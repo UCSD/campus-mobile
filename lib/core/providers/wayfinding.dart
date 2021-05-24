@@ -130,16 +130,17 @@ class WayfindingProvider extends ChangeNotifier {
     checkAdvancedWayfindingEnabled();
     userLongitude = (_coordinates == null) ? null : _coordinates.lon;
     userLatitude = (_coordinates == null) ? null : _coordinates.lat;
-    if (userLongitude == null || userLatitude == null) {
-      print("Got null coordinates");
-      return;
-    }
+    // if (userLongitude == null || userLatitude == null) {
+    //   print("Got null coordinates");
+    //   return;
+    // }
 
     // Verify that BT module is present in this device.
     await flutterBlueInstance.isAvailable.then((value) {
       flutterBlueInstance.state.listen((event) async {
         // Verify BT is available to start scanning.
         if (event.index == 4) {
+          notifyListeners();
           // Set Wayfinding preferences
           advancedWayfindingEnabled = true;
           sharedPreferences = await SharedPreferences.getInstance();
@@ -236,6 +237,7 @@ class WayfindingProvider extends ChangeNotifier {
     removeNoncontinuousDevices();
 
     displayingDevices = List.of(processedDevices);
+    notifyListeners();
     // If there are more than three devices, log location
     processOffloadingLogs(List.of(processedDevices));
 
@@ -843,6 +845,7 @@ class WayfindingProvider extends ChangeNotifier {
     if (snapshot.data as BluetoothState == BluetoothState.unauthorized ||
         snapshot.data as BluetoothState == BluetoothState.off ||
         forceOff) {
+      if (ongoingScanner != null) ongoingScanner = null;
       forceOff = true;
       advancedWayfindingEnabled = false;
     }
@@ -871,6 +874,7 @@ class WayfindingProvider extends ChangeNotifier {
         (PermissionStatus.granted !=
             await locationDataProvider.locationObject.hasPermission())) {
       forceOff = true;
+      if (ongoingScanner != null) ongoingScanner = null;
     } else
       forceOff = false;
   }
@@ -890,10 +894,7 @@ class WayfindingProvider extends ChangeNotifier {
     if (permissionGranted) {
       advancedWayfindingEnabled = true;
       init();
-      if (!advancedWayfindingEnabled) {
-        forceOff = true;
-      }
-      if (advancedWayfindingEnabled) forceOff = false;
+      forceOff = false;
     } else {
       forceOff = false;
     }

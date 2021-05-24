@@ -68,25 +68,27 @@ class _AutomaticBluetoothLoggerViewState
       appBar: AppBar(
         title: Text("AW Developer View"),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[statusCard(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              child: Container(
-               height: cardContentMaxHeight,
-              child: ListView.builder(
-                  itemCount: _wayfindingProvider.processedDevices.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return buildText(index);
-                        }),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[statusCard(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                child: Container(
+                 height: cardContentMaxHeight,
+                child: ListView.builder(
+                    itemCount: _wayfindingProvider.processedDevices.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return buildText(index);
+                          }),
+                ),
               ),
-            ),
-          )
+            )
 
-        ],
+          ],
+        ),
       ),
     );
   }
