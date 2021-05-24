@@ -153,7 +153,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                     "Try again",
                     style: TextStyle(
                         fontSize: 18.0,
-                        color: Theme.of(context).textTheme.button.color),
+                        color: Theme.of(context).textTheme.button!.color),
                   ),
                 ),
               ),
