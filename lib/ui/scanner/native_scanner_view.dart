@@ -9,7 +9,11 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-class ScanditScanner extends StatelessWidget {
+class ScanditScanner extends StatefulWidget {
+  _ScanditScannerState createState() => _ScanditScannerState();
+}
+
+class _ScanditScannerState extends State<ScanditScanner> {
   ScannerDataProvider _scannerDataProvider;
   UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
@@ -134,20 +138,20 @@ class ScanditScanner extends StatelessWidget {
                     style: TextStyle(fontSize: 15)),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                      padding: EdgeInsets.only(left: 32.0, right: 32.0),
-                      primary: lightButtonColor,
-                      textStyle: TextStyle(
-                        color: Colors.white,
-                      )),
+                padding: EdgeInsets.only(top: 24.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.only(left: 32.0, right: 32.0),
+                    primary: Theme.of(context).buttonColor,
+                  ),
                   onPressed: () {
                     _scannerDataProvider.setDefaultStates();
                   },
                   child: Text(
                     "Try again",
-                    style: TextStyle(fontSize: 18.0),
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: Theme.of(context).textTheme.button.color),
                   ),
                 ),
               ),
