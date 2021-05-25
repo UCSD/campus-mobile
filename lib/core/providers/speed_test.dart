@@ -93,7 +93,18 @@ class SpeedTestProvider extends ChangeNotifier {
 
   Future uploadSpeedTest() async {
     String path = (await getApplicationDocumentsDirectory()).path;
-    var tempDownload = File(path + "/temp.html").readAsBytesSync();
+    File temp = File(path + "/temp.html");
+
+    // if not on UCSD wifi OR the file above does not exist,
+    // we should not upload the speed test results
+    // instead, stop the timer and exit the function
+    if(!isUCSDWiFi || !temp.existsSync()) {
+      _timer.stop();
+      notifyListeners();
+      return;
+    }
+
+    var tempDownload = temp.readAsBytesSync();
 
     FormData formData = new FormData.fromMap(
         {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
