@@ -86,6 +86,18 @@ class PushNotificationDataProvider extends ChangeNotifier {
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: selectNotification);
 
+      RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+      if (initialMessage != null) {
+        await Provider.of<MessagesDataProvider>(context, listen: false)
+            .fetchMessages(true);
+
+        ///switch to the notifications tab
+        Provider.of<BottomNavigationBarProvider>(context, listen: false)
+            .currentIndex = NavigatorConstants.NotificationsTab;
+      }
+
       /// Foreground messaging
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         print('FCM: onMessage: foreground message:');
