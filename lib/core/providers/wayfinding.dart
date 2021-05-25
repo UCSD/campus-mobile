@@ -8,7 +8,6 @@ import 'dart:math' as math;
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:background_fetch/background_fetch.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
@@ -171,9 +170,6 @@ class WayfindingProvider extends ChangeNotifier {
 
           // Set up broadcasting for UCSD App Identification
           startBeaconBroadcast();
-
-          // Set up background scanning
-          backgroundFetchSetUp();
 
           // Set the minimum change to activate a new scan.
           //location.changeSettings(accuracy: LocationAccuracy.low);
@@ -731,50 +727,6 @@ class WayfindingProvider extends ChangeNotifier {
     return String.fromCharCodes(codeUnits);
   }
 
-  // Start Background Scanning
-  void _onBackgroundFetch(String taskID) async {
-    String? lastTimeStamp = await _storage.read(key: "lastBackgroundScan");
-
-    // Start a background scan
-    if (lastTimeStamp == null ||
-        DateTime.now().difference(DateTime.parse(lastTimeStamp)).inMinutes >
-            _wayfindingConstantsModel.backgroundScanInterval!) {
-      inBackground = true;
-      startScan();
-      inBackground = false;
-    }
-    BackgroundFetch.finish(taskID);
-  }
-
-  // Set background tasks
-  void backgroundFetchSetUp() {
-    // Configure BackgroundFetch.
-    BackgroundFetch.configure(
-            BackgroundFetchConfig(
-              minimumFetchInterval:
-                  _wayfindingConstantsModel.backgroundScanInterval!,
-              forceAlarmManager: false,
-              stopOnTerminate: false,
-              startOnBoot: true,
-              enableHeadless: true,
-              requiresBatteryNotLow: false,
-              requiresCharging: false,
-              requiresStorageNotLow: false,
-              requiresDeviceIdle: false,
-              requiredNetworkType: NetworkType.ANY,
-            ),
-            _onBackgroundFetch)
-        .then((int status) {
-      _storage.write(
-          key: _randomValue(),
-          value: '[BackgroundFetch] configure success: $status');
-    }).catchError((e) {
-      _storage.write(
-          key: _randomValue(), value: '[BackgroundFetch] configure ERROR: $e');
-    });
-  }
-  // End Background Scanning
-
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {
     String uuid = '';
@@ -816,10 +768,11 @@ class WayfindingProvider extends ChangeNotifier {
     beaconSingleton.beaconBroadcast.stop();
   }
 
-  void coordinateAndLocation(Coordinates value, LocationDataProvider locationDataProvider) {
+  void coordinateAndLocation(
+      Coordinates value, LocationDataProvider locationDataProvider) {
     _locationDataProvider = locationDataProvider;
     // Toggle off 'force off" value
-    if(_coordinates!= null){
+    if (_coordinates != null) {
       forceOff = false;
     }
     _coordinates = value;
@@ -849,10 +802,10 @@ class WayfindingProvider extends ChangeNotifier {
 
   // Checks bt state of the device
   bool permissionState(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-
-   // checkAdvancedWayfindingEnabled();
+    // checkAdvancedWayfindingEnabled();
     if (snapshot.data as BluetoothState == BluetoothState.unauthorized ||
-        snapshot.data as BluetoothState == BluetoothState.off || forceOff) {
+        snapshot.data as BluetoothState == BluetoothState.off ||
+        forceOff) {
       forceOff = true;
       advancedWayfindingEnabled = false;
     } else {
@@ -888,8 +841,7 @@ class WayfindingProvider extends ChangeNotifier {
     if (forceOff) return;
 //    print("wayfinging enabled");
 //    print(advancedWayfindingEnabled);
-    if (permissionGranted)
-    {
+    if (permissionGranted) {
       advancedWayfindingEnabled = true;
       init();
       if (!advancedWayfindingEnabled!) {
