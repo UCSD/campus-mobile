@@ -44,7 +44,7 @@ class CustomAppBar extends ChangeNotifier {
   }
 
   changeTitle(String? newTitle) {
-    title = RouteTitles.titleMap[newTitle!];
+    title = RouteTitles.titleMap[newTitle];
     makeAppBar();
   }
 }

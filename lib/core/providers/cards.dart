@@ -24,7 +24,6 @@ class CardsDataProvider extends ChangeNotifier {
       'student_survey',
       'student_id',
       'employee_id',
-      'speed_test',
       'availability',
       'dining',
       'events',
@@ -32,6 +31,7 @@ class CardsDataProvider extends ChangeNotifier {
       'parking',
       'news',
       'weather',
+      'speed_test',
     ];
 
     // Native student cards

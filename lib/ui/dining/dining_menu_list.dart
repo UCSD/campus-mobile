@@ -80,12 +80,13 @@ class _DiningMenuListState extends State<DiningMenuList> {
               ),
             ),
             onTap: () {
+              Object args = {
+                "data": item,
+                "disclaimer": menu.disclaimer,
+                "disclaimerEmail": menu.disclaimerEmail
+              };
               Navigator.pushNamed(context, RoutePaths.DiningNutritionView,
-                  arguments: {
-                    "data": item,
-                    "disclaimer": menu.disclaimer,
-                    "disclaimerEmail": menu.disclaimerEmail
-                  });
+                  arguments: args);
             },
           ));
         }

@@ -50,10 +50,10 @@ class SpeedTestService {
       await getNewToken();
       // Get download & upload urls
       String? _downloadResponse = await _networkHelper.authorizedFetch(
-          "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/generateDownloadUrl",
+          "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/url_generator/download_url",
           header);
       String? _uploadResponse = await _networkHelper.authorizedFetch(
-          "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/generateUploadUrl?name=temp.html",
+          "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/url_generator/upload_url?name=temp.html",
           header);
 
       /// parse data
