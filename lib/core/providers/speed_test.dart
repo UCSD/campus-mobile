@@ -312,8 +312,8 @@ class SpeedTestProvider extends ChangeNotifier {
       }
       // Send to offload API
       try {
-        _networkHelper.authorizedPost(
-            mobileLoggerApi, offloadDataHeader, json.encode(wiFiLog));
+        _networkHelper.authorizedPost(mobileLoggerApi, offloadDataHeader,
+            json.encode(wiFiLog.toString()));
       } catch (Exception) {
         if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
           _userDataProvider.silentLogin();
