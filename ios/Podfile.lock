@@ -1,8 +1,6 @@
 PODS:
   - "app_settings (3.0.0+1)":
     - Flutter
-  - background_fetch (1.0.0-nullsafety.2):
-    - Flutter
   - beacon_broadcast (0.0.1):
     - Flutter
   - connectivity (0.0.1):
@@ -121,6 +119,11 @@ PODS:
     - GoogleUtilities/MethodSwizzler (~> 7.4)
     - GoogleUtilities/Network (~> 7.4)
     - "GoogleUtilities/NSData+zlib (~> 7.4)"
+  - GoogleAppMeasurement/AdIdSupport (7.11.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
+    - GoogleUtilities/MethodSwizzler (~> 7.0)
+    - GoogleUtilities/Network (~> 7.0)
+    - "GoogleUtilities/NSData+zlib (~> 7.0)"
     - nanopb (~> 2.30908.0)
   - GoogleDataTransport (9.0.0):
     - GoogleUtilities/Environment (~> 7.2)
@@ -182,7 +185,6 @@ PODS:
 
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
-  - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - beacon_broadcast (from `.symlinks/plugins/beacon_broadcast/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
@@ -229,8 +231,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
-  background_fetch:
-    :path: ".symlinks/plugins/background_fetch/ios"
   beacon_broadcast:
     :path: ".symlinks/plugins/beacon_broadcast/ios"
   connectivity:
@@ -278,7 +278,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
-  background_fetch: 67b227578932e795dbe3ea6d3f7c006e45f3ce66
   beacon_broadcast: 2c2562111f7b7e0f1ab59487f6bc805805e3c9f3
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
@@ -319,6 +318,6 @@ SPEC CHECKSUMS:
   webview_flutter: 9f491a9b5a66f2573946a389b2677987b0ff8c0b
   wifi_connection: cbd6d42bbd0cb9302ea325efe5bd3945576266cc
 
-PODFILE CHECKSUM: 4ce335bd3d39b2b13951c6130618e51c5ed4085e
+PODFILE CHECKSUM: bc4d9b6e9b7bb8aa948f133bdca3b9602a89e1b5
 
 COCOAPODS: 1.10.1
