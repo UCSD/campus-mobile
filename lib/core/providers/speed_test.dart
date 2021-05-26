@@ -98,7 +98,7 @@ class SpeedTestProvider extends ChangeNotifier {
     // if not on UCSD wifi OR the file above does not exist,
     // we should not upload the speed test results
     // instead, stop the timer and exit the function
-    if(!isUCSDWiFi || !temp.existsSync()) {
+    if (isUCSDWiFi != true || !temp.existsSync()) {
       _timer.stop();
       notifyListeners();
       return;
