@@ -85,7 +85,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: selectNotification);
 
-      RemoteMessage initialMessage =
+      RemoteMessage? initialMessage =
           await FirebaseMessaging.instance.getInitialMessage();
 
       if (initialMessage != null) {
