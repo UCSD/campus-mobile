@@ -20,12 +20,12 @@ String shuttleStopModelToJson(List<ShuttleStopModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ShuttleStopModel {
-  double lat;
-  double lon;
-  int id;
-  String name;
-  int stopCode;
-  String rtpiNumber;
+  double? lat;
+  double? lon;
+  int? id;
+  String? name;
+  int? stopCode;
+  String? rtpiNumber;
 
   ShuttleStopModel({
     this.lat,

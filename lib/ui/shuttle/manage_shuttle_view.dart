@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -12,7 +14,7 @@ class ManageShuttleView extends StatefulWidget {
 }
 
 class _ManageShuttleViewState extends State<ManageShuttleView> {
-  ShuttleDataProvider _shuttleDataProvider;
+  late ShuttleDataProvider _shuttleDataProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -40,32 +42,33 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    List<ShuttleStopModel> newOrder = _shuttleDataProvider.stopsToRender;
+    List<ShuttleStopModel?> newOrder = _shuttleDataProvider.stopsToRender;
     List<ShuttleStopModel> toRemove = [];
 
-    for (ShuttleStopModel item in newOrder) {
+    for (ShuttleStopModel? item in newOrder) {
       if (_shuttleDataProvider.stopsToRender == null) {
-        toRemove.add(item);
+        toRemove.add(item!);
       }
     }
     newOrder.removeWhere((element) => toRemove.contains(element));
-    ShuttleStopModel item = newOrder.removeAt(oldIndex);
+    ShuttleStopModel? item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
-    List<int> orderedStopNames = [];
-    for (ShuttleStopModel item in newOrder) {
-      orderedStopNames.add(item.id);
+    List<int?> orderedStopNames = [];
+    for (ShuttleStopModel? item in newOrder) {
+      orderedStopNames.add(item!.id);
     }
     _shuttleDataProvider.reorderStops(orderedStopNames);
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
-    for (ShuttleStopModel model in _shuttleDataProvider.stopsToRender) {
+    print("is called");
+    for (ShuttleStopModel? model in _shuttleDataProvider.stopsToRender) {
       if (model != null) {
         list.add(ListTile(
             key: Key(model.id.toString()),
             title: Text(
-              model.name,
+              model.name!,
             ),
             leading: Icon(
               Icons.reorder,

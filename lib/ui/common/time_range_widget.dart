@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -7,11 +9,11 @@ import 'package:intl/intl.dart';
 /// The TimeRangeWidget will build a Text Widget that displays 5:01 PM - 8:20 PM
 class TimeRangeWidget extends StatelessWidget {
   const TimeRangeWidget({
-    Key key,
-    @required this.time,
+    Key? key,
+    required this.time,
   }) : super(key: key);
 
-  final String time;
+  final String? time;
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -20,12 +22,12 @@ class TimeRangeWidget extends StatelessWidget {
   }
 
   String getStartTime(BuildContext context) {
-    List<String> times = time.split("-");
+    List<String> times = time!.split("-");
     return stringToTimeOfDay(times[0]).format(context);
   }
 
   String getStopTime(BuildContext context) {
-    List<String> times = time.split("- ");
+    List<String> times = time!.split("- ");
     return stringToTimeOfDay(times[1]).format(context);
   }
 

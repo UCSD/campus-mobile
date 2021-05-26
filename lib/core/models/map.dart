@@ -12,19 +12,19 @@ String mapSearchModelToJson(List<MapSearchModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class MapSearchModel {
-  String title;
-  int mkrEnabled;
-  int mkrRegion;
-  String location;
-  String description;
-  int mkrGroupid;
+  String? title;
+  int? mkrEnabled;
+  int? mkrRegion;
+  String? location;
+  String? description;
+  int? mkrGroupid;
   dynamic score;
-  double mkrLong;
-  double mkrLat;
-  String access;
-  String url;
-  int mkrMarkerid;
-  double distance;
+  double? mkrLong;
+  double? mkrLat;
+  String? access;
+  String? url;
+  int? mkrMarkerid;
+  double? distance;
 
   MapSearchModel({
     this.title,

@@ -19,11 +19,11 @@ class CardsModel {
       this.requireAuth,
       this.titleText});
 
-  bool cardActive;
-  String initialURL;
-  bool isWebCard;
-  bool requireAuth;
-  String titleText;
+  bool? cardActive;
+  String? initialURL;
+  bool? isWebCard;
+  bool? requireAuth;
+  String? titleText;
 
   factory CardsModel.fromJson(Map<String, dynamic> json) => CardsModel(
         cardActive: json["cardActive"] == null ? null : json["cardActive"],

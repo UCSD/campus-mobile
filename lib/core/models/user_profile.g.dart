@@ -17,13 +17,13 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserProfileModel(
-      selectedLots: (fields[0] as List)?.cast<String>(),
-      selectedOccuspaceLocations: (fields[1] as List)?.cast<String>(),
-      subscribedTopics: (fields[2] as List)?.cast<String>(),
-      selectedParkingSpots: (fields[3] as Map)?.cast<String, bool>(),
-      selectedParkingLots: (fields[4] as Map)?.cast<String, bool>(),
-      selectedStops: (fields[5] as List)?.cast<int>(),
-      surveyCompletion: (fields[6] as List)?.cast<String>(),
+      selectedLots: (fields[0] as List?)?.cast<String>(),
+      selectedOccuspaceLocations: (fields[1] as List?)?.cast<String?>(),
+      subscribedTopics: (fields[2] as List?)?.cast<String?>(),
+      selectedParkingSpots: (fields[3] as Map?)?.cast<String?, bool>(),
+      selectedParkingLots: (fields[4] as Map?)?.cast<String?, bool>(),
+      selectedStops: (fields[5] as List?)?.cast<int?>(),
+      surveyCompletion: (fields[6] as List?)?.cast<String>(),
     );
   }
 

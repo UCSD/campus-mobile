@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
@@ -34,40 +36,39 @@ enum ScannedDevice {
 /// A file that handles AdvancedWayfinding feature to scan and identify nearby BT devices.
 class WayfindingProvider extends ChangeNotifier {
   /// A structured model to simplify constants management and UCSD-ITS configurations.
-  WayfindingConstantsModel _wayfindingConstantsModel;
+  late WayfindingConstantsModel _wayfindingConstantsModel;
 
   /// A service for fetching UCSD-ITS configurations from network.
-  WayfindingService _wayfindingService;
+  late WayfindingService _wayfindingService;
 
   /// Responsible for managing the broadcasting of [advertisementValue].
-  BeaconSingleton beaconSingleton;
+  late BeaconSingleton beaconSingleton;
 
   /// Distinguishes running in the background vs having app open.
   bool inBackground = false;
 
-  /// Randomized sequence used to differentiate user devices while preserving user privacy.
-  String advertisementValue;
+  /// Advertisement string
+  String? advertisementValue;
 
-  /// Identifies devices as Android or iOS.
-  String operatingSystem;
+  /// Operating system of device
+  String? operatingSystem;
 
   /// Confirms that this is the first instance of the Wayfinding feature, preventing parallel scanning.
   bool firstInstance = true;
 
-  /// Confirms user's permission selection for AdvancedWayfinding feature.
-  bool advancedWayfindingEnabled = false;
+  bool? advancedWayfindingEnabled = false;
+
+  /// Access previous bt setting/permissions
+  late SharedPreferences sharedPreferences;
 
   /// Ensures AdvancedWayfinding is disabled when location & BT are unavailable.
   bool forceOff = false;
 
-  /// Recalls past user permission selection for AdvancedWayfinding feature.
-  SharedPreferences sharedPreferences;
-
   /// Provides location of device for logging scans.
-  Coordinates _coordinates;
+  Coordinates? _coordinates;
 
   /// Not directly accessed but used to check permissions
-  LocationDataProvider _locationDataProvider;
+  LocationDataProvider? _locationDataProvider;
 
   /// Keeps track of scanned unique BT devices.
   HashMap<String, BluetoothDeviceProfile> scannedObjects = new HashMap();
@@ -79,7 +80,7 @@ class WayfindingProvider extends ChangeNotifier {
   final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   /// Holds header for mobile logger POST.
-  Map<String, String> loggerHeader;
+  Map<String, String>? loggerHeader;
 
   /// Holds header for user token retrieval.
   final Map<String, String> tokenHeader = {
@@ -93,8 +94,30 @@ class WayfindingProvider extends ChangeNotifier {
   String mobileLoggerEndpoint =
       "https://api-qa.ucsd.edu:8243/mobileapplogger/v1.1.0/log?type=WAYFINDING";
 
-  /// Responsible for recurrent scans after a certain time interval.
-  Timer ongoingScanner;
+  //Thresholds for logging location
+  int qualifiedDevicesThreshold = 0;
+  int distanceThreshold = 10; // default in ZenHub
+  int scanIntervalAllowance = 0;
+  int? backgroundScanInterval = 15; // Minutes
+  int? deletionInterval = 30; // Minutes
+  double milesFromPriceCenter = 5;
+  int dwellTimeThreshold = 200; // In seconds (10 minutes -> 600 seconds)
+
+  /// Keep track of devices that meet our requirements
+  int qualifyingDevices = 0;
+
+  /// Default constant for scans
+  int scanDuration = 2; //Seconds
+  int waitTime = 15; // Minutes
+  int dwellMinutes = 30;
+
+  /// Coordinates for Price Center
+  final double pcLongitude = -117.237006;
+  final double pcLatitude = 32.880006;
+  late double distanceFromPriceCenter;
+
+  /// Allows for continuous scan
+  Timer? ongoingScanner;
 
   /// Displays BT devices that have been scanned (only for debugger view).
   List loggedItems = [];
@@ -102,14 +125,14 @@ class WayfindingProvider extends ChangeNotifier {
   /// Gives an unfiltered list of scanned devices.
   static List<List<Object>> unprocessedDevices = [];
 
+  /// Device types list for local caching
+  Map<String, dynamic>? deviceTypes = {};
   // initialize location and permissions to be checked
-  double userLatitude;
-  double userLongitude;
-  // Device Types
-  Map<String, dynamic> deviceTypes = {};
+  double? userLatitude;
+  double? userLongitude;
 
   /// Access user's profile to offload data
-  UserDataProvider userDataProvider;
+  UserDataProvider? userDataProvider;
 
   /// Provides sole instance of AdvancedWayfinding feature.
   static final WayfindingProvider _bluetoothSingleton =
@@ -123,8 +146,8 @@ class WayfindingProvider extends ChangeNotifier {
   /// Runs if AdvancedWayfinding was turned on.
   void init() async {
     checkAdvancedWayfindingEnabled();
-    userLongitude = (_coordinates == null) ? null : _coordinates.lon;
-    userLatitude = (_coordinates == null) ? null : _coordinates.lat;
+    userLongitude = (_coordinates == null) ? null : _coordinates!.lon;
+    userLatitude = (_coordinates == null) ? null : _coordinates!.lat;
     if (userLongitude == null || userLatitude == null) {
       return;
     }
@@ -143,7 +166,7 @@ class WayfindingProvider extends ChangeNotifier {
           _wayfindingService = WayfindingService();
           await _wayfindingService.fetchData();
           _wayfindingConstantsModel =
-              _wayfindingService.wayfindingConstantsModel;
+              _wayfindingService.wayfindingConstantsModel!;
 
           // Set up broadcasting for UCSD App Identification
           startBeaconBroadcast();
@@ -168,7 +191,7 @@ class WayfindingProvider extends ChangeNotifier {
 
     // Enable timer and  wait duration before starting next scan.
     ongoingScanner = new Timer.periodic(
-        Duration(minutes: _wayfindingConstantsModel.scanWaitTime),
+        Duration(minutes: _wayfindingConstantsModel.scanWaitTime!),
         (Timer t) => startScan());
   }
 
@@ -187,12 +210,12 @@ class WayfindingProvider extends ChangeNotifier {
 
       // Convert km to miles
       _wayfindingConstantsModel.userDistanceFromPriceCenter =
-          _wayfindingConstantsModel.userDistanceFromPriceCenter / 1.609;
+          _wayfindingConstantsModel.userDistanceFromPriceCenter! / 1.609;
     }
 
     //prevent scanning if not within boundaries
-    if (_wayfindingConstantsModel.userDistanceFromPriceCenter >
-        _wayfindingConstantsModel.milesFromPC) {
+    if (_wayfindingConstantsModel.userDistanceFromPriceCenter! >
+        _wayfindingConstantsModel.milesFromPC!) {
       return;
     }
 
@@ -202,10 +225,10 @@ class WayfindingProvider extends ChangeNotifier {
     // Process the scan results (synchronously)
     flutterBlueInstance.scanResults.listen((results) {
       for (ScanResult scanResult in results) {
-        String calculatedUUID;
+        String? calculatedUUID;
 
         // Identify possible advertisement ID
-        calculatedUUID = extractAdvertisementUUID(scanResult, calculatedUUID);
+        calculatedUUID = extractAdvertisementUUID(scanResult);
 
         //Create BT objects to check continuity and store data
         identifyDevices(scanResult);
@@ -278,8 +301,8 @@ class WayfindingProvider extends ChangeNotifier {
     } else if (Platform.isIOS) {
       operatingSystem = "iOS";
     }
-    if (_wayfindingConstantsModel.qualifyingDevices >=
-        _wayfindingConstantsModel.qualifiedDevicesThreshold) {
+    if (_wayfindingConstantsModel.qualifyingDevices! >=
+        _wayfindingConstantsModel.qualifiedDevicesThreshold!) {
       // Reset dwell times
       resetDevices();
       _wayfindingConstantsModel.qualifyingDevices = 0;
@@ -303,7 +326,7 @@ class WayfindingProvider extends ChangeNotifier {
   /// Will attach access token if logged in
   Future<void> sendLogs(Map log) async {
     // Attach token from user if logged in
-    if (userDataProvider.isLoggedIn) {
+    if (userDataProvider != null && userDataProvider!.isLoggedIn) {
       if (loggerHeader == null) {
         loggerHeader = {
           'Authorization':
@@ -320,7 +343,7 @@ class WayfindingProvider extends ChangeNotifier {
       } catch (Exception) {
         // Silent login if access token is expired
         if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
-          userDataProvider.silentLogin();
+          userDataProvider!.silentLogin();
           loggerHeader = {
             'Authorization':
                 'Bearer ${userDataProvider?.authenticationModel?.accessToken}'
@@ -344,8 +367,8 @@ class WayfindingProvider extends ChangeNotifier {
   }
 
   // Calculates Advertisement ID if one is available
-  String extractAdvertisementUUID(
-      ScanResult scanResult, String calculatedUUID) {
+  String extractAdvertisementUUID(ScanResult scanResult) {
+    String calculatedUUID = "";
     scanResult.advertisementData.manufacturerData.forEach((key, decimalArray) {
       calculatedUUID = calculateHexFromArray(
           decimalArray); //https://stackoverflow.com/questions/60902976/flutter-ios-to-ios-broadcast-beacon-not-working
@@ -363,30 +386,30 @@ class WayfindingProvider extends ChangeNotifier {
       if (Platform.isIOS) {
         deviceEntry.insert(
             1,
-            ((scannedObjects[(deviceEntry[0].toString().substring(0, 36))]
+            ((scannedObjects[(deviceEntry[0].toString().substring(0, 36))]!
                         .deviceType !=
                     "")
-                ? "${getAppleClassification(scannedObjects[deviceEntry[0].toString().substring(0, 36)].deviceType)}"
+                ? "${getAppleClassification(scannedObjects[deviceEntry[0].toString().substring(0, 36)]!.deviceType!)}"
                 : "Unavailable"));
         if (getAppleClassification(
-                scannedObjects[deviceEntry[0].toString().substring(0, 36)]
-                    .deviceType) !=
+                scannedObjects[deviceEntry[0].toString().substring(0, 36)]!
+                    .deviceType!) !=
             "") {
           iOSDevice = true;
         }
       } else if (Platform.isAndroid) {
         deviceEntry.insert(
             1,
-            ((scannedObjects[deviceEntry[0].toString().substring(0, 17)]
+            ((scannedObjects[deviceEntry[0].toString().substring(0, 17)]!
                         .deviceType !=
                     "")
-                ? "${getAppleClassification(scannedObjects[deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index].toString().substring(0, 17)].deviceType)}"
+                ? "${getAppleClassification(scannedObjects[deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index].toString().substring(0, 17)]!.deviceType!)}"
                 : "Unavailable"));
         if (getAppleClassification(scannedObjects[
                     deviceEntry[ScannedDevice.SCANNED_DEVICE_ID.index]
                         .toString()
-                        .substring(0, 17)]
-                .deviceType) !=
+                        .substring(0, 17)]!
+                .deviceType!) !=
             "") {
           iOSDevice = true;
         }
@@ -424,21 +447,21 @@ class WayfindingProvider extends ChangeNotifier {
   void resetDevices() {
     int currentMinutes = getMinutesTimeOfDay();
     scannedObjects.removeWhere((key, value) {
-      if (currentMinutes < value.scanTimeMinutes) {
-        return (currentMinutes + 60) - value.scanTimeMinutes >= 2;
+      if (currentMinutes < value.scanTimeMinutes!) {
+        return (currentMinutes + 60) - value.scanTimeMinutes! >= 2;
       }
-      return currentMinutes - value.scanTimeMinutes >= 2;
+      return currentMinutes - value.scanTimeMinutes! >= 2;
     });
   }
 
   bool checkDeviceDwellTime(BluetoothDeviceProfile device) {
     int currentMinutes = getMinutesTimeOfDay();
-    if (currentMinutes < device.scanTimeMinutes) {
-      return (currentMinutes + 60) - device.scanTimeMinutes <
-          _wayfindingConstantsModel.dwellTimeThreshold;
+    if (currentMinutes < device.scanTimeMinutes!) {
+      return (currentMinutes + 60) - device.scanTimeMinutes! <
+          _wayfindingConstantsModel.dwellTimeThreshold!;
     }
-    return currentMinutes - device.scanTimeMinutes <
-        _wayfindingConstantsModel.dwellTimeThreshold;
+    return currentMinutes - device.scanTimeMinutes! <
+        _wayfindingConstantsModel.dwellTimeThreshold!;
   }
 
   //Gather information on device scanned
@@ -511,27 +534,27 @@ class WayfindingProvider extends ChangeNotifier {
     scannedObjects.removeWhere((key, value) {
       bool isDeviceContinuous = checkDeviceDwellTime(value);
       if (!isDeviceContinuous &&
-          value.scanIntervalAllowancesUsed >=
-              _wayfindingConstantsModel.scanIntervalAllowance) {
+          value.scanIntervalAllowancesUsed! >=
+              _wayfindingConstantsModel.scanIntervalAllowance!) {
         return true;
       } else if (!isDeviceContinuous &&
-          value.scanIntervalAllowancesUsed <
-              _wayfindingConstantsModel.scanIntervalAllowance) {
-        value.scanIntervalAllowancesUsed++;
+          value.scanIntervalAllowancesUsed! <
+              _wayfindingConstantsModel.scanIntervalAllowance!) {
+        value.scanIntervalAllowancesUsed = value.scanIntervalAllowancesUsed! + 1;
       }
       return false;
     });
 
     List<String> objectsToRemove = [];
     scannedObjects.forEach((key, value) {
-      if (!value.continuousDuration &&
-          value.scanIntervalAllowancesUsed >
-              _wayfindingConstantsModel.scanIntervalAllowance) {
+      if (!value.continuousDuration! &&
+          value.scanIntervalAllowancesUsed! >
+              _wayfindingConstantsModel.scanIntervalAllowance!) {
         objectsToRemove.add(key);
-      } else if (!value.continuousDuration &&
-          value.scanIntervalAllowancesUsed <=
-              _wayfindingConstantsModel.scanIntervalAllowance) {
-        value.scanIntervalAllowancesUsed++;
+      } else if (!value.continuousDuration! &&
+          value.scanIntervalAllowancesUsed! <=
+              _wayfindingConstantsModel.scanIntervalAllowance!) {
+        value.scanIntervalAllowancesUsed = value.scanIntervalAllowancesUsed! + 1;
       }
     });
     objectsToRemove.forEach((element) {
@@ -541,29 +564,30 @@ class WayfindingProvider extends ChangeNotifier {
 
   // Determine if we use the type to log location
   bool eligibleType(String manufacturerName) {
-    return _wayfindingConstantsModel.allowableDevices
+    return _wayfindingConstantsModel.allowableDevices!
             .contains(getAppleClassification(manufacturerName)) ||
-        _wayfindingConstantsModel.allowableDevices.contains(manufacturerName);
+        _wayfindingConstantsModel.allowableDevices!.contains(manufacturerName);
   }
 
   // Originally for on screen rendering but also calculates devices that meet our requirements
   void bluetoothLogAnalysis(
-      bool repeatedDevice, ScanResult scanResult, String calculatedUUID) {
+      bool repeatedDevice, ScanResult scanResult, String? calculatedUUID) {
     if (!repeatedDevice) {
-      scannedObjects[scanResult.device.id.toString()].dwellTime +=
-          (_wayfindingConstantsModel.scanWaitTime * 60); //account for seconds
-      scannedObjects[scanResult.device.id.toString()].distance =
+      scannedObjects[scanResult.device.id.toString()]!.dwellTime =
+          scannedObjects[scanResult.device.id.toString()]!.dwellTime! +
+              (_wayfindingConstantsModel.scanWaitTime !* 60); //account for seconds
+      scannedObjects[scanResult.device.id.toString()]!.distance =
           getDistance(scanResult.rssi);
-      if (scannedObjects[scanResult.device.id.toString()].dwellTime >=
-          _wayfindingConstantsModel.dwellTimeThreshold) {
+      if (scannedObjects[scanResult.device.id.toString()]!.dwellTime! >=
+          _wayfindingConstantsModel.dwellTimeThreshold!) {
         // Remove to reinstate thresholds
         // &&
         // scannedObjects[scanResult.device.id.toString()].distance <=
         //     distanceThreshold &&
         // eligibleType(
         //     scannedObjects[scanResult.device.id.toString()].deviceType)) {
-        _wayfindingConstantsModel.qualifyingDevices +=
-            1; // Add the # of unique devices detected
+        _wayfindingConstantsModel.qualifyingDevices =
+            _wayfindingConstantsModel.qualifyingDevices! + 1; // Add the # of unique devices detected
       }
 
       // Log important information
@@ -575,23 +599,22 @@ class WayfindingProvider extends ChangeNotifier {
       List<Object> actualDeviceLog = [
         deviceLog,
         calculatedUUID.toString(),
-        scannedObjects[scanResult.device.id.toString()]
-            .timeStamps[0]
+        scannedObjects[scanResult.device.id.toString()]!
+            .timeStamps![0]
             .toString(),
         scanResult.rssi.toInt(),
-        scannedObjects[scanResult.device.id.toString()].distance.toInt()
+        scannedObjects[scanResult.device.id.toString()]!.distance!.toInt()
       ];
 
       unprocessedDevices.add(actualDeviceLog);
 
       if (Platform.isAndroid) {
-        scannedObjects[scanResult.device.id.toString()].deviceType =
+        scannedObjects[scanResult.device.id.toString()]!.deviceType =
             parseForAppearance(scanResult);
       }
 
       if (scanResult.advertisementData.connectable &&
-          scannedObjects[scanResult.device.id.toString()].deviceType == "" &&
-          scanResult != null) {
+          scannedObjects[scanResult.device.id.toString()]!.deviceType == "") {
         extractBTServices(scanResult);
       }
     }
@@ -599,7 +622,7 @@ class WayfindingProvider extends ChangeNotifier {
 
   // Parse raw BT data for advertised info.
   String parseForAppearance(ScanResult scanResult) {
-    Uint8List adData = scanResult.advertisementData.rawData;
+    Uint8List adData = scanResult.advertisementData.rawData as Uint8List;
     int index = 0;
     String data;
 
@@ -644,11 +667,11 @@ class WayfindingProvider extends ChangeNotifier {
                 if (characteristic.toString().toUpperCase().contains("2A01")) {
                   // Appearance
                   characteristic.read().then((deviceType) {
-                    scannedObjects[scannedDevice.id.toString()].deviceType =
-                        _wayfindingConstantsModel.deviceTypes
+                    scannedObjects[scannedDevice.id.toString()]!.deviceType =
+                        _wayfindingConstantsModel.deviceTypes!
                                 .containsKey(deviceType.toString())
                             ? _wayfindingConstantsModel
-                                .deviceTypes[deviceType.toString()]
+                                .deviceTypes![deviceType.toString()]
                             : " ";
                   });
                 }
@@ -659,7 +682,7 @@ class WayfindingProvider extends ChangeNotifier {
                 if (characteristic.toString().toUpperCase().contains("2A24")) {
                   // Device Type Name
                   characteristic.read().then((deviceType) {
-                    scannedObjects[scannedDevice.id.toString()].deviceType =
+                    scannedObjects[scannedDevice.id.toString()]!.deviceType =
                         "${ascii.decode(deviceType).toString()}";
                   });
                 }
@@ -738,11 +761,11 @@ class WayfindingProvider extends ChangeNotifier {
 // Stops all ongoing processes
   void stopScans() {
     if (ongoingScanner != null) {
-      ongoingScanner.cancel();
+      ongoingScanner!.cancel();
     }
     flutterBlueInstance.stopScan();
     flutterBlueInstance.scanResults.listen((event) {}).cancel();
-    beaconSingleton?.beaconBroadcast?.stop();
+    beaconSingleton.beaconBroadcast.stop();
   }
 
   void coordinateAndLocation(
@@ -772,7 +795,7 @@ class WayfindingProvider extends ChangeNotifier {
       } else {
         //Write to bt value
         sharedPreferences.setBool(
-            "advancedWayfindingEnabled", advancedWayfindingEnabled);
+            "advancedWayfindingEnabled", advancedWayfindingEnabled!);
       }
     });
   }
@@ -788,8 +811,8 @@ class WayfindingProvider extends ChangeNotifier {
     } else {
       forceOff = false;
     }
-    if (advancedWayfindingEnabled) init();
-    return advancedWayfindingEnabled;
+    if (advancedWayfindingEnabled != null && advancedWayfindingEnabled!) init();
+    return advancedWayfindingEnabled!;
   }
 
   // Verify permissions are enabled
@@ -797,7 +820,7 @@ class WayfindingProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (prefs.containsKey("advancedWayfindingEnabled") &&
-        prefs.getBool('advancedWayfindingEnabled')) {
+        prefs.getBool('advancedWayfindingEnabled')!) {
       if (firstInstance) {
         firstInstance = false;
         init();
@@ -808,8 +831,8 @@ class WayfindingProvider extends ChangeNotifier {
   /// permissionGranted = true
   /// forceOff (currently false)
   void startBluetooth(BuildContext context, bool permissionGranted) async {
-    if (PermissionStatus.granted !=
-        await _locationDataProvider.locationObject.hasPermission()) {
+
+    if (PermissionStatus.granted != await _locationDataProvider!.locationObject.hasPermission()){
       advancedWayfindingEnabled = false;
       forceOff = true;
       notifyListeners();
@@ -821,10 +844,10 @@ class WayfindingProvider extends ChangeNotifier {
     if (permissionGranted) {
       advancedWayfindingEnabled = true;
       init();
-      if (!advancedWayfindingEnabled) {
+      if (!advancedWayfindingEnabled!) {
         forceOff = true;
       }
-      if (advancedWayfindingEnabled) forceOff = false;
+      if (advancedWayfindingEnabled!) forceOff = false;
     } else {
       forceOff = false;
     }
@@ -860,24 +883,24 @@ class WayfindingProvider extends ChangeNotifier {
 
   void setAWPreference() {
     SharedPreferences.getInstance().then((value) {
-      value.setBool("advancedWayfindingEnabled", advancedWayfindingEnabled);
+      value.setBool("advancedWayfindingEnabled", advancedWayfindingEnabled!);
     });
   }
 }
 
 // Helper Class
 class BluetoothDeviceProfile {
-  String uuid;
-  int rssi;
-  String deviceType;
-  List<String> timeStamps;
-  bool continuousDuration;
-  double distance; // Feet
-  int txPowerLevel;
-  double dwellTime = 0;
-  int scanTimeMinutes;
-  bool timeThresholdMet = false;
-  int scanIntervalAllowancesUsed = 0;
+  String? uuid;
+  int? rssi;
+  String? deviceType;
+  List<String>? timeStamps;
+  bool? continuousDuration;
+  double? distance; // Feet
+  int? txPowerLevel;
+  double? dwellTime = 0;
+  int? scanTimeMinutes;
+  bool? timeThresholdMet = false;
+  int? scanIntervalAllowancesUsed = 0;
 
   BluetoothDeviceProfile(this.uuid, this.rssi, this.deviceType, this.timeStamps,
       this.continuousDuration, this.scanTimeMinutes);

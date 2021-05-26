@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/event_time.dart';
@@ -7,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailView extends StatelessWidget {
-  const EventDetailView({Key key, @required this.data}) : super(key: key);
+  const EventDetailView({Key? key, required this.data}) : super(key: key);
   final EventModel data;
   @override
   Widget build(BuildContext context) {
@@ -28,12 +30,12 @@ class EventDetailView extends StatelessWidget {
       ),
       Divider(),
       Text(
-        data.title,
+        data.title!,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.headline6,
       ),
       Divider(),
-      data.location != null && data.location.isNotEmpty
+      data.location != null && data.location!.isNotEmpty
           ? LinkifyWithCatch(
               text: data.location,
               looseUrl: true,
@@ -43,7 +45,7 @@ class EventDetailView extends StatelessWidget {
           : Container(),
       Center(child: EventTime(data: data)),
       Divider(),
-      data.description != null && data.description.isNotEmpty
+      data.description != null && data.description!.isNotEmpty
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: LinkifyWithCatch(
@@ -52,7 +54,7 @@ class EventDetailView extends StatelessWidget {
               ),
             )
           : Container(),
-      data.link != null && data.link.isNotEmpty
+      data.link != null && data.link!.isNotEmpty
           ? LearnMoreButton(link: data.link)
           : Container(),
     ];
@@ -60,8 +62,8 @@ class EventDetailView extends StatelessWidget {
 }
 
 class LearnMoreButton extends StatelessWidget {
-  const LearnMoreButton({Key key, @required this.link}) : super(key: key);
-  final String link;
+  const LearnMoreButton({Key? key, required this.link}) : super(key: key);
+  final String? link;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -74,11 +76,11 @@ class LearnMoreButton extends StatelessWidget {
           child: Text(
             'Learn More',
             style: TextStyle(
-                fontSize: 16, color: Theme.of(context).textTheme.button.color),
+                fontSize: 16, color: Theme.of(context).textTheme.button!.color),
           ),
           onPressed: () async {
             try {
-              await launch(link, forceSafariVC: true);
+              await launch(link!, forceSafariVC: true);
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('Could not open.'),

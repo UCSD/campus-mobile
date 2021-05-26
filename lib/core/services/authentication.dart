@@ -1,11 +1,13 @@
+
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 
 class AuthenticationService {
   AuthenticationService();
-  String _error;
-  AuthenticationModel _data;
-  DateTime _lastUpdated;
+  String? _error;
+  AuthenticationModel? _data;
+  DateTime? _lastUpdated;
 
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
@@ -42,7 +44,7 @@ class AuthenticationService {
     } catch (e) {
       ///TODO: handle errors thrown by the network class for different types of error responses
       _error = e.toString();
-      print("authentication error:" + _error);
+      print("authentication error:" + _error!);
       return false;
     }
   }
@@ -73,13 +75,13 @@ class AuthenticationService {
     } catch (e) {
       ///TODO: handle errors thrown by the network class for different types of error responses
       _error = e.toString();
-      print("authentication error:" + _error);
+      print("authentication error:" + _error!);
       return false;
     }
   }
 
-  DateTime get lastUpdated => _lastUpdated;
-  AuthenticationModel get data => _data;
-  String get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
+  AuthenticationModel? get data => _data;
+  String? get error => _error;
   NetworkHelper get availabilityService => _networkHelper;
 }

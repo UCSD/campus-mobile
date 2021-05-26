@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -10,7 +12,7 @@ class AddShuttleStopsView extends StatefulWidget {
 }
 
 class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
-  ShuttleDataProvider _shuttleDataProvider;
+  late ShuttleDataProvider _shuttleDataProvider;
   bool isAddingStop = false;
 
   @override
@@ -53,7 +55,7 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
         list.add(ListTile(
           key: Key(model.id.toString()),
           title: Text(
-            model.name,
+            model.name!,
           ),
           onTap: () async {
             setState(() {

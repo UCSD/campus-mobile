@@ -11,8 +11,8 @@ String academicTermModelToJson(AcademicTermModel data) =>
     json.encode(data.toJson());
 
 class AcademicTermModel {
-  String termName;
-  String termCode;
+  String? termName;
+  String? termCode;
 
   AcademicTermModel({
     this.termName,
