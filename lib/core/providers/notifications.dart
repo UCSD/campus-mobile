@@ -1,16 +1,17 @@
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/topics.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:campus_mobile_experimental/core/services/notifications.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 class PushNotificationDataProvider extends ChangeNotifier {
@@ -84,8 +85,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: selectNotification);
 
-      RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
+      RemoteMessage initialMessage =
+          await FirebaseMessaging.instance.getInitialMessage();
 
       if (initialMessage != null) {
         await Provider.of<MessagesDataProvider>(context, listen: false)
@@ -99,14 +100,14 @@ class PushNotificationDataProvider extends ChangeNotifier {
       /// Foreground messaging
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         print('FCM: onMessage: foreground message:');
+
         /// foreground messaging callback via flutter_local_notifications
         /// only show message if the message has not been seen before
-        if(!_receivedMessageIds.contains(message.messageId)) {
+        if (!_receivedMessageIds.contains(message.messageId)) {
           showNotification(message);
         }
         // add messageId as it has been shown already
         _receivedMessageIds.add(message.messageId);
-
 
         /// Fetch in-app messages
         Provider.of<MessagesDataProvider>(context, listen: false)
