@@ -887,7 +887,6 @@ class WayfindingProvider extends ChangeNotifier {
     if (forceOff) {
       advancedWayfindingEnabled = false;
       notifyListeners();
-      print("detected no permission");
       return;
     }
 

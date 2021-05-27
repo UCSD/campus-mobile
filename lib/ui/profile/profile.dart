@@ -86,16 +86,17 @@ class Profile extends StatelessWidget {
               },
             ),
           ),
-          if(!kReleaseMode) Card(
-            child: ListTile(
-              leading: Icon(Icons.settings_bluetooth),
-              title: Text('Advanced Wayfinding Developer View'),
-              onTap: () {
-                Navigator.pushNamed(
-                    context, RoutePaths.AutomaticBluetoothLoggerView);
-              },
-            ),
-          ),
+          //TODO: Reinstate to view AW developer view in debug mode
+          // if(!kReleaseMode) Card(
+          //   child: ListTile(
+          //     leading: Icon(Icons.settings_bluetooth),
+          //     title: Text('Advanced Wayfinding Developer View'),
+          //     onTap: () {
+          //       Navigator.pushNamed(
+          //           context, RoutePaths.AutomaticBluetoothLoggerView);
+          //     },
+          //   ),
+          // ),
           BuildInfo(),
         ],
       ),
