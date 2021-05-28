@@ -51,7 +51,6 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   Widget buildErrorCardContent(BuildContext context) {
-    print("building error card");
     return Container(
       width: double.infinity,
       child: Center(
@@ -78,6 +77,9 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                           recognizer: TapGestureRecognizer()..onTap = () {
                             openLink("https://blink.ucsd.edu/technology/help-desk/index.html");
                           }
+                        ),
+                        TextSpan(
+                          text: "."
                         )
                       ]
                     ),
