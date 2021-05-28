@@ -221,14 +221,8 @@ class UserDataProvider extends ChangeNotifier {
           .silentLogin(base64EncodedWithEncryptedPassword)) {
         print('UserDataProvider:silentLogin:SUCCESS');
         await updateAuthenticationModel(_authenticationService.data);
-
         await fetchUserProfile();
-
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
-        print(_cardsDataProvider.cardOrder.toString());
-        _cardsDataProvider
-            .updateAvailableCards(_userProfileModel.ucsdaffiliation);
-
         _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data.accessToken);
