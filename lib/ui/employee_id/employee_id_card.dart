@@ -6,7 +6,9 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/employee_id.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/employee_id.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -20,10 +22,15 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   String cardId = "employee_id";
   String placeholderPhotoUrl =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/resources/img/placeholderPerson.png";
+  bool isValidId = false;
 
   @override
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
+
+    EmployeeIdModel? employeeModel = Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
+    isValidId = employeeModel != null && (employeeModel.barcode != null) &&
+        (employeeModel.employeePreferredDisplayName != null && employeeModel.employeeId != null);
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
@@ -34,9 +41,52 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
       isLoading: Provider.of<EmployeeIdDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<EmployeeIdDataProvider>(context).error,
-      child: () => buildCardContent(
+      child: () => isValidId ? buildCardContent(
           Provider.of<EmployeeIdDataProvider>(context).employeeIdModel,
-          context),
+          context)
+          :
+          buildErrorCardContent(context)
+      ,
+    );
+  }
+
+  Widget buildErrorCardContent(BuildContext context) {
+    print("building error card");
+    return Container(
+      width: double.infinity,
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 16.0,
+            bottom: 32.0,
+          ),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text.rich(
+                    TextSpan(
+                      text: "Unable to display Employee ID.\n",
+                      children: [
+                        TextSpan(
+                          text: "If the problem persists, contact the "
+                        ),
+                        TextSpan(
+                          text: "ITS Service Desk",
+                          style: TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()..onTap = () {
+                            openLink("https://blink.ucsd.edu/technology/help-desk/index.html");
+                          }
+                        )
+                      ]
+                    ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
