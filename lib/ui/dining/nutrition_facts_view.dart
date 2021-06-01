@@ -46,7 +46,7 @@ class NutritionFactsView extends StatelessWidget {
   Widget buildText(BuildContext context, ingredients, String? allergens) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: 14.0, color: Theme.of(context).accentColor),
+        style: TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary),
         children: [
           TextSpan(
             text: "Ingredients: ",
@@ -137,7 +137,7 @@ Widget nutrientHeader(BuildContext context, calories, String? servingSize) {
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
         height: 5.0,
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
       ),
       Text(
         "Ammount Per Serving",
@@ -146,7 +146,7 @@ Widget nutrientHeader(BuildContext context, calories, String? servingSize) {
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
         height: 1.0,
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
       ),
       Row(children: <Widget>[
         Text(
@@ -161,7 +161,7 @@ Widget nutrientHeader(BuildContext context, calories, String? servingSize) {
       Container(
         margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
         height: 3.0,
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
       ),
       Container(
         alignment: Alignment.topRight,
@@ -194,7 +194,7 @@ Widget nutrientLiner({
         Container(
           margin: EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
           height: 1.0,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         Row(
           children: <Widget>[
@@ -228,7 +228,7 @@ Widget footerCalories(BuildContext context, calories) {
       children: <Widget>[
         Container(
           height: 5.0,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         Text(
           "Percent Daily Values are based on a $calories calories diet.",

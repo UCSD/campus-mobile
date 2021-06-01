@@ -36,7 +36,7 @@ class _LoginState extends State<Login> {
 
     return Container(
         constraints: BoxConstraints(maxWidth: 100, maxHeight: 100),
-        child: Center(child: CircularProgressIndicator()));
+        child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)));
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
