@@ -1,3 +1,5 @@
+
+
 import 'dart:math';
 
 import 'package:beacon_broadcast/beacon_broadcast.dart';
@@ -5,7 +7,7 @@ import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BeaconSingleton {
-  String advertisingUUID;
+  String? advertisingUUID;
   String ucsdAppPrefix = "08506708-3068-0650-8008-0"; // UCSDAPP in ASCII
   List<String> hexLetters = ["A", "B", "C", "D", "E", "F"];
   BeaconBroadcast beaconBroadcast = BeaconBroadcast();
@@ -22,9 +24,9 @@ class BeaconSingleton {
     changeUUID();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     checkTime();
-    prefs.setString('uuid', advertisingUUID);
+    prefs.setString('uuid', advertisingUUID!);
     beaconBroadcast
-        .setUUID(advertisingUUID)
+        .setUUID(advertisingUUID!)
         .setMajorId(1)
         .setMinorId(100)
         .setIdentifier('ucsd.app.mobile')
@@ -34,10 +36,10 @@ class BeaconSingleton {
 
   void checkTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    advertisingUUID = prefs.get('uuid') ?? "null";
+    advertisingUUID = prefs.get('uuid') as String? ?? "null";
     var previousTime = prefs.get('previousTime') ?? DateTime(1990).toString();
     var difference =
-        DateTime.now().difference(DateTime.parse(previousTime)).inHours;
+        DateTime.now().difference(DateTime.parse(previousTime as String)).inHours;
     if (difference > 24) {
       changeUUID();
       prefs.setString('previousTime', DateTime.now().toString());

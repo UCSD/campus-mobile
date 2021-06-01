@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -14,12 +16,12 @@ class FinalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
         if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
-            .isLoading) {
+            .isLoading!) {
           return null;
         } else {
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
@@ -30,14 +32,14 @@ class FinalsCard extends StatelessWidget {
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildFinalsCard(
-          Provider.of<ClassScheduleDataProvider>(context).finals,
+          Provider.of<ClassScheduleDataProvider>(context).finals!,
           Provider.of<ClassScheduleDataProvider>(context).lastUpdated,
           Provider.of<ClassScheduleDataProvider>(context).nextDayWithClass,
           context),
     );
   }
 
-  String abbrevToFullWeekday(String abbreviation) {
+  String abbrevToFullWeekday(String? abbreviation) {
     switch (abbreviation) {
       case 'MO':
         return 'Monday';
@@ -61,7 +63,7 @@ class FinalsCard extends StatelessWidget {
   }
 
   Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
-      DateTime lastUpdated, String nextDayWithClasses, BuildContext context) {
+      DateTime? lastUpdated, String? nextDayWithClasses, BuildContext context) {
     List<Widget> listToReturn = [];
     finalsData.forEach((key, value) {
       for (SectionData data in value) {
@@ -69,10 +71,10 @@ class FinalsCard extends StatelessWidget {
           title: buildWeekdayText(abbrevToFullWeekday(data.days)),
           subtitle: Column(
             children: [
-              buildClassTitle(data.subjectCode + ' ' + data.courseCode),
+              buildClassTitle(data.subjectCode! + ' ' + data.courseCode!),
               buildTimeRow(data.time),
-              buildClassTitle(data.courseTitle),
-              buildLocationRow(data.building + ' ' + data.room),
+              buildClassTitle(data.courseTitle!),
+              buildLocationRow(data.building! + ' ' + data.room!),
             ],
             crossAxisAlignment: CrossAxisAlignment.start,
           ),
@@ -112,7 +114,7 @@ class FinalsCard extends StatelessWidget {
     );
   }
 
-  Widget buildTimeRow(String time) {
+  Widget buildTimeRow(String? time) {
     return Row(
       children: <Widget>[
         Flexible(

@@ -11,17 +11,17 @@ String studentIdProfileModelToJson(StudentIdProfileModel data) =>
     json.encode(data.toJson());
 
 class StudentIdProfileModel {
-  String studentPid;
-  String termYear;
-  String studentLevelCurrent;
-  String collegeCurrent;
-  String ugPrimaryMajorCurrent;
+  String? studentPid;
+  String? termYear;
+  String? studentLevelCurrent;
+  String? collegeCurrent;
+  String? ugPrimaryMajorCurrent;
   dynamic graduatePrimaryMajorCurrent;
-  int athleteCurrentCount;
-  String cardNumber;
-  String barcode;
-  String classificationType;
-  int issueNumber;
+  int? athleteCurrentCount;
+  String? cardNumber;
+  String? barcode;
+  String? classificationType;
+  int? issueNumber;
 
   StudentIdProfileModel({
     this.studentPid,

@@ -1,3 +1,5 @@
+
+
 import 'package:beacon_broadcast/beacon_broadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,8 +13,8 @@ class BeaconView extends StatefulWidget {
 class _BeaconViewState extends State<BeaconView> {
   var _isTransmissionSupported;
   var _isAdvertising = false;
-  var _isAdvertisingSubscription;
-  BeaconBroadcast beaconBroadcast;
+  late var _isAdvertisingSubscription;
+  late BeaconBroadcast beaconBroadcast;
   var beaconUuid = 'null';
 
   @override
@@ -49,10 +51,10 @@ class _BeaconViewState extends State<BeaconView> {
 
   void checkTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    beaconUuid = prefs.get('uuid') ?? "null";
+    beaconUuid = prefs.get('uuid') as String? ?? "null";
     var previousTime = prefs.get('previousTime') ?? DateTime(1990).toString();
     var difference =
-        DateTime.now().difference(DateTime.parse(previousTime)).inSeconds;
+        DateTime.now().difference(DateTime.parse(previousTime as String)).inSeconds;
     print(difference);
     if (difference > 10) {
       changeUUID();

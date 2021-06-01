@@ -1,14 +1,16 @@
+
+
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 
 class NutritionFactsView extends StatelessWidget {
   const NutritionFactsView(
-      {Key key, @required this.data, this.disclaimer, this.disclaimerEmail})
+      {Key? key, required this.data, this.disclaimer, this.disclaimerEmail})
       : super(key: key);
   final MenuItem data;
-  final String disclaimer;
-  final String disclaimerEmail;
+  final String? disclaimer;
+  final String? disclaimerEmail;
   @override
   Widget build(BuildContext context) {
     return ContainerView(child: nutrientWidget(context));
@@ -19,13 +21,13 @@ class NutritionFactsView extends StatelessWidget {
       padding: EdgeInsets.all(2.0),
       child: ListView(
         children: <Widget>[
-          buildTitle(data.name, context),
+          buildTitle(data.name!, context),
           nutrientHeader(
-              context, data.nutrition.calories, data.nutrition.servingSize),
-          nutrientValues(context, nutrientData: data.nutrition.toJson()),
+              context, data.nutrition!.calories, data.nutrition!.servingSize),
+          nutrientValues(context, nutrientData: data.nutrition!.toJson()),
           footerCalories(context, 2000),
           buildText(
-              context, data.nutrition.ingredients, data.nutrition.allergens),
+              context, data.nutrition!.ingredients, data.nutrition!.allergens),
         ],
       ),
     );
@@ -41,7 +43,7 @@ class NutritionFactsView extends StatelessWidget {
     );
   }
 
-  Widget buildText(BuildContext context, ingredients, String allergens) {
+  Widget buildText(BuildContext context, ingredients, String? allergens) {
     return RichText(
       text: TextSpan(
         style: TextStyle(fontSize: 14.0, color: Theme.of(context).accentColor),
@@ -119,7 +121,7 @@ Widget nutrientValues(BuildContext context, {nutrientData}) {
   );
 }
 
-Widget nutrientHeader(BuildContext context, calories, String servingSize) {
+Widget nutrientHeader(BuildContext context, calories, String? servingSize) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -174,9 +176,9 @@ Widget nutrientHeader(BuildContext context, calories, String servingSize) {
 }
 
 Widget nutrientLiner({
-  @required nutrientName,
-  @required qty,
-  @required context,
+  required nutrientName,
+  required qty,
+  required context,
   ptg,
   sub: false,
   showPercent: true,

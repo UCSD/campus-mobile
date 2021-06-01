@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart'
@@ -15,7 +17,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-bool showOnboardingScreen;
+late bool showOnboardingScreen;
 
 bool isFirstRunFlag = false;
 bool executedInitialDeeplinkQuery = false;

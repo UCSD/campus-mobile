@@ -6,7 +6,7 @@ SpotTypeModel spotTypeModelFromJson(String str) =>
 String spotTypeModelToJson(SpotTypeModel data) => json.encode(data.toJson());
 
 class SpotTypeModel {
-  List<Spot> spots;
+  List<Spot>? spots;
 
   SpotTypeModel({
     this.spots,
@@ -21,16 +21,16 @@ class SpotTypeModel {
   Map<String, dynamic> toJson() => {
         "spots": spots == null
             ? null
-            : List<dynamic>.from(spots.map((x) => x.toJson())),
+            : List<dynamic>.from(spots!.map((x) => x.toJson())),
       };
 }
 
 class Spot {
-  String spotKey;
-  String name;
-  String color;
-  String text;
-  String textColor;
+  String? spotKey;
+  String? name;
+  String? color;
+  String? text;
+  String? textColor;
 
   Spot({this.spotKey, this.name, this.color, this.text, this.textColor});
 

@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -19,13 +21,13 @@ class WiFiCard extends StatefulWidget {
 
 class _WiFiCardState extends State<WiFiCard> {
   String cardId = "speed_test";
-  TestStatus cardState;
-  int lastSpeed;
-  bool goodSpeed;
+  TestStatus? cardState;
+  int? lastSpeed;
+  late bool goodSpeed;
   SpeedTestProvider _speedTestProvider = SpeedTestProvider();
-  UserDataProvider _userDataProvider;
+  UserDataProvider? _userDataProvider;
   bool _buttonEnabled = true;
-  Timer buttonTimer;
+  Timer? buttonTimer;
 
   @override
   void initState() {
@@ -43,7 +45,7 @@ class _WiFiCardState extends State<WiFiCard> {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
@@ -69,9 +71,9 @@ class _WiFiCardState extends State<WiFiCard> {
     _speedTestProvider.addListener(() {
       //TODO: Add print statements to verify not reloading
       try {
-        if (_speedTestProvider.onSimulator) {
+        if (_speedTestProvider.onSimulator!) {
           cardState = TestStatus.simulated;
-        } else if (!_speedTestProvider.isUCSDWiFi) {
+        } else if (!_speedTestProvider.isUCSDWiFi!) {
           cardState = TestStatus.unavailable;
         } else if (_speedTestProvider.timeElapsedDownload +
                 _speedTestProvider.timeElapsedUpload >
@@ -135,7 +137,7 @@ class _WiFiCardState extends State<WiFiCard> {
               TextSpan(
                   text: "Testing... ",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Theme.of(context).accentColor,
                     fontSize: 36,
                   )),
               WidgetSpan(
@@ -197,7 +199,7 @@ class _WiFiCardState extends State<WiFiCard> {
             padding: EdgeInsets.all(4.0),
             elevation: 0.0,
             onPressed: () {
-              if (_speedTestProvider.onSimulator) {
+              if (_speedTestProvider.onSimulator!) {
                 setState(() {
                   cardState = TestStatus.simulated;
                 });
@@ -225,7 +227,7 @@ class _WiFiCardState extends State<WiFiCard> {
             onPressed: _buttonEnabled
                 ? () {
                     _speedTestProvider.reportIssue();
-                    return showDialog(
+                    showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
@@ -269,7 +271,7 @@ class _WiFiCardState extends State<WiFiCard> {
           TextSpan(
               text: "Your speed is:  ",
               style: TextStyle(
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
                 fontSize: 36,
               )),
           WidgetSpan(
@@ -279,7 +281,7 @@ class _WiFiCardState extends State<WiFiCard> {
           ),
           TextSpan(
             text:
-                '\n Your download speed was: ${lastSpeed != null ? lastSpeed.toStringAsPrecision(3) : _speedTestProvider.speed.toStringAsPrecision(3)} Mbps \n Your upload speed was: ${_speedTestProvider.uploadSpeed.toStringAsPrecision(3)} Mbps\n',
+                '\n Your download speed was: ${lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3)} Mbps \n Your upload speed was: ${_speedTestProvider.uploadSpeed!.toStringAsPrecision(3)} Mbps\n',
             style: TextStyle(fontSize: 15, color: Colors.grey),
           )
         ])),
@@ -312,7 +314,7 @@ class _WiFiCardState extends State<WiFiCard> {
               onPressed: _buttonEnabled
                   ? () {
                       _speedTestProvider.reportIssue();
-                      return showDialog(
+                      showDialog(
                           context: context,
                           builder: (context) {
                             return AlertDialog(
@@ -409,9 +411,9 @@ class _WiFiCardState extends State<WiFiCard> {
 
 //Image Scaling
 class ScalingUtility {
-  MediaQueryData _queryData;
-  static double horizontalSafeBlock;
-  static double verticalSafeBlock;
+  late MediaQueryData _queryData;
+  static late double horizontalSafeBlock;
+  static double? verticalSafeBlock;
 
   void getCurrentMeasurements(BuildContext context) {
     /// Find screen size
@@ -428,16 +430,16 @@ class ScalingUtility {
 }
 
 class SizeConfig {
-  static MediaQueryData _mediaQueryData;
-  static double screenWidth;
-  static double screenHeight;
-  static double blockSizeHorizontal;
-  static double blockSizeVertical;
+  static late MediaQueryData _mediaQueryData;
+  static late double screenWidth;
+  static late double screenHeight;
+  static double? blockSizeHorizontal;
+  static double? blockSizeVertical;
 
-  static double _safeAreaHorizontal;
-  static double _safeAreaVertical;
-  static double safeBlockHorizontal;
-  static double safeBlockVertical;
+  static late double _safeAreaHorizontal;
+  static late double _safeAreaVertical;
+  static double? safeBlockHorizontal;
+  static double? safeBlockVertical;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);

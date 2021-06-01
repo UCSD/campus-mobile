@@ -11,8 +11,8 @@ String studentIdBarcodeModelToJson(StudentIdBarcodeModel data) =>
     json.encode(data.toJson());
 
 class StudentIdBarcodeModel {
-  String studentId;
-  int barCode;
+  String? studentId;
+  int? barCode;
 
   StudentIdBarcodeModel({
     this.studentId,

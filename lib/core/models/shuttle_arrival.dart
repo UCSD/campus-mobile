@@ -18,11 +18,11 @@ class ArrivingShuttle {
     this.vehicle,
   });
 
-  Pattern pattern;
-  Route route;
-  bool schedulePrediction;
-  int secondsToArrival;
-  Vehicle vehicle;
+  Pattern? pattern;
+  Route? route;
+  bool? schedulePrediction;
+  int? secondsToArrival;
+  Vehicle? vehicle;
 
   String toRawJson() => json.encode(toJson());
 
@@ -41,12 +41,12 @@ class ArrivingShuttle {
       );
 
   Map<String, dynamic> toJson() => {
-        "pattern": pattern == null ? null : pattern.toJson(),
-        "route": route == null ? null : route.toJson(),
+        "pattern": pattern == null ? null : pattern!.toJson(),
+        "route": route == null ? null : route!.toJson(),
         "schedulePrediction":
             schedulePrediction == null ? null : schedulePrediction,
         "secondsToArrival": secondsToArrival == null ? null : secondsToArrival,
-        "vehicle": vehicle == null ? null : vehicle.toJson(),
+        "vehicle": vehicle == null ? null : vehicle!.toJson(),
       };
 }
 
@@ -60,10 +60,10 @@ class Pattern {
     this.shape,
   });
 
-  String color;
+  String? color;
   dynamic direction;
-  int id;
-  String name;
+  int? id;
+  String? name;
   dynamic directionType;
   dynamic shape;
 
@@ -104,16 +104,16 @@ class Route {
     this.textColor,
   });
 
-  String color;
-  int displayOrder;
-  int id;
-  String name;
+  String? color;
+  int? displayOrder;
+  int? id;
+  String? name;
   dynamic customerRouteId;
-  String shortName;
-  String description;
-  String routeType;
+  String? shortName;
+  String? description;
+  String? routeType;
   dynamic url;
-  String textColor;
+  String? textColor;
 
   factory Route.fromRawJson(String str) => Route.fromJson(json.decode(str));
 
@@ -162,17 +162,17 @@ class Vehicle {
     this.shapeDistanceTraveled,
   });
 
-  int capacity;
-  int id;
-  double lat;
-  double lon;
-  String name;
-  double passengerLoad;
-  DateTime lastUpdated;
-  String heading;
-  int speed;
-  double headingDegrees;
-  double shapeDistanceTraveled;
+  int? capacity;
+  int? id;
+  double? lat;
+  double? lon;
+  String? name;
+  double? passengerLoad;
+  DateTime? lastUpdated;
+  String? heading;
+  int? speed;
+  double? headingDegrees;
+  double? shapeDistanceTraveled;
 
   factory Vehicle.fromRawJson(String str) => Vehicle.fromJson(json.decode(str));
 
@@ -208,7 +208,7 @@ class Vehicle {
         "name": name == null ? null : name,
         "passengerLoad": passengerLoad == null ? null : passengerLoad,
         "lastUpdated":
-            lastUpdated == null ? null : lastUpdated.toIso8601String(),
+            lastUpdated == null ? null : lastUpdated!.toIso8601String(),
         "heading": heading == null ? null : heading,
         "speed": speed == null ? null : speed,
         "headingDegrees": headingDegrees == null ? null : headingDegrees,

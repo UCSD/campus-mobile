@@ -1,21 +1,28 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 
 class CardsService {
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
+  DateTime? _lastUpdated;
+  String? _error;
 
-  Map<String, CardsModel> _cardsModel;
+  Map<String, CardsModel>? _cardsModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
 
-  Future<bool> fetchCards(String ucsdAffiliation) async {
+  Future<bool> fetchCards(String? ucsdAffiliation) async {
     _error = null;
     _isLoading = true;
+
+    if (ucsdAffiliation == null)
+      ucsdAffiliation = "";
 
     /// API Manager Service
     try {
@@ -72,8 +79,8 @@ class CardsService {
     }
   }
 
-  String get error => _error;
-  Map<String, CardsModel> get cardsModel => _cardsModel;
+  String? get error => _error;
+  Map<String, CardsModel>? get cardsModel => _cardsModel;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

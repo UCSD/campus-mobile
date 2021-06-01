@@ -10,12 +10,12 @@ WeatherModel weatherModelFromJson(String str) =>
 String weatherModelToJson(WeatherModel data) => json.encode(data.toJson());
 
 class WeatherModel {
-  double latitude;
-  double longitude;
-  String timezone;
-  Weather currentWeather;
-  WeeklyForecast weeklyForecast;
-  int offset;
+  double? latitude;
+  double? longitude;
+  String? timezone;
+  Weather? currentWeather;
+  WeeklyForecast? weeklyForecast;
+  int? offset;
 
   WeatherModel({
     this.latitude,
@@ -39,33 +39,33 @@ class WeatherModel {
         "latitude": latitude,
         "longitude": longitude,
         "timezone": timezone,
-        "currently": currentWeather.toJson(),
-        "daily": weeklyForecast.toJson(),
+        "currently": currentWeather!.toJson(),
+        "daily": weeklyForecast!.toJson(),
         "offset": offset,
       };
 }
 
 class Weather {
-  int time;
-  String summary;
-  String icon;
-  int nearestStormDistance;
-  int nearestStormBearing;
-  int precipIntensity;
-  int precipProbability;
-  String precipType;
-  double temperature;
-  double apparentTemperature;
-  double dewPoint;
-  double humidity;
-  double pressure;
-  double windSpeed;
-  double windGust;
-  int windBearing;
-  double cloudCover;
-  int uvIndex;
-  int visibility;
-  double ozone;
+  int? time;
+  String? summary;
+  String? icon;
+  int? nearestStormDistance;
+  int? nearestStormBearing;
+  int? precipIntensity;
+  int? precipProbability;
+  String? precipType;
+  double? temperature;
+  double? apparentTemperature;
+  double? dewPoint;
+  double? humidity;
+  double? pressure;
+  double? windSpeed;
+  double? windGust;
+  int? windBearing;
+  double? cloudCover;
+  int? uvIndex;
+  int? visibility;
+  double? ozone;
 
   Weather({
     this.time,
@@ -138,9 +138,9 @@ class Weather {
 }
 
 class WeeklyForecast {
-  String summary;
-  String icon;
-  List<Forecast> data;
+  String? summary;
+  String? icon;
+  List<Forecast>? data;
 
   WeeklyForecast({
     this.summary,
@@ -158,50 +158,50 @@ class WeeklyForecast {
   Map<String, dynamic> toJson() => {
         "summary": summary,
         "icon": icon,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
       };
 }
 
 class Forecast {
-  int time;
-  String summary;
-  String icon;
-  int sunriseTime;
-  int sunsetTime;
-  double moonPhase;
-  double precipIntensity;
-  double precipIntensityMax;
-  int precipIntensityMaxTime;
-  double precipProbability;
-  String precipType;
-  double temperatureHigh;
-  int temperatureHighTime;
-  double temperatureLow;
-  int temperatureLowTime;
-  double apparentTemperatureHigh;
-  int apparentTemperatureHighTime;
-  double apparentTemperatureLow;
-  int apparentTemperatureLowTime;
-  double dewPoint;
-  double humidity;
-  double pressure;
-  double windSpeed;
-  double windGust;
-  int windGustTime;
-  int windBearing;
-  double cloudCover;
-  int uvIndex;
-  int uvIndexTime;
-  double visibility;
-  double ozone;
-  double temperatureMin;
-  int temperatureMinTime;
-  double temperatureMax;
-  int temperatureMaxTime;
-  double apparentTemperatureMin;
-  int apparentTemperatureMinTime;
-  double apparentTemperatureMax;
-  int apparentTemperatureMaxTime;
+  int? time;
+  String? summary;
+  String? icon;
+  int? sunriseTime;
+  int? sunsetTime;
+  double? moonPhase;
+  double? precipIntensity;
+  double? precipIntensityMax;
+  int? precipIntensityMaxTime;
+  double? precipProbability;
+  String? precipType;
+  double? temperatureHigh;
+  int? temperatureHighTime;
+  double? temperatureLow;
+  int? temperatureLowTime;
+  double? apparentTemperatureHigh;
+  int? apparentTemperatureHighTime;
+  double? apparentTemperatureLow;
+  int? apparentTemperatureLowTime;
+  double? dewPoint;
+  double? humidity;
+  double? pressure;
+  double? windSpeed;
+  double? windGust;
+  int? windGustTime;
+  int? windBearing;
+  double? cloudCover;
+  int? uvIndex;
+  int? uvIndexTime;
+  double? visibility;
+  double? ozone;
+  double? temperatureMin;
+  int? temperatureMinTime;
+  double? temperatureMax;
+  int? temperatureMaxTime;
+  double? apparentTemperatureMin;
+  int? apparentTemperatureMinTime;
+  double? apparentTemperatureMax;
+  int? apparentTemperatureMaxTime;
 
   Forecast({
     this.time,

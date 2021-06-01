@@ -19,7 +19,7 @@ class AutomaticBluetoothLoggerView extends StatefulWidget {
 
 class _AutomaticBluetoothLoggerViewState
     extends State<AutomaticBluetoothLoggerView> {
-  WayfindingProvider _wayfindingProvider;
+  WayfindingProvider _wayfindingProvider = WayfindingProvider();
 
   @override
   void didChangeDependencies() {
@@ -30,7 +30,7 @@ class _AutomaticBluetoothLoggerViewState
   // List for rendering the ongoing log
   List loggedItems = [];
 
-  _AutomaticBluetoothLoggerViewState();
+   _AutomaticBluetoothLoggerViewState();
 
   // // Set the state when a new scan occurs
   // void initState() {
@@ -119,7 +119,7 @@ class _AutomaticBluetoothLoggerViewState
                   future: checkPermissions(),
                   builder:
                       (BuildContext context, AsyncSnapshot<Text> snapshot) {
-                     return  snapshot.hasData ? snapshot.data : LinearProgressIndicator();
+                     return  snapshot.hasData ? snapshot.data as Widget : LinearProgressIndicator();
                       }),
             ],
           ),

@@ -17,7 +17,7 @@ class AdvancedWayfindingPermission extends StatefulWidget {
 
 class _AdvancedWayfindingPermissionState
     extends State<AdvancedWayfindingPermission> {
-  WayfindingProvider _wayfindingProvider;
+  late WayfindingProvider _wayfindingProvider;
 
   @override
   void didChangeDependencies() {
@@ -92,18 +92,18 @@ class _AdvancedWayfindingPermissionState
                                         BluetoothState.unauthorized ||
                                     streamSnapshot.data as BluetoothState ==
                                         BluetoothState.off) {
-                                  if ((futureSnapshot.data[1] !=
+                                  if (((futureSnapshot.data! as List)[1] !=
                                           PermissionStatus.granted) ||
-                                      !futureSnapshot.data[0]) {
+                                      !(futureSnapshot.data! as List)[0]) {
                                     bluetoothAndLocationMessage();
                                   } else
                                     bluetoothMessage();
                                 } else {
-                                  if (futureSnapshot.data[1] !=
+                                  if ((futureSnapshot.data! as List )[1] !=
                                       PermissionStatus.granted) {
                                     locationPermissionMessage();
                                   }
-                                  if (!futureSnapshot.data[0]) {
+                                  if (!(futureSnapshot.data! as List)[0]) {
                                     devicelocationMessage();
                                   }
                                 }

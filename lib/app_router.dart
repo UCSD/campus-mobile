@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
@@ -94,10 +96,10 @@ class Router {
           return DiningDetailView(data: data);
         });
       case RoutePaths.DiningNutritionView:
-        Map<String, Object> arguments = settings.arguments;
+        Map<String, Object?> arguments = settings.arguments as Map<String, Object?>;
         MenuItem data = arguments['data'] as MenuItem;
-        String disclaimer = arguments['disclaimer'] as String;
-        String disclaimerEmail = arguments['disclaimerEmail'] as String;
+        String? disclaimer = arguments['disclaimer'] as String?;
+        String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
         return MaterialPageRoute(
             builder: (_) => NutritionFactsView(
                   data: data,
