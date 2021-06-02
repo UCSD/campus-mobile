@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
@@ -35,7 +37,7 @@ List<SingleChildWidget> providers = [
   ...dependentServices,
   ...uiConsumableProviders,
 ];
-LocationDataProvider locationProvider;
+LocationDataProvider? locationProvider;
 final FirebaseAnalytics analytics = FirebaseAnalytics();
 final FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
@@ -81,10 +83,11 @@ List<SingleChildWidget> independentServices = [
     },
   ),
   StreamProvider<Coordinates>(
+    initialData: Coordinates(),
     create: (_) {
       print("CreateProvider: Coordinates (LocationDataProvider)");
       locationProvider = LocationDataProvider();
-      return locationProvider.locationStream;
+      return locationProvider!.locationStream;
     },
     lazy: false,
   ),
@@ -111,7 +114,7 @@ List<SingleChildWidget> dependentServices = [
     return diningDataProvider;
   }, update: (_, coordinates, diningDataProvider) {
     print("UpdateProvider: DiningDataProvider");
-    diningDataProvider.coordinates = coordinates;
+    diningDataProvider!.coordinates = coordinates;
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
@@ -120,7 +123,7 @@ List<SingleChildWidget> dependentServices = [
     return mapsDataProvider;
   }, update: (_, coordinates, mapsDataProvider) {
     print("UpdateProvider: MapsDataProvider");
-    mapsDataProvider.coordinates = coordinates;
+    mapsDataProvider!.coordinates = coordinates;
     mapsDataProvider.populateDistances();
     return mapsDataProvider;
   }),
@@ -139,7 +142,7 @@ List<SingleChildWidget> dependentServices = [
       lazy: false,
       update: (_, pushNotificationDataProvider, _userDataProvider) {
         print("UpdateProvider: UserDataProvider");
-        _userDataProvider.pushNotificationDataProvider =
+        _userDataProvider!.pushNotificationDataProvider =
             pushNotificationDataProvider;
         return _userDataProvider;
       }),
@@ -152,17 +155,17 @@ List<SingleChildWidget> dependentServices = [
       lazy: false,
       update: (_, userDataProvider, cardsDataProvider) {
         print("UpdateProvider: CardsDataProvider");
-        cardsDataProvider.userDataProvider = userDataProvider;
+        cardsDataProvider!.userDataProvider = userDataProvider;
         userDataProvider.cardsDataProvider = cardsDataProvider;
         cardsDataProvider
           ..loadSavedData().then((value) {
             // Update available cards
             cardsDataProvider.updateAvailableCards(
-                userDataProvider.authenticationModel.ucsdaffiliation);
+                userDataProvider.authenticationModel!.ucsdaffiliation);
 
             // Student card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel.classifications?.student ??
+                (userDataProvider.userProfileModel!.classifications?.student ??
                     false)) {
               cardsDataProvider.activateStudentCards();
             } else {
@@ -171,7 +174,7 @@ List<SingleChildWidget> dependentServices = [
 
             // Staff card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel.classifications?.staff ??
+                (userDataProvider.userProfileModel!.classifications?.staff ??
                     false)) {
               cardsDataProvider.activateStaffCards();
             } else {
@@ -187,8 +190,8 @@ List<SingleChildWidget> dependentServices = [
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     print("UpdateProvider: ClassScheduleDataProvider");
-    classScheduleDataProvider.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
+    classScheduleDataProvider!.userDataProvider = userDataProvider;
+    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading!) {
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
@@ -200,7 +203,7 @@ List<SingleChildWidget> dependentServices = [
     return proximityAwarenessSingleton;
   }, update: (_, coordinates, userDataProvider, proximityAwarenessSingleton) {
     print("UpdateProvider: AdvancedWayfindingSingleton");
-    proximityAwarenessSingleton.coordinateAndLocation(coordinates, locationProvider);
+    proximityAwarenessSingleton!.coordinateAndLocation(coordinates, locationProvider!);
     proximityAwarenessSingleton.userProvider = userDataProvider;
     return proximityAwarenessSingleton;
   }),
@@ -211,9 +214,9 @@ List<SingleChildWidget> dependentServices = [
     return studentIdDataProvider;
   }, update: (_, userDataProvider, studentIdDataProvider) {
     print("UpdateProvider: StudentIdDataProvider");
-    studentIdDataProvider.userDataProvider = userDataProvider;
+    studentIdDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
+    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading!) {
       studentIdDataProvider.fetchData();
     }
     return studentIdDataProvider;
@@ -225,9 +228,9 @@ List<SingleChildWidget> dependentServices = [
     return employeeIdDataProvider;
   }, update: (_, userDataProvider, employeeIdDataProvider) {
     print("UpdateProvider: EmployeeIdDataProvider");
-    employeeIdDataProvider.userDataProvider = userDataProvider;
+    employeeIdDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) {
+    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading!) {
       employeeIdDataProvider.fetchData();
     }
     return employeeIdDataProvider;
@@ -240,7 +243,7 @@ List<SingleChildWidget> dependentServices = [
     return surveyDataProvider;
   }, update: (_, userDataProvider, surveyDataProvider) {
     print("UpdateProvider: SurveyDataProvider");
-    surveyDataProvider.userDataProvider = userDataProvider;
+    surveyDataProvider!.userDataProvider = userDataProvider;
     return surveyDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ScannerMessageDataProvider>(
@@ -250,9 +253,9 @@ List<SingleChildWidget> dependentServices = [
     return scannerMessageDataProvider;
   }, update: (_, userDataProvider, scannerMessageDataProvider) {
     print("UpdateProvider: ScannerMessageDataProvider");
-    scannerMessageDataProvider.userDataProvider = userDataProvider;
+    scannerMessageDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !scannerMessageDataProvider.isLoading) {
+    if (userDataProvider.isLoggedIn && !scannerMessageDataProvider.isLoading!) {
       scannerMessageDataProvider.fetchData();
     }
     return scannerMessageDataProvider;
@@ -265,7 +268,7 @@ List<SingleChildWidget> dependentServices = [
     return availabilityDataProvider;
   }, update: (_, userDataProvider, availabilityDataProvider) {
     print("UpdateProvider: AvailabilityDataProvider");
-    availabilityDataProvider.userDataProvider = userDataProvider;
+    availabilityDataProvider!.userDataProvider = userDataProvider;
     return availabilityDataProvider;
   }),
   ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
@@ -274,7 +277,7 @@ List<SingleChildWidget> dependentServices = [
     return shuttleDataProvider;
   }, update: (_, coordinates, userDataProvider, shuttleDataProvider) {
     print("UpdateProvider: shuttleDataProvider");
-    shuttleDataProvider.userCoords = coordinates;
+    shuttleDataProvider!.userCoords = coordinates;
     shuttleDataProvider.userDataProvider = userDataProvider;
     shuttleDataProvider.fetchStops(true);
     return shuttleDataProvider;
@@ -285,7 +288,7 @@ List<SingleChildWidget> dependentServices = [
     speedTestProvider.init();
     return speedTestProvider;
   }, update: (_, coordinates, userDataProvider, speedTestProvider) {
-    speedTestProvider.coordinates = coordinates;
+    speedTestProvider!.coordinates = coordinates;
     speedTestProvider.userDataProvider = userDataProvider;
     return speedTestProvider;
   }),
@@ -296,7 +299,7 @@ List<SingleChildWidget> dependentServices = [
     return parkingDataProvider;
   }, update: (_, userDataProvider, parkingDataProvider) {
     print("UpdateProvider: ParkingDataProvider");
-    parkingDataProvider.userDataProvider = userDataProvider;
+    parkingDataProvider!.userDataProvider = userDataProvider;
     parkingDataProvider.fetchParkingData();
     return parkingDataProvider;
   }),
@@ -309,7 +312,7 @@ List<SingleChildWidget> dependentServices = [
     lazy: false,
     update: (_, userDataProvider, messageDataProvider) {
       print("UpdateProvider: MessagesDataProvider");
-      messageDataProvider.userDataProvider = userDataProvider;
+      messageDataProvider!.userDataProvider = userDataProvider;
       messageDataProvider.fetchMessages(true);
       return messageDataProvider;
     },
@@ -323,7 +326,7 @@ List<SingleChildWidget> dependentServices = [
     },
     update: (_, messageDataProvider, freefoodDataProvider) {
       print("UpdateProvider: FreeFoodDataProvider");
-      freefoodDataProvider.messageDataProvider = messageDataProvider;
+      freefoodDataProvider!.messageDataProvider = messageDataProvider;
       freefoodDataProvider.parseMessages();
       return freefoodDataProvider;
     },
@@ -336,7 +339,7 @@ List<SingleChildWidget> dependentServices = [
       return _scannerDataProvider;
     },
     update: (_, _userDataProvider, scannerDataProvider) {
-      scannerDataProvider.userDataProvider = _userDataProvider;
+      scannerDataProvider!.userDataProvider = _userDataProvider;
       scannerDataProvider.initState();
       scannerDataProvider.setDefaultStates();
       return scannerDataProvider;

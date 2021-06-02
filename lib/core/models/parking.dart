@@ -11,10 +11,10 @@ String parkingModelToJson(List<ParkingModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ParkingModel {
-  String locationId;
-  String locationName;
-  String locationContext;
-  String locationProvider;
+  String? locationId;
+  String? locationName;
+  String? locationContext;
+  String? locationProvider;
 
   ParkingModel({
     this.locationId,

@@ -11,9 +11,9 @@ String diningMenuItemsModelToJson(DiningMenuItemsModel data) =>
     json.encode(data.toJson());
 
 class DiningMenuItemsModel {
-  List<MenuItem> menuItems;
-  String disclaimer;
-  String disclaimerEmail;
+  List<MenuItem>? menuItems;
+  String? disclaimer;
+  String? disclaimerEmail;
 
   DiningMenuItemsModel({
     this.menuItems,
@@ -35,20 +35,20 @@ class DiningMenuItemsModel {
   Map<String, dynamic> toJson() => {
         "menuitems": menuItems == null
             ? null
-            : List<dynamic>.from(menuItems.map((x) => x.toJson())),
+            : List<dynamic>.from(menuItems!.map((x) => x.toJson())),
         "disclaimer": disclaimer == null ? null : disclaimer,
         "disclaimerEmail": disclaimerEmail == null ? null : disclaimerEmail,
       };
 }
 
 class MenuItem {
-  String name;
-  String itemId;
-  String station;
-  String price;
+  String? name;
+  String? itemId;
+  String? station;
+  String? price;
   dynamic images;
-  String tags;
-  Nutrition nutrition;
+  String? tags;
+  Nutrition? nutrition;
 
   MenuItem({
     this.name,
@@ -79,33 +79,33 @@ class MenuItem {
         "price": price == null ? null : price,
         "images": images,
         "tags": tags == null ? null : tags,
-        "nutrition": nutrition == null ? null : nutrition.toJson(),
+        "nutrition": nutrition == null ? null : nutrition!.toJson(),
       };
 }
 
 class Nutrition {
-  String servingSize;
-  String calories;
-  String totalFat;
-  String totalFatDv;
-  String saturatedFat;
-  String saturatedFatDv;
-  String transFat;
-  String transFatDv;
-  String cholesterol;
-  String cholesterolDv;
-  String sodium;
-  String sodiumDv;
-  String totalCarbohydrate;
-  String totalCarbohydrateDv;
-  String dietaryFiber;
-  String dietaryFiberDv;
-  String sugar;
-  String sugarDv;
-  String protein;
-  String proteinDv;
-  String ingredients;
-  String allergens;
+  String? servingSize;
+  String? calories;
+  String? totalFat;
+  String? totalFatDv;
+  String? saturatedFat;
+  String? saturatedFatDv;
+  String? transFat;
+  String? transFatDv;
+  String? cholesterol;
+  String? cholesterolDv;
+  String? sodium;
+  String? sodiumDv;
+  String? totalCarbohydrate;
+  String? totalCarbohydrateDv;
+  String? dietaryFiber;
+  String? dietaryFiberDv;
+  String? sugar;
+  String? sugarDv;
+  String? protein;
+  String? proteinDv;
+  String? ingredients;
+  String? allergens;
 
   Nutrition({
     this.servingSize,

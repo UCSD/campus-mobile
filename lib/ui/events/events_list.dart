@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
@@ -8,16 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EventsList extends StatelessWidget {
-  const EventsList({Key key, this.listSize}) : super(key: key);
+  const EventsList({Key? key, this.listSize}) : super(key: key);
 
-  final int listSize;
+  final int? listSize;
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading
-        ? Center(child: CircularProgressIndicator())
+    return Provider.of<EventsDataProvider>(context).isLoading!
+        ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
         : buildEventsList(
-            Provider.of<EventsDataProvider>(context).eventsModels, context);
+            Provider.of<EventsDataProvider>(context).eventsModels!, context);
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
@@ -72,7 +74,7 @@ class EventsList extends StatelessWidget {
       title: Padding(
         padding: const EdgeInsets.symmetric(vertical: 3.0),
         child: Text(
-          data.title,
+          data.title!,
           textAlign: TextAlign.start,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
@@ -94,7 +96,7 @@ class EventsList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  data.description,
+                  data.description!,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,

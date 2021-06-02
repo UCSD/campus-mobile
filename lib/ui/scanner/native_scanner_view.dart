@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
@@ -14,8 +16,8 @@ class ScanditScanner extends StatefulWidget {
 }
 
 class _ScanditScannerState extends State<ScanditScanner> {
-  ScannerDataProvider _scannerDataProvider;
-  UserDataProvider _userDataProvider;
+  late ScannerDataProvider _scannerDataProvider;
+  late UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
   bool hasUpdatedLatestScan = false;
 
@@ -34,7 +36,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
           title: const Text("Scanner"),
         ),
       ),
-      body: !_scannerDataProvider.hasScanned
+      body: !_scannerDataProvider.hasScanned!
           ? renderScanner(context)
           : renderSubmissionView(context),
       floatingActionButton: IconButton(
@@ -55,7 +57,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
               symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
               onScanditCreated: (controller) =>
                   _scannerDataProvider.controller = controller,
-              licenseKey: _scannerDataProvider.licenseKey),
+              licenseKey: _scannerDataProvider.licenseKey!),
           Center(
             child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -65,7 +67,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                   border: Border.all(color: Colors.white),
                 )),
           ),
-          Center(child: Text(_scannerDataProvider.message)),
+          Center(child: Text(_scannerDataProvider.message!)),
         ],
       ));
     } else {
@@ -83,7 +85,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
         children: <Widget>[
           Center(
             child: SizedBox(
-                height: 40, width: 40, child: CircularProgressIndicator()),
+                height: 40, width: 40, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
           ),
           Padding(
             padding: EdgeInsets.only(top: 20.0),
@@ -92,9 +94,9 @@ class _ScanditScannerState extends State<ScanditScanner> {
           ),
         ],
       ));
-    } else if (_scannerDataProvider.successfulSubmission) {
+    } else if (_scannerDataProvider.successfulSubmission!) {
       return (renderSuccessScreen(context));
-    } else if (_scannerDataProvider.didError) {
+    } else if (_scannerDataProvider.didError!) {
       return (renderFailureScreen(context));
     } else {
       return (renderFailureScreen(context));
@@ -110,8 +112,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
             child: (Column(children: <Widget>[
               ClipOval(
                 child: Container(
-                  color: (!_scannerDataProvider.isValidBarcode ||
-                          _scannerDataProvider.isDuplicate)
+                  color: (!_scannerDataProvider.isValidBarcode! ||
+                          _scannerDataProvider.isDuplicate!)
                       ? Colors.orange
                       : Colors.red,
                   height: 75,
@@ -151,7 +153,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                     "Try again",
                     style: TextStyle(
                         fontSize: 18.0,
-                        color: Theme.of(context).textTheme.button.color),
+                        color: Theme.of(context).textTheme.button!.color),
                   ),
                 ),
               ),
@@ -181,7 +183,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
               ),
               Text("Scan sent at: " + scanTime,
                   style: TextStyle(color: Theme.of(context).iconTheme.color)),
-              Text("Scanned value: " + _scannerDataProvider.barcode,
+              Text("Scanned value: " + _scannerDataProvider.barcode!,
                   style: TextStyle(color: Theme.of(context).iconTheme.color)),
             ])),
           ),
@@ -226,10 +228,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Text buildChartText(BuildContext context) {
-    if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
+    if (_userDataProvider.userProfileModel!.classifications?.student ?? false) {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyStudentChart.");
-    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
+    } else if (_userDataProvider.userProfileModel!.classifications?.staff ??
         false) {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyUCSDChart.");
@@ -240,7 +242,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   void updateLatestScan(BuildContext context) {
-    if (_scannerDataProvider.successfulSubmission && !hasUpdatedLatestScan) {
+    if (_scannerDataProvider.successfulSubmission! && !hasUpdatedLatestScan) {
       // to fetch the most recent scan and display timestamp to user to confirm success
       print("updating");
       Provider.of<ScannerMessageDataProvider>(context, listen: false)

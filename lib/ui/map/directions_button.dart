@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +9,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DirectionsButton extends StatelessWidget {
   const DirectionsButton({
-    Key key,
-    @required GoogleMapController mapController,
+    Key? key,
+    required GoogleMapController? mapController,
   })  : _mapController = mapController,
         super(key: key);
 
-  final GoogleMapController _mapController;
+  final GoogleMapController? _mapController;
 
   @override
   Widget build(BuildContext context) {

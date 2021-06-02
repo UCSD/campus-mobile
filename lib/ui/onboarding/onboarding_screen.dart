@@ -1,3 +1,5 @@
+
+
 import 'dart:ui';
 
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -15,17 +17,17 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreen extends State<OnboardingScreen>
     with TickerProviderStateMixin {
   final _controller = PageController();
-  AnimationController _animationController,
+  late AnimationController _animationController,
       _animationController2,
       _animationController3;
-  Animation<Offset> _offsetAnimation, _offsetAnimation2, _offsetAnimation3;
-  double currentIndex = 0;
+  late Animation<Offset> _offsetAnimation, _offsetAnimation2, _offsetAnimation3;
+  double? currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(() {
-      if (_controller.page.round() != currentIndex) {
+      if (_controller.page!.round() != currentIndex) {
         setState(() {
           currentIndex = _controller.page;
         });
@@ -136,7 +138,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
   Widget buildDotIndicator() {
     return DotsIndicator(
       dotsCount: 3,
-      position: currentIndex,
+      position: currentIndex!,
       decorator: DotsDecorator(
           activeColor: ColorPrimary, spacing: EdgeInsets.all(4.0)),
     );

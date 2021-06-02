@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class MapSearchBarPlaceHolder extends StatelessWidget {
   const MapSearchBarPlaceHolder({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -22,13 +24,13 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 9),
-                  child: Provider.of<MapsDataProvider>(context).isLoading
+                  child: Provider.of<MapsDataProvider>(context).isLoading!
                       ? Padding(
                           padding: const EdgeInsets.all(2.5),
                           child: Container(
                               height: 25,
                               width: 25,
-                              child: CircularProgressIndicator()),
+                              child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
                         )
                       : Icon(
                           Icons.search,

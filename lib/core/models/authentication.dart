@@ -17,16 +17,16 @@ String authenticationModelToJson(AuthenticationModel data) =>
 @HiveType(typeId: 1)
 class AuthenticationModel extends HiveObject {
   @HiveField(0)
-  String accessToken;
+  String? accessToken;
   // Deprecated reserved field number - DO NOT REMOVE
   // @HiveField(1)
   // String refreshToken;
   @HiveField(2)
-  String pid;
+  String? pid;
   @HiveField(3)
-  String ucsdaffiliation;
+  String? ucsdaffiliation;
   @HiveField(4)
-  int expiration;
+  int? expiration;
 
   AuthenticationModel({
     this.accessToken,
@@ -53,7 +53,7 @@ class AuthenticationModel extends HiveObject {
       };
 
   /// Checks if the token we got back is expired
-  bool isLoggedIn(DateTime lastUpdated) {
+  bool isLoggedIn(DateTime? lastUpdated) {
     /// User has not logged in previously - isLoggedIn FALSE
     if (lastUpdated == null) {
       return false;
@@ -66,7 +66,7 @@ class AuthenticationModel extends HiveObject {
 
     /// User has expiration and accessToken
     if (DateTime.now()
-        .isBefore(lastUpdated.add(Duration(seconds: expiration)))) {
+        .isBefore(lastUpdated.add(Duration(seconds: expiration!)))) {
       /// Current datetime < expiration datetime - isLoggedIn TRUE
       return true;
     } else {

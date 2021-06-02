@@ -1,3 +1,5 @@
+
+
 import 'dart:io' show Platform;
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -16,24 +18,24 @@ class ScannerDataProvider extends ChangeNotifier {
     _barcodeService = BarcodeService();
   }
 
-  bool _hasScanned;
-  bool hasSubmitted;
-  bool _didError;
-  String _message = '';
+  bool? _hasScanned;
+  bool? hasSubmitted;
+  bool? _didError;
+  String? _message = '';
 
-  String _licenseKey;
-  BarcodeService _barcodeService;
-  UserDataProvider _userDataProvider;
+  String? _licenseKey;
+  late BarcodeService _barcodeService;
+  late UserDataProvider _userDataProvider;
 
-  String _barcode;
-  bool isLoading;
-  bool _isDuplicate;
-  bool _successfulSubmission;
-  bool _isValidBarcode;
-  String errorText;
-  PermissionStatus cameraPermissionsStatus;
-  ScanditController _controller;
-  List<String> scannedCodes = [];
+  String? _barcode;
+  late bool isLoading;
+  bool? _isDuplicate;
+  bool? _successfulSubmission;
+  bool? _isValidBarcode;
+  late String errorText;
+  PermissionStatus? cameraPermissionsStatus;
+  ScanditController? _controller;
+  List<String?> scannedCodes = [];
 
   void initState() {
     if (Platform.isIOS) {
@@ -73,7 +75,7 @@ class ScannerDataProvider extends ChangeNotifier {
   Map<String, dynamic> createUserData() {
     return {
       'barcode': _barcode,
-      'ucsdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation
+      'ucsdaffiliation': _userDataProvider.authenticationModel!.ucsdaffiliation
     };
   }
 
@@ -83,9 +85,9 @@ class ScannerDataProvider extends ChangeNotifier {
     scannedCodes.add(result.data);
     // currently scanning 3 consecutive times
     if (scannedCodes.length < 3) {
-      _controller.resumeBarcodeScanning();
+      _controller!.resumeBarcodeScanning();
     } else {
-      String firstScan = scannedCodes.first;
+      String? firstScan = scannedCodes.first;
       // if all scans are not the same, need to go into error state
       // otherwise, continue to handle normally
       if (scannedCodes.every((element) => element == firstScan)) {
@@ -103,12 +105,12 @@ class ScannerDataProvider extends ChangeNotifier {
 
   Future<void> handleBarcodeResult(BarcodeResult result) async {
     _hasScanned = true;
-    _barcode = result?.data;
+    _barcode = result.data;
     isLoading = true;
 
     try {
-      var accessTokenExpiration =
-          _userDataProvider?.authenticationModel?.expiration;
+      int accessTokenExpiration =
+          _userDataProvider.authenticationModel?.expiration! as int;
       var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
       var timeDiff = accessTokenExpiration - nowTime;
       var tokenExpired = timeDiff <= 0 ? true : false;
@@ -128,7 +130,7 @@ class ScannerDataProvider extends ChangeNotifier {
           var results = await _barcodeService.uploadResults({
             "Content-Type": "application/json",
             'Authorization':
-                'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
           }, {
             'barcode': _barcode
           });
@@ -142,11 +144,11 @@ class ScannerDataProvider extends ChangeNotifier {
             _didError = true;
             isLoading = false;
 
-            if (_barcodeService.error
+            if (_barcodeService.error!
                 .contains(ErrorConstants.duplicateRecord)) {
               errorText = ScannerConstants.duplicateRecord;
               _isDuplicate = true;
-            } else if (_barcodeService.error
+            } else if (_barcodeService.error!
                 .contains(ErrorConstants.invalidMedia)) {
               errorText = ScannerConstants.invalidMedia;
               _isValidBarcode = false;
@@ -176,22 +178,22 @@ class ScannerDataProvider extends ChangeNotifier {
   }
 
   /// Simple setters and getters
-  set controller(ScanditController value) {
+  set controller(ScanditController? value) {
     _controller = value;
   }
 
-  set message(String value) {
+  set message(String? value) {
     _message = value;
   }
 
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
-  String get barcode => _barcode;
-  String get message => _message;
-  bool get didError => _didError;
-  bool get hasScanned => _hasScanned;
-  String get licenseKey => _licenseKey;
-  bool get isDuplicate => _isDuplicate;
-  bool get isValidBarcode => _isValidBarcode;
-  bool get successfulSubmission => _successfulSubmission;
+  String? get barcode => _barcode;
+  String? get message => _message;
+  bool? get didError => _didError;
+  bool? get hasScanned => _hasScanned;
+  String? get licenseKey => _licenseKey;
+  bool? get isDuplicate => _isDuplicate;
+  bool? get isValidBarcode => _isValidBarcode;
+  bool? get successfulSubmission => _successfulSubmission;
 }

@@ -1,3 +1,7 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 
@@ -6,9 +10,9 @@ class EventsService {
       'https://yehduhg5p1.execute-api.us-west-2.amazonaws.com/qa/v1/events/student';
 
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
-  List<EventModel> _data;
+  DateTime? _lastUpdated;
+  String? _error;
+  List<EventModel>? _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
@@ -35,8 +39,8 @@ class EventsService {
     }
   }
 
-  String get error => _error;
-  List<EventModel> get eventsModels => _data;
+  String? get error => _error;
+  List<EventModel>? get eventsModels => _data;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

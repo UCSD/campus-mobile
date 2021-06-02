@@ -94,4 +94,11 @@ else
     exit 1
 fi
 
+# Write release notes
+if [ -n "$FCI_PULL_REQUEST_NUMBER" ]; then
+    echo "$BUILD_ENV Environment Build (PR: $FCI_PULL_REQUEST_NUMBER)" > ./release_notes.txt
+else
+    echo "$BUILD_ENV Environment Build (Branch: $FCI_BRANCH)" > ./release_notes.txt
+fi
+
 echo "End: post-clone.sh"

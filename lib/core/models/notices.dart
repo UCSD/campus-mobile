@@ -11,9 +11,9 @@ String noticesModelToJson(List<NoticesModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class NoticesModel {
-  String title;
-  String imageUrl;
-  String link;
+  String? title;
+  String? imageUrl;
+  String? link;
 
   NoticesModel({
     this.title,
