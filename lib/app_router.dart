@@ -74,8 +74,10 @@ class Router {
         });
       case RoutePaths.NewsDetailView:
         Item newsItem = settings.arguments as Item;
-        return MaterialPageRoute(
-            builder: (_) => NewsDetailView(data: newsItem));
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return NewsDetailView(data: newsItem);
+        });
       case RoutePaths.EventDetailView:
         EventModel data = settings.arguments as EventModel;
         return MaterialPageRoute(builder: (_) {
@@ -113,6 +115,11 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageParkingView();
+        });
+      case RoutePaths.SpotTypesView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return SpotTypesView();
         });
       case RoutePaths.ManageShuttleView:
         return MaterialPageRoute(builder: (_) {
