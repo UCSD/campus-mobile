@@ -9,8 +9,8 @@ Messages messagesFromJson(String str) => Messages.fromJson(json.decode(str));
 String messagesToJson(Messages data) => json.encode(data.toJson());
 
 class Messages {
-  List<MessageElement> messages;
-  int next;
+  List<MessageElement>? messages;
+  int? next;
 
   Messages({this.messages, this.next});
 
@@ -25,7 +25,7 @@ class Messages {
   Map<String, dynamic> toJson() => {
         "messages": messages == null
             ? null
-            : List<dynamic>.from(messages.map((x) => x.toJson())),
+            : List<dynamic>.from(messages!.map((x) => x.toJson())),
         "next": next == null ? null : next
       };
 }
@@ -39,11 +39,11 @@ class MessageElement {
     this.timestamp,
   });
 
-  String sender;
-  Message message;
-  String messageId;
-  Audience audience;
-  int timestamp;
+  String? sender;
+  Message? message;
+  String? messageId;
+  Audience? audience;
+  int? timestamp;
 
   factory MessageElement.fromJson(Map<String, dynamic> json) => MessageElement(
         sender: json["sender"] == null ? null : json["sender"],
@@ -58,9 +58,9 @@ class MessageElement {
 
   Map<String, dynamic> toJson() => {
         "sender": sender == null ? null : sender,
-        "message": message == null ? null : message.toJson(),
+        "message": message == null ? null : message!.toJson(),
         "messageId": messageId == null ? null : messageId,
-        "audience": audience == null ? null : audience.toJson(),
+        "audience": audience == null ? null : audience!.toJson(),
         "timestamp": timestamp == null ? null : timestamp,
       };
 }
@@ -70,7 +70,7 @@ class Audience {
     this.topics,
   });
 
-  List<String> topics;
+  List<String>? topics;
 
   factory Audience.fromJson(Map<String, dynamic> json) => Audience(
         topics: json["topics"] == null
@@ -80,14 +80,14 @@ class Audience {
 
   Map<String, dynamic> toJson() => {
         "topics":
-            topics == null ? null : List<dynamic>.from(topics.map((x) => x)),
+            topics == null ? null : List<dynamic>.from(topics!.map((x) => x)),
       };
 }
 
 class Message {
-  String message;
-  String title;
-  Data data;
+  String? message;
+  String? title;
+  Data? data;
 
   Message({
     this.message,
@@ -104,14 +104,14 @@ class Message {
   Map<String, dynamic> toJson() => {
         "message": message,
         "title": title,
-        "data": data == null ? null : data.toJson(),
+        "data": data == null ? null : data!.toJson(),
       };
 }
 
 class Data {
   Data();
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data();
+  factory Data.fromJson(Map<String, dynamic>? json) => Data();
 
   Map<String, dynamic> toJson() => {};
 }

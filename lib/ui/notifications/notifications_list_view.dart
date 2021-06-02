@@ -21,13 +21,14 @@ class NotificationsListView extends StatelessWidget {
       child: buildListView(context),
       onRefresh: () => Provider.of<MessagesDataProvider>(context, listen: false)
           .fetchMessages(true),
+      color: Theme.of(context).colorScheme.secondary,
     );
   }
 
   Widget buildListView(BuildContext context) {
-    if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
+    if (Provider.of<MessagesDataProvider>(context).messages!.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
-        if (Provider.of<MessagesDataProvider>(context).isLoading) {
+        if (Provider.of<MessagesDataProvider>(context).isLoading!) {
           // empty notifications view until they load in
         } else {
           return ListView.separated(
@@ -55,7 +56,7 @@ class NotificationsListView extends StatelessWidget {
       physics: AlwaysScrollableScrollPhysics(),
       itemBuilder: _buildMessage,
       controller: Provider.of<MessagesDataProvider>(context).scrollController,
-      itemCount: Provider.of<MessagesDataProvider>(context).messages.length,
+      itemCount: Provider.of<MessagesDataProvider>(context).messages!.length,
       separatorBuilder: (BuildContext context, int index) => Divider(),
     );
   }
@@ -82,17 +83,16 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
-    StreamSubscription _sub;
-    _sub = linkStream.listen((String link) async {
+    late StreamSubscription _sub;
+    _sub = linkStream.listen((String? link) async {
       // handling for map query
-      if (link.contains("deeplinking.searchmap")) {
+      if (link!.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);
-        var query = uri.queryParameters['query'];
+        var query = uri.queryParameters['query']!;
         // redirect query to maps tab and search with query
         Provider.of<MapsDataProvider>(context, listen: false)
             .searchBarController
@@ -104,12 +104,11 @@ class NotificationsListView extends StatelessWidget {
         _sub.cancel();
       }
     });
-
   }
 
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages[index];
+        Provider.of<MessagesDataProvider>(context).messages![index]!;
     FreeFoodDataProvider freefoodProvider =
         Provider.of<FreeFoodDataProvider>(context);
 
@@ -117,9 +116,9 @@ class NotificationsListView extends StatelessWidget {
       leading: Icon(Icons.info, color: Colors.grey, size: 30),
       title: Column(
         children: <Widget>[
-          Text(_readTimestamp(data.timestamp),
+          Text(_readTimestamp(data.timestamp!),
               style: TextStyle(fontSize: 10, color: Colors.grey)),
-          Text(data.message.title),
+          Text(data.message!.title!),
           Padding(padding: const EdgeInsets.all(3.5))
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +128,7 @@ class NotificationsListView extends StatelessWidget {
           Align(
             alignment: Alignment.topLeft,
             child: Linkify(
-              text: data.message.message,
+              text: data.message!.message!,
               onOpen: (link) async {
                 try {
                   await launch(link.url, forceSafariVC: true);

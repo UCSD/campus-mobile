@@ -1,3 +1,7 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_barcode.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
@@ -11,8 +15,8 @@ class StudentIdService {
       'https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1';
 
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
+  DateTime? _lastUpdated;
+  String? _error;
   StudentIdBarcodeModel _studentIdBarcodeModel = StudentIdBarcodeModel();
   StudentIdNameModel _studentIdNameModel = StudentIdNameModel();
   StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
@@ -99,11 +103,11 @@ class StudentIdService {
     }
   }
 
-  String get error => _error;
+  String? get error => _error;
   StudentIdBarcodeModel get studentIdBarcodeModel => _studentIdBarcodeModel;
   StudentIdNameModel get studentIdNameModel => _studentIdNameModel;
   StudentIdPhotoModel get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

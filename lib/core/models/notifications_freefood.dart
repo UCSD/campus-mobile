@@ -6,8 +6,8 @@ FreeFoodModel freeFoodModelFromJson(String str) =>
 String freeFoodModelToJson(FreeFoodModel data) => json.encode(data.toJson());
 
 class FreeFoodModel {
-  int statusCode;
-  Body body;
+  int? statusCode;
+  Body? body;
 
   FreeFoodModel({
     this.statusCode,
@@ -21,13 +21,13 @@ class FreeFoodModel {
 
   Map<String, dynamic> toJson() => {
         "statusCode": statusCode,
-        "body": body.toJson(),
+        "body": body!.toJson(),
       };
 }
 
 class Body {
-  int count;
-  int maxCount;
+  int? count;
+  int? maxCount;
 
   Body({this.count, this.maxCount});
 

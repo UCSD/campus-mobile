@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/core/services/news.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +15,15 @@ class NewsDataProvider extends ChangeNotifier {
   }
 
   ///STATES
-  bool _isLoading;
-  DateTime _lastUpdated;
-  String _error;
+  bool? _isLoading;
+  DateTime? _lastUpdated;
+  String? _error;
 
   ///MODELS
-  NewsModel _newsModels;
+  NewsModel? _newsModels;
 
   ///SERVICES
-  NewsService _newsService;
+  late NewsService _newsService;
 
   void fetchNews() async {
     _isLoading = true;
@@ -39,8 +41,8 @@ class NewsDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String get error => _error;
-  DateTime get lastUpdated => _lastUpdated;
-  NewsModel get newsModels => _newsModels;
+  bool? get isLoading => _isLoading;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
+  NewsModel? get newsModels => _newsModels;
 }

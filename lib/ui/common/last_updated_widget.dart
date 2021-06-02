@@ -1,18 +1,20 @@
+
+
 import 'package:flutter/material.dart';
 
 class LastUpdatedWidget extends StatelessWidget {
   const LastUpdatedWidget({
-    Key key,
-    @required this.time,
+    Key? key,
+    required this.time,
   }) : super(key: key);
 
-  final DateTime time;
+  final DateTime? time;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        'Last updated: ' + determineText(time),
+        'Last updated: ' + determineText(time!),
         style: TextStyle(
             color: Colors.grey, fontStyle: FontStyle.italic, fontSize: 16),
       ),

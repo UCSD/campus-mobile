@@ -9,7 +9,7 @@ String scannerMessageModelToJson(ScannerMessageModel data) =>
 class ScannerMessageModel {
   ScannerMessageModel({this.collectionTime});
 
-  String collectionTime;
+  String? collectionTime;
 
   factory ScannerMessageModel.fromJson(Map<String, dynamic> json) =>
       ScannerMessageModel(

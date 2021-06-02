@@ -24,16 +24,16 @@ class EventModel {
     this.location,
   });
 
-  String title;
-  String description;
-  DateTime startDate;
-  DateTime endDate;
-  String imageHQ;
-  String imageThumb;
-  String link;
-  String id;
-  List<String> tags;
-  String location;
+  String? title;
+  String? description;
+  DateTime? startDate;
+  DateTime? endDate;
+  String? imageHQ;
+  String? imageThumb;
+  String? link;
+  String? id;
+  List<String>? tags;
+  String? location;
 
   factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
         title: json["title"] == null ? null : json["title"],
@@ -59,7 +59,7 @@ class EventModel {
         "imageThumb": imageThumb == null ? null : imageThumb,
         "link": link == null ? null : link,
         "id": id == null ? null : id,
-        "tags": tags == null ? null : List<dynamic>.from(tags.map((x) => x)),
+        "tags": tags == null ? null : List<dynamic>.from(tags!.map((x) => x)),
         "location": location == null ? null : location,
       };
 }

@@ -17,10 +17,10 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AuthenticationModel(
-      accessToken: fields[0] as String,
-      pid: fields[2] as String,
-      ucsdaffiliation: fields[3] as String,
-      expiration: fields[4] as int,
+      accessToken: fields[0] as String?,
+      pid: fields[2] as String?,
+      ucsdaffiliation: fields[3] as String?,
+      expiration: fields[4] as int?,
     );
   }
 

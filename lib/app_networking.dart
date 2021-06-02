@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 import 'dart:ui';
 
@@ -84,7 +86,7 @@ class NetworkHelper {
         retries++;
         waitTime = SSO_REFRESH_RETRY_INCREMENT;
         while(retries <= SSO_REFRESH_MAX_RETRIES) {
-          print("SILENTLOGIN: Retrying in ${waitTime} ms...");
+          print("SILENTLOGIN: Retrying in $waitTime ms...");
 
           // wait for the wait time to elapse
           await Future.delayed(Duration(milliseconds: waitTime));
@@ -112,7 +114,7 @@ class NetworkHelper {
   }
 
   Future<dynamic> authorizedPost(
-      String url, Map<String, String> headers, dynamic body) async {
+      String url, Map<String, String>? headers, dynamic body) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = 20000;
     dio.options.receiveTimeout = 20000;

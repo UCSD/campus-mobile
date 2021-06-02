@@ -1,10 +1,14 @@
+
+
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/employee_id.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/employee_id.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -18,13 +22,18 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   String cardId = "employee_id";
   String placeholderPhotoUrl =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/resources/img/placeholderPerson.png";
+  bool isValidId = false;
 
   @override
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
 
+    EmployeeIdModel? employeeModel = Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
+    isValidId = employeeModel != null && (employeeModel.barcode != null) &&
+        (employeeModel.employeePreferredDisplayName != null && employeeModel.employeeId != null);
+
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<EmployeeIdDataProvider>(context, listen: false)
@@ -32,14 +41,59 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
       isLoading: Provider.of<EmployeeIdDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<EmployeeIdDataProvider>(context).error,
-      child: () => buildCardContent(
+      child: () => isValidId ? buildCardContent(
           Provider.of<EmployeeIdDataProvider>(context).employeeIdModel,
-          context),
+          context)
+          :
+          buildErrorCardContent(context)
+      ,
+    );
+  }
+
+  Widget buildErrorCardContent(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 16.0,
+            bottom: 32.0,
+          ),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text.rich(
+                    TextSpan(
+                      text: "Unable to display Employee ID.\n",
+                      children: [
+                        TextSpan(
+                          text: "If the problem persists, contact the "
+                        ),
+                        TextSpan(
+                          text: "ITS Service Desk",
+                          style: TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()..onTap = () {
+                            openLink("https://blink.ucsd.edu/technology/help-desk/index.html");
+                          }
+                        ),
+                        TextSpan(
+                          text: "."
+                        )
+                      ]
+                    ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Widget buildCardContent(
-      EmployeeIdModel employeeIdModel, BuildContext context) {
+      EmployeeIdModel? employeeIdModel, BuildContext context) {
     try {
       if (MediaQuery.of(context).size.width < 600) {
         return Padding(
@@ -55,7 +109,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                     Column(
                       children: <Widget>[
                         Image.network(
-                          employeeIdModel.photo.contains("https")
+                          employeeIdModel!.photo.contains("https")
                               ? employeeIdModel.photo
                               : placeholderPhotoUrl,
                           fit: BoxFit.contain,
@@ -192,7 +246,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
             child: Column(
               children: <Widget>[
                 Image.network(
-                  employeeIdModel.photo.contains("https")
+                  employeeIdModel!.photo.contains("https")
                       ? employeeIdModel.photo
                       : placeholderPhotoUrl,
                   fit: BoxFit.contain,
@@ -295,7 +349,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
 
   /// Pop up barcode
   createAlertDialog(
-      BuildContext context, Column image, String cardNumber, bool rotated) {
+      BuildContext context, Column image, String? cardNumber, bool rotated) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -323,7 +377,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   Column checkForRotation(
-      Column image, BuildContext context, String cardNumber, bool rotated) {
+      Column image, BuildContext context, String? cardNumber, bool rotated) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return returnBarcodeContainer(cardNumber, rotated, context);
     }
@@ -342,7 +396,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
 
   /// Determine barcode to display
   returnBarcodeContainer(
-      String cardNumber, bool rotated, BuildContext context) {
+      String? cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
 
     /// Initialize sizing
@@ -350,7 +404,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     if (rotated) {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
-        data: cardNumber,
+        data: cardNumber!,
         width: ScalingUtility.verticalSafeBlock * 45,
         height: 80,
         style: TextStyle(
@@ -361,7 +415,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     } else {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
-        data: cardNumber,
+        data: cardNumber!,
         width: ScalingUtility.horizontalSafeBlock * 50,
         height: ScalingUtility.verticalSafeBlock * 4.45,
         style: TextStyle(
@@ -438,13 +492,13 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   returnBarcodeContainerTablet(
-      String cardNumber, bool rotated, BuildContext context) {
+      String? cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
     SizeConfig().init(context);
     if (rotated) {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
-        data: cardNumber,
+        data: cardNumber!,
         width: SizeConfig.safeBlockVertical * 60,
         height: 80,
         style: TextStyle(
@@ -455,7 +509,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     } else {
       barcodeWithText = BarcodeWidget(
         barcode: Barcode.codabar(),
-        data: cardNumber,
+        data: cardNumber!,
         width: SizeConfig.safeBlockHorizontal * 20,
         height: 40,
         style: TextStyle(
@@ -595,9 +649,9 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
 
 //Image Scaling
 class ScalingUtility {
-  MediaQueryData _queryData;
-  static double horizontalSafeBlock;
-  static double verticalSafeBlock;
+  late MediaQueryData _queryData;
+  static late double horizontalSafeBlock;
+  static late double verticalSafeBlock;
 
   void getCurrentMeasurements(BuildContext context) {
     /// Find screen size
@@ -614,16 +668,16 @@ class ScalingUtility {
 }
 
 class SizeConfig {
-  static MediaQueryData _mediaQueryData;
-  static double screenWidth;
-  static double screenHeight;
-  static double blockSizeHorizontal;
-  static double blockSizeVertical;
+  static late MediaQueryData _mediaQueryData;
+  static late double screenWidth;
+  static late double screenHeight;
+  static double? blockSizeHorizontal;
+  static double? blockSizeVertical;
 
-  static double _safeAreaHorizontal;
-  static double _safeAreaVertical;
-  static double safeBlockHorizontal;
-  static double safeBlockVertical;
+  static late double _safeAreaHorizontal;
+  static late double _safeAreaVertical;
+  static late double safeBlockHorizontal;
+  static late double safeBlockVertical;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);

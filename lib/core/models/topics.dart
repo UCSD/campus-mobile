@@ -11,8 +11,8 @@ String topicsModelToJson(List<TopicsModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class TopicsModel {
-  String audienceId;
-  List<Topic> topics;
+  String? audienceId;
+  List<Topic>? topics;
 
   TopicsModel({
     this.audienceId,
@@ -30,13 +30,13 @@ class TopicsModel {
         "audienceId": audienceId == null ? null : audienceId,
         "topics": topics == null
             ? null
-            : List<dynamic>.from(topics.map((x) => x.toJson())),
+            : List<dynamic>.from(topics!.map((x) => x.toJson())),
       };
 }
 
 class Topic {
-  String topicId;
-  TopicMetadata topicMetadata;
+  String? topicId;
+  TopicMetadata? topicMetadata;
 
   Topic({
     this.topicId,
@@ -52,13 +52,13 @@ class Topic {
 
   Map<String, dynamic> toJson() => {
         "topicId": topicId == null ? null : topicId,
-        "topicMetadata": topicMetadata == null ? null : topicMetadata.toJson(),
+        "topicMetadata": topicMetadata == null ? null : topicMetadata!.toJson(),
       };
 }
 
 class TopicMetadata {
-  String name;
-  String description;
+  String? name;
+  String? description;
 
   TopicMetadata({
     this.name,

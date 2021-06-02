@@ -1,3 +1,5 @@
+
+
 import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -16,7 +18,7 @@ class AdvancedWayfindingPermission extends StatefulWidget {
 
 class _AdvancedWayfindingPermissionState
     extends State<AdvancedWayfindingPermission> {
-  WayfindingProvider _wayfindingProvider;
+  late WayfindingProvider _wayfindingProvider;
 
   @override
   void didChangeDependencies() {
@@ -136,10 +138,10 @@ class _AdvancedWayfindingPermissionState
                       false;
                     } else {
                       _wayfindingProvider.advancedWayfindingEnabled =
-                      !_wayfindingProvider.advancedWayfindingEnabled;
+                      !_wayfindingProvider.advancedWayfindingEnabled!;
                     }
 
-                    if (!_wayfindingProvider.advancedWayfindingEnabled) {
+                    if (!_wayfindingProvider.advancedWayfindingEnabled!) {
                       _wayfindingProvider.stopScans();
                     }
                     _wayfindingProvider.setAWPreference();
@@ -147,7 +149,7 @@ class _AdvancedWayfindingPermissionState
                 },
                 activeColor: Theme.of(context).buttonColor,
               )
-                  : CircularProgressIndicator();
+                  : CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
             })
       ],
     );

@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
@@ -9,14 +11,14 @@ class NotificationService {
   final String _topicsEndpoint =
       'https://mobile.ucsd.edu/replatform/v1/qa/topics.json';
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
-  List<TopicsModel> _topicsModel;
+  DateTime? _lastUpdated;
+  String? _error;
+  List<TopicsModel>? _topicsModel;
 
   Future<bool> fetchTopics() async {
     print('NotificationService:fetchTopics');
     try {
-      String response = await _networkHelper.fetchData(_topicsEndpoint);
+      String? response = await _networkHelper.fetchData(_topicsEndpoint);
       if (response != null) {
         _topicsModel = topicsModelFromJson(response);
         return true;
@@ -33,7 +35,7 @@ class NotificationService {
   Future<bool> postPushToken(Map<String, String> headers, body) async {
     print('NotificationService:postPushToken');
     try {
-      String response = await _networkHelper.authorizedPost(
+      String? response = await _networkHelper.authorizedPost(
           _endpoint + '/register', headers, body);
       if (response == 'Success') {
         return true;
@@ -52,7 +54,7 @@ class NotificationService {
     print('NotificationService:deletePushToken');
     token = Uri.encodeComponent(token);
     try {
-      String response = await _networkHelper.authorizedDelete(
+      String? response = await _networkHelper.authorizedDelete(
           _endpoint + '/token/' + token, headers);
       if (response == 'Success') {
         return true;
@@ -66,8 +68,8 @@ class NotificationService {
     }
   }
 
-  String get error => _error;
+  String? get error => _error;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
-  List<TopicsModel> get topicsModel => _topicsModel;
+  DateTime? get lastUpdated => _lastUpdated;
+  List<TopicsModel>? get topicsModel => _topicsModel;
 }

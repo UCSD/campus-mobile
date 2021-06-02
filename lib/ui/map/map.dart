@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -15,12 +17,12 @@ import 'package:uni_links2/uni_links.dart';
 class Maps extends StatelessWidget {
   Widget resultsList(BuildContext context) {
     if (Provider.of<MapsDataProvider>(context).markers.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       });
       return MoreResultsList();
-    } else if (Provider.of<MapsDataProvider>(context).noResults) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    } else if (Provider.of<MapsDataProvider>(context).noResults!) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
           ..showSnackBar(
@@ -55,12 +57,12 @@ class Maps extends StatelessWidget {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
-    StreamSubscription _sub;
-    _sub = linkStream.listen((String link) async {
+    late StreamSubscription _sub;
+    _sub = linkStream.listen((String? link) async {
       // handling for map query
-      if (link.contains("deeplinking.searchmap")) {
+      if (link!.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);
-        var query = uri.queryParameters['query'];
+        var query = uri.queryParameters['query']!;
         // redirect query to maps tab and search with query
         Provider.of<MapsDataProvider>(context, listen: false)
             .searchBarController
