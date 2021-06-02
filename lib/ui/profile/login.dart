@@ -1,6 +1,5 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +35,9 @@ class _LoginState extends State<Login> {
 
     return Container(
         constraints: BoxConstraints(maxWidth: 100, maxHeight: 100),
-        child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)));
+        child: Center(
+            child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary)));
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
@@ -96,8 +97,18 @@ class _LoginState extends State<Login> {
             TextField(
               decoration: InputDecoration(
                 hintText: 'UCSD Email',
+                hintStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 border: OutlineInputBorder(),
+                focusedBorder: new OutlineInputBorder(
+                  borderSide: new BorderSide(
+                      color: Theme.of(context).colorScheme.secondary),
+                ),
                 labelText: 'UCSD Email',
+                labelStyle: TextStyle(
+                  color: ucLabelColor,
+                ),
               ),
               keyboardType: TextInputType.emailAddress,
               controller: _emailTextFieldController,
@@ -106,6 +117,9 @@ class _LoginState extends State<Login> {
             TextField(
               decoration: InputDecoration(
                 hintText: 'Password',
+                hintStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 suffixIcon: IconButton(
                   icon: Icon(
                     // Based on passwordObscured state choose the icon
@@ -115,7 +129,14 @@ class _LoginState extends State<Login> {
                   onPressed: () => _toggle(),
                 ),
                 border: OutlineInputBorder(),
+                focusedBorder: new OutlineInputBorder(
+                  borderSide: new BorderSide(
+                      color: Theme.of(context).colorScheme.secondary),
+                ),
                 labelText: 'Password',
+                labelStyle: TextStyle(
+                  color: ucLabelColor,
+                ),
               ),
               obscureText: _passwordObscured,
               controller: _passwordTextFieldController,
