@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -23,6 +21,7 @@ class NotificationsListView extends StatelessWidget {
       child: buildListView(context),
       onRefresh: () => Provider.of<MessagesDataProvider>(context, listen: false)
           .fetchMessages(true),
+      color: Theme.of(context).colorScheme.secondary,
     );
   }
 
@@ -84,7 +83,6 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
@@ -106,7 +104,6 @@ class NotificationsListView extends StatelessWidget {
         _sub.cancel();
       }
     });
-
   }
 
   Widget _buildMessage(BuildContext context, int index) {
