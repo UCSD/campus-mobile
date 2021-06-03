@@ -1,6 +1,6 @@
 class Data {
-  int id;
-  Object resp;
+  int? id;
+  Object? resp;
   Data({this.id, this.resp});
 
   Map<String, dynamic> toJson() {

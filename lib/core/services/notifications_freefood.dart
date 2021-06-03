@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
 
@@ -6,9 +8,9 @@ class FreeFoodService {
       'https://api-qa.ucsd.edu:8243/campusevents/1.0.0/';
 
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
-  FreeFoodModel _data;
+  DateTime? _lastUpdated;
+  String? _error;
+  FreeFoodModel? _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
@@ -124,8 +126,8 @@ class FreeFoodService {
   }
 
   // getters
-  String get error => _error;
-  FreeFoodModel get freeFoodModel => _data;
+  String? get error => _error;
+  FreeFoodModel? get freeFoodModel => _data;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

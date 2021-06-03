@@ -1,3 +1,7 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -5,8 +9,8 @@ import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 class ShuttleService {
   ShuttleService();
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
+  DateTime? _lastUpdated;
+  String? _error;
   List<ShuttleStopModel> _data = [];
 
   /// add state related things for view model here
@@ -59,6 +63,6 @@ class ShuttleService {
   }
 
   bool get isLoading => _isLoading;
-  String get error => _error;
-  DateTime get lastUpdated => _lastUpdated;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
 }

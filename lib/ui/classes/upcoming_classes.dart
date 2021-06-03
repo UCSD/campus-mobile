@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +11,13 @@ class UpcomingCoursesList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<SectionData> data =
         Provider.of<ClassScheduleDataProvider>(context).upcomingCourses;
-    int selectedCourseIndex =
+    int? selectedCourseIndex =
         Provider.of<ClassScheduleDataProvider>(context).selectedCourse;
     return buildListOfCourses(data, selectedCourseIndex, context);
   }
 
   Widget buildListOfCourses(
-      List<SectionData> data, int selectedCourse, BuildContext context) {
+      List<SectionData> data, int? selectedCourse, BuildContext context) {
     List<Widget> listOfCourses = List.generate(data.length, (int index) {
       return buildTile(index, selectedCourse, data[index], context);
     });
@@ -29,7 +31,7 @@ class UpcomingCoursesList extends StatelessWidget {
   }
 
   Widget buildTile(
-      int index, int selectedCourse, SectionData data, BuildContext context) {
+      int index, int? selectedCourse, SectionData data, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 4.0, right: 8.0),
       child: Container(
@@ -57,13 +59,13 @@ class UpcomingCoursesList extends StatelessWidget {
 
   Widget buildClassTimeText(SectionData sectionData, BuildContext context) {
     return Text(
-      sectionData.days + ' @ ' + getStartTime(sectionData.time, context),
+      sectionData.days! + ' @ ' + getStartTime(sectionData.time!, context),
     );
   }
 
   Widget buildClassTitle(SectionData sectionData) {
     return Text(
-      sectionData.subjectCode + ' ' + sectionData.courseCode,
+      sectionData.subjectCode! + ' ' + sectionData.courseCode!,
       style: TextStyle(fontWeight: FontWeight.bold),
     );
   }

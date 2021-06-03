@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart'
@@ -15,7 +17,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-bool showOnboardingScreen;
+late bool showOnboardingScreen;
 
 bool isFirstRunFlag = false;
 bool executedInitialDeeplinkQuery = false;
@@ -66,31 +68,38 @@ clearHiveStorage() async {
 class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    final ThemeData theme = ThemeData(
+      primarySwatch: ColorPrimary,
+      primaryColor: lightPrimaryColor,
+      brightness: Brightness.light,
+      buttonColor: lightButtonColor,
+      textTheme: lightThemeText,
+      iconTheme: lightIconTheme,
+      appBarTheme: lightAppBarTheme,
+    );
+
+    final ThemeData darkTheme = ThemeData(
+      primarySwatch: ColorPrimary,
+      primaryColor: darkPrimaryColor,
+      brightness: Brightness.dark,
+      buttonColor: darkButtonColor,
+      textTheme: darkThemeText,
+      iconTheme: darkIconTheme,
+      appBarTheme: darkAppBarTheme,
+      unselectedWidgetColor: darkAccentColor,
+    );
+
     return MultiProvider(
       providers: providers,
       child: GetMaterialApp(
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
-        theme: ThemeData(
-          primarySwatch: ColorPrimary,
-          primaryColor: lightPrimaryColor,
-          accentColor: darkAccentColor,
-          brightness: Brightness.light,
-          buttonColor: lightButtonColor,
-          textTheme: lightThemeText,
-          iconTheme: lightIconTheme,
-          appBarTheme: lightAppBarTheme,
+        theme: theme.copyWith(
+          colorScheme: theme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
-        darkTheme: ThemeData(
-          primarySwatch: ColorPrimary,
-          primaryColor: darkPrimaryColor,
-          accentColor: lightAccentColor,
-          brightness: Brightness.dark,
-          buttonColor: darkButtonColor,
-          textTheme: darkThemeText,
-          iconTheme: darkIconTheme,
-          appBarTheme: darkAppBarTheme,
-          unselectedWidgetColor: darkAccentColor,
+        darkTheme: darkTheme.copyWith(
+          colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
         initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingInitial

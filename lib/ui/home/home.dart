@@ -46,25 +46,25 @@ class _HomeState extends State<Home> {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
     // currently, this method handles executing custom map query
-    StreamSubscription _sub;
+    late StreamSubscription _sub;
 
     // Used to handle links on cold app start
-    String initialLink = await getInitialLink();
+    String? initialLink = await getInitialLink();
     if (!executedInitialDeeplinkQuery &&
         initialLink != null &&
         initialLink.contains("deeplinking.searchmap")) {
       var uri = Uri.dataFromString(initialLink);
-      var query = uri.queryParameters['query'];
+      var query = uri.queryParameters['query']!;
       // redirect query to maps tab and search with query
       executeQuery(context, query);
     }
 
     // used to handle links while app is in foreground/background
-    _sub = linkStream.listen((String link) async {
+    _sub = linkStream.listen((String? link) async {
       // handling for map query
-      if (link.contains("deeplinking.searchmap")) {
+      if (link!.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);
-        var query = uri.queryParameters['query'];
+        var query = uri.queryParameters['query']!;
         // redirect query to maps tab and search with query
         executeQuery(context, query);
         // received deeplink, cancel stream to prevent memory leaks
@@ -100,9 +100,9 @@ class _HomeState extends State<Home> {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> orderedCards =
-        getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder);
+        getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder!);
     List<Widget> noticesCards = getNoticesCardsList(
-        Provider.of<NoticesDataProvider>(context).noticesModel);
+        Provider.of<NoticesDataProvider>(context).noticesModel!);
 
     return noticesCards + orderedCards;
   }
@@ -117,11 +117,11 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = [];
-    Map<String, CardsModel> webCards =
+    Map<String, CardsModel?>? webCards =
         Provider.of<CardsDataProvider>(context, listen: false).webCards;
 
     for (String card in order) {
-      if (!webCards.containsKey(card)) {
+      if (!webCards!.containsKey(card)) {
         switch (card) {
           case 'NativeScanner':
             orderedCards.insert(0, NativeScannerCard());
@@ -175,10 +175,10 @@ class _HomeState extends State<Home> {
       } else {
         // dynamically insert webCards into the list
         orderedCards.add(WebViewContainer(
-          titleText: webCards[card].titleText,
-          initialUrl: webCards[card].initialURL,
+          titleText: webCards[card]!.titleText,
+          initialUrl: webCards[card]!.initialURL,
           cardId: card,
-          requireAuth: webCards[card].requireAuth,
+          requireAuth: webCards[card]!.requireAuth,
         ));
       }
     }
@@ -189,7 +189,7 @@ class _HomeState extends State<Home> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (prefs.containsKey("advancedWayfindingEnabled") &&
-        prefs.getBool("advancedWayfindingEnabled")) {
+        prefs.getBool("advancedWayfindingEnabled")!) {
       WayfindingProvider bluetoothSingleton = WayfindingProvider();
       bluetoothSingleton.advancedWayfindingEnabled =
           prefs.getBool("advancedWayfindingEnabled");
@@ -199,7 +199,7 @@ class _HomeState extends State<Home> {
           bluetoothSingleton.userDataProvider =
               Provider.of<UserDataProvider>(context, listen: false);
         }
-        if (bluetoothSingleton.advancedWayfindingEnabled) {
+        if (bluetoothSingleton.advancedWayfindingEnabled!) {
           bluetoothSingleton.init();
         }
       }

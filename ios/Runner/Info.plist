@@ -57,6 +57,8 @@
 	<string></string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allowing location access allows cards and map search to display information relevant to your location.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allowing location access allows cards and map search to display information relevant to your location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allowing location access while using the app allows cards and map search to display information relevant to your location.</string>
 	<key>UIBackgroundModes</key>

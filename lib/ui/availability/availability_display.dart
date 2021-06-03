@@ -1,10 +1,12 @@
+
+
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityDisplay extends StatelessWidget {
   const AvailabilityDisplay({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final AvailabilityModel model;
@@ -24,21 +26,21 @@ class AvailabilityDisplay extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 18),
       child: ListTile(
           title: Text(
-            model.locationName,
+            model.locationName!,
             style: TextStyle(fontSize: 17),
           ),
           contentPadding: EdgeInsets.all(0),
           subtitle: Row(
             children: <Widget>[
               Text(
-                model.isOpen ? "Open" : "Closed",
+                model.isOpen! ? "Open" : "Closed",
               ),
               Container(
                 width: 12,
                 height: 12,
                 margin: EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: model.isOpen ? Colors.green : Colors.red,
+                  color: model.isOpen! ? Colors.green : Colors.red,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -50,11 +52,11 @@ class AvailabilityDisplay extends StatelessWidget {
   Widget buildAvailabilityBars(BuildContext context) {
     List<Widget> locations = [];
 
-    if (model.subLocations.isNotEmpty) {
-      for (AvailabilityModel subLocation in model.subLocations) {
+    if (model.subLocations!.isNotEmpty) {
+      for (AvailabilityModel subLocation in model.subLocations!) {
         locations.add(
           ListTile(
-              title: Text(subLocation.locationName,
+              title: Text(subLocation.locationName!,
                   style: TextStyle(
                     fontSize: 17,
                   )),
@@ -76,7 +78,7 @@ class AvailabilityDisplay extends StatelessWidget {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: LinearProgressIndicator(
-                            value: percentAvailability(subLocation),
+                            value: percentAvailability(subLocation) as double?,
                             backgroundColor: Colors.grey[200],
                             valueColor: AlwaysStoppedAnimation<Color>(
                                 setIndicatorColor(
@@ -105,7 +107,7 @@ class AvailabilityDisplay extends StatelessWidget {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: LinearProgressIndicator(
-                        value: percentAvailability(model),
+                        value: percentAvailability(model) as double?,
                         backgroundColor: Colors.grey[200],
                         valueColor: AlwaysStoppedAnimation<Color>(
                           setIndicatorColor(percentAvailability(model)),
@@ -127,8 +129,8 @@ class AvailabilityDisplay extends StatelessWidget {
   num percentAvailability(AvailabilityModel location) {
     num percentAvailable = 0.0;
 
-    if (location.isOpen) {
-      percentAvailable = 1 - location.percent;
+    if (location.isOpen!) {
+      percentAvailable = 1 - location.percent!;
     }
 
     return percentAvailable;

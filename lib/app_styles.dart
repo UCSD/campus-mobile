@@ -103,6 +103,9 @@ const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
 const Color lightAccentColor = Color(0xFFFFFFFF);
 const Color darkAccentColor = Color(0xFF333333);
 
+// Universal color for themes
+const Color ucLabelColor = Color(0xFF777777);
+
 const debugHeader = TextStyle(color: lightTextColor, fontSize: 14.0);
 const debugRow = TextStyle(color: lightTextColor, fontSize: 12.0);
 

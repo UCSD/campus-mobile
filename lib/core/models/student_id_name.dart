@@ -11,12 +11,12 @@ String studentIdNameModelToJson(StudentIdNameModel data) =>
     json.encode(data.toJson());
 
 class StudentIdNameModel {
-  String studentId;
-  String firstName;
-  String middleName;
-  String lastName;
-  String lastUpdatedBy;
-  int internalId;
+  String? studentId;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? lastUpdatedBy;
+  int? internalId;
   dynamic lastUpdatedDate;
 
   StudentIdNameModel({

@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,7 @@ class CMAppBar extends StatelessWidget {
   CMAppBar({
     this.title,
   });
-  final String title;
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +25,15 @@ class CMAppBar extends StatelessWidget {
                 fit: BoxFit.contain,
                 height: 28,
               )
-            : Text(title),
+            : Text(title!),
       ),
     );
   }
 }
 
 class CustomAppBar extends ChangeNotifier {
-  CMAppBar appBar;
-  String title;
+  late CMAppBar appBar;
+  String? title;
   CustomAppBar() {
     makeAppBar();
   }
@@ -41,7 +43,7 @@ class CustomAppBar extends ChangeNotifier {
     );
   }
 
-  changeTitle(String newTitle) {
+  changeTitle(String? newTitle) {
     title = RouteTitles.titleMap[newTitle];
     makeAppBar();
   }

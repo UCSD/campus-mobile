@@ -1,20 +1,20 @@
 class WayfindingConstantsModel {
-  int qualifyingDevices;
-  int qualifiedDevicesThreshold;
-  int distanceThreshold;
-  int dwellTimeThreshold;
-  int scanIntervalAllowance;
-  int backgroundScanInterval;
-  int deletionInterval;
-  int scanDuration;
-  int scanWaitTime;
-  int currentDwellTime;
-  double milesFromPC;
+  int? qualifyingDevices;
+  int? qualifiedDevicesThreshold;
+  int? distanceThreshold;
+  int? dwellTimeThreshold;
+  int? scanIntervalAllowance;
+  int? backgroundScanInterval;
+  int? deletionInterval;
+  int? scanDuration;
+  int? scanWaitTime;
+  int? currentDwellTime;
+  double? milesFromPC;
   final double pcLongitude = -117.237006;
   final double pcLatitude = 32.880006;
-  double userDistanceFromPriceCenter;
-  List<String> allowableDevices;
-  Map<String, dynamic> deviceTypes;
+  double? userDistanceFromPriceCenter;
+  List<String>? allowableDevices;
+  Map<String, dynamic>? deviceTypes;
 
   WayfindingConstantsModel(
       {this.allowableDevices,

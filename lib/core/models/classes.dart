@@ -11,8 +11,8 @@ String classScheduleModelToJson(ClassScheduleModel data) =>
     json.encode(data.toJson());
 
 class ClassScheduleModel {
-  Metadata metadata;
-  List<ClassData> data;
+  Metadata? metadata;
+  List<ClassData>? data;
 
   ClassScheduleModel({
     this.metadata,
@@ -30,25 +30,25 @@ class ClassScheduleModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "metadata": metadata == null ? null : metadata.toJson(),
+        "metadata": metadata == null ? null : metadata!.toJson(),
         "data": data == null
             ? null
-            : List<dynamic>.from(data.map((x) => x.toJson())),
+            : List<dynamic>.from(data!.map((x) => x.toJson())),
       };
 }
 
 class ClassData {
-  String termCode;
-  String subjectCode;
-  String courseCode;
-  double units;
-  String courseLevel;
-  String gradeOption;
-  String grade;
-  String courseTitle;
-  String enrollmentStatus;
-  String repeatCode;
-  List<SectionData> sectionData;
+  String? termCode;
+  String? subjectCode;
+  String? courseCode;
+  double? units;
+  String? courseLevel;
+  String? gradeOption;
+  String? grade;
+  String? courseTitle;
+  String? enrollmentStatus;
+  String? repeatCode;
+  List<SectionData>? sectionData;
 
   ClassData({
     this.termCode,
@@ -96,25 +96,25 @@ class ClassData {
         "repeat_code": repeatCode == null ? null : repeatCode,
         "section_data": sectionData == null
             ? null
-            : List<dynamic>.from(sectionData.map((x) => x.toJson())),
+            : List<dynamic>.from(sectionData!.map((x) => x.toJson())),
       };
 }
 
 class SectionData {
-  String section;
-  String meetingType;
-  String time;
-  String days;
-  String date;
-  String building;
-  String room;
-  String instructorName;
-  String specialMtgCode;
-  String subjectCode;
-  String courseCode;
-  String courseTitle;
-  String gradeOption;
-  String enrollStatus;
+  String? section;
+  String? meetingType;
+  String? time;
+  String? days;
+  String? date;
+  String? building;
+  String? room;
+  String? instructorName;
+  String? specialMtgCode;
+  String? subjectCode;
+  String? courseCode;
+  String? courseTitle;
+  late String gradeOption;
+  String? enrollStatus;
 
   SectionData({
     this.section,
@@ -162,7 +162,7 @@ class SectionData {
 class Metadata {
   Metadata();
 
-  factory Metadata.fromJson(Map<String, dynamic> json) => Metadata();
+  factory Metadata.fromJson(Map<String, dynamic>? json) => Metadata();
 
   Map<String, dynamic> toJson() => {};
 }

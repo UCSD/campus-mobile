@@ -1,14 +1,16 @@
+
+
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FreeFoodNotification extends StatefulWidget {
   /// required parameters
-  final String messageId;
+  final String? messageId;
 
   const FreeFoodNotification({
-    Key key,
-    @required this.messageId,
+    Key? key,
+    required this.messageId,
   }) : super(key: key);
 
   @override
@@ -20,8 +22,8 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
     this.messageId = messageId;
   }
 
-  FreeFoodDataProvider _freeFoodDataProvider;
-  String messageId;
+  late FreeFoodDataProvider _freeFoodDataProvider;
+  String? messageId;
 
   bool _isLoading = false;
   bool _isGoing = false;
@@ -34,7 +36,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
     super.didChangeDependencies();
     _freeFoodDataProvider = Provider.of<FreeFoodDataProvider>(context);
     _isLoading = _freeFoodDataProvider.isLoading(messageId);
-    _isGoing = _freeFoodDataProvider.registeredEvents.contains(messageId);
+    _isGoing = _freeFoodDataProvider.registeredEvents!.contains(messageId);
     if (_isGoing) {
       _buttonColor = Colors.green;
       _borderColor = Colors.green;
@@ -118,6 +120,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                     height: 12,
                     width: 12,
                     child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.secondary,
                       strokeWidth: 1.5,
                     )))
             : Material(
@@ -139,7 +142,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                                 checkColor: Colors.green,
                                 activeColor: Colors.white,
                                 value: _isGoing,
-                                onChanged: (bool val) {
+                                onChanged: (bool? val) {
                                   _toggleGoing();
                                 },
                               ))),
@@ -156,12 +159,12 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
         _textColor = Color(0xFF034161);
-        _freeFoodDataProvider.decrementCount(messageId);
+        _freeFoodDataProvider.decrementCount(messageId!);
       } else {
         _buttonColor = Colors.green;
         _borderColor = Colors.green;
         _textColor = Colors.white;
-        _freeFoodDataProvider.incrementCount(messageId);
+        _freeFoodDataProvider.incrementCount(messageId!);
       }
       _isGoing = !_isGoing;
     });

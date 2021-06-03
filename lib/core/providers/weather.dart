@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/weather.dart';
 import 'package:campus_mobile_experimental/core/services/weather.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +15,15 @@ class WeatherDataProvider extends ChangeNotifier {
   }
 
   ///STATES
-  bool _isLoading;
-  DateTime _lastUpdated;
-  String _error;
+  bool? _isLoading;
+  DateTime? _lastUpdated;
+  String? _error;
 
   ///MODELS
-  WeatherModel _weatherModel;
+  WeatherModel? _weatherModel;
 
   ///SERVICES
-  WeatherService _weatherService;
+  late WeatherService _weatherService;
 
   void fetchWeather() async {
     _isLoading = true;
@@ -39,8 +41,8 @@ class WeatherDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String get error => _error;
-  DateTime get lastUpdated => _lastUpdated;
-  WeatherModel get weatherModel => _weatherModel;
+  bool? get isLoading => _isLoading;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
+  WeatherModel? get weatherModel => _weatherModel;
 }

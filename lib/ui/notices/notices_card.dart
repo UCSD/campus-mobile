@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
@@ -6,8 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NoticesCard extends StatelessWidget {
   const NoticesCard({
-    Key key,
-    @required this.notice,
+    Key? key,
+    required this.notice,
   }) : super(key: key);
 
   final NoticesModel notice;
@@ -24,7 +26,7 @@ class NoticesCard extends StatelessWidget {
   Widget buildBannerView(NoticesModel notice) {
     return GestureDetector(
         onTap: () {
-          openLink(notice.link);
+          openLink(notice.link!);
         },
         child: ImageLoader(
           url: notice.imageUrl,

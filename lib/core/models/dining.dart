@@ -13,22 +13,22 @@ String diningModelToJson(List<DiningModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class DiningModel {
-  String id;
-  String name;
-  String description;
-  String location;
-  String address;
-  String tel;
-  Meals meals;
-  String persistentMenu;
-  List<String> paymentOptions;
-  List<Image> images;
-  Coordinates coordinates;
-  RegularHours regularHours;
-  List<SpecialHour> specialHours;
-  String url;
-  String menuWebsite;
-  double distance;
+  String? id;
+  String? name;
+  String? description;
+  String? location;
+  String? address;
+  String? tel;
+  Meals? meals;
+  String? persistentMenu;
+  List<String>? paymentOptions;
+  List<Image>? images;
+  Coordinates? coordinates;
+  RegularHours? regularHours;
+  List<SpecialHour>? specialHours;
+  String? url;
+  String? menuWebsite;
+  double? distance;
 
   DiningModel({
     this.id,
@@ -85,19 +85,19 @@ class DiningModel {
         "location": location == null ? null : location,
         "address": address == null ? null : address,
         "tel": tel == null ? null : tel,
-        "meals": meals == null ? null : mealsValues.reverse[meals],
+        "meals": meals == null ? null : mealsValues.reverse![meals!],
         "persistentMenu": persistentMenu == null ? null : persistentMenu,
         "paymentOptions": paymentOptions == null
             ? null
-            : List<dynamic>.from(paymentOptions.map((x) => x)),
+            : List<dynamic>.from(paymentOptions!.map((x) => x)),
         "images": images == null
             ? null
-            : List<dynamic>.from(images.map((x) => x.toJson())),
-        "coords": coordinates == null ? null : coordinates.toJson(),
-        "regularHours": regularHours == null ? null : regularHours.toJson(),
+            : List<dynamic>.from(images!.map((x) => x.toJson())),
+        "coords": coordinates == null ? null : coordinates!.toJson(),
+        "regularHours": regularHours == null ? null : regularHours!.toJson(),
         "specialHours": specialHours == null
             ? null
-            : List<dynamic>.from(specialHours.map((x) => x.toJson())),
+            : List<dynamic>.from(specialHours!.map((x) => x.toJson())),
         "url": url == null ? null : url,
         "menuWebsite": menuWebsite == null ? null : menuWebsite,
         "distance": distance == null ? null : distance,
@@ -105,9 +105,9 @@ class DiningModel {
 }
 
 class Image {
-  String small;
-  String large;
-  String caption;
+  String? small;
+  String? large;
+  String? caption;
 
   Image({
     this.small,
@@ -136,13 +136,13 @@ final mealsValues = EnumValues({
 });
 
 class RegularHours {
-  String mon;
-  String tue;
-  String wed;
-  String thu;
-  String fri;
-  String sat;
-  String sun;
+  String? mon;
+  String? tue;
+  String? wed;
+  String? thu;
+  String? fri;
+  String? sat;
+  String? sun;
 
   RegularHours({
     this.mon,
@@ -176,8 +176,8 @@ class RegularHours {
 }
 
 class SpecialHour {
-  String title;
-  String hours;
+  String? title;
+  String? hours;
 
   SpecialHour({
     this.title,
@@ -197,11 +197,11 @@ class SpecialHour {
 
 class EnumValues<T> {
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<T, String>? reverseMap;
 
   EnumValues(this.map);
 
-  Map<T, String> get reverse {
+  Map<T, String>? get reverse {
     if (reverseMap == null) {
       reverseMap = map.map((k, v) => new MapEntry(v, k));
     }

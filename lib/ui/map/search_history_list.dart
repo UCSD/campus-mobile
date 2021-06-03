@@ -1,10 +1,12 @@
+
+
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchHistoryList extends StatelessWidget {
   const SearchHistoryList({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

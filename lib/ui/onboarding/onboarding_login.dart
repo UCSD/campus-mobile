@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -14,7 +16,7 @@ class OnboardingLogin extends StatefulWidget {
 class _OnboardingLoginState extends State<OnboardingLogin> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
-  UserDataProvider _userDataProvider;
+  late UserDataProvider _userDataProvider;
   bool _passwordObscured = true;
 
   @override
@@ -32,7 +34,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         brightness: Brightness.dark,
       ),
       backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
-      body: _userDataProvider.isLoading
+      body: _userDataProvider.isLoading!
           ? Center(
               child: CircularProgressIndicator(
                 valueColor: new AlwaysStoppedAnimation<Color>(lightAccentColor),
@@ -62,8 +64,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(100)),
-                        color: Theme.of(context)
-                            .accentColor), //lightTextFieldBorderColor,
+                        color: Theme.of(context).colorScheme.secondary), //lightTextFieldBorderColor,
                     child: TextField(
                       style: TextStyle(
                           textBaseline: TextBaseline.alphabetic,
@@ -95,7 +96,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(100)),
-                    color: Theme.of(context).accentColor),
+                    color: Theme.of(context).colorScheme.secondary),
                 child: TextField(
                   style: TextStyle(
                     textBaseline: TextBaseline.alphabetic,
@@ -160,7 +161,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                        onPressed: _userDataProvider.isLoading
+                        onPressed: _userDataProvider.isLoading!
                             ? null
                             : () {
                                 _userDataProvider

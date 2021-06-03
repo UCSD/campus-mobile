@@ -1,9 +1,11 @@
+
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 
 class BarcodeService {
   BarcodeService();
-  bool _isLoading;
-  String _error;
+  bool? _isLoading;
+  String? _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String _endpoint =
@@ -56,6 +58,6 @@ class BarcodeService {
     }
   }
 
-  String get error => _error;
-  bool get isLoading => _isLoading;
+  String? get error => _error;
+  bool? get isLoading => _isLoading;
 }
