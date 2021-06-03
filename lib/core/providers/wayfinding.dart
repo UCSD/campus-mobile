@@ -383,7 +383,6 @@ class WayfindingProvider extends ChangeNotifier {
           "-" +
           calculatedUUID.substring(20);
     }
-    print("Calculated UUID: " + calculatedUUID);
     return calculatedUUID;
   }
 
