@@ -1,11 +1,46 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/ui/common/build_info.dart';
 import 'package:campus_mobile_experimental/ui/profile/login.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatelessWidget {
+
+  Future<Null> initUniLinks(BuildContext context) async {
+    // deep links are received by this method
+    // the specific host needs to be added in AndroidManifest.xml and Info.plist
+    // currently, this method handles executing custom map query
+    late StreamSubscription _sub;
+    _sub = linkStream.listen((String? link) async {
+      // handling for map query
+      if (link!.contains("deeplinking.searchmap")) {
+        var uri = Uri.dataFromString(link);
+        var query = uri.queryParameters['query']!;
+        // redirect query to maps tab and search with query
+        Provider.of<MapsDataProvider>(context, listen: false)
+            .searchBarController
+            .text = query;
+        Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
+        Provider.of<BottomNavigationBarProvider>(context, listen: false)
+            .currentIndex = NavigatorConstants.MapTab;
+        // received deeplink, cancel stream to prevent memory leaks
+        _sub.cancel();
+      }
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    initUniLinks(context);
     return Container(
       child: ListView(
         children: <Widget>[
@@ -52,6 +87,7 @@ class Profile extends StatelessWidget {
               },
             ),
           ),
+          BuildInfo(),
         ],
       ),
     );

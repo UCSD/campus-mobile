@@ -1,3 +1,7 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 
@@ -6,8 +10,8 @@ class SpotTypesService {
     fetchSpotTypesData();
   }
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
+  DateTime? _lastUpdated;
+  String? _error;
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
@@ -16,7 +20,7 @@ class SpotTypesService {
   SpotTypeModel _spotTypeModel = SpotTypeModel();
 
   final String endpoint =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/spot_types.json";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v3/spot_types.json";
   Future<bool> fetchSpotTypesData() async {
     _error = null;
     _isLoading = true;
@@ -35,7 +39,7 @@ class SpotTypesService {
   }
 
   bool get isLoading => _isLoading;
-  String get error => _error;
-  DateTime get lastUpdated => _lastUpdated;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
   SpotTypeModel get spotTypeModel => _spotTypeModel;
 }

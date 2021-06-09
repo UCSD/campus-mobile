@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
@@ -5,8 +7,13 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SpotTypesView extends StatelessWidget {
-  ParkingDataProvider spotTypesDataProvider;
+class SpotTypesView extends StatefulWidget {
+  @override
+  _SpotTypesViewState createState() => _SpotTypesViewState();
+}
+
+class _SpotTypesViewState extends State<SpotTypesView> {
+  late ParkingDataProvider spotTypesDataProvider;
   @override
   Widget build(BuildContext context) {
     spotTypesDataProvider = Provider.of<ParkingDataProvider>(context);
@@ -20,10 +27,10 @@ class SpotTypesView extends StatelessWidget {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> list = List<Widget>();
-    for (Spot data in spotTypesDataProvider.spotTypeModel.spots) {
-      Color iconColor = HexColor(data.color);
-      Color textColor = HexColor(data.textColor);
+    List<Widget> list = [];
+    for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
+      Color iconColor = HexColor(data.color!);
+      Color textColor = HexColor(data.textColor!);
       list.add(ListTile(
         key: Key(data.spotKey.toString()),
         leading: Container(
@@ -35,19 +42,19 @@ class SpotTypesView extends StatelessWidget {
             ),
             child: Align(
                 alignment: Alignment.center,
-                child: data.text.contains("&#x267f;")
+                child: data.text!.contains("&#x267f;")
                     ? Icon(
                         Icons.accessible,
                         size: 25.0,
                       )
                     : Text(
-                        data.text,
+                        data.text!,
                         style: TextStyle(color: textColor),
                       ))),
-        title: Text(data.name),
+        title: Text(data.name!),
         trailing: Switch(
           value: Provider.of<ParkingDataProvider>(context)
-              .spotTypesState[data.spotKey],
+              .spotTypesState![data.spotKey]!,
           onChanged: (_) {
             spotTypesDataProvider.toggleSpotSelection(data.spotKey);
           },

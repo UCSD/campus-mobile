@@ -17,9 +17,11 @@ const prodEnvReplacements = async (targetEnv) => {
 		config.PROD_ENV_REPLACEMENTS.forEach((envItem) => {
 			fs.readFile(envItem.PATH, 'utf8', (err, data) => {
 				envItem.QA.forEach((replacement, index) => {
-					// Debug endpoints
-					// console.log('replacement: ' + replacement + ', index: ' + index)
-					data = data.replace(replacement, envItem.PROD[index])
+					if (replacement === '"##BUILD_ENV##"') {
+						data = data.replace(replacement, '"' + targetEnv + '"')
+					} else {
+						data = data.replace(replacement, envItem.PROD[index])
+					}
 				})
 				fs.writeFile(envItem.PATH, data, 'utf8', (err) => {
 					if (err) throw err
@@ -37,7 +39,11 @@ const prodtestEnvReplacements = async (targetEnv) => {
 		config.PRODTEST_ENV_REPLACEMENTS.forEach((envItem) => {
 			fs.readFile(envItem.PATH, 'utf8', (err, data) => {
 				envItem.PROD.forEach((replacement, index) => {
-					data = data.replace(replacement, envItem.QA[index])
+					if (replacement === '"##BUILD_ENV##"') {
+						data = data.replace(replacement, '"' + targetEnv + '"')
+					} else {
+						data = data.replace(replacement, envItem.QA[index])
+					}
 				})
 				fs.writeFile(envItem.PATH, data, 'utf8', (err) => {
 					if (err) throw err
@@ -55,9 +61,11 @@ const qaEnvReplacements = async (targetEnv) => {
 		config.QA_ENV_REPLACEMENTS.forEach((envItem) => {
 			fs.readFile(envItem.PATH, 'utf8', (err, data) => {
 				envItem.QA.forEach((replacement, index) => {
-					// Debug endpoints
-					// console.log('replacement: ' + replacement + ', index: ' + index)
-					data = data.replace(replacement, envItem.PROD[index])
+					if (replacement === '"##BUILD_ENV##"') {
+						data = data.replace(replacement, '"' + targetEnv + '"')
+					} else {
+						data = data.replace(replacement, envItem.PROD[index])
+					}
 				})
 				fs.writeFile(envItem.PATH, data, 'utf8', (err) => {
 					if (err) throw err
@@ -76,8 +84,8 @@ const appVersionReplacements = async () => {
 		config.APP_VERSION_REPLACEMENTS.forEach((envItem) => {
 			fs.readFile(envItem.PATH, 'utf8', (err, data) => {
 				const finalBuildNumber = parseInt(buildNumber) + 1000
-				data = data.replaceAll('MARKETING_VERSION = 1.0.0;', 'MARKETING_VERSION = ' + appVersion + ';')
-				data = data.replaceAll('CURRENT_PROJECT_VERSION = 1;', 'CURRENT_PROJECT_VERSION = ' + finalBuildNumber + ';')
+				data = data.replace(/MARKETING_VERSION = 1\.0\.0;/g, 'MARKETING_VERSION = ' + appVersion + ';')
+				data = data.replace(/CURRENT_PROJECT_VERSION = 1;/g, 'CURRENT_PROJECT_VERSION = ' + finalBuildNumber + ';')
 				fs.writeFile(envItem.PATH, data, 'utf8', (err) => {
 					if (err) throw err
 					else console.log(envItem.PATH + ' --> ' + appVersion + ' (' + finalBuildNumber + ')')

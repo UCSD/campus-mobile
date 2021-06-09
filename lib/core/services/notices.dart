@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
@@ -5,14 +7,14 @@ import 'package:campus_mobile_experimental/core/models/notices.dart';
 
 class NoticesService {
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
+  DateTime? _lastUpdated;
+  String? _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String endpoint =
       'https://mobile.ucsd.edu/replatform/v1/qa/notices-v2.json';
 
-  List<NoticesModel> _noticesModel = List<NoticesModel>();
+  List<NoticesModel> _noticesModel = [];
 
   Future<bool> fetchData() async {
     _error = null;
@@ -38,9 +40,9 @@ class NoticesService {
 
   bool get isLoading => _isLoading;
 
-  String get error => _error;
+  String? get error => _error;
 
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 
   NetworkHelper get availabilityService => _networkHelper;
 

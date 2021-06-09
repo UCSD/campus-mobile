@@ -51,10 +51,16 @@ else
     exit 1
 fi
 
-
+# 7. BUILD_PLATFORM
+if [ -n "$BUILD_PLATFORM" ]; then
+    echo "BUILD_PLATFORM: Found"
+else
+    echo "Error: BUILD_PLATFORM not found, exiting."
+    exit 1
+fi
 
 echo "Installing Node.js ..."
-curl "https://nodejs.org/dist/latest/node-${VERSION:-$(wget -qO- https://nodejs.org/dist/latest/ | sed -nE 's|.*>node-(.*)\.pkg</a>.*|\1|p')}.pkg" > "$HOME/Downloads/node-latest.pkg" && sudo installer -store -pkg "$HOME/Downloads/node-latest.pkg" -target "/"
+curl "https://nodejs.org/dist/v14.16.0/node-v14.16.0.pkg" > "$HOME/Downloads/node-stable.pkg" && sudo installer -store -pkg "$HOME/Downloads/node-stable.pkg" -target "/"
 node --version
 
 echo "Writing app-config.js from \$APP_CONFIG ..."
@@ -73,19 +79,26 @@ echo $FIREBASE_ANDROID | base64 --decode > ./android/app/google-services.json
 echo "Setting build environment: $BUILD_ENV"
 if [ "$BUILD_ENV" == "PROD" ]; then
     node ./scripts/codemagic-ci/set-env.js PROD $APP_VERSION $PROJECT_BUILD_NUMBER
-    sh ./scripts/codemagic-ci/verify-env.sh PROD
+    sh ./scripts/codemagic-ci/verify-env.sh PROD $BUILD_PLATFORM
 elif [ "$BUILD_ENV" == "PROD-TEST" ]; then
     node ./scripts/codemagic-ci/set-env.js PROD $APP_VERSION $PROJECT_BUILD_NUMBER
-    sh ./scripts/codemagic-ci/verify-env.sh PROD
+    sh ./scripts/codemagic-ci/verify-env.sh PROD $BUILD_PLATFORM
     node ./scripts/codemagic-ci/set-env.js PROD-TEST
-    sh ./scripts/codemagic-ci/verify-env.sh PROD-TEST
+    sh ./scripts/codemagic-ci/verify-env.sh PROD-TEST $BUILD_PLATFORM
 elif [ "$BUILD_ENV" == "QA" ]; then
     node ./scripts/codemagic-ci/set-env.js QA $APP_VERSION $PROJECT_BUILD_NUMBER
-    sh ./scripts/codemagic-ci/verify-env.sh QA
+    sh ./scripts/codemagic-ci/verify-env.sh QA $BUILD_PLATFORM
 else
     echo "Error: BUILD_ENV not found, exiting."
     echo "End: post-clone.sh"
     exit 1
+fi
+
+# Write release notes
+if [ -n "$FCI_PULL_REQUEST_NUMBER" ]; then
+    echo "$BUILD_ENV Environment Build (PR: $FCI_PULL_REQUEST_NUMBER)" > ./release_notes.txt
+else
+    echo "$BUILD_ENV Environment Build (Branch: $FCI_BRANCH)" > ./release_notes.txt
 fi
 
 echo "End: post-clone.sh"

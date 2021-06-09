@@ -1,7 +1,9 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
+
+
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/providers/scanner.dart';
+import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/services/barcode.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
@@ -10,75 +12,33 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class ScanditScanner extends StatefulWidget {
-  @override
   _ScanditScannerState createState() => _ScanditScannerState();
 }
 
 class _ScanditScannerState extends State<ScanditScanner> {
-  String _message = '';
-  ScanditController _controller;
-  bool hasScanned;
-  bool hasSubmitted;
-  bool didError;
-  String licenseKey;
-  BarcodeService _barcodeService = new BarcodeService();
-  UserDataProvider _userDataProvider;
+  late ScannerDataProvider _scannerDataProvider;
+  late UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-  String _barcode;
-  String _errorText;
-  bool isLoading;
-  bool isDuplicate;
-  bool successfulSubmission;
-  bool isValidBarcode;
-  PermissionStatus _cameraPermissionsStatus = PermissionStatus.undetermined;
-  List<String> scannedCodes = new List<String>();
-
-  Future _requestCameraPermissions() async {
-    var status = await Permission.camera.status;
-    if (!status.isGranted) {
-      status = await Permission.camera.request();
-    }
-
-    if (_cameraPermissionsStatus != status) {
-      setState(() {
-        _cameraPermissionsStatus = status;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    hasScanned = false;
-    hasSubmitted = false;
-    didError = false;
-    successfulSubmission = false;
-    isLoading = false;
-    isDuplicate = false;
-    isValidBarcode = true;
-    _errorText = "Something went wrong, please try again.";
-
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _requestCameraPermissions());
-  }
+  bool hasUpdatedLatestScan = false;
 
   @override
   Widget build(BuildContext context) {
     _userDataProvider = Provider.of<UserDataProvider>(context);
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
-      licenseKey = "SCANDIT_NATIVE_LICENSE_IOS_PH";
-    } else if (Theme.of(context).platform == TargetPlatform.android) {
-      licenseKey = "SCANDIT_NATIVE_LICENSE_ANDROID_PH";
-    }
+    _scannerDataProvider = Provider.of<ScannerDataProvider>(context);
+    _scannerDataProvider.requestCameraPermissions();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
+          backgroundColor: ColorPrimary,
+          brightness: Brightness.dark,
           centerTitle: true,
           title: const Text("Scanner"),
         ),
       ),
-      body: !hasScanned ? renderScanner(context) : renderSubmissionView(),
+      body: !_scannerDataProvider.hasScanned!
+          ? renderScanner(context)
+          : renderSubmissionView(context),
       floatingActionButton: IconButton(
         onPressed: () {},
         icon: Container(),
@@ -87,15 +47,17 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Widget renderScanner(BuildContext context) {
-    if (_cameraPermissionsStatus == PermissionStatus.granted) {
+    if (_scannerDataProvider.cameraPermissionsStatus ==
+        PermissionStatus.granted) {
       return (Stack(
         children: [
           Scandit(
-              scanned: _verifyBarcodeScanning,
-              onError: (e) => setState(() => _message = e.message),
+              scanned: _scannerDataProvider.verifyBarcodeScanning,
+              onError: (e) => (_scannerDataProvider.message = e.message),
               symbologies: [Symbology.CODE128, Symbology.DATA_MATRIX],
-              onScanditCreated: (controller) => _controller = controller,
-              licenseKey: licenseKey),
+              onScanditCreated: (controller) =>
+                  _scannerDataProvider.controller = controller,
+              licenseKey: _scannerDataProvider.licenseKey!),
           Center(
             child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -105,7 +67,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
                   border: Border.all(color: Colors.white),
                 )),
           ),
-          Center(child: Text(_message)),
+          Center(child: Text(_scannerDataProvider.message!)),
         ],
       ));
     } else {
@@ -115,15 +77,15 @@ class _ScanditScannerState extends State<ScanditScanner> {
     }
   }
 
-  Widget renderSubmissionView() {
-    if (isLoading) {
+  Widget renderSubmissionView(BuildContext context) {
+    if (_scannerDataProvider.isLoading) {
       return (Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Center(
             child: SizedBox(
-                height: 40, width: 40, child: CircularProgressIndicator()),
+                height: 40, width: 40, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
           ),
           Padding(
             padding: EdgeInsets.only(top: 20.0),
@@ -132,9 +94,9 @@ class _ScanditScannerState extends State<ScanditScanner> {
           ),
         ],
       ));
-    } else if (successfulSubmission) {
+    } else if (_scannerDataProvider.successfulSubmission!) {
       return (renderSuccessScreen(context));
-    } else if (didError) {
+    } else if (_scannerDataProvider.didError!) {
       return (renderFailureScreen(context));
     } else {
       return (renderFailureScreen(context));
@@ -150,7 +112,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
             child: (Column(children: <Widget>[
               ClipOval(
                 child: Container(
-                  color: (!isValidBarcode || isDuplicate)
+                  color: (!_scannerDataProvider.isValidBarcode! ||
+                          _scannerDataProvider.isDuplicate!)
                       ? Colors.orange
                       : Colors.red,
                   height: 75,
@@ -166,7 +129,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16.0),
-                child: Text(_errorText,
+                child: Text(_scannerDataProvider.errorText,
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               ),
@@ -177,25 +140,21 @@ class _ScanditScannerState extends State<ScanditScanner> {
                     style: TextStyle(fontSize: 15)),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: FlatButton(
-                  padding: EdgeInsets.only(left: 32.0, right: 32.0),
+                padding: EdgeInsets.only(top: 24.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.only(left: 32.0, right: 32.0),
+                    primary: Theme.of(context).buttonColor,
+                  ),
                   onPressed: () {
-                    scannedCodes.clear();
-                    this.setState(() {
-                      hasScanned = false;
-                      hasSubmitted = false;
-                      didError = false;
-                      successfulSubmission = false;
-                      isLoading = false;
-                    });
+                    _scannerDataProvider.setDefaultStates();
                   },
                   child: Text(
                     "Try again",
-                    style: TextStyle(fontSize: 18.0),
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: Theme.of(context).textTheme.button!.color),
                   ),
-                  color: lightButtonColor,
-                  textColor: Colors.white,
                 ),
               ),
             ])),
@@ -208,7 +167,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
   Widget renderSuccessScreen(BuildContext context) {
     final dateFormat = new DateFormat('dd-MM-yyyy hh:mm:ss a');
     final String scanTime = dateFormat.format(new DateTime.now());
-
+    updateLatestScan(context);
     return Column(
       children: [
         Center(
@@ -224,7 +183,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
               ),
               Text("Scan sent at: " + scanTime,
                   style: TextStyle(color: Theme.of(context).iconTheme.color)),
-              Text("Scanned value: " + _barcode,
+              Text("Scanned value: " + _scannerDataProvider.barcode!,
                   style: TextStyle(color: Theme.of(context).iconTheme.color)),
             ])),
           ),
@@ -268,129 +227,27 @@ class _ScanditScannerState extends State<ScanditScanner> {
     );
   }
 
-  void _verifyBarcodeScanning(BarcodeResult result) {
-    scannedCodes.add(result.data);
-    // currently scanning 3 consecutive times
-    if (scannedCodes.length < 3) {
-      _controller.resumeBarcodeScanning();
-    } else {
-      String firstScan = scannedCodes.first;
-      // if all scans are not the same, need to go into error state
-      // otherwise, continue to handle normally
-      if (scannedCodes.every((element) => element == firstScan)) {
-        // ACCEPT STATE
-        _handleBarcodeResult(result);
-      } else {
-        // REJECT STATE
-        this.setState(() {
-          hasScanned = true;
-          didError = true;
-          isLoading = false;
-        });
-      }
-    }
-  }
-
   Text buildChartText(BuildContext context) {
-    if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
+    if (_userDataProvider.userProfileModel!.classifications?.student ?? false) {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyStudentChart.");
-    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
+    } else if (_userDataProvider.userProfileModel!.classifications?.staff ??
         false) {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyUCSDChart.");
     }
+
+    return Text(String.fromCharCode(0x2022) +
+        " You can view your results by logging in to MyChart.");
   }
 
-  Future<void> _handleBarcodeResult(BarcodeResult result) async {
-    this.setState(() {
-      hasScanned = true;
-      _barcode = result?.data;
-      isLoading = true;
-    });
-
-    try {
-      var accessTokenExpiration =
-          _userDataProvider?.authenticationModel?.expiration;
-      var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
-      var timeDiff = accessTokenExpiration - nowTime;
-      var tokenExpired = timeDiff <= 0 ? true : false;
-      var isLoggedIn =
-          Provider.of<UserDataProvider>(context, listen: false).isLoggedIn;
-      var validToken = false;
-
-      if (isLoggedIn) {
-        if (tokenExpired) {
-          if (await _userDataProvider.silentLogin()) {
-            validToken = true;
-          }
-        } else {
-          validToken = true;
-        }
-
-        if (validToken) {
-          var results = await _barcodeService.uploadResults({
-            "Content-Type": "application/json",
-            'Authorization':
-                'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
-          }, {
-            'barcode': _barcode
-          });
-
-          if (results) {
-            this.setState(() {
-              successfulSubmission = true;
-              didError = false;
-              isLoading = false;
-            });
-          } else {
-            this.setState(() {
-              successfulSubmission = false;
-              didError = true;
-              isLoading = false;
-            });
-
-            if (_barcodeService.error
-                .contains(ErrorConstants.duplicateRecord)) {
-              this.setState(() {
-                _errorText = ScannerConstants.duplicateRecord;
-                isDuplicate = true;
-              });
-            } else if (_barcodeService.error
-                .contains(ErrorConstants.invalidMedia)) {
-              this.setState(() {
-                _errorText = ScannerConstants.invalidMedia;
-                isValidBarcode = false;
-              });
-            } else {
-              this.setState(() {
-                _errorText = ScannerConstants.barcodeError;
-              });
-            }
-          }
-        } else {
-          this.setState(() {
-            successfulSubmission = false;
-            didError = true;
-            isLoading = false;
-            _errorText = ScannerConstants.invalidToken;
-          });
-        }
-      } else {
-        this.setState(() {
-          successfulSubmission = false;
-          didError = true;
-          isLoading = false;
-          _errorText = ScannerConstants.loggedOut;
-        });
-      }
-    } catch (e) {
-      this.setState(() {
-        successfulSubmission = false;
-        didError = true;
-        isLoading = false;
-        _errorText = ScannerConstants.unknownError;
-      });
+  void updateLatestScan(BuildContext context) {
+    if (_scannerDataProvider.successfulSubmission! && !hasUpdatedLatestScan) {
+      // to fetch the most recent scan and display timestamp to user to confirm success
+      print("updating");
+      Provider.of<ScannerMessageDataProvider>(context, listen: false)
+          .fetchData();
+      hasUpdatedLatestScan = true;
     }
   }
 }

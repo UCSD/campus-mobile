@@ -1,3 +1,5 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,18 +13,19 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
-  UserDataProvider _userDataProvider;
+  late UserDataProvider _userDataProvider;
+  bool _passwordObscured = true;
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
+    print('_LoginState:didChangeDependencies');
     super.didChangeDependencies();
     _userDataProvider = Provider.of<UserDataProvider>(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_userDataProvider.isLoading) {
+    if (!_userDataProvider.isLoading!) {
       if (_userDataProvider.isLoggedIn) {
         return buildLoggedInWidget(context);
       } else {
@@ -32,7 +35,9 @@ class _LoginState extends State<Login> {
 
     return Container(
         constraints: BoxConstraints(maxWidth: 100, maxHeight: 100),
-        child: Center(child: CircularProgressIndicator()));
+        child: Center(
+            child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary)));
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
@@ -62,13 +67,16 @@ class _LoginState extends State<Login> {
         color: Colors.green,
       ),
       title: Text(
-        _userDataProvider.userProfileModel.username != null
-            ? _userDataProvider.userProfileModel.username
+        _userDataProvider.userProfileModel!.username != null
+            ? _userDataProvider.userProfileModel!.username!
             : "",
         style: TextStyle(fontSize: 17),
       ),
-      trailing: OutlineButton(
-        child: Text('logout'),
+      trailing: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          primary: Theme.of(context).buttonColor,
+        ),
+        child: Text('Log out'),
         onPressed: () => _userDataProvider.logout(),
       ),
     );
@@ -81,13 +89,26 @@ class _LoginState extends State<Login> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Single Sign-On'),
+            Text(
+              'Single Sign-On',
+              style: TextStyle(fontSize: 17),
+            ),
             SizedBox(height: 10),
             TextField(
               decoration: InputDecoration(
                 hintText: 'UCSD Email',
+                hintStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 border: OutlineInputBorder(),
+                focusedBorder: new OutlineInputBorder(
+                  borderSide: new BorderSide(
+                      color: Theme.of(context).colorScheme.secondary),
+                ),
                 labelText: 'UCSD Email',
+                labelStyle: TextStyle(
+                  color: ucLabelColor,
+                ),
               ),
               keyboardType: TextInputType.emailAddress,
               controller: _emailTextFieldController,
@@ -96,23 +117,49 @@ class _LoginState extends State<Login> {
             TextField(
               decoration: InputDecoration(
                 hintText: 'Password',
+                hintStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    // Based on passwordObscured state choose the icon
+                    _passwordObscured ? Icons.visibility_off : Icons.visibility,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                  onPressed: () => _toggle(),
+                ),
                 border: OutlineInputBorder(),
+                focusedBorder: new OutlineInputBorder(
+                  borderSide: new BorderSide(
+                      color: Theme.of(context).colorScheme.secondary),
+                ),
                 labelText: 'Password',
+                labelStyle: TextStyle(
+                  color: ucLabelColor,
+                ),
               ),
-              obscureText: true,
+              obscureText: _passwordObscured,
               controller: _passwordTextFieldController,
             ),
             SizedBox(height: 10),
             Row(
               children: <Widget>[
                 Expanded(
-                  child: FlatButton(
-                    child: Text('Sign In'),
-                    onPressed: _userDataProvider.isLoading
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).buttonColor,
+                    ),
+                    child: Text(
+                      'Sign In',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Theme.of(context).textTheme.button!.color),
+                    ),
+                    onPressed: _userDataProvider.isLoading!
                         ? null
                         : () {
                             _userDataProvider
-                                .login(_emailTextFieldController.text,
+                                .manualLogin(_emailTextFieldController.text,
                                     _passwordTextFieldController.text)
                                 .then((isLoggedIn) {
                               if (!isLoggedIn) {
@@ -120,16 +167,21 @@ class _LoginState extends State<Login> {
                               }
                             });
                           },
-                    color: Theme.of(context).buttonColor,
-                    textColor: Theme.of(context).textTheme.button.color,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10),
             Center(
                 child: GestureDetector(
-              child: Text('Need help logging in?'),
+              child: Container(
+                height: 35,
+                child: Center(
+                  child: Text(
+                    'Need help logging in?',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
               onTap: () async {
                 try {
                   String link =
@@ -146,9 +198,19 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget showAlertDialog(BuildContext context) {
+  // Toggles the password show status
+  void _toggle() {
+    setState(() {
+      _passwordObscured = !_passwordObscured;
+    });
+  }
+
+  showAlertDialog(BuildContext context) {
     // set up the button
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();
@@ -157,9 +219,8 @@ class _LoginState extends State<Login> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Sorry, unable to sign you in"),
-      content: Text(
-          "Be sure you are using the correct credentials; TritonLink login if you are a student, SSO if you are Faculty/Staff."),
+      title: Text(LoginConstants.loginFailedTitle),
+      content: Text(LoginConstants.loginFailedDesc),
       actions: [
         okButton,
       ],

@@ -1,16 +1,20 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 
 class AvailabilityService {
-  AvailabilityService() {}
+  AvailabilityService();
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
-  List<AvailabilityModel> _data;
+  DateTime? _lastUpdated;
+  String? _error;
+  List<AvailabilityModel>? _data;
 
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
-  List<AvailabilityModel> get data => _data;
+  List<AvailabilityModel>? get data => _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
@@ -25,7 +29,7 @@ class AvailabilityService {
     try {
       /// fetch data
       String _response =
-          await _networkHelper.authorizedFetch(endpoint, headers);
+          await (_networkHelper.authorizedFetch(endpoint, headers));
 
       /// parse data
       final data = availabilityModelFromJson(_response);
@@ -69,7 +73,7 @@ class AvailabilityService {
 
   bool get isLoading => _isLoading;
 
-  String get error => _error;
+  String? get error => _error;
 
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

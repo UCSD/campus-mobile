@@ -1,11 +1,15 @@
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ManageParkingView extends StatelessWidget {
-  ParkingDataProvider parkingDataProvider;
+class ManageParkingView extends StatefulWidget {
+  _ManageParkingViewState createState() => _ManageParkingViewState();
+}
+class _ManageParkingViewState extends State<ManageParkingView> {
+  late ParkingDataProvider parkingDataProvider;
   @override
   Widget build(BuildContext context) {
     parkingDataProvider = Provider.of<ParkingDataProvider>(context);
@@ -28,7 +32,7 @@ class ManageParkingView extends StatelessWidget {
     List<ParkingModel> newOrder = parkingDataProvider.parkingModels;
     ParkingModel item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
-    List<String> orderedLocationNames = List<String>();
+    List<String?> orderedLocationNames = [];
     for (ParkingModel item in newOrder) {
       orderedLocationNames.add(item.locationName);
     }
@@ -36,19 +40,17 @@ class ManageParkingView extends StatelessWidget {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = [];
     for (ParkingModel model in parkingDataProvider.parkingModels) {
-      print(model.locationName);
-      print(parkingDataProvider.parkingViewState[model.locationId]);
-
       list.add(ListTile(
           key: Key(model.locationId.toString()),
-          title: Text(model.locationName),
+          title: Text(model.locationName!),
           leading: Icon(Icons.reorder),
           trailing: Switch(
-            value: parkingDataProvider.parkingViewState[model.locationId],
+            value: Provider.of<ParkingDataProvider>(context)
+                .parkingViewState![model.locationName]!,
             onChanged: (_) {
-              parkingDataProvider.toggleLot(model.locationId);
+              parkingDataProvider.toggleLot(model.locationName);
             },
             activeColor: Theme.of(context).buttonColor,
           )));

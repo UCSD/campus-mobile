@@ -12,19 +12,18 @@ String cardsModelToJson(Map<String, CardsModel> data) => json.encode(
     Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
 
 class CardsModel {
-  CardsModel({
-    this.cardActive,
-    this.initialURL,
-    this.isWebCard,
-    this.requireAuth,
-    this.titleText
-  });
-  
-  bool cardActive;
-  String initialURL;
-  bool isWebCard;
-  bool requireAuth;
-  String titleText;
+  CardsModel(
+      {this.cardActive,
+      this.initialURL,
+      this.isWebCard,
+      this.requireAuth,
+      this.titleText});
+
+  bool? cardActive;
+  String? initialURL;
+  bool? isWebCard;
+  bool? requireAuth;
+  String? titleText;
 
   factory CardsModel.fromJson(Map<String, dynamic> json) => CardsModel(
         cardActive: json["cardActive"] == null ? null : json["cardActive"],

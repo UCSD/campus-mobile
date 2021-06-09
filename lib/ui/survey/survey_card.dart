@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -21,15 +23,15 @@ class _SurveyCardState extends State<SurveyCard>
     with AutomaticKeepAliveClientMixin {
   String cardId = "student_survey";
   double _contentHeight = webViewMinHeight;
-  SurveyDataProvider _surveyDataProvider;
-  UserDataProvider _userDataProvider;
+  late SurveyDataProvider _surveyDataProvider;
+  late UserDataProvider _userDataProvider;
   bool get wantKeepAlive => true;
-  WebViewController _webViewController;
+  WebViewController? _webViewController;
   String surveyIdMessage = "";
-  List<String> postMessage;
-  String surveyID = "";
+  late List<String> postMessage;
+  String? surveyID = "";
   bool displayCard = true;
-  String surveyURL;
+  String? surveyURL;
   bool noActiveSurveys = false;
 
   @override
@@ -44,7 +46,7 @@ class _SurveyCardState extends State<SurveyCard>
   Widget build(BuildContext context) {
     //super.build(context);
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => {_surveyDataProvider.fetchSurvey()},
@@ -56,13 +58,13 @@ class _SurveyCardState extends State<SurveyCard>
   }
 
   Widget buildCardContent(BuildContext context) {
-    if (_surveyDataProvider.surveyModel.surveyActive == true) {
-      surveyURL = _surveyDataProvider.surveyModel.surveyUrl;
-      surveyID = _surveyDataProvider.surveyModel.surveyId;
+    if (_surveyDataProvider.surveyModel!.surveyActive == true) {
+      surveyURL = _surveyDataProvider.surveyModel!.surveyUrl;
+      surveyID = _surveyDataProvider.surveyModel!.surveyId;
     }
 
-    if (_surveyDataProvider.surveyModel.surveyActive == true &&
-        _userDataProvider.userProfileModel.surveyCompletion
+    if (_surveyDataProvider.surveyModel!.surveyActive == true &&
+        _userDataProvider.userProfileModel!.surveyCompletion!
             .contains(surveyID)) {
       displayCard = false;
     }
@@ -82,7 +84,6 @@ class _SurveyCardState extends State<SurveyCard>
       return Container(
         height: _contentHeight + 50, // Dynamic height iffy, add some padding
         child: WebView(
-          opaque: false,
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: surveyURL,
           onWebViewCreated: (controller) {

@@ -11,8 +11,8 @@ String studentIdPhotoModelToJson(StudentIdPhotoModel data) =>
     json.encode(data.toJson());
 
 class StudentIdPhotoModel {
-  String studentId;
-  String photoUrl;
+  String? studentId;
+  String? photoUrl;
 
   StudentIdPhotoModel({
     this.studentId,

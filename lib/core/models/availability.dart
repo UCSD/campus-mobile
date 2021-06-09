@@ -7,12 +7,12 @@ List<AvailabilityModel> availabilityModelFromJson(String str) {
 }
 
 class AvailabilityModel {
-  int locationId;
-  bool isOpen;
-  bool isError;
-  double percent;
-  String locationName;
-  List<AvailabilityModel> subLocations;
+  int? locationId;
+  bool? isOpen;
+  bool? isError;
+  double? percent;
+  String? locationName;
+  List<AvailabilityModel>? subLocations;
 
   AvailabilityModel(
       {this.locationId,
@@ -43,6 +43,6 @@ class AvailabilityModel {
         "percent": percent == null ? null : percent.toString(),
         "children": subLocations == null
             ? null
-            : List<dynamic>.from(subLocations.map((x) => x.toJson())),
+            : List<dynamic>.from(subLocations!.map((x) => x.toJson())),
       };
 }

@@ -1,3 +1,5 @@
+
+
 import 'dart:ui';
 
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -15,17 +17,17 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreen extends State<OnboardingScreen>
     with TickerProviderStateMixin {
   final _controller = PageController();
-  AnimationController _animationController,
+  late AnimationController _animationController,
       _animationController2,
       _animationController3;
-  Animation<Offset> _offsetAnimation, _offsetAnimation2, _offsetAnimation3;
-  double currentIndex = 0;
+  late Animation<Offset> _offsetAnimation, _offsetAnimation2, _offsetAnimation3;
+  double? currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(() {
-      if (_controller.page.round() != currentIndex) {
+      if (_controller.page!.round() != currentIndex) {
         setState(() {
           currentIndex = _controller.page;
         });
@@ -88,7 +90,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Stack(children: <Widget>[
         Container(
@@ -136,7 +138,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
   Widget buildDotIndicator() {
     return DotsIndicator(
       dotsCount: 3,
-      position: currentIndex,
+      position: currentIndex!,
       decorator: DotsDecorator(
           activeColor: ColorPrimary, spacing: EdgeInsets.all(4.0)),
     );
@@ -151,8 +153,10 @@ class _OnboardingScreen extends State<OnboardingScreen>
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Expanded(
-                  child: FlatButton(
-                color: ColorPrimary,
+                  child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: ColorPrimary,
+                ),
                 onPressed: () {
                   Navigator.of(context).push(_routeToAffiliations());
                 },
@@ -165,8 +169,10 @@ class _OnboardingScreen extends State<OnboardingScreen>
                 ),
               )),
               Expanded(
-                child: FlatButton(
-                  color: ColorPrimary,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: ColorPrimary,
+                  ),
                   onPressed: () {
                     Navigator.of(context).push(_routeToLogin());
                   },
@@ -183,11 +189,11 @@ class _OnboardingScreen extends State<OnboardingScreen>
   }
 
   Widget buildPage1(double width, double height) {
-    return Stack(overflow: Overflow.clip, children: <Widget>[
+    return Stack(clipBehavior: Clip.none, children: <Widget>[
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         FractionallySizedBox(
           child: Container(
-              height: MediaQuery.of(context).size.height * .42,
+              height: height * 0.42,
               decoration: new BoxDecoration(
                   image: DecorationImage(
                 image: AssetImage('assets/images/onboarding_background1.png'),
@@ -244,7 +250,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     return Stack(children: <Widget>[
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         Container(
-            height: MediaQuery.of(context).size.height * .42,
+            height: height * 0.42,
             decoration: new BoxDecoration(
                 image: DecorationImage(
               image: AssetImage('assets/images/onboarding_background2.png'),
@@ -285,20 +291,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
       Column(children: <Widget>[
         Container(
           //alignment: Alignment.topRight,
-          padding: EdgeInsets.only(left: width * 0.026, top: height * 0.22),
-          child: Container(
-              height: height * 0.14,
-              width: width * 0.49,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                image:
-                    AssetImage('assets/images/onboarding_student_profile.png'),
-                fit: BoxFit.fill,
-              ))),
-        ),
-        Container(
-          //alignment: Alignment.topRight,
-          padding: EdgeInsets.only(left: width * 0.026, top: height * 0.025),
+          padding: EdgeInsets.only(left: width * 0.026, top: height * 0.35),
           child: Container(
               height: height * 0.14,
               width: width * 0.49,
@@ -317,7 +310,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
     return Stack(children: <Widget>[
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         Container(
-            height: MediaQuery.of(context).size.height * .42,
+            height: height * .42,
             decoration: new BoxDecoration(
                 image: DecorationImage(
               image: AssetImage('assets/images/onboarding_background3.png'),

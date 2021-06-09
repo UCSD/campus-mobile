@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/shuttle.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -7,23 +9,23 @@ import 'package:flutter/rendering.dart';
 
 class ShuttleDisplay extends StatelessWidget {
   ShuttleDisplay(
-      {Key key, @required this.stop, @required this.arrivingShuttles})
+      {Key? key, required this.stop, required this.arrivingShuttles})
       : super(key: key);
 
-  final ShuttleStopModel stop;
-  final List<ArrivingShuttle> arrivingShuttles;
+  final ShuttleStopModel? stop;
+  final List<ArrivingShuttle>? arrivingShuttles;
 
   @override
   Widget build(BuildContext context) {
     // print("Building ${stop.name}");
-
+    print(arrivingShuttles);
     if (arrivingShuttles == null) {
       return Container(
         width: double.infinity,
         height: 200.0,
         child: Center(
           child: Container(
-              height: 32, width: 32, child: CircularProgressIndicator()),
+              height: 32, width: 32, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
         ),
       );
     } else {
@@ -52,7 +54,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget buildNextArrival() {
-    if (arrivingShuttles.isEmpty || arrivingShuttles == null) {
+    if (arrivingShuttles!.isEmpty || arrivingShuttles == null) {
       return Text(
         "No arrivals found.",
         style: TextStyle(color: Colors.grey, fontSize: 20),
@@ -61,7 +63,7 @@ class ShuttleDisplay extends StatelessWidget {
       return Column(
         children: [
           Text(
-            arrivingShuttles[0].route.name,
+            arrivingShuttles![0].route!.name!,
             style: TextStyle(fontSize: 16),
           ),
           buildTimetoArrivalText()
@@ -71,7 +73,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget buildTimetoArrivalText() {
-    int minutesToArrival = arrivingShuttles[0].secondsToArrival ~/ 60;
+    int minutesToArrival = arrivingShuttles![0].secondsToArrival! ~/ 60;
     return Text(
       "Arriving in: $minutesToArrival minutes",
       style: TextStyle(color: Colors.grey, fontSize: 20),
@@ -86,14 +88,14 @@ class ShuttleDisplay extends StatelessWidget {
           children: [
             CircleAvatar(
               minRadius: 40,
-              backgroundColor: HexColor(arrivingShuttles.isEmpty
+              backgroundColor: HexColor(arrivingShuttles!.isEmpty
                   ? "#B74093"
-                  : arrivingShuttles[0].route.color),
+                  : arrivingShuttles![0].route!.color!),
               foregroundColor: Colors.black,
               child: Text(
-                arrivingShuttles.isEmpty
+                arrivingShuttles!.isEmpty
                     ? "S"
-                    : arrivingShuttles[0].route.name[0],
+                    : arrivingShuttles![0].route!.name![0],
                 style: TextStyle(fontSize: 50),
               ),
             ),
@@ -110,7 +112,7 @@ class ShuttleDisplay extends StatelessWidget {
                 decoration: new BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     shape: BoxShape.circle),
-                child: Text(stop.name,
+                child: Text(stop!.name!,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12, color: Colors.grey))),
           ],
@@ -118,18 +120,18 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget buildArrivalData() {
-    List<Widget> arrivalsToRender = List<Widget>();
+    List<Widget> arrivalsToRender = [];
     for (int index = 1;
-        index < arrivingShuttles.length && index <= 2;
+        index < arrivingShuttles!.length && index <= 2;
         index++) {
-      arrivalsToRender.add(buildArrivingShuttle(arrivingShuttles[index]));
+      arrivalsToRender.add(buildArrivingShuttle(arrivingShuttles![index]));
     }
 
     return Column(children: arrivalsToRender);
   }
 
   Widget buildArrivingShuttle(ArrivingShuttle shuttle) {
-    int minutesToArrival = shuttle.secondsToArrival ~/ 60;
+    int minutesToArrival = shuttle.secondsToArrival! ~/ 60;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -137,16 +139,16 @@ class ShuttleDisplay extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
             minRadius: 20,
-            backgroundColor: HexColor(shuttle.route.color),
+            backgroundColor: HexColor(shuttle.route!.color!),
             foregroundColor: Colors.black,
             child: Text(
-              shuttle.route.name[0],
+              shuttle.route!.name![0],
               style: TextStyle(fontSize: 25),
             ),
           ),
         ),
         Text(
-          shuttle.route.name,
+          shuttle.route!.name!,
           style: TextStyle(fontSize: 16),
         ),
         Expanded(
@@ -165,8 +167,8 @@ class ShuttleDisplay extends StatelessWidget {
 
   String getArrivingShuttles() {
     String str = "";
-    arrivingShuttles.forEach((element) {
-      str += "Route: ${element.route.id} - ${element.route.name}\n";
+    arrivingShuttles!.forEach((element) {
+      str += "Route: ${element.route!.id} - ${element.route!.name}\n";
     });
     return str;
   }

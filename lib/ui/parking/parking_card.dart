@@ -18,7 +18,7 @@ class _ParkingCardState extends State<ParkingCard> {
   final _controller = new PageController();
   String cardId = 'parking';
   String webCardURL =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v2/index.html";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v3/index.html";
 
   @override
   void didChangeDependencies() {
@@ -26,14 +26,16 @@ class _ParkingCardState extends State<ParkingCard> {
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
+  // ignore: must_call_super
   Widget build(BuildContext context) {
+    //super.build(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
       isLoading: _parkingDataProvider.isLoading,
       reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(context),
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       actionButtons: buildActionButtons(),
@@ -46,7 +48,7 @@ class _ParkingCardState extends State<ParkingCard> {
 
     for (ParkingModel model in _parkingDataProvider.parkingModels) {
       if (model != null) {
-        if (_parkingDataProvider.parkingViewState[model.locationId]) {
+        if (_parkingDataProvider.parkingViewState!![model.locationId]) {
           selectedLotsViews.add(CircularParkingIndicators(model: model));
         }
       }
@@ -84,8 +86,11 @@ class _ParkingCardState extends State<ParkingCard> {
   }
 
   List<Widget> buildActionButtons() {
-    List<Widget> actionButtons = List<Widget>();
-    actionButtons.add(FlatButton(
+    List<Widget> actionButtons = [];
+    actionButtons.add(TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text(
         'Manage Lots',
       ),
@@ -93,7 +98,10 @@ class _ParkingCardState extends State<ParkingCard> {
         Navigator.pushNamed(context, RoutePaths.ManageParkingView);
       },
     ));
-    actionButtons.add(FlatButton(
+    actionButtons.add(TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text(
         'Manage Spots',
       ),

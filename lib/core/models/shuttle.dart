@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 
-List<ShuttleModel> shuttleModelFromJson(String str) =>
+List<ShuttleModel>? shuttleModelFromJson(String str) =>
     json.decode(str).map((x) => ShuttleModel.fromJson(x));
 
 //    List<ShuttleModel>.from(
@@ -13,16 +13,16 @@ String shuttleModelToJson(List<ShuttleModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ShuttleModel {
-  int displayOrder;
-  String url;
-  String customerRouteId;
-  int id;
-  String name;
-  String shortName;
-  String description;
-  String routeType;
-  Color color;
-  List<ShuttleStopModel> stops = List<ShuttleStopModel>();
+  int? displayOrder;
+  String? url;
+  String? customerRouteId;
+  int? id;
+  String? name;
+  String? shortName;
+  String? description;
+  String? routeType;
+  Color? color;
+  List<ShuttleStopModel>? stops = [];
 
   ShuttleModel(
       {this.displayOrder,
@@ -37,8 +37,8 @@ class ShuttleModel {
       this.stops});
 
   ShuttleModel.fromJson(Map<String, dynamic> json) {
-    json.forEach((key, value) {
-      return (ShuttleModel(
+    json.forEach((key, value) =>
+       ShuttleModel(
           displayOrder:
               value["displayOrder"] == null ? null : value["displayOrder"],
           url: value["url"] == null ? null : value["lon"],
@@ -60,13 +60,13 @@ class ShuttleModel {
                     return (ShuttleStopModel.fromJson(entry.value));
                   })
                   .toList()
-                  .cast<ShuttleStopModel>()));
-    });
+                  .cast<ShuttleStopModel>())
+    );
   }
 
   List<ShuttleModel> getListOfShuttles(String str) {
     Map<String, dynamic> list = json.decode(str);
-    List<ShuttleModel> ret = List<ShuttleModel>();
+    List<ShuttleModel> ret = [];
     list.forEach((key, value) {
       ret.add(ShuttleModel(
           displayOrder:
@@ -104,10 +104,10 @@ class ShuttleModel {
         "shortName": shortName == null ? null : shortName,
         "description": description == null ? null : description,
         "routeType": routeType == null ? null : routeType,
-        "color": color == null ? null : '#${color.value.toRadixString(16)}',
+        "color": color == null ? null : '#${color!.value.toRadixString(16)}',
         "stops": stops == null
             ? null
-            : List<dynamic>.from(stops.map((x) => x.toJson()))
+            : List<dynamic>.from(stops!.map((x) => x.toJson()))
       };
 }
 

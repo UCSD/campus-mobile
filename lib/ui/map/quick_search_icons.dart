@@ -1,10 +1,12 @@
+
+
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class QuickSearchIcons extends StatelessWidget {
   const QuickSearchIcons({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -73,28 +75,28 @@ class QuickSearchIcons extends StatelessWidget {
 }
 
 class LabeledIconButton extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final Function onPressed;
+  final IconData? icon;
+  final String? text;
+  final Function? onPressed;
   LabeledIconButton({this.icon, this.text, this.onPressed});
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        FlatButton(
-          padding: EdgeInsets.symmetric(vertical: 12.0),
-          onPressed: onPressed,
-          shape: CircleBorder(),
+        MaterialButton(
+          onPressed: onPressed as void Function()?,
           color: Colors.red,
+          textColor: Colors.white,
           child: Icon(
             icon,
             size: 28,
-            color: Colors.white,
           ),
+          padding: EdgeInsets.all(12),
+          shape: CircleBorder(),
         ),
         SizedBox(height: 6),
-        Text(text),
+        Text(text!),
       ],
     );
   }

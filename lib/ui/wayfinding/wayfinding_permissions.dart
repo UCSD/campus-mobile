@@ -1,15 +1,15 @@
-import 'dart:io';
 
+
+import 'dart:io';
 import 'package:app_settings/app_settings.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-// ignore: must_be_immutable
 class AdvancedWayfindingPermission extends StatefulWidget {
   @override
   _AdvancedWayfindingPermissionState createState() =>
@@ -18,93 +18,51 @@ class AdvancedWayfindingPermission extends StatefulWidget {
 
 class _AdvancedWayfindingPermissionState
     extends State<AdvancedWayfindingPermission> {
-  AdvancedWayfindingSingleton _bluetoothSingleton;
-  SharedPreferences pref;
+  late WayfindingProvider _wayfindingProvider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _wayfindingProvider = Provider.of<WayfindingProvider>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
-    getPreferences();
+    _wayfindingProvider = Provider.of<WayfindingProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
+          backgroundColor: ColorPrimary,
+          brightness: Brightness.dark,
           primary: true,
           centerTitle: true,
           title: Text("Advanced Wayfinding"),
         ),
       ),
-      body: getPermissionsContainer(context),
+      body: buildBody(context),
     );
   }
 
-  void getPreferences() async {
-    SharedPreferences.getInstance().then((value) {
-      pref = value;
-    });
-  }
-
-  Widget getPermissionsContainer(BuildContext context) {
+  Widget buildBody(BuildContext context) {
     return Column(
-      children: <Widget>[
-        offloadPermissionToggle(context),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Advanced wayfinding benefits",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16, top: 4, right: 16),
-            child: Text(
-              "\u2022 Getting directions",
-              style: TextStyle(
-                fontSize: 17,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
-            child: Text(
-              "\u2022 Locate areas of interest on campus",
-              style: TextStyle(
-                fontSize: 17,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
-            child: Text(
-              "\u2022 Context aware communication with other Bluetooth devices",
-              style: TextStyle(
-                fontSize: 17,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ),
-      ],
-    );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          toggleSwitch(context),
+          Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Text("Advanced wayfinding benefits",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left)),
+          Container(
+              padding: const EdgeInsets.only(left: 16, top: 4, right: 16),
+              child: Text(
+                  "\u2022 Getting directions\n\n\u2022 Locate areas of interest on campus\n\n\u2022 Context aware communication with other Bluetooth devices",
+                  style: TextStyle(fontSize: 17)))
+        ]);
   }
 
-  Widget offloadPermissionToggle(BuildContext context) {
+  Widget toggleSwitch(BuildContext context) {
     return Row(
       children: <Widget>[
         Padding(
@@ -114,22 +72,18 @@ class _AdvancedWayfindingPermissionState
             style: TextStyle(fontSize: 17),
           ),
         ),
-        Expanded(child: SizedBox()),
+        Spacer(),
         StreamBuilder(
-          stream: FlutterBlue.instance.state,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Switch(
-                value: bluetoothStarted(context, snapshot),
+            stream: FlutterBlue.instance.state,
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                  ? Switch(
+                value: _wayfindingProvider.permissionState(
+                    context, snapshot),
                 onChanged: (permissionGranted) {
-                  startBluetooth(context, permissionGranted);
-                  bool forceOff = false;
-                  if (((snapshot.data as BluetoothState ==
-                              BluetoothState.unauthorized) ||
-                          (snapshot.data as BluetoothState ==
-                              BluetoothState.off)) &&
-                      permissionGranted) {
-                    forceOff = true;
+                  _wayfindingProvider.startBluetooth(
+                      context, permissionGranted);
+                  if (_wayfindingProvider.forceOff) {
                     showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -137,9 +91,9 @@ class _AdvancedWayfindingPermissionState
                           if (Platform.isIOS) {
                             return CupertinoAlertDialog(
                               title: Text(
-                                  "UCSD Mobile would like to use Bluetooth."),
+                                  "UCSD Mobile would like to use Bluetooth and location."),
                               content: Text(
-                                  "This feature use Bluetooth to connect with other devices."),
+                                  "This feature use Bluetooth and location to connect with other devices."),
                               actions: <Widget>[
                                 FlatButton(
                                   child: Text('Cancel'),
@@ -158,9 +112,9 @@ class _AdvancedWayfindingPermissionState
                           }
                           return AlertDialog(
                             title: Text(
-                                "UCSD Mobile would like to use Bluetooth."),
+                                "UCSD Mobile would like to use Bluetooth and location."),
                             content: Text(
-                                "This feature use Bluetooth to connect with other devices."),
+                                "This feature use Bluetooth and location to connect with other devices."),
                             actions: <Widget>[
                               FlatButton(
                                 child: Text('Cancel'),
@@ -179,72 +133,25 @@ class _AdvancedWayfindingPermissionState
                         });
                   }
                   setState(() {
-                    if (forceOff) {
-                      _bluetoothSingleton.advancedWayfindingEnabled = false;
+                    if (_wayfindingProvider.forceOff) {
+                      _wayfindingProvider.advancedWayfindingEnabled =
+                      false;
                     } else {
-                      _bluetoothSingleton.advancedWayfindingEnabled =
-                          !_bluetoothSingleton.advancedWayfindingEnabled;
+                      _wayfindingProvider.advancedWayfindingEnabled =
+                      !_wayfindingProvider.advancedWayfindingEnabled!;
                     }
 
-                    if (!_bluetoothSingleton.advancedWayfindingEnabled) {
-                      _bluetoothSingleton.stopScans();
+                    if (!_wayfindingProvider.advancedWayfindingEnabled!) {
+                      _wayfindingProvider.stopScans();
                     }
-                    SharedPreferences.getInstance().then((value) {
-                      value.setBool("advancedWayfindingEnabled",
-                          _bluetoothSingleton.advancedWayfindingEnabled);
-                    });
+                    _wayfindingProvider.setAWPreference();
                   });
                 },
                 activeColor: Theme.of(context).buttonColor,
-              );
-            } else {
-              return CircularProgressIndicator();
-            }
-          },
-        ),
+              )
+                  : CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
+            })
       ],
     );
-  }
-
-  bool bluetoothStarted(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-    _bluetoothSingleton = AdvancedWayfindingSingleton();
-
-    if ((snapshot.data as BluetoothState == BluetoothState.unauthorized ||
-            snapshot.data as BluetoothState == BluetoothState.off) ||
-        (_bluetoothSingleton != null &&
-            !_bluetoothSingleton.advancedWayfindingEnabled)) {
-      _bluetoothSingleton.advancedWayfindingEnabled = false;
-    }
-    return _bluetoothSingleton.advancedWayfindingEnabled;
-  }
-
-  void checkToResumeBluetooth(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    if (prefs.containsKey("advancedWayfindingEnabled") &&
-        prefs.getBool('advancedWayfindingEnabled')) {
-      AdvancedWayfindingSingleton bluetoothSingleton =
-          AdvancedWayfindingSingleton();
-      if (bluetoothSingleton.firstInstance) {
-        bluetoothSingleton.firstInstance = false;
-        if (bluetoothSingleton.userDataProvider == null) {
-          bluetoothSingleton.userDataProvider =
-              Provider.of<UserDataProvider>(context, listen: false);
-        }
-        bluetoothSingleton.init();
-      }
-    }
-  }
-
-  void startBluetooth(BuildContext context, bool permissionGranted) async {
-    _bluetoothSingleton = AdvancedWayfindingSingleton();
-    if (_bluetoothSingleton.userDataProvider == null) {
-      _bluetoothSingleton.userDataProvider =
-          Provider.of<UserDataProvider>(context, listen: false);
-    }
-    if (permissionGranted) {
-      // Future.delayed(Duration(seconds: 5), ()  => bluetoothInstance.getOffloadAuthorization(context));
-      await _bluetoothSingleton.init();
-    }
   }
 }

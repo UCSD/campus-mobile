@@ -1,3 +1,5 @@
+
+
 import 'dart:ui';
 
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -29,13 +31,13 @@ class _OnboardingInitialState extends State<OnboardingInitial>
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Stack(children: <Widget>[
           Container(
             child: Column(children: <Widget>[
               Expanded(
-                  child: Stack(overflow: Overflow.clip, children: <Widget>[
+                  child: Stack(clipBehavior: Clip.none, children: <Widget>[
                 Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -114,8 +116,11 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Expanded(
-                            child: FlatButton(
-                          color: ColorPrimary,
+                            child: TextButton(
+                          style: TextButton.styleFrom(
+                            primary: ColorPrimary,
+                          ),
+                          onPressed: () { },
                           child: Text(
                             "Get Started",
                             style: TextStyle(
@@ -125,8 +130,11 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                           ),
                         )),
                         Expanded(
-                          child: FlatButton(
-                            color: ColorPrimary,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              primary: ColorPrimary,
+                            ),
+                            onPressed: () { },
                             child: Text(
                               "Log In",
                               style: TextStyle(

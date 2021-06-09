@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -14,7 +16,8 @@ class OnboardingLogin extends StatefulWidget {
 class _OnboardingLoginState extends State<OnboardingLogin> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
-  UserDataProvider _userDataProvider;
+  late UserDataProvider _userDataProvider;
+  bool _passwordObscured = true;
 
   @override
   void didChangeDependencies() {
@@ -28,9 +31,10 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
+        brightness: Brightness.dark,
       ),
       backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
-      body: _userDataProvider.isLoading
+      body: _userDataProvider.isLoading!
           ? Center(
               child: CircularProgressIndicator(
                 valueColor: new AlwaysStoppedAnimation<Color>(lightAccentColor),
@@ -60,8 +64,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(100)),
-                        color: Theme.of(context)
-                            .accentColor), //lightTextFieldBorderColor,
+                        color: Theme.of(context).colorScheme.secondary), //lightTextFieldBorderColor,
                     child: TextField(
                       style: TextStyle(
                           textBaseline: TextBaseline.alphabetic,
@@ -93,7 +96,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(100)),
-                    color: Theme.of(context).accentColor),
+                    color: Theme.of(context).colorScheme.secondary),
                 child: TextField(
                   style: TextStyle(
                     textBaseline: TextBaseline.alphabetic,
@@ -101,6 +104,16 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   ),
                   decoration: InputDecoration(
                     hintText: 'Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        // Based on passwordObscured state choose the icon
+                        _passwordObscured
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: () => _toggle(),
+                    ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.black,
@@ -118,25 +131,29 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     fillColor: Colors.white,
                     filled: true,
                   ),
-                  obscureText: true,
+                  obscureText: _passwordObscured,
                   controller: _passwordTextFieldController,
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 20),
               Padding(
                   padding: EdgeInsets.only(top: 30.0),
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                          child: FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          side: BorderSide(color: Colors.white),
+                          child: TextButton(
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            side: BorderSide(color: Colors.white),
+                          ),
+                          primary: ColorPrimary,
+                          textStyle: TextStyle(
+                            color: lightButtonTextColor,
+                          ),
+                          //child: OutlineButton(
+                          //borderSide: BorderSide(color: ColorPrimary),
                         ),
-                        color: ColorPrimary,
-                        textColor: lightButtonTextColor,
-                        //child: OutlineButton(
-                        //borderSide: BorderSide(color: ColorPrimary),
                         child: Text(
                           'Log in',
                           style: TextStyle(
@@ -144,13 +161,15 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                        onPressed: _userDataProvider.isLoading
+                        onPressed: _userDataProvider.isLoading!
                             ? null
                             : () {
                                 _userDataProvider
-                                    .login(_emailTextFieldController.text,
+                                    .manualLogin(_emailTextFieldController.text,
                                         _passwordTextFieldController.text)
                                     .then((isLoggedIn) async {
+                                  print('onboarding_login:isLoggedIn: ' +
+                                      isLoggedIn.toString());
                                   if (isLoggedIn) {
                                     Navigator.pushNamedAndRemoveUntil(
                                         context,
@@ -170,13 +189,13 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       )),
                     ],
                   )),
-              SizedBox(height: 5),
+              SizedBox(height: 10),
               Row(
                 children: [
                   GestureDetector(
                     child: Text(
                       'Need help logging in?',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                     onTap: () async {
                       try {
@@ -188,17 +207,18 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       }
                     },
                   ),
-
-                  /* GestureDetector(
+                  GestureDetector(
                     child: Text(
                       'Skip',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
-                    onTap: () {
+                    onTap: () async {
                       Navigator.pushNamedAndRemoveUntil(context,
                           RoutePaths.BottomNavigationBar, (_) => false);
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setBool('showOnboardingScreen', false);
                     },
-                  )*/
+                  )
                 ],
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
               ),
@@ -209,9 +229,19 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     );
   }
 
-  Widget showAlertDialog(BuildContext context) {
+  // Toggles the password show status
+  void _toggle() {
+    setState(() {
+      _passwordObscured = !_passwordObscured;
+    });
+  }
+
+  showAlertDialog(BuildContext context) {
     // set up the button
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+      ),
       child: Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();
@@ -220,9 +250,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Sorry, unable to sign you in"),
-      content: Text(
-          "Be sure you are using the correct credentials; TritonLink login if you are a student, SSO if you are Faculty/Staff."),
+      title: Text(LoginConstants.loginFailedTitle),
+      content: Text(LoginConstants.loginFailedDesc),
       actions: [
         okButton,
       ],

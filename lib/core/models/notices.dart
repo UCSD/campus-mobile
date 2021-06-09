@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 String noticeTitleKey = "notice-title";
 String noticeBannerImageKey = "notice-banner-image";
 String noticeBannerLinkKey = "notice-banner-link";
@@ -14,9 +11,9 @@ String noticesModelToJson(List<NoticesModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class NoticesModel {
-  String title;
-  String imageUrl;
-  String link;
+  String? title;
+  String? imageUrl;
+  String? link;
 
   NoticesModel({
     this.title,

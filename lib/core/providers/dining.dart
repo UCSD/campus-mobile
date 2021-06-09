@@ -1,3 +1,5 @@
+
+
 import 'dart:math';
 
 import 'package:campus_mobile_experimental/core/models/dining.dart';
@@ -18,21 +20,21 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   ///STATES
-  bool _isLoading;
-  DateTime _lastUpdated;
-  String _error;
+  bool? _isLoading;
+  DateTime? _lastUpdated;
+  String? _error;
 
   ///MODELS
-  Map<String, DiningModel> _diningModels = Map<String, DiningModel>();
-  Map<String, DiningMenuItemsModel> _diningMenuItemModels =
-      Map<String, DiningMenuItemsModel>();
-  Coordinates _coordinates;
+  Map<String?, DiningModel> _diningModels = Map<String, DiningModel>();
+  Map<String, DiningMenuItemsModel?> _diningMenuItemModels =
+      Map<String, DiningMenuItemsModel?>();
+  Coordinates? _coordinates;
 
   List<bool> filtersSelected = [false, false, false];
   Meal mealTime = Meal.breakfast;
 
   ///SERVICES
-  DiningService _diningService;
+  late DiningService _diningService;
 
   void fetchDiningMenu(String menuId) async {
     _isLoading = true;
@@ -53,9 +55,9 @@ class DiningDataProvider extends ChangeNotifier {
     notifyListeners();
 
     /// creating  new map ensures we remove all unsupported locations
-    Map<String, DiningModel> mapOfDiningLocations = Map<String, DiningModel>();
+    Map<String?, DiningModel> mapOfDiningLocations = Map<String?, DiningModel>();
     if (await _diningService.fetchData()) {
-      for (DiningModel model in _diningService.data) {
+      for (DiningModel model in _diningService.data!) {
         mapOfDiningLocations[model.name] = model;
       }
 
@@ -80,7 +82,7 @@ class DiningDataProvider extends ChangeNotifier {
     List<DiningModel> orderedListOfLots = _diningModels.values.toList();
     orderedListOfLots.sort((DiningModel a, DiningModel b) {
       if (a.distance != null && b.distance != null) {
-        return a.distance.compareTo(b.distance);
+        return a.distance!.compareTo(b.distance!);
       }
       return 0;
     });
@@ -91,9 +93,9 @@ class DiningDataProvider extends ChangeNotifier {
     if (_coordinates != null) {
       for (DiningModel model in _diningModels.values.toList()) {
         if (model.coordinates != null) {
-          var distance = calculateDistance(_coordinates.lat, _coordinates.lon,
-              model.coordinates.lat, model.coordinates.lon);
-          model.distance = distance;
+          var distance = calculateDistance(_coordinates!.lat ?? 0.0, _coordinates!.lon ?? 0.0,
+              model.coordinates!.lat ?? 0.0, model.coordinates!.lon ?? 0.0);
+          model.distance = distance as double?;
         }
       }
     }
@@ -114,13 +116,13 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String get error => _error;
-  DateTime get lastUpdated => _lastUpdated;
+  bool? get isLoading => _isLoading;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
 
   /// Returns menu data for given id
   /// Fetches menu if not already downloaded
-  DiningMenuItemsModel getMenuData(String id) {
+  DiningMenuItemsModel? getMenuData(String? id) {
     if (id != null) {
       if (_diningMenuItemModels[id] != null) {
         return _diningMenuItemModels[id];
@@ -131,19 +133,19 @@ class DiningDataProvider extends ChangeNotifier {
     return DiningMenuItemsModel();
   }
 
-  List<MenuItem> getMenuItems(String id, List<String> filters) {
-    List<MenuItem> menuItems;
-    if (_diningMenuItemModels[id] == null) {
+  List<MenuItem>? getMenuItems(String? id, List<String> filters) {
+    List<MenuItem>? menuItems;
+    if (_diningMenuItemModels[id!] == null) {
       return null;
     } else {
-      menuItems = _diningMenuItemModels[id].menuItems;
+      menuItems = _diningMenuItemModels[id]!.menuItems;
     }
-    List<MenuItem> filteredMenuItems = List<MenuItem>();
+    List<MenuItem> filteredMenuItems = [];
     if (filters != null) {
-      for (var menuItem in menuItems) {
+      for (var menuItem in menuItems!) {
         int matched = 0;
         for (int i = 0; i < filters.length; i++) {
-          if (menuItem.tags.contains(filters[i])) {
+          if (menuItem.tags!.contains(filters[i])) {
             matched++;
           }
         }
@@ -166,6 +168,6 @@ class DiningDataProvider extends ChangeNotifier {
       }
       return _diningModels.values.toList();
     }
-    return List<DiningModel>();
+    return [];
   }
 }

@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
@@ -56,11 +58,13 @@ class Router {
       case RoutePaths.MapSearch:
         return MaterialPageRoute(builder: (_) => MapSearchView());
       case RoutePaths.Notifications:
-        return MaterialPageRoute(builder: (_) => NotificationsListView());
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return NotificationsListView();
+        });
       case RoutePaths.Profile:
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:
-        NewsModel data = settings.arguments as NewsModel;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NewsList();
@@ -72,11 +76,16 @@ class Router {
         });
       case RoutePaths.NewsDetailView:
         Item newsItem = settings.arguments as Item;
-        return MaterialPageRoute(
-            builder: (_) => NewsDetailView(data: newsItem));
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return NewsDetailView(data: newsItem);
+        });
       case RoutePaths.EventDetailView:
         EventModel data = settings.arguments as EventModel;
-        return MaterialPageRoute(builder: (_) => EventDetailView(data: data));
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return EventDetailView(data: data);
+        });
       case RoutePaths.ManageAvailabilityView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
@@ -94,10 +103,10 @@ class Router {
           return DiningDetailView(data: data);
         });
       case RoutePaths.DiningNutritionView:
-        Map<String, Object> arguments = settings.arguments;
+        Map<String, Object?> arguments = settings.arguments as Map<String, Object?>;
         MenuItem data = arguments['data'] as MenuItem;
-        String disclaimer = arguments['disclaimer'] as String;
-        String disclaimerEmail = arguments['disclaimerEmail'] as String;
+        String? disclaimer = arguments['disclaimer'] as String?;
+        String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
         return MaterialPageRoute(
             builder: (_) => NutritionFactsView(
                   data: data,
@@ -108,6 +117,11 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageParkingView();
+        });
+      case RoutePaths.SpotTypesView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return SpotTypesView();
         });
       case RoutePaths.ManageShuttleView:
         return MaterialPageRoute(builder: (_) {
@@ -150,6 +164,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => BeaconView());
       case RoutePaths.ScanditScanner:
         return MaterialPageRoute(builder: (_) => ScanditScanner());
+      default:
+        return MaterialPageRoute(builder: (_) => Home());
     }
   }
 }

@@ -1,9 +1,11 @@
+
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 
 class BarcodeService {
   BarcodeService();
-  bool _isLoading;
-  String _error;
+  bool? _isLoading;
+  String? _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String _endpoint =
@@ -15,9 +17,8 @@ class BarcodeService {
     _isLoading = true;
     try {
       final response =
-      await _networkHelper.authorizedPost(_endpoint, headers, body);
-      if (response != null &&
-          validateUploadResults(body, response)) {
+          await _networkHelper.authorizedPost(_endpoint, headers, body);
+      if (response != null && validateUploadResults(body, response)) {
         _isLoading = false;
         return true;
       } else {
@@ -32,7 +33,6 @@ class BarcodeService {
     }
   }
 
-
   /*
     The following conditions are being checked on the client-side before indicating a successful submission:
 
@@ -41,24 +41,23 @@ class BarcodeService {
       - The stored value returned by ScanData API matches the value that has actually been scanned
       - The student has a non-empty Account ID, User ID, or Employee ID
   */
-  bool validateUploadResults(Map<String, dynamic> submit, Map<String, dynamic> response) {
+  bool validateUploadResults(
+      Map<String, dynamic> submit, Map<String, dynamic> response) {
     try {
       return (submit["barcode"] == response["SCAN_CODE_ID"]);
-    }
-    catch(e) {
+    } catch (e) {
       return false;
     }
   }
 
   bool isValid(var toCheck) {
     try {
-      return(toCheck != null && toCheck.toString().isNotEmpty);
-    }
-    catch(e) {
+      return (toCheck != null && toCheck.toString().isNotEmpty);
+    } catch (e) {
       return false;
     }
   }
 
-  String get error => _error;
-  bool get isLoading => _isLoading;
+  String? get error => _error;
+  bool? get isLoading => _isLoading;
 }

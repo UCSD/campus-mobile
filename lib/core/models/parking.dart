@@ -11,13 +11,13 @@ String parkingModelToJson(List<ParkingModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ParkingModel {
-  String locationId;
-  String locationName;
-  String locationContext;
-  String locationProvider;
-  Map<String, dynamic> availability;
-  DateTime lastUpdated;
-  String availabilityType;
+  String? locationId;
+  String? locationName;
+  String? locationContext;
+  String? locationProvider;
+  Map<String, dynamic>? availability;
+  DateTime? lastUpdated;
+  String? availabilityType;
 
   ParkingModel({
     this.locationId,
@@ -40,7 +40,7 @@ class ParkingModel {
           json["LocationProvider"] == null ? null : json["LocationProvider"],
       availability: json["Availability"] == null
           ? null
-          : json["Availability"] as Map<String, dynamic>,
+          : json["Availability"] as Map<String, dynamic>?,
       lastUpdated: json["lastUpdated"] == null
           ? null
           : DateTime.parse(json["LastUpdated"]),
@@ -56,7 +56,7 @@ class ParkingModel {
         "LocationProvider": locationProvider == null ? null : locationProvider,
         "Availability": availability == null ? null : availability,
         "LastUpdated":
-            lastUpdated == null ? null : lastUpdated.toIso8601String(),
+            lastUpdated == null ? null : lastUpdated!.toIso8601String(),
         "AvailabilityType": availabilityType == null ? null : availabilityType
       };
 }

@@ -17,16 +17,16 @@ String authenticationModelToJson(AuthenticationModel data) =>
 @HiveType(typeId: 1)
 class AuthenticationModel extends HiveObject {
   @HiveField(0)
-  String accessToken;
+  String? accessToken;
   // Deprecated reserved field number - DO NOT REMOVE
   // @HiveField(1)
   // String refreshToken;
   @HiveField(2)
-  String pid;
+  String? pid;
   @HiveField(3)
-  String ucsdaffiliation;
+  String? ucsdaffiliation;
   @HiveField(4)
-  int expiration;
+  int? expiration;
 
   AuthenticationModel({
     this.accessToken,
@@ -40,7 +40,7 @@ class AuthenticationModel extends HiveObject {
       accessToken: json["access_token"] == null ? null : json["access_token"],
       pid: json["pid"] == null ? null : json["pid"],
       ucsdaffiliation:
-          json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
+          json["ucsdaffiliation"] == null ? "" : json["ucsdaffiliation"],
       expiration: json["expiration"] == null ? 0 : json["expiration"],
     );
   }
@@ -48,22 +48,30 @@ class AuthenticationModel extends HiveObject {
   Map<String, dynamic> toJson() => {
         "access_token": accessToken == null ? null : accessToken,
         "pid": pid == null ? null : pid,
-        "ucsdaffiliation": ucsdaffiliation == null ? null : ucsdaffiliation,
+        "ucsdaffiliation": ucsdaffiliation == null ? "" : ucsdaffiliation,
         "expiration": expiration == null ? null : expiration,
       };
 
   /// Checks if the token we got back is expired
-  bool isLoggedIn(DateTime lastUpdated) {
+  bool isLoggedIn(DateTime? lastUpdated) {
+    /// User has not logged in previously - isLoggedIn FALSE
     if (lastUpdated == null) {
       return false;
     }
-    if (expiration == null) {
+
+    /// User has no expiration or accessToken - isLoggedIn FALSE
+    if (expiration == null || accessToken == null) {
       return false;
     }
+
+    /// User has expiration and accessToken
     if (DateTime.now()
-        .isAfter(lastUpdated.add(Duration(seconds: expiration)))) {
+        .isBefore(lastUpdated.add(Duration(seconds: expiration!)))) {
+      /// Current datetime < expiration datetime - isLoggedIn TRUE
+      return true;
+    } else {
+      /// Current datetime > expiration datetime - isLoggedIn FALSE
       return false;
     }
-    return true;
   }
 }

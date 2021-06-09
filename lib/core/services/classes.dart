@@ -1,3 +1,7 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/term.dart';
@@ -8,11 +12,11 @@ class ClassScheduleService {
   final String myAcademicHistoryApiEndpoint =
       'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list';
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
-  ClassScheduleModel _UNdata = ClassScheduleModel();
-  ClassScheduleModel _GRdata = ClassScheduleModel();
-  AcademicTermModel _academicTermModel;
+  DateTime? _lastUpdated;
+  String? _error;
+  ClassScheduleModel _unData = ClassScheduleModel();
+  ClassScheduleModel _grData = ClassScheduleModel();
+  AcademicTermModel? _academicTermModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
@@ -26,7 +30,7 @@ class ClassScheduleService {
           headers);
 
       /// parse data
-      _UNdata = classScheduleModelFromJson(_response);
+      _unData = classScheduleModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {
@@ -41,12 +45,12 @@ class ClassScheduleService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
+      String _response = _networkHelper.authorizedFetch(
           myAcademicHistoryApiEndpoint + '?academic_level=GR&term_code=' + term,
-          headers);
+          headers) as String;
 
       /// parse data
-      _GRdata = classScheduleModelFromJson(_response);
+      _grData = classScheduleModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {
@@ -70,10 +74,10 @@ class ClassScheduleService {
     }
   }
 
-  String get error => _error;
-  ClassScheduleModel get UNdata => _UNdata;
-  ClassScheduleModel get GRdata => _GRdata;
-  AcademicTermModel get academicTermModel => _academicTermModel;
+  String? get error => _error;
+  ClassScheduleModel get unData => _unData;
+  ClassScheduleModel get grData => _grData;
+  AcademicTermModel? get academicTermModel => _academicTermModel;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

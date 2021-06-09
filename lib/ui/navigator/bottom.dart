@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/wrappers/push_notifications.dart';
@@ -57,19 +59,19 @@ class _BottomTabBarState extends State<BottomTabBar> {
         items: [
           BottomNavigationBarItem(
             icon: new Icon(Icons.home),
-            title: new Text('Home'),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.map),
-            title: new Text('Map'),
+            label: 'Map',
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.notifications),
-            title: new Text('Notifications'),
+            label: 'Notifications',
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.person),
-            title: new Text('User Profile'),
+            label: 'User Profile',
           ),
         ],
         showSelectedLabels: false,

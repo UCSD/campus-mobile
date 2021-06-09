@@ -1,3 +1,5 @@
+
+
 class RoutePaths {
   static const String Home = '/';
   static const String BottomNavigationBar = 'bottom_navigation_bar';
@@ -33,13 +35,6 @@ class RoutePaths {
   static const String DiningViewAll = 'dining/dining_list_view';
   static const String DiningDetailView = 'dining/dining_detail_view';
   static const String DiningNutritionView = 'dining/dining_nutrition_view';
-  static const String SurfView = 'surfing/surf_view';
-  static const String SpecialEventsListView =
-      'special_events/special_events_list_view';
-  static const String SpecialEventsFilterView =
-      'special_events/special_events_filter_view';
-  static const String SpecialEventsDetailView =
-      'special_events/special_events_detail_view';
   static const String ScannerView = 'scanner/scanner_view';
   static const String ScanditScanner = 'scanner/scandit_scanner';
   static const String Parking = "parking/parking_view";
@@ -65,12 +60,10 @@ class RouteTitles {
     'shuttle/manage_shuttle_view': 'Manage Shuttle Stops',
     'shuttle/add_shuttle_stops_view': 'Add Shuttle Stops',
     'parking/manage_parking_view': 'Parking',
+    'parking/spot_types_view': 'Parking',
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
-    'special_events/special_events_list_view': 'Special Events',
-    'special_events/special_events_filter_view': 'Special Events',
-    'special_events/special_events_detail_view': 'Special Events',
   };
 }
 
@@ -91,9 +84,10 @@ class ErrorConstants {
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
   static const duplicateRecord =
-      'DioError [DioErrorType.RESPONSE]: Http status error [409]';
+      'DioError [DioErrorType.response]: Http status error [409]';
   static const invalidMedia =
-      'DioError [DioErrorType.RESPONSE]: Http status error [415]';
+      'DioError [DioErrorType.response]: Http status error [415]';
+  static const silentLoginFailed = "Silent login failed";
 }
 
 class ScannerConstants {
@@ -110,6 +104,16 @@ class ScannerConstants {
       'An error occurred. Please try again.\nCode #1040';
   static const scannerReauthFailure =
       'Your session has expired. Please login to submit a scan.';
+  static const noRecentScan = 'No scan submitted';
+}
+
+class LoginConstants {
+  static const silentLoginFailedTitle = 'Oops! You\'re not logged in.';
+  static const silentLoginFailedDesc =
+      'The system has logged you out (probably by mistake). Go to Profile to log back in.';
+  static const loginFailedTitle = 'Sorry, unable to sign you in.';
+  static const loginFailedDesc =
+      'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO (AD or Active Directory) if you are a Faculty/Staff.';
 }
 
 class Plugins {
@@ -145,16 +149,13 @@ class DataPersistence {
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-    'QRScanner': 'Scanner', // Web Scanner
     'NativeScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
     'MyUCSDChart': 'MyUCSDChart',
-    'staff_info': 'COVID-19 Info',
-    'campus_info': "Campus Information",
-    'student_info': 'COVID-19 Info',
     'student_survey': 'Student Survey',
     'student_id': 'Student ID',
-    'staff_id': 'Staff ID',
+    'speed_test': "Speed Test",
+    'employee_id': 'Employee ID',
     'finals': 'Finals',
     'schedule': 'Classes',
     'shuttle': "Shuttle",
@@ -163,7 +164,6 @@ class CardTitleConstants {
     'events': 'Events',
     'news': 'News',
     'parking': 'Parking',
-    'special_events': 'Special Events',
     'weather': 'Weather',
   };
 }

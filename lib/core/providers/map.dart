@@ -1,3 +1,5 @@
+
+
 import 'dart:math';
 
 import 'package:campus_mobile_experimental/core/models/location.dart';
@@ -15,52 +17,63 @@ class MapsDataProvider extends ChangeNotifier {
     ///INITIALIZE SERVICES
     _mapSearchService = MapSearchService();
 
-    _mapSearchModels = List<MapSearchModel>();
+    _mapSearchModels = [];
   }
 
   ///STATES
-  bool _isLoading;
-  DateTime _lastUpdated;
-  String _error;
-  bool _noResults;
+  bool? _isLoading;
+  DateTime? _lastUpdated;
+  String? _error;
+  bool? _noResults;
 
   ///MODELS
-  List<MapSearchModel> _mapSearchModels = List<MapSearchModel>();
+  List<MapSearchModel> _mapSearchModels = [];
 
-  Coordinates _coordinates;
+  Coordinates? _coordinates;
   Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
   TextEditingController _searchBarController = TextEditingController();
-  GoogleMapController _mapController;
+  GoogleMapController? _mapController;
 
-  List<String> _searchHistory = List<String>();
+  List<String> _searchHistory = [];
 
   ///SERVICES
-  MapSearchService _mapSearchService;
+  late MapSearchService _mapSearchService;
 
   void addMarker(int listIndex) {
     final Marker marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
-      position: LatLng(_mapSearchModels[listIndex].mkrLat,
-          _mapSearchModels[listIndex].mkrLong),
-      infoWindow: InfoWindow(title: _mapSearchModels[listIndex].title),
+      position: LatLng(_mapSearchModels[listIndex].mkrLat!,
+          _mapSearchModels[listIndex].mkrLong!),
+      infoWindow: InfoWindow(
+          title: _mapSearchModels[listIndex].title,
+          snippet: _mapSearchModels[listIndex].description),
     );
     _markers.clear();
     _markers[marker.markerId] = marker;
+
     updateMapPosition();
     notifyListeners();
   }
 
   void updateMapPosition() {
     if (_markers.isNotEmpty && _mapController != null) {
-      _mapController.animateCamera(
-          CameraUpdate.newLatLng(_markers.values.toList()[0].position));
+      _mapController!
+          .animateCamera(
+              CameraUpdate.newLatLng(_markers.values.toList()[0].position))
+          .then((_) async {
+        await Future.delayed(Duration(seconds: 1));
+        try {
+          _mapController!
+              .showMarkerInfoWindow(_markers.values.toList()[0].markerId);
+        } catch (e) {}
+      });
     }
   }
 
   void reorderLocations() {
     _mapSearchModels.sort((MapSearchModel a, MapSearchModel b) {
       if (a.distance != null && b.distance != null) {
-        return a.distance.compareTo(b.distance);
+        return a.distance!.compareTo(b.distance!);
       }
       return 0;
     });
@@ -107,8 +120,8 @@ class MapsDataProvider extends ChangeNotifier {
       for (MapSearchModel model in _mapSearchModels) {
         if (model.mkrLat != null && model.mkrLong != null) {
           var distance = calculateDistance(
-              _coordinates.lat, _coordinates.lon, model.mkrLat, model.mkrLong);
-          model.distance = distance;
+              _coordinates!.lat!, _coordinates!.lon!, model.mkrLat!, model.mkrLong!);
+          model.distance = distance as double?;
         }
       }
     }
@@ -124,19 +137,19 @@ class MapsDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String get error => _error;
-  DateTime get lastUpdated => _lastUpdated;
+  bool? get isLoading => _isLoading;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
   List<MapSearchModel> get mapSearchModels => _mapSearchModels;
   List<String> get searchHistory => _searchHistory;
   Map<MarkerId, Marker> get markers => _markers;
-  Coordinates get coordinates => _coordinates;
+  Coordinates? get coordinates => _coordinates;
   TextEditingController get searchBarController => _searchBarController;
-  bool get noResults => _noResults;
-  GoogleMapController get mapController => _mapController;
+  bool? get noResults => _noResults;
+  GoogleMapController? get mapController => _mapController;
 
   ///Setters
-  set coordinates(Coordinates value) {
+  set coordinates(Coordinates? value) {
     _coordinates = value;
     notifyListeners();
   }
@@ -146,7 +159,7 @@ class MapsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set mapController(GoogleMapController value) {
+  set mapController(GoogleMapController? value) {
     _mapController = value;
     notifyListeners();
   }

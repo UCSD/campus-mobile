@@ -9,7 +9,7 @@ NewsModel newsModelFromJson(String str) => NewsModel.fromJson(json.decode(str));
 String newsModelToJson(NewsModel data) => json.encode(data.toJson());
 
 class NewsModel {
-  List<Item> items;
+  List<Item>? items;
 
   NewsModel({
     this.items,
@@ -24,16 +24,16 @@ class NewsModel {
   Map<String, dynamic> toJson() => {
         "items": items == null
             ? null
-            : List<dynamic>.from(items.map((x) => x.toJson())),
+            : List<dynamic>.from(items!.map((x) => x.toJson())),
       };
 }
 
 class Item {
-  DateTime date;
-  String title;
-  String description;
-  String link;
-  String image;
+  DateTime? date;
+  String? title;
+  String? description;
+  String? link;
+  String? image;
 
   Item({
     this.date,
@@ -53,9 +53,9 @@ class Item {
       );
 
   Map<String, dynamic> toJson() => {
-        "date": date == null ? null : date.toIso8601String(),
+        "date": date == null ? null : date!.toIso8601String(),
         "title": title == null ? null : title,
-        "description": description == null ? null : description.trim(),
+        "description": description == null ? null : description!.trim(),
         "link": link == null ? null : link,
         "image": image == null ? null : image,
       };

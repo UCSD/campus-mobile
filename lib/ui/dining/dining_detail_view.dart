@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/dining.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
@@ -7,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DiningDetailView extends StatelessWidget {
-  const DiningDetailView({Key key, @required this.data}) : super(key: key);
+  const DiningDetailView({Key? key, required this.data}) : super(key: key);
   final prefix0.DiningModel data;
   @override
   Widget build(BuildContext context) {
@@ -29,12 +31,12 @@ class DiningDetailView extends StatelessWidget {
       BuildContext context, prefix0.DiningModel model) {
     return [
       Text(
-        model.name,
+        model.name!,
         textAlign: TextAlign.start,
         style: TextStyle(fontSize: 26),
       ),
       Text(
-        model.description,
+        model.description!,
         textAlign: TextAlign.start,
         style: TextStyle(fontSize: 15),
       ),
@@ -52,7 +54,10 @@ class DiningDetailView extends StatelessWidget {
   Widget buildDirectionsButton(
       BuildContext context, prefix0.DiningModel model) {
     if (model.distance != null)
-      return FlatButton(
+      return TextButton(
+        style: TextButton.styleFrom(
+          primary: Theme.of(context).buttonColor,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -66,7 +71,7 @@ class DiningDetailView extends StatelessWidget {
                   Icons.directions_walk,
                   size: 30,
                 ),
-                Text(num.parse(model.distance.toStringAsFixed(1)).toString() +
+                Text(num.parse(model.distance!.toStringAsFixed(1)).toString() +
                     ' mi'),
               ],
             ),
@@ -75,7 +80,7 @@ class DiningDetailView extends StatelessWidget {
         onPressed: () {
           try {
             launch(
-                'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates.lat},${model.coordinates.lon}&travelmode=walking',
+                'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates!.lat},${model.coordinates!.lon}&travelmode=walking',
                 forceSafariVC: true);
           } catch (e) {
             // an error occurred, do nothing
@@ -88,12 +93,18 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
     if (model.url != null && model.url != '') {
-      return RaisedButton(
-        child: Text('Visit Website'),
-        textColor: Theme.of(context).textTheme.button.color,
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          onPrimary: Theme.of(context).primaryColor, // foreground
+          primary: Theme.of(context).buttonColor,
+        ),
+        child: Text('Visit Website',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.button!.color,
+            )),
         onPressed: () {
           try {
-            launch(model.url, forceSafariVC: true);
+            launch(model.url!, forceSafariVC: true);
           } catch (e) {
             // an error occurred, do nothing
           }
@@ -104,13 +115,19 @@ class DiningDetailView extends StatelessWidget {
   }
 
   Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
-    if (model.menuWebsite != null && model.menuWebsite.isNotEmpty) {
-      return RaisedButton(
-        child: Text('View Menu'),
-        textColor: Theme.of(context).textTheme.button.color,
+    if (model.menuWebsite != null && model.menuWebsite!.isNotEmpty) {
+      return ElevatedButton(
+        child: Text('View Menu',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.button!.color,
+            )),
+        style: ElevatedButton.styleFrom(
+          onPrimary: Theme.of(context).primaryColor, // foreground
+          primary: Theme.of(context).buttonColor,
+        ),
         onPressed: () {
           try {
-            launch(model.menuWebsite, forceSafariVC: true);
+            launch(model.menuWebsite!, forceSafariVC: true);
           } catch (e) {
             // an error occurred, do nothing
           }
@@ -148,12 +165,12 @@ class DiningDetailView extends StatelessWidget {
   }
 
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
-    String options = model.paymentOptions.join(', ');
+    String options = model.paymentOptions!.join(', ');
     return RichText(
       text: TextSpan(
         style: TextStyle(
-            fontSize: Theme.of(context).textTheme.body1.fontSize,
-            color: Theme.of(context).textTheme.body1.color),
+            fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
+            color: Theme.of(context).textTheme.bodyText2!.color),
         children: [
           TextSpan(
             text: "Payment Options:\n",
@@ -166,9 +183,9 @@ class DiningDetailView extends StatelessWidget {
   }
 
   Widget buildPictures(prefix0.DiningModel model) {
-    List<ImageLoader> images = List<ImageLoader>();
-    if (model.images != null && model.images.length > 0) {
-      for (prefix0.Image item in model.images) {
+    List<ImageLoader> images = [];
+    if (model.images != null && model.images!.length > 0) {
+      for (prefix0.Image item in model.images!) {
         images.add(ImageLoader(
           url: item.small,
         ));
@@ -194,50 +211,50 @@ class DiningDetailView extends StatelessWidget {
 }
 
 class HoursOfDay extends StatelessWidget {
-  final int weekday;
-  final prefix0.DiningModel model;
+  final int? weekday;
+  final prefix0.DiningModel? model;
 
-  const HoursOfDay({Key key, this.weekday, this.model}) : super(key: key);
+  const HoursOfDay({Key? key, this.weekday, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String theDay;
-    String theHours;
+    String? theDay;
+    String? theHours;
     switch (weekday) {
       case 1:
         theDay = 'Monday';
         theHours =
-            model.regularHours.mon == null ? 'Closed' : model.regularHours.mon;
+            model!.regularHours!.mon == null ? 'Closed' : model!.regularHours!.mon;
         break;
       case 2:
         theDay = 'Tuesday';
         theHours =
-            model.regularHours.tue == null ? 'Closed' : model.regularHours.tue;
+            model!.regularHours!.tue == null ? 'Closed' : model!.regularHours!.tue;
         break;
       case 3:
         theDay = 'Wednesday';
         theHours =
-            model.regularHours.wed == null ? 'Closed' : model.regularHours.wed;
+            model!.regularHours!.wed == null ? 'Closed' : model!.regularHours!.wed;
         break;
       case 4:
         theDay = 'Thursday';
         theHours =
-            model.regularHours.thu == null ? 'Closed' : model.regularHours.thu;
+            model!.regularHours!.thu == null ? 'Closed' : model!.regularHours!.thu;
         break;
       case 5:
         theDay = 'Friday';
         theHours =
-            model.regularHours.fri == null ? 'Closed' : model.regularHours.fri;
+            model!.regularHours!.fri == null ? 'Closed' : model!.regularHours!.fri;
         break;
       case 6:
         theDay = 'Saturday';
         theHours =
-            model.regularHours.sat == null ? 'Closed' : model.regularHours.sat;
+            model!.regularHours!.sat == null ? 'Closed' : model!.regularHours!.sat;
         break;
       case 7:
         theDay = 'Sunday';
         theHours =
-            model.regularHours.sun == null ? 'Closed' : model.regularHours.sun;
+            model!.regularHours!.sun == null ? 'Closed' : model!.regularHours!.sun;
         break;
     }
     /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
@@ -253,7 +270,7 @@ class HoursOfDay extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  RegExp(r"\b[0-9]{2}").allMatches(theHours).length != 2
+                  RegExp(r"\b[0-9]{2}").allMatches(theHours!).length != 2
                       ? Text(theHours)
                       : TimeRangeWidget(
                           time: theHours

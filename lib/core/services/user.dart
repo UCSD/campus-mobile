@@ -1,11 +1,15 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 
 class UserProfileService {
   UserProfileService();
-  bool _isLoading;
-  String _error;
-  UserProfileModel _userProfileModel;
+  bool? _isLoading;
+  String? _error;
+  UserProfileModel? _userProfileModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
@@ -49,15 +53,14 @@ class UserProfileService {
   ///if attribute does not exists in db then it will be created
   List<Map<String, dynamic>> createAttributeValueJson(
       Map<String, dynamic> json) {
-    List<Map<String, dynamic>> correctlyFormattedData =
-        List<Map<String, dynamic>>();
+    List<Map<String, dynamic>> correctlyFormattedData = [];
     json.forEach((key, value) {
       correctlyFormattedData.add({"attribute": key, "value": value});
     });
     return correctlyFormattedData;
   }
 
-  String get error => _error;
-  UserProfileModel get userProfileModel => _userProfileModel;
-  bool get isLoading => _isLoading;
+  String? get error => _error;
+  UserProfileModel? get userProfileModel => _userProfileModel;
+  bool? get isLoading => _isLoading;
 }

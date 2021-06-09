@@ -1,34 +1,36 @@
+
+
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 
 class CardsService {
   bool _isLoading = false;
-  DateTime _lastUpdated;
-  String _error;
+  DateTime? _lastUpdated;
+  String? _error;
 
-  Map<String, CardsModel> _cardsModel;
+  Map<String, CardsModel>? _cardsModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
 
-  Future<bool> fetchCards(String ucsdAffiliation) async {
+  Future<bool> fetchCards(String? ucsdAffiliation) async {
     _error = null;
     _isLoading = true;
 
-    String cardListEndpoint =
-        'https://api-qa.ucsd.edu:8243/defaultcards/v4.0.0/defaultcards';
+    if (ucsdAffiliation == null)
+      ucsdAffiliation = "";
 
+    /// API Manager Service
     try {
-      //form query string with ucsd affiliation
-      cardListEndpoint += "?ucsdaffiliation=${ucsdAffiliation}";
-
-      /// fetch data
+      String cardListEndpoint =
+          "https://api-qa.ucsd.edu:8243/defaultcards/v6.0.0/defaultcards?ucsdaffiliation=" +
+              ucsdAffiliation;
       String _response =
           await _networkHelper.authorizedFetch(cardListEndpoint, headers);
-
-      /// parse data
       _cardsModel = cardsModelFromJson(_response);
       _isLoading = false;
       return true;
@@ -42,6 +44,21 @@ class CardsService {
       _isLoading = false;
       return false;
     }
+
+    /// Card Prototyping Service
+    // try {
+    //   String cardPrototypeEndpoint =
+    //       "https://mobile.ucsd.edu/replatform/v1/qa/cards/prototypes/card-prototype--copy-me.json";
+    //   String _response = await _networkHelper.fetchData(cardPrototypeEndpoint);
+    //   _cardsModel = cardsModelFromJson(_response);
+    //   _isLoading = false;
+    //   return true;
+    // } catch (e) {
+    //   print(e);
+    //   _error = e.toString();
+    //   _isLoading = false;
+    //   return false;
+    // }
   }
 
   Future<bool> getNewToken() async {
@@ -62,8 +79,8 @@ class CardsService {
     }
   }
 
-  String get error => _error;
-  Map<String, CardsModel> get cardsModel => _cardsModel;
+  String? get error => _error;
+  Map<String, CardsModel>? get cardsModel => _cardsModel;
   bool get isLoading => _isLoading;
-  DateTime get lastUpdated => _lastUpdated;
+  DateTime? get lastUpdated => _lastUpdated;
 }

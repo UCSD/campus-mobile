@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/student_id_barcode.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
@@ -16,22 +18,22 @@ class StudentIdDataProvider extends ChangeNotifier {
   }
 
   ///STATES
-  bool _isLoading;
-  DateTime _lastUpdated;
-  String _error;
-  int _selectedCourse;
+  bool? _isLoading;
+  DateTime? _lastUpdated;
+  String? _error;
+  int? _selectedCourse;
 
   ///MODELS
-  StudentIdBarcodeModel _studentIdBarcodeModel;
-  StudentIdNameModel _studentIdNameModel;
-  StudentIdPhotoModel _studentIdPhotoModel;
-  StudentIdProfileModel _studentIdProfileModel;
+  StudentIdBarcodeModel? _studentIdBarcodeModel;
+  StudentIdNameModel? _studentIdNameModel;
+  StudentIdPhotoModel? _studentIdPhotoModel;
+  StudentIdProfileModel? _studentIdProfileModel;
 
   ///Additional Provider
-  UserDataProvider _userDataProvider;
+  late UserDataProvider _userDataProvider;
 
   ///SERVICES
-  StudentIdService _studentIdService;
+  late StudentIdService _studentIdService;
 
   //Fetch Information From Models
   void fetchData() async {
@@ -44,7 +46,7 @@ class StudentIdDataProvider extends ChangeNotifier {
       /// Initialize header
       final Map<String, String> header = {
         'Authorization':
-            'Bearer ${_userDataProvider?.authenticationModel?.accessToken}'
+            'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
       };
 
       /// Fetch Barcode
@@ -114,14 +116,14 @@ class StudentIdDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String get error => _error;
-  DateTime get lastUpdated => _lastUpdated;
-  StudentIdBarcodeModel get studentIdBarcodeModel => _studentIdBarcodeModel;
-  StudentIdNameModel get studentIdNameModel => _studentIdNameModel;
-  StudentIdPhotoModel get studentIdPhotoModel => _studentIdPhotoModel;
-  StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
-  int get selectedCourse => _selectedCourse;
+  bool? get isLoading => _isLoading;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
+  StudentIdBarcodeModel? get studentIdBarcodeModel => _studentIdBarcodeModel;
+  StudentIdNameModel? get studentIdNameModel => _studentIdNameModel;
+  StudentIdPhotoModel? get studentIdPhotoModel => _studentIdPhotoModel;
+  StudentIdProfileModel? get studentIdProfileModel => _studentIdProfileModel;
+  int? get selectedCourse => _selectedCourse;
 
   ///Simple Setters
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;

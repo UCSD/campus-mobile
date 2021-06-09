@@ -1,19 +1,20 @@
+
+
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:flutter/foundation.dart' as Foundation;
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 
-class DebugBuildInfo extends StatefulWidget {
+class BuildInfo extends StatefulWidget {
   @override
-  _DebugBuildInfoState createState() => _DebugBuildInfoState();
+  _BuildInfoState createState() => _BuildInfoState();
 }
 
-class _DebugBuildInfoState extends State<DebugBuildInfo> {
+class _BuildInfoState extends State<BuildInfo> {
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
-    packageName: 'Unknown',
     version: 'Unknown',
     buildNumber: 'Unknown',
+    packageName: 'Unknown',
   );
 
   @override
@@ -29,76 +30,31 @@ class _DebugBuildInfoState extends State<DebugBuildInfo> {
     });
   }
 
+  final String buildEnv = "##BUILD_ENV##";
+
   @override
   Widget build(BuildContext context) {
-    return Foundation.kDebugMode
-        ? Expanded(
-            child: SingleChildScrollView(
-              child: Theme(
-                data: ThemeData(
-                  dividerColor: lightAccentColor,
-                ),
-                child: DataTable(
-                    horizontalMargin: 0.0,
-                    columnSpacing: 10.0,
-                    headingRowHeight: 30.0,
-                    dataRowHeight: 30.0,
-                    columns: [
-                      DataColumn(
-                          label: Text(
-                        'Debug Build Info',
-                        style: debugHeader,
-                      )),
-                      DataColumn(
-                          label: Text(
-                        '',
-                        style: debugHeader,
-                      )),
-                    ],
-                    rows: [
-                      DataRow(cells: [
-                        DataCell(Text('App Name', style: debugRow)),
-                        DataCell(Text(
-                          _packageInfo.appName ?? 'N/A',
-                          style: debugRow,
-                        )),
-                      ]),
-                      DataRow(cells: [
-                        DataCell(Text(
-                          'App ID',
-                          style: debugRow,
-                        )),
-                        DataCell(Text(
-                          _packageInfo.packageName ?? 'N/A',
-                          style: debugRow,
-                        )),
-                      ]),
-                      DataRow(cells: [
-                        DataCell(Text(
-                          'Version',
-                          style: debugRow,
-                        )),
-                        DataCell(Text(
-                          _packageInfo.version ?? 'N/A',
-                          style: debugRow,
-                        )),
-                      ]),
-                      DataRow(cells: [
-                        DataCell(Text(
-                          'Build',
-                          style: debugRow,
-                        )),
-                        DataCell(Text(
-                          _packageInfo.buildNumber ?? 'N/A',
-                          style: debugRow,
-                        )),
-                      ]),
-                      // ##PRE_BUILD_DEBUG_SUPPLEMENTAL## (Do Not Remove)
-                    ]),
-              ),
-            ),
-            flex: 1,
-          )
-        : Container();
+    try {
+      return Container(
+          padding: EdgeInsets.only(top: 16, bottom: 16),
+          width: double.infinity,
+          child: Text(
+            _packageInfo.appName +
+                ' ' +
+                _packageInfo.version +
+                ' (' +
+                _packageInfo.buildNumber +
+                ')' +
+                ((buildEnv == 'PROD' || buildEnv == '##BUILD_ENV##')
+                    ? ''
+                    : ' ' + buildEnv) +
+                ((buildEnv == '##BUILD_ENV##') ? ' QA' : ''),
+            style: TextStyle(color: agnosticDisabled),
+            textAlign: TextAlign.center,
+          ));
+    } catch (err) {
+      print(err);
+      return Container();
+    }
   }
 }

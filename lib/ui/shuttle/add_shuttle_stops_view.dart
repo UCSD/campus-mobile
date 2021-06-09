@@ -1,3 +1,5 @@
+
+
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -10,7 +12,7 @@ class AddShuttleStopsView extends StatefulWidget {
 }
 
 class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
-  ShuttleDataProvider _shuttleDataProvider;
+  late ShuttleDataProvider _shuttleDataProvider;
   bool isAddingStop = false;
 
   @override
@@ -25,7 +27,7 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
           height: 200.0,
           child: Center(
             child: Container(
-                height: 32, width: 32, child: CircularProgressIndicator()),
+                height: 32, width: 32, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
           ),
         )),
       ]);
@@ -45,7 +47,7 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
   }
 
   List<Widget> createList(BuildContext context) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = [];
 
     _shuttleDataProvider.stopsNotSelected.forEach((key, value) {
       ShuttleStopModel model = value;
@@ -53,7 +55,7 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
         list.add(ListTile(
           key: Key(model.id.toString()),
           title: Text(
-            model.name,
+            model.name!,
           ),
           onTap: () async {
             setState(() {

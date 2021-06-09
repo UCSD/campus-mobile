@@ -1,17 +1,19 @@
+
+
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MoreResultsList extends StatelessWidget {
   const MoreResultsList({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -38,7 +40,7 @@ class MoreResultsList extends StatelessWidget {
                         title: Text(
                           Provider.of<MapsDataProvider>(cntxt, listen: false)
                               .mapSearchModels[index]
-                              .title,
+                              .title!,
                         ),
                         trailing: Text(
                           Provider.of<MapsDataProvider>(cntxt, listen: false)
@@ -48,7 +50,7 @@ class MoreResultsList extends StatelessWidget {
                               ? Provider.of<MapsDataProvider>(cntxt,
                                           listen: false)
                                       .mapSearchModels[index]
-                                      .distance
+                                      .distance!
                                       .toStringAsPrecision(3) +
                                   ' mi'
                               : '--',
@@ -67,10 +69,12 @@ class MoreResultsList extends StatelessWidget {
             ),
           );
         },
-        color: Theme.of(context).buttonColor,
+        style: ElevatedButton.styleFrom(
+          primary: Theme.of(context).buttonColor,
+        ),
         child: Text(
           'Show More Results',
-          style: TextStyle(color: Theme.of(context).textTheme.button.color),
+          style: TextStyle(color: Theme.of(context).textTheme.button!.color),
         ),
       ),
     );

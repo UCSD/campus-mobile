@@ -16,6 +16,19 @@
 	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>deeplinking.searchmap</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>campusmobile</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -43,6 +56,8 @@
 	<key>NSHumanReadableCopyright</key>
 	<string></string>
 	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allowing location access allows cards and map search to display information relevant to your location.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allowing location access allows cards and map search to display information relevant to your location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allowing location access while using the app allows cards and map search to display information relevant to your location.</string>

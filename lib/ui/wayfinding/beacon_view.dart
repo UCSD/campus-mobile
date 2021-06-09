@@ -1,9 +1,9 @@
-import 'dart:async';
 
-import 'package:flutter/material.dart';
+
 import 'package:beacon_broadcast/beacon_broadcast.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class BeaconView extends StatefulWidget {
   @override
@@ -11,26 +11,28 @@ class BeaconView extends StatefulWidget {
 }
 
 class _BeaconViewState extends State<BeaconView> {
-
   var _isTransmissionSupported;
   var _isAdvertising = false;
-  var _isAdvertisingSubscription;
-  BeaconBroadcast beaconBroadcast;
+  late var _isAdvertisingSubscription;
+  late BeaconBroadcast beaconBroadcast;
   var beaconUuid = 'null';
 
   @override
-  void initState () {
+  void initState() {
     super.initState();
 
     checkTime();
     beaconBroadcast = BeaconBroadcast();
-    beaconBroadcast.checkTransmissionSupported().then((isTransmissionSupported) {
+    beaconBroadcast
+        .checkTransmissionSupported()
+        .then((isTransmissionSupported) {
       setState(() {
         _isTransmissionSupported = isTransmissionSupported;
       });
     });
 
-    _isAdvertisingSubscription = beaconBroadcast.getAdvertisingStateChange().listen((isAdvertising) {
+    _isAdvertisingSubscription =
+        beaconBroadcast.getAdvertisingStateChange().listen((isAdvertising) {
       setState(() {
         _isAdvertising = isAdvertising;
       });
@@ -47,37 +49,36 @@ class _BeaconViewState extends State<BeaconView> {
     beaconBroadcast.stop();
   }
 
-  void checkTime () async {
+  void checkTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    beaconUuid = prefs.get('uuid') ?? "null";
-    var previousTime =  prefs.get('previousTime') ?? DateTime(1990).toString();
-    var difference = DateTime.now().difference(DateTime.parse(previousTime)).inSeconds;
+    beaconUuid = prefs.get('uuid') as String? ?? "null";
+    var previousTime = prefs.get('previousTime') ?? DateTime(1990).toString();
+    var difference =
+        DateTime.now().difference(DateTime.parse(previousTime as String)).inSeconds;
     print(difference);
     if (difference > 10) {
       changeUUID();
       prefs.setString('previousTime', DateTime.now().toString());
     }
-
   }
 
-  void _startBroadcast () {
-    if (_isAdvertising)
-      return null;
+  void _startBroadcast() {
+    if (_isAdvertising) return null;
 
     beaconBroadcast
-      .setUUID(beaconUuid)
-      .setMajorId(1)
-      .setMinorId(100)
-      .setIdentifier('com.example.myDevice')
-      .setLayout(BeaconBroadcast.ALTBEACON_LAYOUT)
-      .start();
+        .setUUID(beaconUuid)
+        .setMajorId(1)
+        .setMinorId(100)
+        .setIdentifier('com.example.myDevice')
+        .setLayout(BeaconBroadcast.ALTBEACON_LAYOUT)
+        .start();
 
     print(beaconUuid);
   }
 
-  void _stopBroadcast () => beaconBroadcast.stop();
+  void _stopBroadcast() => beaconBroadcast.stop();
 
-  void changeUUID () {
+  void changeUUID() {
     beaconUuid = Uuid().v4();
     beaconUuid = "00000000" + beaconUuid.substring(8);
     setState(() {});
@@ -85,37 +86,37 @@ class _BeaconViewState extends State<BeaconView> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold (
-      appBar: AppBar (
-        title: Text ("Bluetooth Beacon Broadcasting"),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Bluetooth Beacon Broadcasting"),
       ),
-
-      body: Column (
+      body: Column(
         children: <Widget>[
-          Row (
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              RaisedButton (
+              ElevatedButton(
                 onPressed: _startBroadcast,
-                child: Text ("Start Broadcasting",
-                  style: TextStyle (color: Colors.white),
+                child: Text(
+                  "Start Broadcasting",
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
-              RaisedButton (
+              ElevatedButton(
                 onPressed: _stopBroadcast,
-                child: Text ("Stop Broadcasting",
-                  style: TextStyle (color: Colors.white),
+                child: Text(
+                  "Stop Broadcasting",
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
           ),
-          Text ("Is transmission supported?"),
-          Text ("$_isTransmissionSupported"),
-          Text ("Is beacon broadcasting?"),
-          Text ("$_isAdvertising"),
-          Text ("Broadcasting UUID"),
-          Text (beaconUuid),
+          Text("Is transmission supported?"),
+          Text("$_isTransmissionSupported"),
+          Text("Is beacon broadcasting?"),
+          Text("$_isAdvertising"),
+          Text("Broadcasting UUID"),
+          Text(beaconUuid),
         ],
       ),
     );

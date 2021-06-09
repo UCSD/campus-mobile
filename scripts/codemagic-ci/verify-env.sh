@@ -1,10 +1,9 @@
 #!/bin/sh
-set -ex
+set -e
 
-echo "Param passed: -------------------------- $1"
+echo "Running verify-env.sh $1"
 
 if [ "$1" == "PROD" ]; then
-    echo "verify-env.sh PROD-----------------------------------------------"
 	qa_slash=$(grep -rio "https.*\/qa" lib | wc -l | sed -e "s/^[ \t]*//")
 	qa_dash=$(grep -rio "https.*-qa" lib | wc -l | sed -e "s/^[ \t]*//")
 	dev_slash=$(grep -rio "https.*\/dev" lib | wc -l | sed -e "s/^[ \t]*//")
@@ -24,9 +23,9 @@ if [ "$1" == "PROD" ]; then
 		grep -rin "https.*-dev" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_IOS_PH" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_ANDROID_PH" lib
+		exit 1
 	fi
 elif [ "$1" == "PROD-TEST" ]; then
-    echo "verify-env.sh PROD-TEST -----------------------------------------------"
 	topics=$(grep -rio "https.*prod/topics.json" lib | wc -l | sed -e "s/^[ \t]*//")
 
 	invalid_count=$((topics))
@@ -39,9 +38,9 @@ elif [ "$1" == "PROD-TEST" ]; then
 		grep -rin "\"freeFood\"" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_IOS_PH" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_ANDROID_PH" lib
+		exit 1
 	fi
 elif [ "$1" == "QA" ]; then
-    echo "verify-env.sh QA-----------------------------------------------"
 	scandit_android=$(grep -rio "SCANDIT_NATIVE_LICENSE_ANDROID_PH" lib | wc -l | sed -e "s/^[ \t]*//")
 	scandit_ios=$(grep -rio "SCANDIT_NATIVE_LICENSE_IOS_PH" lib | wc -l | sed -e "s/^[ \t]*//")
 
@@ -55,6 +54,7 @@ elif [ "$1" == "QA" ]; then
 		grep -rin "https.*-prod" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_IOS_PH" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_ANDROID_PH" lib
+		exit 1
 	fi
 else
 	echo "Error: verify-env.sh: Environment not specified (PROD|PROD-TEST|QA)"

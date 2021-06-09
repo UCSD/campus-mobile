@@ -1,11 +1,13 @@
+
+
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ContainerView extends StatelessWidget {
   const ContainerView({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
   final Widget child;
 

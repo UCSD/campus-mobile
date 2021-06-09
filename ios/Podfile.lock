@@ -1,76 +1,104 @@
 PODS:
   - "app_settings (3.0.0+1)":
     - Flutter
-  - background_fetch (0.6.0):
-    - Flutter
   - beacon_broadcast (0.0.1):
     - Flutter
+  - connectivity (0.0.1):
+    - Flutter
+    - Reachability
   - device_info (0.0.1):
     - Flutter
-  - Firebase/Analytics (6.34.0):
+  - Firebase/Analytics (8.0.0):
     - Firebase/Core
-  - Firebase/Core (6.34.0):
+  - Firebase/Core (8.0.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 6.9.0)
-  - Firebase/CoreOnly (6.34.0):
-    - FirebaseCore (= 6.10.4)
-  - Firebase/Messaging (6.34.0):
+    - FirebaseAnalytics (~> 8.0.0)
+  - Firebase/CoreOnly (8.0.0):
+    - FirebaseCore (= 8.0.0)
+  - Firebase/Crashlytics (8.0.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 4.7.1)
-  - firebase_analytics (0.0.1):
-    - Firebase/Analytics (~> 6.0)
-    - Firebase/Core
+    - FirebaseCrashlytics (~> 8.0.0)
+  - Firebase/Messaging (8.0.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 8.0.0)
+  - firebase_analytics (8.1.0):
+    - Firebase/Analytics (= 8.0.0)
+    - firebase_core
     - Flutter
-  - firebase_core (0.0.1):
-    - Firebase/Core
+  - firebase_core (1.2.0):
+    - Firebase/CoreOnly (= 8.0.0)
     - Flutter
-  - firebase_messaging (0.0.1):
-    - Firebase/Core
-    - Firebase/Messaging
+  - firebase_crashlytics (2.0.4):
+    - Firebase/Crashlytics (= 8.0.0)
+    - firebase_core
     - Flutter
-  - FirebaseAnalytics (6.9.0):
-    - FirebaseCore (~> 6.10)
-    - FirebaseInstallations (~> 1.7)
-    - GoogleAppMeasurement (= 6.9.0)
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
-    - GoogleUtilities/MethodSwizzler (~> 6.7)
-    - GoogleUtilities/Network (~> 6.7)
-    - "GoogleUtilities/NSData+zlib (~> 6.7)"
-    - nanopb (~> 1.30906.0)
-  - FirebaseCore (6.10.4):
-    - FirebaseCoreDiagnostics (~> 1.6)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/Logger (~> 6.7)
-  - FirebaseCoreDiagnostics (1.7.0):
-    - GoogleDataTransport (~> 7.4)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/Logger (~> 6.7)
-    - nanopb (~> 1.30906.0)
-  - FirebaseInstallations (1.7.0):
-    - FirebaseCore (~> 6.10)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/UserDefaults (~> 6.7)
+  - firebase_messaging (10.0.0):
+    - Firebase/Messaging (= 8.0.0)
+    - firebase_core
+    - Flutter
+  - FirebaseAnalytics (8.0.0):
+    - FirebaseAnalytics/AdIdSupport (= 8.0.0)
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/MethodSwizzler (~> 7.4)
+    - GoogleUtilities/Network (~> 7.4)
+    - "GoogleUtilities/NSData+zlib (~> 7.4)"
+    - nanopb (~> 2.30908.0)
+  - FirebaseAnalytics/AdIdSupport (8.0.0):
+    - FirebaseAnalytics/Base (= 8.0.0)
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleAppMeasurement (= 8.0.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/MethodSwizzler (~> 7.4)
+    - GoogleUtilities/Network (~> 7.4)
+    - "GoogleUtilities/NSData+zlib (~> 7.4)"
+    - nanopb (~> 2.30908.0)
+  - FirebaseAnalytics/Base (8.0.0):
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/MethodSwizzler (~> 7.4)
+    - GoogleUtilities/Network (~> 7.4)
+    - "GoogleUtilities/NSData+zlib (~> 7.4)"
+    - nanopb (~> 2.30908.0)
+  - FirebaseCore (8.0.0):
+    - FirebaseCoreDiagnostics (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/Logger (~> 7.4)
+  - FirebaseCoreDiagnostics (8.0.0):
+    - GoogleDataTransport (~> 9.0)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/Logger (~> 7.4)
+    - nanopb (~> 2.30908.0)
+  - FirebaseCrashlytics (8.0.0):
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleDataTransport (~> 9.0)
+    - nanopb (~> 2.30908.0)
     - PromisesObjC (~> 1.2)
-  - FirebaseInstanceID (4.8.0):
-    - FirebaseCore (~> 6.10)
-    - FirebaseInstallations (~> 1.6)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/UserDefaults (~> 6.7)
-  - FirebaseMessaging (4.7.1):
-    - FirebaseCore (~> 6.10)
-    - FirebaseInstanceID (~> 4.7)
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/Reachability (~> 6.7)
-    - GoogleUtilities/UserDefaults (~> 6.7)
-    - Protobuf (>= 3.9.2, ~> 3.9)
+  - FirebaseInstallations (8.0.0):
+    - FirebaseCore (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/UserDefaults (~> 7.4)
+    - PromisesObjC (~> 1.2)
+  - FirebaseMessaging (8.0.0):
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/Reachability (~> 7.4)
+    - GoogleUtilities/UserDefaults (~> 7.4)
   - Flutter (1.0.0)
   - flutter_blue (0.0.1):
     - Flutter
     - flutter_blue/Protos (= 0.0.1)
   - flutter_blue/Protos (0.0.1):
     - Flutter
-    - Protobuf (~> 3.11.4)
+    - Protobuf (~> 3.15.8)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_scandit_plugin (0.0.1):
     - Flutter
     - ScanditBarcodeCapture (~> 6.6.0-beta.2)
@@ -78,74 +106,90 @@ PODS:
     - Flutter
   - google_maps_flutter (0.0.1):
     - Flutter
-    - GoogleMaps (< 3.10)
-  - GoogleAppMeasurement (6.9.0):
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
-    - GoogleUtilities/MethodSwizzler (~> 6.7)
-    - GoogleUtilities/Network (~> 6.7)
-    - "GoogleUtilities/NSData+zlib (~> 6.7)"
-    - nanopb (~> 1.30906.0)
-  - GoogleDataTransport (7.5.1):
-    - nanopb (~> 1.30906.0)
-  - GoogleMaps (3.9.0):
-    - GoogleMaps/Maps (= 3.9.0)
-  - GoogleMaps/Base (3.9.0)
-  - GoogleMaps/Maps (3.9.0):
+    - GoogleMaps
+  - GoogleAppMeasurement (8.0.0):
+    - GoogleAppMeasurement/AdIdSupport (= 8.0.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/MethodSwizzler (~> 7.4)
+    - GoogleUtilities/Network (~> 7.4)
+    - "GoogleUtilities/NSData+zlib (~> 7.4)"
+    - nanopb (~> 2.30908.0)
+  - GoogleAppMeasurement/AdIdSupport (8.0.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/MethodSwizzler (~> 7.4)
+    - GoogleUtilities/Network (~> 7.4)
+    - "GoogleUtilities/NSData+zlib (~> 7.4)"
+    - nanopb (~> 2.30908.0)
+  - GoogleDataTransport (9.0.0):
+    - GoogleUtilities/Environment (~> 7.2)
+    - nanopb (~> 2.30908.0)
+    - PromisesObjC (~> 1.2)
+  - GoogleMaps (4.2.0):
+    - GoogleMaps/Maps (= 4.2.0)
+  - GoogleMaps/Base (4.2.0)
+  - GoogleMaps/Maps (4.2.0):
     - GoogleMaps/Base
-  - GoogleUtilities/AppDelegateSwizzler (6.7.2):
+  - GoogleUtilities/AppDelegateSwizzler (7.4.1):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (6.7.2):
+  - GoogleUtilities/Environment (7.4.1):
     - PromisesObjC (~> 1.2)
-  - GoogleUtilities/Logger (6.7.2):
+  - GoogleUtilities/Logger (7.4.1):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (6.7.2):
+  - GoogleUtilities/MethodSwizzler (7.4.1):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (6.7.2):
+  - GoogleUtilities/Network (7.4.1):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (6.7.2)"
-  - GoogleUtilities/Reachability (6.7.2):
+  - "GoogleUtilities/NSData+zlib (7.4.1)"
+  - GoogleUtilities/Reachability (7.4.1):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (6.7.2):
+  - GoogleUtilities/UserDefaults (7.4.1):
     - GoogleUtilities/Logger
   - location (0.0.1):
     - Flutter
-  - nanopb (1.30906.0):
-    - nanopb/decode (= 1.30906.0)
-    - nanopb/encode (= 1.30906.0)
-  - nanopb/decode (1.30906.0)
-  - nanopb/encode (1.30906.0)
+  - nanopb (2.30908.0):
+    - nanopb/decode (= 2.30908.0)
+    - nanopb/encode (= 2.30908.0)
+  - nanopb/decode (2.30908.0)
+  - nanopb/encode (2.30908.0)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - "permission_handler (5.0.1+1)":
+  - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (1.2.12)
-  - Protobuf (3.11.4)
-  - ScanditBarcodeCapture (6.6.2):
-    - ScanditCaptureCore (= 6.6.2)
-  - ScanditCaptureCore (6.6.2)
+  - Protobuf (3.15.8)
+  - Reachability (3.2)
+  - ScanditBarcodeCapture (6.6.4):
+    - ScanditCaptureCore (= 6.6.4)
+  - ScanditCaptureCore (6.6.4)
   - shared_preferences (0.0.1):
+    - Flutter
+  - uni_links2 (0.0.1):
     - Flutter
   - url_launcher (0.0.1):
     - Flutter
   - webview_flutter (0.0.1):
     - Flutter
+  - wifi_connection (0.0.2):
+    - Flutter
 
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
-  - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - beacon_broadcast (from `.symlinks/plugins/beacon_broadcast/ios`)
+  - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_blue (from `.symlinks/plugins/flutter_blue/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_scandit_plugin (from `.symlinks/plugins/flutter_scandit_plugin/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
@@ -154,8 +198,10 @@ DEPENDENCIES:
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - uni_links2 (from `.symlinks/plugins/uni_links2/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
+  - wifi_connection (from `.symlinks/plugins/wifi_connection/ios`)
 
 SPEC REPOS:
   trunk:
@@ -163,8 +209,8 @@ SPEC REPOS:
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseCoreDiagnostics
+    - FirebaseCrashlytics
     - FirebaseInstallations
-    - FirebaseInstanceID
     - FirebaseMessaging
     - GoogleAppMeasurement
     - GoogleDataTransport
@@ -173,28 +219,33 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - Protobuf
+    - Reachability
     - ScanditBarcodeCapture
     - ScanditCaptureCore
 
 EXTERNAL SOURCES:
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
-  background_fetch:
-    :path: ".symlinks/plugins/background_fetch/ios"
   beacon_broadcast:
     :path: ".symlinks/plugins/beacon_broadcast/ios"
+  connectivity:
+    :path: ".symlinks/plugins/connectivity/ios"
   device_info:
     :path: ".symlinks/plugins/device_info/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_crashlytics:
+    :path: ".symlinks/plugins/firebase_crashlytics/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
   flutter_blue:
     :path: ".symlinks/plugins/flutter_blue/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_scandit_plugin:
     :path: ".symlinks/plugins/flutter_scandit_plugin/ios"
   flutter_secure_storage:
@@ -211,48 +262,57 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  uni_links2:
+    :path: ".symlinks/plugins/uni_links2/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
+  wifi_connection:
+    :path: ".symlinks/plugins/wifi_connection/ios"
 
 SPEC CHECKSUMS:
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
-  background_fetch: 9221ccc02b41aff8a52b2090d9f791c5ed82eaee
   beacon_broadcast: 2c2562111f7b7e0f1ab59487f6bc805805e3c9f3
+  connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
-  Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
-  firebase_analytics: 045e7ebe7b8a4d27357168072868ff082dca15a6
-  firebase_core: dc539d4bdc69894823e4a6e557034a9e48960f21
-  firebase_messaging: cffb57ce40958c6204f03fb0c81713e4cd1e240c
-  FirebaseAnalytics: 3bb096873ee0d7fa4b6c70f5e9166b6da413cc7f
-  FirebaseCore: d3a978a3cfa3240bf7e4ba7d137fdf5b22b628ec
-  FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
-  FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
-  FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
-  FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_blue: eeb381dc4727a0954dede73515f683865494b370
+  Firebase: 73c3e3b216ec1ecbc54d2ffdd4670c65c749edb1
+  firebase_analytics: 221d3bc4e8f1b5144a4bd4cc6b33790ee51bd543
+  firebase_core: e4d3efb030a2b2021819f8faa538bb23deb46695
+  firebase_crashlytics: 4f3ce855ce6116de954cde34f88003df8ed9de4a
+  firebase_messaging: 3b6e0657b21261a57a1cd041fafa713f2aa6923f
+  FirebaseAnalytics: dcb92c7c9ef4fa7ffac276e8f87bd4fc8c97f1b8
+  FirebaseCore: 3f09591d51292843e2a46f18358d60bf4e996255
+  FirebaseCoreDiagnostics: a31d987ba0fe16d59886a5dbadc2f1de871f88c8
+  FirebaseCrashlytics: 69cddb6bfa7656c5346e603bc85b029392252ee6
+  FirebaseInstallations: c4aab1005d6547b00a7529777fe52f5d4d45165b
+  FirebaseMessaging: 1a33b4af3c8042ed6ddacb6c031894af2064bfab
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_blue: 0c6281e67dd48996820a5fd1b98d6d532a1e5efb
+  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_scandit_plugin: 99b341bc008c38d7a2590ed924e4c106ac76841e
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
-  google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
-  GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e
-  GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
-  GoogleMaps: 4b5346bddfe6911bb89155d43c903020170523ac
-  GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
+  google_maps_flutter: df4e7de95264aa0a2f11aac0fc7e313acb8ffc7e
+  GoogleAppMeasurement: c6bbc9753d046b5456dd4f940057fbad2c28419e
+  GoogleDataTransport: 11e3a5f2c190327df1a4a5d7e7ae3d4d5b9c9e4c
+  GoogleMaps: eb03e327edfd70b06de1e6e321653f73712df7ad
+  GoogleUtilities: f8a43108b38a68eebe8b3540e1f4f2d28843ce20
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
-  nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
+  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
-  Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
-  ScanditBarcodeCapture: 80517b2725abfa0c8d55ef12e83896e9285d363f
-  ScanditCaptureCore: 86bba3618cbbe7a6d025f1545737c4bb6d63738f
-  shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
-  url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
-  webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
+  Protobuf: adb85cd18a15bd1a777c158af9fd6e612a0e6d69
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  ScanditBarcodeCapture: 8de10f1d79cb4c669b75c61ddaed60c7c7daa7f4
+  ScanditCaptureCore: 7118e29ef970e70ca1ea6512fa8414e5a3761497
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  uni_links2: fbc37081577fc19c6e0f7e6cdbd3baa150023635
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  webview_flutter: 9f491a9b5a66f2573946a389b2677987b0ff8c0b
+  wifi_connection: cbd6d42bbd0cb9302ea325efe5bd3945576266cc
 
-PODFILE CHECKSUM: 1daf15007dd0a90dc4040b8e7d262e09b3f07d09
+PODFILE CHECKSUM: bc4d9b6e9b7bb8aa948f133bdca3b9602a89e1b5
 
 COCOAPODS: 1.10.1
