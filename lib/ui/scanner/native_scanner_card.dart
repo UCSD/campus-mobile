@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
+import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -133,6 +134,7 @@ class NativeScannerCard extends StatelessWidget {
     } else {
       Provider.of<BottomNavigationBarProvider>(context, listen: false)
           .currentIndex = NavigatorConstants.ProfileTab;
+      Provider.of<CustomAppBar>(context, listen: false).changeTitle("Profile");
     }
   }
 }

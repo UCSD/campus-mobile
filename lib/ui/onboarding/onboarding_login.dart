@@ -64,8 +64,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(100)),
-                        color: Theme.of(context)
-                            .accentColor), //lightTextFieldBorderColor,
+                        color: Theme.of(context).colorScheme.secondary), //lightTextFieldBorderColor,
                     child: TextField(
                       style: TextStyle(
                           textBaseline: TextBaseline.alphabetic,
@@ -97,7 +96,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(100)),
-                    color: Theme.of(context).accentColor),
+                    color: Theme.of(context).colorScheme.secondary),
                 child: TextField(
                   style: TextStyle(
                     textBaseline: TextBaseline.alphabetic,

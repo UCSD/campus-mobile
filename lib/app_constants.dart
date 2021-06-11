@@ -60,6 +60,7 @@ class RouteTitles {
     'shuttle/manage_shuttle_view': 'Manage Shuttle Stops',
     'shuttle/add_shuttle_stops_view': 'Add Shuttle Stops',
     'parking/manage_parking_view': 'Parking',
+    'parking/spot_types_view': 'Parking',
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',

@@ -101,7 +101,9 @@ class CardContainer extends StatelessWidget {
         constraints: BoxConstraints(minHeight: cardContentMinHeight),
         child: Center(
           child: Container(
-              height: 32, width: 32, child: CircularProgressIndicator()),
+              height: 32, width: 32, child: CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.secondary,
+          )),
         ),
       );
     } else if (titleText == "Availability") {

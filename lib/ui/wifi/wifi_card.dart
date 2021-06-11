@@ -137,7 +137,7 @@ class _WiFiCardState extends State<WiFiCard> {
               TextSpan(
                   text: "Testing... ",
                   style: TextStyle(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     fontSize: 36,
                   )),
               WidgetSpan(
@@ -175,7 +175,7 @@ class _WiFiCardState extends State<WiFiCard> {
           TextSpan(
               text: "Test WiFi Speed ",
               style: TextStyle(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 fontSize: 36,
               )),
           WidgetSpan(
@@ -271,7 +271,7 @@ class _WiFiCardState extends State<WiFiCard> {
           TextSpan(
               text: "Your speed is:  ",
               style: TextStyle(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 fontSize: 36,
               )),
           WidgetSpan(

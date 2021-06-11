@@ -7,6 +7,7 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
+import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -222,6 +223,8 @@ class _WebViewContainerState extends State<WebViewContainer>
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
+        Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
+        //Navigator.pushNamed(context, RoutePaths.Map);
       },
     );
   }

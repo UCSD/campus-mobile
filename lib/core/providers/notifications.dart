@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/models/topics.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
 import 'package:campus_mobile_experimental/core/services/notifications.dart';
+import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -150,6 +151,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     /// Set tab bar index to the Notifications tab
     Provider.of<BottomNavigationBarProvider>(this.context, listen: false)
         .currentIndex = NavigatorConstants.NotificationsTab;
+    Provider.of<CustomAppBar>(context, listen: false)
+        .changeTitle("Notifications");
     print("Local Notification Clicked");
   }
 
