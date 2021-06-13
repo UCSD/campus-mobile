@@ -14,7 +14,7 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  ParkingDataProvider _parkingDataProvider;
+  late ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
   String cardId = 'parking';
   String webCardURL =
@@ -47,10 +47,8 @@ class _ParkingCardState extends State<ParkingCard> {
     List<Widget> selectedLotsViews = [];
 
     for (ParkingModel model in _parkingDataProvider.parkingModels) {
-      if (model != null) {
-        if (_parkingDataProvider.parkingViewState!![model.locationId]) {
-          selectedLotsViews.add(CircularParkingIndicators(model: model));
-        }
+      if (_parkingDataProvider.parkingViewState![model.locationId] == true) {
+        selectedLotsViews.add(CircularParkingIndicators(model: model));
       }
     }
 

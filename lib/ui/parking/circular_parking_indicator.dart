@@ -7,8 +7,8 @@ import 'package:provider/provider.dart';
 
 class CircularParkingIndicators extends StatelessWidget {
   const CircularParkingIndicators({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final ParkingModel model;
@@ -26,22 +26,22 @@ class CircularParkingIndicators extends StatelessWidget {
   }
 
   Widget buildAllParkingAvailability(BuildContext context) {
-    List<Widget> listOfCircularParkingInfo = List<Widget>();
+    List<Widget> listOfCircularParkingInfo = [];
 
     List<String> selectedSpots = [];
 
     Provider.of<ParkingDataProvider>(context)
-        .spotTypesState
+        .spotTypesState!
         .forEach((key, value) {
       if (value) {
-        selectedSpots.add(key);
+        selectedSpots.add(key!);
       }
     });
     for (String spot in selectedSpots) {
-      if (model.availability != null && model.availability[spot] != null) {
+      if (model.availability != null && model.availability![spot] != null) {
         listOfCircularParkingInfo.add(buildCircularParkingInfo(
-            Provider.of<ParkingDataProvider>(context).spotTypeMap[spot],
-            model.availability[spot],
+            Provider.of<ParkingDataProvider>(context).spotTypeMap![spot],
+            model.availability![spot],
             context));
       }
     }
@@ -54,7 +54,7 @@ class CircularParkingIndicators extends StatelessWidget {
   }
 
   Widget buildCircularParkingInfo(
-      Spot spotType, dynamic locationData, BuildContext context) {
+      Spot? spotType, dynamic locationData, BuildContext context) {
     print("spot and location data");
     print(locationData);
     return locationData != null
@@ -88,10 +88,10 @@ class CircularParkingIndicators extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    backgroundColor: colorFromHex(spotType.color),
-                    child: Text(spotType.spotKey),
-                  ),
+                  child: spotType != null ? CircleAvatar(
+                    backgroundColor: colorFromHex(spotType.color!),
+                    child: Text(spotType.spotKey!),
+                  ) : Container(),
                 )
               ],
             ),

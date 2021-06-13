@@ -52,7 +52,7 @@ class ParkingDataProvider extends ChangeNotifier {
         _parkingViewState =
             _userDataProvider.userProfileModel!.selectedParkingLots;
       } else {
-        for (ParkingModel model in _parkingService.data) {
+        for (ParkingModel model in _parkingService.data!) {
           if (ParkingDefaults.defaultLots.contains(model.locationId)) {
             _parkingViewState![model.locationName] = true;
           } else {
@@ -61,7 +61,7 @@ class ParkingDataProvider extends ChangeNotifier {
         }
       }
 
-      for (ParkingModel model in _parkingService.data) {
+      for (ParkingModel model in _parkingService.data!) {
         newMapOfLots[model.locationName] = model;
         newMapOfLotStates[model.locationName] =
             (_parkingViewState![model.locationName] == null
@@ -87,8 +87,8 @@ class ParkingDataProvider extends ChangeNotifier {
     if (await _spotTypesService.fetchSpotTypesData()) {
       _spotTypeModel = _spotTypesService.spotTypeModel;
       //create map of spot types
-      for (Spot spot in _spotTypeModel!.spots) {
-        _spotTypeMap[spot.spotKey] = spot;
+      for (Spot spot in _spotTypeModel!.spots!) {
+        _spotTypeMap![spot.spotKey] = spot;
       }
       if (_userDataProvider.userProfileModel!.selectedParkingSpots!.isNotEmpty) {
         //Load selected spots types from user Profile
@@ -96,21 +96,21 @@ class ParkingDataProvider extends ChangeNotifier {
             _userDataProvider.userProfileModel!.selectedParkingSpots;
       } else {
         //Load default spot types
-        for (Spot spot in _spotTypeModel.spots) {
+        for (Spot spot in _spotTypeModel!.spots!) {
           if (ParkingDefaults.defaultSpots.contains(spot.spotKey)) {
-            _selectedSpotTypesState[spot.spotKey] = true;
+            _selectedSpotTypesState![spot.spotKey] = true;
           } else {
-            _selectedSpotTypesState[spot.spotKey] = false;
+            _selectedSpotTypesState![spot.spotKey] = false;
           }
         }
       }
 
       /// this block of code is to ensure we remove any unsupported spot types
-      Map<String?, bool> newMapOfSpotTypes = Map<String, bool>();
-      for (Spot spot in _spotTypeModel.spots) {
-        newMapOfSpotTypes[spot.spotKey] = _selectedSpotTypesState[spot.spotKey];
+      Map<String?, bool?> newMapOfSpotTypes = Map<String, bool>();
+      for (Spot spot in _spotTypeModel!.spots!) {
+        newMapOfSpotTypes[spot.spotKey] = _selectedSpotTypesState![spot.spotKey];
       }
-      _selectedSpotTypesState = newMapOfSpotTypes;
+      _selectedSpotTypesState = newMapOfSpotTypes.cast<String?, bool>();
 
       //Update number of spots selected
       _selectedSpotTypesState!.forEach((key, value) {
@@ -184,17 +184,17 @@ class ParkingDataProvider extends ChangeNotifier {
 
   /// Returns the total number of spots open at a given location
   /// does not filter based on spot type
-  int getApproxNumOfOpenSpots(String locationId) {
+  int getApproxNumOfOpenSpots(String? locationId) {
     int totalOpenSpots = 0;
-    if (_parkingModels[locationId] != null &&
-        _parkingModels[locationId].availability != null) {
-      print(_parkingModels[locationId].toJson());
-      for (dynamic spot in _parkingModels[locationId].availability.keys) {
-        if (_parkingModels[locationId].availability[spot]['Open'] != null &&
-            _parkingModels[locationId].availability[spot]['Open'] != "") {
-          print(_parkingModels[locationId].availability[spot]['Open']);
+    if (_parkingModels![locationId] != null &&
+        _parkingModels![locationId]!.availability != null) {
+      print(_parkingModels![locationId]!.toJson());
+      for (dynamic spot in _parkingModels![locationId]!.availability!.keys) {
+        if (_parkingModels![locationId]!.availability![spot]['Open'] != null &&
+            _parkingModels![locationId]!.availability![spot]['Open'] != "") {
+          print(_parkingModels![locationId]!.availability![spot]['Open']);
           totalOpenSpots = totalOpenSpots +
-              int.parse(_parkingModels[locationId].availability[spot]['Open']);
+              int.parse(_parkingModels![locationId]!.availability![spot]['Open']);
         }
       }
     }
@@ -207,6 +207,6 @@ class ParkingDataProvider extends ChangeNotifier {
   DateTime? get lastUpdated => _lastUpdated;
   Map<String?, bool>? get spotTypesState => _selectedSpotTypesState;
   Map<String?, bool>? get parkingViewState => _parkingViewState;
-  Map<String?, Spot>? get spotTypeMap => _spotTypeMap;
-  SpotTypeModel? get spotTypeModel => _spotTypeModel;
+  Map<String?, Spot?>? get spotTypeMap => _spotTypeMap;
+  // SpotTypeModel? get spotTypeModel => _spotTypeModel;
 }
