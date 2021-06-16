@@ -23,7 +23,7 @@ class DiningList extends StatelessWidget {
         Provider.of<DiningDataProvider>(context).diningModels;
     return data.length > 0
         ? buildDiningList(data, context)
-        : CircularProgressIndicator();
+        : CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
   }
 
   Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {

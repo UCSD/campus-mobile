@@ -17,7 +17,7 @@ class NotificationsSettingsView extends StatelessWidget {
   Widget buildSettingsList(BuildContext context, List<String?>? topicsData) {
     return (topicsData ?? []).isNotEmpty
         ? ListView(children: createList(context, topicsData as List<String?>))
-        : Center(child: CircularProgressIndicator());
+        : Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary));
   }
 
   List<Widget> createList(BuildContext context, List<String?> topicsAvailable) {

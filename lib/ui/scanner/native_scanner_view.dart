@@ -85,7 +85,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
         children: <Widget>[
           Center(
             child: SizedBox(
-                height: 40, width: 40, child: CircularProgressIndicator()),
+                height: 40, width: 40, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
           ),
           Padding(
             padding: EdgeInsets.only(top: 20.0),

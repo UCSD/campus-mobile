@@ -120,6 +120,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                     height: 12,
                     width: 12,
                     child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.secondary,
                       strokeWidth: 1.5,
                     )))
             : Material(
