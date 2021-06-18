@@ -43,7 +43,7 @@ dependencies:
   location: 4.1.1
   package_info: 2.0.2
   permission_handler: 7.1.0
-  pointycastle: 3.0.1
+  pointycastle: 3.1.2
   provider: 5.0.0
   shared_preferences: 2.0.6
   uni_links2: 0.6.0+2
