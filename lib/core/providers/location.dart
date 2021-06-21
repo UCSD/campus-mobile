@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/core/models/location.dart';
@@ -43,13 +41,11 @@ class LocationDataProvider extends ChangeNotifier {
   _enableListener() {
     if (_permission) {
       _locationService.onLocationChanged.listen((locationData) {
-        if (locationData != null) {
-          error = null;
-          _locationController.add(Coordinates(
-            lat: locationData.latitude,
-            lon: locationData.longitude,
-          ));
-        }
+        error = null;
+        _locationController.add(Coordinates(
+          lat: locationData.latitude,
+          lon: locationData.longitude,
+        ));
       });
     }
   }

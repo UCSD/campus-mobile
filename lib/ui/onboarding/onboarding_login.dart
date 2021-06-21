@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -64,7 +62,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(100)),
-                        color: Theme.of(context).colorScheme.secondary), //lightTextFieldBorderColor,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary), //lightTextFieldBorderColor,
                     child: TextField(
                       style: TextStyle(
                           textBaseline: TextBaseline.alphabetic,

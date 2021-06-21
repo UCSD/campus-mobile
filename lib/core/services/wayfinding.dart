@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/wayfinding_constants.dart';
-import 'package:dio/dio.dart';
 
 class WayfindingService {
   bool? isLoading;
@@ -29,15 +28,15 @@ class WayfindingService {
     try {
       await getNewToken();
       print(tokenHeader);
-      String deviceTypesResponse = await networkHelper!.authorizedFetch(
-          deviceTypesEndpoint, tokenHeader);
-      String constantsResponse = await networkHelper!.authorizedFetch(
-          awConstantsEndpoint, tokenHeader);
+      String deviceTypesResponse = await networkHelper!
+          .authorizedFetch(deviceTypesEndpoint, tokenHeader);
+      String constantsResponse = await networkHelper!
+          .authorizedFetch(awConstantsEndpoint, tokenHeader);
       Map<String, dynamic> deviceTypesJson = json.decode(deviceTypesResponse);
       Map<String, dynamic> constantsJson = json.decode(constantsResponse);
 
       wayfindingConstantsModel =
-           WayfindingConstantsModel.fromJson(deviceTypesJson, constantsJson);
+          WayfindingConstantsModel.fromJson(deviceTypesJson, constantsJson);
       isLoading = false;
       return true;
     } catch (exception) {
@@ -46,12 +45,13 @@ class WayfindingService {
       return false;
     }
   }
+
   Future<bool> getNewToken() async {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await networkHelper!.authorizedPost(

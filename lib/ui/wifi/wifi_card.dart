@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -100,31 +98,27 @@ class _WiFiCardState extends State<WiFiCard> {
           padding: const EdgeInsets.all(8.0),
           child: initialState(context),
         );
-        break;
       case TestStatus.running:
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: speedTest(),
         );
-        break;
       case TestStatus.finished:
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: finishedState(),
         );
-        break;
       case TestStatus.unavailable:
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: unavailableState(),
         );
-        break;
       case TestStatus.simulated:
         return Padding(
             padding: const EdgeInsets.all(8.0), child: simulatedState());
-        break;
+      default:
+        return initialState(context);
     }
-    return initialState(context);
   }
 
   Column speedTest() {

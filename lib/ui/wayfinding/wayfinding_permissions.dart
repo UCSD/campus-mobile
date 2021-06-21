@@ -1,7 +1,7 @@
 import 'dart:io';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +99,7 @@ class _AdvancedWayfindingPermissionState
                                   } else
                                     bluetoothMessage();
                                 } else {
-                                  if ((futureSnapshot.data! as List )[1] !=
+                                  if ((futureSnapshot.data! as List)[1] !=
                                       PermissionStatus.granted) {
                                     locationPermissionMessage();
                                   }
@@ -129,10 +129,12 @@ class _AdvancedWayfindingPermissionState
                             activeColor: Theme.of(context).buttonColor,
                           );
                         } else {
-                          return CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
+                          return CircularProgressIndicator(
+                              color: Theme.of(context).colorScheme.secondary);
                         }
                       })
-                  : CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
+                  : CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.secondary);
             })
       ],
     );

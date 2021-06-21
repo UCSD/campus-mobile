@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart'
@@ -68,7 +66,6 @@ clearHiveStorage() async {
 class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     final ThemeData theme = ThemeData(
       primarySwatch: ColorPrimary,
       primaryColor: lightPrimaryColor,
@@ -99,7 +96,8 @@ class CampusMobile extends StatelessWidget {
           colorScheme: theme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
-          colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+          colorScheme:
+              darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
         initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingInitial

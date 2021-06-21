@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
@@ -21,8 +19,9 @@ class ScannerMessageService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
-          endpoint, headers);
+      String _response =
+          await _networkHelper.authorizedFetch(endpoint, headers);
+
       /// parse data
       _scannerMessageModel = scannerMessageModelFromJson(_response);
       _isLoading = false;

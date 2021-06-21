@@ -1,7 +1,4 @@
-
-
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:dio/dio.dart';
@@ -74,43 +71,41 @@ class NetworkHelper {
   // mimicking existing code from React Native versions of campus-mobile
   Future<dynamic> authorizedPublicPost(
       String url, Map<String, String> headers, dynamic body) async {
-      print("SILENTLOGIN: in authorizedPublicPost");
-      int retries = 0;
-      int waitTime = 0;
-      try {
-        var response = await authorizedPost(url, headers, body);
-        return response;
-      }
-      catch(e) {
-        // exponential backoff here
-        retries++;
-        waitTime = SSO_REFRESH_RETRY_INCREMENT;
-        while(retries <= SSO_REFRESH_MAX_RETRIES) {
-          print("SILENTLOGIN: Retrying in $waitTime ms...");
+    print("SILENTLOGIN: in authorizedPublicPost");
+    int retries = 0;
+    int waitTime = 0;
+    try {
+      var response = await authorizedPost(url, headers, body);
+      return response;
+    } catch (e) {
+      // exponential backoff here
+      retries++;
+      waitTime = SSO_REFRESH_RETRY_INCREMENT;
+      while (retries <= SSO_REFRESH_MAX_RETRIES) {
+        print("SILENTLOGIN: Retrying in $waitTime ms...");
 
-          // wait for the wait time to elapse
-          await Future.delayed(Duration(milliseconds: waitTime));
+        // wait for the wait time to elapse
+        await Future.delayed(Duration(milliseconds: waitTime));
 
-          // calculate new wait time (not exponential for now, mimicking previous code)
-          waitTime *= SSO_REFRESH_RETRY_MULTIPLIER;
-          // try to log in again
-          try {
-            print("SILENTLOGIN: Retrying now...");
-            var response = await authorizedPost(url, headers, body);
+        // calculate new wait time (not exponential for now, mimicking previous code)
+        waitTime *= SSO_REFRESH_RETRY_MULTIPLIER;
+        // try to log in again
+        try {
+          print("SILENTLOGIN: Retrying now...");
+          var response = await authorizedPost(url, headers, body);
 
-            // no exception thrown, success, return response
-            return response;
-          }
-          catch(e) {
-            // still raising an exception, increment retries and try again
-            retries++;
-          }
+          // no exception thrown, success, return response
+          return response;
+        } catch (e) {
+          // still raising an exception, increment retries and try again
+          retries++;
         }
       }
-      // if here, silent login has failed
-      // throw exception to inform caller
-      await Get.dialog(getSilentLoginDialog());
-      throw new Exception(ErrorConstants.silentLoginFailed);
+    }
+    // if here, silent login has failed
+    // throw exception to inform caller
+    await Get.dialog(getSilentLoginDialog());
+    throw new Exception(ErrorConstants.silentLoginFailed);
   }
 
   Future<dynamic> authorizedPost(

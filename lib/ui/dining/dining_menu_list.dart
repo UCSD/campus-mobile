@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
@@ -20,7 +18,8 @@ class _DiningMenuListState extends State<DiningMenuList> {
   Widget build(BuildContext context) {
     return Center(
       child: Provider.of<DiningDataProvider>(context).isLoading!
-          ? CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)
+          ? CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.secondary)
           : buildDiningMenuList(context),
     );
   }
@@ -160,15 +159,13 @@ class _DiningMenuListState extends State<DiningMenuList> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         LabeledRadio(
-          title: 'Breakfast',
-          value: Meal.breakfast,
-          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-          onChanged: (Meal? value) =>
-            setState(() {
-              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
-                  value!;
-            })
-        ),
+            title: 'Breakfast',
+            value: Meal.breakfast,
+            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+            onChanged: (Meal? value) => setState(() {
+                  Provider.of<DiningDataProvider>(context, listen: false)
+                      .mealTime = value!;
+                })),
         LabeledRadio(
           title: 'Lunch',
           value: Meal.lunch,
@@ -181,15 +178,13 @@ class _DiningMenuListState extends State<DiningMenuList> {
           },
         ),
         LabeledRadio(
-          title: 'Dinner',
-          value: Meal.dinner,
-          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-          onChanged: (Meal? value) =>
-            setState(() {
-              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
-                  value!;
-          })
-        ),
+            title: 'Dinner',
+            value: Meal.dinner,
+            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
+            onChanged: (Meal? value) => setState(() {
+                  Provider.of<DiningDataProvider>(context, listen: false)
+                      .mealTime = value!;
+                })),
       ],
     );
   }
@@ -202,7 +197,11 @@ class LabeledRadio extends StatelessWidget {
   final void Function(Meal?)? onChanged;
 
   const LabeledRadio(
-      {Key? key, this.title, required this.value, this.groupValue, this.onChanged})
+      {Key? key,
+      this.title,
+      required this.value,
+      this.groupValue,
+      this.onChanged})
       : super(key: key);
 
   @override

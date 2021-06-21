@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -9,6 +7,7 @@ import 'package:provider/provider.dart';
 class ManageParkingView extends StatefulWidget {
   _ManageParkingViewState createState() => _ManageParkingViewState();
 }
+
 class _ManageParkingViewState extends State<ManageParkingView> {
   late ParkingDataProvider parkingDataProvider;
   @override

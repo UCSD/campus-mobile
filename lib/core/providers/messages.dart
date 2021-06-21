@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -17,17 +15,16 @@ class MessagesDataProvider extends ChangeNotifier {
     _statusText = NotificationsConstants.statusFetching;
     _hasMoreMessagesToLoad = false;
     _scrollController = ScrollController();
-    _scrollController
-      !.addListener(() {
-        var triggerFetchMoreSize =
-            0.9 * _scrollController!.position.maxScrollExtent;
+    _scrollController!.addListener(() {
+      var triggerFetchMoreSize =
+          0.9 * _scrollController!.position.maxScrollExtent;
 
-        if (_scrollController!.position.pixels > triggerFetchMoreSize) {
-          if (!_isLoading! && _hasMoreMessagesToLoad!) {
-            fetchMessages(false);
-          }
+      if (_scrollController!.position.pixels > triggerFetchMoreSize) {
+        if (!_isLoading! && _hasMoreMessagesToLoad!) {
+          fetchMessages(false);
         }
-      });
+      }
+    });
   }
 
   /// STATES
@@ -143,7 +140,8 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   void makeOrderedMessagesList() {
-    Map<String?, MessageElement?> uniqueMessages = Map<String, MessageElement>();
+    Map<String?, MessageElement?> uniqueMessages =
+        Map<String, MessageElement>();
     uniqueMessages = Map.fromIterable(_messages!,
         key: (message) => message.messageId, value: (message) => message);
     _messages!.clear();

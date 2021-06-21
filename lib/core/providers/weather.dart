@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/weather.dart';
 import 'package:campus_mobile_experimental/core/services/weather.dart';
 import 'package:flutter/material.dart';

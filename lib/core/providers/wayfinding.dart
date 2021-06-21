@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -150,7 +149,6 @@ class WayfindingProvider extends ChangeNotifier {
     checkAdvancedWayfindingEnabled();
     userLongitude = (_coordinates == null) ? null : _coordinates!.lon;
     userLatitude = (_coordinates == null) ? null : _coordinates!.lat;
-
 
     // Verify that BT module is present in this device.
     await flutterBlueInstance.isAvailable.then((value) {
@@ -737,16 +735,6 @@ class WayfindingProvider extends ChangeNotifier {
   // Internal constructor
   WayfindingProvider._internal();
 
-  // Key generator for storage
-  String _randomValue() {
-    final rand = Random();
-    final codeUnits = List.generate(20, (index) {
-      return rand.nextInt(26) + 65;
-    });
-
-    return String.fromCharCodes(codeUnits);
-  }
-
   //Parse advertisement data
   String calculateHexFromArray(decimalArray) {
     String uuid = '';
@@ -786,7 +774,7 @@ class WayfindingProvider extends ChangeNotifier {
     }
     flutterBlueInstance.stopScan();
     flutterBlueInstance.scanResults.listen((event) {}).cancel();
-    beaconSingleton?.beaconBroadcast?.stop();
+    beaconSingleton.beaconBroadcast.stop();
   }
 
   void coordinateAndLocation(
@@ -818,7 +806,7 @@ class WayfindingProvider extends ChangeNotifier {
       } else {
         //Write to bt value
         sharedPreferences.setBool(
-            "advancedWayfindingEnabled", advancedWayfindingEnabled!);
+            "advancedWayfindingEnabled", advancedWayfindingEnabled);
       }
     });
   }
@@ -915,7 +903,7 @@ class WayfindingProvider extends ChangeNotifier {
 
   void setAWPreference() {
     SharedPreferences.getInstance().then((value) {
-      value.setBool("advancedWayfindingEnabled", advancedWayfindingEnabled!);
+      value.setBool("advancedWayfindingEnabled", advancedWayfindingEnabled);
     });
   }
 }

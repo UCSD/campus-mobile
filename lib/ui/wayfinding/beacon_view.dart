@@ -1,5 +1,3 @@
-
-
 import 'package:beacon_broadcast/beacon_broadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,8 +51,9 @@ class _BeaconViewState extends State<BeaconView> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     beaconUuid = prefs.get('uuid') as String? ?? "null";
     var previousTime = prefs.get('previousTime') ?? DateTime(1990).toString();
-    var difference =
-        DateTime.now().difference(DateTime.parse(previousTime as String)).inSeconds;
+    var difference = DateTime.now()
+        .difference(DateTime.parse(previousTime as String))
+        .inSeconds;
     print(difference);
     if (difference > 10) {
       changeUUID();
