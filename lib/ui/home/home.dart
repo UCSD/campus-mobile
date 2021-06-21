@@ -187,21 +187,14 @@ class _HomeState extends State<Home> {
 
   void checkToResumeBluetooth(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool preference = prefs.getBool("advancedWayfindingEnabled")!;
 
-    if (prefs.containsKey("advancedWayfindingEnabled") &&
-        prefs.getBool("advancedWayfindingEnabled")!) {
-      WayfindingProvider bluetoothSingleton = WayfindingProvider();
-      bluetoothSingleton.advancedWayfindingEnabled =
-          prefs.getBool("advancedWayfindingEnabled");
-      if (bluetoothSingleton.firstInstance) {
-        bluetoothSingleton.firstInstance = false;
-        if (bluetoothSingleton.userDataProvider == null) {
-          bluetoothSingleton.userDataProvider =
-              Provider.of<UserDataProvider>(context, listen: false);
-        }
-        if (bluetoothSingleton.advancedWayfindingEnabled!) {
-          bluetoothSingleton.init();
-        }
+    if (prefs.containsKey("advancedWayfindingEnabled") && preference) {
+      WayfindingProvider bluetoothSingleton = Provider.of<WayfindingProvider>(context, listen: false);
+      bluetoothSingleton.advancedWayfindingEnabled = true;
+      if (bluetoothSingleton.ongoingScanner == null) {
+            bluetoothSingleton.init();
+
       }
     }
   }
