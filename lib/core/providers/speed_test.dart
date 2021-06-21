@@ -279,9 +279,9 @@ class SpeedTestProvider extends ChangeNotifier {
       "userId": (_userDataProvider.userProfileModel!.pid) == null
           ? ""
           : _userDataProvider.userProfileModel!.pid,
-      "userEmail": (_userDataProvider.userProfileModel!.username) == null
+      "userLogin": (_userDataProvider.userProfileModel!.username) == null
           ? ""
-          : _userDataProvider.userProfileModel!.username! + "@ucsd.edu",
+          : _userDataProvider.userProfileModel!.username!,
       "Platform": _speedTestModel!.platform,
       "SSID": _speedTestModel!.ssid,
       "BSSID": _speedTestModel!.bssid,
