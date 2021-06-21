@@ -20,7 +20,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
   Widget build(BuildContext context) {
     return Center(
       child: Provider.of<DiningDataProvider>(context).isLoading!
-          ? CircularProgressIndicator()
+          ? CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)
           : buildDiningMenuList(context),
     );
   }

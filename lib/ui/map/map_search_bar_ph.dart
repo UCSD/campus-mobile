@@ -30,7 +30,7 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
                           child: Container(
                               height: 25,
                               width: 25,
-                              child: CircularProgressIndicator()),
+                              child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
                         )
                       : Icon(
                           Icons.search,

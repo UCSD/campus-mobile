@@ -17,7 +17,7 @@ class NewsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Provider.of<NewsDataProvider>(context).isLoading!) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary));
     }
     return buildNewsList(
       context,

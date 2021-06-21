@@ -129,10 +129,10 @@ class _AdvancedWayfindingPermissionState
                             activeColor: Theme.of(context).buttonColor,
                           );
                         } else {
-                          return CircularProgressIndicator();
+                          return CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
                         }
                       })
-                  : CircularProgressIndicator();
+                  : CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
             })
       ],
     );

@@ -59,7 +59,10 @@ class Router {
       case RoutePaths.MapSearch:
         return MaterialPageRoute(builder: (_) => MapSearchView());
       case RoutePaths.Notifications:
-        return MaterialPageRoute(builder: (_) => NotificationsListView());
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return NotificationsListView();
+        });
       case RoutePaths.Profile:
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:
@@ -74,11 +77,16 @@ class Router {
         });
       case RoutePaths.NewsDetailView:
         Item newsItem = settings.arguments as Item;
-        return MaterialPageRoute(
-            builder: (_) => NewsDetailView(data: newsItem));
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return NewsDetailView(data: newsItem);
+        });
       case RoutePaths.EventDetailView:
         EventModel data = settings.arguments as EventModel;
-        return MaterialPageRoute(builder: (_) => EventDetailView(data: data));
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return EventDetailView(data: data);
+        });
       case RoutePaths.ManageAvailabilityView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
@@ -110,6 +118,11 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageParkingView();
+        });
+      case RoutePaths.SpotTypesView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return SpotTypesView();
         });
       case RoutePaths.ManageShuttleView:
         return MaterialPageRoute(builder: (_) {

@@ -375,6 +375,18 @@ class WayfindingProvider extends ChangeNotifier {
       calculatedUUID = calculateHexFromArray(
           decimalArray); //https://stackoverflow.com/questions/60902976/flutter-ios-to-ios-broadcast-beacon-not-working
     });
+    //Add formatting to applicable uuid
+    if (calculatedUUID.length == 30) {
+      calculatedUUID = calculatedUUID.substring(0, 8) +
+          "-" +
+          calculatedUUID.substring(8, 12) +
+          "-" +
+          calculatedUUID.substring(12, 16) +
+          "-" +
+          calculatedUUID.substring(16, 20) +
+          "-" +
+          calculatedUUID.substring(20);
+    }
     return calculatedUUID;
   }
 
@@ -542,7 +554,8 @@ class WayfindingProvider extends ChangeNotifier {
       } else if (!isDeviceContinuous &&
           value.scanIntervalAllowancesUsed! <
               _wayfindingConstantsModel.scanIntervalAllowance!) {
-        value.scanIntervalAllowancesUsed = value.scanIntervalAllowancesUsed! + 1;
+        value.scanIntervalAllowancesUsed =
+            value.scanIntervalAllowancesUsed! + 1;
       }
       return false;
     });
@@ -556,7 +569,8 @@ class WayfindingProvider extends ChangeNotifier {
       } else if (!value.continuousDuration! &&
           value.scanIntervalAllowancesUsed! <=
               _wayfindingConstantsModel.scanIntervalAllowance!) {
-        value.scanIntervalAllowancesUsed = value.scanIntervalAllowancesUsed! + 1;
+        value.scanIntervalAllowancesUsed =
+            value.scanIntervalAllowancesUsed! + 1;
       }
     });
     objectsToRemove.forEach((element) {
@@ -577,7 +591,8 @@ class WayfindingProvider extends ChangeNotifier {
     if (!repeatedDevice) {
       scannedObjects[scanResult.device.id.toString()]!.dwellTime =
           scannedObjects[scanResult.device.id.toString()]!.dwellTime! +
-              (_wayfindingConstantsModel.scanWaitTime !* 60); //account for seconds
+              (_wayfindingConstantsModel.scanWaitTime! *
+                  60); //account for seconds
       scannedObjects[scanResult.device.id.toString()]!.distance =
           getDistance(scanResult.rssi);
       if (scannedObjects[scanResult.device.id.toString()]!.dwellTime! >=
@@ -589,7 +604,8 @@ class WayfindingProvider extends ChangeNotifier {
         // eligibleType(
         //     scannedObjects[scanResult.device.id.toString()].deviceType)) {
         _wayfindingConstantsModel.qualifyingDevices =
-            _wayfindingConstantsModel.qualifyingDevices! + 1; // Add the # of unique devices detected
+            _wayfindingConstantsModel.qualifyingDevices! +
+                1; // Add the # of unique devices detected
       }
 
       // Log important information
