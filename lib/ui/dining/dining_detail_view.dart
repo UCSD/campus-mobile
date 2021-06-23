@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/dining.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
@@ -53,7 +51,9 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildDirectionsButton(
       BuildContext context, prefix0.DiningModel model) {
-    if (model.distance != null)
+    if (model.coordinates != null &&
+        model.coordinates!.lat != null &&
+        model.coordinates!.lon != null) {
       return TextButton(
         style: TextButton.styleFrom(
           primary: Theme.of(context).buttonColor,
@@ -71,8 +71,11 @@ class DiningDetailView extends StatelessWidget {
                   Icons.directions_walk,
                   size: 30,
                 ),
-                Text(num.parse(model.distance!.toStringAsFixed(1)).toString() +
-                    ' mi'),
+                model.distance != null
+                    ? Text(num.parse(model.distance!.toStringAsFixed(1))
+                            .toString() +
+                        ' mi')
+                    : Text('--'),
               ],
             ),
           ],
@@ -87,8 +90,9 @@ class DiningDetailView extends StatelessWidget {
           }
         },
       );
-    else
+    } else {
       return Center(child: Text('Directions not available.'));
+    }
   }
 
   Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
@@ -223,38 +227,45 @@ class HoursOfDay extends StatelessWidget {
     switch (weekday) {
       case 1:
         theDay = 'Monday';
-        theHours =
-            model!.regularHours!.mon == null ? 'Closed' : model!.regularHours!.mon;
+        theHours = model!.regularHours!.mon == null
+            ? 'Closed'
+            : model!.regularHours!.mon;
         break;
       case 2:
         theDay = 'Tuesday';
-        theHours =
-            model!.regularHours!.tue == null ? 'Closed' : model!.regularHours!.tue;
+        theHours = model!.regularHours!.tue == null
+            ? 'Closed'
+            : model!.regularHours!.tue;
         break;
       case 3:
         theDay = 'Wednesday';
-        theHours =
-            model!.regularHours!.wed == null ? 'Closed' : model!.regularHours!.wed;
+        theHours = model!.regularHours!.wed == null
+            ? 'Closed'
+            : model!.regularHours!.wed;
         break;
       case 4:
         theDay = 'Thursday';
-        theHours =
-            model!.regularHours!.thu == null ? 'Closed' : model!.regularHours!.thu;
+        theHours = model!.regularHours!.thu == null
+            ? 'Closed'
+            : model!.regularHours!.thu;
         break;
       case 5:
         theDay = 'Friday';
-        theHours =
-            model!.regularHours!.fri == null ? 'Closed' : model!.regularHours!.fri;
+        theHours = model!.regularHours!.fri == null
+            ? 'Closed'
+            : model!.regularHours!.fri;
         break;
       case 6:
         theDay = 'Saturday';
-        theHours =
-            model!.regularHours!.sat == null ? 'Closed' : model!.regularHours!.sat;
+        theHours = model!.regularHours!.sat == null
+            ? 'Closed'
+            : model!.regularHours!.sat;
         break;
       case 7:
         theDay = 'Sunday';
-        theHours =
-            model!.regularHours!.sun == null ? 'Closed' : model!.regularHours!.sun;
+        theHours = model!.regularHours!.sun == null
+            ? 'Closed'
+            : model!.regularHours!.sun;
         break;
     }
     /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
