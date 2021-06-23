@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -236,7 +234,7 @@ class _WiFiCardState extends State<WiFiCard> {
                                   "Please run speed test to report issue."),
                             ),
                             actions: <Widget>[
-                              FlatButton(
+                              TextButton(
                                   child: Text("Dismiss"),
                                   onPressed: () {
                                     Navigator.of(context).pop();
@@ -323,7 +321,7 @@ class _WiFiCardState extends State<WiFiCard> {
                                     "Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services."),
                               ),
                               actions: <Widget>[
-                                FlatButton(
+                                TextButton(
                                     child: Text("Dismiss"),
                                     onPressed: () {
                                       Navigator.of(context).pop();
