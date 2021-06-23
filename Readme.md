@@ -1,4 +1,4 @@
-<!-- codemagic test -->
+<!-- pr-test -->
 ## UC San Diego - Experimental
 
 UC San Diego - Experimental is the rolling release of the UC San Diego Mobile app. This rolling release is for users interested in developing for, and experimenting with, the absolute latest version of the UC San Diego Mobile app.
