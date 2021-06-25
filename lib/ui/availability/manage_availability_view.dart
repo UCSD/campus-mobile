@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -36,11 +34,6 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
         _availabilityDataProvider.availabilityModels;
     List<AvailabilityModel> toRemove = [];
 
-    for (AvailabilityModel? item in newOrder) {
-      if (_availabilityDataProvider.availabilityModels == null) {
-        toRemove.add(item!);
-      }
-    }
     newOrder.removeWhere((element) => toRemove.contains(element));
     AvailabilityModel? item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);

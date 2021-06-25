@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -59,18 +57,16 @@ class _ParkingCardState extends State<ParkingCard>
       });
 
       for (ParkingModel model in _parkingDataProvider.parkingModels) {
-        if (model != null) {
-          if (_parkingDataProvider.parkingViewState![model.locationName]!) {
-            final url = makeUrl(model.locationId, selectedSpots);
+        if (_parkingDataProvider.parkingViewState![model.locationName]!) {
+          final url = makeUrl(model.locationId, selectedSpots);
 
-            selectedLotsViews.add(WebView(
-              initialUrl: url,
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (controller) {
-                _webViewController = controller;
-              },
-            ));
-          }
+          selectedLotsViews.add(WebView(
+            initialUrl: url,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (controller) {
+              _webViewController = controller;
+            },
+          ));
         }
       }
 

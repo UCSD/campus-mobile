@@ -30,7 +30,7 @@ class _AutomaticBluetoothLoggerViewState
   // List for rendering the ongoing log
   List loggedItems = [];
 
-   _AutomaticBluetoothLoggerViewState();
+  _AutomaticBluetoothLoggerViewState();
 
   // // Set the state when a new scan occurs
   // void initState() {
@@ -71,36 +71,36 @@ class _AutomaticBluetoothLoggerViewState
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[statusCard(),
+          children: <Widget>[
+            statusCard(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
                 child: Container(
-                 height: cardContentMaxHeight,
-                child: ListView.builder(
-                    itemCount: _wayfindingProvider.processedDevices.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return buildText(index);
-                          }),
+                  height: cardContentMaxHeight,
+                  child: ListView.builder(
+                      itemCount: _wayfindingProvider.processedDevices.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return buildText(index);
+                      }),
                 ),
               ),
             )
-
           ],
         ),
       ),
     );
   }
 
-
   // // Return normal text for device display
   // return Text(loggedItems[index]);
 
   Card statusCard() {
     return Card(
-
-      color: _wayfindingProvider.ongoingScanner != null ? Colors.green : Colors.red,
+      color: _wayfindingProvider.ongoingScanner != null
+          ? Colors.green
+          : Colors.red,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
@@ -119,8 +119,10 @@ class _AutomaticBluetoothLoggerViewState
                   future: checkPermissions(),
                   builder:
                       (BuildContext context, AsyncSnapshot<Text> snapshot) {
-                     return  snapshot.hasData ? snapshot.data as Widget : LinearProgressIndicator();
-                      }),
+                    return snapshot.hasData
+                        ? snapshot.data as Widget
+                        : LinearProgressIndicator();
+                  }),
             ],
           ),
         ),
@@ -138,10 +140,15 @@ class _AutomaticBluetoothLoggerViewState
     return Text(
         "OS: ${Platform.isIOS ? "iOS" : "Android"} \nLocation: ${locationStatus.toString()} \nService enabled: $locationService \nBluetooth: ${bluetoothStatus.toString()} \nAW Enabled: ${_wayfindingProvider.advancedWayfindingEnabled} \nForce off: ${_wayfindingProvider.forceOff}");
   }
+
   // // Bold location and timestamp to differentiate scans
   Text buildText(int index) {
-    if (_wayfindingProvider.processedDevices[index].toString().contains("LATITUDE") ||
-        _wayfindingProvider.processedDevices[index].toString().contains("TIMESTAMP")) {
+    if (_wayfindingProvider.processedDevices[index]
+            .toString()
+            .contains("LATITUDE") ||
+        _wayfindingProvider.processedDevices[index]
+            .toString()
+            .contains("TIMESTAMP")) {
       return Text(
         _wayfindingProvider.processedDevices[index],
         style: TextStyle(fontWeight: FontWeight.bold),
@@ -149,7 +156,6 @@ class _AutomaticBluetoothLoggerViewState
     }
     return Text(_wayfindingProvider.processedDevices[index].toString() + '\n');
   }
-
 }
 
 //

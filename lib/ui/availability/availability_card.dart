@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';

@@ -8,7 +8,6 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:campus_mobile_experimental/main.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
@@ -190,11 +189,11 @@ class _HomeState extends State<Home> {
     bool preference = prefs.getBool("advancedWayfindingEnabled")!;
 
     if (prefs.containsKey("advancedWayfindingEnabled") && preference) {
-      WayfindingProvider bluetoothSingleton = Provider.of<WayfindingProvider>(context, listen: false);
+      WayfindingProvider bluetoothSingleton =
+          Provider.of<WayfindingProvider>(context, listen: false);
       bluetoothSingleton.advancedWayfindingEnabled = true;
       if (bluetoothSingleton.ongoingScanner == null) {
-            bluetoothSingleton.init();
-
+        bluetoothSingleton.init();
       }
     }
   }

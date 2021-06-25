@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -11,10 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/foundation.dart';
 
 class Profile extends StatelessWidget {
-
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
@@ -36,7 +32,6 @@ class Profile extends StatelessWidget {
         _sub.cancel();
       }
     });
-
   }
 
   @override

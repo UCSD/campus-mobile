@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -45,11 +43,6 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
     List<ShuttleStopModel?> newOrder = _shuttleDataProvider.stopsToRender;
     List<ShuttleStopModel> toRemove = [];
 
-    for (ShuttleStopModel? item in newOrder) {
-      if (_shuttleDataProvider.stopsToRender == null) {
-        toRemove.add(item!);
-      }
-    }
     newOrder.removeWhere((element) => toRemove.contains(element));
     ShuttleStopModel? item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);

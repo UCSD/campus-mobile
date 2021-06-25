@@ -1,5 +1,3 @@
-
-
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -28,9 +26,12 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
 
-    EmployeeIdModel? employeeModel = Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
-    isValidId = employeeModel != null && (employeeModel.barcode != null) &&
-        (employeeModel.employeePreferredDisplayName != null && employeeModel.employeeId != null);
+    EmployeeIdModel? employeeModel =
+        Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
+    isValidId = employeeModel != null &&
+        (employeeModel.barcode != null) &&
+        (employeeModel.employeePreferredDisplayName != null &&
+            employeeModel.employeeId != null);
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
@@ -41,12 +42,11 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
       isLoading: Provider.of<EmployeeIdDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<EmployeeIdDataProvider>(context).error,
-      child: () => isValidId ? buildCardContent(
-          Provider.of<EmployeeIdDataProvider>(context).employeeIdModel,
-          context)
-          :
-          buildErrorCardContent(context)
-      ,
+      child: () => isValidId
+          ? buildCardContent(
+              Provider.of<EmployeeIdDataProvider>(context).employeeIdModel,
+              context)
+          : buildErrorCardContent(context),
     );
   }
 
@@ -65,24 +65,20 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
             children: [
               Center(
                 child: Text.rich(
+                  TextSpan(text: "Unable to display Employee ID.\n", children: [
+                    TextSpan(text: "If the problem persists, contact the "),
                     TextSpan(
-                      text: "Unable to display Employee ID.\n",
-                      children: [
-                        TextSpan(
-                          text: "If the problem persists, contact the "
-                        ),
-                        TextSpan(
-                          text: "ITS Service Desk",
-                          style: TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline),
-                          recognizer: TapGestureRecognizer()..onTap = () {
-                            openLink("https://blink.ucsd.edu/technology/help-desk/index.html");
-                          }
-                        ),
-                        TextSpan(
-                          text: "."
-                        )
-                      ]
-                    ),
+                        text: "ITS Service Desk",
+                        style: TextStyle(
+                            color: Colors.blueAccent,
+                            decoration: TextDecoration.underline),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            openLink(
+                                "https://blink.ucsd.edu/technology/help-desk/index.html");
+                          }),
+                    TextSpan(text: ".")
+                  ]),
                 ),
               ),
             ],

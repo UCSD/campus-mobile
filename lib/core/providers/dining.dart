@@ -147,33 +147,26 @@ class DiningDataProvider extends ChangeNotifier {
       menuItems = _diningMenuItemModels[id]!.menuItems;
     }
     List<MenuItem> filteredMenuItems = [];
-    if (filters != null) {
-      for (var menuItem in menuItems!) {
-        int matched = 0;
-        for (int i = 0; i < filters.length; i++) {
-          if (menuItem.tags!.contains(filters[i])) {
-            matched++;
-          }
-        }
-        if (matched == filters.length) {
-          filteredMenuItems.add(menuItem);
+    for (var menuItem in menuItems!) {
+      int matched = 0;
+      for (int i = 0; i < filters.length; i++) {
+        if (menuItem.tags!.contains(filters[i])) {
+          matched++;
         }
       }
-    } else {
-      return menuItems;
+      if (matched == filters.length) {
+        filteredMenuItems.add(menuItem);
+      }
     }
     return filteredMenuItems;
   }
 
   ///RETURNS A List<diningModels> sorted by distance
   List<DiningModel> get diningModels {
-    if (_diningModels != null) {
-      ///check if we have a coordinates object
-      if (_coordinates != null) {
-        return reorderLocations();
-      }
-      return _diningModels.values.toList();
+    ///check if we have a coordinates object
+    if (_coordinates != null) {
+      return reorderLocations();
     }
-    return [];
+    return _diningModels.values.toList();
   }
 }

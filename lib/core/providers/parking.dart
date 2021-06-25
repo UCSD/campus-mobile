@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
@@ -9,7 +7,9 @@ import 'package:campus_mobile_experimental/core/services/spot_types.dart';
 import 'package:flutter/material.dart';
 
 class ParkingDataProvider extends ChangeNotifier {
-  ParkingDataProvider() : selectedLots = 0, selectedSpots = 0 {
+  ParkingDataProvider()
+      : selectedLots = 0,
+        selectedSpots = 0 {
     ///DEFAULT STATES
     _isLoading = false;
 
@@ -79,7 +79,8 @@ class ParkingDataProvider extends ChangeNotifier {
 
     if (await _spotTypesService.fetchSpotTypesData()) {
       _spotTypeModel = _spotTypesService.spotTypeModel;
-      if (_userDataProvider.userProfileModel!.selectedParkingSpots!.isNotEmpty) {
+      if (_userDataProvider
+          .userProfileModel!.selectedParkingSpots!.isNotEmpty) {
         //Load selected spots types from user Profile
         _selectedSpotTypesState =
             _userDataProvider.userProfileModel!.selectedParkingSpots;

@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
@@ -85,7 +83,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
         children: <Widget>[
           Center(
             child: SizedBox(
-                height: 40, width: 40, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
+                height: 40,
+                width: 40,
+                child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.secondary)),
           ),
           Padding(
             padding: EdgeInsets.only(top: 20.0),

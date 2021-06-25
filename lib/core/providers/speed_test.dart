@@ -14,7 +14,6 @@ import 'package:path_provider/path_provider.dart';
 class SpeedTestProvider extends ChangeNotifier {
   bool? _onSimulator;
   bool? _isLoading;
-  bool _isUCSDWifi = true;
   late Coordinates _coordinates;
   String? _error;
   NetworkHelper _networkHelper = new NetworkHelper();
@@ -236,7 +235,7 @@ class SpeedTestProvider extends ChangeNotifier {
       }
       // Send to offload API
       try {
-        var response = _networkHelper
+        _networkHelper
             .authorizedPost(mobileLoggerApiWifi, offloadDataHeader,
                 json.encode(log.toString()))
             .then((value) {
@@ -330,9 +329,7 @@ class SpeedTestProvider extends ChangeNotifier {
         });
       } catch (Exception) {
         getNewToken().then((value) {
-          var response = _networkHelper.authorizedPost(
-              mobileLoggerApiWifiReport,
-              headers,
+          _networkHelper.authorizedPost(mobileLoggerApiWifiReport, headers,
               json.encode(wiFiLog.toString()));
         });
       }

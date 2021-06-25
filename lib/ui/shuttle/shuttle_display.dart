@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/shuttle.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -8,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class ShuttleDisplay extends StatelessWidget {
-  ShuttleDisplay(
-      {Key? key, required this.stop, required this.arrivingShuttles})
+  ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles})
       : super(key: key);
 
   final ShuttleStopModel? stop;
@@ -25,7 +22,10 @@ class ShuttleDisplay extends StatelessWidget {
         height: 200.0,
         child: Center(
           child: Container(
-              height: 32, width: 32, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
+              height: 32,
+              width: 32,
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary)),
         ),
       );
     } else {

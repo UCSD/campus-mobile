@@ -1,5 +1,3 @@
-
-
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -132,7 +130,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
                                   cardMargin),
                           child: FittedBox(
                             child: Text(
-                              (nameModel!.firstName! + " " + nameModel.lastName!),
+                              (nameModel!.firstName! +
+                                  " " +
+                                  nameModel.lastName!),
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: getFontSize(

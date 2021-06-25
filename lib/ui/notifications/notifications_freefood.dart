@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

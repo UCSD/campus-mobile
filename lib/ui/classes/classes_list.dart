@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';

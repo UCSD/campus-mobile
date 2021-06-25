@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
@@ -21,8 +19,7 @@ class CardsService {
     _error = null;
     _isLoading = true;
 
-    if (ucsdAffiliation == null)
-      ucsdAffiliation = "";
+    if (ucsdAffiliation == null) ucsdAffiliation = "";
 
     /// API Manager Service
     try {

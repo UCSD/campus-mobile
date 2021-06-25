@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

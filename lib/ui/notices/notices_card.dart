@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
