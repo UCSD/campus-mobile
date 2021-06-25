@@ -51,7 +51,9 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildDirectionsButton(
       BuildContext context, prefix0.DiningModel model) {
-    if (model.distance != null)
+    if (model.coordinates != null &&
+        model.coordinates!.lat != null &&
+        model.coordinates!.lon != null) {
       return TextButton(
         style: TextButton.styleFrom(
           primary: Theme.of(context).buttonColor,
@@ -69,8 +71,11 @@ class DiningDetailView extends StatelessWidget {
                   Icons.directions_walk,
                   size: 30,
                 ),
-                Text(num.parse(model.distance!.toStringAsFixed(1)).toString() +
-                    ' mi'),
+                model.distance != null
+                    ? Text(num.parse(model.distance!.toStringAsFixed(1))
+                            .toString() +
+                        ' mi')
+                    : Text('--'),
               ],
             ),
           ],
@@ -85,8 +90,9 @@ class DiningDetailView extends StatelessWidget {
           }
         },
       );
-    else
+    } else {
       return Center(child: Text('Directions not available.'));
+    }
   }
 
   Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
