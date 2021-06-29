@@ -69,29 +69,30 @@ class CircularParkingIndicators extends StatelessWidget {
                     children: [
                       Center(
                         child: CircularProgressIndicator(
-                          value: (int.parse(locationData['Open']) /
-                              int.parse(locationData['Total'])),
+                          value: (locationData['Open'] / locationData['Total']),
                           valueColor:
                               AlwaysStoppedAnimation<Color>(ColorPrimary),
                         ),
                       ),
                       Center(
-                        child: Text(((int.parse(locationData['Open']) /
-                                        int.parse(locationData['Total'])) *
-                                    100)
-                                .round()
-                                .toString() +
-                            "%"),
+                        child: Text(
+                            ((locationData['Open'] / locationData['Total']) *
+                                        100)
+                                    .round()
+                                    .toString() +
+                                "%"),
                       ),
                     ],
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: spotType != null ? CircleAvatar(
-                    backgroundColor: colorFromHex(spotType.color!),
-                    child: Text(spotType.spotKey!),
-                  ) : Container(),
+                  child: spotType != null
+                      ? CircleAvatar(
+                          backgroundColor: colorFromHex(spotType.color!),
+                          child: Text(spotType.spotKey!),
+                        )
+                      : Container(),
                 )
               ],
             ),
