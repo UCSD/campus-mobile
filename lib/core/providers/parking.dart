@@ -7,7 +7,9 @@ import 'package:campus_mobile_experimental/core/services/spot_types.dart';
 import 'package:flutter/material.dart';
 
 class ParkingDataProvider extends ChangeNotifier {
-  ParkingDataProvider() : selectedLots = 0, selectedSpots = 0 {
+  ParkingDataProvider()
+      : selectedLots = 0,
+        selectedSpots = 0 {
     ///DEFAULT STATES
     _isLoading = false;
 
@@ -90,7 +92,8 @@ class ParkingDataProvider extends ChangeNotifier {
       for (Spot spot in _spotTypeModel!.spots!) {
         _spotTypeMap![spot.spotKey] = spot;
       }
-      if (_userDataProvider.userProfileModel!.selectedParkingSpots!.isNotEmpty) {
+      if (_userDataProvider
+          .userProfileModel!.selectedParkingSpots!.isNotEmpty) {
         //Load selected spots types from user Profile
         _selectedSpotTypesState =
             _userDataProvider.userProfileModel!.selectedParkingSpots;
@@ -108,7 +111,8 @@ class ParkingDataProvider extends ChangeNotifier {
       /// this block of code is to ensure we remove any unsupported spot types
       Map<String?, bool?> newMapOfSpotTypes = Map<String, bool>();
       for (Spot spot in _spotTypeModel!.spots!) {
-        newMapOfSpotTypes[spot.spotKey] = _selectedSpotTypesState![spot.spotKey];
+        newMapOfSpotTypes[spot.spotKey] =
+            _selectedSpotTypesState![spot.spotKey];
       }
       _selectedSpotTypesState = newMapOfSpotTypes.cast<String?, bool>();
 
@@ -194,7 +198,8 @@ class ParkingDataProvider extends ChangeNotifier {
             _parkingModels![locationId]!.availability![spot]['Open'] != "") {
           print(_parkingModels![locationId]!.availability![spot]['Open']);
           totalOpenSpots = totalOpenSpots +
-              int.parse(_parkingModels![locationId]!.availability![spot]['Open']);
+              int.parse(
+                  _parkingModels![locationId]!.availability![spot]['Open']);
         }
       }
     }

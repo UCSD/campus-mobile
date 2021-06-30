@@ -46,8 +46,11 @@ class _ParkingCardState extends State<ParkingCard> {
     // try {
     List<Widget> selectedLotsViews = [];
 
+    print("----model------");
+    print(_parkingDataProvider.parkingViewState);
     for (ParkingModel model in _parkingDataProvider.parkingModels) {
-      if (_parkingDataProvider.parkingViewState![model.locationId] == true) {
+      if (_parkingDataProvider.parkingViewState![model.locationName] == true) {
+        print(_parkingDataProvider.parkingViewState![model.locationName]);
         selectedLotsViews.add(CircularParkingIndicators(model: model));
       }
     }
