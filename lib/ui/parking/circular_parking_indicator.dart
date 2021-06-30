@@ -68,19 +68,25 @@ class CircularParkingIndicators extends StatelessWidget {
                     alignment: Alignment.center,
                     children: [
                       Center(
-                        child: CircularProgressIndicator(
-                          value: (locationData['Open'] / locationData['Total']),
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(ColorPrimary),
-                        ),
-                      ),
+                        child: SizedBox(
+                      height: 75,
+                      width: 75,
+                    child:  CircularProgressIndicator(
+                      value: (locationData['Open'] / locationData['Total']),
+                      valueColor: AlwaysStoppedAnimation<Color>(getColor(locationData['Open'] / locationData['Total'])),
+                      backgroundColor: colorFromHex('#EDECEC'),
+                      strokeWidth: 7.5,
+                    )),
+
+                    ),
                       Center(
                         child: Text(
                             ((locationData['Open'] / locationData['Total']) *
                                         100)
                                     .round()
                                     .toString() +
-                                "%"),
+                                "%",
+                        style: TextStyle(fontSize: 25)),
                       ),
                     ],
                   ),
@@ -109,14 +115,28 @@ class CircularParkingIndicators extends StatelessWidget {
     return Color(int.parse('FF$hexCode', radix: 16));
   }
 
+  Color getColor(double value) {
+    if(value > .75) {
+      return Colors.green;
+    }
+    if(value > .25) {
+      return Colors.yellow;
+    }
+    return Colors.red;
+  }
+
   Widget buildLocationContext(BuildContext context) {
     return Center(
-      child: Text(model.locationContext ?? ""),
+      child: Text(model.locationContext ?? "", style: TextStyle(color: Colors.grey,)),
     );
   }
 
   Widget buildLocationTitle() {
-    return Text(model.locationName ?? "");
+    return Text(model.locationName ?? "",
+      style: TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 20,
+    ),);
   }
 
   Widget buildSpotsAvailableText(BuildContext context) {
