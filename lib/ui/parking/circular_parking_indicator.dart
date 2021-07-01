@@ -57,6 +57,8 @@ class CircularParkingIndicators extends StatelessWidget {
       Spot? spotType, dynamic locationData, BuildContext context) {
     print("spot and location data");
     print(locationData);
+    int open = locationData["Open"] == null ? 0 : locationData["Open"];
+    int total = locationData["Total"] == null ? 0 : locationData["Total"];
     return locationData != null
         ? Expanded(
             child: Column(
@@ -69,24 +71,20 @@ class CircularParkingIndicators extends StatelessWidget {
                     children: [
                       Center(
                         child: SizedBox(
-                      height: 75,
-                      width: 75,
-                    child:  CircularProgressIndicator(
-                      value: (locationData['Open'] / locationData['Total']),
-                      valueColor: AlwaysStoppedAnimation<Color>(getColor(locationData['Open'] / locationData['Total'])),
-                      backgroundColor: colorFromHex('#EDECEC'),
-                      strokeWidth: 7.5,
-                    )),
-
-                    ),
+                            height: 75,
+                            width: 75,
+                            child: CircularProgressIndicator(
+                              value: (open / total),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  getColor(open / total)),
+                              backgroundColor: colorFromHex('#EDECEC'),
+                              strokeWidth: 7.5,
+                            )),
+                      ),
                       Center(
                         child: Text(
-                            ((locationData['Open'] / locationData['Total']) *
-                                        100)
-                                    .round()
-                                    .toString() +
-                                "%",
-                        style: TextStyle(fontSize: 25)),
+                            ((open / total) * 100).round().toString() + "%",
+                            style: TextStyle(fontSize: 25)),
                       ),
                     ],
                   ),
@@ -116,10 +114,10 @@ class CircularParkingIndicators extends StatelessWidget {
   }
 
   Color getColor(double value) {
-    if(value > .75) {
+    if (value > .75) {
       return Colors.green;
     }
-    if(value > .25) {
+    if (value > .25) {
       return Colors.yellow;
     }
     return Colors.red;
@@ -127,23 +125,28 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Widget buildLocationContext(BuildContext context) {
     return Center(
-      child: Text(model.locationContext ?? "", style: TextStyle(color: Colors.grey,)),
+      child: Text(model.locationContext ?? "",
+          style: TextStyle(
+            color: Colors.grey,
+          )),
     );
   }
 
   Widget buildLocationTitle() {
-    return Text(model.locationName ?? "",
+    return Text(
+      model.locationName ?? "",
       style: TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 20,
-    ),);
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+      ),
+    );
   }
 
   Widget buildSpotsAvailableText(BuildContext context) {
     return Center(
       child: Text("~" +
           Provider.of<ParkingDataProvider>(context)
-              .getApproxNumOfOpenSpots(model.locationId)
+              .getApproxNumOfOpenSpots(model.locationName)
               .toString() +
           " Spots Available"),
     );
