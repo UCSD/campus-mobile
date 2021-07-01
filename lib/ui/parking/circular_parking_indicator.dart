@@ -146,7 +146,11 @@ class CircularParkingIndicators extends StatelessWidget {
     return Center(
       child: Text("~" +
           Provider.of<ParkingDataProvider>(context)
-              .getApproxNumOfOpenSpots(model.locationName)
+              .getApproxNumOfOpenSpots(model.locationName)["Open"]
+              .toString() +
+          " of " +
+          Provider.of<ParkingDataProvider>(context)
+              .getApproxNumOfOpenSpots(model.locationName)["Total"]
               .toString() +
           " Spots Available"),
     );

@@ -189,20 +189,26 @@ class ParkingDataProvider extends ChangeNotifier {
   /// Returns the total number of spots open at a given location
   /// does not filter based on spot type
   //TODO: Changed to num make sure it still works (kwgong)
-  num getApproxNumOfOpenSpots(String? locationId) {
-    num totalOpenSpots = 0;
+  Map<String, num> getApproxNumOfOpenSpots(String? locationId) {
+    Map<String, num> totalAndOpenSpots = {"Open": 0, "Total": 0};
     if (_parkingModels![locationId] != null &&
         _parkingModels![locationId]!.availability != null) {
       print(_parkingModels![locationId]!.toJson());
       for (dynamic spot in _parkingModels![locationId]!.availability!.keys) {
         if (_parkingModels![locationId]!.availability![spot]['Open'] != null &&
             _parkingModels![locationId]!.availability![spot]['Open'] != "") {
-          totalOpenSpots = totalOpenSpots +
+          totalAndOpenSpots["Open"] = totalAndOpenSpots["Open"]! +
               _parkingModels![locationId]!.availability![spot]['Open'];
+        }
+
+        if (_parkingModels![locationId]!.availability![spot]['Total'] != null &&
+            _parkingModels![locationId]!.availability![spot]['Total'] != "") {
+          totalAndOpenSpots["Total"] = totalAndOpenSpots["Total"]! +
+              _parkingModels![locationId]!.availability![spot]['Total'];
         }
       }
     }
-    return totalOpenSpots;
+    return totalAndOpenSpots;
   }
 
   ///SIMPLE GETTERS
