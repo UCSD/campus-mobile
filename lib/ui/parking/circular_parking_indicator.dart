@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class CircularParkingIndicators extends StatelessWidget {
   const CircularParkingIndicators({
@@ -80,18 +81,19 @@ class CircularParkingIndicators extends StatelessWidget {
                         child: SizedBox(
                             height: 75,
                             width: 75,
-                            child: CircularProgressIndicator(
-                              value: (open / total),
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  getColor(open / total)),
+                            child: CircularPercentIndicator(
+                              radius: 75,
+                              animation: true,
+                              animationDuration: 1000,
+                              lineWidth: 7.5,
+                              percent: open / total,
+                              center: Text( ((open / total) * 100).round().toString() + "%",
+                                  style: TextStyle(fontSize: 25)),
+                              circularStrokeCap: CircularStrokeCap.round,
                               backgroundColor: colorFromHex('#EDECEC'),
-                              strokeWidth: 7.5,
-                            )),
-                      ),
-                      Center(
-                        child: Text(
-                            ((open / total) * 100).round().toString() + "%",
-                            style: TextStyle(fontSize: 25)),
+                              progressColor: getColor(open / total),
+                            ),
+                        ),
                       ),
                     ],
                   ),
@@ -121,14 +123,16 @@ class CircularParkingIndicators extends StatelessWidget {
                         child: SizedBox(
                             height: 75,
                             width: 75,
-                            child: CircularProgressIndicator(
-                              value: 0.0,
+                            child:  CircularPercentIndicator(
+                              radius: 75,
+                              animation: false,
+                              lineWidth: 7.5,
+                              percent: 0.0,
+                              center: Text("N/A",
+                                  style: TextStyle(fontSize: 25)),
                               backgroundColor: colorFromHex('#EDECEC'),
-                              strokeWidth: 7.5,
-                            )),
-                      ),
-                      Center(
-                        child: Text("N/A"),
+                            ),
+                        ),
                       ),
                     ],
                   ),
