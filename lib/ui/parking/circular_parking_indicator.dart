@@ -38,7 +38,7 @@ class CircularParkingIndicators extends StatelessWidget {
       }
     });
     for (String spot in selectedSpots) {
-      if (model.availability != null && model.availability![spot] != null) {
+      if (model.availability != null) {
         listOfCircularParkingInfo.add(buildCircularParkingInfo(
             Provider.of<ParkingDataProvider>(context).spotTypeMap![spot],
             model.availability![spot],
@@ -57,8 +57,15 @@ class CircularParkingIndicators extends StatelessWidget {
       Spot? spotType, dynamic locationData, BuildContext context) {
     print("spot and location data");
     print(locationData);
-    int open = locationData["Open"] == null ? 0 : locationData["Open"];
-    int total = locationData["Total"] == null ? 0 : locationData["Total"];
+    int open;
+    int total;
+    if (locationData != null) {
+      open = locationData["Open"] == null ? 0 : locationData["Open"];
+      total = locationData["Total"] == null ? 0 : locationData["Total"];
+    } else {
+      open = 0;
+      total = 0;
+    }
     return locationData != null
         ? Expanded(
             child: Column(
@@ -101,7 +108,43 @@ class CircularParkingIndicators extends StatelessWidget {
               ],
             ),
           )
-        : Container();
+        : Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Center(
+                        child: SizedBox(
+                            height: 75,
+                            width: 75,
+                            child: CircularProgressIndicator(
+                              value: 0.0,
+                              backgroundColor: colorFromHex('#EDECEC'),
+                              strokeWidth: 7.5,
+                            )),
+                      ),
+                      Center(
+                        child: Text("N/A"),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: spotType != null
+                      ? CircleAvatar(
+                          backgroundColor: colorFromHex(spotType.color!),
+                          child: Text(spotType.spotKey!),
+                        )
+                      : Container(),
+                )
+              ],
+            ),
+          );
   }
 
   Color colorFromHex(String hexColor) {

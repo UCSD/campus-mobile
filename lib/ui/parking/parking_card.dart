@@ -45,9 +45,6 @@ class _ParkingCardState extends State<ParkingCard> {
   Widget buildParkingCard(BuildContext context) {
     // try {
     List<Widget> selectedLotsViews = [];
-
-    print("----model------");
-    print(_parkingDataProvider.parkingViewState);
     for (ParkingModel model in _parkingDataProvider.parkingModels) {
       if (_parkingDataProvider.parkingViewState![model.locationName] == true) {
         print(_parkingDataProvider.parkingViewState![model.locationName]);

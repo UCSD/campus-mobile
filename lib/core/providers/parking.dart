@@ -193,7 +193,6 @@ class ParkingDataProvider extends ChangeNotifier {
     Map<String, num> totalAndOpenSpots = {"Open": 0, "Total": 0};
     if (_parkingModels![locationId] != null &&
         _parkingModels![locationId]!.availability != null) {
-      print(_parkingModels![locationId]!.toJson());
       for (dynamic spot in _parkingModels![locationId]!.availability!.keys) {
         if (_parkingModels![locationId]!.availability![spot]['Open'] != null &&
             _parkingModels![locationId]!.availability![spot]['Open'] != "") {
