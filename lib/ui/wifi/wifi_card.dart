@@ -235,10 +235,9 @@ class _WiFiCardState extends State<WiFiCard> {
                             ),
                             actions: <Widget>[
                               TextButton(
-                                  child: Text(
-                                    "Dismiss",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  child: Text("Dismiss"),
+                                  style: TextButton.styleFrom(
+                                      primary: Theme.of(context).buttonColor),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   })
@@ -325,8 +324,9 @@ class _WiFiCardState extends State<WiFiCard> {
                               ),
                               actions: <Widget>[
                                 TextButton(
-                                    child: Text("Dismiss",
-                                        style: TextStyle(color: Colors.white)),
+                                    child: Text("Dismiss"),
+                                    style: TextButton.styleFrom(
+                                        primary: Theme.of(context).buttonColor),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       _buttonEnabled = false;
