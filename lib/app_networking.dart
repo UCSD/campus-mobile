@@ -57,7 +57,7 @@ class NetworkHelper {
       title: const Text(LoginConstants.silentLoginFailedTitle),
       content: Text(LoginConstants.silentLoginFailedDesc),
       actions: [
-        FlatButton(
+        TextButton(
           onPressed: () {
             Get.back(closeOverlays: true);
           },

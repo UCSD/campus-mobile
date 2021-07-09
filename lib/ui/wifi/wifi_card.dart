@@ -230,8 +230,10 @@ class _WiFiCardState extends State<WiFiCard> {
                                   "Please run speed test to report issue."),
                             ),
                             actions: <Widget>[
-                              FlatButton(
+                              TextButton(
                                   child: Text("Dismiss"),
+                                  style: TextButton.styleFrom(
+                                      primary: Theme.of(context).buttonColor),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   })
@@ -317,8 +319,10 @@ class _WiFiCardState extends State<WiFiCard> {
                                     "Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services."),
                               ),
                               actions: <Widget>[
-                                FlatButton(
+                                TextButton(
                                     child: Text("Dismiss"),
+                                    style: TextButton.styleFrom(
+                                        primary: Theme.of(context).buttonColor),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       _buttonEnabled = false;
