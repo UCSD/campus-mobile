@@ -38,6 +38,11 @@ class RoutePaths {
   static const String Parking = "parking/parking_view";
   static const String SpotTypesView = "parking/spot_types_view";
   static const String ParkingLotsView = "parking/parking_lots_view";
+
+  // NEW CODE
+  static const String VentilationBuildings = "ventilation/buildings";
+  static const String VentilationFloors = "ventilation/floors";
+  static const String VentilationRooms = "ventilation/rooms";
 }
 
 class RouteTitles {
@@ -62,6 +67,9 @@ class RouteTitles {
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
+    'ventilation/buildings': 'HVAC: Manage Location',
+    'ventilation/floors': 'HVAC: Manage Location',
+    'ventilation/rooms': 'HVAC: Manage Location',
   };
 }
 
@@ -163,5 +171,6 @@ class CardTitleConstants {
     'news': 'News',
     'parking': 'Parking',
     'weather': 'Weather',
+    'ventilation': 'Office Environment',
   };
 }

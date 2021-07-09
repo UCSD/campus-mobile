@@ -30,6 +30,9 @@ import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
+import 'package:campus_mobile_experimental/ui/ventilation/ventilation_buildings.dart';
+import 'package:campus_mobile_experimental/ui/ventilation/ventilation_floors.dart';
+import 'package:campus_mobile_experimental/ui/ventilation/ventilation_rooms.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/beacon_view.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/bluetooth_logger.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/wayfinding_permissions.dart';
@@ -90,6 +93,25 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageAvailabilityView();
         });
+
+      // NEW CODE
+      case RoutePaths.VentilationBuildings:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return VentilationBuildings();
+        });
+      case RoutePaths.VentilationFloors:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return VentilationFloors();
+        });
+      case RoutePaths.VentilationRooms:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return VentilationRooms();
+        });
+      // NEW CODE
+
       case RoutePaths.DiningViewAll:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
