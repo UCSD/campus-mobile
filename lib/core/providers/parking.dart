@@ -164,7 +164,8 @@ class ParkingDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleSpotSelection(String? spotKey) {
+  void toggleSpotSelection(String? spotKey, int spotsSelected) {
+    selectedSpots = spotsSelected;
     if (selectedSpots < MAX_SELECTED_SPOTS) {
       _selectedSpotTypesState![spotKey] = !_selectedSpotTypesState![spotKey]!;
       _selectedSpotTypesState![spotKey]! ? selectedSpots++ : selectedSpots--;

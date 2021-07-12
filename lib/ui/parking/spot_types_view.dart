@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
@@ -27,8 +25,14 @@ class _SpotTypesViewState extends State<SpotTypesView> {
   }
 
   List<Widget> createList(BuildContext context) {
+    int selectedSpots = 0;
     List<Widget> list = [];
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
+      if (Provider.of<ParkingDataProvider>(context)
+              .spotTypesState![data.spotKey]! ==
+          true) {
+        selectedSpots++;
+      }
       Color iconColor = HexColor(data.color!);
       Color textColor = HexColor(data.textColor!);
       list.add(ListTile(
@@ -56,7 +60,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
           value: Provider.of<ParkingDataProvider>(context)
               .spotTypesState![data.spotKey]!,
           onChanged: (_) {
-            spotTypesDataProvider.toggleSpotSelection(data.spotKey);
+            spotTypesDataProvider.toggleSpotSelection(
+                data.spotKey, selectedSpots);
           },
           activeColor: Theme.of(context).buttonColor,
         ),
