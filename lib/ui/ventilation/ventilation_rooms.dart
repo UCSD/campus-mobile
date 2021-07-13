@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -55,26 +56,6 @@ class VentilationRoomsState extends State<VentilationRooms> {
           style: TextStyle(
               color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        trailing: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            onPrimary: Theme.of(context).primaryColor, // foreground
-            primary: Theme.of(context).buttonColor,
-          ),
-          child: Text('Done',
-              style: TextStyle(
-                color: Theme.of(context).textTheme.button!.color,
-              )),
-          onPressed: () {
-            /// Set tab bar index to the Home tab
-            Provider.of<BottomNavigationBarProvider>(context, listen: false)
-                .currentIndex = NavigatorConstants.HomeTab;
-
-            /// Navigate to Home tab
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                RoutePaths.BottomNavigationBar,
-                (Route<dynamic> route) => false);
-          },
-        ),
       ),
     ));
 
@@ -96,6 +77,18 @@ class VentilationRoomsState extends State<VentilationRooms> {
               setState(() {
                 _added[i] = !_added[i];
               });
+
+              /// Set tab bar index to the Home tab
+              Provider.of<BottomNavigationBarProvider>(context, listen: false)
+                  .currentIndex = NavigatorConstants.HomeTab;
+
+              /// Navigate to Home tab
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  RoutePaths.BottomNavigationBar,
+                  (Route<dynamic> route) => false);
+
+              Provider.of<CustomAppBar>(context, listen: false)
+                  .changeTitle(CustomAppBar().appBar.title);
             }),
       );
     }
