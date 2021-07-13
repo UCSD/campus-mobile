@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart'
@@ -19,14 +21,22 @@ late bool showOnboardingScreen;
 
 bool isFirstRunFlag = false;
 bool executedInitialDeeplinkQuery = false;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  await initializeHive();
-  await initializeApp();
 
-  runApp(CampusMobile());
+  /// Record zoned errors - https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
+  runZonedGuarded<Future<void>>(() async {
+    /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+
+    /// Record uncaught errors - https://firebase.flutter.dev/docs/crashlytics/usage#handling-uncaught-errors
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    await initializeHive();
+    await initializeApp();
+    runApp(CampusMobile());
+  }, FirebaseCrashlytics.instance.recordError);
 }
 
 initializeHive() async {
