@@ -50,7 +50,7 @@ dependencies:
   uni_links2: 0.6.0+2
   url_launcher: 6.0.6
   uuid: 3.0.4
-  webview_flutter: 2.0.8
+  webview_flutter: 2.0.10
   wifi_connection: 0.0.4
 dev_dependencies:
   build_runner: 2.0.2
