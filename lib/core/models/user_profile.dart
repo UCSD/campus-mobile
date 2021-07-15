@@ -36,6 +36,8 @@ class UserProfileModel extends HiveObject {
   List<int?>? selectedStops;
   @HiveField(6)
   List<String>? surveyCompletion;
+  // @HiveField(7)
+  // List<String>? selectedVentilationLocations;
 
   UserProfileModel(
       {this.classifications,

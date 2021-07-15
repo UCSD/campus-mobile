@@ -1,65 +1,59 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/models/ventilation_locations.dart';
-import 'package:campus_mobile_experimental/core/providers/ventilation.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/rendering.dart';
 
 class VentilationBuildings extends StatefulWidget {
-  @override
   _VentilationBuildingsState createState() => _VentilationBuildingsState();
 }
 
 class _VentilationBuildingsState extends State<VentilationBuildings> {
-  late VentilationDataProvider ventilationDataProvider;
-
   @override
-  Widget build(BuildContext context) {
-    print("Context in ventilation buildings: $context");
+  Widget build(BuildContext context) => ContainerView(
+        child: buildingsList(context),
+      );
 
-    ventilationDataProvider = Provider.of<VentilationDataProvider>(context);
-
-    return ContainerView(
-      child: buildingsList(context),
-    );
-  }
-
+  // builds the listview that will be put into ContainerView
   Widget buildingsList(BuildContext context) {
+    // creates a list that will hold the list of building names
     List<Widget> list = [];
-    list.add(Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-      child: ListTile(
-        dense: true,
-        title: Text(
-          'Buildings:',
+    list.add(ListTile(
+      title: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+        child: Text(
+          "Buildings:",
           style: TextStyle(
               color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
     ));
 
-    for (VentilationLocationsModel model
-        in ventilationDataProvider.ventilationLocationModels) {
-      list.add(TextButton(
-          child: ListTile(
-            dense: true,
-            title: Text(
-              'Atkinson Hall',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.black,
-            ),
+    // loops through and adds buttons for the user to click on
+    for (var i = 0; i < 5; i++) {
+      list.add(ListTile(
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          child: Text(
+            "Atkinson Hall",
+            style: TextStyle(color: Colors.black, fontSize: 20),
           ),
-          onPressed: () {
-            Navigator.pushNamed(
-              context,
-              RoutePaths.VentilationFloors,
-              arguments: {'building': 'Atkinson Hall'},
-            );
-          }));
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          color: Colors.black,
+        ),
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            RoutePaths.VentilationFloors,
+            arguments: {'building': 'Atkinson Hall'},
+          );
+        },
+      ));
     }
+
+    // adds SizedBox to have a grey underline for the last item in the list
+    list.add(SizedBox());
 
     return ListView(
       physics: NeverScrollableScrollPhysics(),

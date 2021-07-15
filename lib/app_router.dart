@@ -101,14 +101,16 @@ class Router {
           return VentilationBuildings();
         });
       case RoutePaths.VentilationFloors:
+        Map data = settings.arguments as Map;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return VentilationFloors();
+          return VentilationFloors(data);
         });
       case RoutePaths.VentilationRooms:
+        Map data = settings.arguments as Map;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return VentilationRooms();
+          return VentilationRooms(data);
         });
       // NEW CODE
 

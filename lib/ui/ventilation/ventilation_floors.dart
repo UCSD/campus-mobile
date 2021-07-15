@@ -1,51 +1,31 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class VentilationFloors extends StatefulWidget {
+  final Map args;
+  const VentilationFloors(this.args);
+
   VentilationFloorsState createState() => VentilationFloorsState();
 }
 
 class VentilationFloorsState extends State<VentilationFloors> {
   @override
-  // constructor
-  Widget build(BuildContext context) {
-    return ContainerView(
-      child: buildFloorsList(context),
-    );
-  }
-
-  // converts a nullable map to a non-nullable map
-  Map nullMap(Map? args) {
-    if (args != null) {
-      return args;
-    }
-
-    return {'building': 'Bonner Hall'};
-  }
-
-  // builds the ListView that will be put into ContainerView
-  Widget buildFloorsList(BuildContext context) {
-    return ListView(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      children:
-          ListTile.divideTiles(tiles: floorsList(context), context: context)
-              .toList(),
-    );
-  }
+  Widget build(BuildContext context) => ContainerView(
+        child: floorsList(context),
+      );
 
   // builds the list of floors to be put into ListView
-  List<Widget> floorsList(BuildContext context) {
-    Map? args = ModalRoute.of(context)!.settings.arguments as Map?;
-    final arguments = nullMap(args);
+  Widget floorsList(BuildContext context) {
+    Map arguments = widget.args;
 
+    // creates a list that will hold the list of floor names
     List<Widget> list = [];
-    list.add(Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-      child: ListTile(
-        dense: true,
-        title: Text(
+    list.add(ListTile(
+      title: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+        child: Text(
           'Floors:',
           style: TextStyle(
               color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
@@ -53,31 +33,38 @@ class VentilationFloorsState extends State<VentilationFloors> {
       ),
     ));
 
+    // loops through and adds buttons for the user to click on
     for (var i = 0; i < 5; i++) {
-      list.add(TextButton(
-          child: ListTile(
-            dense: true,
-            title: Text(
-              '1st Floor',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.black,
-            ),
+      list.add(ListTile(
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          child: Text(
+            '1st Floor',
+            style: TextStyle(color: Colors.black, fontSize: 20),
           ),
-          onPressed: () {
-            Navigator.pushNamed(
-              context,
-              RoutePaths.VentilationRooms,
-              arguments: {
-                'building': arguments['building'],
-                'floor': '1st Floor'
-              },
-            );
-          }));
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          color: Colors.black,
+        ),
+        onTap: () {
+          arguments['floor'] = '1st Floor';
+          Navigator.pushNamed(
+            context,
+            RoutePaths.VentilationRooms,
+            arguments: arguments,
+          );
+        },
+      ));
     }
 
-    return list;
+    // adds SizedBox to have a grey underline for the last item in the list
+    list.add(SizedBox());
+
+    return ListView(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      children: ListTile.divideTiles(tiles: list, context: context).toList(),
+    );
   }
 }
