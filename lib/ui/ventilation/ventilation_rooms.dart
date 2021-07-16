@@ -56,9 +56,8 @@ class VentilationRoomsState extends State<VentilationRooms> {
             _added[i] = !_added[i];
           });
 
-          arguments['room'] = 'Room 101';
-          print("Arguments: $arguments");
-          VentilationDisplay.args = arguments;
+          arguments['room'] = 'Room 301';
+          VentilationDisplay.pages.add(arguments);
 
           // Set tab bar index to the Home tab
           Provider.of<BottomNavigationBarProvider>(context, listen: false)

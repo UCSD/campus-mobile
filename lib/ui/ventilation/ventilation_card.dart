@@ -1,6 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/ventilation.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/ventilation/ventilation_display.dart';
@@ -16,19 +15,13 @@ class VentilationCard extends StatefulWidget {
 
 class _VentilationCardState extends State<VentilationCard> {
   PageController _controller = PageController(initialPage: 0);
-  late VentilationDataProvider _ventilationDataProvider;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _ventilationDataProvider = Provider.of<VentilationDataProvider>(context);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  // late VentilationDataProvider _ventilationDataProvider;
+  //
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   _ventilationDataProvider = Provider.of<VentilationDataProvider>(context);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +36,22 @@ class _VentilationCardState extends State<VentilationCard> {
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: null,
-      child: () => buildCardContent(data),
+      child: () => buildCardContent(),
       actionButtons: buildActionButtons(),
     );
   }
 
-  Widget buildCardContent(List<Widget> locationsList) {
-    int numPages = 3;
-    VentilationDisplay.numPages = numPages;
+  Widget buildCardContent() {
+    List<Widget> locationsList = [];
+    // for (VentilationModel? model in dataList) {
+    //   if (model != null) {
+    //     if (_ventilationDataProvider.locationViewState[model.locationName]!) {
+    //       locationsList.add(AvailabilityDisplay(
+    //         model: model,
+    //       ));
+    //     }
+    //   }
+    // }
 
     return Column(
       children: <Widget>[
@@ -63,7 +64,7 @@ class _VentilationCardState extends State<VentilationCard> {
         ),
         DotsIndicator(
           controller: _controller,
-          itemCount: numPages,
+          itemCount: VentilationDisplay.pages.length,
           onPageSelected: (int index) {
             _controller.animateToPage(index,
                 duration: Duration(seconds: 1), curve: Curves.ease);
