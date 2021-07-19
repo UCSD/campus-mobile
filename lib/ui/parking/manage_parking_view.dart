@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 class ManageParkingView extends StatefulWidget {
   _ManageParkingViewState createState() => _ManageParkingViewState();
 }
+
 class _ManageParkingViewState extends State<ManageParkingView> {
   late ParkingDataProvider parkingDataProvider;
   @override
@@ -36,7 +37,7 @@ class _ManageParkingViewState extends State<ManageParkingView> {
     for (ParkingModel item in newOrder) {
       orderedLocationNames.add(item.locationName);
     }
-    // parkingDataProvider.reorderLots(orderedLocationNames);
+    //parkingDataProvider.reorderLots(orderedLocationNames);
   }
 
   List<Widget> createList(BuildContext context) {
