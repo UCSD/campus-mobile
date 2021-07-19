@@ -43,7 +43,7 @@ dependencies:
       ref: 9fd5cc0aa1a68d70588741f40bfc6830b46c10c1
   location: 4.1.1
   package_info: 2.0.2
-  permission_handler: 7.1.0
+  permission_handler: 8.1.3
   pointycastle: 3.0.1
   provider: 5.0.0
   shared_preferences: 2.0.6
