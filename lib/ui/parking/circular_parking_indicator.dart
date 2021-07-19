@@ -56,8 +56,6 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Widget buildCircularParkingInfo(
       Spot? spotType, dynamic locationData, BuildContext context) {
-    print("spot and location data");
-    print(locationData);
     int open;
     int total;
     if (locationData != null) {
