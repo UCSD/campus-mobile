@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/term.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -91,7 +89,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         if (await _classScheduleService.fetchUNCourses(
             headers, _academicTermModel!.termCode!)) {
           if (_classScheduleModel!.data != null) {
-            _classScheduleModel!.data!.addAll(_classScheduleService.unData.data!);
+            _classScheduleModel!.data!
+                .addAll(_classScheduleService.unData.data!);
           } else {
             _classScheduleModel = _classScheduleService.unData;
           }

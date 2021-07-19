@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
@@ -23,7 +21,8 @@ class DiningList extends StatelessWidget {
         Provider.of<DiningDataProvider>(context).diningModels;
     return data.length > 0
         ? buildDiningList(data, context)
-        : CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
+        : CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.secondary);
   }
 
   Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
@@ -108,7 +107,6 @@ class DiningList extends StatelessWidget {
         break;
       default:
         return Text('Closed');
-        break;
     }
     if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
       if (dayHours == 'Closed-Closed') {

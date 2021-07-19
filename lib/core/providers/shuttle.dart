@@ -1,5 +1,3 @@
-
-
 import 'dart:math' as Math;
 
 import 'package:campus_mobile_experimental/core/models/location.dart';
@@ -7,7 +5,6 @@ import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
-import 'package:campus_mobile_experimental/core/utils/maps.dart';
 import 'package:flutter/material.dart';
 
 import 'location.dart';
@@ -174,7 +171,6 @@ class ShuttleDataProvider extends ChangeNotifier {
   String? get error => _error;
 
   ShuttleStopModel? get closestStop => _closestStop;
-
 
   List<ShuttleStopModel> get stopsToRender {
     List<ShuttleStopModel> stopsToRenderList = <ShuttleStopModel>[];

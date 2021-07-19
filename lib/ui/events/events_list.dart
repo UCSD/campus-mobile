@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
@@ -17,7 +15,9 @@ class EventsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider.of<EventsDataProvider>(context).isLoading!
-        ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
+        ? Center(
+            child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary))
         : buildEventsList(
             Provider.of<EventsDataProvider>(context).eventsModels!, context);
   }

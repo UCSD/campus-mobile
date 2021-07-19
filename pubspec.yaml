@@ -1,15 +1,16 @@
 name: campus_mobile_experimental
 description: Mobile app platform for campus.
 version: 1.0.0+1
+publish_to: none
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: "^2.2.1"
+  flutter: 2.2.2
 dependencies:
   app_settings: 4.1.0
   barcode_widget: 2.0.1
   beacon_broadcast: 0.3.0-nullsafety.0
-  connectivity: 3.0.3
-  device_info: 2.0.0
+  connectivity: 3.0.6
+  device_info: 2.0.2
   dio: 4.0.0
   dots_indicator: 2.0.0
   encrypt: 5.0.0
@@ -46,9 +47,9 @@ dependencies:
   permission_handler: 7.1.0
   pointycastle: 3.0.1
   provider: 5.0.0
-  shared_preferences: 2.0.5
+  shared_preferences: 2.0.6
   uni_links2: 0.6.0+2
-  url_launcher: 6.0.3
+  url_launcher: 6.0.6
   uuid: 3.0.4
   webview_flutter: 2.0.8
   wifi_connection: 0.0.4

@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/services/events.dart';
 import 'package:flutter/material.dart';

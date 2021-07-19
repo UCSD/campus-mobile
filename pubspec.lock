@@ -182,7 +182,7 @@ packages:
       name: connectivity
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.6"
   connectivity_for_web:
     dependency: transitive
     description:
@@ -231,7 +231,7 @@ packages:
       name: device_info
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.2"
   device_info_platform_interface:
     dependency: transitive
     description:
@@ -798,7 +798,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.6"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -964,7 +964,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.3"
+    version: "6.0.6"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -1072,4 +1072,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.13.0 <3.0.0"
-  flutter: ">=2.2.1"
+  flutter: ">=2.2.2"

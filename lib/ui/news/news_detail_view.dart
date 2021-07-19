@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';

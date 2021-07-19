@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -101,9 +99,11 @@ class CardContainer extends StatelessWidget {
         constraints: BoxConstraints(minHeight: cardContentMinHeight),
         child: Center(
           child: Container(
-              height: 32, width: 32, child: CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary,
-          )),
+              height: 32,
+              width: 32,
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary,
+              )),
         ),
       );
     } else if (titleText == "Availability") {

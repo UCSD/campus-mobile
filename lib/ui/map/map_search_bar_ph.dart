@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +28,9 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
                           child: Container(
                               height: 25,
                               width: 25,
-                              child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
+                              child: CircularProgressIndicator(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary)),
                         )
                       : Icon(
                           Icons.search,

@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 
 import 'package:campus_mobile_experimental/core/models/dining.dart';
@@ -55,7 +53,8 @@ class DiningDataProvider extends ChangeNotifier {
     notifyListeners();
 
     /// creating  new map ensures we remove all unsupported locations
-    Map<String?, DiningModel> mapOfDiningLocations = Map<String?, DiningModel>();
+    Map<String?, DiningModel> mapOfDiningLocations =
+        Map<String?, DiningModel>();
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data!) {
         mapOfDiningLocations[model.name] = model;
@@ -92,10 +91,17 @@ class DiningDataProvider extends ChangeNotifier {
   void populateDistances() {
     if (_coordinates != null) {
       for (DiningModel model in _diningModels.values.toList()) {
-        if (model.coordinates != null) {
-          var distance = calculateDistance(_coordinates!.lat ?? 0.0, _coordinates!.lon ?? 0.0,
-              model.coordinates!.lat ?? 0.0, model.coordinates!.lon ?? 0.0);
+        if (model.coordinates != null &&
+            _coordinates!.lat != null &&
+            _coordinates!.lon != null) {
+          var distance = calculateDistance(
+              _coordinates!.lat ?? 0.0,
+              _coordinates!.lon ?? 0.0,
+              model.coordinates!.lat ?? 0.0,
+              model.coordinates!.lon ?? 0.0);
           model.distance = distance as double?;
+        } else {
+          model.distance = null;
         }
       }
     }
@@ -141,33 +147,26 @@ class DiningDataProvider extends ChangeNotifier {
       menuItems = _diningMenuItemModels[id]!.menuItems;
     }
     List<MenuItem> filteredMenuItems = [];
-    if (filters != null) {
-      for (var menuItem in menuItems!) {
-        int matched = 0;
-        for (int i = 0; i < filters.length; i++) {
-          if (menuItem.tags!.contains(filters[i])) {
-            matched++;
-          }
-        }
-        if (matched == filters.length) {
-          filteredMenuItems.add(menuItem);
+    for (var menuItem in menuItems!) {
+      int matched = 0;
+      for (int i = 0; i < filters.length; i++) {
+        if (menuItem.tags!.contains(filters[i])) {
+          matched++;
         }
       }
-    } else {
-      return menuItems;
+      if (matched == filters.length) {
+        filteredMenuItems.add(menuItem);
+      }
     }
     return filteredMenuItems;
   }
 
   ///RETURNS A List<diningModels> sorted by distance
   List<DiningModel> get diningModels {
-    if (_diningModels != null) {
-      ///check if we have a coordinates object
-      if (_coordinates != null) {
-        return reorderLocations();
-      }
-      return _diningModels.values.toList();
+    ///check if we have a coordinates object
+    if (_coordinates != null) {
+      return reorderLocations();
     }
-    return [];
+    return _diningModels.values.toList();
   }
 }

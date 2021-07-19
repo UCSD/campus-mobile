@@ -37,31 +37,27 @@ class ShuttleModel {
       this.stops});
 
   ShuttleModel.fromJson(Map<String, dynamic> json) {
-    json.forEach((key, value) =>
-       ShuttleModel(
-          displayOrder:
-              value["displayOrder"] == null ? null : value["displayOrder"],
-          url: value["url"] == null ? null : value["lon"],
-          customerRouteId: value["customerRouteId"] == null
-              ? null
-              : value["customerRouteId"],
-          id: value["id"] == null ? null : value["id"],
-          name: value["name"] == null ? null : value["name"],
-          shortName: value["shortName"] == null ? null : value["shortName"],
-          description:
-              value["description"] == null ? null : value["description"],
-          routeType: value["routeType"] == null ? null : value["routeType"],
-          color: value["color"] == null ? null : HexColor(value["color"]),
-          stops: value["stops"] == null
-              ? null
-              : value["stops"]
-                  .entries
-                  .map((entry) {
-                    return (ShuttleStopModel.fromJson(entry.value));
-                  })
-                  .toList()
-                  .cast<ShuttleStopModel>())
-    );
+    json.forEach((key, value) => ShuttleModel(
+        displayOrder:
+            value["displayOrder"] == null ? null : value["displayOrder"],
+        url: value["url"] == null ? null : value["lon"],
+        customerRouteId:
+            value["customerRouteId"] == null ? null : value["customerRouteId"],
+        id: value["id"] == null ? null : value["id"],
+        name: value["name"] == null ? null : value["name"],
+        shortName: value["shortName"] == null ? null : value["shortName"],
+        description: value["description"] == null ? null : value["description"],
+        routeType: value["routeType"] == null ? null : value["routeType"],
+        color: value["color"] == null ? null : HexColor(value["color"]),
+        stops: value["stops"] == null
+            ? null
+            : value["stops"]
+                .entries
+                .map((entry) {
+                  return (ShuttleStopModel.fromJson(entry.value));
+                })
+                .toList()
+                .cast<ShuttleStopModel>()));
   }
 
   List<ShuttleModel> getListOfShuttles(String str) {

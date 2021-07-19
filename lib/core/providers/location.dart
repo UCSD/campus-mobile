@@ -1,19 +1,18 @@
-
-
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 
-class LocationDataProvider extends ChangeNotifier{
+class LocationDataProvider extends ChangeNotifier {
   final Location _locationService = new Location();
   bool _permission = false;
   String? error;
 
   StreamController<Coordinates> _locationController =
-  StreamController<Coordinates>.broadcast();
+      StreamController<Coordinates>.broadcast();
   Stream<Coordinates> get locationStream => _locationController.stream;
+
   Location get locationObject => _locationService;
   LocationDataProvider() {
     locationStream;
@@ -42,13 +41,11 @@ class LocationDataProvider extends ChangeNotifier{
   _enableListener() {
     if (_permission) {
       _locationService.onLocationChanged.listen((locationData) {
-        if (locationData != null) {
-          error = null;
-          _locationController.add(Coordinates(
-            lat: locationData.latitude,
-            lon: locationData.longitude,
-          ));
-        }
+        error = null;
+        _locationController.add(Coordinates(
+          lat: locationData.latitude,
+          lon: locationData.longitude,
+        ));
       });
     }
   }

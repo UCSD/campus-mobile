@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -72,7 +70,8 @@ class AvailabilityDataProvider extends ChangeNotifier {
           _userDataProvider.userProfileModel!.selectedOccuspaceLocations);
       _lastUpdated = DateTime.now();
     } else {
-      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) {
+      if (_error != null &&
+          _error!.contains(ErrorConstants.invalidBearerToken)) {
         if (await _availabilityService.getNewToken()) {
           fetchAvailability();
         }
@@ -163,7 +162,8 @@ class AvailabilityDataProvider extends ChangeNotifier {
   /// get all locations
   List<String?> locations() {
     List<String?> locationsToReturn = [];
-    for (AvailabilityModel model in _availabilityModels as Iterable<AvailabilityModel>? ?? []) {
+    for (AvailabilityModel model
+        in _availabilityModels as Iterable<AvailabilityModel>? ?? []) {
       locationsToReturn.add(model.locationName);
     }
     return locationsToReturn;

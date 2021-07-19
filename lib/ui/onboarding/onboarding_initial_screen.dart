@@ -1,5 +1,3 @@
-
-
 import 'dart:ui';
 
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -120,7 +118,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                           style: TextButton.styleFrom(
                             primary: ColorPrimary,
                           ),
-                          onPressed: () { },
+                          onPressed: () {},
                           child: Text(
                             "Get Started",
                             style: TextStyle(
@@ -134,7 +132,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                             style: TextButton.styleFrom(
                               primary: ColorPrimary,
                             ),
-                            onPressed: () { },
+                            onPressed: () {},
                             child: Text(
                               "Log In",
                               style: TextStyle(

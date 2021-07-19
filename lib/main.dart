@@ -1,4 +1,4 @@
-
+import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
@@ -21,14 +21,22 @@ late bool showOnboardingScreen;
 
 bool isFirstRunFlag = false;
 bool executedInitialDeeplinkQuery = false;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  await initializeHive();
-  await initializeApp();
 
-  runApp(CampusMobile());
+  /// Record zoned errors - https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
+  runZonedGuarded<Future<void>>(() async {
+    /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+
+    /// Record uncaught errors - https://firebase.flutter.dev/docs/crashlytics/usage#handling-uncaught-errors
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    await initializeHive();
+    await initializeApp();
+    runApp(CampusMobile());
+  }, FirebaseCrashlytics.instance.recordError);
 }
 
 initializeHive() async {
@@ -68,7 +76,6 @@ clearHiveStorage() async {
 class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     final ThemeData theme = ThemeData(
       primarySwatch: ColorPrimary,
       primaryColor: lightPrimaryColor,
@@ -99,7 +106,8 @@ class CampusMobile extends StatelessWidget {
           colorScheme: theme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
-          colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+          colorScheme:
+              darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
         initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingInitial

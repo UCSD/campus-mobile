@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 
 import 'package:campus_mobile_experimental/core/models/location.dart';
@@ -119,8 +117,8 @@ class MapsDataProvider extends ChangeNotifier {
     if (_coordinates != null) {
       for (MapSearchModel model in _mapSearchModels) {
         if (model.mkrLat != null && model.mkrLong != null) {
-          var distance = calculateDistance(
-              _coordinates!.lat!, _coordinates!.lon!, model.mkrLat!, model.mkrLong!);
+          var distance = calculateDistance(_coordinates!.lat!,
+              _coordinates!.lon!, model.mkrLat!, model.mkrLong!);
           model.distance = distance as double?;
         }
       }

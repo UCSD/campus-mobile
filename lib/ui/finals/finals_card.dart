@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';

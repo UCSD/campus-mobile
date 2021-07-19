@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
@@ -33,6 +31,7 @@ import 'package:campus_mobile_experimental/ui/scanner/native_scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/beacon_view.dart';
+import 'package:campus_mobile_experimental/ui/wayfinding/bluetooth_logger.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/wayfinding_permissions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -103,7 +102,8 @@ class Router {
           return DiningDetailView(data: data);
         });
       case RoutePaths.DiningNutritionView:
-        Map<String, Object?> arguments = settings.arguments as Map<String, Object?>;
+        Map<String, Object?> arguments =
+            settings.arguments as Map<String, Object?>;
         MenuItem data = arguments['data'] as MenuItem;
         String? disclaimer = arguments['disclaimer'] as String?;
         String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
@@ -144,11 +144,14 @@ class Router {
           return NotificationsSettingsView();
         });
       case RoutePaths.BluetoothPermissionsView:
-        return MaterialPageRoute(
-            builder: (_) => AdvancedWayfindingPermission());
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return NotificationsListView();
+          return AdvancedWayfindingPermission();
+        });
+      case RoutePaths.AutomaticBluetoothLoggerView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return AutomaticBluetoothLoggerView();
         });
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) {

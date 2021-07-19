@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 
 import 'package:beacon_broadcast/beacon_broadcast.dart';
@@ -38,8 +36,9 @@ class BeaconSingleton {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     advertisingUUID = prefs.get('uuid') as String? ?? "null";
     var previousTime = prefs.get('previousTime') ?? DateTime(1990).toString();
-    var difference =
-        DateTime.now().difference(DateTime.parse(previousTime as String)).inHours;
+    var difference = DateTime.now()
+        .difference(DateTime.parse(previousTime as String))
+        .inHours;
     if (difference > 24) {
       changeUUID();
       prefs.setString('previousTime', DateTime.now().toString());

@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/core/providers/news.dart';
@@ -17,7 +15,9 @@ class NewsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Provider.of<NewsDataProvider>(context).isLoading!) {
-      return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary));
+      return Center(
+          child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.secondary));
     }
     return buildNewsList(
       context,

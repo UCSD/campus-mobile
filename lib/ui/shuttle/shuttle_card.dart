@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -67,7 +65,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       }
 
       // Initialize first shuttle display with arrival information
-      if (renderList == null || renderList.isEmpty) {
+      if (renderList.isEmpty) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 42.0),
           child: Center(child: Text('No shuttles found. Please add a stop.')),

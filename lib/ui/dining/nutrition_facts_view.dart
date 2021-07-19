@@ -1,5 +1,3 @@
-
-
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +44,8 @@ class NutritionFactsView extends StatelessWidget {
   Widget buildText(BuildContext context, ingredients, String? allergens) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary),
+        style: TextStyle(
+            fontSize: 14.0, color: Theme.of(context).colorScheme.secondary),
         children: [
           TextSpan(
             text: "Ingredients: ",

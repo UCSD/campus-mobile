@@ -79,20 +79,21 @@ class CircularParkingIndicators extends StatelessWidget {
                     children: [
                       Center(
                         child: SizedBox(
-                            height: 75,
-                            width: 75,
-                            child: CircularPercentIndicator(
-                              radius: 75,
-                              animation: true,
-                              animationDuration: 1000,
-                              lineWidth: 7.5,
-                              percent: open / total,
-                              center: Text( ((open / total) * 100).round().toString() + "%",
-                                  style: TextStyle(fontSize: 25)),
-                              circularStrokeCap: CircularStrokeCap.round,
-                              backgroundColor: colorFromHex('#EDECEC'),
-                              progressColor: getColor(open / total),
-                            ),
+                          height: 75,
+                          width: 75,
+                          child: CircularPercentIndicator(
+                            radius: 75,
+                            animation: true,
+                            animationDuration: 1000,
+                            lineWidth: 7.5,
+                            percent: open / total,
+                            center: Text(
+                                ((open / total) * 100).round().toString() + "%",
+                                style: TextStyle(fontSize: 25)),
+                            circularStrokeCap: CircularStrokeCap.round,
+                            backgroundColor: colorFromHex('#EDECEC'),
+                            progressColor: getColor(open / total),
+                          ),
                         ),
                       ),
                     ],
@@ -121,17 +122,16 @@ class CircularParkingIndicators extends StatelessWidget {
                     children: [
                       Center(
                         child: SizedBox(
-                            height: 75,
-                            width: 75,
-                            child:  CircularPercentIndicator(
-                              radius: 75,
-                              animation: false,
-                              lineWidth: 7.5,
-                              percent: 0.0,
-                              center: Text("N/A",
-                                  style: TextStyle(fontSize: 25)),
-                              backgroundColor: colorFromHex('#EDECEC'),
-                            ),
+                          height: 75,
+                          width: 75,
+                          child: CircularPercentIndicator(
+                            radius: 75,
+                            animation: false,
+                            lineWidth: 7.5,
+                            percent: 0.0,
+                            center: Text("N/A", style: TextStyle(fontSize: 25)),
+                            backgroundColor: colorFromHex('#EDECEC'),
+                          ),
                         ),
                       ),
                     ],
