@@ -25,16 +25,18 @@ class _VentilationCardState extends State<VentilationCard> {
 
   @override
   Widget build(BuildContext context) {
-    // print("Context in ventilation card: $context");
     List<Widget> data = [];
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
+      //null
       reload: () => null,
+      //false
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId],
+      //null
       errorText: null,
       child: () => buildCardContent(),
       actionButtons: buildActionButtons(),
@@ -42,13 +44,12 @@ class _VentilationCardState extends State<VentilationCard> {
   }
 
   Widget buildCardContent() {
-    List<Widget> locationsList = [];
-    // for (VentilationModel? model in dataList) {
+    // List<Widget> locationsList = [];
+    // for (VentilationModel? model in data) {
     //   if (model != null) {
-    //     if (_ventilationDataProvider.locationViewState[model.locationName]!) {
-    //       locationsList.add(AvailabilityDisplay(
-    //         model: model,
-    //       ));
+    //     if (_ventilationDataProvider
+    //         .ventilationViewState[model.buildingName]!) {
+    //       locationsList.add(Text("Hello"));
     //     }
     //   }
     // }

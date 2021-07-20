@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final ntpllnModel = ntpllnModelFromJson(jsonString);
-
 import 'dart:convert';
 
 VentilationModel ventilationModelFromJson(String str) =>
