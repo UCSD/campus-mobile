@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final ventilationModel = ventilationModelFromJson(jsonString);
+
 import 'dart:convert';
 
 List<VentilationModel> ventilationModelFromJson(String str) =>
@@ -8,15 +12,15 @@ String ventilationModelToJson(List<VentilationModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class VentilationModel {
-  String? buildingId;
-  String? buildingName;
-  List<BuildingFloor>? buildingFloors;
-
   VentilationModel({
     this.buildingId,
     this.buildingName,
     this.buildingFloors,
   });
+
+  String? buildingId;
+  String? buildingName;
+  List<BuildingFloor>? buildingFloors;
 
   factory VentilationModel.fromJson(Map<String, dynamic> json) =>
       VentilationModel(
