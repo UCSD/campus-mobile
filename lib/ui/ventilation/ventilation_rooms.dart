@@ -16,11 +16,15 @@ class VentilationRooms extends StatefulWidget {
 class VentilationRoomsState extends State<VentilationRooms> {
   // keeps track of which button was tapped
   List<bool> _added = [];
+  // late VentilationDataProvider _ventilationDataProvider;
 
   @override
-  Widget build(BuildContext context) => ContainerView(
-        child: roomsList(context),
-      );
+  Widget build(BuildContext context) {
+    // _ventilationDataProvider = Provider.of<VentilationDataProvider>(context);
+    return ContainerView(
+      child: roomsList(context),
+    );
+  }
 
   // builds the list of rooms to be put into ListView
   Widget roomsList(BuildContext context) {
@@ -37,6 +41,12 @@ class VentilationRoomsState extends State<VentilationRooms> {
         ),
       ),
     ));
+
+    // VentilationLocationsModel? model;
+    // for (VentilationLocationsModel? hi
+    //     in _ventilationDataProvider.ventilationLocationsModels) {
+    //   model = hi;
+    // }
 
     for (var i = 0; i < 5; i++) {
       _added.add(false);
@@ -58,6 +68,7 @@ class VentilationRoomsState extends State<VentilationRooms> {
 
           arguments['room'] = 'Room 301';
           VentilationDisplay.pages.add(arguments);
+          // _ventilationDataProvider.toggleLocation(model!.buildingName);
 
           // Set tab bar index to the Home tab
           Provider.of<BottomNavigationBarProvider>(context, listen: false)

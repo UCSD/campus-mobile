@@ -1,13 +1,16 @@
 import 'dart:convert';
 
-VentilationModel ventilationModelFromJson(String str) =>
-    VentilationModel.fromJson(json.decode(str));
+/// MIGHT WANT TO FIX THE INSIDE OF THE CODE
+List<VentilationDataModel> ventilationDataModelFromJson(String str) {
+  return List<VentilationDataModel>.from(
+      json.decode(str).map((x) => VentilationDataModel.fromJson(x)));
+}
 
-String ventilationModelToJson(VentilationModel data) =>
+String ventilationDataModelToJson(VentilationDataModel data) =>
     json.encode(data.toJson());
 
-class VentilationModel {
-  VentilationModel({
+class VentilationDataModel {
+  VentilationDataModel({
     this.buildingName,
     this.buildingFloorName,
     this.buildingRoomName,
@@ -23,8 +26,8 @@ class VentilationModel {
   bool? windowsOpen;
   bool? hvacActive;
 
-  factory VentilationModel.fromJson(Map<String, dynamic> json) =>
-      VentilationModel(
+  factory VentilationDataModel.fromJson(Map<String, dynamic> json) =>
+      VentilationDataModel(
         buildingName:
             json["BuildingName"] == null ? null : json["BuildingName"],
         buildingFloorName: json["BuildingFloorName"] == null

@@ -1,48 +1,72 @@
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/ventilation.dart';
+import 'package:campus_mobile_experimental/core/models/ventilation_data.dart';
+import 'package:campus_mobile_experimental/core/models/ventilation_locations.dart';
 
 class VentilationService {
   VentilationService();
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<VentilationModel>? _data;
+  List<VentilationLocationsModel>? _locations;
+  List<VentilationDataModel>? _data;
 
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
-  List<VentilationModel>? get data => _data;
+  List<VentilationLocationsModel>? get locations => _locations;
+  List<VentilationDataModel>? get data => _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  final String endpoint =
-      "https://ucsd-its-sandbox-wts-charles.s3.us-west-1.amazonaws.com/mock-api/ntplln-mock-3.json";
+  final String locationsEndpoint =
+      "https://ucsd-its-sandbox-wts-charles.s3.us-west-1.amazonaws.com/mock-api/ntplln-mock-2.json";
+  final String dataBaseEndpoint =
+      "https://ucsd-its-sandbox-wts-charles.s3.us-west-1.amazonaws.com/mock-api/ntplln-mock-2-data.json";
 
-  Future<bool> fetchData() async {
+  Future<bool> fetchLocations() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.authorizedFetch(endpoint, headers));
+          await (_networkHelper.authorizedFetch(locationsEndpoint, headers));
 
       /// parse data
-      final data = ventilationModelFromJson(_response);
+      final data = ventilationLocationsModelFromJson(_response);
       _isLoading = false;
 
-      _data = data;
+      _locations = data;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
         if (await getNewToken()) {
-          return await fetchData();
+          return await fetchLocations();
         }
       }
+      _error = e.toString();
+      _isLoading = false;
+      return false;
+    }
+  }
+
+  Future<bool> fetchData(String bfrId) async {
+    _error = null;
+    _isLoading = true;
+    try {
+      /// fetch data, BUT FOR NOW THIS WILL NOT WORK WITH MOCK JSON
+      String _response =
+          await _networkHelper.fetchData(dataBaseEndpoint + '/' + bfrId);
+
+      /// parse data
+      final data = ventilationDataModelFromJson(_response);
+      _data = data;
+      return true;
+    } catch (e) {
       _error = e.toString();
       _isLoading = false;
       return false;

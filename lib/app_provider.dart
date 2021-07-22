@@ -108,6 +108,8 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
     print("CreateProvider: DiningDataProvider");
     var diningDataProvider = DiningDataProvider();
+
+    /// NOT SURE IF THE LINE BELOW IS CORRECT
     diningDataProvider.fetchDiningLocations();
     return diningDataProvider;
   }, update: (_, coordinates, diningDataProvider) {
@@ -122,7 +124,7 @@ List<SingleChildWidget> dependentServices = [
       create: (_) {
     print("CreateProvider: VentilationDataProvider");
     var ventilationDataProvider = VentilationDataProvider();
-    ventilationDataProvider.fetchVentilation();
+    ventilationDataProvider.fetchVentilationLocations();
     return ventilationDataProvider;
   }, update: (_, userDataProvider, ventilationDataProvider) {
     print("UpdateProvider: ventilationDataProvider");

@@ -56,6 +56,8 @@ class _VentilationCardState extends State<VentilationCard> {
 
     return Column(
       children: <Widget>[
+        // for some reason only wrapping PageView in a container or SizedBox works
+        // Flexible and Expanded do not work
         Container(
           height: 150,
           child: PageView(
