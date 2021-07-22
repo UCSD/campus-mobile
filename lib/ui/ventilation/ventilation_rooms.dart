@@ -68,7 +68,7 @@ class VentilationRoomsState extends State<VentilationRooms> {
 
           arguments['room'] = 'Room 301';
           VentilationDisplay.pages.add(arguments);
-          // _ventilationDataProvider.toggleLocation(model!.buildingName);
+          // _ventilationDataProvider.addLocation(model!.buildingName);
 
           // Set tab bar index to the Home tab
           Provider.of<BottomNavigationBarProvider>(context, listen: false)

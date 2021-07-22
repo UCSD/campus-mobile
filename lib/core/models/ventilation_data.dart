@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 /// MIGHT WANT TO FIX THE INSIDE OF THE CODE
-List<VentilationDataModel> ventilationDataModelFromJson(String str) {
-  return List<VentilationDataModel>.from(
-      json.decode(str).map((x) => VentilationDataModel.fromJson(x)));
-}
+VentilationDataModel ventilationDataModelFromJson(String str) =>
+    VentilationDataModel.fromJson(json.decode(str));
 
 String ventilationDataModelToJson(VentilationDataModel data) =>
     json.encode(data.toJson());

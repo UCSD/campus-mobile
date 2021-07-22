@@ -10,12 +10,10 @@ class VentilationService {
   DateTime? _lastUpdated;
   String? _error;
   List<VentilationLocationsModel>? _locations;
-  List<VentilationDataModel>? _data;
+  VentilationDataModel? _data;
 
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
-  List<VentilationLocationsModel>? get locations => _locations;
-  List<VentilationDataModel>? get data => _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
@@ -99,4 +97,8 @@ class VentilationService {
   String? get error => _error;
 
   DateTime? get lastUpdated => _lastUpdated;
+
+  List<VentilationLocationsModel>? get locations => _locations;
+
+  VentilationDataModel? get data => _data;
 }

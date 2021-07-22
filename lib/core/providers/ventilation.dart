@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/core/models/ventilation_data.dart';
 import 'package:campus_mobile_experimental/core/models/ventilation_locations.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/ventilation.dart';
@@ -21,7 +22,9 @@ class VentilationDataProvider extends ChangeNotifier {
 
   /// MODELS
   /// TODO: add models that will be needed in this data provider
-  Map<String?, VentilationLocationsModel>? _ventilationModels;
+  Map<String?, VentilationLocationsModel>? _ventilationLocationModels;
+  Map<String, VentilationDataModel?> _ventilationDataModels =
+      Map<String, VentilationDataModel?>();
   late UserDataProvider _userDataProvider;
 
   ///
@@ -32,15 +35,6 @@ class VentilationDataProvider extends ChangeNotifier {
   /// SERVICES
   /// TODO: add any services that will be needed for this data provider
   late VentilationService _ventilationService;
-
-  /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
-  void toggleLocation(String? bfrId) {
-    _ventilationViewState.add(bfrId);
-    _userDataProvider.userProfileModel!.selectedVentilationLocations =
-        _ventilationViewState;
-    _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
-    notifyListeners();
-  }
 
   void fetchVentilationLocations() async {
     _isLoading = true;
@@ -57,7 +51,7 @@ class VentilationDataProvider extends ChangeNotifier {
       }
 
       ///replace old list of lots with new one
-      _ventilationModels = mapOfVentilationLocations;
+      _ventilationLocationModels = mapOfVentilationLocations;
     } else {
       _error = _ventilationService.error;
     }
@@ -65,26 +59,57 @@ class VentilationDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<VentilationLocationsModel?> makeOrderedList(List<String?>? order) {
-    if (order == null) {
-      return _ventilationModels!.values.toList();
+  void fetchVentilationData(String bfrId) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    if (await _ventilationService.fetchData(bfrId)) {
+      _ventilationDataModels[bfrId] = _ventilationService.data;
+    } else {
+      _error = _ventilationService.error;
     }
-
-    ///create an empty list that will be returned
-    List<VentilationLocationsModel?> orderedListOfLots = [];
-    Map<String?, VentilationLocationsModel> tempMap =
-        Map<String?, VentilationLocationsModel>();
-    tempMap.addAll(_ventilationModels!);
-
-    /// remove lots as we add them to the ordered list
-    for (String? lotName in order) {
-      orderedListOfLots.add(tempMap.remove(lotName));
-    }
-
-    /// add remaining lots
-    orderedListOfLots.addAll(tempMap.values);
-    return orderedListOfLots;
+    _isLoading = false;
+    notifyListeners();
   }
+
+  /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
+  void addLocation(String? bfrId) {
+    _ventilationViewState.add(bfrId);
+    _userDataProvider.userProfileModel!.selectedVentilationLocations =
+        _ventilationViewState;
+    _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+    notifyListeners();
+  }
+
+  /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
+  void removeLocation(String? bfrId) {
+    _ventilationViewState.remove(bfrId);
+    _userDataProvider.userProfileModel!.selectedVentilationLocations =
+        _ventilationViewState;
+    _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+    notifyListeners();
+  }
+
+  // List<VentilationLocationsModel?> makeOrderedList(List<String?>? order) {
+  //   if (order == null) {
+  //     return _ventilationLocationModels!.values.toList();
+  //   }
+  //
+  //   ///create an empty list that will be returned
+  //   List<VentilationLocationsModel?> orderedListOfLots = [];
+  //   Map<String?, VentilationLocationsModel> tempMap =
+  //       Map<String?, VentilationLocationsModel>();
+  //   tempMap.addAll(_ventilationLocationModels!);
+  //
+  //   /// remove lots as we add them to the ordered list
+  //   for (String? lotName in order) {
+  //     orderedListOfLots.add(tempMap.remove(lotName));
+  //   }
+  //
+  //   /// add remaining lots
+  //   orderedListOfLots.addAll(tempMap.values);
+  //   return orderedListOfLots;
+  // }
   //
   // void reorderLocations(List<String?>? order) {
   //   ///edit the profile and upload user selected lots
@@ -94,28 +119,6 @@ class VentilationDataProvider extends ChangeNotifier {
   //   // _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
   //   notifyListeners();
   // }
-  //
-  // /// add or remove location availability display from card based on user selection
-  // void toggleLocation(String? location) {
-  //   if (_ventilationViewState[location] ?? true) {
-  //     _ventilationViewState[location] = false;
-  //   } else {
-  //     _ventilationViewState[location] = true;
-  //   }
-  //   _userDataProvider
-  //       .updateUserProfileModel(_userDataProvider.userProfileModel);
-  //   notifyListeners();
-  // }
-
-  ///UPLOAD SELECTED LOCATIONS IN THE CORRECT ORDER TO THE DATABASE
-  ///IF NOT LOGGED IN THEN SAVE LOCATIONS TO LOCAL PROFILE
-  uploadVentilationData(List<String> locations) {
-    var userProfile = _userDataProvider.userProfileModel!;
-
-    ///set the local user profile to the given lots
-    userProfile.selectedVentilationLocations = locations;
-    _userDataProvider.postUserProfile(userProfile);
-  }
 
   ///This setter is only used in provider to supply and updated UserDataProvider object
   set userDataProvider(UserDataProvider value) {
@@ -129,27 +132,9 @@ class VentilationDataProvider extends ChangeNotifier {
 
   DateTime? get lastUpdated => _lastUpdated;
 
-  // Map<String?, bool> get ventilationViewState => _ventilationViewState;
-  //
-  List<VentilationLocationsModel?> get ventilationLocationsModels {
-    if (_ventilationModels != null) {
-      ///check if we have an offline _userProfileModel
-      if (_userDataProvider.userProfileModel != null) {
-        return makeOrderedList(
-            _userDataProvider.userProfileModel!.selectedVentilationLocations);
-      }
-      return _ventilationModels!.values.toList();
-    }
-    return [];
-  }
-  //
-  // /// get all locations
-  // List<String?> locations() {
-  //   List<String?> locationsToReturn = [];
-  //   for (VentilationModel model
-  //       in _ventilationModels as Iterable<VentilationModel>? ?? []) {
-  //     locationsToReturn.add(model.buildingName);
-  //   }
-  //   return locationsToReturn;
-  // }
+  List<VentilationDataModel?> get ventilationData =>
+      _ventilationDataModels.values.toList();
+
+  List<VentilationLocationsModel?> get ventilationLocations =>
+      _ventilationLocationModels!.values.toList();
 }
