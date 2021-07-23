@@ -26,6 +26,13 @@ class _ParkingCardState extends State<ParkingCard> {
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
+  Map<String, Function> menuOption = {
+    "Manage Lots": (context) =>
+        {Navigator.pushNamed(context, RoutePaths.ManageParkingView)},
+    "Manage Spots": (context) =>
+        {Navigator.pushNamed(context, RoutePaths.SpotTypesView)}
+  };
+
   // ignore: must_call_super
   Widget build(BuildContext context) {
     //super.build(context);
