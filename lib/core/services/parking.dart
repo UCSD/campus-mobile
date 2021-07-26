@@ -18,8 +18,8 @@ class ParkingService {
 
   final String endpoint =
   // "https://b2waxbcovi.execute-api.us-west-2.amazonaws.com/prod/parking/v1.1/status";
-      "https://mobile.ucsd.edu/replatform/v1/qa/testing/parking-card-update-mock-data.json";
-
+  //     "https://mobile.ucsd.edu/replatform/v1/qa/testing/parking-card-update-mock-data.json";
+  "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v3/parking-neighborhoods.json";
 
   Future<bool> fetchParkingLotData() async {
     _error = null;
