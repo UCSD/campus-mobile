@@ -52,13 +52,14 @@ class VentilationService {
     }
   }
 
-  Future<bool> fetchData(String bfrId) async {
+  Future<bool> fetchData(String bfrID) async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data, BUT FOR NOW THIS WILL NOT WORK WITH MOCK JSON
-      String _response =
-          await _networkHelper.fetchData(dataBaseEndpoint + '/' + bfrId);
+      // String _response =
+      //     await _networkHelper.fetchData(dataBaseEndpoint + '/' + bfrID);
+      String _response = await _networkHelper.fetchData(dataBaseEndpoint);
 
       /// parse data
       final data = ventilationDataModelFromJson(_response);

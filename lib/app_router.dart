@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
+import 'package:campus_mobile_experimental/core/models/ventilation_locations.dart';
 import 'package:campus_mobile_experimental/ui/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_list.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_detail_view.dart';
@@ -96,18 +97,20 @@ class Router {
 
       // NEW CODE
       case RoutePaths.VentilationBuildings:
+        List<VentilationLocationsModel> data =
+            settings.arguments as List<VentilationLocationsModel>;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return VentilationBuildings();
+          return VentilationBuildings(data);
         });
       case RoutePaths.VentilationFloors:
-        Map data = settings.arguments as Map;
+        List<BuildingFloor> data = settings.arguments as List<BuildingFloor>;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return VentilationFloors(data);
         });
       case RoutePaths.VentilationRooms:
-        Map data = settings.arguments as Map;
+        List<String> data = settings.arguments as List<String>;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return VentilationRooms(data);

@@ -119,19 +119,6 @@ List<SingleChildWidget> dependentServices = [
     return diningDataProvider;
   }),
 
-  // in app_provider.dart, add this somewhere around line 118
-  ChangeNotifierProxyProvider<UserDataProvider, VentilationDataProvider>(
-      create: (_) {
-    print("CreateProvider: VentilationDataProvider");
-    var ventilationDataProvider = VentilationDataProvider();
-    ventilationDataProvider.fetchVentilationLocations();
-    return ventilationDataProvider;
-  }, update: (_, userDataProvider, ventilationDataProvider) {
-    print("UpdateProvider: ventilationDataProvider");
-    ventilationDataProvider!.userDataProvider = userDataProvider;
-    return ventilationDataProvider;
-  }),
-
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;
@@ -360,6 +347,20 @@ List<SingleChildWidget> dependentServices = [
       return scannerDataProvider;
     },
     lazy: false,
-  )
+  ),
+  // in app_provider.dart, add this somewhere around line 118
+  ChangeNotifierProxyProvider<UserDataProvider, VentilationDataProvider>(
+      create: (_) {
+    print("CreateProvider: VentilationDataProvider");
+    var ventilationDataProvider = VentilationDataProvider();
+    ventilationDataProvider.fetchVentilationLocations();
+    ventilationDataProvider.fetchVentilationData();
+    return ventilationDataProvider;
+  }, update: (_, userDataProvider, ventilationDataProvider) {
+    print("UpdateProvider: ventilationDataProvider");
+    ventilationDataProvider!.userDataProvider = userDataProvider;
+    ventilationDataProvider.fetchVentilationData();
+    return ventilationDataProvider;
+  })
 ];
 List<SingleChildWidget> uiConsumableProviders = [];

@@ -1,24 +1,32 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/ventilation_locations.dart';
+import 'package:campus_mobile_experimental/core/providers/ventilation.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class VentilationFloors extends StatefulWidget {
-  final Map args;
+  final List<BuildingFloor> args;
   const VentilationFloors(this.args);
 
   VentilationFloorsState createState() => VentilationFloorsState();
 }
 
 class VentilationFloorsState extends State<VentilationFloors> {
+  late VentilationDataProvider _ventilationDataProvider;
+
   @override
-  Widget build(BuildContext context) => ContainerView(
-        child: floorsList(context),
-      );
+  Widget build(BuildContext context) {
+    _ventilationDataProvider = Provider.of<VentilationDataProvider>(context);
+    return ContainerView(
+      child: floorsList(context),
+    );
+  }
 
   // builds the list of floors to be put into ListView
   Widget floorsList(BuildContext context) {
-    Map arguments = widget.args;
+    List<BuildingFloor> arguments = widget.args;
 
     // creates a list that will hold the list of floor names
     List<Widget> list = [];
@@ -34,12 +42,12 @@ class VentilationFloorsState extends State<VentilationFloors> {
     ));
 
     // loops through and adds buttons for the user to click on
-    for (var i = 0; i < 5; i++) {
+    for (BuildingFloor model in arguments) {
       list.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
-            '1st Floor',
+            model.buildingFloorNumber.toString(),
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
         ),
@@ -48,11 +56,12 @@ class VentilationFloorsState extends State<VentilationFloors> {
           color: Colors.black,
         ),
         onTap: () {
-          arguments['floor'] = '1st Floor';
+          _ventilationDataProvider
+              .addFloorID(model.buildingFloorNumber.toString());
           Navigator.pushNamed(
             context,
             RoutePaths.VentilationRooms,
-            arguments: arguments,
+            arguments: model.buildingFloorRooms,
           );
         },
       ));

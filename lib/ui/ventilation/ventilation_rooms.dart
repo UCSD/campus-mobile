@@ -1,13 +1,13 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/providers/ventilation.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
-import 'package:campus_mobile_experimental/ui/ventilation/ventilation_display.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class VentilationRooms extends StatefulWidget {
-  final Map args;
+  final List<String> args;
   const VentilationRooms(this.args);
 
   VentilationRoomsState createState() => VentilationRoomsState();
@@ -16,11 +16,11 @@ class VentilationRooms extends StatefulWidget {
 class VentilationRoomsState extends State<VentilationRooms> {
   // keeps track of which button was tapped
   List<bool> _added = [];
-  // late VentilationDataProvider _ventilationDataProvider;
+  late VentilationDataProvider _ventilationDataProvider;
 
   @override
   Widget build(BuildContext context) {
-    // _ventilationDataProvider = Provider.of<VentilationDataProvider>(context);
+    _ventilationDataProvider = Provider.of<VentilationDataProvider>(context);
     return ContainerView(
       child: roomsList(context),
     );
@@ -28,9 +28,10 @@ class VentilationRoomsState extends State<VentilationRooms> {
 
   // builds the list of rooms to be put into ListView
   Widget roomsList(BuildContext context) {
-    Map arguments = widget.args;
+    List<String> arguments = widget.args;
+    List<String> bfrIDs = []; //list of the bfrIDs
+    List<Widget> list = []; //list of ListTile widgets
 
-    List<Widget> list = [];
     list.add(ListTile(
       title: Padding(
         padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
@@ -42,19 +43,24 @@ class VentilationRoomsState extends State<VentilationRooms> {
       ),
     ));
 
-    // VentilationLocationsModel? model;
-    // for (VentilationLocationsModel? hi
-    //     in _ventilationDataProvider.ventilationLocationsModels) {
-    //   model = hi;
-    // }
+    for (int i = 0; i < arguments.length; i++) {
+      // makes the bfrID and adds it to the list
+      String bfrID = _ventilationDataProvider.bfrID(arguments[i]);
+      bfrIDs.add(bfrID);
 
-    for (var i = 0; i < 5; i++) {
-      _added.add(false);
+      // checks to see if the user has added this bfrID
+      bool containsID = _ventilationDataProvider.ventilationIDs.contains(bfrID);
+      _added.add(containsID);
+
+      print("ID: $bfrID");
+      print("Contains: $containsID");
+
+      // creates the ListTile and button
       list.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
-            'Room 301',
+            'Room ${arguments[i]}',
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
         ),
@@ -62,13 +68,14 @@ class VentilationRoomsState extends State<VentilationRooms> {
           !_added[i] ? Icons.add_circle_outline_outlined : Icons.cancel,
         ),
         onTap: () {
+          // removes or adds a location depending if the user already added it
+          !_added[i]
+              ? _ventilationDataProvider.addLocation(arguments[i])
+              : _ventilationDataProvider.removeLocation(arguments[i]);
+
           setState(() {
             _added[i] = !_added[i];
           });
-
-          arguments['room'] = 'Room 301';
-          VentilationDisplay.pages.add(arguments);
-          // _ventilationDataProvider.addLocation(model!.buildingName);
 
           // Set tab bar index to the Home tab
           Provider.of<BottomNavigationBarProvider>(context, listen: false)

@@ -9,31 +9,24 @@ class VentilationDataProvider extends ChangeNotifier {
     /// DEFAULT STATES
     _isLoading = false;
 
-    /// TODO: initialize services here
+    /// initialize services here
     _ventilationService = VentilationService();
   }
 
   /// STATES
-  /// TODO: create any other states needed for the feature
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
-  List<String?> _ventilationViewState = [];
 
   /// MODELS
-  /// TODO: add models that will be needed in this data provider
   Map<String?, VentilationLocationsModel>? _ventilationLocationModels;
-  Map<String, VentilationDataModel?> _ventilationDataModels =
-      Map<String, VentilationDataModel?>();
-  late UserDataProvider _userDataProvider;
-
-  ///
-  /// DATA PROVIDERS
-  /// TODO: add data providers that will be needed if this is a dependent data provider
-  /// create setters for each of these providers
+  List<String?> ventilationIDs = [];
+  List<VentilationDataModel?> ventilationDataModels = [];
+  UserDataProvider? _userDataProvider;
+  String? buildingID;
+  String? floorID;
 
   /// SERVICES
-  /// TODO: add any services that will be needed for this data provider
   late VentilationService _ventilationService;
 
   void fetchVentilationLocations() async {
@@ -59,35 +52,85 @@ class VentilationDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fetchVentilationData(String bfrId) async {
+  void fetchVentilationData() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    if (await _ventilationService.fetchData(bfrId)) {
-      _ventilationDataModels[bfrId] = _ventilationService.data;
-    } else {
-      _error = _ventilationService.error;
+    print("Items in Ventilation IDS");
+
+    // create new list of ventilation data to display
+    List<VentilationDataModel?> tempModels = [];
+
+    if (_userDataProvider != null) {
+      ventilationIDs =
+          _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
+
+      for (String? bfrID in ventilationIDs) {
+        print("ID: $bfrID");
+        if (await _ventilationService.fetchData(bfrID!)) {
+          tempModels.add(_ventilationService.data);
+        }
+      }
     }
+
+    ventilationDataModels = tempModels;
+
+    ///TODO: MIGHT NEED THIS if the user is logged in we want to sync the order of parking lots amongst all devices
+    // if (userDataProvider != null && !reloading) {
+    //   reorderStops(userDataProvider!.userProfileModel!.selectedStops);
+    // }
+
     _isLoading = false;
     notifyListeners();
   }
 
   /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
-  void addLocation(String? bfrId) {
-    _ventilationViewState.add(bfrId);
-    _userDataProvider.userProfileModel!.selectedVentilationLocations =
-        _ventilationViewState;
-    _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+  Future<void> addLocation(String? roomID) async {
+    // creates the bfrID and then adds the ID to the user's list
+    String bfrID = buildingID! + floorID! + roomID!;
+    _userDataProvider!.userProfileModel!.selectedVentilationLocations!
+        .add(bfrID);
+    _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
+
+    ///TODO: MIGHT BE GOOD TO HAVE SOME CATCH IN CASE THE FETCH RETURNS FALSE
+    // calls ventilationService to get this bfrID's data and adds it to the list
+    await _ventilationService.fetchData(bfrID);
+    ventilationDataModels.add(_ventilationService.data);
+    // fetchVentilationData();
+
+    print("Length in addLocation: ${ventilationDataModels.length}");
+
     notifyListeners();
   }
 
   /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
-  void removeLocation(String? bfrId) {
-    _ventilationViewState.remove(bfrId);
-    _userDataProvider.userProfileModel!.selectedVentilationLocations =
-        _ventilationViewState;
-    _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+  Future<void> removeLocation(String? roomID) async {
+    // creates the bfrID and then removes the ID to the user's list
+    String bfrID = buildingID! + floorID! + roomID!;
+    _userDataProvider!.userProfileModel!.selectedVentilationLocations!
+        .remove(bfrID);
+    ventilationIDs =
+        _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
+    _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
+
+    ///TODO: MIGHT BE GOOD TO HAVE SOME CATCH IN CASE THE FETCH RETURNS FALSE
+    // calls ventilationService to get this bfrID's data and removes it from the list
+    await _ventilationService.fetchData(bfrID);
+    ventilationDataModels.remove(_ventilationService.data);
+
     notifyListeners();
+  }
+
+  void addBuildingID(String id) {
+    buildingID = id;
+  }
+
+  void addFloorID(String id) {
+    floorID = id;
+  }
+
+  String bfrID(String roomID) {
+    return buildingID! + floorID! + roomID;
   }
 
   // List<VentilationLocationsModel?> makeOrderedList(List<String?>? order) {
@@ -132,9 +175,19 @@ class VentilationDataProvider extends ChangeNotifier {
 
   DateTime? get lastUpdated => _lastUpdated;
 
-  List<VentilationDataModel?> get ventilationData =>
-      _ventilationDataModels.values.toList();
-
   List<VentilationLocationsModel?> get ventilationLocations =>
       _ventilationLocationModels!.values.toList();
+
+  List<VentilationDataModel?> get locationsToRenderInCard =>
+      ventilationDataModels;
+
+  List<String> get locationsToRenderInRooms {
+    List<String> locationsToRenderInRooms = [];
+    for (String? bfrID in ventilationIDs) {
+      if (bfrID != null) {
+        locationsToRenderInRooms.add(bfrID);
+      }
+    }
+    return locationsToRenderInRooms;
+  }
 }
