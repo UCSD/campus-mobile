@@ -12,19 +12,15 @@ class VentilationDisplay extends StatelessWidget {
     print(model);
 
     String windowText = '';
-    bool? window = model!.windowsOpen;
+    bool? window = model!.windowsOpen!;
     String hvacText = '';
-    bool? hvac = model!.hvacActive;
+    bool? hvac = model!.hvacActive!;
 
-    if (window != null) {
-      window
-          ? windowText = 'Windows are open'
-          : windowText = 'Windows are closed';
-    }
+    window
+        ? windowText = 'Windows are open'
+        : windowText = 'Windows are closed';
 
-    if (hvac != null) {
-      hvac ? hvacText = 'HVAC is active' : hvacText = 'HVAC is off';
-    }
+    hvac ? hvacText = 'HVAC is active' : hvacText = 'HVAC is off';
 
     return Column(
       children: <Widget>[
@@ -33,7 +29,7 @@ class VentilationDisplay extends StatelessWidget {
           children: <Widget>[
             Container(
               child: Text(
-                model!.buildingName.toString(),
+                model!.buildingName!.toString(),
                 style: TextStyle(color: Colors.grey[600], fontSize: 20),
                 textAlign: TextAlign.left,
               ),
@@ -44,7 +40,7 @@ class VentilationDisplay extends StatelessWidget {
             ),
             Container(
               child: Text(
-                model!.buildingRoomName.toString(),
+                model!.buildingRoomName!.toString(),
                 textAlign: TextAlign.right,
                 style: TextStyle(color: Colors.grey[600], fontSize: 20),
               ),
@@ -59,7 +55,7 @@ class VentilationDisplay extends StatelessWidget {
           children: <Widget>[
             Container(
               child: Text(
-                model!.buildingFloorName.toString(),
+                model!.buildingFloorName!.toString(),
                 style: TextStyle(color: Colors.grey[600], fontSize: 15),
                 textAlign: TextAlign.left,
               ),
@@ -79,7 +75,7 @@ class VentilationDisplay extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       child: Text(
-                        'Currently ${model!.currentTemperature}°',
+                        'Currently ${model!.currentTemperature!}°',
                         style: TextStyle(color: Colors.black, fontSize: 36),
                         textAlign: TextAlign.center,
                       ),
