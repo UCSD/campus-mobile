@@ -11,6 +11,8 @@ String parkingModelToJson(List<ParkingModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ParkingModel {
+  String? neighborhood;
+  bool? isStructure;
   String? locationId;
   String? locationName;
   String? locationContext;
@@ -20,6 +22,8 @@ class ParkingModel {
   String? availabilityType;
 
   ParkingModel({
+    this.neighborhood,
+    this.isStructure,
     this.locationId,
     this.locationName,
     this.locationContext,
@@ -30,8 +34,10 @@ class ParkingModel {
   });
 
   factory ParkingModel.fromJson(Map<String, dynamic> json) {
-    //print(json);
+   // print(json);
     return ParkingModel(
+      neighborhood: json["Neighborhood"] == null ? null : json["Neighborhood"],
+      isStructure: json["isStructure"] == null ? null : json["isStructure"],
       locationId: json["LocationId"] == null ? null : json["LocationId"],
       locationName: json["LocationName"] == null ? null : json["LocationName"],
       locationContext:
@@ -50,6 +56,8 @@ class ParkingModel {
   }
 
   Map<String, dynamic> toJson() => {
+        "Neighborhood": neighborhood == null ? null : neighborhood,
+        "isStructure": isStructure == null ? null : isStructure,
         "LocationId": locationId == null ? null : locationId,
         "LocationName": locationName == null ? null : locationName,
         "LocationContext": locationContext == null ? null : locationContext,

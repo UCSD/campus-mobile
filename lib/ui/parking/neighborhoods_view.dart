@@ -47,6 +47,7 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
         ),
         onTap: () {
           Navigator.pushNamed(context, RoutePaths.NeighborhoodsLotsView);
+          // arguments: {'building': 'Atkinson Hall'},
         },
       ));
     }

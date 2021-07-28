@@ -27,9 +27,10 @@ class ParkingService {
     try {
       /// fetch data
       String _response = await (_networkHelper.fetchData(endpoint));
-
+      print(_response);
       /// parse data
       _data = parkingModelFromJson(_response);
+      print(_data);
       _isLoading = false;
       return true;
     } catch (e) {
