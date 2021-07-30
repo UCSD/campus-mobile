@@ -45,7 +45,8 @@ class _ParkingCardState extends State<ParkingCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      actionButtons: buildActionButtons(),
+      overFlowMenu: menuOption,
+      //actionButtons: buildActionButtons(),
     );
   }
 

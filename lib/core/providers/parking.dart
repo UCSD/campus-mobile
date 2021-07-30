@@ -198,13 +198,21 @@ class ParkingDataProvider extends ChangeNotifier {
         if (_parkingModels![locationId]!.availability![spot]['Open'] != null &&
             _parkingModels![locationId]!.availability![spot]['Open'] != "") {
           totalAndOpenSpots["Open"] = totalAndOpenSpots["Open"]! +
-              _parkingModels![locationId]!.availability![spot]['Open'];
+              (_parkingModels![locationId]!.availability![spot]['Open']
+                      is String
+                  ? int.parse(
+                      _parkingModels![locationId]!.availability![spot]['Open'])
+                  : _parkingModels![locationId]!.availability![spot]['Open']);
         }
 
         if (_parkingModels![locationId]!.availability![spot]['Total'] != null &&
             _parkingModels![locationId]!.availability![spot]['Total'] != "") {
           totalAndOpenSpots["Total"] = totalAndOpenSpots["Total"]! +
-              _parkingModels![locationId]!.availability![spot]['Total'];
+              (_parkingModels![locationId]!.availability![spot]['Total']
+                      is String
+                  ? int.parse(
+                      _parkingModels![locationId]!.availability![spot]['Total'])
+                  : _parkingModels![locationId]!.availability![spot]['Total']);
         }
       }
     }

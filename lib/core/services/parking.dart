@@ -17,9 +17,9 @@ class ParkingService {
   };
 
   final String endpoint =
-  // "https://b2waxbcovi.execute-api.us-west-2.amazonaws.com/prod/parking/v1.1/status";
-  //     "https://mobile.ucsd.edu/replatform/v1/qa/testing/parking-card-update-mock-data.json";
-  "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v3/parking-neighborhoods.json";
+      //"https://b2waxbcovi.execute-api.us-west-2.amazonaws.com/prod/parking/v1.1/status";
+      // "https://mobile.ucsd.edu/replatform/v1/qa/testing/parking-card-update-mock-data.json";
+      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v3/parking-neighborhoods.json";
 
   Future<bool> fetchParkingLotData() async {
     _error = null;
@@ -27,7 +27,7 @@ class ParkingService {
     try {
       /// fetch data
       String _response = await (_networkHelper.fetchData(endpoint));
-      print(_response);
+
       /// parse data
       _data = parkingModelFromJson(_response);
       print(_data);
