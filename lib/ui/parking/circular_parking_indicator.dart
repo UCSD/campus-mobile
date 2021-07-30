@@ -59,8 +59,17 @@ class CircularParkingIndicators extends StatelessWidget {
     int open;
     int total;
     if (locationData != null) {
-      open = locationData["Open"] == null ? 0 : locationData["Open"];
-      total = locationData["Total"] == null ? 0 : locationData["Total"];
+      if (locationData["Open"] is String) {
+        open = int.parse(locationData["Open"]);
+      } else {
+        open = locationData["Open"] == null ? 0 : locationData["Open"];
+      }
+
+      if (locationData["Total"] is String) {
+        total = int.parse(locationData["Total"]);
+      } else {
+        total = locationData["Total"] == null ? 0 : locationData["Total"];
+      }
     } else {
       open = 0;
       total = 0;

@@ -11,8 +11,7 @@ class NeighborhoodLotsView extends StatefulWidget {
 }
 
 class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
-  List<bool> _added = [];
-  //List<bool> selected = List.filled(5, false);
+  List<bool> selected = List.filled(20, false, growable: true);
 
   @override
   Widget build(BuildContext context) => ContainerView(
@@ -22,7 +21,6 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
   // builds the listview that will be put into ContainerView
   Widget buildingsList(BuildContext context) {
     List<String> arguments = widget.args;
-    List<bool> selected = List.filled(arguments.length, false);
 
     // creates a list that will hold the list of building names
     List<Widget> list = [];
