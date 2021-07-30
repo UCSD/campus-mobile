@@ -183,9 +183,10 @@ class Router {
           return NeighborhoodsView();
         });
       case RoutePaths.NeighborhoodsLotsView:
+        List<String> data = settings.arguments as List<String>;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return NeighborhoodLotsView();
+          return NeighborhoodLotsView(data);
         });
       case RoutePaths.SpotTypesView:
         return MaterialPageRoute(builder: (_) {

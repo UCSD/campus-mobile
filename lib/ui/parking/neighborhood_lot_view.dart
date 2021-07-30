@@ -4,12 +4,15 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:flutter/rendering.dart';
 
 class NeighborhoodLotsView extends StatefulWidget {
+  final List<String> args;
+  const NeighborhoodLotsView(this.args);
+
   _NeighborhoodLotsViewState createState() => _NeighborhoodLotsViewState();
 }
 
 class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
   List<bool> _added = [];
-  List<bool> selected = List.filled(5, false);
+  //List<bool> selected = List.filled(5, false);
 
   @override
   Widget build(BuildContext context) => ContainerView(
@@ -18,6 +21,9 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
 // builds the list of rooms to be put into ListView
   // builds the listview that will be put into ContainerView
   Widget buildingsList(BuildContext context) {
+    List<String> arguments = widget.args;
+    List<bool> selected = List.filled(arguments.length, false);
+
     // creates a list that will hold the list of building names
     List<Widget> list = [];
     list.add(ListTile(
@@ -32,12 +38,12 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
     ));
 
     // loops through and adds buttons for the user to click on
-    for (var i = 0; i < 5; i++) {
+    for (int i = 0; i < arguments.length; i++) {
       list.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
-            "whoop",
+            arguments[i],
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
         ),
