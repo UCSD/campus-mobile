@@ -37,7 +37,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
-            "P103",
+            "whoop",
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
         ),
@@ -69,4 +69,10 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
       children: ListTile.divideTiles(tiles: list, context: context).toList(),
     );
   }
+}
+
+class ScreenArguments {
+  final List<String> lotList;
+
+  ScreenArguments(this.lotList);
 }

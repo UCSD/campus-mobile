@@ -22,7 +22,6 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
   Widget buildingsList(BuildContext context) {
     Map<String, List<String>?>? neighborhoods =
         Provider.of<ParkingDataProvider>(context).getParkingMap();
-
     // creates a list that will hold the list of building names
     List<Widget> list = [];
     list.add(ListTile(
@@ -38,23 +37,26 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
 
     // loops through and adds buttons for the user to click on
     neighborhoods.forEach((key, value) {
-      list.add(ListTile(
-        title: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-          child: Text(
-            key,
-            style: TextStyle(color: Colors.black, fontSize: 20),
+      if (key != "") {
+        list.add(ListTile(
+          title: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+            child: Text(
+              key,
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
           ),
-        ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.black,
-        ),
-        onTap: () {
-          Navigator.pushNamed(context, RoutePaths.NeighborhoodsLotsView);
-          // arguments: {'building': 'Atkinson Hall'},
-        },
-      ));
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.black,
+          ),
+          onTap: () {
+            Navigator.pushNamed(context, RoutePaths.NeighborhoodsLotsView,
+                arguments: value);
+            // arguments: {'building': 'Atkinson Hall'},
+          },
+        ));
+      }
     });
 
     // adds SizedBox to have a grey underline for the last item in the list

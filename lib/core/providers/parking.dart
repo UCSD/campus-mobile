@@ -229,9 +229,27 @@ class ParkingDataProvider extends ChangeNotifier {
     for (ParkingModel model in _parkingService.data!) {
       parkingMap[model.neighborhood]!.add(model.locationId!);
     }
-    print("PARKING MAP");
-    print(parkingMap);
     return parkingMap;
+  }
+
+  List<String> getStructures() {
+    List<String> structureMap = [];
+    for (ParkingModel model in _parkingService.data!) {
+      if (model.isStructure!) {
+        structureMap.add(model.locationName!);
+      }
+    }
+    return structureMap;
+  }
+
+  List<String> getLots() {
+    List<String> lotMap = [];
+    for (ParkingModel model in _parkingService.data!) {
+      if (model.isStructure! == false) {
+        lotMap.add(model.locationName!);
+      }
+    }
+    return lotMap;
   }
 
   ///SIMPLE GETTERS

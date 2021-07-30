@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class ParkingLotsView extends StatefulWidget {
   _ParkingLotViewState createState() => _ParkingLotViewState();
 }
 
 class _ParkingLotViewState extends State<ParkingLotsView> {
-  List<bool> _added = [];
-  List<bool> selected = List.filled(5, false);
+  List<bool> selected = List.filled(100, false);
 
   @override
   Widget build(BuildContext context) => ContainerView(
@@ -18,6 +18,7 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
 // builds the list of rooms to be put into ListView
   // builds the listview that will be put into ContainerView
   Widget buildingsList(BuildContext context) {
+    List<String> lots = Provider.of<ParkingDataProvider>(context).getLots();
     // creates a list that will hold the list of building names
     List<Widget> list = [];
     list.add(ListTile(
@@ -32,12 +33,12 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
     ));
 
     // loops through and adds buttons for the user to click on
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < lots.length; i++) {
       list.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
-            "P103",
+            lots[i],
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
         ),
