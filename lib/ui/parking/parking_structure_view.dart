@@ -67,7 +67,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
     list.add(SizedBox());
 
     return ListView(
-      physics: NeverScrollableScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       shrinkWrap: true,
       children: ListTile.divideTiles(tiles: list, context: context).toList(),
     );
