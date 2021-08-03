@@ -1,7 +1,9 @@
+import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class NeighborhoodLotsView extends StatefulWidget {
   final List<String> args;
@@ -11,12 +13,17 @@ class NeighborhoodLotsView extends StatefulWidget {
 }
 
 class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
+  late ParkingDataProvider parkingDataProvider;
   List<bool> selected = List.filled(20, false, growable: true);
 
   @override
-  Widget build(BuildContext context) => ContainerView(
-        child: buildingsList(context),
-      );
+  Widget build(BuildContext context) {
+    parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+    return ContainerView(
+      child: buildingsList(context),
+    );
+  }
+
 // builds the list of rooms to be put into ListView
   // builds the listview that will be put into ContainerView
   Widget buildingsList(BuildContext context) {
@@ -49,6 +56,9 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
           icon: Icon(selected[i] ? Icons.cancel_rounded : Icons.add_rounded),
           color: Colors.black,
           onPressed: () {
+            parkingDataProvider.toggleLot(arguments[i]);
+            print('PRESSED');
+            print(arguments[i]);
             setState(() {
               selected[i] = !selected[i];
             });
