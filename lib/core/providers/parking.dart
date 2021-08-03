@@ -189,7 +189,6 @@ class ParkingDataProvider extends ChangeNotifier {
 
   /// Returns the total number of spots open at a given location
   /// does not filter based on spot type
-  //TODO: Changed to num make sure it still works (kwgong)
   Map<String, num> getApproxNumOfOpenSpots(String? locationId) {
     Map<String, num> totalAndOpenSpots = {"Open": 0, "Total": 0};
     if (_parkingModels![locationId] != null &&
@@ -227,7 +226,7 @@ class ParkingDataProvider extends ChangeNotifier {
     }
 
     for (ParkingModel model in _parkingService.data!) {
-      parkingMap[model.neighborhood]!.add(model.locationId!);
+      parkingMap[model.neighborhood]!.add(model.locationName!);
     }
     return parkingMap;
   }

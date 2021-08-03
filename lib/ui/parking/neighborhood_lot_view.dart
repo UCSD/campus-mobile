@@ -14,7 +14,6 @@ class NeighborhoodLotsView extends StatefulWidget {
 
 class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
   late ParkingDataProvider parkingDataProvider;
-  List<bool> selected = List.filled(20, false, growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +43,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
 
     // loops through and adds buttons for the user to click on
     for (int i = 0; i < arguments.length; i++) {
+      bool lotState = parkingDataProvider.parkingViewState![arguments[i]]!;
       list.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
@@ -53,24 +53,12 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
           ),
         ),
         trailing: IconButton(
-          icon: Icon(selected[i] ? Icons.cancel_rounded : Icons.add_rounded),
+          icon: Icon(lotState ? Icons.cancel_rounded : Icons.add_rounded),
           color: Colors.black,
           onPressed: () {
             parkingDataProvider.toggleLot(arguments[i]);
-            print('PRESSED');
-            print(arguments[i]);
-            setState(() {
-              selected[i] = !selected[i];
-            });
           },
         ),
-        // onTap: () {
-        //   Navigator.pushNamed(
-        //     context,
-        //     RoutePaths.VentilationFloors,
-        //     arguments: {'building': 'Atkinson Hall'},
-        //   );
-        // },
       ));
     }
 

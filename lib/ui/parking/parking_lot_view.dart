@@ -9,12 +9,16 @@ class ParkingLotsView extends StatefulWidget {
 }
 
 class _ParkingLotViewState extends State<ParkingLotsView> {
-  List<bool> selected = List.filled(100, false);
+  late ParkingDataProvider parkingDataProvider;
 
   @override
-  Widget build(BuildContext context) => ContainerView(
-        child: buildingsList(context),
-      );
+  Widget build(BuildContext context) {
+    parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+    return ContainerView(
+      child: buildingsList(context),
+    );
+  }
+
 // builds the list of rooms to be put into ListView
   // builds the listview that will be put into ContainerView
   Widget buildingsList(BuildContext context) {
@@ -34,6 +38,7 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
 
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < lots.length; i++) {
+      bool lotViewState = parkingDataProvider.parkingViewState![lots[i]]!;
       list.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
@@ -43,21 +48,12 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
           ),
         ),
         trailing: IconButton(
-          icon: Icon(selected[i] ? Icons.cancel_rounded : Icons.add_rounded),
+          icon: Icon(lotViewState ? Icons.cancel_rounded : Icons.add_rounded),
           color: Colors.black,
           onPressed: () {
-            setState(() {
-              selected[i] = !selected[i];
-            });
+            parkingDataProvider.toggleLot(lots[i]);
           },
         ),
-        // onTap: () {
-        //   Navigator.pushNamed(
-        //     context,
-        //     RoutePaths.VentilationFloors,
-        //     arguments: {'building': 'Atkinson Hall'},
-        //   );
-        // },
       ));
     }
 

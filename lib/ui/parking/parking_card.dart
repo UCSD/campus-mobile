@@ -26,15 +26,15 @@ class _ParkingCardState extends State<ParkingCard> {
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
-  Map<String, Function> menuOption = {
-    "Manage Lots": (context) =>
-        {Navigator.pushNamed(context, RoutePaths.ManageParkingView)},
-    "Manage Spots": (context) =>
-        {Navigator.pushNamed(context, RoutePaths.SpotTypesView)}
-  };
-
   // ignore: must_call_super
   Widget build(BuildContext context) {
+    //Navigator.of(context).pushNamed(RoutePaths.ManageParkingView);
+    Map<String, Function> menuOption = {
+      "Manage Lots": (context) =>
+          {Navigator.pushNamed(context, RoutePaths.ManageParkingView)},
+      "Manage Spots": (context) =>
+          {Navigator.pushNamed(context, RoutePaths.SpotTypesView)}
+    };
     //super.build(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
@@ -45,7 +45,7 @@ class _ParkingCardState extends State<ParkingCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      //overFlowMenu: menuOption,
+      overFlowMenu: menuOption,
       actionButtons: buildActionButtons(),
     );
   }
