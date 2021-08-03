@@ -29,19 +29,26 @@ class VentilationRoomsState extends State<VentilationRooms> {
   // builds the list of rooms to be put into ListView
   Widget roomsList(BuildContext context) {
     List<String> arguments = widget.args;
-    List<String> bfrIDs = []; //list of the bfrIDs
-    List<Widget> list = []; //list of ListTile widgets
+    List<String> bfrIDs = []; // list of the bfrIDs
+    List<Widget> contentList = []; // list of ListTile widgets
 
-    list.add(ListTile(
-      title: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-        child: Text(
-          'Rooms:',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+    Widget titleWidget = Container(
+      child: ListTile(
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          child: Text(
+            'Rooms:',
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
-    ));
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: .75, color: Colors.grey.shade200),
+        ),
+      ),
+    );
 
     for (int i = 0; i < arguments.length; i++) {
       // makes the bfrID and adds it to the list
@@ -56,7 +63,7 @@ class VentilationRoomsState extends State<VentilationRooms> {
       print("Contains: $containsID");
 
       // creates the ListTile and button
-      list.add(ListTile(
+      contentList.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
@@ -93,12 +100,21 @@ class VentilationRoomsState extends State<VentilationRooms> {
     }
 
     // adds sizedbox to have a grey underline for the last item in the list
-    list.add(SizedBox());
-
-    return ListView(
-      physics: NeverScrollableScrollPhysics(),
+    contentList.add(SizedBox());
+    ListView contentListView = ListView(
       shrinkWrap: true,
-      children: ListTile.divideTiles(tiles: list, context: context).toList(),
+      children:
+          ListTile.divideTiles(tiles: contentList, context: context).toList(),
+    );
+
+    return Column(
+      children: [titleWidget, Expanded(child: contentListView)],
     );
   }
 }
+
+// ListView(
+// // physics: NeverScrollableScrollPhysics(),
+// shrinkWrap: true,
+// children: ListTile.divideTiles(tiles: contentList, context: context).toList(),
+// );

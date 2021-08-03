@@ -20,7 +20,7 @@ class VentilationService {
     "accept": "application/json",
   };
   final String locationsEndpoint =
-      "https://ucsd-its-sandbox-wts-charles.s3.us-west-1.amazonaws.com/mock-api/ntplln-mock-2.json";
+      "https://ucsd-its-sandbox-wts-charles.s3.us-west-1.amazonaws.com/mock-api/ntplln-mock-7.json";
   final String dataBaseEndpoint =
       "https://ucsd-its-sandbox-wts-charles.s3.us-west-1.amazonaws.com/mock-api/ntplln-mock-2-data.json";
 
@@ -36,11 +36,13 @@ class VentilationService {
       final data = ventilationLocationsModelFromJson(_response);
       _isLoading = false;
 
+      print("HELLO RESPONSE $_response");
       _locations = data;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
+      print("IN CARCH");
       if (e.toString().contains("401")) {
         if (await getNewToken()) {
           return await fetchLocations();

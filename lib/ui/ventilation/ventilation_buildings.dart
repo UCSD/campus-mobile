@@ -27,21 +27,28 @@ class _VentilationBuildingsState extends State<VentilationBuildings> {
     List<VentilationLocationsModel> arguments = widget.args;
     _ventilationDataProvider = Provider.of<VentilationDataProvider>(context);
 
-    List<Widget> list = [];
-    list.add(ListTile(
-      title: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-        child: Text(
-          "Buildings:",
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+    List<Widget> contentList = [];
+    Widget titleWidget = Container(
+      child: ListTile(
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          child: Text(
+            'Buildings:',
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
-    ));
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: .75, color: Colors.grey.shade200),
+        ),
+      ),
+    );
 
     // loops through and adds buttons for the user to click on
     for (VentilationLocationsModel model in arguments) {
-      list.add(ListTile(
+      contentList.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
@@ -65,12 +72,16 @@ class _VentilationBuildingsState extends State<VentilationBuildings> {
     }
 
     // adds SizedBox to have a grey underline for the last item in the list
-    list.add(SizedBox());
-
-    return ListView(
-      physics: NeverScrollableScrollPhysics(),
+    contentList.add(SizedBox());
+    ListView contentListView = ListView(
+      // physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      children: ListTile.divideTiles(tiles: list, context: context).toList(),
+      children:
+          ListTile.divideTiles(tiles: contentList, context: context).toList(),
+    );
+
+    return Column(
+      children: [titleWidget, Expanded(child: contentListView)],
     );
   }
 }

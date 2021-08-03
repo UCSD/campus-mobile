@@ -44,7 +44,7 @@ class BuildingFloor {
     this.buildingFloorRooms,
   });
 
-  int? buildingFloorNumber;
+  String? buildingFloorNumber;
   List<String>? buildingFloorRooms;
 
   factory BuildingFloor.fromJson(Map<String, dynamic> json) => BuildingFloor(

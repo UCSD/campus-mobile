@@ -88,6 +88,17 @@ class VentilationDataProvider extends ChangeNotifier {
   Future<void> addLocation(String? roomID) async {
     // creates the bfrID and then adds the ID to the user's list
     String bfrID = buildingID! + floorID! + roomID!;
+
+    if (ventilationIDs.isNotEmpty) {
+      /// MAYBE CHANGE THIS LATER
+      ventilationIDs = [];
+      ventilationDataModels = [];
+      _userDataProvider!.userProfileModel!.selectedVentilationLocations = [];
+      _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
+
+      notifyListeners();
+    }
+
     _userDataProvider!.userProfileModel!.selectedVentilationLocations!
         .add(bfrID);
     _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
@@ -96,9 +107,8 @@ class VentilationDataProvider extends ChangeNotifier {
     // calls ventilationService to get this bfrID's data and adds it to the list
     await _ventilationService.fetchData(bfrID);
     ventilationDataModels.add(_ventilationService.data);
-    // fetchVentilationData();
-
-    print("Length in addLocation: ${ventilationDataModels.length}");
+    ventilationIDs =
+        _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
 
     notifyListeners();
   }
