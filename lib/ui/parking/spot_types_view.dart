@@ -48,10 +48,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
             child: Align(
                 alignment: Alignment.center,
                 child: data.text!.contains("&#x267f;")
-                    ? Icon(
-                        Icons.accessible,
-                        size: 25.0,
-                      )
+                    ? Icon(Icons.accessible,
+                        size: 25.0, color: colorFromHex(data.textColor!))
                     : Text(
                         data.spotKey!.contains("SR") ? "RS" : data.text!,
                         style: TextStyle(color: textColor),
@@ -69,5 +67,14 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       ));
     }
     return list;
+  }
+
+  Color colorFromHex(String hexColor) {
+    final hexCode = hexColor.replaceAll('#', '');
+    if (hexColor.length == 6) {
+      hexColor =
+          'FF' + hexColor; // FF as the opacity value if you don't add it.
+    }
+    return Color(int.parse('FF$hexCode', radix: 16));
   }
 }

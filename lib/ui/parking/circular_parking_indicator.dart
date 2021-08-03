@@ -108,6 +108,7 @@ class CircularParkingIndicators extends StatelessWidget {
                               ? Icon(
                                   Icons.accessible,
                                   size: 25.0,
+                                  color: colorFromHex(spotType.textColor!),
                                 )
                               : Text(
                                   spotType.spotKey!.contains("SR")
@@ -155,10 +156,9 @@ class CircularParkingIndicators extends StatelessWidget {
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color!),
                           child: spotType.text!.contains("&#x267f;")
-                              ? Icon(
-                                  Icons.accessible,
+                              ? Icon(Icons.accessible,
                                   size: 25.0,
-                                )
+                                  color: colorFromHex(spotType.textColor!))
                               : Text(
                                   spotType.spotKey!.contains("SR")
                                       ? "RS"
