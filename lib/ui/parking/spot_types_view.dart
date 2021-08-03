@@ -35,8 +35,9 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       }
       Color iconColor = HexColor(data.color!);
       Color textColor = HexColor(data.textColor!);
+      //print("SPOT KEY: ${data.}");
       list.add(ListTile(
-        key: Key(data.spotKey.toString()),
+        key: Key(data.name.toString()),
         leading: Container(
             width: 35,
             height: 35,
@@ -52,7 +53,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                         size: 25.0,
                       )
                     : Text(
-                        data.text!,
+                        data.spotKey!.contains("SR") ? "RS" : data.text!,
                         style: TextStyle(color: textColor),
                       ))),
         title: Text(data.name!),

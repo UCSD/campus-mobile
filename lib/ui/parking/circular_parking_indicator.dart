@@ -65,6 +65,8 @@ class CircularParkingIndicators extends StatelessWidget {
       open = 0;
       total = 0;
     }
+
+    //print("SPOT TYPE: ${spotType!.text}");
     return locationData != null
         ? Expanded(
             child: Column(
@@ -102,7 +104,19 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color!),
-                          child: Text(spotType.spotKey!),
+                          child: spotType.text!.contains("&#x267f;")
+                              ? Icon(
+                                  Icons.accessible,
+                                  size: 25.0,
+                                )
+                              : Text(
+                                  spotType.spotKey!.contains("SR")
+                                      ? "RS"
+                                      : spotType.text!,
+                                  style: TextStyle(
+                                    color: colorFromHex(spotType.textColor!),
+                                  ),
+                                ),
                         )
                       : Container(),
                 )
@@ -140,7 +154,19 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color!),
-                          child: Text(spotType.spotKey!),
+                          child: spotType.text!.contains("&#x267f;")
+                              ? Icon(
+                                  Icons.accessible,
+                                  size: 25.0,
+                                )
+                              : Text(
+                                  spotType.spotKey!.contains("SR")
+                                      ? "RS"
+                                      : spotType.text!,
+                                  style: TextStyle(
+                                    color: colorFromHex(spotType.textColor!),
+                                  ),
+                                ),
                         )
                       : Container(),
                 )
