@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _ManageParkingViewState extends State<ManageParkingView> {
     for (ParkingModel item in newOrder) {
       orderedLocationNames.add(item.locationName);
     }
-    // parkingDataProvider.reorderLots(orderedLocationNames);
+    //parkingDataProvider.reorderLots(orderedLocationNames);
   }
 
   List<Widget> createList(BuildContext context) {

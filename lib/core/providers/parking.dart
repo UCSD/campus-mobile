@@ -28,6 +28,7 @@ class ParkingDataProvider extends ChangeNotifier {
   static const MAX_SELECTED_SPOTS = 3;
   Map<String?, bool>? _parkingViewState = <String?, bool>{};
   Map<String?, bool>? _selectedSpotTypesState = <String?, bool>{};
+  Map<String?, Spot>? _spotTypeMap = <String?, Spot>{};
 
   ///MODELS
   Map<String?, ParkingModel>? _parkingModels;
@@ -46,6 +47,8 @@ class ParkingDataProvider extends ChangeNotifier {
 
     /// create a new map to ensure we remove all unsupported lots
     Map<String?, ParkingModel> newMapOfLots = Map<String?, ParkingModel>();
+    Map<String?, bool> newMapOfLotStates = Map<String?, bool>();
+
     if (await _parkingService.fetchParkingLotData()) {
       if (_userDataProvider.userProfileModel!.selectedParkingLots!.isNotEmpty) {
         _parkingViewState =
@@ -59,9 +62,18 @@ class ParkingDataProvider extends ChangeNotifier {
           }
         }
       }
+
       for (ParkingModel model in _parkingService.data!) {
         newMapOfLots[model.locationName] = model;
+        newMapOfLotStates[model.locationName] =
+            (_parkingViewState![model.locationName] == null
+                ? false
+                : _parkingViewState![model.locationName])!;
       }
+
+      ///replace old list of lots with new one
+      _parkingModels = newMapOfLots;
+      _parkingViewState = newMapOfLotStates;
 
       //Update number of lots selected
       _parkingViewState!.forEach((key, value) {
@@ -69,9 +81,6 @@ class ParkingDataProvider extends ChangeNotifier {
           selectedLots++;
         }
       });
-
-      ///replace old list of lots with new one
-      _parkingModels = newMapOfLots;
     } else {
       ///TODO: determine what error to show to the user
       _error = _parkingService.error;
@@ -79,6 +88,10 @@ class ParkingDataProvider extends ChangeNotifier {
 
     if (await _spotTypesService.fetchSpotTypesData()) {
       _spotTypeModel = _spotTypesService.spotTypeModel;
+      //create map of spot types
+      for (Spot spot in _spotTypeModel!.spots!) {
+        _spotTypeMap![spot.spotKey] = spot;
+      }
       if (_userDataProvider
           .userProfileModel!.selectedParkingSpots!.isNotEmpty) {
         //Load selected spots types from user Profile
@@ -94,6 +107,14 @@ class ParkingDataProvider extends ChangeNotifier {
           }
         }
       }
+
+      /// this block of code is to ensure we remove any unsupported spot types
+      Map<String?, bool?> newMapOfSpotTypes = Map<String, bool>();
+      for (Spot spot in _spotTypeModel!.spots!) {
+        newMapOfSpotTypes[spot.spotKey] =
+            _selectedSpotTypesState![spot.spotKey];
+      }
+      _selectedSpotTypesState = newMapOfSpotTypes.cast<String?, bool>();
 
       //Update number of spots selected
       _selectedSpotTypesState!.forEach((key, value) {
@@ -143,7 +164,8 @@ class ParkingDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleSpotSelection(String? spotKey) {
+  void toggleSpotSelection(String? spotKey, int spotsSelected) {
+    selectedSpots = spotsSelected;
     if (selectedSpots < MAX_SELECTED_SPOTS) {
       _selectedSpotTypesState![spotKey] = !_selectedSpotTypesState![spotKey]!;
       _selectedSpotTypesState![spotKey]! ? selectedSpots++ : selectedSpots--;
@@ -165,10 +187,36 @@ class ParkingDataProvider extends ChangeNotifier {
     _userDataProvider = value;
   }
 
+  /// Returns the total number of spots open at a given location
+  /// does not filter based on spot type
+  //TODO: Changed to num make sure it still works (kwgong)
+  Map<String, num> getApproxNumOfOpenSpots(String? locationId) {
+    Map<String, num> totalAndOpenSpots = {"Open": 0, "Total": 0};
+    if (_parkingModels![locationId] != null &&
+        _parkingModels![locationId]!.availability != null) {
+      for (dynamic spot in _parkingModels![locationId]!.availability!.keys) {
+        if (_parkingModels![locationId]!.availability![spot]['Open'] != null &&
+            _parkingModels![locationId]!.availability![spot]['Open'] != "") {
+          totalAndOpenSpots["Open"] = totalAndOpenSpots["Open"]! +
+              _parkingModels![locationId]!.availability![spot]['Open'];
+        }
+
+        if (_parkingModels![locationId]!.availability![spot]['Total'] != null &&
+            _parkingModels![locationId]!.availability![spot]['Total'] != "") {
+          totalAndOpenSpots["Total"] = totalAndOpenSpots["Total"]! +
+              _parkingModels![locationId]!.availability![spot]['Total'];
+        }
+      }
+    }
+    return totalAndOpenSpots;
+  }
+
   ///SIMPLE GETTERS
   bool? get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
   Map<String?, bool>? get spotTypesState => _selectedSpotTypesState;
   Map<String?, bool>? get parkingViewState => _parkingViewState;
+  Map<String?, Spot?>? get spotTypeMap => _spotTypeMap;
+  // SpotTypeModel? get spotTypeModel => _spotTypeModel;
 }

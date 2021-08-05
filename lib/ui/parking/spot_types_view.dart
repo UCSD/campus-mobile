@@ -25,12 +25,19 @@ class _SpotTypesViewState extends State<SpotTypesView> {
   }
 
   List<Widget> createList(BuildContext context) {
+    int selectedSpots = 0;
     List<Widget> list = [];
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
+      if (Provider.of<ParkingDataProvider>(context)
+              .spotTypesState![data.spotKey]! ==
+          true) {
+        selectedSpots++;
+      }
       Color iconColor = HexColor(data.color!);
       Color textColor = HexColor(data.textColor!);
+      //print("SPOT KEY: ${data.}");
       list.add(ListTile(
-        key: Key(data.spotKey.toString()),
+        key: Key(data.name.toString()),
         leading: Container(
             width: 35,
             height: 35,
@@ -41,12 +48,10 @@ class _SpotTypesViewState extends State<SpotTypesView> {
             child: Align(
                 alignment: Alignment.center,
                 child: data.text!.contains("&#x267f;")
-                    ? Icon(
-                        Icons.accessible,
-                        size: 25.0,
-                      )
+                    ? Icon(Icons.accessible,
+                        size: 25.0, color: colorFromHex(data.textColor!))
                     : Text(
-                        data.text!,
+                        data.spotKey!.contains("SR") ? "RS" : data.text!,
                         style: TextStyle(color: textColor),
                       ))),
         title: Text(data.name!),
@@ -54,12 +59,22 @@ class _SpotTypesViewState extends State<SpotTypesView> {
           value: Provider.of<ParkingDataProvider>(context)
               .spotTypesState![data.spotKey]!,
           onChanged: (_) {
-            spotTypesDataProvider.toggleSpotSelection(data.spotKey);
+            spotTypesDataProvider.toggleSpotSelection(
+                data.spotKey, selectedSpots);
           },
           activeColor: Theme.of(context).buttonColor,
         ),
       ));
     }
     return list;
+  }
+
+  Color colorFromHex(String hexColor) {
+    final hexCode = hexColor.replaceAll('#', '');
+    if (hexColor.length == 6) {
+      hexColor =
+          'FF' + hexColor; // FF as the opacity value if you don't add it.
+    }
+    return Color(int.parse('FF$hexCode', radix: 16));
   }
 }

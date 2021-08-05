@@ -154,7 +154,7 @@ packages:
       name: cli_util
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.1"
+    version: "0.3.3"
   clock:
     dependency: transitive
     description:
@@ -544,7 +544,7 @@ packages:
       name: io
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.3"
   js:
     dependency: transitive
     description:
@@ -694,6 +694,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   permission_handler:
     dependency: "direct main"
     description:
@@ -721,7 +728,7 @@ packages:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   pointycastle:
     dependency: "direct main"
     description:
@@ -833,7 +840,7 @@ packages:
       name: shelf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.4"
+    version: "1.2.0"
   shelf_web_socket:
     dependency: transitive
     description:
@@ -978,7 +985,7 @@ packages:
       name: url_launcher_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   url_launcher_web:
     dependency: transitive
     description:
@@ -1048,7 +1055,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.4"
+    version: "2.2.5"
   xdg_directories:
     dependency: transitive
     description:
@@ -1065,4 +1072,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.13.0 <3.0.0"
-  flutter: ">=2.2.1"
+  flutter: ">=2.2.2"
