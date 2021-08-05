@@ -36,7 +36,7 @@ class ParkingModel {
   factory ParkingModel.fromJson(Map<String, dynamic> json) {
    // print(json);
     return ParkingModel(
-      neighborhood: json["Neighborhood"] == null ? null : json["Neighborhood"],
+      neighborhood: json["neighborhood"] == null ? null : json["neighborhood"],
       isStructure: json["isStructure"] == null ? null : json["isStructure"],
       locationId: json["LocationId"] == null ? null : json["LocationId"],
       locationName: json["LocationName"] == null ? null : json["LocationName"],

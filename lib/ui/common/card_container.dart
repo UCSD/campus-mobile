@@ -150,14 +150,6 @@ class CardContainer extends StatelessWidget {
           }),
         ],
       );
-    } else if (titleText == "Parking") {
-      overFlowMenu!.addAll({'reload': reload, 'hide': hide});
-      return ButtonBar(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          buildMenuOptions(overFlowMenu!),
-        ],
-      );
     }
     return ButtonBar(
       mainAxisSize: MainAxisSize.min,
@@ -201,18 +193,6 @@ class CardContainer extends StatelessWidget {
       case 'hide':
         {
           hide();
-        }
-        break;
-      case 'Manage Lots':
-        {
-          Function lots = overFlowMenu![selectedMenuItem]!;
-          lots();
-        }
-        break;
-      case 'Manage Spots':
-        {
-          Function spots = overFlowMenu![selectedMenuItem]!;
-          spots();
         }
         break;
       default:

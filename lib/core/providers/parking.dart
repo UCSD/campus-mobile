@@ -219,10 +219,18 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   Map<String, List<String>> getParkingMap() {
+    print("PARKING SERVICE");
+    print(_parkingService.data);
+
     Map<String, List<String>> parkingMap = {};
     for (ParkingModel model in _parkingService.data!) {
       List<String> val = [];
-      parkingMap[model.neighborhood!] = val;
+      if(model.neighborhood != null) {
+        print("neighborhood : ");
+
+        print(model.neighborhood!);
+        parkingMap[model.neighborhood!] = val;
+      }
     }
 
     for (ParkingModel model in _parkingService.data!) {
