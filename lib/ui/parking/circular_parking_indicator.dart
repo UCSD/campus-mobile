@@ -21,6 +21,7 @@ class CircularParkingIndicators extends StatelessWidget {
         buildLocationTitle(),
         buildLocationContext(context),
         buildSpotsAvailableText(context),
+        buildHistoricInfo(),
         buildAllParkingAvailability(context),
       ],
     );
@@ -194,6 +195,25 @@ class CircularParkingIndicators extends StatelessWidget {
         fontSize: 20,
       ),
     );
+  }
+
+  Widget buildHistoricInfo() {
+    if(model.locationProvider == "Historic") {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.error_outline, color: Colors.black,),
+          Padding(padding: EdgeInsets.only(right: 1.0),),
+          Text(
+            "No Live Data. Estimated availability shown.",
+          )
+        ],
+      );
+    }
+    else {
+      return Text("");
+    }
+
   }
 
   Widget buildSpotsAvailableText(BuildContext context) {
