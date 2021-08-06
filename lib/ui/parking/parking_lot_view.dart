@@ -4,6 +4,8 @@ import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_styles.dart';
+
 class ParkingLotsView extends StatefulWidget {
   _ParkingLotViewState createState() => _ParkingLotViewState();
 }
@@ -44,12 +46,12 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             lots[i],
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(color: lotViewState ? ColorPrimary : Colors.black, fontSize: 20),
           ),
         ),
         trailing: IconButton(
           icon: Icon(lotViewState ? Icons.cancel_rounded : Icons.add_rounded),
-          color: Colors.black,
+          color: lotViewState ? ColorPrimary : Colors.black,
           onPressed: () {
             parkingDataProvider.toggleLot(lots[i]);
           },

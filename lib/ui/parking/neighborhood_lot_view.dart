@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -49,13 +50,14 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             arguments[i],
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(color: lotState ? ColorPrimary : Colors.black, fontSize: 20),
           ),
         ),
         trailing: IconButton(
           icon: Icon(lotState ? Icons.cancel_rounded : Icons.add_rounded),
-          color: Colors.black,
+          color: lotState ? ColorPrimary : Colors.black,
           onPressed: () {
+            print("pressed");
             parkingDataProvider.toggleLot(arguments[i]);
           },
         ),

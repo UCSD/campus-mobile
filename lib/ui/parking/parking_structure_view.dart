@@ -4,6 +4,8 @@ import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_styles.dart';
+
 class ParkingStructureView extends StatefulWidget {
   _ParkingStructureViewState createState() => _ParkingStructureViewState();
 }
@@ -47,12 +49,12 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             structures[i],
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(color: structureState ? ColorPrimary : Colors.black, fontSize: 20),
           ),
         ),
         trailing: IconButton(
           icon: Icon(structureState ? Icons.cancel_rounded : Icons.add_rounded),
-          color: Colors.black,
+          color: structureState ? ColorPrimary : Colors.black,
           onPressed: () {
             parkingDataProvider.toggleLot(structures[i]);
           },
