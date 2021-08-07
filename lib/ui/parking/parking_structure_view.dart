@@ -40,23 +40,29 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
       ),
     ));
 
+    int selectedLots = 0;
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < structures.length; i++) {
       bool structureState =
           parkingDataProvider.parkingViewState![structures[i]]!;
+      parkingDataProvider.parkingViewState![structures[i]]! == true
+          ? selectedLots++
+          : selectedLots = selectedLots;
       list.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             structures[i],
-            style: TextStyle(color: structureState ? ColorPrimary : Colors.black, fontSize: 20),
+            style: TextStyle(
+                color: structureState ? ColorPrimary : Colors.black,
+                fontSize: 20),
           ),
         ),
         trailing: IconButton(
           icon: Icon(structureState ? Icons.cancel_rounded : Icons.add_rounded),
           color: structureState ? ColorPrimary : Colors.black,
           onPressed: () {
-            parkingDataProvider.toggleLot(structures[i]);
+            parkingDataProvider.toggleLot(structures[i], selectedLots);
           },
         ),
       ));

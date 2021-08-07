@@ -148,7 +148,8 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
 // add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
-  void toggleLot(String? location) {
+  void toggleLot(String? location, int numSelected) {
+    selectedLots = numSelected;
     if (selectedLots < MAX_SELECTED_LOTS) {
       _parkingViewState![location] = !_parkingViewState![location]!;
       _parkingViewState![location]! ? selectedLots++ : selectedLots--;
@@ -161,6 +162,7 @@ class ParkingDataProvider extends ChangeNotifier {
     }
     _userDataProvider.userProfileModel!.selectedParkingLots = _parkingViewState;
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+    print("After toggle: $selectedLots");
     notifyListeners();
   }
 
@@ -219,11 +221,10 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   Map<String, List<String>> getParkingMap() {
-
     Map<String, List<String>> parkingMap = {};
     for (ParkingModel model in _parkingService.data!) {
       List<String> val = [];
-       parkingMap[model.neighborhood!] = val;
+      parkingMap[model.neighborhood!] = val;
     }
 
     for (ParkingModel model in _parkingService.data!) {

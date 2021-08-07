@@ -38,22 +38,29 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
       ),
     ));
 
+    int selectedLots = 0;
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < lots.length; i++) {
       bool lotViewState = parkingDataProvider.parkingViewState![lots[i]]!;
+      parkingDataProvider.parkingViewState![lots[i]]! == true
+          ? selectedLots++
+          : selectedLots = selectedLots;
       list.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             lots[i],
-            style: TextStyle(color: lotViewState ? ColorPrimary : Colors.black, fontSize: 20),
+            style: TextStyle(
+                color: lotViewState ? ColorPrimary : Colors.black,
+                fontSize: 20),
           ),
         ),
         trailing: IconButton(
           icon: Icon(lotViewState ? Icons.cancel_rounded : Icons.add_rounded),
           color: lotViewState ? ColorPrimary : Colors.black,
           onPressed: () {
-            parkingDataProvider.toggleLot(lots[i]);
+            print("Before: $selectedLots");
+            parkingDataProvider.toggleLot(lots[i], selectedLots);
           },
         ),
       ));

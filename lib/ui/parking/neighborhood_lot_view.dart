@@ -42,23 +42,27 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
       ),
     ));
 
+    int selectedLots = 0;
     // loops through and adds buttons for the user to click on
     for (int i = 0; i < arguments.length; i++) {
       bool lotState = parkingDataProvider.parkingViewState![arguments[i]]!;
+      parkingDataProvider.parkingViewState![arguments[i]]! == true
+          ? selectedLots++
+          : selectedLots = selectedLots;
       list.add(ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             arguments[i],
-            style: TextStyle(color: lotState ? ColorPrimary : Colors.black, fontSize: 20),
+            style: TextStyle(
+                color: lotState ? ColorPrimary : Colors.black, fontSize: 20),
           ),
         ),
         trailing: IconButton(
           icon: Icon(lotState ? Icons.cancel_rounded : Icons.add_rounded),
           color: lotState ? ColorPrimary : Colors.black,
           onPressed: () {
-            print("pressed");
-            parkingDataProvider.toggleLot(arguments[i]);
+            parkingDataProvider.toggleLot(arguments[i], selectedLots);
           },
         ),
       ));
