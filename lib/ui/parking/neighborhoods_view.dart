@@ -51,7 +51,7 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
           ),
           trailing: Icon(
             Icons.arrow_forward_ios,
-            color: Theme.of(context).iconTheme.color,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           onTap: () {
             Navigator.pushNamed(context, RoutePaths.NeighborhoodsLotsView,

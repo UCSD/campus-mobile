@@ -100,7 +100,7 @@ class _ManageParkingViewState extends State<ManageParkingView> {
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          color: Theme.of(context).iconTheme.color,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         onTap: () {
           if (i == 0) {
