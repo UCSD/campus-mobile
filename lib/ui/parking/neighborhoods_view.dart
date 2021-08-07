@@ -30,7 +30,9 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
         child: Text(
           "Neighborhoods:",
           style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
         ),
       ),
     ));
@@ -43,12 +45,13 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
             child: Text(
               key,
-              style: TextStyle(color: Colors.black, fontSize: 20),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary, fontSize: 20),
             ),
           ),
           trailing: Icon(
             Icons.arrow_forward_ios,
-            color: Colors.black,
+            color: Theme.of(context).iconTheme.color,
           ),
           onTap: () {
             Navigator.pushNamed(context, RoutePaths.NeighborhoodsLotsView,

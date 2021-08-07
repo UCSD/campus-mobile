@@ -162,7 +162,6 @@ class ParkingDataProvider extends ChangeNotifier {
     }
     _userDataProvider.userProfileModel!.selectedParkingLots = _parkingViewState;
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
-    print("After toggle: $selectedLots");
     notifyListeners();
   }
 

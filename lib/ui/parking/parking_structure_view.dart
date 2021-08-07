@@ -35,7 +35,9 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
         child: Text(
           "Parking Structure:",
           style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
         ),
       ),
     ));
@@ -54,13 +56,17 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
           child: Text(
             structures[i],
             style: TextStyle(
-                color: structureState ? ColorPrimary : Colors.black,
+                color: Theme.of(context)
+                    .colorScheme
+                    .secondary, // structureState ? ColorPrimary : Colors.black,
                 fontSize: 20),
           ),
         ),
         trailing: IconButton(
           icon: Icon(structureState ? Icons.cancel_rounded : Icons.add_rounded),
-          color: structureState ? ColorPrimary : Colors.black,
+          color: Theme.of(context)
+              .colorScheme
+              .secondary, // structureState ? ColorPrimary : Colors.black,
           onPressed: () {
             parkingDataProvider.toggleLot(structures[i], selectedLots);
           },

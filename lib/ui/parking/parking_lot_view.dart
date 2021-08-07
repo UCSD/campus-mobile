@@ -33,7 +33,9 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
         child: Text(
           "Parking Lots:",
           style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
         ),
       ),
     ));
@@ -51,15 +53,18 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
           child: Text(
             lots[i],
             style: TextStyle(
-                color: lotViewState ? ColorPrimary : Colors.black,
+                color: Theme.of(context)
+                    .colorScheme
+                    .secondary, // lotViewState ? ColorPrimary : Colors.black,
                 fontSize: 20),
           ),
         ),
         trailing: IconButton(
           icon: Icon(lotViewState ? Icons.cancel_rounded : Icons.add_rounded),
-          color: lotViewState ? ColorPrimary : Colors.black,
+          color: Theme.of(context)
+              .colorScheme
+              .secondary, // lotViewState ? ColorPrimary : Colors.black,
           onPressed: () {
-            print("Before: $selectedLots");
             parkingDataProvider.toggleLot(lots[i], selectedLots);
           },
         ),

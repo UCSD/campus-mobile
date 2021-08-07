@@ -94,12 +94,13 @@ class _ManageParkingViewState extends State<ManageParkingView> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             "${parkingType[i]}",
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary, fontSize: 20),
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          color: Colors.black,
+          color: Theme.of(context).iconTheme.color,
         ),
         onTap: () {
           if (i == 0) {

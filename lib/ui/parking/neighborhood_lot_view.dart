@@ -37,7 +37,9 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
         child: Text(
           "Parking Lots:",
           style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
         ),
       ),
     ));
@@ -55,12 +57,17 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
           child: Text(
             arguments[i],
             style: TextStyle(
-                color: lotState ? ColorPrimary : Colors.black, fontSize: 20),
+                color: Theme.of(context)
+                    .colorScheme
+                    .secondary, // lotState ? colorFromHex('#006A96') : Theme.of(context).colorScheme.secondary,
+                fontSize: 20),
           ),
         ),
         trailing: IconButton(
           icon: Icon(lotState ? Icons.cancel_rounded : Icons.add_rounded),
-          color: lotState ? ColorPrimary : Colors.black,
+          color: Theme.of(context)
+              .colorScheme
+              .secondary, // lotState ? colorFromHex('#006A96') : Theme.of(context).colorScheme.secondary,
           onPressed: () {
             parkingDataProvider.toggleLot(arguments[i], selectedLots);
           },
@@ -77,6 +84,14 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
       children: ListTile.divideTiles(tiles: list, context: context).toList(),
     );
   }
+}
+
+Color colorFromHex(String hexColor) {
+  final hexCode = hexColor.replaceAll('#', '');
+  if (hexColor.length == 6) {
+    hexColor = 'FF' + hexColor; // FF as the opacity value if you don't add it.
+  }
+  return Color(int.parse('FF$hexCode', radix: 16));
 }
 
 class ScreenArguments {
