@@ -28,7 +28,6 @@ class ParkingService {
 
       /// parse data
       _data = parkingModelFromJson(_response);
-      print(_data);
       _isLoading = false;
       return true;
     } catch (e) {
