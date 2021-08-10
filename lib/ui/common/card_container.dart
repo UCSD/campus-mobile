@@ -83,13 +83,26 @@ class CardContainer extends StatelessWidget {
           child: Text('An error occurred, please try again.'),
         );
       } else if (titleText == 'Finals') {
-        // TODO: Resolve alignment issues on cards without action buttons
+        var customErrorText = '';
+        if (errorText!.contains('Exception')) {
+          customErrorText =
+              'Your finals could not be displayed.\n\nIf the problem persists contact mobile@ucsd.edu';
+        } else {
+          customErrorText = 'No finals found.';
+        }
         return Padding(
           padding: const EdgeInsets.only(bottom: 42.0),
-          child: Text('No finals found.'),
+          child: Text(customErrorText),
         );
       } else if (titleText == 'Classes') {
-        return Text('No classes found.');
+        var customErrorText = '';
+        if (errorText!.contains('Exception')) {
+          customErrorText =
+              'Your classes could not be displayed.\n\nIf the problem persists contact mobile@ucsd.edu';
+        } else {
+          customErrorText = 'No finals found.';
+        }
+        return Text(customErrorText);
       } else {
         return Text('An error occurred, please try again.');
       }
