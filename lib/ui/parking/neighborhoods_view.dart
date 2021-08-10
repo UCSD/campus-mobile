@@ -15,11 +15,11 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
 
   @override
   Widget build(BuildContext context) => ContainerView(
-        child: buildingsList(context),
+        child: neighborhoodsList(context),
       );
-// builds the list of rooms to be put into ListView
+
   // builds the listview that will be put into ContainerView
-  Widget buildingsList(BuildContext context) {
+  Widget neighborhoodsList(BuildContext context) {
     Map<String, List<String>?>? neighborhoods =
         Provider.of<ParkingDataProvider>(context).getParkingMap();
     // creates a list that will hold the list of building names

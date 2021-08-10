@@ -20,13 +20,12 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
   Widget build(BuildContext context) {
     parkingDataProvider = Provider.of<ParkingDataProvider>(context);
     return ContainerView(
-      child: buildingsList(context),
+      child: lotsList(context),
     );
   }
 
-// builds the list of rooms to be put into ListView
   // builds the listview that will be put into ContainerView
-  Widget buildingsList(BuildContext context) {
+  Widget lotsList(BuildContext context) {
     List<String> arguments = widget.args;
 
     // creates a list that will hold the list of building names

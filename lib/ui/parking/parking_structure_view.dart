@@ -17,13 +17,13 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
   Widget build(BuildContext context) {
     parkingDataProvider = Provider.of<ParkingDataProvider>(context);
     return ContainerView(
-      child: buildingsList(context),
+      child: structureList(context),
     );
   }
 
 // builds the list of rooms to be put into ListView
   // builds the listview that will be put into ContainerView
-  Widget buildingsList(BuildContext context) {
+  Widget structureList(BuildContext context) {
     List<String> structures =
         Provider.of<ParkingDataProvider>(context).getStructures();
 

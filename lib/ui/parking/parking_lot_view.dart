@@ -17,13 +17,12 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
   Widget build(BuildContext context) {
     parkingDataProvider = Provider.of<ParkingDataProvider>(context);
     return ContainerView(
-      child: buildingsList(context),
+      child: parkingLotsList(context),
     );
   }
 
-// builds the list of rooms to be put into ListView
   // builds the listview that will be put into ContainerView
-  Widget buildingsList(BuildContext context) {
+  Widget parkingLotsList(BuildContext context) {
     List<String> lots = Provider.of<ParkingDataProvider>(context).getLots();
     // creates a list that will hold the list of building names
     List<Widget> list = [];
