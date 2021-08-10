@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/last_updated_widget.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -62,36 +63,54 @@ class FinalsCard extends StatelessWidget {
 
   Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
       DateTime? lastUpdated, String? nextDayWithClasses, BuildContext context) {
-    List<Widget> listToReturn = [];
-    finalsData.forEach((key, value) {
-      for (SectionData data in value) {
-        listToReturn.add(ListTile(
-          title: buildWeekdayText(abbrevToFullWeekday(data.days)),
-          subtitle: Column(
-            children: [
-              buildClassTitle(data.subjectCode! + ' ' + data.courseCode!),
-              buildTimeRow(data.time),
-              buildClassTitle(data.courseTitle!),
-              buildLocationRow(data.building! + ' ' + data.room!),
-            ],
-            crossAxisAlignment: CrossAxisAlignment.start,
+    try {
+      List<Widget> listToReturn = [];
+      finalsData.forEach((key, value) {
+        for (SectionData data in value) {
+          listToReturn.add(ListTile(
+            title: buildWeekdayText(abbrevToFullWeekday(data.days)),
+            subtitle: Column(
+              children: [
+                buildClassTitle(data.subjectCode! + ' ' + data.courseCode!),
+                buildTimeRow(data.time),
+                buildClassTitle(data.courseTitle!),
+                buildLocationRow(data.building! + ' ' + data.room!),
+              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+          ));
+        }
+      });
+      listToReturn =
+          ListTile.divideTiles(tiles: listToReturn, context: context).toList();
+      listToReturn.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+          child: LastUpdatedWidget(time: lastUpdated),
+        ),
+      );
+      return ListView(
+        physics: NeverScrollableScrollPhysics(),
+        children: listToReturn,
+        shrinkWrap: true,
+      );
+    } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          e, StackTrace.fromString(e.toString()),
+          reason: "Finals Card: Failed to build card content.", fatal: false);
+      return Container(
+        width: double.infinity,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 32, bottom: 48),
+            child: Container(
+              child: Text(
+                  "Your finals could not be displayed.\n\nIf the problem persists contact mobile@ucsd.edu"),
+            ),
           ),
-        ));
-      }
-    });
-    listToReturn =
-        ListTile.divideTiles(tiles: listToReturn, context: context).toList();
-    listToReturn.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-        child: LastUpdatedWidget(time: lastUpdated),
-      ),
-    );
-    return ListView(
-      physics: NeverScrollableScrollPhysics(),
-      children: listToReturn,
-      shrinkWrap: true,
-    );
+        ),
+      );
+    }
   }
 
   Widget buildClassTitle(String title) {

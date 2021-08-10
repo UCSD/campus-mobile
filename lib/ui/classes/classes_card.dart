@@ -7,6 +7,7 @@ import 'package:campus_mobile_experimental/ui/classes/upcoming_classes.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/last_updated_widget.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -59,48 +60,66 @@ class ClassScheduleCard extends StatelessWidget {
 
   Widget buildClassScheduleCard(List<SectionData> courseData,
       int selectedCourse, DateTime? lastUpdated, String nextDayWithClasses) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4.0, top: 4.0),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            flex: 5,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: IntrinsicHeight(
-                child: Column(
-                  children: [
-                    buildWeekdayText(nextDayWithClasses),
-                    buildClassTitle(courseData[selectedCourse].subjectCode! +
-                        ' ' +
-                        courseData[selectedCourse].courseCode!),
-                    buildClassType(courseData[selectedCourse].meetingType!),
-                    buildTimeRow(courseData[selectedCourse].time),
-                    buildLocationRow(courseData[selectedCourse].building! +
-                        ' ' +
-                        courseData[selectedCourse].room!),
-                    buildGradeEvaluationRow(
-                        courseData[selectedCourse].gradeOption),
-                    Flexible(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 4.0, top: 24.0),
-                        child: LastUpdatedWidget(time: lastUpdated),
+    try {
+      return Padding(
+        padding: const EdgeInsets.only(left: 4.0, top: 4.0),
+        child: Row(
+          children: <Widget>[
+            Flexible(
+              flex: 5,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      buildWeekdayText(nextDayWithClasses),
+                      buildClassTitle(courseData[selectedCourse].subjectCode! +
+                          ' ' +
+                          courseData[selectedCourse].courseCode!),
+                      buildClassType(courseData[selectedCourse].meetingType!),
+                      buildTimeRow(courseData[selectedCourse].time),
+                      buildLocationRow(courseData[selectedCourse].building! +
+                          ' ' +
+                          courseData[selectedCourse].room!),
+                      buildGradeEvaluationRow(
+                          courseData[selectedCourse].gradeOption),
+                      Flexible(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0, top: 24.0),
+                          child: LastUpdatedWidget(time: lastUpdated),
+                        ),
                       ),
-                    ),
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
                 ),
               ),
             ),
+            Flexible(
+              flex: 2,
+              child: UpcomingCoursesList(),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          e, StackTrace.fromString(e.toString()),
+          reason: "Classes Card: Failed to build card content.", fatal: false);
+      return Container(
+        width: double.infinity,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 32, bottom: 48),
+            child: Container(
+              child: Text(
+                  "Your classes could not be displayed.\n\nIf the problem persists contact mobile@ucsd.edu"),
+            ),
           ),
-          Flexible(
-            flex: 2,
-            child: UpcomingCoursesList(),
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    }
   }
 
   Widget buildWeekdayText(String nextDayWithClasses) {
