@@ -163,7 +163,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
-
     for (ClassData classData in enrolledCourses) {
       for (SectionData sectionData in classData.sectionData!) {
         /// copy over info from [ClassData] object and put into [SectionData] object
@@ -193,11 +192,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     for (List<SectionData> listOfClasses in _enrolledClasses!.values.toList()) {
       listOfClasses.sort((a, b) => _compare(a, b));
     }
-
     for (List<SectionData> listOfFinals in _finals!.values.toList()) {
       listOfFinals.sort((a, b) => _compare(a, b));
     }
-
     for (List<SectionData> listOfMidterms in _midterms!.values.toList()) {
       listOfMidterms.sort((a, b) => _compare(a, b));
       listOfMidterms.sort((a, b) => _compareMidterms(a, b));
@@ -267,29 +264,40 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   List<SectionData> get upcomingCourses {
-    /// get weekday and return [List<SectionData>] associated with current weekday
-    List<SectionData> listToReturn = [];
-    String today = DateFormat('EEEE')
-        .format(DateTime.now())
-        .toString()
-        .toUpperCase()
-        .substring(0, 2);
-    nextDayWithClass = DateFormat('EEEE').format(DateTime.now()).toString();
-
-    /// if no classes are scheduled for today then find the next day with classes
-    int daysToAdd = 1;
-    while (_enrolledClasses![today]!.isEmpty) {
-      today = DateFormat('EEEE')
-          .format(DateTime.now().add(Duration(days: daysToAdd)))
+    try {
+      /// get weekday and return [List<SectionData>] associated with current weekday
+      List<SectionData> listToReturn = [];
+      String today = DateFormat('EEEE')
+          .format(DateTime.now())
           .toString()
           .toUpperCase()
           .substring(0, 2);
-      nextDayWithClass = DateFormat('EEEE')
-          .format(DateTime.now().add(Duration(days: daysToAdd)));
-      daysToAdd += 1;
+      nextDayWithClass = DateFormat('EEEE').format(DateTime.now()).toString();
+
+      /// if no classes are scheduled for today then find the next day with classes
+      int daysToAdd = 1;
+
+      while (_enrolledClasses![today]!.isEmpty && daysToAdd <= 7) {
+        today = DateFormat('EEEE')
+            .format(DateTime.now().add(Duration(days: daysToAdd)))
+            .toString()
+            .toUpperCase()
+            .substring(0, 2);
+        nextDayWithClass = DateFormat('EEEE')
+            .format(DateTime.now().add(Duration(days: daysToAdd)));
+        daysToAdd += 1;
+      }
+
+      if (_enrolledClasses![today]!.isNotEmpty) {
+        listToReturn.addAll(_enrolledClasses![today]!);
+      } else {
+        listToReturn.addAll([]);
+      }
+      return listToReturn;
+    } catch (err) {
+      print(err);
+      return [];
     }
-    listToReturn.addAll(_enrolledClasses![today]!);
-    return listToReturn;
   }
 
   set userDataProvider(UserDataProvider value) {
