@@ -29,7 +29,7 @@ dependencies:
       url: https://github.com/UCSD/flutter_blue.git
       ref: 470b128cd463373d0ec4b668d5b4f449dc728d72
   flutter_linkify: 5.0.2
-  flutter_local_notifications: 6.0.0
+  flutter_local_notifications: 6.1.1
   flutter_secure_storage: 4.2.0
   flutter_sticky_header: 0.6.0
   get: 4.1.4
