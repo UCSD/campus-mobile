@@ -43,8 +43,7 @@ class CircularParkingIndicators extends StatelessWidget {
       if (model.availability != null) {
         listOfCircularParkingInfo.add(buildCircularParkingInfo(
             Provider.of<ParkingDataProvider>(context).spotTypeMap![spot],
-            Provider.of<ParkingDataProvider>(context)
-                .getApproxNumOfOpenSpots(model.locationName),
+            model.availability![spot],
             context));
       }
     }
@@ -58,8 +57,25 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Widget buildCircularParkingInfo(
       Spot? spotType, dynamic locationData, BuildContext context) {
-    int open = locationData["Open"] == null ? 0 : locationData["Open"];
-    int total = locationData["Total"] == null ? 0 : locationData["Total"];
+    int open;
+    int total;
+    if (locationData != null) {
+      if (locationData["Open"] is String) {
+        open = locationData["Open"] == "" ? 0 : int.parse(locationData["Open"]);
+      } else {
+        open = locationData["Open"] == null ? 0 : locationData["Open"];
+      }
+      if (locationData["Total"] is String) {
+        total =
+            locationData["Total"] == "" ? 0 : int.parse(locationData["Total"]);
+      } else {
+        total = locationData["Total"] == null ? 0 : locationData["Total"];
+      }
+    } else {
+      open = 0;
+      total = 0;
+    }
+
     return locationData != null
         ? Expanded(
             child: Column(
