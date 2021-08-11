@@ -43,7 +43,8 @@ class CircularParkingIndicators extends StatelessWidget {
       if (model.availability != null) {
         listOfCircularParkingInfo.add(buildCircularParkingInfo(
             Provider.of<ParkingDataProvider>(context).spotTypeMap![spot],
-            model.availability![spot],
+            Provider.of<ParkingDataProvider>(context)
+                .getApproxNumOfOpenSpots(model.locationName),
             context));
       }
     }
@@ -57,26 +58,8 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Widget buildCircularParkingInfo(
       Spot? spotType, dynamic locationData, BuildContext context) {
-    int open;
-    int total;
-    if (locationData != null) {
-      if (locationData["Open"] is String) {
-        open = int.parse(locationData["Open"]);
-      } else {
-        open = locationData["Open"] == null ? 0 : locationData["Open"];
-      }
-
-      if (locationData["Total"] is String) {
-        total = int.parse(locationData["Total"]);
-      } else {
-        total = locationData["Total"] == null ? 0 : locationData["Total"];
-      }
-    } else {
-      open = 0;
-      total = 0;
-    }
-
-    //print("SPOT TYPE: ${spotType!.text}");
+    int open = locationData["Open"] == null ? 0 : locationData["Open"];
+    int total = locationData["Total"] == null ? 0 : locationData["Total"];
     return locationData != null
         ? Expanded(
             child: Column(
@@ -224,22 +207,25 @@ class CircularParkingIndicators extends StatelessWidget {
   }
 
   Widget buildHistoricInfo() {
-    if(model.locationProvider == "Historic") {
+    if (model.locationProvider == "Historic") {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error_outline, color: Colors.black,),
-          Padding(padding: EdgeInsets.only(right: 1.0),),
+          Icon(
+            Icons.error_outline,
+            color: Colors.black,
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: 1.0),
+          ),
           Text(
             "No Live Data. Estimated availability shown.",
           )
         ],
       );
-    }
-    else {
+    } else {
       return Text("");
     }
-
   }
 
   Widget buildSpotsAvailableText(BuildContext context) {
