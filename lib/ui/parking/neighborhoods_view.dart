@@ -10,7 +10,6 @@ class NeighborhoodsView extends StatefulWidget {
 }
 
 class _NeighborhoodsViewState extends State<NeighborhoodsView> {
-  List<bool> _added = [];
   List<bool> selected = List.filled(5, false);
 
   @override

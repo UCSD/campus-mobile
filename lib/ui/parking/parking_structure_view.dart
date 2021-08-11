@@ -21,7 +21,6 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
     );
   }
 
-// builds the list of rooms to be put into ListView
   // builds the listview that will be put into ContainerView
   Widget structureList(BuildContext context) {
     List<String> structures =
