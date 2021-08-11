@@ -98,7 +98,7 @@ class CircularParkingIndicators extends StatelessWidget {
                             percent: open / total,
                             center: Text(
                                 ((open / total) * 100).round().toString() + "%",
-                                style: TextStyle(fontSize: 25)),
+                                style: TextStyle(fontSize: 22)),
                             circularStrokeCap: CircularStrokeCap.round,
                             backgroundColor: colorFromHex('#EDECEC'),
                             progressColor: getColor(open / total),
@@ -151,7 +151,7 @@ class CircularParkingIndicators extends StatelessWidget {
                             animation: false,
                             lineWidth: 7.5,
                             percent: 0.0,
-                            center: Text("N/A", style: TextStyle(fontSize: 25)),
+                            center: Text("N/A", style: TextStyle(fontSize: 22)),
                             backgroundColor: colorFromHex('#EDECEC'),
                           ),
                         ),
