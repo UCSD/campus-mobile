@@ -74,11 +74,12 @@ class VentilationRoomsState extends State<VentilationRooms> {
         trailing: Icon(
           !_added[i] ? Icons.add_circle_outline_outlined : Icons.cancel,
         ),
-        onTap: () {
+        onTap: () async {
           // removes or adds a location depending if the user already added it
+
           !_added[i]
-              ? _ventilationDataProvider.addLocation(arguments[i])
-              : _ventilationDataProvider.removeLocation(arguments[i]);
+              ? await _ventilationDataProvider.addLocation(arguments[i])
+              : await _ventilationDataProvider.removeLocation(arguments[i]);
 
           setState(() {
             _added[i] = !_added[i];

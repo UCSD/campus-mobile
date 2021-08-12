@@ -103,49 +103,57 @@ class VentilationDataProvider extends ChangeNotifier {
 
   /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
   Future<void> addLocation(String? roomID) async {
-    // creates the bfrID and then adds the ID to the user's list
-    String bfrID = buildingID! + '/' + floorID! + '/' + roomID!;
+    try {
+      // creates the bfrID and then adds the ID to the user's list
+      String bfrID = buildingID! + '/' + floorID! + '/' + roomID!;
 
-    if (ventilationIDs.isNotEmpty) {
-      /// MAYBE CHANGE THIS LATER
-      ventilationIDs = [];
-      ventilationDataModels = [];
-      _userDataProvider!.userProfileModel!.selectedVentilationLocations = [];
+      if (ventilationIDs.isNotEmpty) {
+        /// MAYBE CHANGE THIS LATER
+        ventilationIDs = [];
+        ventilationDataModels = [];
+        _userDataProvider!.userProfileModel!.selectedVentilationLocations = [];
+        _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
+
+        notifyListeners();
+      }
+
+      _userDataProvider!.userProfileModel!.selectedVentilationLocations!
+          .add(bfrID);
       _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
 
+      ///TODO: MIGHT BE GOOD TO HAVE SOME CATCH IN CASE THE FETCH RETURNS FALSE
+      // calls ventilationService to get this bfrID's data and adds it to the list
+      await _ventilationService.fetchData(bfrID);
+      ventilationDataModels.add(_ventilationService.data);
+      ventilationIDs =
+          _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
+
       notifyListeners();
+    } catch (e) {
+      print("Error while adding location:  $e");
     }
-
-    _userDataProvider!.userProfileModel!.selectedVentilationLocations!
-        .add(bfrID);
-    _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
-
-    ///TODO: MIGHT BE GOOD TO HAVE SOME CATCH IN CASE THE FETCH RETURNS FALSE
-    // calls ventilationService to get this bfrID's data and adds it to the list
-    await _ventilationService.fetchData(bfrID);
-    ventilationDataModels.add(_ventilationService.data);
-    ventilationIDs =
-        _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
-
-    notifyListeners();
   }
 
   /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
   Future<void> removeLocation(String? roomID) async {
-    // creates the bfrID and then removes the ID to the user's list
-    String bfrID = buildingID! + '/' + floorID! + '/' + roomID!;
-    _userDataProvider!.userProfileModel!.selectedVentilationLocations!
-        .remove(bfrID);
-    ventilationIDs =
-        _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
-    _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
+    try {
+      // creates the bfrID and then removes the ID to the user's list
+      String bfrID = buildingID! + '/' + floorID! + '/' + roomID!;
+      _userDataProvider!.userProfileModel!.selectedVentilationLocations!
+          .remove(bfrID);
+      ventilationIDs =
+          _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
+      _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
 
-    ///TODO: MIGHT BE GOOD TO HAVE SOME CATCH IN CASE THE FETCH RETURNS FALSE
-    // calls ventilationService to get this bfrID's data and removes it from the list
-    await _ventilationService.fetchData(bfrID);
-    ventilationDataModels.remove(_ventilationService.data);
+      ///TODO: MIGHT BE GOOD TO HAVE SOME CATCH IN CASE THE FETCH RETURNS FALSE
+      // calls ventilationService to get this bfrID's data and removes it from the list
+      await _ventilationService.fetchData(bfrID);
+      ventilationDataModels.remove(_ventilationService.data);
 
-    notifyListeners();
+      notifyListeners();
+    } catch (e) {
+      print("Error while removing location:  $e");
+    }
   }
 
   void addBuildingID(String id) {
@@ -157,7 +165,7 @@ class VentilationDataProvider extends ChangeNotifier {
   }
 
   String bfrID(String roomID) {
-    return buildingID! + floorID! + roomID;
+    return buildingID! + '/' + floorID! + '/' + roomID;
   }
 
   // List<VentilationLocationsModel?> makeOrderedList(List<String?>? order) {

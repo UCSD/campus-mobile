@@ -53,6 +53,7 @@ class VentilationService {
         }
       }
       _error = e.toString();
+      print(_error);
       _isLoading = false;
       return false;
     }

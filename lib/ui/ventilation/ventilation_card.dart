@@ -51,9 +51,11 @@ class _VentilationCardState extends State<VentilationCard> {
     List<Widget> displays = [];
     try {
       for (VentilationDataModel? model in models) {
-        displays.add(VentilationDisplay(
-          model: model,
-        ));
+        if (model != null) {
+          displays.add(VentilationDisplay(
+            model: model,
+          ));
+        }
       }
 
       if (displays.isEmpty) {
@@ -62,19 +64,20 @@ class _VentilationCardState extends State<VentilationCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "No Locations to Display",
+              "No Location to Display",
               style: TextStyle(color: Colors.black, fontSize: 24),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: Text(
-                "Add Locations via 'Manage Locations'",
+                "Add a Location via 'Manage Locations'",
                 style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
               ),
             ),
           ],
         ));
       }
+      print("About to return displays: $displays");
       return Column(
         children: <Widget>[
           Container(
@@ -95,6 +98,7 @@ class _VentilationCardState extends State<VentilationCard> {
         ],
       );
     } catch (e) {
+      print(e);
       return Container(
         width: double.infinity,
         child: Center(
