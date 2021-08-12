@@ -4,6 +4,8 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/ventilation.dart';
 import 'package:flutter/material.dart';
 
+import '../../app_constants.dart';
+
 class VentilationDataProvider extends ChangeNotifier {
   VentilationDataProvider() {
     /// DEFAULT STATES
@@ -46,6 +48,12 @@ class VentilationDataProvider extends ChangeNotifier {
       ///replace old list of lots with new one
       _ventilationLocationModels = mapOfVentilationLocations;
     } else {
+      if (_error != null &&
+          _error!.contains(ErrorConstants.invalidBearerToken)) {
+        if (await _ventilationService.getNewToken()) {
+          fetchVentilationLocations();
+        }
+      }
       _error = _ventilationService.error;
     }
     _isLoading = false;
@@ -69,6 +77,15 @@ class VentilationDataProvider extends ChangeNotifier {
         print("ID: $bfrID");
         if (await _ventilationService.fetchData(bfrID!)) {
           tempModels.add(_ventilationService.data);
+        } else {
+          if (_error != null &&
+              _error!.contains(ErrorConstants.invalidBearerToken)) {
+            if (await _ventilationService.getNewToken()) {
+              fetchVentilationData();
+            }
+          }
+
+          _error = _ventilationService.error;
         }
       }
     }
@@ -87,7 +104,7 @@ class VentilationDataProvider extends ChangeNotifier {
   /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
   Future<void> addLocation(String? roomID) async {
     // creates the bfrID and then adds the ID to the user's list
-    String bfrID = buildingID! + floorID! + roomID!;
+    String bfrID = buildingID! + '/' + floorID! + '/' + roomID!;
 
     if (ventilationIDs.isNotEmpty) {
       /// MAYBE CHANGE THIS LATER
@@ -116,7 +133,7 @@ class VentilationDataProvider extends ChangeNotifier {
   /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
   Future<void> removeLocation(String? roomID) async {
     // creates the bfrID and then removes the ID to the user's list
-    String bfrID = buildingID! + floorID! + roomID!;
+    String bfrID = buildingID! + '/' + floorID! + '/' + roomID!;
     _userDataProvider!.userProfileModel!.selectedVentilationLocations!
         .remove(bfrID);
     ventilationIDs =

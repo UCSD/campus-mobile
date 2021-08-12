@@ -20,17 +20,19 @@ class VentilationService {
     "accept": "application/json",
   };
   final String locationsEndpoint =
-      "https://ucsd-its-sandbox-wts-charles.s3.us-west-1.amazonaws.com/mock-api/ntplln-mock-7.json";
+      "https://api-qa.ucsd.edu:8243/buildingstatus/v1.0.0/buildings";
   final String dataBaseEndpoint =
-      "https://ucsd-its-sandbox-wts-charles.s3.us-west-1.amazonaws.com/mock-api/ntplln-mock-2-data.json";
+      "https://api-qa.ucsd.edu:8243/buildingstatus/v1.0.0/buildings";
 
   Future<bool> fetchLocations() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
+      print("Before fetch locations:" + locationsEndpoint);
       String _response =
           await (_networkHelper.authorizedFetch(locationsEndpoint, headers));
+      print("After fetch locations:" + locationsEndpoint);
 
       /// parse data
       final data = ventilationLocationsModelFromJson(_response);
@@ -42,9 +44,11 @@ class VentilationService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      print("IN CARCH");
+      print("IN CATCH");
       if (e.toString().contains("401")) {
+        print("Getting new token from fetchLocations");
         if (await getNewToken()) {
+          print("Getting new token from fetchLocations");
           return await fetchLocations();
         }
       }
@@ -59,15 +63,24 @@ class VentilationService {
     _isLoading = true;
     try {
       /// fetch data, BUT FOR NOW THIS WILL NOT WORK WITH MOCK JSON
-      // String _response =
-      //     await _networkHelper.fetchData(dataBaseEndpoint + '/' + bfrID);
-      String _response = await _networkHelper.fetchData(dataBaseEndpoint);
+      print("Before fetching data" + dataBaseEndpoint + '/' + bfrID);
+      String _response = await _networkHelper.authorizedFetch(
+          dataBaseEndpoint + '/' + bfrID, headers);
+      print("After fetching data" + dataBaseEndpoint + '/' + bfrID);
+      // String _response = await _networkHelper.fetchData(dataBaseEndpoint);
 
       /// parse data
       final data = ventilationDataModelFromJson(_response);
       _data = data;
       return true;
     } catch (e) {
+      if (e.toString().contains("401")) {
+        print("Getting new token from fetchData");
+        if (await getNewToken()) {
+          print("Got new token from fetchData");
+          return await fetchData(bfrID);
+        }
+      }
       _error = e.toString();
       _isLoading = false;
       return false;

@@ -20,7 +20,7 @@ class VentilationDataModel {
   String? buildingName;
   String? buildingFloorName;
   String? buildingRoomName;
-  String? currentTemperature;
+  int? currentTemperature;
   bool? windowsOpen;
   bool? hvacActive;
 
