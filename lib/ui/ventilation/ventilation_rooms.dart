@@ -67,19 +67,19 @@ class VentilationRoomsState extends State<VentilationRooms> {
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
-            'Room ${arguments[i]}',
+            '${arguments[i]}',
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
         ),
         trailing: Icon(
           !_added[i] ? Icons.add_circle_outline_outlined : Icons.cancel,
         ),
-        onTap: () async {
+        onTap: () {
           // removes or adds a location depending if the user already added it
 
           !_added[i]
-              ? await _ventilationDataProvider.addLocation(arguments[i])
-              : await _ventilationDataProvider.removeLocation(arguments[i]);
+              ? _ventilationDataProvider.addLocation(arguments[i])
+              : _ventilationDataProvider.removeLocation(arguments[i]);
 
           setState(() {
             _added[i] = !_added[i];

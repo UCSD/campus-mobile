@@ -353,8 +353,7 @@ List<SingleChildWidget> dependentServices = [
       create: (_) {
     print("CreateProvider: VentilationDataProvider");
     var ventilationDataProvider = VentilationDataProvider();
-    ventilationDataProvider.fetchVentilationLocations();
-    ventilationDataProvider.fetchVentilationData();
+    ventilationDataProvider.fetchLocationsAndData();
     return ventilationDataProvider;
   }, update: (_, userDataProvider, ventilationDataProvider) {
     print("UpdateProvider: ventilationDataProvider");

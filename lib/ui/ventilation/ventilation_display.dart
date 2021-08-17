@@ -24,43 +24,50 @@ class VentilationDisplay extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
-              child: Text(
-                model!.buildingName!.toString(),
-                style: TextStyle(color: Colors.grey[600], fontSize: 20),
-                textAlign: TextAlign.left,
-              ),
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
+        Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+          ),
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(
+                    right: 25,
+                  ),
+                  child: Text(
+                    model!.buildingName!.toString(),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 25,
+                  ),
+                  child: Text(
+                    model!.buildingRoomName!.toString(),
+                    textAlign: TextAlign.right,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                  ),
+                ),
+              ],
             ),
-            Container(
-              child: Text(
-                model!.buildingRoomName!.toString(),
-                textAlign: TextAlign.right,
-                style: TextStyle(color: Colors.grey[600], fontSize: 20),
-              ),
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-            )
-          ],
+          ),
         ),
         Row(
           children: <Widget>[
             Container(
               child: Text(
-                model!.buildingFloorName!.toString(),
-                style: TextStyle(color: Colors.grey[600], fontSize: 15),
+                "${model!.buildingFloorName!} Floor",
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
                 textAlign: TextAlign.left,
               ),
               padding: EdgeInsets.only(
-                left: 10,
+                left: 16,
                 right: 10,
               ),
             ),
