@@ -64,10 +64,10 @@ class VentilationService {
     _isLoading = true;
     try {
       /// fetch data, BUT FOR NOW THIS WILL NOT WORK WITH MOCK JSON
-      print("Before fetching data" + dataBaseEndpoint + '/' + bfrID);
+      print("Before fetching data: " + dataBaseEndpoint + '/' + bfrID);
       String _response = await _networkHelper.authorizedFetch(
           dataBaseEndpoint + '/' + bfrID, headers);
-      print("After fetching data" + dataBaseEndpoint + '/' + bfrID);
+      print("After fetching data: " + dataBaseEndpoint + '/' + bfrID);
       // String _response = await _networkHelper.fetchData(dataBaseEndpoint);
 
       /// parse data
@@ -75,6 +75,8 @@ class VentilationService {
       _data = data;
       return true;
     } catch (e) {
+      print("ERROR in ventilation services");
+      print(e);
       if (e.toString().contains("401")) {
         print("Getting new token from fetchData");
         if (await getNewToken()) {

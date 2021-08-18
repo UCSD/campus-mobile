@@ -31,6 +31,62 @@ class VentilationDataProvider extends ChangeNotifier {
   /// SERVICES
   late VentilationService _ventilationService;
 
+  void fetchLocationsAndData() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    /// creating  new map ensures we remove all unsupported locations
+    Map<String?, VentilationLocationsModel> mapOfVentilationLocations =
+        Map<String?, VentilationLocationsModel>();
+
+    if (await _ventilationService.fetchLocations()) {
+      for (VentilationLocationsModel model in _ventilationService.locations!) {
+        mapOfVentilationLocations[model.buildingId] = model;
+      }
+
+      ///replace old list of lots with new one
+      _ventilationLocationModels = mapOfVentilationLocations;
+    } else {
+      if (_error != null &&
+          _error!.contains(ErrorConstants.invalidBearerToken)) {
+        if (await _ventilationService.getNewToken()) {
+          fetchVentilationLocations();
+        }
+      }
+      _error = _ventilationService.error;
+    }
+
+    // create new list of ventilation data to display
+    List<VentilationDataModel?> tempModels = [];
+
+    if (_userDataProvider != null) {
+      ventilationIDs =
+          _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
+
+      for (String? bfrID in ventilationIDs) {
+        print("ID: $bfrID");
+        if (await _ventilationService.fetchData(bfrID!)) {
+          tempModels.add(_ventilationService.data);
+        } else {
+          if (_error != null &&
+              _error!.contains(ErrorConstants.invalidBearerToken)) {
+            if (await _ventilationService.getNewToken()) {
+              fetchVentilationData();
+            }
+          }
+
+          _error = _ventilationService.error;
+        }
+      }
+    }
+
+    ventilationDataModels = tempModels;
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
   void fetchVentilationLocations() async {
     _isLoading = true;
     _error = null;
@@ -56,6 +112,7 @@ class VentilationDataProvider extends ChangeNotifier {
       }
       _error = _ventilationService.error;
     }
+
     _isLoading = false;
     notifyListeners();
   }
@@ -167,36 +224,6 @@ class VentilationDataProvider extends ChangeNotifier {
   String bfrID(String roomID) {
     return buildingID! + '/' + floorID! + '/' + roomID;
   }
-
-  // List<VentilationLocationsModel?> makeOrderedList(List<String?>? order) {
-  //   if (order == null) {
-  //     return _ventilationLocationModels!.values.toList();
-  //   }
-  //
-  //   ///create an empty list that will be returned
-  //   List<VentilationLocationsModel?> orderedListOfLots = [];
-  //   Map<String?, VentilationLocationsModel> tempMap =
-  //       Map<String?, VentilationLocationsModel>();
-  //   tempMap.addAll(_ventilationLocationModels!);
-  //
-  //   /// remove lots as we add them to the ordered list
-  //   for (String? lotName in order) {
-  //     orderedListOfLots.add(tempMap.remove(lotName));
-  //   }
-  //
-  //   /// add remaining lots
-  //   orderedListOfLots.addAll(tempMap.values);
-  //   return orderedListOfLots;
-  // }
-  //
-  // void reorderLocations(List<String?>? order) {
-  //   ///edit the profile and upload user selected lots
-  //   _userDataProvider.userProfileModel!.selectedVentilationLocations = order;
-  //   // Commented out as this method updates the userDataProvider before it is set up,
-  //   // posting null userProfile, was causing issues for parking preferences
-  //   // _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
-  //   notifyListeners();
-  // }
 
   ///This setter is only used in provider to supply and updated UserDataProvider object
   set userDataProvider(UserDataProvider value) {

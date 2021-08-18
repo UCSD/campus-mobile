@@ -94,8 +94,6 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageAvailabilityView();
         });
-
-      // NEW CODE
       case RoutePaths.VentilationBuildings:
         List<VentilationLocationsModel> data =
             settings.arguments as List<VentilationLocationsModel>;
@@ -115,8 +113,6 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return VentilationRooms(data);
         });
-      // NEW CODE
-
       case RoutePaths.DiningViewAll:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
