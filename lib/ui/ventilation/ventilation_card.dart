@@ -81,7 +81,7 @@ class _VentilationCardState extends State<VentilationCard> {
       return Column(
         children: <Widget>[
           Container(
-            height: 150,
+            height: 140,
             child: PageView(
               controller: _controller,
               children: displays,
