@@ -21,51 +21,58 @@ class VentilationDisplay extends StatelessWidget {
         : windowText = 'Windows are closed';
 
     hvac ? hvacText = 'HVAC is active' : hvacText = 'HVAC is off';
-
     return Column(
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
-              child: Text(
-                model!.buildingName!.toString(),
-                style: TextStyle(color: Colors.grey[600], fontSize: 20),
-                textAlign: TextAlign.left,
-              ),
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-            ),
-            Container(
-              child: Text(
-                model!.buildingRoomName!.toString(),
-                textAlign: TextAlign.right,
-                style: TextStyle(color: Colors.grey[600], fontSize: 20),
-              ),
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-            )
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            Container(
-              child: Text(
-                model!.buildingFloorName!.toString(),
-                style: TextStyle(color: Colors.grey[600], fontSize: 15),
-                textAlign: TextAlign.left,
-              ),
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
+        Column(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: FittedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0, right: 40.0),
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          model!.buildingName!.toString(),
+                          style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Text(
+                        model!.buildingRoomName!.toString(),
+                        textAlign: TextAlign.right,
+                        style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                       ),
+                    ),
+                  ],
+                ),
               ),
             ),
+            Row(
+              children: <Widget>[
+                Container(
+                  child: Text(
+                    model!.buildingFloorName!.toString(),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 15),
+                    textAlign: TextAlign.left,
+                  ),
+                  padding: EdgeInsets.only(
+                    left: 15,
+                    right: 10,
+                  ),
+                ),
+              ],
+            ),
           ],
+
         ),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
