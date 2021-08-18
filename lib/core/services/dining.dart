@@ -20,15 +20,18 @@ class DiningService {
       "https://6ypg6mcvba.execute-api.us-west-2.amazonaws.com/dev/v3/dining/";
 
   Future<bool> fetchData() async {
+    print("ENDPOINT: $baseEndpoint");
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response =
           await _networkHelper.fetchData(baseEndpoint + 'locations');
+      print("RESPONSE: $_response");
 
       /// parse data
       final data = diningModelFromJson(_response);
+      print("DINING DATA: $data");
       _isLoading = false;
 
       _data = data;
@@ -36,6 +39,7 @@ class DiningService {
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
+      print("ERROR: $_error");
       return false;
     }
   }

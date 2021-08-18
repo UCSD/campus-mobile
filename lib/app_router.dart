@@ -117,11 +117,11 @@ class Router {
                   disclaimer: disclaimer,
                   disclaimerEmail: disclaimerEmail,
                 ));
-      case RoutePaths.ManageParkingView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ManageParkingView();
-        });
+      // case RoutePaths.ManageParkingView:
+      //   return MaterialPageRoute(builder: (_) {
+      //     Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+      //     return ManageParkingView();
+      //   });
       case RoutePaths.SpotTypesView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
