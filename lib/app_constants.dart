@@ -65,7 +65,7 @@ class RouteTitles {
     'parking/neighborhoods_view': 'Parking: Manage Lots',
     'parking/parking_lots_view': 'Parking: Manage Lots',
     'parking/parking_structure_view': 'Parking: Manage Lots',
-    'parking/spot_types_view': 'Parking',
+    'parking/spot_types_view': 'Parking: Manage Spots',
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
