@@ -69,6 +69,11 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
               .colorScheme
               .secondary, // structureState ? ColorPrimary : Colors.black,
           onPressed: () {
+            if(selectedLots == 10 && !structureState) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
+              ));
+            }
             parkingDataProvider.toggleLot(structures[i], selectedLots);
           },
         ),

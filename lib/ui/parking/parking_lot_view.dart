@@ -66,6 +66,11 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
               .colorScheme
               .secondary, // lotViewState ? ColorPrimary : Colors.black,
           onPressed: () {
+            if(selectedLots == 10 && !lotViewState) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
+              ));
+            }
             parkingDataProvider.toggleLot(lots[i], selectedLots);
           },
         ),

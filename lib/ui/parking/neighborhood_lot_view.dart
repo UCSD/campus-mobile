@@ -70,6 +70,11 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
               .colorScheme
               .secondary, // lotState ? colorFromHex('#006A96') : Theme.of(context).colorScheme.secondary,
           onPressed: () {
+            if(selectedLots == 10 && !lotState) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
+              ));
+            }
             parkingDataProvider.toggleLot(arguments[i], selectedLots);
           },
         ),
