@@ -12,6 +12,7 @@ class ParkingLotsView extends StatefulWidget {
 
 class _ParkingLotViewState extends State<ParkingLotsView> {
   late ParkingDataProvider parkingDataProvider;
+  bool showedScaffold = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,10 +67,13 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
               .colorScheme
               .secondary, // lotViewState ? ColorPrimary : Colors.black,
           onPressed: () {
-            if(selectedLots == 10 && !lotViewState) {
+            if (selectedLots == 10 && !lotViewState && showedScaffold != true) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
+                content: Text(
+                    'You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
+                duration: Duration(seconds: 5),
               ));
+              showedScaffold = !showedScaffold;
             }
             parkingDataProvider.toggleLot(lots[i], selectedLots);
           },

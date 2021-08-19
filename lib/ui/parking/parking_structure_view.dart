@@ -12,6 +12,7 @@ class ParkingStructureView extends StatefulWidget {
 
 class _ParkingStructureViewState extends State<ParkingStructureView> {
   late ParkingDataProvider parkingDataProvider;
+  bool showedScaffold = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +70,15 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
               .colorScheme
               .secondary, // structureState ? ColorPrimary : Colors.black,
           onPressed: () {
-            if(selectedLots == 10 && !structureState) {
+            if (selectedLots == 10 &&
+                !structureState &&
+                showedScaffold != true) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
+                content: Text(
+                    'You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
+                duration: Duration(seconds: 5),
               ));
+              showedScaffold = !showedScaffold;
             }
             parkingDataProvider.toggleLot(structures[i], selectedLots);
           },
