@@ -9,8 +9,6 @@ class VentilationDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(model);
-
     String windowText = '';
     bool? window = model!.windowsOpen!;
     String hvacText = '';
