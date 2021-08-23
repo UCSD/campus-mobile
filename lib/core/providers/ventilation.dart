@@ -169,7 +169,8 @@ class VentilationDataProvider extends ChangeNotifier {
         ventilationIDs = [];
         ventilationDataModels = [];
         _userDataProvider!.userProfileModel!.selectedVentilationLocations = [];
-        _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
+        await _userDataProvider!
+            .postUserProfile(_userDataProvider!.userProfileModel);
 
         notifyListeners();
       }
