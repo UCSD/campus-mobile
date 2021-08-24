@@ -35,7 +35,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       }
       Color iconColor = HexColor(data.color!);
       Color textColor = HexColor(data.textColor!);
-      //print("SPOT KEY: ${data.}");
+
       list.add(ListTile(
         key: Key(data.name.toString()),
         leading: Container(

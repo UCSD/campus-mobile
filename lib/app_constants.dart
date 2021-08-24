@@ -37,7 +37,10 @@ class RoutePaths {
   static const String ScanditScanner = 'scanner/scandit_scanner';
   static const String Parking = "parking/parking_view";
   static const String SpotTypesView = "parking/spot_types_view";
+  static const String ParkingStructureView = "parking/parking_structure_view";
   static const String ParkingLotsView = "parking/parking_lots_view";
+  static const String NeighborhoodsView = "parking/neighborhoods_view";
+  static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
 }
 
 class RouteTitles {
@@ -57,8 +60,12 @@ class RouteTitles {
     'availability/manage_locations_view': 'Manage Locations',
     'shuttle/manage_shuttle_view': 'Manage Shuttle Stops',
     'shuttle/add_shuttle_stops_view': 'Add Shuttle Stops',
-    'parking/manage_parking_view': 'Parking',
-    'parking/spot_types_view': 'Parking',
+    'parking/manage_parking_view': 'Parking: Manage Lots',
+    'parking/neighborhoods_lot_view': 'Parking: Manage Lots',
+    'parking/neighborhoods_view': 'Parking: Manage Lots',
+    'parking/parking_lots_view': 'Parking: Manage Lots',
+    'parking/parking_structure_view': 'Parking: Manage Lots',
+    'parking/spot_types_view': 'Parking: Manage Spots',
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',

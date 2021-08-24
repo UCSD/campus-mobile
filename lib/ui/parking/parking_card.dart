@@ -28,6 +28,12 @@ class _ParkingCardState extends State<ParkingCard> {
 
   // ignore: must_call_super
   Widget build(BuildContext context) {
+    Map<String, Function> menuOption = {
+      "Manage Lots": (context) =>
+          {Navigator.pushNamed(context, RoutePaths.ManageParkingView)},
+      "Manage Spots": (context) =>
+          {Navigator.pushNamed(context, RoutePaths.SpotTypesView)}
+    };
     //super.build(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
@@ -43,7 +49,7 @@ class _ParkingCardState extends State<ParkingCard> {
   }
 
   Widget buildParkingCard(BuildContext context) {
-    // try {
+    // try
     List<Widget> selectedLotsViews = [];
     for (ParkingModel model in _parkingDataProvider.parkingModels) {
       if (_parkingDataProvider.parkingViewState![model.locationName] == true) {
