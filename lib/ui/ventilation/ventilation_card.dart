@@ -3,7 +3,6 @@ import 'package:campus_mobile_experimental/core/models/ventilation_data.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/ventilation.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
-import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/ventilation/ventilation_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -47,7 +46,6 @@ class _VentilationCardState extends State<VentilationCard> {
 
   Widget buildCardContent(List<VentilationDataModel?> models) {
     print("Length in card: ${models.length}");
-
     List<Widget> displays = [];
     try {
       for (VentilationDataModel? model in models) {
@@ -57,7 +55,6 @@ class _VentilationCardState extends State<VentilationCard> {
           ));
         }
       }
-
       if (displays.isEmpty) {
         return (Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,19 +78,7 @@ class _VentilationCardState extends State<VentilationCard> {
       return Column(
         children: <Widget>[
           Container(
-            height: 140,
-            child: PageView(
-              controller: _controller,
-              children: displays,
-            ),
-          ),
-          DotsIndicator(
-            controller: _controller,
-            itemCount: displays.length,
-            onPageSelected: (int index) {
-              _controller.animateToPage(index,
-                  duration: Duration(seconds: 1), curve: Curves.ease);
-            },
+            child: displays[0],
           ),
         ],
       );
