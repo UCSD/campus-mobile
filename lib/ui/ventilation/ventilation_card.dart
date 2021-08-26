@@ -62,13 +62,13 @@ class _VentilationCardState extends State<VentilationCard> {
           children: [
             Text(
               "No Location to Display",
-              style: TextStyle(color: Colors.black, fontSize: 24),
+              style: TextStyle(fontSize: 24),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: Text(
                 "Add a Location via 'Manage Locations'",
-                style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
+                style: TextStyle(fontSize: 14),
               ),
             ),
           ],

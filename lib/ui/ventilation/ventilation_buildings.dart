@@ -34,14 +34,15 @@ class _VentilationBuildingsState extends State<VentilationBuildings> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             'Buildings:',
-            style: TextStyle(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
       ),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(width: .75, color: Colors.grey.shade200),
+          bottom: BorderSide(
+            width: .75,
+          ),
         ),
       ),
     );
@@ -53,12 +54,11 @@ class _VentilationBuildingsState extends State<VentilationBuildings> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             model.buildingName.toString(),
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(fontSize: 20),
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          color: Colors.black,
         ),
         onTap: () {
           _ventilationDataProvider.addBuildingID(model.buildingId.toString());

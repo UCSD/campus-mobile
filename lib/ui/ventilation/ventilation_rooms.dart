@@ -38,14 +38,13 @@ class VentilationRoomsState extends State<VentilationRooms> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             'Rooms:',
-            style: TextStyle(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
       ),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(width: .75, color: Colors.grey.shade200),
+          bottom: BorderSide(width: .75),
         ),
       ),
     );
@@ -68,7 +67,7 @@ class VentilationRoomsState extends State<VentilationRooms> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             '${arguments[i]}',
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(fontSize: 20),
           ),
         ),
         trailing: Icon(

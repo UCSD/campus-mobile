@@ -30,7 +30,7 @@ class VentilationDisplay extends StatelessWidget {
                     child: Text(
                       model!.buildingName!.toString(),
                       textAlign: TextAlign.left,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
                   Expanded(
@@ -38,7 +38,7 @@ class VentilationDisplay extends StatelessWidget {
                     child: Text(
                       model!.buildingRoomName!.toString(),
                       textAlign: TextAlign.right,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
                 ],
@@ -48,7 +48,7 @@ class VentilationDisplay extends StatelessWidget {
                   Container(
                     child: Text(
                       "${model!.buildingFloorName!.toString()} Floor",
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      style: TextStyle(fontSize: 14),
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -67,7 +67,7 @@ class VentilationDisplay extends StatelessWidget {
                     Container(
                       child: Text(
                         'Currently ${model!.currentTemperature!}°',
-                        style: TextStyle(color: Colors.black, fontSize: 36),
+                        style: TextStyle(fontSize: 36),
                         textAlign: TextAlign.center,
                       ),
                       padding: EdgeInsets.only(
@@ -83,7 +83,7 @@ class VentilationDisplay extends StatelessWidget {
                     Container(
                       child: Text(
                         windowText,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 15),
+                        style: TextStyle(fontSize: 15),
                         textAlign: TextAlign.left,
                       ),
                       padding: EdgeInsets.only(
@@ -99,7 +99,7 @@ class VentilationDisplay extends StatelessWidget {
                     Container(
                       child: Text(
                         hvacText,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 15),
+                        style: TextStyle(fontSize: 15),
                         textAlign: TextAlign.left,
                       ),
                       padding: EdgeInsets.only(
