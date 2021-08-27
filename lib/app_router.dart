@@ -25,6 +25,10 @@ import 'package:campus_mobile_experimental/ui/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
+import 'package:campus_mobile_experimental/ui/parking/parking_lot_view.dart';
+import 'package:campus_mobile_experimental/ui/parking/neighborhoods_view.dart';
+import 'package:campus_mobile_experimental/ui/parking/neighborhood_lot_view.dart';
+import 'package:campus_mobile_experimental/ui/parking/parking_structure_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/cards.dart';
 import 'package:campus_mobile_experimental/ui/profile/notifications.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
@@ -180,6 +184,32 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ClassList();
+        });
+      case RoutePaths.ManageParkingView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return ManageParkingView();
+        });
+      case RoutePaths.ParkingLotsView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return ParkingLotsView();
+        });
+      case RoutePaths.ParkingStructureView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return ParkingStructureView();
+        });
+      case RoutePaths.NeighborhoodsView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return NeighborhoodsView();
+        });
+      case RoutePaths.NeighborhoodsLotsView:
+        List<String> data = settings.arguments as List<String>;
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return NeighborhoodLotsView(data);
         });
       case RoutePaths.SpotTypesView:
         return MaterialPageRoute(builder: (_) {

@@ -55,7 +55,6 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
-    print("is called");
     for (ShuttleStopModel? model in _shuttleDataProvider.stopsToRender) {
       if (model != null) {
         list.add(ListTile(
