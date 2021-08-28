@@ -22,6 +22,20 @@ class MyLocationButton extends StatelessWidget {
       ),
       backgroundColor: Colors.lightBlue,
       onPressed: () {
+        if (Provider.of<MapsDataProvider>(context, listen: false)
+                    .coordinates!
+                    .lat ==
+                null ||
+            Provider.of<MapsDataProvider>(context, listen: false)
+                    .coordinates!
+                    .lon ==
+                null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                'Sorry! Your location is turned off so this function is not available.'),
+            duration: Duration(seconds: 5),
+          ));
+        }
         _mapController!.animateCamera(CameraUpdate.newLatLng(LatLng(
             Provider.of<MapsDataProvider>(context, listen: false)
                 .coordinates!
