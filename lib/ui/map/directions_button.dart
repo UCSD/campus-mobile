@@ -24,14 +24,29 @@ class DirectionsButton extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       onPressed: () {
-        String locationQuery =
+        if (Provider.of<MapsDataProvider>(context, listen: false)
+                    .coordinates!
+                    .lat ==
+                null ||
             Provider.of<MapsDataProvider>(context, listen: false)
-                .searchBarController
-                .text;
-        if (locationQuery.isNotEmpty) {
-          getDirections(context);
+                    .coordinates!
+                    .lon ==
+                null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                'Sorry! Your location is turned off so this function is not available.'),
+            duration: Duration(seconds: 5),
+          ));
         } else {
-          Navigator.pushNamed(context, RoutePaths.MapSearch);
+          String locationQuery =
+              Provider.of<MapsDataProvider>(context, listen: false)
+                  .searchBarController
+                  .text;
+          if (locationQuery.isNotEmpty) {
+            getDirections(context);
+          } else {
+            Navigator.pushNamed(context, RoutePaths.MapSearch);
+          }
         }
       },
     );

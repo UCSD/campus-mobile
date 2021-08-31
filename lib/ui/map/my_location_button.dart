@@ -35,14 +35,15 @@ class MyLocationButton extends StatelessWidget {
                 'Sorry! Your location is turned off so this function is not available.'),
             duration: Duration(seconds: 5),
           ));
+        } else {
+          _mapController!.animateCamera(CameraUpdate.newLatLng(LatLng(
+              Provider.of<MapsDataProvider>(context, listen: false)
+                  .coordinates!
+                  .lat!,
+              Provider.of<MapsDataProvider>(context, listen: false)
+                  .coordinates!
+                  .lon!)));
         }
-        _mapController!.animateCamera(CameraUpdate.newLatLng(LatLng(
-            Provider.of<MapsDataProvider>(context, listen: false)
-                .coordinates!
-                .lat!,
-            Provider.of<MapsDataProvider>(context, listen: false)
-                .coordinates!
-                .lon!)));
       },
     );
   }
