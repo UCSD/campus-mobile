@@ -23,7 +23,6 @@ class VentilationDisplay extends StatelessWidget {
           child: Column(
             children: [
               Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
                     flex: 1,

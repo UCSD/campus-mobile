@@ -108,8 +108,6 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
     print("CreateProvider: DiningDataProvider");
     var diningDataProvider = DiningDataProvider();
-
-    /// NOT SURE IF THE LINE BELOW IS CORRECT
     diningDataProvider.fetchDiningLocations();
     return diningDataProvider;
   }, update: (_, coordinates, diningDataProvider) {
@@ -118,7 +116,6 @@ List<SingleChildWidget> dependentServices = [
     diningDataProvider.populateDistances();
     return diningDataProvider;
   }),
-
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;
@@ -348,7 +345,6 @@ List<SingleChildWidget> dependentServices = [
     },
     lazy: false,
   ),
-  // in app_provider.dart, add this somewhere around line 118
   ChangeNotifierProxyProvider<UserDataProvider, VentilationDataProvider>(
       create: (_) {
     print("CreateProvider: VentilationDataProvider");

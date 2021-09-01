@@ -67,7 +67,7 @@ class _VentilationCardState extends State<VentilationCard> {
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: Text(
-                "Add a Location via 'Manage Locations'",
+                "Add a Location via 'Manage Location'",
                 style: TextStyle(fontSize: 14),
               ),
             ),
@@ -102,7 +102,7 @@ class _VentilationCardState extends State<VentilationCard> {
         primary: Theme.of(context).buttonColor,
       ),
       child: Text(
-        'Manage Locations',
+        'Manage Location',
       ),
       onPressed: () {
         if (!_ventilationDataProvider.isLoading!) {

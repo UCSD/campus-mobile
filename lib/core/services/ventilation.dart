@@ -12,16 +12,11 @@ class VentilationService {
   List<VentilationLocationsModel>? _locations;
   VentilationDataModel? _data;
 
-  /// add state related things for view model here
-  /// add any type of data manipulation here so it can be accessed via provider
-
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  final String locationsEndpoint =
-      "https://api-qa.ucsd.edu:8243/buildingstatus/v1.0.0/buildings";
-  final String dataBaseEndpoint =
+  final String baseEndpoint =
       "https://api-qa.ucsd.edu:8243/buildingstatus/v1.0.0/buildings";
 
   Future<bool> fetchLocations() async {
@@ -29,16 +24,14 @@ class VentilationService {
     _isLoading = true;
     try {
       /// fetch data
-      print("Before fetch locations:" + locationsEndpoint);
+
       String _response =
-          await (_networkHelper.authorizedFetch(locationsEndpoint, headers));
-      print("After fetch locations:" + locationsEndpoint);
+          await (_networkHelper.authorizedFetch(baseEndpoint, headers));
 
       /// parse data
       final data = ventilationLocationsModelFromJson(_response);
       _isLoading = false;
 
-      print("HELLO RESPONSE $_response");
       _locations = data;
       return true;
     } catch (e) {
@@ -63,11 +56,10 @@ class VentilationService {
     _error = null;
     _isLoading = true;
     try {
-      /// fetch data, BUT FOR NOW THIS WILL NOT WORK WITH MOCK JSON
-      print("Before fetching data: " + dataBaseEndpoint + '/' + bfrID);
+      print("Before fetching data: " + baseEndpoint + '/' + bfrID);
       String _response = await _networkHelper.authorizedFetch(
-          dataBaseEndpoint + '/' + bfrID, headers);
-      print("After fetching data: " + dataBaseEndpoint + '/' + bfrID);
+          baseEndpoint + '/' + bfrID, headers);
+      print("After fetching data: " + baseEndpoint + '/' + bfrID);
       // String _response = await _networkHelper.fetchData(dataBaseEndpoint);
 
       /// parse data
@@ -90,7 +82,6 @@ class VentilationService {
     }
   }
 
-  /// MIGHT NEED TO CHANGE THIS SINCE THE MOCK JSON DOES NOT NEED A TOKEN
   Future<bool> getNewToken() async {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {

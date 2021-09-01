@@ -36,7 +36,7 @@ class VentilationDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    /// creating  new map ensures we remove all unsupported locations
+    /// creating new map ensures we remove all unsupported locations
     Map<String?, VentilationLocationsModel> mapOfVentilationLocations =
         Map<String?, VentilationLocationsModel>();
 
@@ -45,7 +45,6 @@ class VentilationDataProvider extends ChangeNotifier {
         mapOfVentilationLocations[model.buildingId] = model;
       }
 
-      ///replace old list of lots with new one
       _ventilationLocationModels = mapOfVentilationLocations;
     } else {
       if (_error != null &&
@@ -149,23 +148,16 @@ class VentilationDataProvider extends ChangeNotifier {
 
     ventilationDataModels = tempModels;
 
-    ///TODO: MIGHT NEED THIS if the user is logged in we want to sync the order of parking lots amongst all devices
-    // if (userDataProvider != null && !reloading) {
-    //   reorderStops(userDataProvider!.userProfileModel!.selectedStops);
-    // }
-
     _isLoading = false;
     notifyListeners();
   }
 
-  /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
   Future<void> addLocation(String? roomID) async {
     try {
       // creates the bfrID and then adds the ID to the user's list
       String bfrID = buildingID! + '/' + floorID! + '/' + roomID!;
 
       if (ventilationIDs.isNotEmpty) {
-        /// MAYBE CHANGE THIS LATER
         ventilationIDs = [];
         ventilationDataModels = [];
         _userDataProvider!.userProfileModel!.selectedVentilationLocations = [];
@@ -179,7 +171,6 @@ class VentilationDataProvider extends ChangeNotifier {
           .add(bfrID);
       _userDataProvider!.postUserProfile(_userDataProvider!.userProfileModel);
 
-      ///TODO: MIGHT BE GOOD TO HAVE SOME CATCH IN CASE THE FETCH RETURNS FALSE
       // calls ventilationService to get this bfrID's data and adds it to the list
       await _ventilationService.fetchData(bfrID);
       ventilationDataModels.add(_ventilationService.data);
