@@ -163,7 +163,6 @@ class VentilationDataProvider extends ChangeNotifier {
         _userDataProvider!.userProfileModel!.selectedVentilationLocations = [];
         await _userDataProvider!
             .postUserProfile(_userDataProvider!.userProfileModel);
-
         notifyListeners();
       }
 
@@ -177,10 +176,11 @@ class VentilationDataProvider extends ChangeNotifier {
       ventilationIDs =
           _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
 
-      notifyListeners();
     } catch (e) {
+      _error = VentilationConstants.addLocationFailed;
       print("Error while adding location:  $e");
     }
+    notifyListeners();
   }
 
   /// MIGHT BE A GOOD IDEA TO ADD SOME SORT OF LIMIT HERE AS WELL
@@ -201,6 +201,8 @@ class VentilationDataProvider extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
+      _error = VentilationConstants.removeLocationFailed;
+      notifyListeners();
       print("Error while removing location:  $e");
     }
   }

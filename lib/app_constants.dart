@@ -157,6 +157,11 @@ class DataPersistence {
   static const UserProfileModel = 'UserProfileModel';
 }
 
+class VentilationConstants {
+  static const addLocationFailed = 'addLocationFailed';
+  static const removeLocationFailed = 'removeLocationFailed';
+}
+
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
