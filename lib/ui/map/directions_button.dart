@@ -34,8 +34,8 @@ class DirectionsButton extends StatelessWidget {
                 null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-                'Your location is turned off so this function is not available.'),
-            duration: Duration(seconds: 5),
+                'Please turn your location on in order to use this feature.'),
+            duration: Duration(seconds: 3),
           ));
         } else {
           String locationQuery =
