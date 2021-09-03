@@ -1,8 +1,6 @@
-import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
-import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
