@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-
-import '../../app_styles.dart';
 
 class ParkingStructureView extends StatefulWidget {
   _ParkingStructureViewState createState() => _ParkingStructureViewState();
