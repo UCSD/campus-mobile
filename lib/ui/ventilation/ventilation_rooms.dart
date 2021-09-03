@@ -95,6 +95,18 @@ class VentilationRoomsState extends State<VentilationRooms> {
           // change the appBar title to the ucsd logo
           Provider.of<CustomAppBar>(context, listen: false)
               .changeTitle(CustomAppBar().appBar.title);
+
+          if(_ventilationDataProvider.error == VentilationConstants.addLocationFailed) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Could not add location."),
+            ));
+          }
+          else if(_ventilationDataProvider.error == VentilationConstants.removeLocationFailed) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Could not remove location."),
+            ));
+          }
+
         },
       ));
     }
