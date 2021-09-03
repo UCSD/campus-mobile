@@ -23,7 +23,7 @@ class MapsDataProvider extends ChangeNotifier {
   String? _error;
   bool? _noResults;
 
-  ///DEFAULT LAT AND LONG
+  ///Default coordinates for Price Center
   double? _defaultLat = 32.87990969506536;
   double? _defaultLong = -117.2362059310055;
 
