@@ -46,16 +46,16 @@ class _VentilationCardState extends State<VentilationCard> {
 
   Widget buildCardContent(List<VentilationDataModel?> models) {
     print("Length in card: ${models.length}");
-    List<Widget> displays = [];
+    var display;
     try {
       for (VentilationDataModel? model in models) {
         if (model != null) {
-          displays.add(VentilationDisplay(
+          display = VentilationDisplay(
             model: model,
-          ));
+          );
         }
       }
-      if (displays.isEmpty) {
+      if (display == null) {
         return (Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -74,11 +74,11 @@ class _VentilationCardState extends State<VentilationCard> {
           ],
         ));
       }
-      print("About to return displays: $displays");
+      print("About to return displays: $display");
       return Column(
         children: <Widget>[
           Container(
-            child: displays[0],
+            child: display,
           ),
         ],
       );
