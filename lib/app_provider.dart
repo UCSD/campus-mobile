@@ -21,6 +21,7 @@ import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/survey.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/providers/ventilation.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
@@ -343,6 +344,18 @@ List<SingleChildWidget> dependentServices = [
       return scannerDataProvider;
     },
     lazy: false,
-  )
+  ),
+  ChangeNotifierProxyProvider<UserDataProvider, VentilationDataProvider>(
+      create: (_) {
+    print("CreateProvider: VentilationDataProvider");
+    var ventilationDataProvider = VentilationDataProvider();
+    ventilationDataProvider.fetchLocationsAndData();
+    return ventilationDataProvider;
+  }, update: (_, userDataProvider, ventilationDataProvider) {
+    print("UpdateProvider: ventilationDataProvider");
+    ventilationDataProvider!.userDataProvider = userDataProvider;
+    ventilationDataProvider.fetchVentilationData();
+    return ventilationDataProvider;
+  })
 ];
 List<SingleChildWidget> uiConsumableProviders = [];
