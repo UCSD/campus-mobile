@@ -24,14 +24,29 @@ class DirectionsButton extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       onPressed: () {
-        String locationQuery =
+        if (Provider.of<MapsDataProvider>(context, listen: false)
+                    .coordinates!
+                    .lat ==
+                null ||
             Provider.of<MapsDataProvider>(context, listen: false)
-                .searchBarController
-                .text;
-        if (locationQuery.isNotEmpty) {
-          getDirections(context);
+                    .coordinates!
+                    .lon ==
+                null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                'Please turn your location on in order to use this feature.'),
+            duration: Duration(seconds: 3),
+          ));
         } else {
-          Navigator.pushNamed(context, RoutePaths.MapSearch);
+          String locationQuery =
+              Provider.of<MapsDataProvider>(context, listen: false)
+                  .searchBarController
+                  .text;
+          if (locationQuery.isNotEmpty) {
+            getDirections(context);
+          } else {
+            Navigator.pushNamed(context, RoutePaths.MapSearch);
+          }
         }
       },
     );
