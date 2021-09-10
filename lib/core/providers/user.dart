@@ -61,6 +61,10 @@ class UserDataProvider extends ChangeNotifier {
   /// overwrite the [UserProfileModel] in persistent storage with the model passed in
   Future updateUserProfileModel(UserProfileModel? model) async {
     _userProfileModel = model;
+    print(" KEYS: ------------------------------------------");
+    for (var key in _userProfileModel!.toJson().keys) {
+      print(key);
+    }
     var box;
     try {
       box = Hive.box<UserProfileModel?>('UserProfileModel');
@@ -112,6 +116,10 @@ class UserDataProvider extends ChangeNotifier {
     }
     tempUserProfile = userBox.get('UserProfileModel');
     _userProfileModel = tempUserProfile;
+    print("TEMP KEYS: ------------------------------------------");
+    for (var key in tempUserProfile!.toJson().keys) {
+      print(key);
+    }
     _subscribeToPushNotificationTopics(_userProfileModel!.subscribedTopics!);
     notifyListeners();
   }
@@ -406,6 +414,10 @@ class UserDataProvider extends ChangeNotifier {
       print('UserDataProvider:_createNewUser:error -------------------- 5:');
       print(e.toString());
     }
+    print("KEYS: ------------------------------------------");
+    for (var key in profile.toJson().keys) {
+      print(key);
+    }
     print('UserDataProvider:_createNewUser:SUCCESS');
     return profile;
   }
@@ -430,7 +442,9 @@ class UserDataProvider extends ChangeNotifier {
 
       /// we only want to push data that is not null
       var tempJson = Map<String, dynamic>();
+     // print("KEYS: ------------------------------------------");
       for (var key in profile!.toJson().keys) {
+       // print(key);
         if (profile.toJson()[key] != null) {
           tempJson[key] = profile.toJson()[key];
         }
