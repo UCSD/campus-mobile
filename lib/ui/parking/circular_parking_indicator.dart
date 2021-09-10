@@ -1,10 +1,9 @@
-import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
 
 class CircularParkingIndicators extends StatelessWidget {
   const CircularParkingIndicators({
@@ -21,6 +20,7 @@ class CircularParkingIndicators extends StatelessWidget {
         buildLocationTitle(),
         buildLocationContext(context),
         buildSpotsAvailableText(context),
+        buildHistoricInfo(),
         buildAllParkingAvailability(context),
       ],
     );
@@ -59,14 +59,22 @@ class CircularParkingIndicators extends StatelessWidget {
     int open;
     int total;
     if (locationData != null) {
-      open = locationData["Open"] == null ? 0 : locationData["Open"];
-      total = locationData["Total"] == null ? 0 : locationData["Total"];
+      if (locationData["Open"] is String) {
+        open = locationData["Open"] == "" ? 0 : int.parse(locationData["Open"]);
+      } else {
+        open = locationData["Open"] == null ? 0 : locationData["Open"];
+      }
+      if (locationData["Total"] is String) {
+        total =
+            locationData["Total"] == "" ? 0 : int.parse(locationData["Total"]);
+      } else {
+        total = locationData["Total"] == null ? 0 : locationData["Total"];
+      }
     } else {
       open = 0;
       total = 0;
     }
 
-    //print("SPOT TYPE: ${spotType!.text}");
     return locationData != null
         ? Expanded(
             child: Column(
@@ -89,7 +97,7 @@ class CircularParkingIndicators extends StatelessWidget {
                             percent: open / total,
                             center: Text(
                                 ((open / total) * 100).round().toString() + "%",
-                                style: TextStyle(fontSize: 25)),
+                                style: TextStyle(fontSize: 22)),
                             circularStrokeCap: CircularStrokeCap.round,
                             backgroundColor: colorFromHex('#EDECEC'),
                             progressColor: getColor(open / total),
@@ -142,7 +150,7 @@ class CircularParkingIndicators extends StatelessWidget {
                             animation: false,
                             lineWidth: 7.5,
                             percent: 0.0,
-                            center: Text("N/A", style: TextStyle(fontSize: 25)),
+                            center: Text("N/A", style: TextStyle(fontSize: 22)),
                             backgroundColor: colorFromHex('#EDECEC'),
                           ),
                         ),
@@ -211,6 +219,28 @@ class CircularParkingIndicators extends StatelessWidget {
         fontSize: 20,
       ),
     );
+  }
+
+  Widget buildHistoricInfo() {
+    if (model.locationProvider == "Historic") {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            color: Colors.black,
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: 1.0),
+          ),
+          Text(
+            "No Live Data. Estimated availability shown.",
+          )
+        ],
+      );
+    } else {
+      return Text("");
+    }
   }
 
   Widget buildSpotsAvailableText(BuildContext context) {
