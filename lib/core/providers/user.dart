@@ -320,7 +320,7 @@ class UserDataProvider extends ChangeNotifier {
           newModel.ucsdaffiliation = _authenticationModel!.ucsdaffiliation;
           newModel.pid = _authenticationModel!.pid;
           List<String> castSubscriptions = newModel.subscribedTopics!.cast<String>();
-          newModel.subscribedTopics = castSubscriptions;
+          newModel.subscribedTopics = castSubscriptions.toSet().toList();
           print('UserDataProvider:fetchUserProfile:newModel');
           print(newModel.toJson());
 
@@ -330,15 +330,11 @@ class UserDataProvider extends ChangeNotifier {
           if ((newModel.ucsdaffiliation ?? "").contains(studentPattern)) {
             newModel
               ..classifications =
-                  Classifications.fromJson({'student': true, 'staff': false})
-              ..subscribedTopics!
-                  .addAll(_pushNotificationDataProvider.studentTopics());
+                  Classifications.fromJson({'student': true, 'staff': false});
           } else if ((newModel.ucsdaffiliation ?? "").contains(staffPattern)) {
             newModel
               ..classifications =
-                  Classifications.fromJson({'staff': true, 'student': false})
-              ..subscribedTopics!
-                  .addAll(_pushNotificationDataProvider.staffTopics());
+                  Classifications.fromJson({'staff': true, 'student': false});
           } else {
             newModel.classifications =
                 Classifications.fromJson({'student': false, 'staff': false});
