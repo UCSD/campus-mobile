@@ -44,21 +44,25 @@ class AvailabilityDataProvider extends ChangeNotifier {
         Map<String?, AvailabilityModel>();
     if (await _availabilityService.fetchData()) {
       /// setting the LocationViewState based on user data
-      for (AvailabilityModel model in _availabilityService.data!) {
-        newMapOfLots[model.locationName] = model;
+      for (AvailabilityGroups group in _availabilityService.data!) {
+        for (AvailabilityModel model in group.childCounts!) {
+          newMapOfLots[model.name] = model;
 
-        /// if the user is logged out and has not put any preferences,
-        /// show all locations by default
-        if (_userDataProvider
-            .userProfileModel!.selectedOccuspaceLocations!.isEmpty) {
-          locationViewState[model.locationName] = true;
-        }
+          /// if the user is logged out and has not put any preferences,
+          /// show all locations by default
+          if (_userDataProvider
+              .userProfileModel!.selectedOccuspaceLocations!.isEmpty) {
+            locationViewState[model.name] = true;
+            print("Logged In: ${model.name}");
+          }
 
-        /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
-        else {
-          _locationViewState[model.locationName] = _userDataProvider
-              .userProfileModel!.selectedOccuspaceLocations!
-              .contains(model.locationName);
+          /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
+          else {
+            _locationViewState[model.name] = _userDataProvider
+                .userProfileModel!.selectedOccuspaceLocations!
+                .contains(model.name);
+            print("Logged Out: ${model.name}");
+          }
         }
       }
 
@@ -118,6 +122,16 @@ class AvailabilityDataProvider extends ChangeNotifier {
     } else {
       _locationViewState[location] = true;
     }
+    var list = [];
+
+    for (String? key in _locationViewState.keys) {
+      if (_locationViewState![key] ?? true) {
+        list.add(key);
+      }
+    }
+    print(list);
+    // uploadAvailabilityData(list);
+
     _userDataProvider
         .updateUserProfileModel(_userDataProvider.userProfileModel);
     notifyListeners();
@@ -164,7 +178,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
     List<String?> locationsToReturn = [];
     for (AvailabilityModel model
         in _availabilityModels as Iterable<AvailabilityModel>? ?? []) {
-      locationsToReturn.add(model.locationName);
+      locationsToReturn.add(model.name);
     }
     return locationsToReturn;
   }
