@@ -47,7 +47,7 @@ dependencies:
   permission_handler: 7.1.0
   pointycastle: 3.3.4
   provider: 5.0.0
-  shared_preferences: 2.0.6
+  shared_preferences: 2.0.8
   uni_links2: 0.6.0+2
   url_launcher: 6.0.6
   uuid: 3.0.4
