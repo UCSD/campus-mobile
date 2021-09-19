@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -6,6 +7,7 @@ import 'package:campus_mobile_experimental/ui/common/event_time.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class EventsList extends StatelessWidget {
   const EventsList({Key? key, this.listSize}) : super(key: key);
@@ -45,12 +47,20 @@ class EventsList extends StatelessWidget {
     }
 
     if (listSize != null) {
-      return ListView(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        children:
-            ListTile.divideTiles(tiles: eventTiles, context: context).toList(),
+      return SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: eventTiles,
+        ),
       );
+      // return ListView(
+      //   physics: NeverScrollableScrollPhysics(),
+      //   shrinkWrap: true,
+      //   children:
+      //       ListTile.divideTiles(tiles: eventTiles, context: context).toList(),
+      // );
     } else {
       return ContainerView(
         child: listOfEvents.isEmpty
@@ -65,23 +75,47 @@ class EventsList extends StatelessWidget {
   }
 
   Widget buildEventTile(EventModel data, BuildContext context) {
-    return ListTile(
-      isThreeLine: true,
-      onTap: () {
-        Navigator.pushNamed(context, RoutePaths.EventDetailView,
-            arguments: data);
-      },
-      title: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3.0),
-        child: Text(
-          data.title!,
-          textAlign: TextAlign.start,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-          style: TextStyle(fontSize: 18.0),
+    final screenSize = MediaQuery.of(context).size;
+
+    return Container(
+      width: screenSize.width / 1.5,
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            eventImageLoader(data.imageThumb, screenSize),
+            Container(
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 0.3),
+                  borderRadius: BorderRadius.all(Radius.circular(5.0))),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.expand_less,
+                    color: Colors.black,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      data.title!,
+                      style: TextStyle(
+                          color: lightButtonColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  EventsDateTime(data),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-      subtitle: subtitle(data),
     );
   }
 
@@ -113,5 +147,107 @@ class EventsList extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget eventImageLoader(String? url, Size screenSize) {
+    return url!.isEmpty
+        ? Container(
+            width: 0,
+            height: 0,
+          )
+        : Image.network(
+            url!,
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              );
+            },
+            fit: BoxFit.fill,
+          );
+  }
+
+  Widget EventsDateTime(EventModel data) {
+    try {
+      // Separate dates from times
+      String startMonthDayYear =
+          DateFormat.yMMMMd('en_US').format(data!.startDate!.toLocal());
+      String endMonthDayYear =
+          DateFormat.yMMMMd('en_US').format(data!.endDate!.toLocal());
+      String startTime = DateFormat.jm().format(data!.startDate!.toLocal());
+      String endTime = DateFormat.jm().format(data!.endDate!.toLocal());
+
+      // Mark any special types of events
+      bool sameDay = (startMonthDayYear == endMonthDayYear);
+      bool unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
+      Widget date;
+      Widget time;
+      if (sameDay) {
+        date = Text(startMonthDayYear); // Ex. June 11, 2021
+      } else {
+        // if not the same date, check if the same year
+        String startYear = startMonthDayYear.substring(
+            startMonthDayYear.indexOf(',') + 2, startMonthDayYear.length);
+        String endYear = endMonthDayYear.substring(
+            endMonthDayYear.indexOf(',') + 2, endMonthDayYear.length);
+        if (startYear == endYear) {
+          // if the same year, check if the same month
+          String startMonth =
+              startMonthDayYear.substring(0, startMonthDayYear.indexOf(' '));
+          String endMonth =
+              endMonthDayYear.substring(0, endMonthDayYear.indexOf(' '));
+          if (startMonth == endMonth) {
+            // if different date in the same month and year
+            String startDay = startMonthDayYear.substring(
+                startMonthDayYear.indexOf(' ') + 1,
+                startMonthDayYear.indexOf(','));
+            String endDay = endMonthDayYear.substring(
+                endMonthDayYear.indexOf(' ') + 1, endMonthDayYear.indexOf(','));
+            date = Text(startMonth +
+                ' ' +
+                startDay +
+                ' - ' +
+                endDay +
+                ', ' +
+                startYear); // Ex. September 11 - 26, 2021
+          } else {
+            // if different month in the same year
+            String startMonthDay =
+                startMonthDayYear.substring(0, startMonthDayYear.indexOf(','));
+            String endMonthDay =
+                endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
+            date = Text(startMonthDay +
+                ' - ' +
+                endMonthDay +
+                ', ' +
+                startYear); // Ex. September 11 - October 26, 2021
+          }
+        } else {
+          date = Text(startMonthDayYear +
+              ' - ' +
+              endMonthDayYear); // Ex. June 11, 2021 - May 12, 2023
+        }
+      }
+
+      if (unspecifiedTime) {
+        time = Text('');
+      } else {
+        time = Text(startTime + ' - ' + endTime);
+      }
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [date, time],
+      );
+    } catch (e) {
+      print(e);
+      return Container();
+    }
   }
 }
