@@ -13,8 +13,8 @@ class AuthenticationService {
   final NetworkHelper _networkHelper = NetworkHelper();
 
   final String authServiceApiUrl =
-      "https://3hepzvdimd.execute-api.us-west-2.amazonaws.com/qa/v2/access-profile";
-  final String authServiceApiKey = 'eKFql1kJAj53iyU2fNKyH4jI2b7t70MZ5YbAuPBZ';
+      "https://uokdbiyx00.execute-api.us-west-2.amazonaws.com/qa/v1.1/access-profile";
+  final String authServiceApiKey = 'uRgcQKJKMW4WzC2scgUXUjbE7e8TQJN7JsfjVBK6';
 
   Future<bool> silentLogin(String base64EncodedWithEncryptedPassword) async {
     _error = null;
