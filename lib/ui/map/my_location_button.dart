@@ -22,13 +22,28 @@ class MyLocationButton extends StatelessWidget {
       ),
       backgroundColor: Colors.lightBlue,
       onPressed: () {
-        _mapController!.animateCamera(CameraUpdate.newLatLng(LatLng(
+        if (Provider.of<MapsDataProvider>(context, listen: false)
+                    .coordinates!
+                    .lat ==
+                null ||
             Provider.of<MapsDataProvider>(context, listen: false)
-                .coordinates!
-                .lat!,
-            Provider.of<MapsDataProvider>(context, listen: false)
-                .coordinates!
-                .lon!)));
+                    .coordinates!
+                    .lon ==
+                null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                'Please turn your location on in order to use this feature.'),
+            duration: Duration(seconds: 3),
+          ));
+        } else {
+          _mapController!.animateCamera(CameraUpdate.newLatLng(LatLng(
+              Provider.of<MapsDataProvider>(context, listen: false)
+                  .coordinates!
+                  .lat!,
+              Provider.of<MapsDataProvider>(context, listen: false)
+                  .coordinates!
+                  .lon!)));
+        }
       },
     );
   }

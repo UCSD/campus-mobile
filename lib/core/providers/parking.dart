@@ -148,7 +148,8 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
 // add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
-  void toggleLot(String? location) {
+  void toggleLot(String? location, int numSelected) {
+    selectedLots = numSelected;
     if (selectedLots < MAX_SELECTED_LOTS) {
       _parkingViewState![location] = !_parkingViewState![location]!;
       _parkingViewState![location]! ? selectedLots++ : selectedLots--;
@@ -189,7 +190,6 @@ class ParkingDataProvider extends ChangeNotifier {
 
   /// Returns the total number of spots open at a given location
   /// does not filter based on spot type
-  //TODO: Changed to num make sure it still works (kwgong)
   Map<String, num> getApproxNumOfOpenSpots(String? locationId) {
     Map<String, num> totalAndOpenSpots = {"Open": 0, "Total": 0};
     if (_parkingModels![locationId] != null &&
@@ -198,17 +198,58 @@ class ParkingDataProvider extends ChangeNotifier {
         if (_parkingModels![locationId]!.availability![spot]['Open'] != null &&
             _parkingModels![locationId]!.availability![spot]['Open'] != "") {
           totalAndOpenSpots["Open"] = totalAndOpenSpots["Open"]! +
-              _parkingModels![locationId]!.availability![spot]['Open'];
+              (_parkingModels![locationId]!.availability![spot]['Open']
+                      is String
+                  ? int.parse(
+                      _parkingModels![locationId]!.availability![spot]['Open'])
+                  : _parkingModels![locationId]!.availability![spot]['Open']);
         }
 
         if (_parkingModels![locationId]!.availability![spot]['Total'] != null &&
             _parkingModels![locationId]!.availability![spot]['Total'] != "") {
           totalAndOpenSpots["Total"] = totalAndOpenSpots["Total"]! +
-              _parkingModels![locationId]!.availability![spot]['Total'];
+              (_parkingModels![locationId]!.availability![spot]['Total']
+                      is String
+                  ? int.parse(
+                      _parkingModels![locationId]!.availability![spot]['Total'])
+                  : _parkingModels![locationId]!.availability![spot]['Total']);
         }
       }
     }
     return totalAndOpenSpots;
+  }
+
+  Map<String, List<String>> getParkingMap() {
+    Map<String, List<String>> parkingMap = {};
+    for (ParkingModel model in _parkingService.data!) {
+      List<String> val = [];
+      parkingMap[model.neighborhood!] = val;
+    }
+
+    for (ParkingModel model in _parkingService.data!) {
+      parkingMap[model.neighborhood]!.add(model.locationName!);
+    }
+    return parkingMap;
+  }
+
+  List<String> getStructures() {
+    List<String> structureMap = [];
+    for (ParkingModel model in _parkingService.data!) {
+      if (model.isStructure!) {
+        structureMap.add(model.locationName!);
+      }
+    }
+    return structureMap;
+  }
+
+  List<String> getLots() {
+    List<String> lotMap = [];
+    for (ParkingModel model in _parkingService.data!) {
+      if (model.isStructure! == false) {
+        lotMap.add(model.locationName!);
+      }
+    }
+    return lotMap;
   }
 
   ///SIMPLE GETTERS

@@ -17,7 +17,7 @@ class DiningService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String baseEndpoint =
-      "https://6ypg6mcvba.execute-api.us-west-2.amazonaws.com/dev/v3/dining/";
+      "https://zqhymlxrg3.execute-api.us-west-2.amazonaws.com/qa/v2/dining/";
 
   Future<bool> fetchData() async {
     _error = null;
