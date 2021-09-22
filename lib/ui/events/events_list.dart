@@ -55,12 +55,6 @@ class EventsList extends StatelessWidget {
           children: eventTiles,
         ),
       );
-      // return ListView(
-      //   physics: NeverScrollableScrollPhysics(),
-      //   shrinkWrap: true,
-      //   children:
-      //       ListTile.divideTiles(tiles: eventTiles, context: context).toList(),
-      // );
     } else {
       return ContainerView(
         child: listOfEvents.isEmpty
@@ -78,28 +72,28 @@ class EventsList extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
 
     return Container(
-      width: screenSize.width / 1.5,
+      width: screenSize.width / 1.6,
       child: Card(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             eventImageLoader(data.imageThumb, screenSize),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.fromLTRB(15, 0, 15, 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 0.3),
                   borderRadius: BorderRadius.all(Radius.circular(5.0))),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Icon(
                     Icons.expand_less,
-                    color: Colors.black,
+                    color: Colors.grey,
                   ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 10),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: 55),
                     child: Text(
                       data.title!,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: lightButtonColor,
                           fontSize: 15,
@@ -107,7 +101,7 @@ class EventsList extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                   EventsDateTime(data),
                 ],
@@ -115,36 +109,6 @@ class EventsList extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget subtitle(EventModel data) {
-    return Container(
-      height: 60,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  data.description!,
-                  textAlign: TextAlign.start,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-                SizedBox(height: 5),
-                EventTime(data: data),
-              ],
-            ),
-          ),
-          SizedBox(width: 4),
-          ImageLoader(
-            url: data.imageThumb,
-          ),
-        ],
       ),
     );
   }
@@ -171,6 +135,7 @@ class EventsList extends StatelessWidget {
               );
             },
             fit: BoxFit.fill,
+            height: 200,
           );
   }
 
@@ -223,26 +188,26 @@ class EventsList extends StatelessWidget {
                 startMonthDayYear.substring(0, startMonthDayYear.indexOf(','));
             String endMonthDay =
                 endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
-            date = Text(startMonthDay +
-                ' - ' +
-                endMonthDay +
-                ', ' +
-                startYear); // Ex. September 11 - October 26, 2021
+            date = Text(
+              startMonthDay + ' - ' + endMonthDay + ', ' + startYear,
+            ); // Ex. September 11 - October 26, 2021
           }
         } else {
-          date = Text(startMonthDayYear +
-              ' - ' +
-              endMonthDayYear); // Ex. June 11, 2021 - May 12, 2023
+          date = Text(
+            startMonthDayYear + ' - ' + endMonthDayYear,
+          ); // Ex. June 11, 2021 - May 12, 2023
         }
       }
 
       if (unspecifiedTime) {
         time = Text('');
       } else {
-        time = Text(startTime + ' - ' + endTime);
+        time = Text(
+          startTime + ' - ' + endTime,
+        );
       }
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [date, time],
       );
     } catch (e) {
