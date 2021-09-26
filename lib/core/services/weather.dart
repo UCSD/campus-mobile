@@ -10,7 +10,7 @@ class WeatherService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String endpoint =
-      'https://gglfnarjhf.execute-api.us-west-2.amazonaws.com/dev/';
+      'https://nq1dgvmtpe.execute-api.us-west-2.amazonaws.com/qa/weatherservice/v1/weatherforecast';
 
   WeatherModel _weatherModel = WeatherModel();
 
