@@ -59,13 +59,28 @@ class EventsList extends StatelessWidget {
       return ContainerView(
         child: listOfEvents.isEmpty
             ? Center(child: Text('No events found.'))
-            : ListView(
-                children:
-                    ListTile.divideTiles(tiles: eventTiles, context: context)
-                        .toList(),
+            : Column(
+                children: [
+                  Container(
+                      child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: eventTiles,
+                    ),
+                  )),
+                  Container(
+                    child: Text("All Events"),
+                  )
+                ],
               ),
       );
     }
+    // ListView(
+    //   children:
+    //   ListTile.divideTiles(tiles: eventTiles, context: context)
+    //       .toList(),
   }
 
   Widget buildEventTile(EventModel data, BuildContext context) {
@@ -126,7 +141,7 @@ class EventsList extends StatelessWidget {
             height: 0,
           )
         : Image.network(
-            url!,
+            url,
             loadingBuilder: (BuildContext context, Widget child,
                 ImageChunkEvent? loadingProgress) {
               if (loadingProgress == null) return child;
@@ -149,11 +164,11 @@ class EventsList extends StatelessWidget {
     try {
       // Separate dates from times
       String startMonthDayYear =
-          DateFormat.yMMMMd('en_US').format(data!.startDate!.toLocal());
+          DateFormat.yMMMMd('en_US').format(data.startDate!.toLocal());
       String endMonthDayYear =
-          DateFormat.yMMMMd('en_US').format(data!.endDate!.toLocal());
-      String startTime = DateFormat.jm().format(data!.startDate!.toLocal());
-      String endTime = DateFormat.jm().format(data!.endDate!.toLocal());
+          DateFormat.yMMMMd('en_US').format(data.endDate!.toLocal());
+      String startTime = DateFormat.jm().format(data.startDate!.toLocal());
+      String endTime = DateFormat.jm().format(data.endDate!.toLocal());
 
       // Mark any special types of events
       bool sameDay = (startMonthDayYear == endMonthDayYear);
