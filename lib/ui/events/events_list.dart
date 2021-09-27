@@ -104,9 +104,12 @@ class EventsList extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(5.0))),
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.expand_less,
+                    IconButton(
+                      icon: Icon(Icons.expand_less),
                       color: Colors.grey,
+                      onPressed: () {
+                        Navigator.pushNamed(context, RoutePaths.EventDetailView, arguments: data);
+                      },
                     ),
                     ConstrainedBox(
                       constraints: BoxConstraints(minHeight: 55),
