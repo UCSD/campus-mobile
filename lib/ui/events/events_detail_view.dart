@@ -19,14 +19,14 @@ class EventDetailView extends StatelessWidget {
       //   child: buildDetailView(context),
       // // )
 
-      child: ListView(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        children: buildDetailView(context),
-      ),
+      // child: ListView(
+      //   // physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        child: buildDetailView(context),
+      // ),
     );
   }
 
-  List<Widget> buildDetailView(BuildContext context) {
+  Widget buildDetailView(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -106,40 +106,36 @@ class EventDetailView extends StatelessWidget {
     // );
 
 
-    return [
-      Container(
-        width: width,
-        // height: height - 10,
-        // color: Colors.green,
-        child: new Stack(
-          children: <Widget>[
-           new Container(
-             height:  MediaQuery.of(context).size.height * 0.33 ,
-             decoration: BoxDecoration(
-               color: Colors.green,
-               image: DecorationImage(
-                 fit: BoxFit.fill,
-                 image: NetworkImage(data.imageHQ!),
-               ),
-             ),
-           ),
-            Container(
-              //color: Colors.blue,
-              width: width,
-              height: height * 0.6,
-              decoration: BoxDecoration( borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), topLeft: Radius.circular(10.0)), color: Colors.blue),
-              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.32),
-              child: Center(
-                child: Container(
-                  width: width * 0.85,
-                  child: Column(
+    return ListView(
+      children: [
+        Container(
+          width: width,
+          height: height * 0.33,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              image: NetworkImage(data.imageHQ!),
+            )
+          ),
+        ),
+        Flexible(
+          child: Container(
+            // width: width * 0.5,
+            // height: height * 0.66,
+            // margin: EdgeInsets.only(top: 10.0),
+            color: Colors.blue,
+            child: Center(
+              child: Container(
+                width: width * 0.8,
+               color: Colors.white,
+    child: Column(
                     children: [
                       Icon(Icons.keyboard_arrow_down, size: 30, color: Theme.of(context).primaryColor,),
                       Text(
                         data.title!,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.w500),
-                        // style: Theme.of(context).textTheme.headline6,
+                        // style: Theme.of(context).textTheme.hev adline6,
                       ),
                       Padding(padding: EdgeInsets.only(top: 10.0),),
                       data.location != null && data.location!.isNotEmpty
@@ -166,12 +162,78 @@ class EventDetailView extends StatelessWidget {
                           : Container(),
                     ],
                   ),
-                )),
+              ),
             ),
 
-          ],
-        ),
-      ),
+          ),
+        )
+      ],
+    );
+      // Container(
+      //   width: width,
+      //   // height: height - 10,
+      //   // color: Colors.green,
+      //   child: new Column(
+      //     children: <Widget>[
+      //      new Container(
+      //        height:  MediaQuery.of(context).size.height * 0.33 ,
+      //        decoration: BoxDecoration(
+      //          color: Colors.green,
+      //          image: DecorationImage(
+      //            fit: BoxFit.fill,
+      //            image: NetworkImage(data.imageHQ!),
+      //          ),
+      //        ),
+      //      ),
+      //       Container(
+      //         //color: Colors.blue,
+      //         width: width,
+      //         height: height * 0.6,
+      //         decoration: BoxDecoration( borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), topLeft: Radius.circular(10.0)), color: Colors.blue),
+      //         margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.32),
+      //         child: Center(
+      //           child: Container(
+      //             width: width * 0.85,
+      //             child: Column(
+      //               children: [
+      //                 Icon(Icons.keyboard_arrow_down, size: 30, color: Theme.of(context).primaryColor,),
+      //                 Text(
+      //                   data.title!,
+      //                   textAlign: TextAlign.center,
+      //                   style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.w500),
+      //                   // style: Theme.of(context).textTheme.hev adline6,
+      //                 ),
+      //                 Padding(padding: EdgeInsets.only(top: 10.0),),
+      //                 data.location != null && data.location!.isNotEmpty
+      //                     ? LinkifyWithCatch(
+      //                   text: "Where: " + data.location!,
+      //                   looseUrl: true,
+      //                   style: TextStyle(fontSize: 16, height: 1.3, color: Theme.of(context).primaryColor),
+      //                   textAlign: TextAlign.center,
+      //                 )
+      //                     : Container(),
+      //                 Padding(padding: EdgeInsets.only(top: 10.0),),
+      //                 Center(child: EventTime(data: data)),
+      //                 data.description != null && data.description!.isNotEmpty
+      //                     ? Padding(
+      //                   padding: const EdgeInsets.all(20.0),
+      //                   child: Text(
+      //                      data.description!,
+      //                     style: TextStyle(fontSize: 16, height: 1.3),
+      //                   ),
+      //                 )
+      //                     : Container(),
+      //                 data.link != null && data.link!.isNotEmpty
+      //                     ? LearnMoreButton(link: data.link)
+      //                     : Container(),
+      //               ],
+      //             ),
+      //           )),
+      //       ),
+      //
+      //     ],
+      //   ),
+      // ),
 
       // Container(
       //   width: width,
@@ -191,7 +253,7 @@ class EventDetailView extends StatelessWidget {
 
       // Divider(),
 
-    ];
+
   }
 }
 
