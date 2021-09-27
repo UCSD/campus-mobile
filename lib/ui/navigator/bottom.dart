@@ -74,6 +74,8 @@ class _BottomTabBarState extends State<BottomTabBar> {
         ],
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        unselectedFontSize: 0.0,
+        selectedFontSize: 0.0,
         selectedItemColor: IconTheme.of(context).color,
         unselectedItemColor: Colors.grey.shade500,
       ),

@@ -3,8 +3,8 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/common/event_time.dart';
-import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
+// import 'package:campus_mobile_experimental/ui/common/event_time.dart';
+// import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -77,34 +77,40 @@ class EventsList extends StatelessWidget {
         child: Column(
           children: [
             eventImageLoader(data.imageThumb, screenSize),
-            Container(
-              padding: EdgeInsets.fromLTRB(15, 0, 15, 8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.3),
-                  borderRadius: BorderRadius.all(Radius.circular(5.0))),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.expand_less,
-                    color: Colors.grey,
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: 55),
-                    child: Text(
-                      data.title!,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: lightButtonColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, RoutePaths.EventDetailView,
+                    arguments: data);
+              },
+              child: Container(
+                padding: EdgeInsets.fromLTRB(15, 0, 15, 8),
+                decoration: BoxDecoration(
+                    border: Border.all(width: 0.3),
+                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.expand_less,
+                      color: Colors.grey,
                     ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  EventsDateTime(data),
-                ],
+                    ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: 55),
+                      child: Text(
+                        data.title!,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: lightButtonColor,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    EventsDateTime(data),
+                  ],
+                ),
               ),
             ),
           ],
