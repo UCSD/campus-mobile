@@ -28,7 +28,6 @@ class AvailabilityService {
       /// fetch data
       String _response =
           await (_networkHelper.authorizedFetch(endpoint, headers));
-      print("Response: $_response");
 
       /// parse data
       final data = availabilityApiModelFromJson(_response);
@@ -36,22 +35,15 @@ class AvailabilityService {
 
       List<AvailabilityGroups> models = [];
       for (AvailabilityGroups group in data.data!) {
-        print("Group: ${group.name}");
         models.add(group);
-        // for (AvailabilityModel model in group.childCounts!) {
-        //   print("Model: ${model.name}");
-        //   models.add(model);
-        //   print("After");
-        // }
       }
 
       _data = models;
-      print("_Data : $_data");
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      print("Error: $e");
+      print("Error in services/availability.dart: $e");
 
       if (e.toString().contains("401")) {
         if (await getNewToken()) {

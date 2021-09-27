@@ -4,154 +4,88 @@ import 'package:flutter/material.dart';
 class AvailabilityDisplay extends StatelessWidget {
   const AvailabilityDisplay({
     Key? key,
-    required this.model,
+    required this.models,
+    required this.groupName,
   }) : super(key: key);
 
-  final AvailabilityModel model;
+  final List<AvailabilityModel> models;
+  final String groupName;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        buildLocationTitle(),
-        buildAvailabilityBars(context),
-      ],
-    );
-  }
-
-  Widget buildLocationTitle() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 18),
-      child: ListTile(
-        title: Text(
-          model.name!,
-          style: TextStyle(fontSize: 17),
-        ),
-        contentPadding: EdgeInsets.all(0),
-        // subtitle: Row(
-        //   children: <Widget>[
-        //     Text(
-        //       model.isOpen! ? "Open" : "Closed",
-        //     ),
-        //     Container(
-        //       width: 12,
-        //       height: 12,
-        //       margin: EdgeInsets.all(5),
-        //       decoration: BoxDecoration(
-        //         color: model.isOpen! ? Colors.green : Colors.red,
-        //         shape: BoxShape.circle,
-        //       ),
-        //     ),
-        //   ],
-        // ),
-      ),
-    );
+    return buildAvailabilityBars(context);
   }
 
   Widget buildAvailabilityBars(BuildContext context) {
-    List<Widget> locations = [];
-    locations.add(ListTile(
-      // title: Text(model.locationName),
-      title: Column(
-        children: <Widget>[
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                (100 * percentAvailability(model)).toInt().toString() +
-                    '% Availability',
-                //style: TextStyle(color: Colors.black),
-              )),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                  height: 12,
-                  width: 325,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: LinearProgressIndicator(
-                          value: percentAvailability(model) as double?,
-                          backgroundColor: Colors.grey[200],
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            setIndicatorColor(percentAvailability(model)),
-                          )))))
-        ],
+    // initializes locations list and adds the group name to the list
+    List<Widget> groupsList = [];
+    Widget titleWidget = Container(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        groupName,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
       ),
-    ));
+      padding: EdgeInsets.only(
+        left: 16,
+        bottom: 5,
+      ),
+    );
 
-    // if (model.subLocations!.isNotEmpty) {
-    //   for (AvailabilityModel subLocation in model.subLocations!) {
-    //     locations.add(
-    //       ListTile(
-    //           title: Text(subLocation.locationName!,
-    //               style: TextStyle(
-    //                 fontSize: 17,
-    //               )),
-    //           subtitle: Column(children: <Widget>[
-    //             Align(
-    //                 alignment: Alignment.centerLeft,
-    //                 child: Text(
-    //                   (100 * percentAvailability(subLocation))
-    //                           .toInt()
-    //                           .toString() +
-    //                       '% Availability',
-    //                   // style: TextStyle(color: Colors.black),
-    //                 )),
-    //             Align(
-    //               alignment: Alignment.centerLeft,
-    //               child: SizedBox(
-    //                   height: 12,
-    //                   width: 325,
-    //                   child: ClipRRect(
-    //                       borderRadius: BorderRadius.circular(15),
-    //                       child: LinearProgressIndicator(
-    //                         value: percentAvailability(subLocation) as double?,
-    //                         backgroundColor: Colors.grey[200],
-    //                         valueColor: AlwaysStoppedAnimation<Color>(
-    //                             setIndicatorColor(
-    //                                 percentAvailability(subLocation))),
-    //                       ))),
-    //             )
-    //           ])),
-    //     );
-    //   }
-    // } else {
-    //   locations.add(ListTile(
-    //     // title: Text(model.locationName),
-    //     title: Column(
-    //       children: <Widget>[
-    //         Align(
-    //             alignment: Alignment.centerLeft,
-    //             child: Text(
-    //               (100 * percentAvailability(model)).toInt().toString() +
-    //                   '% Availability',
-    //               //style: TextStyle(color: Colors.black),
-    //             )),
-    //         Align(
-    //             alignment: Alignment.centerLeft,
-    //             child: SizedBox(
-    //                 height: 12,
-    //                 width: 325,
-    //                 child: ClipRRect(
-    //                     borderRadius: BorderRadius.circular(15),
-    //                     child: LinearProgressIndicator(
-    //                         value: percentAvailability(model) as double?,
-    //                         backgroundColor: Colors.grey[200],
-    //                         valueColor: AlwaysStoppedAnimation<Color>(
-    //                           setIndicatorColor(percentAvailability(model)),
-    //                         )))))
-    //       ],
-    //     ),
-    //   ));
-    // }
+    // loop through the new map and add each location to the groups ListTile
+    for (AvailabilityModel model in models) {
+      List<Widget> locations = [];
+      locations.add(Container(
+        alignment: Alignment.centerLeft,
+        child: Text(model.name!),
+      ));
+      locations.add(Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          (100 * percentAvailability(model)).toInt().toString() +
+              '% Availability',
+          //style: TextStyle(color: Colors.black),
+        ),
+      ));
+      locations.add(Container(
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+            height: 12,
+            width: 325,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: LinearProgressIndicator(
+                    value: percentAvailability(model) as double?,
+                    backgroundColor: Colors.grey[200],
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      setIndicatorColor(percentAvailability(model)),
+                    )))),
+        padding: EdgeInsets.only(bottom: 10),
+      ));
 
-    locations =
-        ListTile.divideTiles(tiles: locations, context: context).toList();
-
-    return Flexible(
-      child: Scrollbar(
-        child: ListView(
+      // combines the list into a ListTile
+      groupsList.add(ListTile(
+        title: Column(
           children: locations,
         ),
+      ));
+    }
+
+    groupsList =
+        ListTile.divideTiles(tiles: groupsList, context: context).toList();
+
+    return Container(
+      child: Column(
+        children: [
+          titleWidget,
+          Expanded(
+            child: Scrollbar(
+              child: ListView(
+                shrinkWrap: true,
+                children: groupsList,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -159,10 +93,6 @@ class AvailabilityDisplay extends StatelessWidget {
   num percentAvailability(AvailabilityModel location) {
     num percentAvailable = 0.0;
     percentAvailable = 1 - location.percentage!;
-
-    // if (location.isOpen!) {
-    //   percentAvailable = 1 - location.percent!;
-    // }
 
     return percentAvailable;
   }

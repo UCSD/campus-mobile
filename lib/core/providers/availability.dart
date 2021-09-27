@@ -23,6 +23,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   /// MODELS
   /// TODO: add models that will be needed in this data provider
   Map<String?, AvailabilityModel>? _availabilityModels;
+  Map<String?, List<AvailabilityModel>>? _availabilityGroups;
   late UserDataProvider _userDataProvider;
 
   ///
@@ -42,18 +43,33 @@ class AvailabilityDataProvider extends ChangeNotifier {
     /// creating  new map ensures we remove all unsupported lots
     Map<String?, AvailabilityModel> newMapOfLots =
         Map<String?, AvailabilityModel>();
+    Map<String?, List<AvailabilityModel>> groupToModel =
+        new Map<String?, List<AvailabilityModel>>();
+
     if (await _availabilityService.fetchData()) {
       /// setting the LocationViewState based on user data
       for (AvailabilityGroups group in _availabilityService.data!) {
-        for (AvailabilityModel model in group.childCounts!) {
-          newMapOfLots[model.name] = model;
+        String? groupName = group.name;
 
+        for (AvailabilityModel model in group.childCounts!) {
           /// if the user is logged out and has not put any preferences,
           /// show all locations by default
           if (_userDataProvider
               .userProfileModel!.selectedOccuspaceLocations!.isEmpty) {
             locationViewState[model.name] = true;
-            print("Logged In: ${model.name}");
+
+            // adds model to map of modelName to model
+            newMapOfLots[model.name] = model;
+
+            // adds model to list of locations under groupName
+            if (!groupToModel.containsKey(groupName)) {
+              groupToModel[groupName!] = [];
+              groupToModel[groupName]!.add(model);
+            } else {
+              groupToModel[groupName!]!.add(model);
+            }
+
+            print("Logged Out: ${model.name}");
           }
 
           /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
@@ -61,13 +77,30 @@ class AvailabilityDataProvider extends ChangeNotifier {
             _locationViewState[model.name] = _userDataProvider
                 .userProfileModel!.selectedOccuspaceLocations!
                 .contains(model.name);
-            print("Logged Out: ${model.name}");
+
+            // adds location to maps if the user has the location saved
+            if (_userDataProvider.userProfileModel!.selectedOccuspaceLocations!
+                .contains(model.name)) {
+              // adds model to map of modelName to model
+              newMapOfLots[model.name] = model;
+
+              // adds model to list of locations under groupName
+              if (!groupToModel.containsKey(groupName)) {
+                groupToModel[groupName!] = [];
+                groupToModel[groupName]!.add(model);
+              } else {
+                groupToModel[groupName!]!.add(model);
+              }
+            }
+
+            print("Logged In: ${model.name}");
           }
         }
       }
 
       ///replace old list of lots with new one
       _availabilityModels = newMapOfLots;
+      _availabilityGroups = groupToModel;
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       reorderLocations(
@@ -117,20 +150,23 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
   /// add or remove location availability display from card based on user selection
   void toggleLocation(String? location) {
+    print("Location: $location");
+
     if (_locationViewState[location] ?? true) {
+      print("True/False: False");
       _locationViewState[location] = false;
     } else {
+      print("True/False: True");
       _locationViewState[location] = true;
     }
     var list = [];
 
     for (String? key in _locationViewState.keys) {
-      if (_locationViewState![key] ?? true) {
+      if (_locationViewState[key] ?? true) {
+        print("Key True: $key");
         list.add(key);
       }
     }
-    print(list);
-    // uploadAvailabilityData(list);
 
     _userDataProvider
         .updateUserProfileModel(_userDataProvider.userProfileModel);
@@ -160,6 +196,15 @@ class AvailabilityDataProvider extends ChangeNotifier {
   DateTime? get lastUpdated => _lastUpdated;
 
   Map<String?, bool> get locationViewState => _locationViewState;
+
+  Map<String?, List<AvailabilityModel>> get groupToModel {
+    Map<String?, List<AvailabilityModel>> ret =
+        new Map<String?, List<AvailabilityModel>>();
+    if (_availabilityGroups != null) {
+      ret = _availabilityGroups!;
+    }
+    return ret;
+  }
 
   List<AvailabilityModel?> get availabilityModels {
     if (_availabilityModels != null) {
