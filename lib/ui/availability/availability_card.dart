@@ -45,7 +45,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     List<Widget> locationsList = [];
     for (AvailabilityModel? model in data) {
       if (model != null) {
-        if (_availabilityDataProvider.locationViewState[model.locationName]!) {
+        if (_availabilityDataProvider.locationViewState[model.name]!) {
           locationsList.add(AvailabilityDisplay(
             model: model,
           ));
