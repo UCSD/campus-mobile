@@ -26,23 +26,29 @@ class EventsList extends StatelessWidget {
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
     final List<Widget> eventTiles = [];
+    final screenSize = MediaQuery.of(context).size;
+    double height = screenSize.height;
+    double width = screenSize.width;
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
     var size;
-    if (listSize == null)
-      size = listOfEvents.length;
-    else
+    if (listSize == null) {
+      size = 3;
+      height /= 2;
+      width /= 1.4;
+    } else
       size = listSize;
 
     /// check to see if we have at least 3 events
     if (size > listOfEvents.length) {
       size = listOfEvents.length;
     }
+
     for (int i = 0; i < size; i++) {
       final EventModel item = listOfEvents[i];
-      final tile = buildEventTile(item, context);
+      final tile = buildEventTile(item, context, height, width);
       eventTiles.add(tile);
     }
 
@@ -71,7 +77,20 @@ class EventsList extends StatelessWidget {
                     ),
                   )),
                   Container(
-                    child: Text("All Events"),
+                    child: Column(
+                      children: [
+                        Text('All Events'),
+                        RaisedButton(
+                          onPressed: () {},
+                          child: Text(
+                            "All Events",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
@@ -83,48 +102,55 @@ class EventsList extends StatelessWidget {
     //       .toList(),
   }
 
-  Widget buildEventTile(EventModel data, BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
+  Widget buildEventTile(
+      EventModel data, BuildContext context, double height, double width) {
+    double padding = height * 0.03;
+    double sizedBoxHeight = height * 0.01;
+    double cardWidth = width / 1.6;
+    double minTextConHeight = width * 0.15;
     return Container(
-      width: screenSize.width / 1.6,
+      width: cardWidth,
       child: Card(
         child: Column(
           children: [
-            eventImageLoader(data.imageThumb, screenSize),
+            eventImageLoader(data.imageThumb, height),
             InkWell(
               onTap: () {
                 Navigator.pushNamed(context, RoutePaths.EventDetailView,
                     arguments: data);
               },
               child: Container(
-                padding: EdgeInsets.fromLTRB(15, 0, 15, 8),
+                width: cardWidth,
+                padding:
+                    EdgeInsets.fromLTRB(padding, 0, padding, sizedBoxHeight),
                 decoration: BoxDecoration(
                     border: Border.all(width: 0.3),
                     borderRadius: BorderRadius.all(Radius.circular(5.0))),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
                       icon: Icon(Icons.expand_less),
                       color: Colors.grey,
                       onPressed: () {
-                        Navigator.pushNamed(context, RoutePaths.EventDetailView, arguments: data);
+                        Navigator.pushNamed(context, RoutePaths.EventDetailView,
+                            arguments: data);
                       },
                     ),
                     ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: 55),
+                      constraints: BoxConstraints(minHeight: minTextConHeight),
                       child: Text(
                         data.title!,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             color: lightButtonColor,
-                            fontSize: 15,
+                            fontSize: width * 0.04,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
                     SizedBox(
-                      height: 15,
+                      height: sizedBoxHeight,
                     ),
                     EventsDateTime(data),
                   ],
@@ -137,7 +163,7 @@ class EventsList extends StatelessWidget {
     );
   }
 
-  Widget eventImageLoader(String? url, Size screenSize) {
+  Widget eventImageLoader(String? url, double height) {
     return url!.isEmpty
         ? Container(
             width: 0,
@@ -159,7 +185,7 @@ class EventsList extends StatelessWidget {
               );
             },
             fit: BoxFit.fill,
-            height: 200,
+            height: height / 5,
           );
   }
 
@@ -230,6 +256,7 @@ class EventsList extends StatelessWidget {
           startTime + ' - ' + endTime,
         );
       }
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [date, time],
