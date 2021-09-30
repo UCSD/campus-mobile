@@ -21,11 +21,12 @@ class AvailabilityDisplay extends StatelessWidget {
 
   Widget buildLocationTitle() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 18),
+      margin: EdgeInsets.symmetric(horizontal: 16),
       child: ListTile(
+        visualDensity: VisualDensity.compact,
         title: Text(
           model.name!,
-          style: TextStyle(fontSize: 17),
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         ),
         contentPadding: EdgeInsets.all(0),
         // subtitle: Row(
@@ -55,6 +56,7 @@ class AvailabilityDisplay extends StatelessWidget {
       for (ChildCount subLocation in model.childCounts!) {
         locations.add(
           ListTile(
+              visualDensity: VisualDensity.compact,
               title: Text(subLocation.name!,
                   style: TextStyle(
                     fontSize: 17,
@@ -87,33 +89,16 @@ class AvailabilityDisplay extends StatelessWidget {
               ])),
         );
       }
+    } else {
+      locations.add(ListTile(
+          // title: Text(model.locationName),
+          title: Column(children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text("Data Unavailable"),
+        ),
+      ])));
     }
-    // else {
-    //   locations.add(ListTile(
-    //       // title: Text(model.locationName),
-    //       title: Column(children: <Widget>[
-    //     Align(
-    //         alignment: Alignment.centerLeft,
-    //         child: Text(
-    //           (100 * percentAvailability(model)).toInt().toString() +
-    //               '% Availability',
-    //           //style: TextStyle(color: Colors.black),
-    //         )),
-    //     Align(
-    //         alignment: Alignment.centerLeft,
-    //         child: SizedBox(
-    //             height: 12,
-    //             width: 325,
-    //             child: ClipRRect(
-    //                 borderRadius: BorderRadius.circular(15),
-    //                 child: LinearProgressIndicator(
-    //                     value: percentAvailability(model) as double?,
-    //                     backgroundColor: Colors.grey[200],
-    //                     valueColor: AlwaysStoppedAnimation<Color>(
-    //                       setIndicatorColor(percentAvailability(model)),
-    //                     )))))
-    //   ])));
-    // }
     locations =
         ListTile.divideTiles(tiles: locations, context: context).toList();
 
