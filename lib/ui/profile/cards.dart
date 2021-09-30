@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,18 +54,32 @@ class _CardsViewState extends State<CardsView> {
     List<Widget> list = [];
     for (String card in _cardsDataProvider!.cardOrder!) {
       if (card == 'NativeScanner') continue;
-      list.add(ListTile(
-        leading: Icon(Icons.reorder),
-        key: Key(card),
-        title: Text(_cardsDataProvider!.availableCards![card]!.titleText!),
-        trailing: Switch(
-          value: _cardsDataProvider!.cardStates![card]!,
-          onChanged: (_) {
-            _cardsDataProvider!.toggleCard(card);
-          },
-          activeColor: Theme.of(context).buttonColor,
-        ),
-      ));
+      try {
+        //throw new DeferredLoadException("message");
+        list.add(ListTile(
+          leading: Icon(Icons.reorder),
+          key: Key(card),
+          title: Text(_cardsDataProvider!.availableCards![card]!.titleText!),
+          trailing: Switch(
+            value: _cardsDataProvider!.cardStates![card]!,
+            onChanged: (_) {
+              _cardsDataProvider!.toggleCard(card);
+            },
+            activeColor: Theme.of(context).buttonColor,
+          ),
+        ));
+      }
+      catch (e) {
+        FirebaseCrashlytics.instance.log('error getting $card in profile');
+        FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
+          reason: "Profile/Cards: Failed to load Cards page",
+            fatal: false);
+        // temp list tile
+        list.add(ListTile(
+          leading: Icon(Icons.reorder),
+          title: Text('error'),
+        ));
+      }
     }
     return list;
   }
