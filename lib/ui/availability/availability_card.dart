@@ -43,14 +43,35 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
 
   Widget buildAvailabilityCard(List<AvailabilityModel?> data) {
     List<Widget> locationsList = [];
+
+    // loop through all the models, adding each one to locationsList
     for (AvailabilityModel? model in data) {
       if (model != null) {
         if (_availabilityDataProvider.locationViewState[model.name]!) {
-          locationsList.add(AvailabilityDisplay(
-            model: model,
-          ));
+          locationsList.add(AvailabilityDisplay(model: model));
         }
       }
+    }
+
+    // the user chose no location, so instead show "No Location to Display"
+    if (locationsList.length == 0) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            child: Text(
+              "No Location to Display",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            padding: EdgeInsets.only(bottom: 5),
+          ),
+          Text("Add Locations via 'Manage Locations'"),
+        ],
+      );
     }
 
     return Column(

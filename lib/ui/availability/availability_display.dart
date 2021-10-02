@@ -7,7 +7,13 @@ class AvailabilityDisplay extends StatelessWidget {
     required this.model,
   }) : super(key: key);
 
+  /// Models
   final AvailabilityModel model;
+
+  /// Constant Values
+  static const double SUB_LOCATION_FONT_SIZE = 17;
+  static const double PROGRESS_BAR_HEIGHT = 12;
+  static const double PROGRESS_BAR_WIDTH = 325;
 
   @override
   Widget build(BuildContext context) {
@@ -21,37 +27,35 @@ class AvailabilityDisplay extends StatelessWidget {
 
   Widget buildLocationTitle() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      child: ListTile(
-        visualDensity: VisualDensity.compact,
-        title: Text(
-          model.name!,
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-        ),
-        contentPadding: EdgeInsets.all(0),
-        // subtitle: Row(
-        //   children: <Widget>[
-        //     Text(
-        //       model.isOpen! ? "Open" : "Closed",
-        //     ),
-        //     Container(
-        //       width: 12,
-        //       height: 12,
-        //       margin: EdgeInsets.all(5),
-        //       decoration: BoxDecoration(
-        //         color: model.isOpen! ? Colors.green : Colors.red,
-        //         shape: BoxShape.circle,
-        //       ),
-        //     ),
-        //   ],
-        // ),
+      alignment: Alignment.centerLeft,
+      margin: EdgeInsets.fromLTRB(16, 0, 16, 5),
+      child: Text(
+        model.name!,
+        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
+      // subtitle: Row(
+      //   children: <Widget>[
+      //     Text(
+      //       model.isOpen! ? "Open" : "Closed",
+      //     ),
+      //     Container(
+      //       width: 12,
+      //       height: 12,
+      //       margin: EdgeInsets.all(5),
+      //       decoration: BoxDecoration(
+      //         color: model.isOpen! ? Colors.green : Colors.red,
+      //         shape: BoxShape.circle,
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 
   Widget buildAvailabilityBars(BuildContext context) {
     List<Widget> locations = [];
 
+    // add any children the model contains to the listview
     if (model.childCounts!.isNotEmpty) {
       for (ChildCount subLocation in model.childCounts!) {
         locations.add(
@@ -59,7 +63,7 @@ class AvailabilityDisplay extends StatelessWidget {
               visualDensity: VisualDensity.compact,
               title: Text(subLocation.name!,
                   style: TextStyle(
-                    fontSize: 17,
+                    fontSize: SUB_LOCATION_FONT_SIZE,
                   )),
               subtitle: Column(children: <Widget>[
                 Align(
@@ -74,8 +78,8 @@ class AvailabilityDisplay extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: SizedBox(
-                      height: 12,
-                      width: 325,
+                      height: PROGRESS_BAR_HEIGHT,
+                      width: PROGRESS_BAR_WIDTH,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: LinearProgressIndicator(
@@ -89,15 +93,21 @@ class AvailabilityDisplay extends StatelessWidget {
               ])),
         );
       }
-    } else {
-      locations.add(ListTile(
-          // title: Text(model.locationName),
-          title: Column(children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text("Data Unavailable"),
+    }
+
+    // if no children, show an error ListTile
+    else {
+      locations.add(
+        ListTile(
+          title: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Data Unavailable",
+              style: TextStyle(fontSize: SUB_LOCATION_FONT_SIZE),
+            ),
+          ),
         ),
-      ])));
+      );
     }
     locations =
         ListTile.divideTiles(tiles: locations, context: context).toList();
