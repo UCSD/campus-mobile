@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_display.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
@@ -64,10 +65,12 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
               "No Location to Display",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
+                fontSize: LOCATION_FONT_SIZE,
               ),
             ),
-            padding: EdgeInsets.only(bottom: 5),
+            padding: EdgeInsets.only(
+              bottom: TITLE_BOTTOM_PADDING,
+            ),
           ),
           Text("Add Locations via 'Manage Locations'"),
         ],
