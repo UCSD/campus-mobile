@@ -46,34 +46,34 @@ class AvailabilityModel {
   AvailabilityModel({
     this.id,
     this.name,
-    this.childCounts,
+    this.subLocations,
   });
 
   int? id;
   String? name;
-  List<ChildCount>? childCounts;
+  List<SubLocations>? subLocations;
 
   factory AvailabilityModel.fromJson(Map<String, dynamic> json) =>
       AvailabilityModel(
         id: json["id"] == null ? null : json["id"],
         name: json["name"] == null ? null : json["name"],
-        childCounts: json["childCounts"] == null
+        subLocations: json["childCounts"] == null
             ? null
-            : List<ChildCount>.from(
-                json["childCounts"].map((x) => ChildCount.fromJson(x))),
+            : List<SubLocations>.from(
+                json["childCounts"].map((x) => SubLocations.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id == null ? null : id,
         "name": name == null ? null : name,
-        "childCounts": childCounts == null
+        "childCounts": subLocations == null
             ? null
-            : List<dynamic>.from(childCounts!.map((x) => x.toJson())),
+            : List<dynamic>.from(subLocations!.map((x) => x.toJson())),
       };
 }
 
-class ChildCount {
-  ChildCount({
+class SubLocations {
+  SubLocations({
     this.id,
     this.name,
     this.percentage,
@@ -85,7 +85,7 @@ class ChildCount {
   double? percentage;
   bool? isActive;
 
-  factory ChildCount.fromJson(Map<String, dynamic> json) => ChildCount(
+  factory SubLocations.fromJson(Map<String, dynamic> json) => SubLocations(
         id: json["id"] == null ? null : json["id"],
         name: json["name"] == null ? null : json["name"],
         percentage:

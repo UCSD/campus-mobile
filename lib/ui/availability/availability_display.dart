@@ -43,8 +43,8 @@ class AvailabilityDisplay extends StatelessWidget {
     List<Widget> locations = [];
 
     // add any children the model contains to the listview
-    if (model.childCounts!.isNotEmpty) {
-      for (ChildCount subLocation in model.childCounts!) {
+    if (model.subLocations!.isNotEmpty) {
+      for (SubLocations subLocation in model.subLocations!) {
         locations.add(
           ListTile(
             visualDensity: VisualDensity.compact,
@@ -116,7 +116,7 @@ class AvailabilityDisplay extends StatelessWidget {
     );
   }
 
-  num percentAvailability(ChildCount location) => 1 - location.percentage!;
+  num percentAvailability(SubLocations location) => 1 - location.percentage!;
 
   setIndicatorColor(num percentage) {
     if (percentage >= .75)
