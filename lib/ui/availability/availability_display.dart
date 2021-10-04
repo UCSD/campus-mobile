@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/availability.dart';
+import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:flutter/material.dart';
-
-import 'availability_constants.dart';
 
 class AvailabilityDisplay extends StatelessWidget {
   const AvailabilityDisplay({
@@ -92,18 +91,16 @@ class AvailabilityDisplay extends StatelessWidget {
       }
     }
 
-    // if no children, show an error ListTile
+    // if no children, return an error container
     else {
-      locations.add(
-        Container(
-          alignment: Alignment.center,
-          child: Text(
-            "Data Unavailable",
-            style: TextStyle(fontSize: LOCATION_FONT_SIZE),
-          ),
-          padding: EdgeInsets.only(
-            top: DATA_UNAVAILABLE_TOP_PADDING,
-          ),
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Data Unavailable",
+          style: TextStyle(fontSize: LOCATION_FONT_SIZE),
+        ),
+        padding: EdgeInsets.only(
+          top: DATA_UNAVAILABLE_TOP_PADDING,
         ),
       );
     }
