@@ -123,7 +123,7 @@ class EventDetailView extends StatelessWidget {
             // width: width * 0.5,
             // height: height * 0.66,
             // margin: EdgeInsets.only(top: 10.0),
-            color: Colors.blue,
+            color: Colors.white,
             child: Center(
               child: Container(
                 width: width * 0.8,
