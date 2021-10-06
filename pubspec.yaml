@@ -1,52 +1,63 @@
 name: campus_mobile_experimental
-description: A new Flutter project.
-version: 7.2.5+817
-
+description: Mobile app platform for campus.
+version: 1.0.0+1
+publish_to: none
 environment:
-  sdk: ">=2.6.0 <3.0.0"
-
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: 2.5.2
 dependencies:
+  app_settings: 4.1.0
+  barcode_widget: 2.0.1
+  beacon_broadcast: 0.3.0-nullsafety.0
+  connectivity: 3.0.6
+  device_info: 2.0.2
+  dio: 4.0.0
+  dots_indicator: 2.0.0
+  encrypt: 5.0.0
+  firebase_analytics: 8.1.0
+  firebase_core: 1.2.0
+  firebase_crashlytics: 2.0.4
+  firebase_messaging: 10.0.0
   flutter:
     sdk: flutter
-  encrypt: 3.2.0
-  path_provider: 1.6.8
-  pointycastle: 1.0.1
-  provider: 4.0.5
-  cached_network_image: 1.1.2+1
-  dots_indicator: 1.0.0
-  url_launcher: 5.2.5
-  webview_flutter: 0.3.22+1
-  intl: 0.16.0
-  location: 2.3.5
-  google_maps_flutter: 0.5.28+1
-  dio: 3.0.7
-  flutter_sticky_header: 0.4.0
-  firebase_core: 0.4.4
-  firebase_analytics: 5.0.2
-  firebase_crashlytics: 0.1.3+3
-  flutter_secure_storage: 3.3.1+1
-  hive: 1.4.1+1
-  hive_flutter: 0.3.0+2
-  flutter_linkify: 3.1.3
-  shared_preferences: 0.5.6+3
-  firebase_messaging: 6.0.13
-  device_info: 0.4.2+2
-  package_info: 0.4.0+18
-  barcode_widget: 1.3.0
-  qr_code_scanner:
+  flutter_scandit_plugin:
     git:
-      url: https://github.com/ucsd/qr_code_scanner.git
-      ref: master
-
+      url: https://github.com/UCSD/flutter_scandit.git
+      ref: 41fb666299ed90d8277c24e0065149e83cd71494
+  flutter_blue:
+    git:
+      url: https://github.com/UCSD/flutter_blue.git
+      ref: 470b128cd463373d0ec4b668d5b4f449dc728d72
+  flutter_linkify: 5.0.2
+  flutter_local_notifications: 6.1.1
+  flutter_secure_storage: 4.2.0
+  flutter_sticky_header: 0.6.0
+  get: 4.1.4
+  google_maps_flutter: 2.0.6
+  hive: 2.0.4
+  hive_flutter: 1.0.0
+  intl: 0.17.0
+  liquid_progress_indicator:
+    git:
+      url: https://github.com/UCSD/liquid_progress_indicator.git
+      ref: 9fd5cc0aa1a68d70588741f40bfc6830b46c10c1
+  location: 4.1.1
+  package_info: 2.0.2
+  percent_indicator: 3.0.1
+  permission_handler: 7.1.0
+  pointycastle: 3.3.4
+  provider: 5.0.0
+  shared_preferences: 2.0.6
+  uni_links2: 0.6.0+2
+  url_launcher: 6.0.6
+  uuid: 3.0.4
+  webview_flutter: 2.0.8
+  wifi_connection: 0.0.4
 dev_dependencies:
+  build_runner: 2.0.2
   flutter_test:
     sdk: flutter
-  hive_generator: 0.7.0+2
-  build_runner: 1.8.1
-
-dependency_overrides:
-  dartx: 0.3.0
-
+  hive_generator: 1.1.0
 flutter:
   uses-material-design: true
   assets:

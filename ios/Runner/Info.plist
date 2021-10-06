@@ -2,14 +2,33 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key></key>
+	<string></string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>UC San Diego</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>deeplinking.searchmap</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>campusmobile</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -24,16 +43,29 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>UC San Diego Mobile uses Bluetooth access to scan for nearby beacons to provide location specific information.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>UC San Diego Mobile uses Bluetooth access to scan for nearby beacons to provide location specific information.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>UC San Diego mobile would like access to the camera. The app needs access to scan QR Codes.</string>
+	<key>NSHumanReadableCopyright</key>
+	<string></string>
 	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allowing location access allows cards and map search to display information relevant to your location.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allowing location access allows cards and map search to display information relevant to your location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allowing location access while using the app allows cards and map search to display information relevant to your location.</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
@@ -55,7 +87,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
+	<key>com.transistorsoft.fetch</key>
+	<string></string>
 </dict>
 </plist>
