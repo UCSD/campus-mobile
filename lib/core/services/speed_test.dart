@@ -82,6 +82,7 @@ class SpeedTestService {
           (!value.ssid!.contains("UCSD-GUEST")) &&
           (!value.ssid!.contains("ResNet"))) {
         isUCSDWIFI = false;
+
         return null;
       }
       isUCSDWIFI = true;

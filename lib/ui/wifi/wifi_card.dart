@@ -509,6 +509,21 @@ class _WiFiCardState extends State<WiFiCard> {
             textAlign: TextAlign.center,
           ),
         ),
+        MaterialButton(
+            padding: EdgeInsets.all(4.0),
+            elevation: 0.0,
+            onPressed: () => Provider.of<SpeedTestProvider>(context, listen: false).init(),
+            minWidth: 350,
+            height: 40,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              side: BorderSide(color: Colors.black),
+            ),
+            color: darkAppBarTheme.color,
+            child: Text(
+              "Try Again",
+              style: TextStyle(color: Colors.white),
+            )),
       ],
     );
   }
@@ -540,7 +555,6 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   _onTimeout() {
-    print("---- SPEED TEST TIMED OUT -------");
     _speedTestProvider.cancelDownload();
     _speedTestProvider.cancelUpload();
     setState(() {

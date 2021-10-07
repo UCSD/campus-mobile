@@ -55,6 +55,8 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   void init() async {
+    _isLoading = true;
+    notifyListeners();
     _speedTestService = SpeedTestService();
     if (await _speedTestService.checkSimulation()) {
       _onSimulator = true;
@@ -63,9 +65,10 @@ class SpeedTestProvider extends ChangeNotifier {
     } else {
       _onSimulator = false;
     }
-    _isLoading = true;
+    // _isLoading = true;
     await _speedTestService.fetchSignedUrls();
     _isLoading = false;
+    notifyListeners();
     _speedTestModel = _speedTestService.speedTestModel;
     connectedToUCSDWifi();
     resetSpeedTest();
