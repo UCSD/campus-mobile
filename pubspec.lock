@@ -714,7 +714,7 @@ packages:
       name: permission_handler_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.6.2"
+    version: "3.7.0"
   platform:
     dependency: transitive
     description:
@@ -1072,4 +1072,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.14.0 <3.0.0"
-  flutter: ">=2.5.2"
+  flutter: ">=2.5.0"
