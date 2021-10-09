@@ -324,14 +324,14 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } else {
       print('FCM: toggleNotificationsForTopic:subscribe: ' + topic!);
       _topicSubscriptionState[topic] = true;
-      _subscribeToTopics([topic]);
+      subscribeToTopics([topic]);
     }
     notifyListeners();
   }
 
   /// Iterates through passed in topics list
   /// Invokes [unsubscribeFromTopic] on firebase object [_fcm]
-  void _subscribeToTopics(List<String?> topics) {
+  void subscribeToTopics(List<String?> topics) {
     for (String? topic in topics) {
       if ((topic ?? "").isNotEmpty) {
         print('FCM: _subscribeToTopics: ' + topic!);
