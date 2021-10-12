@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 
 class CardsService {
+  String CARD_CONSTANT = "{\"NativeScanner\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Scanner\"},\"shuttle\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Shuttle\"},\"dining\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Dining\"},\"parking\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Parking\"},\"availability\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Availability\"},\"events\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Events\"},\"news\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"News\"},\"weather\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Weather\"},\"campus_info\":{\"cardActive\":true,\"initialURL\":\"https://mobile.ucsd.edu/replatform/v1/qa/webview/campus_info-v6.html\",\"isWebCard\":true,\"requireAuth\":false,\"titleText\":\"Campus Information\"},\"MyStudentChart\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"MyStudentChart\"},\"student_survey\":{\"cardActive\":false,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Student Survey\"},\"student_id\":{\"cardActive\":false,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Student ID\"},\"finals\":{\"cardActive\":false,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Finals\"},\"schedule\":{\"cardActive\":false,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Classes\"},\"student_info\":{\"cardActive\":false,\"initialURL\":\"https://mobile.ucsd.edu/replatform/v1/qa/webview/student_info-v6.html\",\"isWebCard\":true,\"requireAuth\":false,\"titleText\":\"COVID-19 Info\"},\"student_health_wellbeing\":{\"cardActive\":false,\"initialURL\":\"https://mobile.ucsd.edu/replatform/v1/qa/webview/student-health-wellbeing.html\",\"isWebCard\":true,\"requireAuth\":false,\"titleText\":\"Student Health & Wellness\"},\"MyUCSDChart\":{\"cardActive\":false,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"MyUCSDChart\"},\"employee_id\":{\"cardActive\":false,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Employee ID\"},\"staff_info\":{\"cardActive\":false,\"initialURL\":\"https://mobile.ucsd.edu/replatform/v1/qa/webview/staff_info-v6.html\",\"isWebCard\":true,\"requireAuth\":false,\"titleText\":\"COVID-19 Info\"},\"ventilation\":{\"cardActive\":false,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Office Environment\"},\"speed_test\":{\"cardActive\":true,\"initialURL\":\"\",\"isWebCard\":false,\"requireAuth\":false,\"titleText\":\"Speed Test\"}}";
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
@@ -36,6 +37,10 @@ class CardsService {
         if (await getNewToken()) {
           return await fetchCards(ucsdAffiliation);
         }
+      }else{
+        _cardsModel = cardsModelFromJson(CARD_CONSTANT);
+        _isLoading = false;
+        return true;
       }
       _error = e.toString();
       _isLoading = false;
