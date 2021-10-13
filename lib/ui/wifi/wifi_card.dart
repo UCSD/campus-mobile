@@ -293,15 +293,11 @@ class _WiFiCardState extends State<WiFiCard> {
                     color: Theme.of(context).colorScheme.secondary,
                     fontSize: 36,
                   )),
-              WidgetSpan(
-                child: Icon(Icons.thumb_down, size: 36, color: Colors.red),
-              ),
               TextSpan(
                 text:
-                '\n Your download speed was: ${lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3)} Mbps \n Your upload speed was: ${_speedTestProvider.uploadSpeed!.toStringAsPrecision(3)} Mbps\n',
+                '\n Download speed: ${lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3)} Mbps \n Upload speed: ${_speedTestProvider.uploadSpeed!.toStringAsPrecision(3)} Mbps\n',
                 style: TextStyle(fontSize: 15, color: Colors.grey),
-              )
-            ])),
+              )])),
         Padding(
           padding: const EdgeInsets.all(4.0),
           child: MaterialButton(
@@ -410,14 +406,9 @@ class _WiFiCardState extends State<WiFiCard> {
                 color: Theme.of(context).colorScheme.secondary,
                 fontSize: 36,
               )),
-          WidgetSpan(
-            child: goodSpeed
-                ? Icon(Icons.thumb_up, size: 36, color: Colors.green)
-                : Icon(Icons.thumb_down, size: 36, color: Colors.red),
-          ),
           TextSpan(
             text:
-                '\n Your download speed was: $downloadSpeed \n Your upload speed was: $uploadSpeed\n',
+                '\n Download speed was: $downloadSpeed \n Upload speed was: $uploadSpeed\n',
             style: TextStyle(fontSize: 15, color: Colors.grey),
           )
         ])),
