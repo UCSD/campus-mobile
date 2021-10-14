@@ -33,13 +33,11 @@ class EventsAll extends StatelessWidget {
     }
 
     if (listOfEvents != null && listOfEvents.length > 0) {
-      return CustomScrollView(
-        slivers: [
-          SliverGrid.count(
-            crossAxisCount: 2,
+      return GridView.count(
+          crossAxisCount: 2,
             children: eventTiles,
-          )
-        ],
+        childAspectRatio: MediaQuery.of(context).size.width /
+            (MediaQuery.of(context).size.height / 1.25),
       );
     } else {
       return ContainerView(
