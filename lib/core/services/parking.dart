@@ -17,7 +17,7 @@ class ParkingService {
   };
 
   final String campusParkingServiceApiUrl =
-      "https://api-qa.ucsd.edu:8243/campusparkingservice/1.0.0";
+      "https://api-qa.ucsd.edu:8243/campusparkingservice/v1.3";
 
   Future<bool> fetchParkingLotData() async {
     _error = null;
@@ -25,7 +25,7 @@ class ParkingService {
     try {
       /// fetch data
       String _response = await (_networkHelper.authorizedFetch(
-          campusParkingServiceApiUrl + "/parking/status", headers));
+          campusParkingServiceApiUrl + "/status", headers));
 
       /// parse data
       _data = parkingModelFromJson(_response);
