@@ -17,7 +17,9 @@ class WiFiCard extends StatefulWidget {
   _WiFiCardState createState() => _WiFiCardState();
 }
 
-class _WiFiCardState extends State<WiFiCard> {
+class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
+
   String cardId = "speed_test";
   TestStatus? cardState;
   int? lastSpeed;
@@ -49,7 +51,7 @@ class _WiFiCardState extends State<WiFiCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
-          Provider.of<SpeedTestProvider>(context, listen: false).init(),
+          cardState != TestStatus.running ? Provider.of<SpeedTestProvider>(context, listen: false).init() : print("running test..."),
       isLoading: _speedTestProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _speedTestProvider.error,
@@ -75,7 +77,6 @@ class _WiFiCardState extends State<WiFiCard> {
       );
     }
 
-    print("timedOut: $timedOut");
     if(timedOut) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
@@ -381,11 +382,11 @@ class _WiFiCardState extends State<WiFiCard> {
     String downloadSpeed = lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3) + " Mbps";
     String uploadSpeed = _speedTestProvider.uploadSpeed!.toStringAsPrecision(3) + " Mbps";
 
-    if(downloadSpeed == "Infinity") {
+    if(downloadSpeed.contains("Infinity")) {
       downloadSpeed = "N/A";
     }
 
-    if(uploadSpeed == "Infinity") {
+    if(uploadSpeed.contains("Infinity")) {
       uploadSpeed = "N/A";
     }
 
