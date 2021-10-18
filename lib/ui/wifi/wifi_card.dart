@@ -402,12 +402,6 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
         RichText(
             text: TextSpan(children: [
           TextSpan(
-              text: "Your speed is:  ",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 36,
-              )),
-          TextSpan(
             text:
                 '\n Download speed was: $downloadSpeed \n Upload speed was: $uploadSpeed\n',
             style: TextStyle(fontSize: 15, color: Colors.grey),
