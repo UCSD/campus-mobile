@@ -54,7 +54,7 @@ class SpeedTestProvider extends ChangeNotifier {
     _userDataProvider = userDataProvider;
   }
 
-  void init() async {
+  Future<void> init() async {
     _isLoading = true;
     notifyListeners();
     _speedTestService = SpeedTestService();
@@ -80,6 +80,7 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   Future<void> speedTest() async {
+    init();
     resetSpeedTest();
     downloadSpeedTest().then((value) {
       _timer.reset();

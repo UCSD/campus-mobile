@@ -110,7 +110,6 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
         }
       } catch (e) {}
     });
-
     switch (cardState) {
       //TODO: Add check to verify not over-checking states
       case TestStatus.initial:
@@ -498,7 +497,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
         MaterialButton(
             padding: EdgeInsets.all(4.0),
             elevation: 0.0,
-            onPressed: () => Provider.of<SpeedTestProvider>(context, listen: false).init(),
+            onPressed: () => tryAgain(),
             minWidth: 350,
             height: 40,
             shape: RoundedRectangleBorder(
@@ -514,6 +513,22 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     );
   }
 
+  void tryAgain() async {
+    // re check everything
+    await Provider.of<SpeedTestProvider>(context, listen: false).init();
+
+    // reset states if needed
+    if(_speedTestProvider.isUCSDWiFi!) {
+      setState(() {
+        cardState = TestStatus.initial;
+      });
+    }
+    else {
+      setState(() {
+        cardState = TestStatus.unavailable;
+      });
+    }
+  }
   Column simulatedState() {
     print("WiFi Speed Test feature is only available on physical devices.");
     return Column(

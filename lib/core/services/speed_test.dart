@@ -71,6 +71,7 @@ class SpeedTestService {
   }
 
   Future<WifiInfo?> fetchNetworkDiagnostics() async {
+
     _isLoading = true;
     // Check connected to wifi
     if (await _connectivity.checkConnectivity() != ConnectivityResult.wifi) {
@@ -82,7 +83,7 @@ class SpeedTestService {
     WifiInfo? wiFiInfo = await WifiConnection.wifiInfo.then((value) {
       if ((!value.ssid!.contains("UCSD-PROTECTED")) &&
           (!value.ssid!.contains("UCSD-GUEST")) &&
-          (!value.ssid!.contains("AMMK"))) {
+          (!value.ssid!.contains("ResNet"))) {
         isUCSDWIFI = false;
         _isLoading = false;
         return null;
