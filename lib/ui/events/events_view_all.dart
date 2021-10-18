@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/events/eventTile.dart';
+import 'package:campus_mobile_experimental/ui/events/event_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,8 +34,8 @@ class EventsAll extends StatelessWidget {
 
     if (listOfEvents != null && listOfEvents.length > 0) {
       return GridView.count(
-          crossAxisCount: 2,
-            children: eventTiles,
+        crossAxisCount: 2,
+        children: eventTiles,
         childAspectRatio: MediaQuery.of(context).size.width /
             (MediaQuery.of(context).size.height / 1.25),
       );

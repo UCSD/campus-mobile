@@ -2,7 +2,6 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
-import 'package:campus_mobile_experimental/ui/events/eventTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -26,9 +25,9 @@ class EventTile extends StatelessWidget {
 
   Widget buildEventTile(BuildContext context, double height, double width) {
     double padding = height * 0.03;
-    double sizedBoxHeight = height * 0.01;
     double cardWidth = width / 1.6;
-    double minTextConHeight = width * 0.15;
+    double minTitleConHeight = width * 0.15;
+    double minTimeConHeight = minTitleConHeight / 1.1;
     return Container(
       width: cardWidth,
       child: Card(
@@ -42,8 +41,7 @@ class EventTile extends StatelessWidget {
               },
               child: Container(
                 width: cardWidth,
-                padding:
-                    EdgeInsets.fromLTRB(padding, 0, padding, sizedBoxHeight),
+                padding: EdgeInsets.fromLTRB(padding, 0, padding, 0),
                 decoration: BoxDecoration(
                     border: Border.all(width: 0.3),
                     borderRadius: BorderRadius.all(Radius.circular(5.0))),
@@ -59,7 +57,7 @@ class EventTile extends StatelessWidget {
                       },
                     ),
                     ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: minTextConHeight),
+                      constraints: BoxConstraints(minHeight: minTitleConHeight),
                       child: Text(
                         data.title!,
                         maxLines: 3,
@@ -70,10 +68,10 @@ class EventTile extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(
-                      height: sizedBoxHeight,
+                    ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: minTimeConHeight),
+                      child: EventsDateTime(data),
                     ),
-                    EventsDateTime(data),
                   ],
                 ),
               ),

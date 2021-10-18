@@ -4,7 +4,7 @@ import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/events/events_view_all.dart';
-import 'package:campus_mobile_experimental/ui/events/eventTile.dart';
+import 'package:campus_mobile_experimental/ui/events/event_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
