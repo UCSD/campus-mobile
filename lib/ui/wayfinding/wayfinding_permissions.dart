@@ -29,12 +29,14 @@ class _AdvancedWayfindingPermissionState
   @override
   Widget build(BuildContext context) {
     _wayfindingProvider = Provider.of<WayfindingProvider>(context);
+    print("theme here~");
+    print(Theme.of(context));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
           backgroundColor: ColorPrimary,
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          systemOverlayStyle: (Theme.of(context).brightness == Brightness.light) ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
           primary: true,
           centerTitle: true,
           title: Text("Advanced Wayfinding"),

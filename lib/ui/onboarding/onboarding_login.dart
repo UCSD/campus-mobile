@@ -30,7 +30,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        systemOverlayStyle: (Theme.of(context).brightness == Brightness.light) ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       ),
       backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
       body: _userDataProvider.isLoading!

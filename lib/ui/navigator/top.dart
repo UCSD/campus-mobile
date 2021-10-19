@@ -15,7 +15,7 @@ class CMAppBar extends StatelessWidget {
       preferredSize: Size.fromHeight(42),
       child: AppBar(
         backgroundColor: ColorPrimary,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        systemOverlayStyle: (Theme.of(context).brightness == Brightness.light) ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         primary: true,
         centerTitle: true,
         title: title == null

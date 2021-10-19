@@ -30,7 +30,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
         preferredSize: Size.fromHeight(42),
         child: AppBar(
           backgroundColor: ColorPrimary,
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          systemOverlayStyle: (Theme.of(context).brightness == Brightness.light) ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
           centerTitle: true,
           title: const Text("Scanner"),
         ),

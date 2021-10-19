@@ -22,7 +22,7 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        systemOverlayStyle: (Theme.of(context).brightness == Brightness.light) ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       ),
       body: Container(
         color: ColorPrimary,
