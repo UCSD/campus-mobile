@@ -39,7 +39,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     newOrder.insert(newIndex, item);
     List<String?> orderedLocationNames = [];
     for (AvailabilityModel? item in newOrder) {
-      orderedLocationNames.add(item!.name);
+      orderedLocationNames.add(item!.locationName);
     }
     _availabilityDataProvider.reorderLocations(orderedLocationNames);
   }
@@ -50,19 +50,19 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
         in _availabilityDataProvider.availabilityModels) {
       if (model != null) {
         list.add(ListTile(
-          key: Key(model.name.toString()),
+          key: Key(model.locationId.toString()),
           title: Text(
-            model.name!,
+            model.locationName!,
           ),
           leading: Icon(
             Icons.reorder,
           ),
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
-                .locationViewState[model.name]!,
+                .locationViewState[model.locationName]!,
             activeColor: Theme.of(context).buttonColor,
             onChanged: (_) {
-              _availabilityDataProvider.toggleLocation(model.name);
+              _availabilityDataProvider.toggleLocation(model.locationName);
             },
           ),
         ));
