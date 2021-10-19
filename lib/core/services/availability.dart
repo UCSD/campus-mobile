@@ -19,7 +19,7 @@ class AvailabilityService {
     "accept": "application/json",
   };
   final String endpoint =
-      "https://api-qa.ucsd.edu:8243/occuspace/v3.0/busyness";
+      "https://api-qa.ucsd.edu:8243/occuspace/v2.0/busyness";
 
   Future<bool> fetchData() async {
     _error = null;
@@ -30,10 +30,10 @@ class AvailabilityService {
           await (_networkHelper.authorizedFetch(endpoint, headers));
 
       /// parse data
-      final data = availabilityStatusFromJson(_response);
+      final data = availabilityModelFromJson(_response);
       _isLoading = false;
 
-      _data = data.data;
+      _data = data;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
