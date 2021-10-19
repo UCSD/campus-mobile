@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/core/models/availability.dart';
-import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityDisplay extends StatelessWidget {
@@ -8,7 +7,6 @@ class AvailabilityDisplay extends StatelessWidget {
     required this.model,
   }) : super(key: key);
 
-  /// Models
   final AvailabilityModel model;
 
   @override
@@ -23,39 +21,44 @@ class AvailabilityDisplay extends StatelessWidget {
 
   Widget buildLocationTitle() {
     return Container(
-      alignment: Alignment.centerLeft,
-      margin: EdgeInsets.only(
-        left: TITLE_SIDE_PADDINGS,
-        right: TITLE_SIDE_PADDINGS,
-        bottom: TITLE_BOTTOM_PADDING,
-      ),
-      child: Text(
-        model.name!,
-        style: TextStyle(
-          fontSize: LOCATION_FONT_SIZE,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      margin: EdgeInsets.symmetric(horizontal: 18),
+      child: ListTile(
+          title: Text(
+            model.locationName!,
+            style: TextStyle(fontSize: 17),
+          ),
+          contentPadding: EdgeInsets.all(0),
+          subtitle: Row(
+            children: <Widget>[
+              Text(
+                model.isOpen! ? "Open" : "Closed",
+              ),
+              Container(
+                width: 12,
+                height: 12,
+                margin: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: model.isOpen! ? Colors.green : Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
+          )),
     );
   }
 
   Widget buildAvailabilityBars(BuildContext context) {
     List<Widget> locations = [];
 
-    // add any children the model contains to the listview
     if (model.subLocations!.isNotEmpty) {
-      for (SubLocations subLocation in model.subLocations!) {
+      for (AvailabilityModel subLocation in model.subLocations!) {
         locations.add(
           ListTile(
-            visualDensity: VisualDensity.compact,
-            title: Text(
-              subLocation.name!,
-              style: TextStyle(
-                fontSize: LOCATION_FONT_SIZE,
-              ),
-            ),
-            subtitle: Column(
-              children: <Widget>[
+              title: Text(subLocation.locationName!,
+                  style: TextStyle(
+                    fontSize: 17,
+                  )),
+              subtitle: Column(children: <Widget>[
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -68,41 +71,46 @@ class AvailabilityDisplay extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: SizedBox(
-                    height: PROGRESS_BAR_HEIGHT,
-                    width: PROGRESS_BAR_WIDTH,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
-                      child: LinearProgressIndicator(
-                        value: percentAvailability(subLocation) as double?,
-                        backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          setIndicatorColor(
-                            percentAvailability(subLocation),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+                      height: 12,
+                      width: 325,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: LinearProgressIndicator(
+                            value: percentAvailability(subLocation) as double?,
+                            backgroundColor: Colors.grey[200],
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                setIndicatorColor(
+                                    percentAvailability(subLocation))),
+                          ))),
+                )
+              ])),
         );
       }
-    }
-
-    // if no children, return an error container
-    else {
-      return Container(
-        alignment: Alignment.center,
-        child: Text(
-          "Data Unavailable",
-          style: TextStyle(fontSize: LOCATION_FONT_SIZE),
-        ),
-        padding: EdgeInsets.only(
-          top: DATA_UNAVAILABLE_TOP_PADDING,
-        ),
-      );
+    } else {
+      locations.add(ListTile(
+          // title: Text(model.locationName),
+          title: Column(children: <Widget>[
+        Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              (100 * percentAvailability(model)).toInt().toString() +
+                  '% Availability',
+              //style: TextStyle(color: Colors.black),
+            )),
+        Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+                height: 12,
+                width: 325,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: LinearProgressIndicator(
+                        value: percentAvailability(model) as double?,
+                        backgroundColor: Colors.grey[200],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          setIndicatorColor(percentAvailability(model)),
+                        )))))
+      ])));
     }
     locations =
         ListTile.divideTiles(tiles: locations, context: context).toList();
@@ -116,7 +124,15 @@ class AvailabilityDisplay extends StatelessWidget {
     );
   }
 
-  num percentAvailability(SubLocations location) => 1 - location.percentage!;
+  num percentAvailability(AvailabilityModel location) {
+    num percentAvailable = 0.0;
+
+    if (location.isOpen!) {
+      percentAvailable = 1 - location.percent!;
+    }
+
+    return percentAvailable;
+  }
 
   setIndicatorColor(num percentage) {
     if (percentage >= .75)
