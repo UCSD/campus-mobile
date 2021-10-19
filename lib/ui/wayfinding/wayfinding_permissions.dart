@@ -29,8 +29,6 @@ class _AdvancedWayfindingPermissionState
   @override
   Widget build(BuildContext context) {
     _wayfindingProvider = Provider.of<WayfindingProvider>(context);
-    print("theme here~");
-    print(Theme.of(context));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(42),
