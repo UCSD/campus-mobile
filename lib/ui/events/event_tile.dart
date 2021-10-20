@@ -60,14 +60,16 @@ class EventTile extends StatelessWidget {
                       constraints: BoxConstraints(minHeight: minTitleConHeight),
                       child: Text(
                         data.title!,
+                        textAlign: TextAlign.center,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             color: lightButtonColor,
-                            fontSize: width * 0.04,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
+                    Padding(padding: EdgeInsets.only(bottom: 5),),
                     ConstrainedBox(
                       constraints: BoxConstraints(minHeight: minTimeConHeight),
                       child: EventsDateTime(data),
@@ -126,7 +128,7 @@ class EventTile extends StatelessWidget {
       Widget date;
       Widget time;
       if (sameDay) {
-        date = Text(startMonthDayYear); // Ex. June 11, 2021
+        date = Text(startMonthDayYear, style: TextStyle(fontSize: 12),); // Ex. June 11, 2021
       } else {
         // if not the same date, check if the same year
         String startYear = startMonthDayYear.substring(
@@ -152,7 +154,7 @@ class EventTile extends StatelessWidget {
                 ' - ' +
                 endDay +
                 ', ' +
-                startYear); // Ex. September 11 - 26, 2021
+                startYear, style: TextStyle(fontSize: 12),); // Ex. September 11 - 26, 2021
           } else {
             // if different month in the same year
             String startMonthDay =
@@ -160,27 +162,28 @@ class EventTile extends StatelessWidget {
             String endMonthDay =
                 endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
             date = Text(
-              startMonthDay + ' - ' + endMonthDay + ', ' + startYear,
+              startMonthDay + ' - ' + endMonthDay + ', ' + startYear, style: TextStyle(fontSize: 12),
             ); // Ex. September 11 - October 26, 2021
           }
         } else {
           date = Text(
-            startMonthDayYear + ' - ' + endMonthDayYear,
+            startMonthDayYear + ' - ' + endMonthDayYear, style: TextStyle(fontSize: 12),
           ); // Ex. June 11, 2021 - May 12, 2023
         }
       }
 
       if (unspecifiedTime) {
-        time = Text('');
+        time = Text('', style: TextStyle(fontSize: 12),);
       } else {
         time = Text(
-          startTime + ' - ' + endTime,
+          startTime + ' - ' + endTime, style: TextStyle(fontSize: 12),
         );
       }
 
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [date, time],
+        // mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [date, Padding(padding: EdgeInsets.only(bottom: 5),), time],
       );
     } catch (e) {
       print(e);
