@@ -85,9 +85,8 @@ class EventTile extends StatelessWidget {
   Widget eventImageLoader(String? url, double height) {
     return url!.isEmpty
         ? Container(
-            width: 0,
-            height: 0,
-          )
+            height: height / 5,
+            child: Image.network('https://via.placeholder.com/140x140'))
         : ConstrainedBox(
             constraints:
                 BoxConstraints(minHeight: height / 5, maxHeight: height / 5),
