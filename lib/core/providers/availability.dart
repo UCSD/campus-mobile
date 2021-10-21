@@ -45,20 +45,20 @@ class AvailabilityDataProvider extends ChangeNotifier {
     if (await _availabilityService.fetchData()) {
       /// setting the LocationViewState based on user data
       for (AvailabilityModel model in _availabilityService.data!) {
-        newMapOfLots[model.name] = model;
+        newMapOfLots[model.locationName] = model;
 
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
         if (_userDataProvider
             .userProfileModel!.selectedOccuspaceLocations!.isEmpty) {
-          locationViewState[model.name] = true;
+          locationViewState[model.locationName] = true;
         }
 
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
-          _locationViewState[model.name] = _userDataProvider
+          _locationViewState[model.locationName] = _userDataProvider
               .userProfileModel!.selectedOccuspaceLocations!
-              .contains(model.name);
+              .contains(model.locationName);
         }
       }
 
@@ -164,7 +164,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
     List<String?> locationsToReturn = [];
     for (AvailabilityModel model
         in _availabilityModels as Iterable<AvailabilityModel>? ?? []) {
-      locationsToReturn.add(model.name);
+      locationsToReturn.add(model.locationName);
     }
     return locationsToReturn;
   }
