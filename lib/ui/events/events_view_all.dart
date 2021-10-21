@@ -1,5 +1,3 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -32,7 +30,7 @@ class EventsAll extends StatelessWidget {
       eventTiles.add(tile);
     }
 
-    if (listOfEvents != null && listOfEvents.length > 0) {
+    if (listOfEvents.length > 0) {
       return GridView.count(
         crossAxisCount: 2,
         children: eventTiles,
