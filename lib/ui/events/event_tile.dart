@@ -72,7 +72,7 @@ class EventTile extends StatelessWidget {
                     Padding(padding: EdgeInsets.only(bottom: 5),),
                     ConstrainedBox(
                       constraints: BoxConstraints(minHeight: minTimeConHeight),
-                      child: EventsDateTime(data),
+                      child: eventsDateTime(data),
                     ),
                   ],
                 ),
@@ -88,7 +88,9 @@ class EventTile extends StatelessWidget {
     return url!.isEmpty
         ? Container(
             height: height / 5,
-            child: Image.network('https://via.placeholder.com/140x140'))
+            child: Image(
+              image: AssetImage('assets/images/UCSDMobile_rounded.png'),
+            ))
         : ConstrainedBox(
             constraints:
                 BoxConstraints(minHeight: height / 5, maxHeight: height / 5),
@@ -112,7 +114,7 @@ class EventTile extends StatelessWidget {
           );
   }
 
-  Widget EventsDateTime(EventModel data) {
+  Widget eventsDateTime(EventModel data) {
     try {
       // Separate dates from times
       String startMonthDayYear =
