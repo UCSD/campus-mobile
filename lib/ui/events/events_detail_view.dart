@@ -12,26 +12,26 @@ class EventDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerView(
-        child: buildDetailView(context),
+      child: buildDetailView(context),
     );
   }
 
   Widget buildDetailView(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
-
     return ListView(
       children: [
         Container(
           width: width,
           height: height * 0.33,
           decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: NetworkImage(data.imageHQ!),
-            )
-          ),
+              image: DecorationImage(
+            fit: BoxFit.fill,
+            image: (data.imageHQ!.isEmpty)
+                ? AssetImage('assets/images/UCSDMobile_banner.png')
+                    as ImageProvider
+                : NetworkImage(data.imageHQ!),
+          )),
         ),
         Flexible(
           child: Container(
@@ -39,49 +39,61 @@ class EventDetailView extends StatelessWidget {
             child: Center(
               child: Container(
                 width: width * 0.8,
-               color: Colors.white,
-    child: Column(
-                    children: [
-                      Icon(Icons.keyboard_arrow_down, size: 30, color: Theme.of(context).primaryColor,),
-                      Text(
-                        data.title!,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.w500),
-                        // style: Theme.of(context).textTheme.hev adline6,
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 10.0),),
-                      data.location != null && data.location!.isNotEmpty
-                          ? LinkifyWithCatch(
-                        text: "Where: " + data.location!,
-                        looseUrl: true,
-                        style: TextStyle(fontSize: 16, height: 1.3, color: Theme.of(context).primaryColor),
-                        textAlign: TextAlign.center,
-                      )
-                          : Container(),
-                      Padding(padding: EdgeInsets.only(top: 10.0),),
-                      Center(child: EventTime(data: data)),
-                      data.description != null && data.description!.isNotEmpty
-                          ? Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                           data.description!,
-                          style: TextStyle(fontSize: 16, height: 1.3),
-                        ),
-                      )
-                          : Container(),
-                      data.link != null && data.link!.isNotEmpty
-                          ? LearnMoreButton(link: data.link)
-                          : Container(),
-                    ],
-                  ),
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 30,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Text(
+                      data.title!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                      // style: Theme.of(context).textTheme.hev adline6,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                    ),
+                    data.location != null && data.location!.isNotEmpty
+                        ? LinkifyWithCatch(
+                            text: "Where: " + data.location!,
+                            looseUrl: true,
+                            style: TextStyle(
+                                fontSize: 16,
+                                height: 1.3,
+                                color: Theme.of(context).primaryColor),
+                            textAlign: TextAlign.center,
+                          )
+                        : Container(),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                    ),
+                    Center(child: EventTime(data: data)),
+                    data.description != null && data.description!.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              data.description!,
+                              style: TextStyle(fontSize: 16, height: 1.3),
+                            ),
+                          )
+                        : Container(),
+                    data.link != null && data.link!.isNotEmpty
+                        ? LearnMoreButton(link: data.link)
+                        : Container(),
+                  ],
+                ),
               ),
             ),
-
           ),
         )
       ],
     );
-
   }
 }
 
