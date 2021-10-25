@@ -19,20 +19,31 @@ class EventDetailView extends StatelessWidget {
   Widget buildDetailView(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
+    print(data.imageHQ);
 
     return ListView(
       children: [
+        data.imageHQ != "" ?
         Container(
           width: width,
           height: height * 0.33,
           decoration: BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.fill,
-              image: NetworkImage(data.imageHQ!),
+              image: NetworkImage(data.imageHQ!) ,
             )
           ),
-        ),
+        ) :
+        Container(
+          width: width,
+          height: height * 0.33,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage('assets/images/TridentLogo.png') ,
+              )
+          ),
+        ) ,
         Flexible(
           child: Container(
             color: Colors.white,
@@ -42,7 +53,7 @@ class EventDetailView extends StatelessWidget {
                color: Colors.white,
     child: Column(
                     children: [
-                      Icon(Icons.keyboard_arrow_down, size: 30, color: Theme.of(context).primaryColor,),
+                      Padding(padding: EdgeInsets.only(top: 15.0),),
                       Text(
                         data.title!,
                         textAlign: TextAlign.center,
@@ -83,7 +94,11 @@ class EventDetailView extends StatelessWidget {
     );
 
   }
+
+
 }
+
+
 
 class LearnMoreButton extends StatelessWidget {
   const LearnMoreButton({Key? key, required this.link}) : super(key: key);

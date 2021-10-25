@@ -35,7 +35,7 @@ class EventsAll extends StatelessWidget {
         crossAxisCount: 2,
         children: eventTiles,
         childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 1.25),
+            (MediaQuery.of(context).size.height / 1.1),
       );
     } else {
       return ContainerView(
