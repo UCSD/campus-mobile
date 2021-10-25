@@ -12,93 +12,90 @@ class EventDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerView(
-        child: buildDetailView(context),
+      child: buildDetailView(context),
     );
   }
 
   Widget buildDetailView(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    print(data.imageHQ);
-
     return ListView(
       children: [
-        data.imageHQ != "" ?
-        Container(
-          width: width,
-          height: height * 0.33,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: NetworkImage(data.imageHQ!) ,
-            )
-          ),
-        ) :
         Container(
           width: width,
           height: height * 0.33,
           decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.fill,
-                image: AssetImage('assets/images/TridentLogo.png') ,
-              )
-          ),
-        ) ,
+                image: (data.imageHQ!.isEmpty)
+                    ? AssetImage('assets/images/UCSDMobile_banner.png')
+                as ImageProvider
+                    : NetworkImage(data.imageHQ!),
+              )),
+        ),
         Flexible(
           child: Container(
             color: Colors.white,
             child: Center(
               child: Container(
                 width: width * 0.8,
-               color: Colors.white,
-    child: Column(
-                    children: [
-                      Padding(padding: EdgeInsets.only(top: 15.0),),
-                      Text(
-                        data.title!,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.w500),
-                        // style: Theme.of(context).textTheme.hev adline6,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 30,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Text(
+                      data.title!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                      // style: Theme.of(context).textTheme.hev adline6,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                    ),
+                    data.location != null && data.location!.isNotEmpty
+                        ? LinkifyWithCatch(
+                      text: "Where: " + data.location!,
+                      looseUrl: true,
+                      style: TextStyle(
+                          fontSize: 16,
+                          height: 1.3,
+                          color: Theme.of(context).primaryColor),
+                      textAlign: TextAlign.center,
+                    )
+                        : Container(),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                    ),
+                    Center(child: EventTime(data: data)),
+                    data.description != null && data.description!.isNotEmpty
+                        ? Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        data.description!,
+                        style: TextStyle(fontSize: 16, height: 1.3),
                       ),
-                      Padding(padding: EdgeInsets.only(top: 10.0),),
-                      data.location != null && data.location!.isNotEmpty
-                          ? LinkifyWithCatch(
-                        text: "Where: " + data.location!,
-                        looseUrl: true,
-                        style: TextStyle(fontSize: 16, height: 1.3, color: Theme.of(context).primaryColor),
-                        textAlign: TextAlign.center,
-                      )
-                          : Container(),
-                      Padding(padding: EdgeInsets.only(top: 10.0),),
-                      Center(child: EventTime(data: data)),
-                      data.description != null && data.description!.isNotEmpty
-                          ? Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                           data.description!,
-                          style: TextStyle(fontSize: 16, height: 1.3),
-                        ),
-                      )
-                          : Container(),
-                      data.link != null && data.link!.isNotEmpty
-                          ? LearnMoreButton(link: data.link)
-                          : Container(),
-                    ],
-                  ),
+                    )
+                        : Container(),
+                    data.link != null && data.link!.isNotEmpty
+                        ? LearnMoreButton(link: data.link)
+                        : Container(),
+                  ],
+                ),
               ),
             ),
-
           ),
         )
       ],
     );
-
   }
-
-
 }
-
-
 
 class LearnMoreButton extends StatelessWidget {
   const LearnMoreButton({Key? key, required this.link}) : super(key: key);
