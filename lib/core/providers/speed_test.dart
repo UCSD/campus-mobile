@@ -205,8 +205,8 @@ class SpeedTestProvider extends ChangeNotifier {
       "IsHiddenSSID": _speedTestModel!.isHiddenSSID,
       "RouterIP": _speedTestModel!.routerIP,
       "Channel": _speedTestModel!.channel,
-      "Latitude": _coordinates.lat,
-      "Longitude": _coordinates.lon,
+      "Latitude": _coordinates.lat.toString(),
+      "Longitude": _coordinates.lon.toString(),
       "TimeStamp": _speedTestModel!.timeStamp,
       "DownloadSpeed": lastSpeed != null
           ? lastSpeed.toStringAsPrecision(3)
@@ -236,8 +236,8 @@ class SpeedTestProvider extends ChangeNotifier {
       // Send to offload API
       try {
         _networkHelper
-            .authorizedPost(mobileLoggerApiWifi, offloadDataHeader,
-                json.encode(log.toString()))
+            .authorizedPost(
+                mobileLoggerApiWifi, offloadDataHeader, json.encode(log))
             .then((value) {
           return value;
         });
@@ -248,20 +248,20 @@ class SpeedTestProvider extends ChangeNotifier {
             'Authorization':
                 'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
           };
-          _networkHelper.authorizedPost(mobileLoggerApiWifi, offloadDataHeader,
-              json.encode(log.toString()));
+          _networkHelper.authorizedPost(
+              mobileLoggerApiWifi, offloadDataHeader, json.encode(log));
         }
       }
     } else {
       try {
         getNewToken().then((value) {
           _networkHelper.authorizedPost(
-              mobileLoggerApiWifi, headers, json.encode(log.toString()));
+              mobileLoggerApiWifi, headers, json.encode(log));
         });
       } catch (Exception) {
         getNewToken().then((value) {
           _networkHelper.authorizedPost(
-              mobileLoggerApiWifi, headers, json.encode(log.toString()));
+              mobileLoggerApiWifi, headers, json.encode(log));
         });
       }
     }
@@ -293,8 +293,8 @@ class SpeedTestProvider extends ChangeNotifier {
       "IsHiddenSSID": _speedTestModel!.isHiddenSSID,
       "RouterIP": _speedTestModel!.routerIP,
       "Channel": _speedTestModel!.channel,
-      "Latitude": _coordinates.lat,
-      "Longitude": _coordinates.lon,
+      "Latitude": _coordinates.lat.toString(),
+      "Longitude": _coordinates.lon.toString(),
       "TimeStamp": _speedTestModel!.timeStamp,
       "DownloadSpeed": wiFiLog!['DownloadSpeed'],
       "UploadSpeed": _speedUpload!.toStringAsPrecision(3),
@@ -308,8 +308,8 @@ class SpeedTestProvider extends ChangeNotifier {
       }
       // Send to offload API
       try {
-        _networkHelper.authorizedPost(mobileLoggerApiWifiReport,
-            offloadDataHeader, json.encode(wiFiLog.toString()));
+        _networkHelper.authorizedPost(
+            mobileLoggerApiWifiReport, offloadDataHeader, json.encode(wiFiLog));
       } catch (Exception) {
         if (Exception.toString().contains(ErrorConstants.invalidBearerToken)) {
           _userDataProvider.silentLogin();
@@ -318,19 +318,19 @@ class SpeedTestProvider extends ChangeNotifier {
                 'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
           };
           _networkHelper.authorizedPost(mobileLoggerApiWifiReport,
-              offloadDataHeader, json.encode(wiFiLog.toString()));
+              offloadDataHeader, json.encode(wiFiLog));
         }
       }
     } else {
       try {
         getNewToken().then((value) {
-          _networkHelper.authorizedPost(mobileLoggerApiWifiReport, headers,
-              json.encode(wiFiLog.toString()));
+          _networkHelper.authorizedPost(
+              mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
         });
       } catch (Exception) {
         getNewToken().then((value) {
-          _networkHelper.authorizedPost(mobileLoggerApiWifiReport, headers,
-              json.encode(wiFiLog.toString()));
+          _networkHelper.authorizedPost(
+              mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
         });
       }
     }
