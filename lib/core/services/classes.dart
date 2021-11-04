@@ -6,7 +6,7 @@ import 'package:campus_mobile_experimental/core/models/term.dart';
 
 class ClassScheduleService {
   final String academicTermEndpoint =
-      'https://m9zc9vs4f1.execute-api.us-west-2.amazonaws.com/dev/v1/term/current';
+      'https://o17lydfach.execute-api.us-west-2.amazonaws.com/qa/v1/term/current';
   final String myAcademicHistoryApiEndpoint =
       'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list';
   bool _isLoading = false;

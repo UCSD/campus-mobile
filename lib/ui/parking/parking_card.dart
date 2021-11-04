@@ -17,8 +17,6 @@ class _ParkingCardState extends State<ParkingCard> {
   late ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
   String cardId = 'parking';
-  String webCardURL =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v3/index.html";
 
   @override
   void didChangeDependencies() {
@@ -28,6 +26,12 @@ class _ParkingCardState extends State<ParkingCard> {
 
   // ignore: must_call_super
   Widget build(BuildContext context) {
+    Map<String, Function> menuOption = {
+      "Manage Lots": (context) =>
+          {Navigator.pushNamed(context, RoutePaths.ManageParkingView)},
+      "Manage Spots": (context) =>
+          {Navigator.pushNamed(context, RoutePaths.SpotTypesView)}
+    };
     //super.build(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
@@ -43,43 +47,44 @@ class _ParkingCardState extends State<ParkingCard> {
   }
 
   Widget buildParkingCard(BuildContext context) {
-    // try {
-    List<Widget> selectedLotsViews = [];
-    for (ParkingModel model in _parkingDataProvider.parkingModels) {
-      if (_parkingDataProvider.parkingViewState![model.locationName] == true) {
-        selectedLotsViews.add(CircularParkingIndicators(model: model));
+    try {
+      List<Widget> selectedLotsViews = [];
+      for (ParkingModel model in _parkingDataProvider.parkingModels) {
+        if (_parkingDataProvider.parkingViewState![model.locationName] ==
+            true) {
+          selectedLotsViews.add(CircularParkingIndicators(model: model));
+        }
       }
-    }
 
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: PageView(
+      return Column(
+        children: <Widget>[
+          Expanded(
+            child: PageView(
+              controller: _controller,
+              children: selectedLotsViews,
+            ),
+          ),
+          DotsIndicator(
             controller: _controller,
-            children: selectedLotsViews,
+            itemCount: selectedLotsViews.length,
+            onPageSelected: (int index) {
+              _controller.animateToPage(index,
+                  duration: Duration(seconds: 1), curve: Curves.decelerate);
+            },
+          ),
+        ],
+      );
+    } catch (e) {
+      print(e);
+      return Container(
+        width: double.infinity,
+        child: Center(
+          child: Container(
+            child: Text('An error occurred, please try again.'),
           ),
         ),
-        DotsIndicator(
-          controller: _controller,
-          itemCount: selectedLotsViews.length,
-          onPageSelected: (int index) {
-            _controller.animateToPage(index,
-                duration: Duration(seconds: 1), curve: Curves.decelerate);
-          },
-        ),
-      ],
-    );
-    // } catch (e) {
-    //   print(e);
-    //   return Container(
-    //     width: double.infinity,
-    //     child: Center(
-    //       child: Container(
-    //         child: Text('An error occurred, please try again.'),
-    //       ),
-    //     ),
-    //   );
-    // }
+      );
+    }
   }
 
   List<Widget> buildActionButtons() {

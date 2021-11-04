@@ -18,7 +18,7 @@ class SpotTypesService {
   SpotTypeModel _spotTypeModel = SpotTypeModel();
 
   final String endpoint =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/parking-v3/spot_types.json";
+      "https://mobile.ucsd.edu/replatform/v1/qa/integrations/parking/v1.2/spot_types.json";
   Future<bool> fetchSpotTypesData() async {
     _error = null;
     _isLoading = true;

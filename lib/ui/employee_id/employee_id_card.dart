@@ -609,18 +609,16 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     double base = letterSpacingForTablet();
 
     /// If threshold is passed, shrink text
-    if (input.length >= 21) {
-      return (base - (0.1725 * (input.length - 18)));
-    }
+    // if (input.length >= 21) {
+    //   return (base - (0.1725 * (input.length - 18)));
+    // }
 
-    //// The name should be large than subheadings
-    if (textField == "name") {
-      base = ScalingUtility.horizontalSafeBlock * 1.75;
-      return base;
-    } else {
-      base = ScalingUtility.horizontalSafeBlock * 1.25;
-      return base;
-    }
+    /// The name should be large than subheadings
+    textField == "name"
+        ? base = ScalingUtility.horizontalSafeBlock * 1.75
+        : base = ScalingUtility.horizontalSafeBlock * 1.25;
+
+    return base;
   }
 
   /// Determine the padding for a border around barcode

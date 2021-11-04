@@ -1,71 +1,79 @@
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/dining.dart';
-import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
+import 'package:campus_mobile_experimental/core/models/ventilation_data.dart';
+import 'package:campus_mobile_experimental/core/models/ventilation_locations.dart';
 
-class DiningService {
-  DiningService() {
-    fetchData();
-  }
-
+class VentilationService {
+  VentilationService();
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<DiningModel>? _data;
-  DiningMenuItemsModel? _menuData;
+  List<VentilationLocationsModel>? _locations;
+  VentilationDataModel? _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  final String baseEndpoint = "https://api-qa.ucsd.edu:8243/dining/v3.0.0";
+  final String baseEndpoint =
+      "https://api-qa.ucsd.edu:8243/buildingstatus/v1.0.0/buildings";
 
-  Future<bool> fetchData() async {
+  Future<bool> fetchLocations() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
-          baseEndpoint + '/locations', headers);
+
+      String _response =
+          await (_networkHelper.authorizedFetch(baseEndpoint, headers));
 
       /// parse data
-      final data = diningModelFromJson(_response);
+      final data = ventilationLocationsModelFromJson(_response);
       _isLoading = false;
-      _data = data;
+
+      _locations = data;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
+      print("IN CATCH");
       if (e.toString().contains("401")) {
+        print("Getting new token from fetchLocations");
         if (await getNewToken()) {
-          return await fetchData();
+          print("Getting new token from fetchLocations");
+          return await fetchLocations();
         }
       }
       _error = e.toString();
+      print(_error);
       _isLoading = false;
       return false;
     }
   }
 
-  Future<bool> fetchMenu(String id) async {
+  Future<bool> fetchData(String bfrID) async {
     _error = null;
     _isLoading = true;
     try {
-      /// fetch data
+      print("Before fetching data: " + baseEndpoint + '/' + bfrID);
       String _response = await _networkHelper.authorizedFetch(
-          baseEndpoint + '/menu/' + id, headers);
+          baseEndpoint + '/' + bfrID, headers);
+      print("After fetching data: " + baseEndpoint + '/' + bfrID);
+      // String _response = await _networkHelper.fetchData(dataBaseEndpoint);
 
       /// parse data
-      final data = diningMenuItemsModelFromJson(_response);
-      _menuData = data;
+      final data = ventilationDataModelFromJson(_response);
+      _data = data;
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
+      print("ERROR in ventilation services");
+      print(e);
       if (e.toString().contains("401")) {
+        print("Getting new token from fetchData");
         if (await getNewToken()) {
-          return await fetchMenu(id);
+          print("Got new token from fetchData");
+          return await fetchData(bfrID);
         }
       }
       _error = e.toString();
@@ -95,8 +103,12 @@ class DiningService {
   }
 
   bool get isLoading => _isLoading;
+
   String? get error => _error;
+
   DateTime? get lastUpdated => _lastUpdated;
-  List<DiningModel>? get data => _data;
-  DiningMenuItemsModel? get menuData => _menuData;
+
+  List<VentilationLocationsModel>? get locations => _locations;
+
+  VentilationDataModel? get data => _data;
 }

@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/services/map.dart';
@@ -23,6 +22,10 @@ class MapsDataProvider extends ChangeNotifier {
   DateTime? _lastUpdated;
   String? _error;
   bool? _noResults;
+
+  ///Default coordinates for Price Center
+  double? _defaultLat = 32.87990969506536;
+  double? _defaultLong = -117.2362059310055;
 
   ///MODELS
   List<MapSearchModel> _mapSearchModels = [];
@@ -114,11 +117,15 @@ class MapsDataProvider extends ChangeNotifier {
   }
 
   void populateDistances() {
+    double? latitude =
+        _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
+    double? longitude =
+        _coordinates!.lon != null ? _coordinates!.lat : _defaultLong;
     if (_coordinates != null) {
       for (MapSearchModel model in _mapSearchModels) {
         if (model.mkrLat != null && model.mkrLong != null) {
-          var distance = calculateDistance(_coordinates!.lat!,
-              _coordinates!.lon!, model.mkrLat!, model.mkrLong!);
+          var distance = calculateDistance(
+              latitude!, longitude!, model.mkrLat!, model.mkrLong!);
           model.distance = distance as double?;
         }
       }
