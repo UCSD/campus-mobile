@@ -14,7 +14,7 @@ dependencies:
   dots_indicator: 2.0.0
   encrypt: 5.0.0
   firebase_analytics: 8.1.0
-  firebase_core: 1.2.0
+  firebase_core: 1.10.0
   firebase_crashlytics: 2.0.4
   firebase_messaging: 10.0.0
   flutter:
