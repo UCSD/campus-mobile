@@ -30,7 +30,7 @@ class SpeedTestProvider extends ChangeNotifier {
   int _secondsElapsedUpload = 0;
   late SpeedTestService _speedTestService;
   SpeedTestModel? _speedTestModel;
-  bool? isUCSDWiFi = true;
+  bool? isUCSDWiFi = false;
   Map? wiFiLog;
   late UserDataProvider _userDataProvider;
   final Map<String, String> headers = {
@@ -54,9 +54,10 @@ class SpeedTestProvider extends ChangeNotifier {
     _userDataProvider = userDataProvider;
   }
 
-  void init() async {
+  Future<void> init() async {
+    _isLoading = true;
+    notifyListeners();
     _speedTestService = SpeedTestService();
-
     if (await _speedTestService.checkSimulation()) {
       _onSimulator = true;
       notifyListeners();
@@ -64,9 +65,10 @@ class SpeedTestProvider extends ChangeNotifier {
     } else {
       _onSimulator = false;
     }
-    _isLoading = true;
+    // _isLoading = true;
     await _speedTestService.fetchSignedUrls();
     _isLoading = false;
+    notifyListeners();
     _speedTestModel = _speedTestService.speedTestModel;
     connectedToUCSDWifi();
     resetSpeedTest();
@@ -77,7 +79,8 @@ class SpeedTestProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void speedTest() async {
+  Future<void> speedTest() async {
+    init();
     resetSpeedTest();
     downloadSpeedTest().then((value) {
       _timer.reset();
@@ -115,7 +118,9 @@ class SpeedTestProvider extends ChangeNotifier {
           data: formData,
           onSendProgress: _progressCallbackUpload,
           cancelToken: _cancelTokenUpload);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
     _timer.stop();
     notifyListeners();
   }
@@ -132,7 +137,9 @@ class SpeedTestProvider extends ChangeNotifier {
       await dio.download(_speedTestModel!.downloadUrl!, (tempDownload.path),
           onReceiveProgress: _progressCallbackDownload,
           cancelToken: _cancelTokenDownload);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
     _timer.stop();
     notifyListeners();
   }
@@ -172,6 +179,7 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   void cancelDownload() {
+    _cancelTokenDownload!.cancel("cancelled");
     try {
       if (_timer.isRunning) {
         _timer.stop();
@@ -181,6 +189,7 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   void cancelUpload() {
+    _cancelTokenUpload!.cancel("cancelled");
     try {
       if (_timer.isRunning) {
         _timer.stop();

@@ -17,15 +17,19 @@ class WiFiCard extends StatefulWidget {
   _WiFiCardState createState() => _WiFiCardState();
 }
 
-class _WiFiCardState extends State<WiFiCard> {
+class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
+
   String cardId = "speed_test";
   TestStatus? cardState;
   int? lastSpeed;
   late bool goodSpeed;
+  bool timedOut = false;
   SpeedTestProvider _speedTestProvider = SpeedTestProvider();
   UserDataProvider? _userDataProvider;
   bool _buttonEnabled = true;
   Timer? buttonTimer;
+  static const int SPEED_TEST_TIMEOUT_CONST = 30;
 
   @override
   void initState() {
@@ -47,7 +51,7 @@ class _WiFiCardState extends State<WiFiCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
-          Provider.of<SpeedTestProvider>(context, listen: false).init(),
+          cardState != TestStatus.running ? Provider.of<SpeedTestProvider>(context, listen: false).init() : print("running test..."),
       isLoading: _speedTestProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: _speedTestProvider.error,
@@ -66,22 +70,38 @@ class _WiFiCardState extends State<WiFiCard> {
   }
 
   Widget buildCardContent(BuildContext context) {
+    if(!_speedTestProvider.isUCSDWiFi!) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: unavailableState(),
+      );
+    }
+
+    if(timedOut) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: finishedState(),
+      );
+    }
     _speedTestProvider.addListener(() {
       //TODO: Add print statements to verify not reloading
       try {
         if (_speedTestProvider.onSimulator!) {
           cardState = TestStatus.simulated;
         } else if (!_speedTestProvider.isUCSDWiFi!) {
-          cardState = TestStatus.unavailable;
+          setState(() {
+            cardState = TestStatus.unavailable;
+          });
         } else if (_speedTestProvider.timeElapsedDownload +
                 _speedTestProvider.timeElapsedUpload >
-            15) {
-          _speedTestProvider.cancelDownload();
-          _speedTestProvider.cancelUpload();
+            SPEED_TEST_TIMEOUT_CONST) {
           setState(() {
             goodSpeed = false;
             cardState = TestStatus.finished;
+            timedOut = true;
           });
+          _speedTestProvider.cancelDownload();
+          _speedTestProvider.cancelUpload();
         } else if (_speedTestProvider.speedTestDone) {
           setState(() {
             goodSpeed = true;
@@ -90,7 +110,6 @@ class _WiFiCardState extends State<WiFiCard> {
         }
       } catch (e) {}
     });
-
     switch (cardState) {
       //TODO: Add check to verify not over-checking states
       case TestStatus.initial:
@@ -200,8 +219,8 @@ class _WiFiCardState extends State<WiFiCard> {
               } else {
                 setState(() {
                   cardState = TestStatus.running;
-                  _speedTestProvider.speedTest();
                 });
+                 _speedTestProvider.speedTest().timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
               }
             },
             minWidth: 350,
@@ -212,7 +231,7 @@ class _WiFiCardState extends State<WiFiCard> {
             ),
             color: darkAppBarTheme.color,
             child: Text(
-              "Run Speed Test",
+              "Test WiFi Speed",
               style: TextStyle(color: Colors.white),
             )),
         MaterialButton(
@@ -258,26 +277,132 @@ class _WiFiCardState extends State<WiFiCard> {
     );
   }
 
+  Column timedOutState() {
+    _speedTestProvider.sendNetworkDiagnostics(lastSpeed);
+    bool showDownload = false;
+    if(lastSpeed != null && lastSpeed! > 0) {
+      showDownload = true;
+    }
+    return Column(
+      children: [
+        RichText(
+            text: TextSpan(children: [
+              TextSpan(
+                  text: "Your speed is:  ",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 36,
+                  )),
+              TextSpan(
+                text:
+                '\n Download speed: ${lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3)} Mbps \n Upload speed: ${_speedTestProvider.uploadSpeed!.toStringAsPrecision(3)} Mbps\n',
+                style: TextStyle(fontSize: 15, color: Colors.grey),
+              )])),
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: MaterialButton(
+              elevation: 0.0,
+              onPressed: () {
+                setState(() {
+                  cardState = TestStatus.initial;
+                  _speedTestProvider.resetSpeedTest();
+                });
+              },
+              minWidth: 350,
+              height: 40,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colors.black),
+              ),
+              color: darkAppBarTheme.color,
+              child: Text(
+                "Rerun Test",
+                style: TextStyle(color: Colors.white),
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: MaterialButton(
+              disabledColor: Colors.grey,
+              onPressed: _buttonEnabled
+                  ? () {
+                _speedTestProvider.reportIssue();
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Container(
+                          child: Text(
+                              "Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services."),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                              child: Text("Dismiss"),
+                              style: TextButton.styleFrom(
+                                  primary: Theme.of(context).buttonColor),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                _buttonEnabled = false;
+                                buttonTimer =
+                                new Timer(Duration(minutes: 2), () {
+                                  _buttonEnabled = true;
+                                  setState(() {});
+                                });
+                                setState(() {});
+                              })
+                        ],
+                      );
+                    });
+              }
+                  : null,
+              minWidth: 350,
+              height: 40,
+              elevation: 0.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colors.black),
+              ),
+              color: Colors.grey.shade100,
+              child: Text(
+                "Report Issue",
+                style: TextStyle(color: Colors.black),
+              )),
+        ),
+      ],
+    );
+  }
+
   Column finishedState() {
     _speedTestProvider.sendNetworkDiagnostics(lastSpeed);
+    String downloadSpeed = lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3) + " Mbps";
+    String uploadSpeed = _speedTestProvider.uploadSpeed!.toStringAsPrecision(3) + " Mbps";
+
+    if(downloadSpeed.contains("Infinity")) {
+      downloadSpeed = "N/A";
+    }
+
+    if(uploadSpeed.contains("Infinity")) {
+      uploadSpeed = "N/A";
+    }
+
+    if(timedOut) {
+      goodSpeed = false;
+      if(_speedTestProvider.percentDownloaded == 1.0) {
+        uploadSpeed = "N/A (Timed Out)";
+      }
+      else {
+        uploadSpeed = "N/A (Timed Out)";
+        downloadSpeed = "N/A (Timed Out)";
+      }
+    }
+
     return Column(
       children: [
         RichText(
             text: TextSpan(children: [
           TextSpan(
-              text: "Your speed is:  ",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 36,
-              )),
-          WidgetSpan(
-            child: goodSpeed
-                ? Icon(Icons.thumb_up, size: 36, color: Colors.green)
-                : Icon(Icons.thumb_down, size: 36, color: Colors.red),
-          ),
-          TextSpan(
             text:
-                '\n Your download speed was: ${lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3)} Mbps \n Your upload speed was: ${_speedTestProvider.uploadSpeed!.toStringAsPrecision(3)} Mbps\n',
+                '\n Download speed was: $downloadSpeed \n Upload speed was: $uploadSpeed\n',
             style: TextStyle(fontSize: 15, color: Colors.grey),
           )
         ])),
@@ -287,6 +412,7 @@ class _WiFiCardState extends State<WiFiCard> {
               elevation: 0.0,
               onPressed: () {
                 setState(() {
+                  timedOut = false;
                   cardState = TestStatus.initial;
                   _speedTestProvider.resetSpeedTest();
                 });
@@ -361,25 +487,48 @@ class _WiFiCardState extends State<WiFiCard> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "Looks like you aren’t on a UCSD network",
+            "Connect to a UCSD Network",
             style: TextStyle(
               fontSize: 25,
             ),
             textAlign: TextAlign.center,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "Please check your connection and try again.",
-            style: TextStyle(fontSize: 13),
-            textAlign: TextAlign.center,
-          ),
-        )
+        MaterialButton(
+            padding: EdgeInsets.all(4.0),
+            elevation: 0.0,
+            onPressed: () => tryAgain(),
+            minWidth: 350,
+            height: 40,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              side: BorderSide(color: Colors.black),
+            ),
+            color: darkAppBarTheme.color,
+            child: Text(
+              "Try Again",
+              style: TextStyle(color: Colors.white),
+            )),
       ],
     );
   }
 
+  void tryAgain() async {
+    // re check everything
+    await Provider.of<SpeedTestProvider>(context, listen: false).init();
+
+    // reset states if needed
+    if(_speedTestProvider.isUCSDWiFi!) {
+      setState(() {
+        cardState = TestStatus.initial;
+      });
+    }
+    else {
+      setState(() {
+        cardState = TestStatus.unavailable;
+      });
+    }
+  }
   Column simulatedState() {
     print("WiFi Speed Test feature is only available on physical devices.");
     return Column(
@@ -404,6 +553,16 @@ class _WiFiCardState extends State<WiFiCard> {
         )
       ],
     );
+  }
+
+  _onTimeout() {
+    _speedTestProvider.cancelDownload();
+    _speedTestProvider.cancelUpload();
+    setState(() {
+      timedOut = true;
+      goodSpeed = false;
+      cardState = TestStatus.finished;
+    });
   }
 }
 
