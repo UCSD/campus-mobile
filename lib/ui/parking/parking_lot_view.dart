@@ -47,24 +47,22 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < lots.length; i++) {
       bool lotViewState = parkingDataProvider.parkingViewState![lots[i]]!;
-      list.add(ListTile(
-        title: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-          child: Text(
-            lots[i],
-            style: TextStyle(
-                color: Theme.of(context)
-                    .colorScheme
-                    .secondary, // lotViewState ? ColorPrimary : Colors.black,
-                fontSize: 20),
+      list.add(
+        ListTile(
+          title: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+            child: Text(
+              lots[i],
+              style: TextStyle(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .secondary, // lotViewState ? ColorPrimary : Colors.black,
+                  fontSize: 20),
+            ),
           ),
-        ),
-        trailing: IconButton(
-          icon: Icon(lotViewState ? Icons.cancel_rounded : Icons.add_rounded),
-          color: Theme.of(context)
-              .colorScheme
-              .secondary, // lotViewState ? ColorPrimary : Colors.black,
-          onPressed: () {
+          trailing:
+              Icon(lotViewState ? Icons.cancel_rounded : Icons.add_rounded),
+          onTap: () {
             if (selectedLots == 10 && !lotViewState && showedScaffold != true) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
@@ -76,7 +74,7 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
             parkingDataProvider.toggleLot(lots[i], selectedLots);
           },
         ),
-      ));
+      );
     }
 
     // adds SizedBox to have a grey underline for the last item in the list
