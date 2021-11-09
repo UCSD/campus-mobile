@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
@@ -159,7 +160,7 @@ class CardContainer extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           buildMenuOptions({
-            'reload': reload,
+            CardMenuOptionConstants.reloadCard: reload,
           }),
         ],
       );
@@ -168,8 +169,8 @@ class CardContainer extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         buildMenuOptions({
-          'reload': reload,
-          'hide': hide,
+          CardMenuOptionConstants.reloadCard: reload,
+          CardMenuOptionConstants.hideCard: hide,
         }),
       ],
     );

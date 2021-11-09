@@ -191,3 +191,8 @@ class CardTitleConstants {
     'ventilation': 'Office Environment',
   };
 }
+
+class CardMenuOptionConstants {
+  static const reloadCard = 'reload this card';
+  static const hideCard = 'hide this card';
+}
