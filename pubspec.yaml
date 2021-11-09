@@ -4,7 +4,6 @@ version: 1.0.0+1
 publish_to: none
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: 2.2.3
 dependencies:
   app_settings: 4.1.0
   barcode_widget: 2.0.1
@@ -45,13 +44,13 @@ dependencies:
   package_info: 2.0.2
   percent_indicator: 3.0.1
   permission_handler: 7.1.0
-  pointycastle: 3.0.1
+  pointycastle: 3.3.4
   provider: 5.0.0
   shared_preferences: 2.0.6
   uni_links2: 0.6.0+2
   url_launcher: 6.0.6
   uuid: 3.0.4
-  webview_flutter: 2.0.8
+  webview_flutter: 2.1.2
   wifi_connection: 0.0.4
 dev_dependencies:
   build_runner: 2.0.2
