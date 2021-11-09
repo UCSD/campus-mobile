@@ -49,7 +49,7 @@ class MoreResultsList extends StatelessWidget {
                                           listen: false)
                                       .mapSearchModels[index]
                                       .distance!
-                                      .toStringAsFixed(3) +
+                                      .toStringAsFixed(1) +
                                   ' mi'
                               : '--',
                           style: TextStyle(color: Colors.blue[600]),
