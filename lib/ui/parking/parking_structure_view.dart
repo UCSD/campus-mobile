@@ -50,24 +50,22 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
     for (var i = 0; i < structures.length; i++) {
       bool structureState =
           parkingDataProvider.parkingViewState![structures[i]]!;
-      list.add(ListTile(
-        title: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-          child: Text(
-            structures[i],
-            style: TextStyle(
-                color: Theme.of(context)
-                    .colorScheme
-                    .secondary, // structureState ? ColorPrimary : Colors.black,
-                fontSize: 20),
+      list.add(
+        ListTile(
+          title: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+            child: Text(
+              structures[i],
+              style: TextStyle(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .secondary, // structureState ? ColorPrimary : Colors.black,
+                  fontSize: 20),
+            ),
           ),
-        ),
-        trailing: IconButton(
-          icon: Icon(structureState ? Icons.cancel_rounded : Icons.add_rounded),
-          color: Theme.of(context)
-              .colorScheme
-              .secondary, // structureState ? ColorPrimary : Colors.black,
-          onPressed: () {
+          trailing:
+              Icon(structureState ? Icons.cancel_rounded : Icons.add_rounded),
+          onTap: () {
             if (selectedLots == 10 &&
                 !structureState &&
                 showedScaffold != true) {
@@ -81,7 +79,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
             parkingDataProvider.toggleLot(structures[i], selectedLots);
           },
         ),
-      ));
+      );
     }
 
     // adds SizedBox to have a grey underline for the last item in the list

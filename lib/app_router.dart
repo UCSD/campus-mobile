@@ -192,23 +192,23 @@ class Router {
         });
       case RoutePaths.ParkingLotsView:
         return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return ParkingLotsView();
         });
       case RoutePaths.ParkingStructureView:
         return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return ParkingStructureView();
         });
       case RoutePaths.NeighborhoodsView:
         return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return NeighborhoodsView();
         });
       case RoutePaths.NeighborhoodsLotsView:
         List<String> data = settings.arguments as List<String>;
         return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return NeighborhoodLotsView(data);
         });
       case RoutePaths.SpotTypesView:
