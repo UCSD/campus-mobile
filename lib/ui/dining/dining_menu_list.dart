@@ -66,7 +66,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
                   TextSpan(
                     text: item.name,
                     style: TextStyle(
-                      color: Theme.of(context).buttonColor,
+                      color: Theme.of(context).colorScheme.secondary,
                       fontSize: 18,
                     ),
                   ),
@@ -133,7 +133,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
         isSelected: Provider.of<DiningDataProvider>(context).filtersSelected,
         textStyle: TextStyle(fontSize: 18),
         selectedColor: Theme.of(context).textTheme.button!.color,
-        fillColor: Theme.of(context).buttonColor,
+        fillColor: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(10),
         constraints: BoxConstraints.expand(
             width: (MediaQuery.of(context).size.width - 40) * .33, height: 38),
@@ -214,7 +214,7 @@ class LabeledRadio extends StatelessWidget {
             value: value,
             groupValue: groupValue,
             onChanged: onChanged,
-            activeColor: Theme.of(context).buttonColor,
+            activeColor: Theme.of(context).colorScheme.secondary,
           ),
           Container(
             child: Text(

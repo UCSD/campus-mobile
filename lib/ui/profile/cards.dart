@@ -65,7 +65,7 @@ class _CardsViewState extends State<CardsView> {
             onChanged: (_) {
               _cardsDataProvider!.toggleCard(card);
             },
-            activeColor: Theme.of(context).buttonColor,
+            activeColor: Theme.of(context).colorScheme.secondary,
           ),
         ));
       }

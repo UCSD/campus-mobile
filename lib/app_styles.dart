@@ -57,12 +57,14 @@ const Color lightPrimaryColor = Color(0xFF182B49);
 const Color darkPrimaryColor = Color(0xFF333333);
 
 //Color for the top App Bar on light theme
-const AppBarTheme lightAppBarTheme = AppBarTheme(color: ColorPrimary);
+const AppBarTheme lightAppBarTheme = AppBarTheme(backgroundColor: ColorPrimary);
 
 //Color for the top App Bar on dark theme
 const AppBarTheme darkAppBarTheme = AppBarTheme(
-  color: ColorPrimary,
+  backgroundColor: ColorPrimary,
 );
+
+
 
 //Icon color for light theme
 const IconThemeData lightIconTheme = IconThemeData(
@@ -80,6 +82,9 @@ const TextTheme lightThemeText = TextTheme(
     color: lightTextColor,
   ),
 );
+
+ColorScheme lightColorScheme = ColorScheme.light(secondary: lightButtonColor);
+ColorScheme darkColorScheme = ColorScheme.dark(secondary: darkButtonColor);
 
 //Colors for text on buttons using dark theme
 const TextTheme darkThemeText = TextTheme(

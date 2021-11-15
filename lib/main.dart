@@ -77,20 +77,20 @@ class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = ThemeData(
+      colorScheme: lightColorScheme,
       primarySwatch: ColorPrimary,
       primaryColor: lightPrimaryColor,
       brightness: Brightness.light,
-      buttonColor: lightButtonColor,
       textTheme: lightThemeText,
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
     );
 
     final ThemeData darkTheme = ThemeData(
+      colorScheme: darkColorScheme,
       primarySwatch: ColorPrimary,
       primaryColor: darkPrimaryColor,
       brightness: Brightness.dark,
-      buttonColor: darkButtonColor,
       textTheme: darkThemeText,
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,

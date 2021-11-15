@@ -127,7 +127,7 @@ class _AdvancedWayfindingPermissionState
                                 _wayfindingProvider.setAWPreference();
                               });
                             },
-                            activeColor: Theme.of(context).buttonColor,
+                            activeColor: Theme.of(context).colorScheme.secondary,
                           );
                         } else {
                           return CircularProgressIndicator(

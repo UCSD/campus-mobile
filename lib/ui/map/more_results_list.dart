@@ -68,7 +68,7 @@ class MoreResultsList extends StatelessWidget {
           );
         },
         style: ElevatedButton.styleFrom(
-          primary: Theme.of(context).buttonColor,
+          primary: Theme.of(context).colorScheme.secondary,
         ),
         child: Text(
           'Show More Results',
