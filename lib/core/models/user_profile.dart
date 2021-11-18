@@ -38,6 +38,8 @@ class UserProfileModel extends HiveObject {
   List<String>? surveyCompletion;
   @HiveField(7)
   List<String?>? selectedVentilationLocations;
+  @HiveField(8)
+  List<String?>? cardsOrder;
 
   UserProfileModel(
       {this.classifications,
@@ -52,7 +54,8 @@ class UserProfileModel extends HiveObject {
       this.selectedParkingLots,
       this.selectedStops,
       this.surveyCompletion,
-      this.selectedVentilationLocations});
+      this.selectedVentilationLocations,
+      this.cardsOrder});
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       UserProfileModel(
@@ -94,6 +97,9 @@ class UserProfileModel extends HiveObject {
                 ? []
                 : List<String>.from(
                     json["selectedVentilationLocations"].map((x) => x)),
+        cardsOrder: json['cardsOrder'] == null
+            ? []
+            : List<String>.from(json["cardsOrder"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -129,6 +135,9 @@ class UserProfileModel extends HiveObject {
         "selectedVentilationLocations": selectedVentilationLocations == null
             ? null
             : List<dynamic>.from(selectedVentilationLocations!.map((x) => x)),
+        "cardsOrder": cardsOrder == null
+            ? null
+            : List<dynamic>.from(cardsOrder!.map((x) => x)),
       };
 }
 
