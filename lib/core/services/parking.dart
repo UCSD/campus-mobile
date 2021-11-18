@@ -16,15 +16,16 @@ class ParkingService {
     "accept": "application/json",
   };
 
-  final String endpoint =
-      "https://api-qa.ucsd.edu:8243/parking/v1.2/status";
+  final String campusParkingServiceApiUrl =
+      "https://api-qa.ucsd.edu:8243/campusparkingservice/v1.3";
 
   Future<bool> fetchParkingLotData() async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(endpoint, headers));
+      String _response = await (_networkHelper.authorizedFetch(
+          campusParkingServiceApiUrl + "/status", headers));
 
       /// parse data
       _data = parkingModelFromJson(_response);
@@ -51,7 +52,7 @@ class ParkingService {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
