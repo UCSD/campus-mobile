@@ -104,15 +104,19 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   ),
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        // Based on passwordObscured state choose the icon
-                        _passwordObscured
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                        color: Theme.of(context).primaryColorDark,
+                    suffixIcon: Semantics(
+                      hint:
+                          'press to toggle the visibility of your password field',
+                      child: IconButton(
+                        icon: Icon(
+                          // Based on passwordObscured state choose the icon
+                          _passwordObscured
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                        onPressed: () => _toggle(),
                       ),
-                      onPressed: () => _toggle(),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -154,11 +158,16 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                           //child: OutlineButton(
                           //borderSide: BorderSide(color: ColorPrimary),
                         ),
-                        child: Text(
-                          'Log in',
-                          style: TextStyle(
-                            color: Colors.white,
-                            decoration: TextDecoration.underline,
+                        child: Semantics(
+                          button: true,
+                          hint:
+                              'press to login with your information inputted in above textfields',
+                          child: Text(
+                            'Log in',
+                            style: TextStyle(
+                              color: Colors.white,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
                         onPressed: _userDataProvider.isLoading!
@@ -193,9 +202,13 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               Row(
                 children: [
                   GestureDetector(
-                    child: Text(
-                      'Need help logging in?',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    child: Semantics(
+                      hint:
+                          'press to open service now webpage to read about frequently asked question for login process',
+                      child: Text(
+                        'Need help logging in?',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
                     ),
                     onTap: () async {
                       try {
@@ -208,9 +221,13 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     },
                   ),
                   GestureDetector(
-                    child: Text(
-                      'Skip',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    child: Semantics(
+                      hint:
+                          'press to skip the login process and use this app as a visitor',
+                      child: Text(
+                        'Skip',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
                     ),
                     onTap: () async {
                       Navigator.pushNamedAndRemoveUntil(context,
