@@ -296,11 +296,6 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
-  void reorderCards(List<String> order) {
-    _cardOrder = order;
-    notifyListeners();
-  }
-
   void toggleCard(String card) {
     _cardStates![card] = !_cardStates![card]!;
     updateCardStates(
@@ -309,7 +304,7 @@ class CardsDataProvider extends ChangeNotifier {
 
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
-  ///SIMPLE GETTERS
+  /// SIMPLE GETTERS
   bool? get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
