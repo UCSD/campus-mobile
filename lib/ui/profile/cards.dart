@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -68,12 +66,11 @@ class _CardsViewState extends State<CardsView> {
             activeColor: Theme.of(context).buttonColor,
           ),
         ));
-      }
-      catch (e) {
+      } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
-        FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
-          reason: "Profile/Cards: Failed to load Cards page",
-            fatal: false);
+        FirebaseCrashlytics.instance.recordError(
+            e, StackTrace.fromString(e.toString()),
+            reason: "Profile/Cards: Failed to load Cards page", fatal: false);
         // temp list tile
         list.add(ListTile(
           leading: Icon(Icons.reorder),
