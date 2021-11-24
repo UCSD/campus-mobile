@@ -91,6 +91,7 @@ class _HomeState extends State<Home> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
+        key: PageStorageKey<String>('homePage'),
         padding: EdgeInsets.only(
             top: cardMargin + 2.0, right: 0.0, bottom: 0.0, left: 0.0),
         children: createList(context),
