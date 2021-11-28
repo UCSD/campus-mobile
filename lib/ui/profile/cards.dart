@@ -10,10 +10,12 @@ class CardsView extends StatefulWidget {
 
 class _CardsViewState extends State<CardsView> {
   CardsDataProvider? _cardsDataProvider;
+  late List<String> cardsOrder;
 
   @override
   Widget build(BuildContext context) {
     _cardsDataProvider = Provider.of<CardsDataProvider>(context);
+    cardsOrder = _cardsDataProvider!.cardOrder!;
     return ContainerView(
       child: buildCardsList(context),
     );
@@ -30,21 +32,21 @@ class _CardsViewState extends State<CardsView> {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    List<String> newOrder = _cardsDataProvider!.cardOrder!;
+
     List<String> toRemove = [];
-    if (_cardsDataProvider!.cardOrder!.contains('NativeScanner')) {
+    if (cardsOrder.contains('NativeScanner')) {
       toRemove.add('NativeScanner');
     }
 
-    newOrder.removeWhere((element) => toRemove.contains(element));
-    String item = newOrder.removeAt(oldIndex);
-    newOrder.insert(newIndex, item);
+    cardsOrder.removeWhere((element) => toRemove.contains(element));
+    String item = cardsOrder.removeAt(oldIndex);
+    cardsOrder.insert(newIndex, item);
     List<String> orderList = [];
-    for (String item in newOrder) {
+    for (String item in cardsOrder) {
       orderList.add(item);
     }
     orderList.addAll(toRemove.toList());
-    _cardsDataProvider!.updateCardOrder(orderList);
+    _cardsDataProvider!.updateProfileAndCardOrder(orderList);
     setState(() {});
   }
 
@@ -52,7 +54,10 @@ class _CardsViewState extends State<CardsView> {
     List<Widget> list = [];
     for (String card in _cardsDataProvider!.cardOrder!) {
       if (card == 'NativeScanner') continue;
+      if (card == 'ventilation') continue;
       try {
+        print("Error Causing Item in Try: $card");
+
         //throw new DeferredLoadException("message");
         list.add(ListTile(
           leading: Icon(Icons.reorder),
@@ -67,6 +72,7 @@ class _CardsViewState extends State<CardsView> {
           ),
         ));
       } catch (e) {
+        print("Error Causing Item in Catch: $card");
         FirebaseCrashlytics.instance.log('error getting $card in profile');
         FirebaseCrashlytics.instance.recordError(
             e, StackTrace.fromString(e.toString()),
