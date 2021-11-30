@@ -10,7 +10,7 @@ class UserProfileService {
   UserProfileModel? _userProfileModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
+  final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/2.0.0';
 
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
     _error = null;
