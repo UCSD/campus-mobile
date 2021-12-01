@@ -10,7 +10,7 @@ class NewsService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String endpoint =
-      'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/now_ucsandiego/v1/allstories.json';
+      'https://dy6k9h2x5k.execute-api.us-west-2.amazonaws.com/qa/campusnews/v1/ucsdnewsaggregator';
 
   NewsModel _newsModels = NewsModel();
 
