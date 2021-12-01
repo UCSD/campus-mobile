@@ -37,11 +37,8 @@ class VentilationService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      print("IN CATCH");
       if (e.toString().contains("401")) {
-        print("Getting new token from fetchLocations");
         if (await getNewToken()) {
-          print("Getting new token from fetchLocations");
           return await fetchLocations();
         }
       }
