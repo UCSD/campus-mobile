@@ -80,6 +80,7 @@ class RouteTitles {
 
 class ParkingDefaults {
   static const defaultLots = [
+    "Gilman",
     "406",
     "784",
     "P782",
