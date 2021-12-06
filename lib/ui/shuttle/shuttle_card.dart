@@ -40,7 +40,10 @@ class ShuttleCard extends StatelessWidget {
               onPressed: () {
                 openLink('https://tritontransit.ridesystems.net/routes');
               },
-              child: Text('View live map'))
+              child: Text('View live map',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  )))
         ],
       ),
     );
