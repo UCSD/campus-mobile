@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/services/map.dart';
@@ -120,7 +121,7 @@ class MapsDataProvider extends ChangeNotifier {
     double? latitude =
         _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
     double? longitude =
-        _coordinates!.lon != null ? _coordinates!.lat : _defaultLong;
+        _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
     if (_coordinates != null) {
       for (MapSearchModel model in _mapSearchModels) {
         if (model.mkrLat != null && model.mkrLong != null) {
