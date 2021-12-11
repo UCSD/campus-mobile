@@ -192,12 +192,12 @@ class CardContainer extends StatelessWidget {
 
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
-      case 'reload':
+      case CardMenuOptionConstants.reloadCard:
         {
           reload();
         }
         break;
-      case 'hide':
+      case CardMenuOptionConstants.hideCard:
         {
           hide();
         }
