@@ -56,8 +56,6 @@ class _CardsViewState extends State<CardsView> {
       if (card == 'NativeScanner') continue;
       if (card == 'ventilation') continue;
       try {
-        print("Error Causing Item in Try: $card");
-
         //throw new DeferredLoadException("message");
         list.add(ListTile(
           leading: Icon(Icons.reorder),
@@ -72,7 +70,6 @@ class _CardsViewState extends State<CardsView> {
           ),
         ));
       } catch (e) {
-        print("Error Causing Item in Catch: $card");
         FirebaseCrashlytics.instance.log('error getting $card in profile');
         FirebaseCrashlytics.instance.recordError(
             e, StackTrace.fromString(e.toString()),
