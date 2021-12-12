@@ -413,7 +413,7 @@ packages:
       name: flutter_plugin_android_lifecycle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   flutter_scandit_plugin:
     dependency: "direct main"
     description:
@@ -558,7 +558,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.0"
+    version: "4.4.0"
   linkify:
     dependency: transitive
     description:
@@ -665,7 +665,7 @@ packages:
       name: path_provider_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.9"
   path_provider_ios:
     dependency: transitive
     description:
@@ -749,7 +749,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.4"
+    version: "3.4.0"
   pool:
     dependency: transitive
     description:
@@ -777,7 +777,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "6.0.1"
   pub_semver:
     dependency: transitive
     description:
@@ -1006,7 +1006,7 @@ packages:
       name: url_launcher_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   url_launcher_windows:
     dependency: transitive
     description:
@@ -1062,14 +1062,14 @@ packages:
       name: webview_flutter_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.4.0"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
       name: webview_flutter_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.2"
   webview_flutter_wkwebview:
     dependency: transitive
     description:
@@ -1090,7 +1090,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   xdg_directories:
     dependency: transitive
     description:
