@@ -88,7 +88,7 @@ class ParkingDefaults {
 }
 
 class ButtonText {
-  static const ScanNowFull = 'Scan Your COVID-19 Test Kit.';
+  static const ScanNowFull = 'Scan Your COVID-19 Kit.';
   static const ScanNow = 'Scan Now';
   static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';
   static const SignIn = 'Sign In';
@@ -108,6 +108,8 @@ class ErrorConstants {
 class ScannerConstants {
   static const duplicateRecord =
       'Submission failed due to barcode already scanned. Please discard this test tube and get another one.\nCode #1035';
+  static const duplicateRecordBloodScreen =
+      'Submission failed due to barcode already scanned. Please discard this kit.\nCode #1035';
   static const invalidMedia =
       'Barcode is not valid. Please scan another barcode.\nCode #1036';
   static const barcodeError =

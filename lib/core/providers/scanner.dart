@@ -144,7 +144,12 @@ class ScannerDataProvider extends ChangeNotifier {
 
             if (_barcodeService.error!
                 .contains(ErrorConstants.duplicateRecord)) {
-              errorText = ScannerConstants.duplicateRecord;
+              RegExp bloodScreenTest = RegExp(r'^ZAP-');
+              bool isBloodScreen = bloodScreenTest.hasMatch(_barcode!);
+
+              errorText = isBloodScreen
+                  ? ScannerConstants.duplicateRecordBloodScreen
+                  : ScannerConstants.duplicateRecord;
               _isDuplicate = true;
             } else if (_barcodeService.error!
                 .contains(ErrorConstants.invalidMedia)) {
