@@ -169,7 +169,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
     final dateFormat = new DateFormat('dd-MM-yyyy hh:mm:ss a');
     final String scanTime = dateFormat.format(new DateTime.now());
 
-    RegExp bloodScreenTest = RegExp(r'^ZAP-');
+    RegExp bloodScreenTest = RegExp(r'^UCSDNAS');
     bool isBloodScreen =
         bloodScreenTest.hasMatch(_scannerDataProvider.barcode!);
 
@@ -209,7 +209,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
                 children: <Widget>[
                   ListTile(
                       title: Text(String.fromCharCode(0x2022) +
-                          " Proceed to the next step in the blood screening process")),
+                          " Proceed to the next step in the fingerstick blood collection process.")),
+                  ListTile(
+                      title: Text(String.fromCharCode(0x2022) +
+                          " You can view your research test results in your MyChart in about 60 days.")),
                 ],
               )
             : ListView(

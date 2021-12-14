@@ -109,7 +109,7 @@ class ScannerConstants {
   static const duplicateRecord =
       'Submission failed due to barcode already scanned. Please discard this test tube and get another one.\nCode #1035';
   static const duplicateRecordBloodScreen =
-      'Submission failed due to barcode already scanned. Please discard this kit.\nCode #1035';
+      'Submission failed because this barcode has already been scanned. Please discard this kit.\nCode #1035';
   static const invalidMedia =
       'Barcode is not valid. Please scan another barcode.\nCode #1036';
   static const barcodeError =
