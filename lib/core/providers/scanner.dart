@@ -144,7 +144,7 @@ class ScannerDataProvider extends ChangeNotifier {
 
             if (_barcodeService.error!
                 .contains(ErrorConstants.duplicateRecord)) {
-              RegExp bloodScreenTest = RegExp(r'^UCSDNAS');
+              RegExp bloodScreenTest = RegExp(r'^ZAP');
               bool isBloodScreen = bloodScreenTest.hasMatch(_barcode!);
 
               errorText = isBloodScreen

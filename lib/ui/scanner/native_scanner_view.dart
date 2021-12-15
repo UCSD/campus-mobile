@@ -169,7 +169,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
     final dateFormat = new DateFormat('dd-MM-yyyy hh:mm:ss a');
     final String scanTime = dateFormat.format(new DateTime.now());
 
-    RegExp bloodScreenTest = RegExp(r'^UCSDNAS');
+    RegExp bloodScreenTest = RegExp(r'^ZAP');
     bool isBloodScreen =
         bloodScreenTest.hasMatch(_scannerDataProvider.barcode!);
 
