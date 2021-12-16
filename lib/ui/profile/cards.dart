@@ -10,12 +10,10 @@ class CardsView extends StatefulWidget {
 
 class _CardsViewState extends State<CardsView> {
   CardsDataProvider? _cardsDataProvider;
-  late List<String> cardsOrder;
 
   @override
   Widget build(BuildContext context) {
     _cardsDataProvider = Provider.of<CardsDataProvider>(context);
-    cardsOrder = _cardsDataProvider!.cardOrder!;
     return ContainerView(
       child: buildCardsList(context),
     );
@@ -32,21 +30,22 @@ class _CardsViewState extends State<CardsView> {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
+    List<String> newOrder = _cardsDataProvider!.cardOrder!;
 
     List<String> toRemove = [];
-    if (cardsOrder.contains('NativeScanner')) {
+    if (_cardsDataProvider!.cardOrder!.contains('NativeScanner')) {
       toRemove.add('NativeScanner');
     }
 
-    cardsOrder.removeWhere((element) => toRemove.contains(element));
-    String item = cardsOrder.removeAt(oldIndex);
-    cardsOrder.insert(newIndex, item);
+    newOrder.removeWhere((element) => toRemove.contains(element));
+    String item = newOrder.removeAt(oldIndex);
+    newOrder.insert(newIndex, item);
     List<String> orderList = [];
-    for (String item in cardsOrder) {
+    for (String item in newOrder) {
       orderList.add(item);
     }
     orderList.addAll(toRemove.toList());
-    _cardsDataProvider!.updateProfileAndCardOrder(orderList);
+    _cardsDataProvider!.updateCardOrder(orderList);
     setState(() {});
   }
 
@@ -54,7 +53,6 @@ class _CardsViewState extends State<CardsView> {
     List<Widget> list = [];
     for (String card in _cardsDataProvider!.cardOrder!) {
       if (card == 'NativeScanner') continue;
-      if (card == 'ventilation') continue;
       try {
         //throw new DeferredLoadException("message");
         list.add(ListTile(
