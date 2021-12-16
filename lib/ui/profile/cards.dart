@@ -31,7 +31,6 @@ class _CardsViewState extends State<CardsView> {
       newIndex -= 1;
     }
     List<String> newOrder = _cardsDataProvider!.cardOrder!;
-
     List<String> toRemove = [];
     if (_cardsDataProvider!.cardOrder!.contains('NativeScanner')) {
       toRemove.add('NativeScanner');
