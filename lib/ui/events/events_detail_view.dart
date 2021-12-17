@@ -35,11 +35,9 @@ class EventDetailView extends StatelessWidget {
         ),
         Flexible(
           child: Container(
-            color: Colors.white,
             child: Center(
               child: Container(
                 width: width * 0.8,
-                color: Colors.white,
                 child: Column(
                   children: [
                     Icon(
@@ -51,7 +49,7 @@ class EventDetailView extends StatelessWidget {
                       data.title!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).colorScheme.secondary,
                           fontSize: 20,
                           fontWeight: FontWeight.w500),
                       // style: Theme.of(context).textTheme.hev adline6,

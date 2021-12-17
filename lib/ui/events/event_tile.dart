@@ -64,7 +64,7 @@ class EventTile extends StatelessWidget {
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            color: lightButtonColor,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontSize: 14,
                             fontWeight: FontWeight.bold),
                       ),
