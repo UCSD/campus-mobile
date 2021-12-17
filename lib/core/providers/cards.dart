@@ -148,6 +148,14 @@ class CardsDataProvider extends ChangeNotifier {
     await _loadCardStates();
   }
 
+  /// Call [updateCardOrder] and updates [userDataProvider]
+  updateProfileAndCardOrder(List<String>? newOrder) async {
+    await updateCardOrder(newOrder);
+    _userDataProvider!.userProfileModel!.cardsOrder = newOrder;
+    await _userDataProvider!
+        .postUserProfile(_userDataProvider!.userProfileModel);
+  }
+
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder(List<String>? newOrder) async {
