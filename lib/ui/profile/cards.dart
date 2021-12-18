@@ -10,6 +10,7 @@ class CardsView extends StatefulWidget {
 
 class _CardsViewState extends State<CardsView> {
   CardsDataProvider? _cardsDataProvider;
+  List<String> cardsToRemove = ["NativeScanner"];
   late List<String> cardsOrder;
 
   @override
@@ -29,31 +30,32 @@ class _CardsViewState extends State<CardsView> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
+    // ?
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
 
-    List<String> toRemove = [];
-    if (cardsOrder.contains('NativeScanner')) {
-      toRemove.add('NativeScanner');
+    // remove all unwanted cards from the cards list
+    for (String card in cardsToRemove) {
+      cardsOrder.remove(card);
     }
 
-    cardsOrder.removeWhere((element) => toRemove.contains(element));
+    // change the position for the moved card
     String item = cardsOrder.removeAt(oldIndex);
     cardsOrder.insert(newIndex, item);
-    List<String> orderList = [];
-    for (String item in cardsOrder) {
-      orderList.add(item);
-    }
-    orderList.addAll(toRemove.toList());
-    _cardsDataProvider!.updateCardOrder(orderList);
+
+    // add back all unwanted cards to the end of the list
+    cardsOrder.addAll(cardsToRemove);
+
+    // update card order
+    _cardsDataProvider!.updateCardOrder(cardsOrder);
     setState(() {});
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
     for (String card in _cardsDataProvider!.cardOrder!) {
-      if (card == 'NativeScanner') continue;
+      if (cardsToRemove.contains(card)) continue;
       try {
         //throw new DeferredLoadException("message");
         list.add(ListTile(
