@@ -231,6 +231,12 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   activateStudentCards() {
+    // do nothing if a student card already exists in the list
+    for (String card in _studentCards) {
+      if (_cardOrder!.contains(card)) return;
+    }
+
+    // student cards do not exist in the list, so add them in
     int index = _cardOrder!.indexOf('MyStudentChart') + 1;
     _cardOrder!.insertAll(index, _studentCards.toList());
 

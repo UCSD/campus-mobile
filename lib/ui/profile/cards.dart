@@ -54,7 +54,7 @@ class _CardsViewState extends State<CardsView> {
     cardsOrder.addAll(addBack);
 
     // update card order
-    _cardsDataProvider!.updateCardOrder(cardsOrder);
+    _cardsDataProvider!.updateProfileAndCardOrder(cardsOrder);
     setState(() {});
   }
 
