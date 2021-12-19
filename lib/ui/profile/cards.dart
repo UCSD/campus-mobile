@@ -11,6 +11,7 @@ class CardsView extends StatefulWidget {
 class _CardsViewState extends State<CardsView> {
   CardsDataProvider? _cardsDataProvider;
   List<String> cardsToRemove = ["NativeScanner"];
+  List<String> hiddenCards = ["NativeScanner", "ventilation", "student_survey"];
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,7 @@ class _CardsViewState extends State<CardsView> {
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
     for (String card in _cardsDataProvider!.cardOrder!) {
-      if (cardsToRemove.contains(card)) continue;
+      if (hiddenCards.contains(card)) continue;
       try {
         //throw new DeferredLoadException("message");
         list.add(ListTile(
