@@ -51,7 +51,7 @@ class _CardsViewState extends State<CardsView> {
     cardsOrder.insert(newIndex, item);
 
     // add back all unwanted cards to the end of the list
-    cardsOrder.addAll(addBack);
+    cardsOrder.addAll(addBack.toList());
 
     // update card order
     _cardsDataProvider!.updateProfileAndCardOrder(cardsOrder);
