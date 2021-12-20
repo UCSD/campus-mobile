@@ -47,8 +47,8 @@ class _CardsViewState extends State<CardsView> {
     }
 
     // change the position for the moved card
-    String item = cardsOrder.removeAt(oldIndex);
-    cardsOrder.insert(newIndex, item);
+    String movedCard = cardsOrder.removeAt(oldIndex);
+    cardsOrder.insert(newIndex, movedCard);
 
     // add back all unwanted cards to the end of the list
     cardsOrder.addAll(addBack.toList());
