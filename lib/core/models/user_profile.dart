@@ -39,9 +39,9 @@ class UserProfileModel extends HiveObject {
   @HiveField(7)
   List<String?>? selectedVentilationLocations;
   @HiveField(8)
-  List<String?>? cardsOrder;
+  List<String?>? cardOrder;
   @HiveField(9)
-  Map<String?, bool>? activeCards;
+  Map<String?, bool>? cardStates;
 
   UserProfileModel(
       {this.classifications,
@@ -57,8 +57,8 @@ class UserProfileModel extends HiveObject {
       this.selectedStops,
       this.surveyCompletion,
       this.selectedVentilationLocations,
-      this.cardsOrder,
-      this.activeCards});
+      this.cardOrder,
+      this.cardStates});
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       UserProfileModel(
@@ -100,13 +100,13 @@ class UserProfileModel extends HiveObject {
                 ? []
                 : List<String>.from(
                     json["selectedVentilationLocations"].map((x) => x)),
-        cardsOrder: json['cardsOrder'] == null
+        cardOrder: json['cardOrder'] == null
             ? []
-            : List<String>.from(json["cardsOrder"].map((x) => x)),
-        activeCards: json["activeCards"] == null
+            : List<String>.from(json["cardOrder"].map((x) => x)),
+        cardStates: json["cardStates"] == null
             ? Map<String, bool>()
-            : Map<String, bool>.from(json["activeCards"]
-                .map((x, y) => MapEntry<String, bool>(x, y))),
+            : Map<String, bool>.from(
+                json["cardStates"].map((x, y) => MapEntry<String, bool>(x, y))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -142,13 +142,13 @@ class UserProfileModel extends HiveObject {
         "selectedVentilationLocations": selectedVentilationLocations == null
             ? null
             : List<dynamic>.from(selectedVentilationLocations!.map((x) => x)),
-        "cardsOrder": cardsOrder == null
+        "cardOrder": cardOrder == null
             ? null
-            : List<dynamic>.from(cardsOrder!.map((x) => x)),
-        "activeCards": activeCards == null
+            : List<dynamic>.from(cardOrder!.map((x) => x)),
+        "cardStates": cardStates == null
             ? null
             : Map.from(
-                activeCards!.map((x, y) => MapEntry<String?, bool>(x, y))),
+                cardStates!.map((x, y) => MapEntry<String?, bool>(x, y))),
       };
 }
 

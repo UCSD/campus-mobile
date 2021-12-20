@@ -151,7 +151,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// Call [updateCardOrder] and updates [userDataProvider]
   updateProfileAndCardOrder(List<String>? newOrder) async {
     await updateCardOrder(newOrder);
-    _userDataProvider!.userProfileModel!.cardsOrder = newOrder;
+    _userDataProvider!.userProfileModel!.cardOrder = newOrder;
     await _userDataProvider!
         .postUserProfile(_userDataProvider!.userProfileModel);
   }
