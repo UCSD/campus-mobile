@@ -316,10 +316,14 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
-  void toggleCard(String card) {
+  /// Toggles [_cardStates] and updates [userDataProvider]
+  void toggleCard(String card) async {
     _cardStates![card] = !_cardStates![card]!;
     updateCardStates(
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+    _userDataProvider!.userProfileModel!.cardStates = _cardStates;
+    await _userDataProvider!
+        .postUserProfile(_userDataProvider!.userProfileModel);
   }
 
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
