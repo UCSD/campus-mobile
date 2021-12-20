@@ -292,15 +292,12 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   showAllStaffCards() {
-    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _staffCards.toList());
+    // load in cardOrder and cardStates from the user profile
+    _cardOrder = _userDataProvider!.userProfileModel!.cardOrder!.cast<String>();
+    _cardStates =
+        _userDataProvider!.userProfileModel!.cardStates!.cast<String, bool>();
 
-    // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
-
-    for (String card in _staffCards) {
-      _cardStates![card] = true;
-    }
+    // update the preferences
     updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
