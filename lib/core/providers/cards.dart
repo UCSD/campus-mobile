@@ -248,17 +248,42 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
-  showAllStudentCards() {
-    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _studentCards.toList());
+  showAllStudentCards() async {
+    // grab user cardOrder and cardStates
+    List<String>? userCardOrder =
+        _userDataProvider!.userProfileModel!.cardOrder!.cast<String>();
+    Map<String, bool>? userCardStates =
+        _userDataProvider!.userProfileModel!.cardStates!.cast<String, bool>();
 
-    // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
+    // the cardOrder and cardStates fields do not exist in user profile
+    if (userCardOrder.length == 0 || userCardStates.length == 0) {
+      // insert student cards to the start of the list
+      int index = _cardOrder!.indexOf('MyStudentChart') + 1;
+      _cardOrder!.insertAll(index, _studentCards.toList());
 
-    for (String card in _studentCards) {
-      _cardStates![card] = true;
+      // TODO: test w/o this
+      _cardOrder = List.from(_cardOrder!.toSet().toList());
+
+      for (String card in _studentCards) {
+        _cardStates![card] = true;
+      }
+
+      // give the user the default cardOrder and cardStates
+      _userDataProvider!.userProfileModel!.cardOrder = _cardOrder;
+      _userDataProvider!.userProfileModel!.cardStates = _cardStates;
+
+      // update user profile
+      await _userDataProvider!
+          .postUserProfile(_userDataProvider!.userProfileModel);
     }
 
+    // load in cardOrder and cardStates from the user profile
+    else {
+      _cardOrder = userCardOrder;
+      _cardStates = userCardStates;
+    }
+
+    // update app preferences
     updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
