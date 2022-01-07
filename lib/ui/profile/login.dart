@@ -77,9 +77,15 @@ class _LoginState extends State<Login> {
           primary: Theme.of(context).buttonColor,
         ),
         child: Text('Log out'),
-        onPressed: () => _userDataProvider.logout(),
+        onPressed: () => executeLogout(),
       ),
     );
+  }
+
+  void executeLogout() {
+    _passwordTextFieldController.clear();
+    _emailTextFieldController.clear();
+    _userDataProvider.logout();
   }
 
   Widget buildLoginWidget() {
