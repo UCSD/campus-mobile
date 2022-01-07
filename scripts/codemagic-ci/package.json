@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "abort-controller": "^3.0.0",
-    "download": "^8.0.0",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
     "spsave": "^4.0.0",
