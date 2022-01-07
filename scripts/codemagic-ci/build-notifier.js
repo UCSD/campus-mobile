@@ -2,7 +2,6 @@ const fetch = require('node-fetch')
 const AbortController = require('abort-controller')
 const moment = require('moment')
 const fs = require('fs')
-const download = require('download')
 const XlsxTemplate = require('xlsx-template')
 const spsave = require('spsave').spsave
 const ENV_VARS = require('./env-vars.json')
@@ -181,9 +180,10 @@ const generateTestPlan = async (prAuthor) => {
 			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spPullRequestTestFolder + testPlanFilename + '?web=1').replace(/ /g, '%20')
 			console.log('  (1/3) Downloading PR test plan template ...')
 			if (ENV_VARS.buildPlatform === 'IOS') {
-				fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prTestPlanTemplateUrlIos))
+				
+				fs.copyFileSync(SP_CONFIG.prTestPlanTemplateUrlIos, testPlanFilename)
 			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
-				fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prTestPlanTemplateUrlAndroid))
+				fs.copyFileSync(SP_CONFIG.prTestPlanTemplateUrlAndroid, testPlanFilename)
 			}
 		} else {
 			console.log('Generating regression test plan for branch ' + ENV_VARS.buildBranch)
@@ -193,25 +193,25 @@ const generateTestPlan = async (prAuthor) => {
 				case 'PROD':
 					console.log('  (1/3) Downloading PROD regression test plan template ...')
 					if (ENV_VARS.buildPlatform === 'IOS') {
-						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodRegressionTestPlanTemplateUrlIos))						
+						fs.copyFileSync(SP_CONFIG.prodRegressionTestPlanTemplateUrlIos, testPlanFilename)
 					} else if (ENV_VARS.buildPlatform === 'ANDROID') {
-						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodRegressionTestPlanTemplateUrlAndroid))
+						fs.copyFileSync(SP_CONFIG.prodRegressionTestPlanTemplateUrlAndroid, testPlanFilename)
 					}
 					break
 				case 'PROD-TEST':
 					console.log('  (1/3) Downloading PROD-TEST regression test plan template ...')
 					if (ENV_VARS.buildPlatform === 'IOS') {
-						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodtestRegressionTestPlanTemplateUrlIos))						
+						fs.copyFileSync(SP_CONFIG.prodtestRegressionTestPlanTemplateUrlIos, testPlanFilename)
 					} else if (ENV_VARS.buildPlatform === 'ANDROID') {
-						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.prodtestRegressionTestPlanTemplateUrlAndroid))
+						fs.copyFileSync(SP_CONFIG.prodtestRegressionTestPlanTemplateUrlAndroid, testPlanFilename)
 					}
 					break
 				default:
 					console.log('  (1/3) Downloading QA regression test plan template ...')
 					if (ENV_VARS.buildPlatform === 'IOS') {
-						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.qaRegressionTestPlanTemplateUrlIos))						
+						fs.copyFileSync(SP_CONFIG.qaRegressionTestPlanTemplateUrlIos, testPlanFilename)
 					} else if (ENV_VARS.buildPlatform === 'ANDROID') {
-						fs.writeFileSync(testPlanFilename, await download(SP_CONFIG.qaRegressionTestPlanTemplateUrlAndroid))
+						fs.copyFileSync(SP_CONFIG.qaRegressionTestPlanTemplateUrlAndroid, testPlanFilename)
 					}
 			}
 		}
