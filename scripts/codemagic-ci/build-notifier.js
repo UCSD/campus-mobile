@@ -19,10 +19,10 @@ const buildNotify = async () => {
 		const buildTimestamp = moment().format('YYYY-MM-DD h:mm A')
 		const fciProjectLink = 'https://codemagic.io/app/' + ENV_VARS.fciProjectId + '/build/' + ENV_VARS.fciBuildId
 		let buildSuccess = (ENV_VARS.fciBuildStepStatus === 'success') ? true : false
-		let buildApkFile = 'app-release.apk'
+		let buildAabFile = 'app-release.aab'
 		let buildIpaFile = 'UC_San_Diego.ipa'
 		let prAuthor = ''
-		let saveArtifactApkSuccess = false
+		let saveArtifactAabSuccess = false
 		let saveArtifactIpaSuccess = false
 		let testPlanFilename = ''
 		let testPlanUrl = ''
@@ -41,7 +41,7 @@ const buildNotify = async () => {
 			if (ENV_VARS.buildPlatform === 'IOS') {
 				saveArtifactIpaSuccess = await saveArtifact(buildIpaFile)
 			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
-				saveArtifactApkSuccess = await saveArtifact(buildApkFile)
+				saveArtifactAabSuccess = await saveArtifact(buildAabFile)
 			}
 
 			// Generate test plan
@@ -49,7 +49,7 @@ const buildNotify = async () => {
 		}
 
 		console.log('saveArtifactIpaSuccess: ' + saveArtifactIpaSuccess)
-		console.log('saveArtifactApkSuccess: ' + saveArtifactApkSuccess)
+		console.log('saveArtifactAabSuccess: ' + saveArtifactAabSuccess)
 
 		// Construct build notifier message
 		let teamsMessage = '#### Campus Mobile Build Notifier\n\n'
@@ -74,8 +74,8 @@ const buildNotify = async () => {
 				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>iOS:</b></td><td><span style="color:#d60000">N/A</span></td></tr>'
 			}
 		} else if (ENV_VARS.buildPlatform === 'ANDROID') {
-			if (saveArtifactApkSuccess) {
-				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><a href="' + buildArtifacts.buildApkFinalUrl + '" download style="text-decoration:underline">' + buildArtifacts.buildApkFinalFilename + '</a></td></tr>'
+			if (saveArtifactAabSuccess) {
+				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><a href="' + buildArtifacts.buildAabFinalUrl + '" download style="text-decoration:underline">' + buildArtifacts.buildAabFinalFilename + '</a></td></tr>'
 			} else {
 				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><span style="color:#d60000">N/A</span></td></tr>'
 			}
@@ -91,7 +91,7 @@ const buildNotify = async () => {
 
 		// Build success or failure
 		if (buildSuccess &&
-			((saveArtifactApkSuccess && ENV_VARS.buildPlatform === 'ANDROID') ||
+			((saveArtifactAabSuccess && ENV_VARS.buildPlatform === 'ANDROID') ||
 			(saveArtifactIpaSuccess && ENV_VARS.buildPlatform === 'IOS'))) {
 			const successEmoji = successEmojiList[Math.floor(Math.random() * successEmojiList.length)]
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Status:</b></td><td><span style="color:#12a102">BUILD SUCCESS ' + successEmoji + '</span> (<a href="' + fciProjectLink + '" style="text-decoration:underline">detail</a>)</td></tr>'
@@ -143,12 +143,12 @@ const saveArtifact = async (artifactFilename) => {
 
 		// Save build artifacts to SP
 		if (ENV_VARS.buildPlatform === 'ANDROID') {
-			buildArtifacts.buildApkFilepath = '../../build/app/outputs/apk/release/app-release.apk'
-			buildArtifacts.buildApkFinalFilename = ENV_VARS.appVersion + '-' + finalBuildNumber + buildFilenamePrEnvStr + '.apk'
-			buildArtifacts.buildApkFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildApkFinalFilename).replace(/ /g, '%20')
-			fs.copyFileSync(buildArtifacts.buildApkFilepath, './' + buildArtifacts.buildApkFinalFilename)
-			fileOptions.fileName = buildArtifacts.buildApkFinalFilename
-			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildApkFinalFilename)
+			buildArtifacts.buildAabFilepath = '../../build/app/outputs/aab/release/app-release.aab'
+			buildArtifacts.buildAabFinalFilename = ENV_VARS.appVersion + '-' + finalBuildNumber + buildFilenamePrEnvStr + '.aab'
+			buildArtifacts.buildAabFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildAabFinalFilename).replace(/ /g, '%20')
+			fs.copyFileSync(buildArtifacts.buildAabFilepath, './' + buildArtifacts.buildAabFinalFilename)
+			fileOptions.fileName = buildArtifacts.buildAabFinalFilename
+			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildAabFinalFilename)
 			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
 			await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 			return true
