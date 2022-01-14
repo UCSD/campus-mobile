@@ -41,24 +41,24 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
     /// creating  new map ensures we remove all unsupported lots
     Map<String?, AvailabilityModel> newMapOfLots =
-        Map<String?, AvailabilityModel>();
+    Map<String?, AvailabilityModel>();
     if (await _availabilityService.fetchData()) {
       /// setting the LocationViewState based on user data
       for (AvailabilityModel model in _availabilityService.data!) {
-        newMapOfLots[model.locationName] = model;
+        newMapOfLots[model.name] = model;
 
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
         if (_userDataProvider
             .userProfileModel!.selectedOccuspaceLocations!.isEmpty) {
-          locationViewState[model.locationName] = true;
+          locationViewState[model.name] = true;
         }
 
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
-          _locationViewState[model.locationName] = _userDataProvider
+          _locationViewState[model.name] = _userDataProvider
               .userProfileModel!.selectedOccuspaceLocations!
-              .contains(model.locationName);
+              .contains(model.name);
         }
       }
 
@@ -163,8 +163,8 @@ class AvailabilityDataProvider extends ChangeNotifier {
   List<String?> locations() {
     List<String?> locationsToReturn = [];
     for (AvailabilityModel model
-        in _availabilityModels as Iterable<AvailabilityModel>? ?? []) {
-      locationsToReturn.add(model.locationName);
+    in _availabilityModels as Iterable<AvailabilityModel>? ?? []) {
+      locationsToReturn.add(model.name);
     }
     return locationsToReturn;
   }

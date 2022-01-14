@@ -19,7 +19,7 @@ class AvailabilityService {
     "accept": "application/json",
   };
   final String endpoint =
-      "https://api-qa.ucsd.edu:8243/occuspace/v2.0/busyness";
+      "https://api-qa.ucsd.edu:8243/occuspace/v3.0/busyness";
 
   Future<bool> fetchData() async {
     _error = null;
@@ -27,13 +27,17 @@ class AvailabilityService {
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.authorizedFetch(endpoint, headers));
+      await (_networkHelper.authorizedFetch(endpoint, headers));
 
       /// parse data
-      final data = availabilityModelFromJson(_response);
+      final data = availabilityStatusFromJson(_response);
+      print("DATA:");
+      print(_response);
+      print(data.toString());
+      print(data.toJson());
       _isLoading = false;
 
-      _data = data;
+      _data = data.data;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
@@ -54,12 +58,14 @@ class AvailabilityService {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
 
+      print("RESPONSE: " );
+      print(response);
       headers["Authorization"] = "Bearer " + response["access_token"];
 
       return true;
