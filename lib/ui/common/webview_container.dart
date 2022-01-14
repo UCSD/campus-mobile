@@ -138,8 +138,8 @@ class _WebViewContainerState extends State<WebViewContainer>
       mainAxisSize: MainAxisSize.min,
       children: [
         buildMenuOptions({
-          'reload': _webViewController?.reload,
-          'hide': hide,
+          CardMenuOptionConstants.reloadCard: _webViewController?.reload,
+          CardMenuOptionConstants.hideCard: hide,
         }),
       ],
     );
@@ -168,12 +168,12 @@ class _WebViewContainerState extends State<WebViewContainer>
 
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
-      case 'reload':
+      case CardMenuOptionConstants.reloadCard:
         {
           _webViewController?.loadUrl(webCardUrl!);
         }
         break;
-      case 'hide':
+      case CardMenuOptionConstants.hideCard:
         {
           hide!();
         }
