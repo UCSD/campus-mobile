@@ -35,6 +35,7 @@ class AvailabilityService {
       print(_response);
       print(data.toString());
       print(data.toJson());
+
       _isLoading = false;
 
       _data = data.data;
