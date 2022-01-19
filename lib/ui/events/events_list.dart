@@ -23,9 +23,6 @@ class EventsList extends StatelessWidget {
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
     final List<Widget> eventTiles = [];
-    final screenSize = MediaQuery.of(context).size;
-    double height = screenSize.height;
-    double width = screenSize.width;
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
@@ -33,8 +30,6 @@ class EventsList extends StatelessWidget {
     var size;
     if (listSize == null) {
       size = 3;
-      height /= 2;
-      width /= 1.4;
     } else
       size = listSize;
 
@@ -45,7 +40,7 @@ class EventsList extends StatelessWidget {
 
     for (int i = 0; i < size; i++) {
       final EventModel item = listOfEvents[i];
-      final tile = EventTile(data: item, height: height, width: width);
+      final tile = EventTile(data: item);
       eventTiles.add(tile);
     }
 

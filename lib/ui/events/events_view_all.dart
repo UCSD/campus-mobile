@@ -26,7 +26,7 @@ class EventsAll extends StatelessWidget {
 
     for (int i = 0; i < listOfEvents.length; i++) {
       final EventModel item = listOfEvents[i];
-      final tile = EventTile(data: item, height: height, width: width);
+      final tile = EventTile(data: item);
       eventTiles.add(tile);
     }
 

@@ -7,62 +7,52 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class EventTile extends StatelessWidget {
-  const EventTile(
-      {Key? key, required this.data, required this.height, required this.width})
-      : super(key: key);
+  const EventTile({Key? key, required this.data}) : super(key: key);
   final EventModel data;
-  final double height;
-  final double width;
-
   @override
   Widget build(BuildContext context) {
     return Provider.of<EventsDataProvider>(context).isLoading!
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
-        : buildEventTile(context, height, width);
+        : buildEventTile(context);
   }
 
-  Widget buildEventTile(BuildContext context, double height, double width) {
-    double padding = height * 0.03;
-    double cardWidth = width / 1.6;
-    double minTitleConHeight = width * 0.15;
-    double minTimeConHeight = minTitleConHeight / 1.1;
-
+  Widget buildEventTile(BuildContext context) {
     return Container(
-      width: cardWidth,
-      child: Card(
-        child: Column(
-          children: [
-            eventImageLoader(data.imageThumb, height),
-            Divider(
-              color: Colors.grey,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, RoutePaths.EventDetailView,
-                    arguments: data);
-              },
-              child: Container(
-                width: cardWidth,
-                padding: EdgeInsets.fromLTRB(padding, 0, padding, 0),
-                // decoration: BoxDecoration(
-                //     border: Border.all(width: 0.3),
-                //     borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.expand_less),
-                      color: Colors.grey,
-                      onPressed: () {
-                        Navigator.pushNamed(context, RoutePaths.EventDetailView,
-                            arguments: data);
-                      },
-                    ),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: minTitleConHeight),
-                      child: Text(
+      width: 200,
+      height: 350,
+      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
+      child: Column(
+        children: [
+          eventImageLoader(data.imageThumb),
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, RoutePaths.EventDetailView,
+                  arguments: data);
+            },
+            child: SizedBox(
+              height: 150,
+              width: 200,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.3),
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                ),
+                child: Card(
+                  margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.expand_less),
+                        color: Colors.grey,
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, RoutePaths.EventDetailView,
+                              arguments: data);
+                        },
+                      ),
+                      Text(
                         data.title!,
                         textAlign: TextAlign.center,
                         maxLines: 3,
@@ -72,49 +62,45 @@ class EventTile extends StatelessWidget {
                             fontSize: 14,
                             fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    Padding(padding: EdgeInsets.only(bottom: 5),),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: minTimeConHeight),
-                      child: eventsDateTime(data),
-                    ),
-                  ],
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 5),
+                      ),
+                      eventsDateTime(data),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget eventImageLoader(String? url, double height) {
+  Widget eventImageLoader(String? url) {
     return url!.isEmpty
         ? Container(
-            height: height / 5,
             child: Image(
-              image: AssetImage('assets/images/UCSDMobile_rounded.png'),
-            ))
-        : ConstrainedBox(
-            constraints:
-                BoxConstraints(minHeight: height / 5, maxHeight: height / 5),
-            child: Image.network(
-              url,
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.secondary,
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-              fit: BoxFit.fill,
-            ),
+            image: AssetImage('assets/images/UCSDMobile_rounded.png'),
+            height: 200,
+          ))
+        : Image.network(
+            url,
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              );
+            },
+            fit: BoxFit.fill,
+            height: 200,
           );
   }
 
@@ -134,7 +120,10 @@ class EventTile extends StatelessWidget {
       Widget date;
       Widget time;
       if (sameDay) {
-        date = Text(startMonthDayYear, style: TextStyle(fontSize: 12),); // Ex. June 11, 2021
+        date = Text(
+          startMonthDayYear,
+          style: TextStyle(fontSize: 12),
+        ); // Ex. June 11, 2021
       } else {
         // if not the same date, check if the same year
         String startYear = startMonthDayYear.substring(
@@ -154,13 +143,10 @@ class EventTile extends StatelessWidget {
                 startMonthDayYear.indexOf(','));
             String endDay = endMonthDayYear.substring(
                 endMonthDayYear.indexOf(' ') + 1, endMonthDayYear.indexOf(','));
-            date = Text(startMonth +
-                ' ' +
-                startDay +
-                ' - ' +
-                endDay +
-                ', ' +
-                startYear, style: TextStyle(fontSize: 12),); // Ex. September 11 - 26, 2021
+            date = Text(
+              startMonth + ' ' + startDay + ' - ' + endDay + ', ' + startYear,
+              style: TextStyle(fontSize: 12),
+            ); // Ex. September 11 - 26, 2021
           } else {
             // if different month in the same year
             String startMonthDay =
@@ -168,28 +154,40 @@ class EventTile extends StatelessWidget {
             String endMonthDay =
                 endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
             date = Text(
-              startMonthDay + ' - ' + endMonthDay + ', ' + startYear, style: TextStyle(fontSize: 12),
+              startMonthDay + ' - ' + endMonthDay + ', ' + startYear,
+              style: TextStyle(fontSize: 12),
             ); // Ex. September 11 - October 26, 2021
           }
         } else {
           date = Text(
-            startMonthDayYear + ' - ' + endMonthDayYear, style: TextStyle(fontSize: 12),
+            startMonthDayYear + ' - ' + endMonthDayYear,
+            style: TextStyle(fontSize: 12),
           ); // Ex. June 11, 2021 - May 12, 2023
         }
       }
 
       if (unspecifiedTime) {
-        time = Text('', style: TextStyle(fontSize: 12),);
+        time = Text(
+          '',
+          style: TextStyle(fontSize: 12),
+        );
       } else {
         time = Text(
-          startTime + ' - ' + endTime, style: TextStyle(fontSize: 12),
+          startTime + ' - ' + endTime,
+          style: TextStyle(fontSize: 12),
         );
       }
 
       return Column(
         // mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [date, Padding(padding: EdgeInsets.only(bottom: 5),), time],
+        children: [
+          date,
+          Padding(
+            padding: EdgeInsets.only(bottom: 5),
+          ),
+          time
+        ],
       );
     } catch (e) {
       print(e);
