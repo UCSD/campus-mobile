@@ -20,9 +20,6 @@ class EventsAll extends StatelessWidget {
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
     final List<Widget> eventTiles = [];
-    final screenSize = MediaQuery.of(context).size;
-    double height = screenSize.height;
-    double width = screenSize.width;
 
     for (int i = 0; i < listOfEvents.length; i++) {
       final EventModel item = listOfEvents[i];
@@ -35,7 +32,7 @@ class EventsAll extends StatelessWidget {
         crossAxisCount: 2,
         children: eventTiles,
         childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 1.1),
+            (MediaQuery.of(context).size.height / 1.3),
       );
     } else {
       return ContainerView(

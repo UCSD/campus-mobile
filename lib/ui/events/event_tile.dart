@@ -21,7 +21,7 @@ class EventTile extends StatelessWidget {
   Widget buildEventTile(BuildContext context) {
     return Container(
       width: 200,
-      height: 350,
+      height: 320,
       margin: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
       child: Column(
         children: [
@@ -32,7 +32,7 @@ class EventTile extends StatelessWidget {
                   arguments: data);
             },
             child: SizedBox(
-              height: 150,
+              height: 170,
               width: 200,
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -82,7 +82,7 @@ class EventTile extends StatelessWidget {
         ? Container(
             child: Image(
             image: AssetImage('assets/images/UCSDMobile_rounded.png'),
-            height: 200,
+            height: 150,
           ))
         : Image.network(
             url,
@@ -100,7 +100,7 @@ class EventTile extends StatelessWidget {
               );
             },
             fit: BoxFit.fill,
-            height: 200,
+            height: 150,
           );
   }
 
