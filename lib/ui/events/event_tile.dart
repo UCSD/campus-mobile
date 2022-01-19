@@ -28,12 +28,16 @@ class EventTile extends StatelessWidget {
     double cardWidth = width / 1.6;
     double minTitleConHeight = width * 0.15;
     double minTimeConHeight = minTitleConHeight / 1.1;
+
     return Container(
       width: cardWidth,
       child: Card(
         child: Column(
           children: [
             eventImageLoader(data.imageThumb, height),
+            Divider(
+              color: Colors.grey,
+            ),
             InkWell(
               onTap: () {
                 Navigator.pushNamed(context, RoutePaths.EventDetailView,
@@ -42,9 +46,9 @@ class EventTile extends StatelessWidget {
               child: Container(
                 width: cardWidth,
                 padding: EdgeInsets.fromLTRB(padding, 0, padding, 0),
-                decoration: BoxDecoration(
-                    border: Border.all(width: 0.3),
-                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                // decoration: BoxDecoration(
+                //     border: Border.all(width: 0.3),
+                //     borderRadius: BorderRadius.all(Radius.circular(5.0))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
