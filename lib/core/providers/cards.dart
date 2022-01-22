@@ -224,12 +224,14 @@ class CardsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Update [_cardStates] to all false
   _deactivateAllCards() {
     for (String card in _cardStates!.keys) {
       _cardStates![card] = false;
     }
   }
 
+  /// Update [_cardOrder] to include student cards
   activateStudentCards() {
     // do nothing if a student card already exists in the list
     for (String card in _studentCards) {
@@ -248,6 +250,8 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
+  /// Fetch cardStates and cardOrder from user profile, however,
+  /// if those do not exist create and upload default order and states.
   showAllStudentCards() async {
     // grab user cardOrder and cardStates
     List<String>? userCardOrder =
@@ -299,6 +303,7 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
+  /// Update [_cardOrder] to include staff cards
   activateStaffCards() {
     // do nothing if a staff card already exists in the list
     for (String card in _staffCards) {
