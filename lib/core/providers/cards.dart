@@ -275,10 +275,6 @@ class CardsDataProvider extends ChangeNotifier {
       // give the user the default cardOrder and cardStates
       _userDataProvider!.userProfileModel!.cardOrder = _cardOrder;
       _userDataProvider!.userProfileModel!.cardStates = _cardStates;
-
-      // update user profile
-      await _userDataProvider!
-          .postUserProfile(_userDataProvider!.userProfileModel);
     }
 
     // load in cardOrder and cardStates from the user profile
@@ -291,6 +287,10 @@ class CardsDataProvider extends ChangeNotifier {
     updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+
+    // update user profile
+    await _userDataProvider!
+        .postUserProfile(_userDataProvider!.userProfileModel);
   }
 
   deactivateStudentCards() {
@@ -344,10 +344,6 @@ class CardsDataProvider extends ChangeNotifier {
       // give the user the default cardOrder and cardStates
       _userDataProvider!.userProfileModel!.cardOrder = _cardOrder;
       _userDataProvider!.userProfileModel!.cardStates = _cardStates;
-
-      // update user profile
-      await _userDataProvider!
-          .postUserProfile(_userDataProvider!.userProfileModel);
     }
 
     // load in cardOrder and cardStates from the user profile
@@ -360,6 +356,10 @@ class CardsDataProvider extends ChangeNotifier {
     updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+
+    // update user profile
+    await _userDataProvider!
+        .postUserProfile(_userDataProvider!.userProfileModel);
   }
 
   deactivateStaffCards() {
