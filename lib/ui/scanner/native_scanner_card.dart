@@ -48,15 +48,17 @@ class NativeScannerCard extends StatelessWidget {
               right: 10,
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                getCardContentText(context),
-                textAlign: TextAlign.left,
-              ),
-              getMessageWidget(context),
-            ],
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  getCardContentText(context),
+                  textAlign: TextAlign.left,
+                ),
+                getMessageWidget(context),
+              ],
+            ),
           ),
         ],
       ),
@@ -99,12 +101,12 @@ class NativeScannerCard extends StatelessWidget {
         myRecentScanTime = ScannerConstants.noRecentScan;
       }
       return (Padding(
-        padding: const EdgeInsets.only(top: 8.0),
+        padding: EdgeInsets.only(top: 8.0, right: 8.0),
         child: Text.rich(
           TextSpan(
             children: [
               TextSpan(
-                text: "Last scan: ",
+                text: "Last test kit scan: ",
               ),
               TextSpan(
                   text: Provider.of<ScannerMessageDataProvider>(context,

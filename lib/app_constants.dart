@@ -29,8 +29,6 @@ class RoutePaths {
   static const String ManageAvailabilityView =
       'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
-  static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
-  static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
   static const String DiningViewAll = 'dining/dining_list_view';
   static const String DiningDetailView = 'dining/dining_detail_view';
   static const String DiningNutritionView = 'dining/dining_nutrition_view';
@@ -62,8 +60,6 @@ class RouteTitles {
     'events/event_detail_view': 'Events',
     'class/classList': 'Class Schedule',
     'availability/manage_locations_view': 'Manage Locations',
-    'shuttle/manage_shuttle_view': 'Manage Shuttle Stops',
-    'shuttle/add_shuttle_stops_view': 'Add Shuttle Stops',
     'parking/manage_parking_view': 'Parking: Manage Lots',
     'parking/neighborhoods_lot_view': 'Parking: Manage Lots',
     'parking/neighborhoods_view': 'Parking: Manage Lots',
@@ -80,12 +76,20 @@ class RouteTitles {
 }
 
 class ParkingDefaults {
-  static const defaultLots = ["P406", "P784", "P782", "P386", "P704", "P705"];
+  static const defaultLots = [
+    "Gilman",
+    "406",
+    "784",
+    "P782",
+    "P386 (Gliderport)",
+    "P704",
+    "P705"
+  ];
   static const defaultSpots = ["S", "B", "A"];
 }
 
 class ButtonText {
-  static const ScanNowFull = 'Scan Your COVID-19 Test Kit.';
+  static const ScanNowFull = 'Scan Your COVID-19 Kit.';
   static const ScanNow = 'Scan Now';
   static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';
   static const SignIn = 'Sign In';
@@ -105,6 +109,8 @@ class ErrorConstants {
 class ScannerConstants {
   static const duplicateRecord =
       'Submission failed due to barcode already scanned. Please discard this test tube and get another one.\nCode #1035';
+  static const duplicateRecordBloodScreen =
+      'Submission failed because this barcode has already been scanned. Please discard this kit.\nCode #1035';
   static const invalidMedia =
       'Barcode is not valid. Please scan another barcode.\nCode #1036';
   static const barcodeError =
@@ -184,4 +190,9 @@ class CardTitleConstants {
     'weather': 'Weather',
     'ventilation': 'Office Environment',
   };
+}
+
+class CardMenuOptionConstants {
+  static const reloadCard = 'reload this card';
+  static const hideCard = 'hide this card';
 }
