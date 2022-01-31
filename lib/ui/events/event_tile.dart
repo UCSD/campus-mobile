@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
   final EventModel data;
+  final double tileWidth = 190;
   @override
   Widget build(BuildContext context) {
     return Provider.of<EventsDataProvider>(context).isLoading!
@@ -20,8 +21,8 @@ class EventTile extends StatelessWidget {
 
   Widget buildEventTile(BuildContext context) {
     return Container(
-      width: 200,
-      height: 320,
+      width: tileWidth,
+      height: 300,
       margin: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
       child: Column(
         children: [
@@ -32,8 +33,8 @@ class EventTile extends StatelessWidget {
                   arguments: data);
             },
             child: SizedBox(
-              height: 170,
-              width: 200,
+              height: 150,
+              width: tileWidth,
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   border: Border.all(width: 0.3),
@@ -41,32 +42,35 @@ class EventTile extends StatelessWidget {
                 ),
                 child: Card(
                   margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                  child: Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.expand_less),
-                        color: Colors.grey,
-                        onPressed: () {
-                          Navigator.pushNamed(
-                              context, RoutePaths.EventDetailView,
-                              arguments: data);
-                        },
-                      ),
-                      Text(
-                        data.title!,
-                        textAlign: TextAlign.center,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 5),
-                      ),
-                      eventsDateTime(data),
-                    ],
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.expand_less),
+                          color: Colors.grey,
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, RoutePaths.EventDetailView,
+                                arguments: data);
+                          },
+                        ),
+                        Text(
+                          data.title!,
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 5),
+                        ),
+                        eventsDateTime(data),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -83,6 +87,8 @@ class EventTile extends StatelessWidget {
             child: Image(
             image: AssetImage('assets/images/UCSDMobile_rounded.png'),
             height: 150,
+            width: tileWidth,
+            fit: BoxFit.fill,
           ))
         : Image.network(
             url,
@@ -101,6 +107,7 @@ class EventTile extends StatelessWidget {
             },
             fit: BoxFit.fill,
             height: 150,
+            width: tileWidth,
           );
   }
 
