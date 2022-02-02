@@ -98,6 +98,8 @@ class ErrorConstants {
   static const authorizedPostErrors = 'Failed to upload data: ';
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
+  static const notAcceptable =
+      'DioError [DioErrorType.response]: Http status error [406]';
   static const duplicateRecord =
       'DioError [DioErrorType.response]: Http status error [409]';
   static const invalidMedia =
@@ -119,6 +121,8 @@ class ScannerConstants {
   static const loggedOut = 'An error occurred. Please try again.\nCode #1039';
   static const unknownError =
       'An error occurred. Please try again.\nCode #1040';
+  static const notAcceptable =
+      'Barcode cannot be accepted due to recent positive test result.\nCode #1041';
   static const scannerReauthFailure =
       'Your session has expired. Please login to submit a scan.';
   static const noRecentScan = 'No scan submitted';
