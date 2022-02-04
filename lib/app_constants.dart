@@ -122,7 +122,7 @@ class ScannerConstants {
   static const unknownError =
       'An error occurred. Please try again.\nCode #1040';
   static const notAcceptable =
-      'Barcode cannot be accepted due to recent positive test result.\nCode #1041';
+      'Do not test within 90 days after receiving a positive test for COVID-19. Place all materials in the recycle and trash receptacles.\nCode #1041';
   static const scannerReauthFailure =
       'Your session has expired. Please login to submit a scan.';
   static const noRecentScan = 'No scan submitted';
