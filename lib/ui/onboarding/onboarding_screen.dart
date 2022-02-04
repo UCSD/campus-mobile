@@ -158,12 +158,17 @@ class _OnboardingScreen extends State<OnboardingScreen>
                 onPressed: () {
                   Navigator.of(context).push(_routeToAffiliations());
                 },
-                child: Text(
-                  "Get Started",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      decoration: TextDecoration.underline),
+                child: Semantics(
+                  button: true,
+                  hint:
+                      'press to start by choosing your affiliation to UC San Diego',
+                  child: Text(
+                    "Get Started",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        decoration: TextDecoration.underline),
+                  ),
                 ),
               )),
               Expanded(
@@ -174,12 +179,16 @@ class _OnboardingScreen extends State<OnboardingScreen>
                   onPressed: () {
                     Navigator.of(context).push(_routeToLogin());
                   },
-                  child: Text(
-                    "Log In",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        decoration: TextDecoration.underline),
+                  child: Semantics(
+                    button: true,
+                    hint: 'press to login with your ucsd account',
+                    child: Text(
+                      "Log In",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          decoration: TextDecoration.underline),
+                    ),
                   ),
                 ),
               )

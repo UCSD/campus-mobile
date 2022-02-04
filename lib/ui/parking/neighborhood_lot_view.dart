@@ -51,24 +51,21 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
     // loops through and adds buttons for the user to click on
     for (int i = 0; i < arguments.length; i++) {
       bool lotState = parkingDataProvider.parkingViewState![arguments[i]]!;
-      list.add(ListTile(
-        title: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-          child: Text(
-            arguments[i],
-            style: TextStyle(
-                color: Theme.of(context)
-                    .colorScheme
-                    .secondary, // lotState ? colorFromHex('#006A96') : Theme.of(context).colorScheme.secondary,
-                fontSize: 20),
+      list.add(
+        ListTile(
+          title: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+            child: Text(
+              arguments[i],
+              style: TextStyle(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .secondary, // lotState ? colorFromHex('#006A96') : Theme.of(context).colorScheme.secondary,
+                  fontSize: 20),
+            ),
           ),
-        ),
-        trailing: IconButton(
-          icon: Icon(lotState ? Icons.cancel_rounded : Icons.add_rounded),
-          color: Theme.of(context)
-              .colorScheme
-              .secondary, // lotState ? colorFromHex('#006A96') : Theme.of(context).colorScheme.secondary,
-          onPressed: () {
+          trailing: Icon(lotState ? Icons.cancel_rounded : Icons.add_rounded),
+          onTap: () {
             if (selectedLots == 10 && !lotState && showedScaffold != true) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
@@ -80,7 +77,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
             parkingDataProvider.toggleLot(arguments[i], selectedLots);
           },
         ),
-      ));
+      );
     }
 
     // adds SizedBox to have a grey underline for the last item in the list
