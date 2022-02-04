@@ -85,7 +85,7 @@ class EventTile extends StatelessWidget {
     return url!.isEmpty
         ? Container(
             child: Image(
-            image: AssetImage('assets/images/UCSDMobile_rounded.png'),
+            image: AssetImage('assets/images/UCSDMobile_sharp.png'),
             height: 150,
             width: tileWidth,
             fit: BoxFit.fill,
