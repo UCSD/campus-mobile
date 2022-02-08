@@ -120,6 +120,7 @@ class VentilationDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
+    print("Items in Ventilation IDS");
 
     // create new list of ventilation data to display
     List<VentilationDataModel?> tempModels = [];
@@ -174,6 +175,7 @@ class VentilationDataProvider extends ChangeNotifier {
       ventilationDataModels.add(_ventilationService.data);
       ventilationIDs =
           _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
+
     } catch (e) {
       _error = VentilationConstants.addLocationFailed;
       print("Error while adding location:  $e");
