@@ -257,6 +257,10 @@ class CardsDataProvider extends ChangeNotifier {
     for (String card in accountCards) {
       _cardStates![card] = true;
     }
+
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
   /// Update the [_cardOrder] stored in state
