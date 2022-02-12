@@ -212,36 +212,43 @@ class CardsDataProvider extends ChangeNotifier {
   /// Returns true when both exist, false otherwise.
   /// NOTE: Function should only get called when the user is logged in.
   bool checkIfExist() {
-    // define authenticated variables
-    String account = accountType();
-    List<String> accountCards =
-        _userDataProvider!.userProfileModel!.classifications!.student!
-            ? _studentCards
-            : _staffCards;
+    try {
+      // define authenticated variables
+      String account = accountType();
+      List<String> accountCards =
+          _userDataProvider!.userProfileModel!.classifications!.student!
+              ? _studentCards
+              : _staffCards;
 
-    // check if a cardMapping exists for the account type
-    if (_userDataProvider!.userProfileModel!.cardMappings![account] != null) {
-      // cardMapping, cardOrder, and cardStates exist, so exit the function
-      if (_userDataProvider!.userProfileModel!.cardMappings![account]
-                  ['cardOrder'] !=
-              null &&
-          _userDataProvider!.userProfileModel!.cardMappings![account]
-                  ['cardStates'] !=
-              null) {
-        return true;
+      // check if a cardMapping exists for the account type
+      if (_userDataProvider!.userProfileModel!.cardMappings![account] != null) {
+        // cardMapping, cardOrder, and cardStates exist, so exit the function
+        if (_userDataProvider!.userProfileModel!.cardMappings![account]
+                    ['cardOrder'] !=
+                null &&
+            _userDataProvider!.userProfileModel!.cardMappings![account]
+                    ['cardStates'] !=
+                null) {
+          return true;
+        }
       }
+
+      // create a cardMapping for the account
+      else {
+        _userDataProvider!.userProfileModel!.cardMappings![account] =
+            new Map<String, dynamic>();
+      }
+
+      // create default cardOrder and cardStates
+      _createDefault(account, accountCards);
+
+      return false;
+    } catch (e) {
+      // in case function is somehow called when use is a visitor
+      print("Providers/Cards/checkIfExist Error: $e");
     }
 
-    // create a cardMapping for the account
-    else {
-      _userDataProvider!.userProfileModel!.cardMappings![account] =
-          new Map<String, dynamic>();
-    }
-
-    // create default cardOrder and cardStates
-    _createDefault(account, accountCards);
-
-    return false;
+    return true;
   }
 
   /// Creates default, authenticated _cardOrder and _cardStates.
@@ -282,14 +289,19 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// Toggles [_cardStates] and updates [userDataProvider]
   void toggleCard(String card) async {
-    String account = accountType();
     _cardStates![card] = !_cardStates![card]!;
+
+    // if the account is not a visitor, update user profile as well
+    String account = accountType();
+    if (account != 'visitor') {
+      _userDataProvider!.userProfileModel!.cardMappings![account]
+          ['cardStates'] = _cardStates;
+      await _userDataProvider!
+          .postUserProfile(_userDataProvider!.userProfileModel);
+    }
+
     updateCardStates(
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
-    _userDataProvider!.userProfileModel!.cardMappings![account]['cardStates'] =
-        _cardStates;
-    await _userDataProvider!
-        .postUserProfile(_userDataProvider!.userProfileModel);
   }
 
   /// Update the [_cardStates] stored in state
@@ -313,12 +325,16 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// Call [updateCardOrder()] and updates [userDataProvider]
   updateProfileAndCardOrder(List<String>? newOrder) async {
+    // if the account is not a visitor, update user profile as well
     String account = accountType();
+    if (account != 'visitor') {
+      _userDataProvider!.userProfileModel!.cardMappings![account]['cardOrder'] =
+          newOrder;
+      await _userDataProvider!
+          .postUserProfile(_userDataProvider!.userProfileModel);
+    }
+
     await updateCardOrder(newOrder);
-    _userDataProvider!.userProfileModel!.cardMappings![account]['cardOrder'] =
-        newOrder;
-    await _userDataProvider!
-        .postUserProfile(_userDataProvider!.userProfileModel);
   }
 
   /// Update [_cardStates] to all false
