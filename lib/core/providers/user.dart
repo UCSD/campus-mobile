@@ -6,7 +6,6 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
-import 'package:campus_mobile_experimental/core/services/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/user.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -182,11 +181,7 @@ class UserDataProvider extends ChangeNotifier {
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
-        if (_userProfileModel!.classifications!.student!) {
-          _cardsDataProvider!.showAllStudentCards();
-        } else if (_userProfileModel!.classifications!.staff!) {
-          _cardsDataProvider!.showAllStaffCards();
-        }
+        _cardsDataProvider!.showAllAuthenticatedCards();
         _isLoading = false;
         notifyListeners();
         return true;
@@ -319,7 +314,8 @@ class UserDataProvider extends ChangeNotifier {
           newModel.username = await getUsernameFromDevice();
           newModel.ucsdaffiliation = _authenticationModel!.ucsdaffiliation;
           newModel.pid = _authenticationModel!.pid;
-          List<String> castSubscriptions = newModel.subscribedTopics!.cast<String>();
+          List<String> castSubscriptions =
+              newModel.subscribedTopics!.cast<String>();
           newModel.subscribedTopics = castSubscriptions.toSet().toList();
           print('UserDataProvider:fetchUserProfile:newModel');
           print(newModel.toJson());
@@ -340,7 +336,8 @@ class UserDataProvider extends ChangeNotifier {
                 Classifications.fromJson({'student': false, 'staff': false});
           }
           await updateUserProfileModel(newModel);
-          _pushNotificationDataProvider.subscribeToTopics(newModel.subscribedTopics!.cast<String>());
+          _pushNotificationDataProvider
+              .subscribeToTopics(newModel.subscribedTopics!.cast<String>());
         }
       } else {
         _error = _userProfileService.error;
