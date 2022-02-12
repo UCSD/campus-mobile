@@ -88,7 +88,7 @@ class ParkingDefaults {
 }
 
 class ButtonText {
-  static const ScanNowFull = 'Scan Your COVID-19 Test Kit.';
+  static const ScanNowFull = 'Scan Your COVID-19 Kit.';
   static const ScanNow = 'Scan Now';
   static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';
   static const SignIn = 'Sign In';
@@ -98,6 +98,8 @@ class ErrorConstants {
   static const authorizedPostErrors = 'Failed to upload data: ';
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
+  static const notAcceptable =
+      'DioError [DioErrorType.response]: Http status error [406]';
   static const duplicateRecord =
       'DioError [DioErrorType.response]: Http status error [409]';
   static const invalidMedia =
@@ -108,6 +110,8 @@ class ErrorConstants {
 class ScannerConstants {
   static const duplicateRecord =
       'Submission failed due to barcode already scanned. Please discard this test tube and get another one.\nCode #1035';
+  static const duplicateRecordBloodScreen =
+      'Submission failed because this barcode has already been scanned. Please discard this kit.\nCode #1035';
   static const invalidMedia =
       'Barcode is not valid. Please scan another barcode.\nCode #1036';
   static const barcodeError =
@@ -117,6 +121,8 @@ class ScannerConstants {
   static const loggedOut = 'An error occurred. Please try again.\nCode #1039';
   static const unknownError =
       'An error occurred. Please try again.\nCode #1040';
+  static const notAcceptable =
+      'Do not test within 90 days after receiving a positive test for COVID-19. Place all materials in the recycle and trash receptacles.\nCode #1041';
   static const scannerReauthFailure =
       'Your session has expired. Please login to submit a scan.';
   static const noRecentScan = 'No scan submitted';
@@ -187,4 +193,9 @@ class CardTitleConstants {
     'weather': 'Weather',
     'ventilation': 'Office Environment',
   };
+}
+
+class CardMenuOptionConstants {
+  static const reloadCard = 'reload this card';
+  static const hideCard = 'hide this card';
 }

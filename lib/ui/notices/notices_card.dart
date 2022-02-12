@@ -22,14 +22,20 @@ class NoticesCard extends StatelessWidget {
   }
 
   Widget buildBannerView(NoticesModel notice) {
-    return GestureDetector(
-        onTap: () {
-          openLink(notice.link!);
-        },
-        child: ImageLoader(
-          url: notice.imageUrl,
-          fullSize: true,
-        ));
+    // The screen reader will read - "image - (text on the image)"
+    return Semantics(
+      label: notice.title,
+      image: true,
+      button: true,
+      child: GestureDetector(
+          onTap: () {
+            openLink(notice.link!);
+          },
+          child: ImageLoader(
+            url: notice.imageUrl,
+            fullSize: true,
+          )),
+    );
   }
 
   openLink(String url) async {

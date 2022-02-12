@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
     ///DEFAULT STATES
+    _noInternet = false;
     _isLoading = false;
     _cardStates = {};
     _webCards = {};
@@ -62,6 +63,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   ///STATES
+  bool? _noInternet;
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
@@ -139,6 +141,10 @@ class CardsDataProvider extends ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future changeInternetStatus(noInternet) async {
+    _noInternet = noInternet;
   }
 
   Future loadSavedData() async {
@@ -450,6 +456,7 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// SIMPLE GETTERS
   bool? get isLoading => _isLoading;
+  bool? get noInternet => _noInternet;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
 

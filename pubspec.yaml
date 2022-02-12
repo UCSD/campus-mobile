@@ -7,7 +7,7 @@ environment:
 dependencies:
   app_settings: 4.1.0
   barcode_widget: 2.0.1
-  beacon_broadcast: 0.3.0-nullsafety.0
+  beacon_broadcast: 0.3.0
   connectivity: 3.0.6
   device_info: 2.0.2
   dio: 4.0.0
@@ -29,7 +29,7 @@ dependencies:
       ref: 470b128cd463373d0ec4b668d5b4f449dc728d72
   flutter_linkify: 5.0.2
   flutter_local_notifications: 8.2.0
-  flutter_secure_storage: 4.2.0
+  flutter_secure_storage: 5.0.2
   flutter_sticky_header: 0.6.0
   get: 4.1.4
   google_maps_flutter: 2.0.6
