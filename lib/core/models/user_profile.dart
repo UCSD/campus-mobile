@@ -39,10 +39,6 @@ class UserProfileModel extends HiveObject {
   @HiveField(7)
   List<String?>? selectedVentilationLocations;
   @HiveField(8)
-  List<String?>? cardOrder;
-  @HiveField(9)
-  Map<String?, bool>? cardStates;
-  @HiveField(10)
   Map<String?, dynamic>? cardMappings;
 
   UserProfileModel(
@@ -59,8 +55,6 @@ class UserProfileModel extends HiveObject {
       this.selectedStops,
       this.surveyCompletion,
       this.selectedVentilationLocations,
-      this.cardOrder,
-      this.cardStates,
       this.cardMappings});
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
@@ -103,13 +97,6 @@ class UserProfileModel extends HiveObject {
                 ? []
                 : List<String>.from(
                     json["selectedVentilationLocations"].map((x) => x)),
-        cardOrder: json['cardOrder'] == null
-            ? []
-            : List<String>.from(json["cardOrder"].map((x) => x)),
-        cardStates: json["cardStates"] == null
-            ? Map<String, bool>()
-            : Map<String, bool>.from(
-                json["cardStates"].map((x, y) => MapEntry<String, bool>(x, y))),
         cardMappings: json["cardMappings"] == null
             ? Map<String, dynamic>()
             : Map<String, dynamic>.from(json["cardMappings"]
@@ -149,13 +136,6 @@ class UserProfileModel extends HiveObject {
         "selectedVentilationLocations": selectedVentilationLocations == null
             ? null
             : List<dynamic>.from(selectedVentilationLocations!.map((x) => x)),
-        "cardOrder": cardOrder == null
-            ? null
-            : List<dynamic>.from(cardOrder!.map((x) => x)),
-        "cardStates": cardStates == null
-            ? null
-            : Map.from(
-                cardStates!.map((x, y) => MapEntry<String?, bool>(x, y))),
         "cardMappings": cardMappings == null
             ? null
             : Map.from(
