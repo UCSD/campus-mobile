@@ -26,12 +26,12 @@ class EventDetailView extends StatelessWidget {
           height: height * 0.33,
           decoration: BoxDecoration(
               image: DecorationImage(
-                fit: BoxFit.fill,
-                image: (data.imageHQ!.isEmpty)
-                    ? AssetImage('assets/images/UCSDMobile_banner.png')
-                as ImageProvider
-                    : NetworkImage(data.imageHQ!),
-              )),
+            fit: BoxFit.fill,
+            image: (data.imageHQ!.isEmpty)
+                ? AssetImage('assets/images/UCSDMobile_banner.png')
+                    as ImageProvider
+                : NetworkImage(data.imageHQ!),
+          )),
         ),
         Flexible(
           child: Container(
@@ -48,10 +48,8 @@ class EventDetailView extends StatelessWidget {
                     Text(
                       data.title!,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                       // style: Theme.of(context).textTheme.hev adline6,
                     ),
                     Padding(
@@ -59,14 +57,14 @@ class EventDetailView extends StatelessWidget {
                     ),
                     data.location != null && data.location!.isNotEmpty
                         ? LinkifyWithCatch(
-                      text: "Where: " + data.location!,
-                      looseUrl: true,
-                      style: TextStyle(
-                          fontSize: 16,
-                          height: 1.3,
-                          color: Theme.of(context).primaryColor),
-                      textAlign: TextAlign.center,
-                    )
+                            text: "Where: " + data.location!,
+                            looseUrl: true,
+                            style: TextStyle(
+                                fontSize: 16,
+                                height: 1.3,
+                                color: Theme.of(context).primaryColor),
+                            textAlign: TextAlign.center,
+                          )
                         : Container(),
                     Padding(
                       padding: EdgeInsets.only(top: 10.0),
@@ -74,12 +72,12 @@ class EventDetailView extends StatelessWidget {
                     Center(child: EventTime(data: data)),
                     data.description != null && data.description!.isNotEmpty
                         ? Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        data.description!,
-                        style: TextStyle(fontSize: 16, height: 1.3),
-                      ),
-                    )
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              data.description!,
+                              style: TextStyle(fontSize: 16, height: 1.3),
+                            ),
+                          )
                         : Container(),
                     data.link != null && data.link!.isNotEmpty
                         ? LearnMoreButton(link: data.link)
