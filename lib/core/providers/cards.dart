@@ -187,7 +187,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   /// Returns the account type (visitor, staff, or student) as a string.
-  String accountType() {
+  String _accountType() {
     // set bool vars to user values if they exist, else they will be set to false
     bool isStudent =
         _userDataProvider?.userProfileModel?.classifications?.student ?? false;
@@ -214,7 +214,7 @@ class CardsDataProvider extends ChangeNotifier {
   bool checkIfExist() {
     try {
       // define authenticated variables
-      String account = accountType();
+      String account = _accountType();
       List<String> accountCards =
           _userDataProvider!.userProfileModel!.classifications!.student!
               ? _studentCards
@@ -270,6 +270,20 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
+  /// Call [updateCardOrder()] and updates [userDataProvider]
+  updateProfileAndCardOrder(List<String>? newOrder) async {
+    updateCardOrder(newOrder);
+
+    // if the account is not a visitor, update user profile as well
+    String account = _accountType();
+    if (account != 'visitor') {
+      _userDataProvider!.userProfileModel!.cardMappings![account]['cardOrder'] =
+          newOrder;
+      await _userDataProvider!
+          .postUserProfile(_userDataProvider!.userProfileModel);
+    }
+  }
+
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder(List<String>? newOrder) async {
@@ -289,19 +303,19 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// Toggles [_cardStates] and updates [userDataProvider]
   void toggleCard(String card) async {
+    // update the card's visibility and cardStates
     _cardStates![card] = !_cardStates![card]!;
+    updateCardStates(
+        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
 
     // if the account is not a visitor, update user profile as well
-    String account = accountType();
+    String account = _accountType();
     if (account != 'visitor') {
       _userDataProvider!.userProfileModel!.cardMappings![account]
           ['cardStates'] = _cardStates;
       await _userDataProvider!
           .postUserProfile(_userDataProvider!.userProfileModel);
     }
-
-    updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
   /// Update the [_cardStates] stored in state
@@ -321,27 +335,6 @@ class CardsDataProvider extends ChangeNotifier {
     }
     _lastUpdated = DateTime.now();
     notifyListeners();
-  }
-
-  /// Call [updateCardOrder()] and updates [userDataProvider]
-  updateProfileAndCardOrder(List<String>? newOrder) async {
-    // if the account is not a visitor, update user profile as well
-    String account = accountType();
-    if (account != 'visitor') {
-      _userDataProvider!.userProfileModel!.cardMappings![account]['cardOrder'] =
-          newOrder;
-      await _userDataProvider!
-          .postUserProfile(_userDataProvider!.userProfileModel);
-    }
-
-    await updateCardOrder(newOrder);
-  }
-
-  /// Update [_cardStates] to all false
-  _deactivateAllCards() {
-    for (String card in _cardStates!.keys) {
-      _cardStates![card] = false;
-    }
   }
 
   /// Updates [_cardOrder] and [_cardStates] to remove and turn off all
@@ -372,6 +365,13 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
+  /// Update [_cardStates] to all false
+  _deactivateAllCards() {
+    for (String card in _cardStates!.keys) {
+      _cardStates![card] = false;
+    }
+  }
+
   /// Update [_cardOrder] to include authenticated cards
   activateAuthenticatedCards() {
     // define authenticated variables
@@ -400,7 +400,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// however, if those do not exist, create and upload default order and states.
   showAllAuthenticatedCards() async {
     // grab account type
-    String account = accountType();
+    String account = _accountType();
 
     // leave function if the account is a visitor
     if (account == 'visitor') {
