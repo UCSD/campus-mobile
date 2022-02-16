@@ -1,9 +1,10 @@
 import 'package:campus_mobile_experimental/core/models/events.dart';
+import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/event_time.dart';
-import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailView extends StatelessWidget {
@@ -11,9 +12,13 @@ class EventDetailView extends StatelessWidget {
   final EventModel data;
   @override
   Widget build(BuildContext context) {
-    return ContainerView(
-      child: buildDetailView(context),
-    );
+    return Provider.of<EventsDataProvider>(context).isLoading!
+        ? Center(
+            child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary))
+        : ContainerView(
+            child: buildDetailView(context),
+          );
   }
 
   Widget buildDetailView(BuildContext context) {
@@ -48,8 +53,11 @@ class EventDetailView extends StatelessWidget {
                     Text(
                       data.title!,
                       textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                      // style: Theme.of(context).textTheme.subtitle1
                       // style: Theme.of(context).textTheme.hev adline6,
                     ),
                     Padding(
