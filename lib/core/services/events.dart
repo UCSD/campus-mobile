@@ -4,8 +4,9 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 
 class EventsService {
-  final String endpoint = 'https://mobile.ucsd.edu/replatform/v1/qa/testing/student-events-card-redesign-mock-missing-image.json';
-     // 'https://yehduhg5p1.execute-api.us-west-2.amazonaws.com/qa/v1/events/student';
+  final String endpoint =
+      'https://yehduhg5p1.execute-api.us-west-2.amazonaws.com/qa/v1/events/student';
+  // 'https://mobile.ucsd.edu/replatform/v1/qa/testing/student-events-card-redesign-mock-missing-image.json';
 
   bool _isLoading = false;
   DateTime? _lastUpdated;
