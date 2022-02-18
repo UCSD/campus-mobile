@@ -10,13 +10,13 @@
     <uses-permission android:name="android.permission.BLUETOOTH"/>
 
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="UC San Diego"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
         <activity
-            android:name=".MainActivity"
+            android:name="io.flutter.embedding.android.FlutterActivity"
             android:theme="@style/NormalTheme"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
