@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round">
         <activity
             android:name="io.flutter.embedding.android.FlutterActivity"
+            android:exported="true"
             android:theme="@style/NormalTheme"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
