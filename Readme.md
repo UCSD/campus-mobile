@@ -105,24 +105,11 @@ If you need to make future updates to your pull request, push the updates to you
 
 
 
+## Platform
+The goal of this platform is to provide responsive and intuitive mobile interactions for a personalized campus experience.
+
+[UC San Diego](https://mobile.ucsd.edu/) uses this platform for its campus mobile app on iOS and Android.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## License
+	MIT
