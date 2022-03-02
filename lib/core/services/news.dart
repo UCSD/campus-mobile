@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
 
 class NewsService {
+  NewsService();
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
@@ -14,7 +15,7 @@ class NewsService {
   };
 
   final String endpoint =
-      "https://api-qa.ucsd.edu:8243/qa/campusnews/v1/ucsdnewsaggregator";
+      "https://api-qa.ucsd.edu:8243/campusnews/1.0.0/ucsdnewsaggregator";
 
   NewsModel _newsModels = NewsModel();
 

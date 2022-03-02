@@ -45,7 +45,6 @@ class _VentilationCardState extends State<VentilationCard> {
   }
 
   Widget buildCardContent(List<VentilationDataModel?> models) {
-    print("Length in card: ${models.length}");
     var display;
     try {
       for (VentilationDataModel? model in models) {

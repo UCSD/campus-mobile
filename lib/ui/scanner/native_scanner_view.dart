@@ -169,6 +169,11 @@ class _ScanditScannerState extends State<ScanditScanner> {
   Widget renderSuccessScreen(BuildContext context) {
     final dateFormat = new DateFormat('dd-MM-yyyy hh:mm:ss a');
     final String scanTime = dateFormat.format(new DateTime.now());
+
+    RegExp bloodScreenTest = RegExp(r'^ZAP');
+    bool isBloodScreen =
+        bloodScreenTest.hasMatch(_scannerDataProvider.barcode!);
+
     updateLatestScan(context);
     return Column(
       children: [
@@ -199,32 +204,44 @@ class _ScanditScannerState extends State<ScanditScanner> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             )),
-        ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            ListTile(
-                title: Text(String.fromCharCode(0x2022) +
-                    " Proceed to the next step in the testing process")),
-            ListTile(
-                title: Text(String.fromCharCode(0x2022) +
-                    " Results are usually available within 24-36 hours.")),
-            ListTile(title: buildChartText(context)),
-            ListTile(
-                title: Text(String.fromCharCode(0x2022) +
-                    " If you are experiencing symptoms of COVID-19, stay in your residence and seek guidance from a healthcare provider.")),
-            ListTile(
-              title: Text(
-                  String.fromCharCode(0x2022) +
-                      " Help fight COVID-19. Add CA COVID Notify to your phone.",
-                  style: TextStyle(
-                      color: Colors.blueAccent,
-                      decoration: TextDecoration.underline)),
-              onTap: () {
-                openLink("https://en.ucsd.edu");
-              },
-            ),
-          ],
-        ),
+        isBloodScreen
+            ? ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  ListTile(
+                      title: Text(String.fromCharCode(0x2022) +
+                          " Proceed to the next step in the fingerstick blood collection process.")),
+                  ListTile(
+                      title: Text(String.fromCharCode(0x2022) +
+                          " You can view your research test results in your MyChart in about 60 days.")),
+                ],
+              )
+            : ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  ListTile(
+                      title: Text(String.fromCharCode(0x2022) +
+                          " Proceed to the next step in the testing process")),
+                  ListTile(
+                      title: Text(String.fromCharCode(0x2022) +
+                          " Results are usually available within 24-36 hours.")),
+                  ListTile(title: buildChartText(context)),
+                  ListTile(
+                      title: Text(String.fromCharCode(0x2022) +
+                          " If you are experiencing symptoms of COVID-19, stay in your residence and seek guidance from a healthcare provider.")),
+                  ListTile(
+                    title: Text(
+                        String.fromCharCode(0x2022) +
+                            " Help fight COVID-19. Add CA COVID Notify to your phone.",
+                        style: TextStyle(
+                            color: Colors.blueAccent,
+                            decoration: TextDecoration.underline)),
+                    onTap: () {
+                      openLink("https://en.ucsd.edu");
+                    },
+                  ),
+                ],
+              )
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
@@ -126,13 +127,6 @@ class CardContainer extends StatelessWidget {
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 210),
         child: child(),
       );
-    } else if (titleText == "Shuttle") {
-      // web cards are still sized with static values
-      return Container(
-        width: double.infinity,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
-        child: child(),
-      );
     } else if (titleText == "Parking") {
       double _maxHeight = 320;
       if (MediaQuery.of(context).size.width > 600) {
@@ -159,7 +153,7 @@ class CardContainer extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           buildMenuOptions({
-            'reload': reload,
+            CardMenuOptionConstants.reloadCard: reload,
           }),
         ],
       );
@@ -168,8 +162,8 @@ class CardContainer extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         buildMenuOptions({
-          'reload': reload,
-          'hide': hide,
+          CardMenuOptionConstants.reloadCard: reload,
+          CardMenuOptionConstants.hideCard: hide,
         }),
       ],
     );
@@ -198,12 +192,12 @@ class CardContainer extends StatelessWidget {
 
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
-      case 'reload':
+      case CardMenuOptionConstants.reloadCard:
         {
           reload();
         }
         break;
-      case 'hide':
+      case CardMenuOptionConstants.hideCard:
         {
           hide();
         }
