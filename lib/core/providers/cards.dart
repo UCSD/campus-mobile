@@ -154,23 +154,6 @@ class CardsDataProvider extends ChangeNotifier {
     await _loadCardStates();
   }
 
-  /// Update the [_cardOrder] stored in state
-  /// overwrite the [_cardOrder] in persistent storage with the model passed in
-  Future updateCardOrder(List<String>? newOrder) async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
-      return;
-    }
-    try {
-      await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
-    } catch (e) {
-      _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
-      await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
-    }
-    _cardOrder = newOrder;
-    _lastUpdated = DateTime.now();
-    notifyListeners();
-  }
-
   /// Load [_cardOrder] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardOrder() async {
@@ -203,6 +186,138 @@ class CardsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns the account type (visitor, staff, or student) as a string.
+  String _accountType() {
+    // set bool vars to user values if they exist, else they will be set to false
+    bool isStudent =
+        _userDataProvider?.userProfileModel?.classifications?.student ?? false;
+    bool isStaff =
+        _userDataProvider?.userProfileModel?.classifications?.staff ?? false;
+    String accountType;
+
+    // check which type of account the user is currently
+    if (isStudent) {
+      accountType = 'student';
+    } else if (isStaff) {
+      accountType = 'staff';
+    } else {
+      accountType = 'visitor';
+    }
+
+    return accountType;
+  }
+
+  /// Checks if the account has cardOrder and cardStates. If not then it
+  /// calls createDefault to create default ones.
+  /// Returns true when both exist, false otherwise.
+  /// NOTE: Function should only get called when the user is logged in.
+  bool checkIfExist() {
+    try {
+      // define authenticated variables
+      String account = _accountType();
+      List<String> accountCards =
+          _userDataProvider!.userProfileModel!.classifications!.student!
+              ? _studentCards
+              : _staffCards;
+
+      // check if a cardMapping exists for the account type
+      if (_userDataProvider!.userProfileModel!.cardMappings![account] != null) {
+        // cardMapping, cardOrder, and cardStates exist, so exit the function
+        if (_userDataProvider!.userProfileModel!.cardMappings![account]
+                    ['cardOrder'] !=
+                null &&
+            _userDataProvider!.userProfileModel!.cardMappings![account]
+                    ['cardStates'] !=
+                null) {
+          return true;
+        }
+      }
+
+      // create a cardMapping for the account
+      else {
+        _userDataProvider!.userProfileModel!.cardMappings![account] =
+            new Map<String, dynamic>();
+      }
+
+      // create default cardOrder and cardStates
+      _createDefault(account, accountCards);
+
+      return false;
+    } catch (e) {
+      // in case function is somehow called when use is a visitor
+      print("Providers/Cards/checkIfExist Error: $e");
+    }
+
+    return true;
+  }
+
+  /// Creates default, authenticated _cardOrder and _cardStates.
+  _createDefault(String account, List<String> accountCards) {
+    // insert authenticated cards to the start of the list
+    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
+    _cardOrder!.insertAll(index, accountCards);
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder!.toSet().toList());
+
+    // set all card's state to true
+    for (String card in accountCards) {
+      _cardStates![card] = true;
+    }
+
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+  }
+
+  /// Call [updateCardOrder()] and updates [userDataProvider]
+  updateProfileAndCardOrder(List<String>? newOrder) async {
+    updateCardOrder(newOrder);
+
+    // if the account is not a visitor, update user profile as well
+    String account = _accountType();
+    if (account != 'visitor') {
+      _userDataProvider!.userProfileModel!.cardMappings![account]['cardOrder'] =
+          newOrder;
+      await _userDataProvider!
+          .postUserProfile(_userDataProvider!.userProfileModel);
+    }
+  }
+
+  /// Update the [_cardOrder] stored in state
+  /// overwrite the [_cardOrder] in persistent storage with the model passed in
+  Future updateCardOrder(List<String>? newOrder) async {
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
+      return;
+    }
+    try {
+      await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
+    } catch (e) {
+      _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
+      await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
+    }
+    _cardOrder = newOrder;
+    _lastUpdated = DateTime.now();
+    notifyListeners();
+  }
+
+  /// Toggles [_cardStates] and updates [userDataProvider]
+  void toggleCard(String card) async {
+    // update the card's visibility and cardStates
+    _cardStates![card] = !_cardStates![card]!;
+    updateCardStates(
+        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+
+    // if the account is not a visitor, update user profile as well
+    String account = _accountType();
+    if (account != 'visitor') {
+      _userDataProvider!.userProfileModel!.cardMappings![account]
+          ['cardStates'] = _cardStates;
+      await _userDataProvider!
+          .postUserProfile(_userDataProvider!.userProfileModel);
+    }
+  }
+
   /// Update the [_cardStates] stored in state
   /// overwrite the [_cardStates] in persistent storage with the model passed in
   Future updateCardStates(List<String> activeCards) async {
@@ -222,53 +337,57 @@ class CardsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Updates [_cardOrder] and [_cardStates] to remove and turn off all
+  /// student cards
+  deactivateStudentCards() {
+    // remove and turn off all authenticated cards
+    for (String card in _studentCards) {
+      _cardOrder!.remove(card);
+      _cardStates![card] = false;
+    }
+
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+  }
+
+  /// Updates [_cardOrder] and [_cardStates] to remove and turn off all
+  /// staff cards
+  deactivateStaffCards() {
+    // remove and turn off all authenticated cards
+    for (String card in _staffCards) {
+      _cardOrder!.remove(card);
+      _cardStates![card] = false;
+    }
+
+    updateCardOrder(_cardOrder);
+    updateCardStates(
+        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+  }
+
+  /// Update [_cardStates] to all false
   _deactivateAllCards() {
     for (String card in _cardStates!.keys) {
       _cardStates![card] = false;
     }
   }
 
-  activateStudentCards() {
-    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _studentCards.toList());
+  /// Update [_cardOrder] to include authenticated cards
+  activateAuthenticatedCards() {
+    // define authenticated variables
+    List<String> accountCards =
+        _userDataProvider!.userProfileModel!.classifications!.student!
+            ? _studentCards
+            : _staffCards;
 
-    // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
-
-    updateCardOrder(_cardOrder);
-    updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
-  }
-
-  showAllStudentCards() {
-    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _studentCards.toList());
-
-    // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
-
-    for (String card in _studentCards) {
-      _cardStates![card] = true;
+    // do nothing if an account card already exists in the list
+    for (String card in accountCards) {
+      if (_cardOrder!.contains(card)) return;
     }
 
-    updateCardOrder(_cardOrder);
-    updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
-  }
-
-  deactivateStudentCards() {
-    for (String card in _studentCards) {
-      _cardOrder!.remove(card);
-      _cardStates![card] = false;
-    }
-    updateCardOrder(_cardOrder);
-    updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
-  }
-
-  activateStaffCards() {
+    // account cards do not exist in the list, so add them in
     int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _staffCards.toList());
+    _cardOrder!.insertAll(index, accountCards.toList());
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder!.toSet().toList());
@@ -277,45 +396,50 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
-  showAllStaffCards() {
-    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _staffCards.toList());
+  /// If user is logged in, fetch cardStates and cardOrder from user profile;
+  /// however, if those do not exist, create and upload default order and states.
+  showAllAuthenticatedCards() async {
+    // grab account type
+    String account = _accountType();
 
-    // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
-
-    for (String card in _staffCards) {
-      _cardStates![card] = true;
+    // leave function if the account is a visitor
+    if (account == 'visitor') {
+      return;
     }
+
+    // created a default cardOrder and cardStates
+    if (!checkIfExist()) {
+      // give the user the default cardOrder and cardStates
+      _userDataProvider!.userProfileModel!.cardMappings![account]['cardOrder'] =
+          _cardOrder;
+      _userDataProvider!.userProfileModel!.cardMappings![account]
+          ['cardStates'] = _cardStates;
+
+      // update user profile
+      await _userDataProvider!
+          .postUserProfile(_userDataProvider!.userProfileModel);
+    }
+
+    // load in cardOrder and cardStates from the user profile
+    else {
+      _cardOrder = _userDataProvider!
+          .userProfileModel!.cardMappings![account]['cardOrder']
+          .cast<String>();
+      _cardStates = _userDataProvider!
+          .userProfileModel!.cardMappings![account]['cardStates']
+          .cast<String, bool>();
+    }
+
+    // update app preferences
     updateCardOrder(_cardOrder);
     updateCardStates(
         _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
-  deactivateStaffCards() {
-    for (String card in _staffCards) {
-      _cardOrder!.remove(card);
-      _cardStates![card] = false;
-    }
-    updateCardOrder(_cardOrder);
-    updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
-  }
-
-  void reorderCards(List<String> order) {
-    _cardOrder = order;
-    notifyListeners();
-  }
-
-  void toggleCard(String card) {
-    _cardStates![card] = !_cardStates![card]!;
-    updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
-  }
-
+  /// SIMPLE SETTERS
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
-  ///SIMPLE GETTERS
+  /// SIMPLE GETTERS
   bool? get isLoading => _isLoading;
   bool? get noInternet => _noInternet;
   String? get error => _error;
