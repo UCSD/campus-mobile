@@ -22,7 +22,7 @@ class EventTile extends StatelessWidget {
     return Container(
       width: tileWidth,
       height: 300,
-      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
+      margin: EdgeInsets.zero,
       child: Column(
         children: [
           eventImageLoader(data.imageThumb),
@@ -44,20 +44,12 @@ class EventTile extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          icon: Icon(Icons.expand_less),
-                          color: Colors.grey,
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, RoutePaths.EventDetailView,
-                                arguments: data);
-                          },
-                        ),
                         Text(
                           data.title!,
                           textAlign: TextAlign.center,
-                          maxLines: 3,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.secondary,

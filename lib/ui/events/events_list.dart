@@ -41,7 +41,11 @@ class EventsList extends StatelessWidget {
     for (int i = 0; i < size; i++) {
       final EventModel item = listOfEvents[i];
       final tile = EventTile(data: item);
+      final spacer = SizedBox(
+        width: 5,
+      );
       eventTiles.add(tile);
+      eventTiles.add(spacer);
     }
 
     if (listSize != null) {
