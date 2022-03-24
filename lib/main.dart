@@ -10,6 +10,7 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -102,12 +103,19 @@ class CampusMobile extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
+        themeMode: (Theme.of(context).brightness == Brightness.light)
+            ? ThemeMode.light
+            : ThemeMode.dark,
         theme: theme.copyWith(
           colorScheme: theme.colorScheme.copyWith(secondary: darkAccentColor),
+          appBarTheme:
+              AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.light),
         ),
         darkTheme: darkTheme.copyWith(
           colorScheme:
               darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+          appBarTheme:
+              AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.dark),
         ),
         initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingInitial

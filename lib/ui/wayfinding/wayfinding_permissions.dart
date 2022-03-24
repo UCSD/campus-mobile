@@ -5,7 +5,6 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +33,6 @@ class _AdvancedWayfindingPermissionState
         preferredSize: Size.fromHeight(42),
         child: AppBar(
           backgroundColor: ColorPrimary,
-          systemOverlayStyle: (Theme.of(context).brightness == Brightness.light) ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
           primary: true,
           centerTitle: true,
           title: Text("Advanced Wayfinding"),
@@ -127,7 +125,8 @@ class _AdvancedWayfindingPermissionState
                                 _wayfindingProvider.setAWPreference();
                               });
                             },
-                            activeColor: Theme.of(context).colorScheme.secondary,
+                            activeColor:
+                                Theme.of(context).colorScheme.secondary,
                           );
                         } else {
                           return CircularProgressIndicator(

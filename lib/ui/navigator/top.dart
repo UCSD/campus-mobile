@@ -3,7 +3,6 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 
 class CMAppBar extends StatelessWidget {
   CMAppBar({
@@ -21,7 +20,6 @@ class CMAppBar extends StatelessWidget {
           preferredSize: Size.fromHeight(42),
           child: AppBar(
               backgroundColor: ColorPrimary,
-              systemOverlayStyle: (Theme.of(context).brightness == Brightness.light) ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
               primary: true,
               centerTitle: true,
               title: title == null
@@ -63,7 +61,6 @@ class CMAppBar extends StatelessWidget {
         preferredSize: Size.fromHeight(42),
         child: AppBar(
           backgroundColor: ColorPrimary,
-          systemOverlayStyle: (Theme.of(context).brightness == Brightness.light) ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
           primary: true,
           centerTitle: true,
           title: title == null
