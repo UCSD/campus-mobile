@@ -32,7 +32,7 @@ class EventTile extends StatelessWidget {
                   arguments: data);
             },
             child: SizedBox(
-              height: 150,
+              height: 145,
               width: tileWidth,
               child: DecoratedBox(
                 decoration: BoxDecoration(
