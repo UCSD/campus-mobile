@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -12,6 +10,8 @@ class CardsView extends StatefulWidget {
 
 class _CardsViewState extends State<CardsView> {
   CardsDataProvider? _cardsDataProvider;
+  List<String> cardsToRemove = ["NativeScanner"];
+  List<String> hiddenCards = ["NativeScanner", "ventilation", "student_survey"];
 
   @override
   Widget build(BuildContext context) {
@@ -27,50 +27,62 @@ class _CardsViewState extends State<CardsView> {
       onReorder: _onReorder,
     );
 
-    if( _cardsDataProvider!.noInternet! ) {
-      Future.delayed(Duration.zero, () => {
-        showDialog(context: context, builder: (BuildContext ctx) => AlertDialog(
-            title: const Text('No Internet'),
-            content: const Text('Cards requires an internet connection.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'Ok'),
-                child: const Text('Ok'),
-              ),
-            ]
-        ))
-      });
+    if (_cardsDataProvider!.noInternet!) {
+      Future.delayed(
+          Duration.zero,
+          () => {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext ctx) => AlertDialog(
+                            title: const Text('No Internet'),
+                            content: const Text(
+                                'Cards requires an internet connection.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Ok'),
+                                child: const Text('Ok'),
+                              ),
+                            ]))
+              });
     }
 
     return tempView;
   }
 
   void _onReorder(int oldIndex, int newIndex) {
+    // ?
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    List<String> newOrder = _cardsDataProvider!.cardOrder!;
-    List<String> toRemove = [];
-    if (_cardsDataProvider!.cardOrder!.contains('NativeScanner')) {
-      toRemove.add('NativeScanner');
+
+    // declare variables
+    List<String> cardsOrder = _cardsDataProvider!.cardOrder!;
+    List<String> addBack = [];
+
+    // remove all unwanted cards from the cards list
+    for (String card in cardsToRemove) {
+      // if the card was removed, add it back at the end
+      if (cardsOrder.remove(card)) {
+        addBack.add(card);
+      }
     }
 
-    newOrder.removeWhere((element) => toRemove.contains(element));
-    String item = newOrder.removeAt(oldIndex);
-    newOrder.insert(newIndex, item);
-    List<String> orderList = [];
-    for (String item in newOrder) {
-      orderList.add(item);
-    }
-    orderList.addAll(toRemove.toList());
-    _cardsDataProvider!.updateCardOrder(orderList);
+    // change the position for the moved card
+    String movedCard = cardsOrder.removeAt(oldIndex);
+    cardsOrder.insert(newIndex, movedCard);
+
+    // add back all unwanted cards to the end of the list
+    cardsOrder.addAll(addBack.toList());
+
+    // update card order
+    _cardsDataProvider!.updateProfileAndCardOrder(cardsOrder);
     setState(() {});
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
     for (String card in _cardsDataProvider!.cardOrder!) {
-      if (card == 'NativeScanner') continue;
+      if (hiddenCards.contains(card)) continue;
       try {
         list.add(ListTile(
           leading: Icon(Icons.reorder),
@@ -84,14 +96,11 @@ class _CardsViewState extends State<CardsView> {
             activeColor: Theme.of(context).colorScheme.secondary,
           ),
         ));
-      }
-      catch (e) {
+      } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
         FirebaseCrashlytics.instance.recordError(
             e, StackTrace.fromString(e.toString()),
-            reason: "Profile/Cards: Failed to load Cards page",
-            fatal: false
-        );
+            reason: "Profile/Cards: Failed to load Cards page", fatal: false);
 
         _cardsDataProvider!.changeInternetStatus(true);
       }
