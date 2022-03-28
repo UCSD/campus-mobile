@@ -11,6 +11,7 @@ import 'package:campus_mobile_experimental/ui/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/dining/nutrition_facts_view.dart';
 import 'package:campus_mobile_experimental/ui/events/events_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/events/events_list.dart';
+import 'package:campus_mobile_experimental/ui/events/events_view_all.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/map/map_search_view.dart';
@@ -90,6 +91,11 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return EventDetailView(data: data);
+        });
+      case RoutePaths.EventsAll:
+        return MaterialPageRoute(builder: (context) {
+          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+          return EventsAll();
         });
       case RoutePaths.ManageAvailabilityView:
         return MaterialPageRoute(builder: (_) {
