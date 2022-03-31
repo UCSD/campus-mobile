@@ -42,6 +42,7 @@ class RoutePaths {
   static const String VentilationRooms = "ventilation/rooms";
   static const String NeighborhoodsView = "parking/neighborhoods_view";
   static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
+  static const String AvailabilityDetailedView = "availability/detailed_view";
 }
 
 class RouteTitles {
@@ -71,6 +72,7 @@ class RouteTitles {
     'ventilation/buildings': 'HVAC: Manage Location',
     'ventilation/floors': 'HVAC: Manage Location',
     'ventilation/rooms': 'HVAC: Manage Location',
+    'availability/detailed_view' : 'Availability'
   };
 }
 
