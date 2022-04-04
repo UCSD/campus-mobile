@@ -1,9 +1,10 @@
 import 'package:campus_mobile_experimental/core/models/events.dart';
+import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/event_time.dart';
-import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailView extends StatelessWidget {
@@ -11,51 +12,88 @@ class EventDetailView extends StatelessWidget {
   final EventModel data;
   @override
   Widget build(BuildContext context) {
-    return ContainerView(
-      child: ListView(
-        children: buildDetailView(context),
-      ),
-    );
+    return Provider.of<EventsDataProvider>(context).isLoading!
+        ? Center(
+            child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary))
+        : ContainerView(
+            child: buildDetailView(context),
+          );
   }
 
-  List<Widget> buildDetailView(BuildContext context) {
-    return [
-      Center(
-        child: ImageLoader(
-          url: data.imageHQ,
-          fullSize: true,
+  Widget buildDetailView(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return ListView(
+      children: [
+        Container(
+          width: width,
+          height: height * 0.33,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+            fit: BoxFit.fill,
+            image: (data.imageHQ!.isEmpty)
+                ? AssetImage('assets/images/UCSDMobile_banner.png')
+                    as ImageProvider
+                : NetworkImage(data.imageHQ!),
+          )),
         ),
-      ),
-      Divider(),
-      Text(
-        data.title!,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.headline6,
-      ),
-      Divider(),
-      data.location != null && data.location!.isNotEmpty
-          ? LinkifyWithCatch(
-              text: data.location,
-              looseUrl: true,
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            )
-          : Container(),
-      Center(child: EventTime(data: data)),
-      Divider(),
-      data.description != null && data.description!.isNotEmpty
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: LinkifyWithCatch(
-                text: data.description,
-                style: TextStyle(fontSize: 16),
+        Container(
+          child: Center(
+            child: Container(
+              width: width * 0.8,
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 30,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  Text(
+                    data.title!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                  ),
+                  data.location != null && data.location!.isNotEmpty
+                      ? LinkifyWithCatch(
+                          text: "Where: " + data.location!,
+                          looseUrl: true,
+                          style: TextStyle(
+                              fontSize: 16,
+                              height: 1.3,
+                              color: Theme.of(context).primaryColor),
+                          textAlign: TextAlign.center,
+                        )
+                      : Container(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                  ),
+                  Center(child: EventTime(data: data)),
+                  data.description != null && data.description!.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            data.description!,
+                            style: TextStyle(fontSize: 16, height: 1.3),
+                          ),
+                        )
+                      : Container(),
+                  data.link != null && data.link!.isNotEmpty
+                      ? LearnMoreButton(link: data.link)
+                      : Container(),
+                ],
               ),
-            )
-          : Container(),
-      data.link != null && data.link!.isNotEmpty
-          ? LearnMoreButton(link: data.link)
-          : Container(),
-    ];
+            ),
+          ),
+        )
+      ],
+    );
   }
 }
 
