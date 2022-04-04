@@ -14,11 +14,44 @@ class _CardsViewState extends State<CardsView> {
   List<String> hiddenCards = ["NativeScanner", "ventilation", "student_survey"];
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<CardsDataProvider>(context, listen: false).monitorInternet();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _cardsDataProvider = Provider.of<CardsDataProvider>(context);
-    return ContainerView(
-      child: buildCardsList(context),
-    );
+    return ContainerView(child: Consumer<CardsDataProvider>(
+      builder: (context, model, child) {
+        if (_cardsDataProvider!.noInternet!) {
+          Future.delayed(
+              Duration.zero,
+              () => {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext ctx) => AlertDialog(
+                                title: const Text('No Internet'),
+                                content: const Text(
+                                    'Cards requires an internet connection.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Ok'),
+                                    child: const Text('Ok'),
+                                  ),
+                                ]))
+                  });
+        } else {
+          return ReorderableListView(
+            children: createList(context),
+            onReorder: _onReorder,
+          );
+        }
+      },
+    )
+        // child: buildCardsList(context),
+        );
   }
 
   Widget buildCardsList(BuildContext context) {
@@ -45,7 +78,6 @@ class _CardsViewState extends State<CardsView> {
                             ]))
               });
     }
-
     return tempView;
   }
 
