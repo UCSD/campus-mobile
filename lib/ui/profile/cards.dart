@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,22 +33,37 @@ class _CardsViewState extends State<CardsView> {
       onReorder: _onReorder,
     );
 
+    AlertDialog alert = AlertDialog(
+      title: Text(ConnectivityConstants.offlineTitle),
+      content: Text(ConnectivityConstants.offlineAlert),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Ok'),
+          child: const Text('Ok'),
+        ),
+      ],
+    );
+
     if (_connectivityProvider!.noInternet) {
       Future.delayed(
           Duration.zero,
           () => {
                 showDialog(
-                    context: context,
-                    builder: (BuildContext ctx) => AlertDialog(
-                            title: const Text('No Internet'),
-                            content: const Text(
-                                'Cards requires an internet connection.'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Ok'),
-                                child: const Text('Ok'),
-                              ),
-                            ]))
+                  context: context,
+                  builder: (BuildContext ctx) {
+                    return alert;
+                  },
+                  // AlertDialog(
+                  // title: const Text('No Internet'),
+                  // content:
+                  //     const Text('Cards requires an internet connection.'),
+                  // actions: <Widget>[
+                  //   TextButton(
+                  //     onPressed: () => Navigator.pop(context, 'Ok'),
+                  //     child: const Text('Ok'),
+                  //   ),
+                  // ]),
+                )
               });
     }
 
