@@ -1,5 +1,7 @@
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,7 @@ class CardsView extends StatefulWidget {
 
 class _CardsViewState extends State<CardsView> {
   CardsDataProvider? _cardsDataProvider;
+  InternetConnectivityProvider? _connectivityProvider;
   List<String> cardsToRemove = ["NativeScanner"];
   List<String> hiddenCards = ["NativeScanner", "ventilation", "student_survey"];
 
@@ -22,9 +25,12 @@ class _CardsViewState extends State<CardsView> {
   @override
   Widget build(BuildContext context) {
     _cardsDataProvider = Provider.of<CardsDataProvider>(context);
+    _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return ContainerView(
+        child: ChangeNotifierProvider(
+      create: (_) => InternetConnectivityProvider(),
       child: buildCardsList(context),
-    );
+    ));
   }
 
   Widget buildCardsList(BuildContext context) {
@@ -33,22 +39,30 @@ class _CardsViewState extends State<CardsView> {
       onReorder: _onReorder,
     );
 
-    if (_cardsDataProvider!.noInternet!) {
+    AlertDialog alert = AlertDialog(
+      title: Text(ConnectivityConstants.offlineTitle),
+      content: Text(ConnectivityConstants.offlineAlert),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Ok'),
+          child: Text('Ok'),
+          style: TextButton.styleFrom(
+            primary: Theme.of(context).buttonColor,
+          ),
+        ),
+      ],
+    );
+
+    if (_connectivityProvider!.noInternet) {
       Future.delayed(
           Duration.zero,
           () => {
                 showDialog(
-                    context: context,
-                    builder: (BuildContext ctx) => AlertDialog(
-                            title: const Text('No Internet'),
-                            content: const Text(
-                                'Cards requires an internet connection.'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Ok'),
-                                child: const Text('Ok'),
-                              ),
-                            ]))
+                  context: context,
+                  builder: (BuildContext ctx) {
+                    return alert;
+                  },
+                )
               });
     }
     return tempView;
