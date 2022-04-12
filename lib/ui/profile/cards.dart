@@ -39,7 +39,10 @@ class _CardsViewState extends State<CardsView> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, 'Ok'),
-          child: const Text('Ok'),
+          child: Text('Ok'),
+          style: TextButton.styleFrom(
+            primary: Theme.of(context).buttonColor,
+          ),
         ),
       ],
     );
@@ -53,16 +56,6 @@ class _CardsViewState extends State<CardsView> {
                   builder: (BuildContext ctx) {
                     return alert;
                   },
-                  // AlertDialog(
-                  // title: const Text('No Internet'),
-                  // content:
-                  //     const Text('Cards requires an internet connection.'),
-                  // actions: <Widget>[
-                  //   TextButton(
-                  //     onPressed: () => Navigator.pop(context, 'Ok'),
-                  //     child: const Text('Ok'),
-                  //   ),
-                  // ]),
                 )
               });
     }
