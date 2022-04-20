@@ -6,7 +6,6 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
-import 'package:campus_mobile_experimental/core/services/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/user.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -62,6 +61,10 @@ class UserDataProvider extends ChangeNotifier {
   /// overwrite the [UserProfileModel] in persistent storage with the model passed in
   Future updateUserProfileModel(UserProfileModel? model) async {
     _userProfileModel = model;
+    print(" KEYS: ------------------------------------------");
+    for (var key in _userProfileModel!.toJson().keys) {
+      print(key);
+    }
     var box;
     try {
       box = Hive.box<UserProfileModel?>('UserProfileModel');
@@ -113,6 +116,10 @@ class UserDataProvider extends ChangeNotifier {
     }
     tempUserProfile = userBox.get('UserProfileModel');
     _userProfileModel = tempUserProfile;
+    print("TEMP KEYS: ------------------------------------------");
+    for (var key in tempUserProfile!.toJson().keys) {
+      print(key);
+    }
     _subscribeToPushNotificationTopics(_userProfileModel!.subscribedTopics!);
     notifyListeners();
   }
@@ -182,11 +189,7 @@ class UserDataProvider extends ChangeNotifier {
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
-        if (_userProfileModel!.classifications!.student!) {
-          _cardsDataProvider!.showAllStudentCards();
-        } else if (_userProfileModel!.classifications!.staff!) {
-          _cardsDataProvider!.showAllStaffCards();
-        }
+        _cardsDataProvider!.showAllAuthenticatedCards();
         _isLoading = false;
         notifyListeners();
         return true;
@@ -319,7 +322,8 @@ class UserDataProvider extends ChangeNotifier {
           newModel.username = await getUsernameFromDevice();
           newModel.ucsdaffiliation = _authenticationModel!.ucsdaffiliation;
           newModel.pid = _authenticationModel!.pid;
-          List<String> castSubscriptions = newModel.subscribedTopics!.cast<String>();
+          List<String> castSubscriptions =
+              newModel.subscribedTopics!.cast<String>();
           newModel.subscribedTopics = castSubscriptions.toSet().toList();
           print('UserDataProvider:fetchUserProfile:newModel');
           print(newModel.toJson());
@@ -340,7 +344,8 @@ class UserDataProvider extends ChangeNotifier {
                 Classifications.fromJson({'student': false, 'staff': false});
           }
           await updateUserProfileModel(newModel);
-          _pushNotificationDataProvider.subscribeToTopics(newModel.subscribedTopics!.cast<String>());
+          _pushNotificationDataProvider
+              .subscribeToTopics(newModel.subscribedTopics!.cast<String>());
         }
       } else {
         _error = _userProfileService.error;
@@ -403,6 +408,10 @@ class UserDataProvider extends ChangeNotifier {
       print('UserDataProvider:_createNewUser:error -------------------- 5:');
       print(e.toString());
     }
+    print("KEYS: ------------------------------------------");
+    for (var key in profile.toJson().keys) {
+      print(key);
+    }
     print('UserDataProvider:_createNewUser:SUCCESS');
     return profile;
   }
@@ -427,7 +436,9 @@ class UserDataProvider extends ChangeNotifier {
 
       /// we only want to push data that is not null
       var tempJson = Map<String, dynamic>();
+     // print("KEYS: ------------------------------------------");
       for (var key in profile!.toJson().keys) {
+       // print(key);
         if (profile.toJson()[key] != null) {
           tempJson[key] = profile.toJson()[key];
         }

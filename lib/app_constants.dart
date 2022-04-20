@@ -21,6 +21,7 @@ class RoutePaths {
 
   static const String NewsViewAll = 'news/newslist';
   static const String EventsViewAll = 'events/eventslist';
+  static const String EventsAll = 'events/events_view_all';
   static const String NewsDetailView = 'news/news_detail_view';
   static const String EventDetailView = 'events/event_detail_view';
   static const String LinksViewAll = 'links/links_list';
@@ -100,6 +101,8 @@ class ErrorConstants {
   static const authorizedPostErrors = 'Failed to upload data: ';
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
+  static const notAcceptable =
+      'DioError [DioErrorType.response]: Http status error [406]';
   static const duplicateRecord =
       'DioError [DioErrorType.response]: Http status error [409]';
   static const invalidMedia =
@@ -121,6 +124,8 @@ class ScannerConstants {
   static const loggedOut = 'An error occurred. Please try again.\nCode #1039';
   static const unknownError =
       'An error occurred. Please try again.\nCode #1040';
+  static const notAcceptable =
+      'Do not test within 30 days after receiving a positive test for COVID-19. Place all materials in the recycle and trash receptacles.\nCode #1041';
   static const scannerReauthFailure =
       'Your session has expired. Please login to submit a scan.';
   static const noRecentScan = 'No scan submitted';
@@ -191,4 +196,9 @@ class CardTitleConstants {
     'weather': 'Weather',
     'ventilation': 'Office Environment',
   };
+}
+
+class CardMenuOptionConstants {
+  static const reloadCard = 'reload this card';
+  static const hideCard = 'hide this card';
 }
