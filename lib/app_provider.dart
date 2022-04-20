@@ -105,7 +105,7 @@ List<SingleChildWidget> independentServices = [
   ),
   ChangeNotifierProvider<InternetConnectivityProvider>(
     create: (_) {
-      print("CreateProvider: NoticesDataProvider");
+      print("CreateProvider: InternetConnectivityProvider");
       InternetConnectivityProvider _connectivityProvider =
           InternetConnectivityProvider();
       _connectivityProvider.monitorInternet();

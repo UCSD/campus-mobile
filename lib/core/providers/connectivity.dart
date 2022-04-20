@@ -1,5 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:get/get.dart';
 
 class InternetConnectivityProvider extends ChangeNotifier {
   bool _noInternet = false;
@@ -11,9 +13,12 @@ class InternetConnectivityProvider extends ChangeNotifier {
     try {
       var status = await _connectivity.checkConnectivity();
       if (status == ConnectivityResult.none) {
+        print("Connectivity status: offline");
         _noInternet = true;
         notifyListeners();
+        _showOfflineAlert(Get.context!);
       } else {
+        print("Connectivity status: online");
         _noInternet = false;
         notifyListeners();
       }
@@ -26,12 +31,43 @@ class InternetConnectivityProvider extends ChangeNotifier {
     await initConnectivity();
     _connectivity.onConnectivityChanged.listen((result) async {
       if (result == ConnectivityResult.none) {
+        print("Connectivity status: offline");
         _noInternet = true;
         notifyListeners();
+        _showOfflineAlert(Get.context!);
       } else {
+        print("Connectivity status: online");
         _noInternet = false;
         notifyListeners();
       }
     });
+  }
+
+  void _showOfflineAlert(BuildContext context) {
+    print("showing the offline alert dialog");
+    AlertDialog alert = AlertDialog(
+      title: Text(ConnectivityConstants.offlineTitle),
+      content: Text(ConnectivityConstants.offlineAlert),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Ok'),
+          child: Text('Ok'),
+          style: TextButton.styleFrom(
+            primary: Theme.of(context).buttonColor,
+          ),
+        ),
+      ],
+    );
+
+    Future.delayed(
+        Duration.zero,
+        () => {
+              showDialog(
+                context: context,
+                builder: (BuildContext ctx) {
+                  return alert;
+                },
+              )
+            });
   }
 }
