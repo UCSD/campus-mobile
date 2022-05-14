@@ -58,7 +58,7 @@ post_install do |installer|
         'PERMISSION_CONTACTS=0',
 
         ## dart: PermissionGroup.camera
-        # 'PERMISSION_CAMERA=0',
+        # 'PERMISSION_CAMERA=1',
 
         ## dart: PermissionGroup.microphone
         'PERMISSION_MICROPHONE=0',
@@ -70,10 +70,10 @@ post_install do |installer|
         'PERMISSION_PHOTOS=0',
 
         ## dart: [PermissionGroup.location, PermissionGroup.locationAlways, PermissionGroup.locationWhenInUse]
-        # 'PERMISSION_LOCATION=0',
+        # 'PERMISSION_LOCATION=1',
        
         ## dart: PermissionGroup.notification
-        # 'PERMISSION_NOTIFICATIONS=0',
+        # 'PERMISSION_NOTIFICATIONS=1',
 
         ## dart: PermissionGroup.mediaLibrary
         'PERMISSION_MEDIA_LIBRARY=0',
@@ -82,10 +82,10 @@ post_install do |installer|
         'PERMISSION_SENSORS=0',
 
         ## dart: PermissionGroup.bluetooth
-        # 'PERMISSION_BLUETOOTH=0',
+        # 'PERMISSION_BLUETOOTH=1',
 
         ## dart: PermissionGroup.appTrackingTransparency
-        'PERMISSION_APP_TRACKING_TRANSPARENCY=0'
+        'PERMISSION_APP_TRACKING_TRANSPARENCY=1'
       ]
 
     end
