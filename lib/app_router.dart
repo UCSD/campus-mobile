@@ -41,7 +41,6 @@ import 'package:campus_mobile_experimental/ui/wayfinding/beacon_view.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/bluetooth_logger.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/wayfinding_permissions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class Router {
@@ -135,7 +134,7 @@ class Router {
       case RoutePaths.DiningNutritionView:
         Map<String, Object?> arguments =
             settings.arguments as Map<String, Object?>;
-        MenuItem data = arguments['data'] as MenuItem;
+        DiningMenuItem data = arguments['data'] as DiningMenuItem;
         String? disclaimer = arguments['disclaimer'] as String?;
         String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
         return MaterialPageRoute(
