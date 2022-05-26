@@ -5,48 +5,56 @@ import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 
 class LocationDataProvider extends ChangeNotifier {
-  final Location _locationService = new Location();
-  bool _permission = false;
+  Location location = new Location();
   String? error;
 
   StreamController<Coordinates> _locationController =
-      StreamController<Coordinates>.broadcast();
+  StreamController<Coordinates>.broadcast();
   Stream<Coordinates> get locationStream => _locationController.stream;
 
-  Location get locationObject => _locationService;
+  Location get locationObject => location;
   LocationDataProvider() {
     locationStream;
     _init();
   }
 
   _init() async {
-    /// create the settings for location access
-    await _locationService.changeSettings(
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    // Check location service status
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    // Check permission status
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    // Set high location accuracy
+    await location.changeSettings(
         accuracy: LocationAccuracy.high, distanceFilter: 100);
 
-    /// check to see if gps service is enabled on device
-    bool serviceStatus = await _locationService.serviceEnabled();
-    if (!serviceStatus) {
-      /// check to see if permission has been granted to the app
-      _permission = await _locationService.requestService();
-      if (_permission) {
-        _enableListener();
-      }
-    } else {
-      _permission = true;
-      _enableListener();
-    }
+    // Enable location listener
+    _enableListener();
   }
 
   _enableListener() {
-    if (_permission) {
-      _locationService.onLocationChanged.listen((locationData) {
-        error = null;
-        _locationController.add(Coordinates(
-          lat: locationData.latitude,
-          lon: locationData.longitude,
-        ));
-      });
-    }
+    location.onLocationChanged.listen((locationData) {
+      error = null;
+      _locationController.add(Coordinates(
+        lat: locationData.latitude,
+        lon: locationData.longitude,
+      ));
+    });
   }
 }
