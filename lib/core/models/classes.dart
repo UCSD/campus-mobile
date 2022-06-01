@@ -135,10 +135,10 @@ class SectionData {
         time: json["time"] == null ? null : json["time"],
         days: json["days"] == null ? null : json["days"],
         date: json["date"] == null ? null : json["date"],
-        building: json["building"] == null ? null : json["building"],
-        room: json["room"] == null ? null : json["room"],
+        building: json["building"] == null ? "" : json["building"],
+        room: json["room"] == null ? "" : json["room"],
         instructorName:
-            json["instructor_name"] == null ? null : json["instructor_name"],
+            json["instructor_name"] == null ? "" : json["instructor_name"],
         specialMtgCode:
             json["special_mtg_code"] == null ? null : json["special_mtg_code"],
         enrollStatus:
@@ -151,9 +151,9 @@ class SectionData {
         "time": time == null ? null : time,
         "days": days == null ? null : days,
         "date": date == null ? null : date,
-        "building": building == null ? null : building,
-        "room": room == null ? null : room,
-        "instructor_name": instructorName == null ? null : instructorName,
+        "building": building == null ? "" : building,
+        "room": room == null ? "" : room,
+        "instructor_name": instructorName == null ? "" : instructorName,
         "special_mtg_code": specialMtgCode == null ? null : specialMtgCode,
         "enrollStatus": enrollStatus == null ? null : enrollStatus,
       };

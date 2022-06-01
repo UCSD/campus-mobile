@@ -47,12 +47,9 @@ class CMAppBar extends StatelessWidget {
                             .currentIndex = NavigatorConstants.HomeTab;
 
                         // Navigate to Home tab
-                        Navigator.popUntil(context, (route) {
-                          if (route.settings.name != 'bottom_navigation_bar') {
-                            return false;
-                          }
-                          return true;
-                        });
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            RoutePaths.BottomNavigationBar,
+                            (Route<dynamic> route) => false);
 
                         // change the appBar title to the ucsd logo
                         Provider.of<CustomAppBar>(context, listen: false)

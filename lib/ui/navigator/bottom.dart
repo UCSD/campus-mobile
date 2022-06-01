@@ -29,16 +29,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(42),
           child: Provider.of<CustomAppBar>(context).appBar),
-      body: IndexedStack(
-        children: [
-          PushNotificationWrapper(child: Home()),
-          PushNotificationWrapper(child: prefix0.Maps()),
-          PushNotificationWrapper(child: NotificationsListView()),
-          PushNotificationWrapper(child: Profile()),
-        ],
-
-        index: provider.currentIndex,
-      ),
+      body: PushNotificationWrapper(child: currentTab[provider.currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: provider.currentIndex,
