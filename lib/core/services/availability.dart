@@ -22,6 +22,8 @@ class AvailabilityService {
       "https://api-qa.ucsd.edu:8243/occuspace/v3.0/busyness";
 
   Future<bool> fetchData() async {
+    print("headers:");
+    print(headers.toString());
     _error = null;
     _isLoading = true;
     try {
