@@ -225,9 +225,7 @@ class ParkingDataProvider extends ChangeNotifier {
     for (ParkingModel model in _parkingService.data!) {
       neighborhoodsToSort.add(model.neighborhood!);
     }
-    print(neighborhoodsToSort);
     neighborhoodsToSort.sort();
-    print(neighborhoodsToSort);
     for (String neighborhood in neighborhoodsToSort) {
       List<String> val = [];
       parkingMap[neighborhood] = val;

@@ -58,9 +58,6 @@ class VentilationRoomsState extends State<VentilationRooms> {
       bool containsID = _ventilationDataProvider.ventilationIDs.contains(bfrID);
       _added.add(containsID);
 
-      print("ID: $bfrID");
-      print("Contains: $containsID");
-
       // creates the ListTile and button
       contentList.add(ListTile(
         title: Padding(
@@ -96,17 +93,17 @@ class VentilationRoomsState extends State<VentilationRooms> {
           Provider.of<CustomAppBar>(context, listen: false)
               .changeTitle(CustomAppBar().appBar.title);
 
-          if(_ventilationDataProvider.error == VentilationConstants.addLocationFailed) {
+          if (_ventilationDataProvider.error ==
+              VentilationConstants.addLocationFailed) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Could not add location."),
             ));
-          }
-          else if(_ventilationDataProvider.error == VentilationConstants.removeLocationFailed) {
+          } else if (_ventilationDataProvider.error ==
+              VentilationConstants.removeLocationFailed) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Could not remove location."),
             ));
           }
-
         },
       ));
     }

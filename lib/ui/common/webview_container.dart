@@ -231,12 +231,7 @@ class _WebViewContainerState extends State<WebViewContainer>
       name: 'RefreshToken',
       onMessageReceived: (JavascriptMessage message) async {
         if (!Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-          print(
-              'webview_container:_refreshTokenChannel: User has expired access token, calling silentLogin');
           if (await _userDataProvider.silentLogin()) {
-            print(
-                'webview_container:_refreshTokenChannel: silentLogin SUCCESS, reloading webview: ' +
-                    webCardUrl!);
             _webViewController?.reload();
           }
         }

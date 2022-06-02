@@ -64,7 +64,6 @@ class VentilationDataProvider extends ChangeNotifier {
           _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
 
       for (String? bfrID in ventilationIDs) {
-        print("ID: $bfrID");
         if (await _ventilationService.fetchData(bfrID!)) {
           tempModels.add(_ventilationService.data);
         } else {
@@ -129,7 +128,6 @@ class VentilationDataProvider extends ChangeNotifier {
           _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
 
       for (String? bfrID in ventilationIDs) {
-        print("ID: $bfrID");
         if (await _ventilationService.fetchData(bfrID!)) {
           tempModels.add(_ventilationService.data);
         } else {
@@ -176,7 +174,6 @@ class VentilationDataProvider extends ChangeNotifier {
           _userDataProvider!.userProfileModel!.selectedVentilationLocations!;
     } catch (e) {
       _error = VentilationConstants.addLocationFailed;
-      print("Error while adding location:  $e");
     }
     notifyListeners();
   }
@@ -201,7 +198,6 @@ class VentilationDataProvider extends ChangeNotifier {
     } catch (e) {
       _error = VentilationConstants.removeLocationFailed;
       notifyListeners();
-      print("Error while removing location:  $e");
     }
   }
 

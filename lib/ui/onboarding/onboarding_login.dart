@@ -177,8 +177,6 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                                     .manualLogin(_emailTextFieldController.text,
                                         _passwordTextFieldController.text)
                                     .then((isLoggedIn) async {
-                                  print('onboarding_login:isLoggedIn: ' +
-                                      isLoggedIn.toString());
                                   if (isLoggedIn) {
                                     Navigator.pushNamedAndRemoveUntil(
                                         context,

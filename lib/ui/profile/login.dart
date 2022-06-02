@@ -18,7 +18,6 @@ class _LoginState extends State<Login> {
 
   @override
   void didChangeDependencies() {
-    print('_LoginState:didChangeDependencies');
     super.didChangeDependencies();
     _userDataProvider = Provider.of<UserDataProvider>(context);
   }

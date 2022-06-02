@@ -53,10 +53,8 @@ class VentilationService {
     _error = null;
     _isLoading = true;
     try {
-      print("Before fetching data: " + baseEndpoint + '/' + bfrID);
       String _response = await _networkHelper.authorizedFetch(
           baseEndpoint + '/' + bfrID, headers);
-      print("After fetching data: " + baseEndpoint + '/' + bfrID);
       // String _response = await _networkHelper.fetchData(dataBaseEndpoint);
 
       /// parse data
@@ -64,12 +62,9 @@ class VentilationService {
       _data = data;
       return true;
     } catch (e) {
-      print("ERROR in ventilation services");
       print(e);
       if (e.toString().contains("401")) {
-        print("Getting new token from fetchData");
         if (await getNewToken()) {
-          print("Got new token from fetchData");
           return await fetchData(bfrID);
         }
       }
