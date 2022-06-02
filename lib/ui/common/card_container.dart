@@ -1,5 +1,5 @@
-import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
@@ -42,19 +42,17 @@ class CardContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
+              contentPadding: EdgeInsets.only(
+                  top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
+              visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
                 titleText!,
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                 ),
               ),
-              trailing: ButtonBar(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  buildMenu()!,
-                ],
-              ),
+              trailing: buildMenu()!,
             ),
             buildBody(context),
             Padding(
@@ -147,9 +145,10 @@ class CardContainer extends StatelessWidget {
 
   Widget? buildMenu() {
     if (hideMenu ?? false) {
-      return null;
+      return Container();
     } else if (titleText == "Scanner") {
       return ButtonBar(
+        buttonPadding: EdgeInsets.all(0),
         mainAxisSize: MainAxisSize.min,
         children: [
           buildMenuOptions({
@@ -159,6 +158,7 @@ class CardContainer extends StatelessWidget {
       );
     }
     return ButtonBar(
+      buttonPadding: EdgeInsets.all(0),
       mainAxisSize: MainAxisSize.min,
       children: [
         buildMenuOptions({
