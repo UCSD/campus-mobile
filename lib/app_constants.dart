@@ -197,6 +197,6 @@ class CardTitleConstants {
 }
 
 class CardMenuOptionConstants {
-  static const reloadCard = 'reload this card';
-  static const hideCard = 'hide this card';
+  static const reloadCard = 'reload card';
+  static const hideCard = 'hide card';
 }

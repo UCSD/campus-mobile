@@ -78,19 +78,17 @@ class _WebViewContainerState extends State<WebViewContainer>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
+              contentPadding: EdgeInsets.only(
+                  top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
+              visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
                 widget.titleText!,
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                 ),
               ),
-              trailing: ButtonBar(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  buildMenu()!,
-                ],
-              ),
+              trailing: buildMenu()!,
             ),
             buildBody(context),
             Padding(
@@ -132,9 +130,10 @@ class _WebViewContainerState extends State<WebViewContainer>
 
   Widget? buildMenu() {
     if (widget.hideMenu ?? false) {
-      return null;
+      return Container();
     }
     return ButtonBar(
+      buttonPadding: EdgeInsets.all(0),
       mainAxisSize: MainAxisSize.min,
       children: [
         buildMenuOptions({
