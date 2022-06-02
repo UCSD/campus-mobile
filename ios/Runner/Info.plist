@@ -89,5 +89,7 @@
 	<false/>
 	<key>com.transistorsoft.fetch</key>
 	<string></string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>

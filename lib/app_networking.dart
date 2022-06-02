@@ -190,8 +190,10 @@ class NetworkHelper {
       }
     } on TimeoutException catch (e) {
       // Display an alert - i.e. no internet
+      print('timeout:');
       print(e);
     } catch (err) {
+      print('network error');
       print(err);
       return null;
     }
