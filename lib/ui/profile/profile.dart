@@ -62,7 +62,7 @@ class Profile extends StatelessWidget {
           Card(
             child: ListTile(
               leading: Icon(Icons.feedback),
-              title: Text('Feedback'),
+              title: Text('Mobile App Support'),
               onTap: handleFeedbackTap,
             ),
           ),
@@ -105,7 +105,7 @@ class Profile extends StatelessWidget {
   }
 
   handleFeedbackTap() async {
-    const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=175631";
+    const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=668781";
     openLink(feedbackUrl);
   }
 
