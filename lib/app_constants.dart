@@ -179,7 +179,6 @@ class CardTitleConstants {
     'NativeScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
     'MyUCSDChart': 'MyUCSDChart',
-    'student_survey': 'Student Survey',
     'student_id': 'Student ID',
     'speed_test': "Speed Test",
     'employee_id': 'Employee ID',

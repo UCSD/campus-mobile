@@ -26,7 +26,6 @@ import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
-import 'package:campus_mobile_experimental/ui/survey/survey_card.dart';
 import 'package:campus_mobile_experimental/ui/ventilation/ventilation_card.dart';
 import 'package:campus_mobile_experimental/ui/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
@@ -128,9 +127,6 @@ class _HomeState extends State<Home> {
             break;
           case 'MyStudentChart':
             orderedCards.add(MyStudentChartCard());
-            break;
-          case 'student_survey':
-            orderedCards.add(SurveyCard());
             break;
           case 'dining':
             orderedCards.add(DiningCard());
