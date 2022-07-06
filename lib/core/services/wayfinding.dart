@@ -8,7 +8,8 @@ class WayfindingService {
   NetworkHelper? networkHelper;
   String? error;
   WayfindingConstantsModel? wayfindingConstantsModel;
-  final String bluetoothServiceEndpoint = "https://api-qa.ucsd.edu:8243/bluetoothservice/v1.0.0";
+  final String bluetoothServiceEndpoint =
+      "https://api-qa.ucsd.edu:8243/bluetoothservice/v1.0.0";
   final Map<String, String> tokenHeader = {
     "accept": "application/json",
   };
@@ -24,11 +25,10 @@ class WayfindingService {
 
     try {
       await getNewToken();
-      print(tokenHeader);
-      String deviceTypesResponse = await networkHelper!
-          .authorizedFetch("$bluetoothServiceEndpoint/service_constants", tokenHeader);
-      String constantsResponse = await networkHelper!
-          .authorizedFetch("$bluetoothServiceEndpoint/configurations", tokenHeader);
+      String deviceTypesResponse = await networkHelper!.authorizedFetch(
+          "$bluetoothServiceEndpoint/service_constants", tokenHeader);
+      String constantsResponse = await networkHelper!.authorizedFetch(
+          "$bluetoothServiceEndpoint/configurations", tokenHeader);
       Map<String, dynamic> deviceTypesJson = json.decode(deviceTypesResponse);
       Map<String, dynamic> constantsJson = json.decode(constantsResponse);
       wayfindingConstantsModel =

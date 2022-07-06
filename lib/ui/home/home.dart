@@ -97,7 +97,6 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.only(
             top: cardMargin + 2.0, right: 0.0, bottom: 0.0, left: 0.0),
         children: createList(context),
-        key: PageStorageKey<String>('homePage'),
       ),
     );
   }

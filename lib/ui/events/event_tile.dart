@@ -9,6 +9,7 @@ class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
   final EventModel data;
   final double tileWidth = 190;
+
   @override
   Widget build(BuildContext context) {
     return Provider.of<EventsDataProvider>(context).isLoading!
@@ -23,15 +24,15 @@ class EventTile extends StatelessWidget {
       width: tileWidth,
       height: 300,
       margin: EdgeInsets.zero,
-      child: Column(
-        children: [
-          eventImageLoader(data.imageThumb),
-          InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, RoutePaths.EventDetailView,
-                  arguments: data);
-            },
-            child: SizedBox(
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, RoutePaths.EventDetailView,
+              arguments: data);
+        },
+        child: Column(
+          children: [
+            eventImageLoader(data.imageThumb),
+            SizedBox(
               height: 145,
               width: tileWidth,
               child: DecoratedBox(
@@ -66,8 +67,8 @@ class EventTile extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
+          ], // children
+        ),
       ),
     );
   }

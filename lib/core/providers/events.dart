@@ -25,7 +25,6 @@ class EventsDataProvider extends ChangeNotifier {
   late EventsService _eventsService;
 
   void fetchEvents() async {
-    print('EventsDataProvider: fetchEvents');
     _isLoading = true;
     _error = null;
     notifyListeners();

@@ -262,7 +262,6 @@ class _ScanditScannerState extends State<ScanditScanner> {
   void updateLatestScan(BuildContext context) {
     if (_scannerDataProvider.successfulSubmission! && !hasUpdatedLatestScan) {
       // to fetch the most recent scan and display timestamp to user to confirm success
-      print("updating");
       Provider.of<ScannerMessageDataProvider>(context, listen: false)
           .fetchData();
       hasUpdatedLatestScan = true;
