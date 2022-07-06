@@ -200,3 +200,9 @@ class CardMenuOptionConstants {
   static const reloadCard = 'reload card';
   static const hideCard = 'hide card';
 }
+
+class ConnectivityConstants {
+  static const offlineAlert =
+      'It appears you are currently offline. Check network status and try again.';
+  static const offlineTitle = 'No Internet';
+}

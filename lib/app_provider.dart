@@ -23,6 +23,7 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/ventilation.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
+import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -92,6 +93,15 @@ List<SingleChildWidget> independentServices = [
       NoticesDataProvider _noticesDataProvider = NoticesDataProvider();
       _noticesDataProvider.fetchNotices();
       return _noticesDataProvider;
+    },
+  ),
+  ChangeNotifierProvider<InternetConnectivityProvider>(
+    create: (_) {
+      print("CreateProvider: InternetConnectivityProvider");
+      InternetConnectivityProvider _connectivityProvider =
+          InternetConnectivityProvider();
+      _connectivityProvider.monitorInternet();
+      return _connectivityProvider;
     },
   ),
 ];

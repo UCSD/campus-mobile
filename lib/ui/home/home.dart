@@ -35,6 +35,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links2/uni_links.dart';
+import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -42,6 +43,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  InternetConnectivityProvider? _connectivityProvider;
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
@@ -88,6 +90,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     initUniLinks(context);
     checkToResumeBluetooth(context);
+    _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
