@@ -64,12 +64,12 @@ class RouteTitles {
     'availability/manage_locations_view': 'Manage Locations',
     'shuttle/manage_shuttle_view': 'Manage Shuttle Stops',
     'shuttle/add_shuttle_stops_view': 'Add Shuttle Stops',
-    'parking/manage_parking_view': 'Parking: Manage Lots',
-    'parking/neighborhoods_lot_view': 'Parking: Manage Lots',
-    'parking/neighborhoods_view': 'Parking: Manage Lots',
-    'parking/parking_lots_view': 'Parking: Manage Lots',
-    'parking/parking_structure_view': 'Parking: Manage Lots',
-    'parking/spot_types_view': 'Parking: Manage Spots',
+    'parking/manage_parking_view': 'Manage Lots',
+    'parking/neighborhoods_lot_view': 'Manage Lots',
+    'parking/neighborhoods_view': 'Manage Lots',
+    'parking/parking_lots_view': 'Manage Lots',
+    'parking/parking_structure_view': 'Manage Lots',
+    'parking/spot_types_view': 'Manage Spots',
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
@@ -201,6 +201,12 @@ class CardTitleConstants {
 }
 
 class CardMenuOptionConstants {
-  static const reloadCard = 'reload this card';
-  static const hideCard = 'hide this card';
+  static const reloadCard = 'reload card';
+  static const hideCard = 'hide card';
+}
+
+class ConnectivityConstants {
+  static const offlineAlert =
+      'It appears you are currently offline. Check network status and try again.';
+  static const offlineTitle = 'No Internet';
 }

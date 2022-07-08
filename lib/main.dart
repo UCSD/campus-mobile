@@ -40,14 +40,12 @@ void main() async {
 }
 
 initializeHive() async {
-  print('main:initializeHive');
   await Hive.initFlutter('.');
   Hive.registerAdapter(AuthenticationModelAdapter());
   Hive.registerAdapter(UserProfileModelAdapter());
 }
 
 initializeApp() async {
-  print('main:initializeApp');
   final prefs = await SharedPreferences.getInstance();
   if (prefs.getBool('first_run') ?? true) {
     await clearSecuredStorage();
@@ -60,7 +58,6 @@ initializeApp() async {
 }
 
 clearSecuredStorage() async {
-  print('main:clearSecuredStorage');
   FlutterSecureStorage storage = FlutterSecureStorage();
   await storage.deleteAll();
 }

@@ -73,7 +73,6 @@ class _VentilationCardState extends State<VentilationCard> {
           ],
         ));
       }
-      print("About to return displays: $display");
       return Column(
         children: <Widget>[
           Container(

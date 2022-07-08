@@ -36,7 +36,6 @@ class ParkingService {
       /// token for this service
       if (e.toString().contains("401")) {
         if (await getNewToken()) {
-          print("fetching token");
           return await fetchParkingLotData();
         }
       }
@@ -47,7 +46,6 @@ class ParkingService {
   }
 
   Future<bool> getNewToken() async {
-    print("In get new token");
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
