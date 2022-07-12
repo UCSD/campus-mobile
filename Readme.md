@@ -112,4 +112,4 @@ The goal of this platform is to provide responsive and intuitive mobile interact
 
 
 ## License
-	MIT
+	MITTest PR
