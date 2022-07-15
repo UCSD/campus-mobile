@@ -115,7 +115,6 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   void calculateClosestStop() {
-    print('calculateClosestStop');
     //make sure we have users location before we do any calculations
     if (_userCoords == null ||
         _userCoords!.lon == null ||
@@ -124,15 +123,12 @@ class ShuttleDataProvider extends ChangeNotifier {
       return;
     }
 
-    print('calculateClosestStop t1');
     for (ShuttleStopModel shuttleStop in _shuttleService.data) {
       stopLat = shuttleStop.lat;
       stopLong = shuttleStop.lon;
-      print('calculateClosestStop t2');
       if (getHaversineDistance(
               _userCoords!.lat, _userCoords!.lon, stopLat, stopLong) <
           closestDistance) {
-        print('calculateClosestStop t3');
         closestDistance = getHaversineDistance(
             _userCoords!.lat, _userCoords!.lon, stopLat, stopLong);
         _closestStop = shuttleStop;
