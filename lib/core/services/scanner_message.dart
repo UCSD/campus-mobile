@@ -10,7 +10,7 @@ class ScannerMessageService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String endpoint =
-      'https://api-qa.ucsd.edu:8243/scandata/3.0.0/scanData/myrecentscan';
+      'https://api-qa.ucsd.edu:8243/scandata/2.0.0/scanData/myrecentscan';
 
   ScannerMessageModel _scannerMessageModel = ScannerMessageModel();
 
