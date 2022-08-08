@@ -65,7 +65,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
       }
 
       // Initialize first shuttle display with arrival information
-      if (renderList.isEmpty) {
+      // if (renderList.isEmpty) {
+      if (stopsToRender.isEmpty) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 42.0),
           child: Center(child: Text('No shuttles found. Please add a stop.')),
