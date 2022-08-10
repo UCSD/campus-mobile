@@ -108,6 +108,7 @@ class _WebViewContainerState extends State<WebViewContainer>
 
   // builds the actual webview widget
   Widget buildBody(context) {
+    print('webview_container:buildBody: ' + webCardUrl!);
     return Container(
       height: _contentHeight,
       child: WebView(
