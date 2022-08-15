@@ -21,7 +21,6 @@ class CardsDataProvider extends ChangeNotifier {
       'MyUCSDChart',
       'finals',
       'schedule',
-      'student_survey',
       'student_id',
       'employee_id',
       'availability',
@@ -39,7 +38,6 @@ class CardsDataProvider extends ChangeNotifier {
     _studentCards = [
       'finals',
       'schedule',
-      'student_survey',
       'student_id',
     ];
 
