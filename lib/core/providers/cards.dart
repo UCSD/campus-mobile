@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:connectivity/connectivity.dart';
 
 class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
@@ -20,7 +21,6 @@ class CardsDataProvider extends ChangeNotifier {
       'MyUCSDChart',
       'finals',
       'schedule',
-      'student_survey',
       'student_id',
       'employee_id',
       'availability',
@@ -37,7 +37,6 @@ class CardsDataProvider extends ChangeNotifier {
     _studentCards = [
       'finals',
       'schedule',
-      'student_survey',
       'student_id',
     ];
 
@@ -77,6 +76,7 @@ class CardsDataProvider extends ChangeNotifier {
 
   ///Services
   final CardsService _cardsService = CardsService();
+  Connectivity _connectivity = Connectivity();
 
   void updateAvailableCards(String? ucsdAffiliation) async {
     _isLoading = true;
@@ -143,6 +143,34 @@ class CardsDataProvider extends ChangeNotifier {
 
   Future changeInternetStatus(noInternet) async {
     _noInternet = noInternet;
+  }
+
+  Future<void> initConnectivity() async {
+    try {
+      var status = await _connectivity.checkConnectivity();
+      if (status == ConnectivityResult.none) {
+        _noInternet = true;
+        notifyListeners();
+      } else {
+        _noInternet = false;
+        notifyListeners();
+      }
+    } catch (e) {
+      print("Encounter $e when monitoring Internet for cards");
+    }
+  }
+
+  void monitorInternet() async {
+    await initConnectivity();
+    _connectivity.onConnectivityChanged.listen((result) async {
+      if (result == ConnectivityResult.none) {
+        _noInternet = true;
+        notifyListeners();
+      } else {
+        _noInternet = false;
+        notifyListeners();
+      }
+    });
   }
 
   Future loadSavedData() async {

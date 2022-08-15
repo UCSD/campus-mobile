@@ -41,21 +41,6 @@ class CardsService {
       _isLoading = false;
       return false;
     }
-
-    /// Card Prototyping Service
-    // try {
-    //   String cardPrototypeEndpoint =
-    //       "https://mobile.ucsd.edu/replatform/v1/qa/cards/prototypes/card-prototype--copy-me.json";
-    //   String _response = await _networkHelper.fetchData(cardPrototypeEndpoint);
-    //   _cardsModel = cardsModelFromJson(_response);
-    //   _isLoading = false;
-    //   return true;
-    // } catch (e) {
-    //   print(e);
-    //   _error = e.toString();
-    //   _isLoading = false;
-    //   return false;
-    // }
   }
 
   Future<bool> getNewToken() async {

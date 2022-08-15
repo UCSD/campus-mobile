@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
@@ -26,7 +27,6 @@ import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
-import 'package:campus_mobile_experimental/ui/survey/survey_card.dart';
 import 'package:campus_mobile_experimental/ui/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,6 +41,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  InternetConnectivityProvider? _connectivityProvider;
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
@@ -87,6 +88,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     initUniLinks(context);
     checkToResumeBluetooth(context);
+    _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
@@ -127,9 +129,6 @@ class _HomeState extends State<Home> {
             break;
           case 'MyStudentChart':
             orderedCards.add(MyStudentChartCard());
-            break;
-          case 'student_survey':
-            orderedCards.add(SurveyCard());
             break;
           case 'dining':
             orderedCards.add(DiningCard());
