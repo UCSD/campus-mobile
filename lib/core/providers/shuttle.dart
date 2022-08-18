@@ -45,12 +45,13 @@ class ShuttleDataProvider extends ChangeNotifier {
     // create new map of shuttles/stops to display
     Map<int?, ShuttleStopModel> newMapOfStops = Map<int?, ShuttleStopModel>();
     if (await _shuttleService.fetchData()) {
-      for (ShuttleStopModel model in _shuttleService.data) {
+
+      _shuttleService.data.sort((a,b) => (a.name)!.compareTo(b.name!));
+
+    for (ShuttleStopModel model in _shuttleService.data) {
         newMapOfStops[model.id] = model;
       }
-
       fetchedStops = newMapOfStops;
-
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       if (userDataProvider != null && !reloading) {
         reorderStops(userDataProvider!.userProfileModel!.selectedStops);
@@ -206,5 +207,6 @@ class ShuttleDataProvider extends ChangeNotifier {
   set userCoords(Coordinates value) {
     print("Coordinates set to: $value in shuttle provider");
     _userCoords = value;
+
   }
 }
