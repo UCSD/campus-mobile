@@ -17,6 +17,13 @@ class ShuttleService {
   List<ShuttleStopModel> get data => _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
+  final Map<String, String> headers = {
+    "accept": "application/json",
+    "Authorization":
+        "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+  };
+
+  final shuttleEndpoint = "https://api-qa.ucsd.edu:8243/shuttles/v1.0.0/stops";
 
   Future<bool> fetchData() async {
     _error = null;
@@ -24,8 +31,8 @@ class ShuttleService {
 
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(
-          "https://3nla0bf9z3.execute-api.us-west-2.amazonaws.com/dev-v2/stops");
+      String _response =
+          await (_networkHelper.authorizedFetch(shuttleEndpoint, headers));
 
       /// parse data
       var data = shuttleStopModelFromJson(_response);
@@ -40,15 +47,13 @@ class ShuttleService {
   }
 
   Future<List<ArrivingShuttle>> getArrivingInformation(stopId) async {
-    print('getArrivingInformation:------------------ stopId: ' +
-        stopId.toString());
     _error = null;
     _isLoading = true;
+
     try {
       /// fetch data
-      String arrivingEndpoint =
-          "https://3nla0bf9z3.execute-api.us-west-2.amazonaws.com/dev-v2/stops/$stopId/arrivals";
-      String _response = await _networkHelper.fetchData(arrivingEndpoint);
+      String _response = await (_networkHelper.authorizedFetch(
+          shuttleEndpoint + "/$stopId/arrivals", headers));
 
       /// parse data
       final arrivingData = getArrivingShuttles(_response);
