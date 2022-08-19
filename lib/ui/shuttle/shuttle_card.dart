@@ -52,11 +52,15 @@ class _ShuttleCardState extends State<ShuttleCard> {
     List<Widget> renderList = [];
     try {
       if (_shuttleCardDataProvider.closestStop != null) {
+        print("CLOSEST STOP");
+        print(_shuttleCardDataProvider.closestStop!.name);
+
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.closestStop,
             arrivingShuttles:
                 arrivalsToRender![_shuttleCardDataProvider.closestStop!.id]));
       }
+
       for (int i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
@@ -65,8 +69,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
       }
 
       // Initialize first shuttle display with arrival information
-      // if (renderList.isEmpty) {
-      if (stopsToRender.isEmpty) {
+      if (renderList.isEmpty) {
+        // if (stopsToRender.isEmpty) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 42.0),
           child: Center(child: Text('No shuttles found. Please add a stop.')),
