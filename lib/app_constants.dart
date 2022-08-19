@@ -40,9 +40,6 @@ class RoutePaths {
   static const String SpotTypesView = "parking/spot_types_view";
   static const String ParkingStructureView = "parking/parking_structure_view";
   static const String ParkingLotsView = "parking/parking_lots_view";
-  static const String VentilationBuildings = "ventilation/buildings";
-  static const String VentilationFloors = "ventilation/floors";
-  static const String VentilationRooms = "ventilation/rooms";
   static const String NeighborhoodsView = "parking/neighborhoods_view";
   static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
 }
@@ -73,9 +70,6 @@ class RouteTitles {
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
-    'ventilation/buildings': 'HVAC: Manage Location',
-    'ventilation/floors': 'HVAC: Manage Location',
-    'ventilation/rooms': 'HVAC: Manage Location',
   };
 }
 
@@ -172,18 +166,12 @@ class DataPersistence {
   static const UserProfileModel = 'UserProfileModel';
 }
 
-class VentilationConstants {
-  static const addLocationFailed = 'addLocationFailed';
-  static const removeLocationFailed = 'removeLocationFailed';
-}
-
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
     'NativeScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
     'MyUCSDChart': 'MyUCSDChart',
-    'student_survey': 'Student Survey',
     'student_id': 'Student ID',
     'speed_test': "Speed Test",
     'employee_id': 'Employee ID',
@@ -196,7 +184,6 @@ class CardTitleConstants {
     'news': 'News',
     'parking': 'Parking',
     'weather': 'Weather',
-    'ventilation': 'Office Environment',
   };
 }
 

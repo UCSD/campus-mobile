@@ -10,9 +10,21 @@ const String cardId = 'news';
 
 class NewsCard extends StatelessWidget {
   Widget buildNewsCard() {
-    return NewsList(
-      listSize: 3,
-    );
+    try {
+      return NewsList(
+        listSize: 3,
+      );
+    } catch (e) {
+      print(e);
+      return Container(
+        width: double.infinity,
+        child: Center(
+          child: Container(
+            child: Text('An error occurred, please try again.'),
+          ),
+        ),
+      );
+    }
   }
 
   List<Widget> buildActionButtons(BuildContext context) {

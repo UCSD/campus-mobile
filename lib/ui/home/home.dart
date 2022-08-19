@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
@@ -26,8 +27,6 @@ import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
-import 'package:campus_mobile_experimental/ui/survey/survey_card.dart';
-import 'package:campus_mobile_experimental/ui/ventilation/ventilation_card.dart';
 import 'package:campus_mobile_experimental/ui/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +34,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links2/uni_links.dart';
-import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -132,9 +130,6 @@ class _HomeState extends State<Home> {
           case 'MyStudentChart':
             orderedCards.add(MyStudentChartCard());
             break;
-          case 'student_survey':
-            orderedCards.add(SurveyCard());
-            break;
           case 'dining':
             orderedCards.add(DiningCard());
             break;
@@ -173,9 +168,6 @@ class _HomeState extends State<Home> {
             break;
           case 'shuttle':
             orderedCards.add(ShuttleCard());
-            break;
-          case 'ventilation':
-            orderedCards.add(VentilationCard());
             break;
         }
       } else {
