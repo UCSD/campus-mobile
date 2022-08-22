@@ -39,15 +39,13 @@ class AvailabilityDisplay extends StatelessWidget {
     );
   }
 
-
-
   void _handleIconClick(BuildContext context, SubLocations subLocation) {
-    for(int i = 0; i < subLocation.floors!.length ; i++) {
+    for (int i = 0; i < subLocation.floors!.length; i++) {
       print("name: " + subLocation.floors![i].name!);
       print("percentage: " + subLocation.floors![i].percentage!.toString());
     }
   }
-  
+
   Widget buildAvailabilityBars(BuildContext context) {
     List<Widget> locations = [];
 
@@ -56,9 +54,13 @@ class AvailabilityDisplay extends StatelessWidget {
       for (SubLocations subLocation in model.subLocations!) {
         locations.add(
           ListTile(
-            onTap: () => subLocation.floors != null ? _handleIconClick(context, subLocation): {},
+            onTap: () => subLocation.floors != null
+                ? _handleIconClick(context, subLocation)
+                : print('_handleIconClick: no subLocations'),
             visualDensity: VisualDensity.compact,
-            trailing: subLocation.floors != null ? Icon(Icons.arrow_forward_ios_rounded) : null,
+            trailing: subLocation.floors != null
+                ? Icon(Icons.arrow_forward_ios_rounded)
+                : null,
             title: Text(
               subLocation.name!,
               style: TextStyle(
@@ -71,8 +73,8 @@ class AvailabilityDisplay extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       (100 * percentAvailability(subLocation))
-                          .toInt()
-                          .toString() +
+                              .toInt()
+                              .toString() +
                           '% Availability',
                       // style: TextStyle(color: Colors.black),
                     )),
