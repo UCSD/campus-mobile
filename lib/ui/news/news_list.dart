@@ -59,24 +59,28 @@ class NewsList extends StatelessWidget {
   }
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
-    return ListTile(
-      isThreeLine: true,
-      onTap: () {
-        Navigator.pushNamed(context, RoutePaths.NewsDetailView,
-            arguments: newsItem);
-      },
-      title: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3.0),
-        child: Text(
-          newsItem.title!,
-          textAlign: TextAlign.start,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-          style: TextStyle(fontSize: 18.0),
+    try {
+      return ListTile(
+        isThreeLine: true,
+        onTap: () {
+          Navigator.pushNamed(context, RoutePaths.NewsDetailView,
+              arguments: newsItem);
+        },
+        title: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 3.0),
+          child: Text(
+            newsItem.title!,
+            textAlign: TextAlign.start,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: TextStyle(fontSize: 18.0),
+          ),
         ),
-      ),
-      subtitle: subtitle(newsItem),
-    );
+        subtitle: subtitle(newsItem),
+      );
+    } catch (err) {
+      return Container();
+    }
   }
 
   Widget subtitle(Item data) {

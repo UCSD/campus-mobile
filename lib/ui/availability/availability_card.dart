@@ -85,14 +85,17 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
             children: locationsList,
           ),
         ),
-        DotsIndicator(
-          controller: _controller,
-          itemCount: locationsList.length,
-          onPageSelected: (int index) {
-            _controller.animateToPage(index,
-                duration: Duration(seconds: 1), curve: Curves.ease);
-          },
-        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DotsIndicator(
+            controller: _controller,
+            itemCount: locationsList.length,
+            onPageSelected: (int index) {
+              _controller.animateToPage(index,
+                  duration: Duration(seconds: 1), curve: Curves.ease);
+            },
+          ),
+        )
       ],
     );
   }

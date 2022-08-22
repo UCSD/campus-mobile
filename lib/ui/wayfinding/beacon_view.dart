@@ -54,7 +54,6 @@ class _BeaconViewState extends State<BeaconView> {
     var difference = DateTime.now()
         .difference(DateTime.parse(previousTime as String))
         .inSeconds;
-    print(difference);
     if (difference > 10) {
       changeUUID();
       prefs.setString('previousTime', DateTime.now().toString());
@@ -71,8 +70,6 @@ class _BeaconViewState extends State<BeaconView> {
         .setIdentifier('com.example.myDevice')
         .setLayout(BeaconBroadcast.ALTBEACON_LAYOUT)
         .start();
-
-    print(beaconUuid);
   }
 
   void _stopBroadcast() => beaconBroadcast.stop();

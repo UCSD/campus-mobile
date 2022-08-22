@@ -14,11 +14,15 @@ class _CardsViewState extends State<CardsView> {
   CardsDataProvider? _cardsDataProvider;
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<CardsDataProvider>(context, listen: false).monitorInternet();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _cardsDataProvider = Provider.of<CardsDataProvider>(context);
-    return ContainerView(
-      child: buildCardsList(context),
-    );
+    return ContainerView(child: buildCardsList(context));
   }
 
   Widget buildCardsList(BuildContext context) {

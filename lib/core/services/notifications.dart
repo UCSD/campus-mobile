@@ -5,7 +5,7 @@ import 'package:campus_mobile_experimental/core/models/topics.dart';
 
 class NotificationService {
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/2.0.0';
+  final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
   final String _topicsEndpoint =
       'https://mobile.ucsd.edu/replatform/v1/qa/topics.json';
   bool _isLoading = false;
@@ -14,7 +14,6 @@ class NotificationService {
   List<TopicsModel>? _topicsModel;
 
   Future<bool> fetchTopics() async {
-    print('NotificationService:fetchTopics');
     try {
       String? response = await _networkHelper.fetchData(_topicsEndpoint);
       if (response != null) {
@@ -31,7 +30,6 @@ class NotificationService {
   }
 
   Future<bool> postPushToken(Map<String, String> headers, body) async {
-    print('NotificationService:postPushToken');
     try {
       String? response = await _networkHelper.authorizedPost(
           _endpoint + '/register', headers, body);
@@ -49,7 +47,6 @@ class NotificationService {
 
   Future<bool> deletePushToken(
       Map<String, String> headers, String token) async {
-    print('NotificationService:deletePushToken');
     token = Uri.encodeComponent(token);
     try {
       String? response = await _networkHelper.authorizedDelete(

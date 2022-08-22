@@ -38,9 +38,6 @@ class RoutePaths {
   static const String SpotTypesView = "parking/spot_types_view";
   static const String ParkingStructureView = "parking/parking_structure_view";
   static const String ParkingLotsView = "parking/parking_lots_view";
-  static const String VentilationBuildings = "ventilation/buildings";
-  static const String VentilationFloors = "ventilation/floors";
-  static const String VentilationRooms = "ventilation/rooms";
   static const String NeighborhoodsView = "parking/neighborhoods_view";
   static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
   static const String AvailabilityDetailedView = "availability/detailed_view";
@@ -61,19 +58,16 @@ class RouteTitles {
     'events/event_detail_view': 'Events',
     'class/classList': 'Class Schedule',
     'availability/manage_locations_view': 'Manage Locations',
-    'parking/manage_parking_view': 'Parking: Manage Lots',
-    'parking/neighborhoods_lot_view': 'Parking: Manage Lots',
-    'parking/neighborhoods_view': 'Parking: Manage Lots',
-    'parking/parking_lots_view': 'Parking: Manage Lots',
-    'parking/parking_structure_view': 'Parking: Manage Lots',
-    'parking/spot_types_view': 'Parking: Manage Spots',
+    'parking/manage_parking_view': 'Manage Lots',
+    'parking/neighborhoods_lot_view': 'Manage Lots',
+    'parking/neighborhoods_view': 'Manage Lots',
+    'parking/parking_lots_view': 'Manage Lots',
+    'parking/parking_structure_view': 'Manage Lots',
+    'parking/spot_types_view': 'Manage Spots',
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
-    'ventilation/buildings': 'HVAC: Manage Location',
-    'ventilation/floors': 'HVAC: Manage Location',
-    'ventilation/rooms': 'HVAC: Manage Location',
-    'availability/detailed_view' : 'Availability'
+    'availability/detailed_view': 'Availability'
   };
 }
 
@@ -170,18 +164,12 @@ class DataPersistence {
   static const UserProfileModel = 'UserProfileModel';
 }
 
-class VentilationConstants {
-  static const addLocationFailed = 'addLocationFailed';
-  static const removeLocationFailed = 'removeLocationFailed';
-}
-
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
     'NativeScanner': 'Scanner',
     'MyStudentChart': 'MyStudentChart',
     'MyUCSDChart': 'MyUCSDChart',
-    'student_survey': 'Student Survey',
     'student_id': 'Student ID',
     'speed_test': "Speed Test",
     'employee_id': 'Employee ID',
@@ -194,11 +182,16 @@ class CardTitleConstants {
     'news': 'News',
     'parking': 'Parking',
     'weather': 'Weather',
-    'ventilation': 'Office Environment',
   };
 }
 
 class CardMenuOptionConstants {
-  static const reloadCard = 'reload this card';
-  static const hideCard = 'hide this card';
+  static const reloadCard = 'reload card';
+  static const hideCard = 'hide card';
+}
+
+class ConnectivityConstants {
+  static const offlineAlert =
+      'It appears you are currently offline. Check network status and try again.';
+  static const offlineTitle = 'No Internet';
 }
