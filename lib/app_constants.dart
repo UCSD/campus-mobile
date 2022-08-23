@@ -29,6 +29,8 @@ class RoutePaths {
   static const String ManageAvailabilityView =
       'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
+  static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
+  static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
   static const String DiningViewAll = 'dining/dining_list_view';
   static const String DiningDetailView = 'dining/dining_detail_view';
   static const String DiningNutritionView = 'dining/dining_nutrition_view';
@@ -57,6 +59,8 @@ class RouteTitles {
     'events/event_detail_view': 'Events',
     'class/classList': 'Class Schedule',
     'availability/manage_locations_view': 'Manage Locations',
+    'shuttle/manage_shuttle_view': 'Manage Shuttle Stops',
+    'shuttle/add_shuttle_stops_view': 'Add Shuttle Stops',
     'parking/manage_parking_view': 'Manage Lots',
     'parking/neighborhoods_lot_view': 'Manage Lots',
     'parking/neighborhoods_view': 'Manage Lots',

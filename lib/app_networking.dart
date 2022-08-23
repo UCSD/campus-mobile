@@ -187,6 +187,7 @@ class NetworkHelper {
     } on TimeoutException catch (err) {
       print(err);
     } catch (err) {
+      print('network error');
       print(err);
       return null;
     }
