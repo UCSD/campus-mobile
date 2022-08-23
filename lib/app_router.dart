@@ -33,11 +33,12 @@ import 'package:campus_mobile_experimental/ui/profile/cards.dart';
 import 'package:campus_mobile_experimental/ui/profile/notifications.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_view.dart';
+import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
+import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/beacon_view.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/bluetooth_logger.dart';
 import 'package:campus_mobile_experimental/ui/wayfinding/wayfinding_permissions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class Router {
@@ -130,6 +131,16 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return SpotTypesView();
+        });
+      case RoutePaths.ManageShuttleView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return ManageShuttleView();
+        });
+      case RoutePaths.AddShuttleStopsView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return AddShuttleStopsView();
         });
       case RoutePaths.CardsView:
         return MaterialPageRoute(builder: (_) {
