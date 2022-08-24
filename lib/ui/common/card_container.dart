@@ -85,7 +85,7 @@ class CardContainer extends StatelessWidget {
         var customErrorText = '';
         if (errorText!.contains('Exception')) {
           customErrorText =
-              'Your finals could not be displayed.\n\nIf the problem persists contact mobile@ucsd.edu';
+              'Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu';
         } else {
           customErrorText = 'No finals found.';
         }
@@ -97,7 +97,7 @@ class CardContainer extends StatelessWidget {
         var customErrorText = '';
         if (errorText!.contains('Exception')) {
           customErrorText =
-              'Your classes could not be displayed.\n\nIf the problem persists contact mobile@ucsd.edu';
+              'Your classes could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu';
         } else {
           customErrorText = 'No classes found.';
         }
