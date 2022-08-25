@@ -34,19 +34,7 @@ class ShuttleDisplay extends StatelessWidget {
           buildInfoRow(),
           buildNextArrival(),
           Divider(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Text(
-                  "Next Arrivals",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-            ],
-          ),
+          whetherNextArrivals(),
           buildArrivalData()
         ],
       );
@@ -171,5 +159,25 @@ class ShuttleDisplay extends StatelessWidget {
       str += "Route: ${element.routeId!} - ${element.routeName!}\n";
     });
     return str;
+  }
+
+  Widget whetherNextArrivals() {
+    if (arrivingShuttles!.length <= 1) {
+      return Text("");
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Text(
+              "Next Arrivals",
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ],
+      );
+    }
   }
 }
