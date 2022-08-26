@@ -97,8 +97,8 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
                   'Error:',
                   'Please remove a stop to add more.',
                   snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.black12,
-                  colorText: Colors.black,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  colorText: Colors.white,
               );
             }
           },
