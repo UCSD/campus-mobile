@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityDisplay extends StatelessWidget {
@@ -39,26 +40,20 @@ class AvailabilityDisplay extends StatelessWidget {
     );
   }
 
-  void _handleIconClick(BuildContext context, SubLocations subLocation) {
-    for (int i = 0; i < subLocation.floors!.length; i++) {
-      print("name: " + subLocation.floors![i].name!);
-      print("percentage: " + subLocation.floors![i].percentage!.toString());
-    }
-  }
-
   Widget buildAvailabilityBars(BuildContext context) {
     List<Widget> locations = [];
-
     // add any children the model contains to the listview
     if (model.subLocations!.isNotEmpty) {
       for (SubLocations subLocation in model.subLocations!) {
         locations.add(
           ListTile(
             onTap: () => subLocation.floors != null
-                ? _handleIconClick(context, subLocation)
+                ? Navigator.pushNamed(
+                    context, RoutePaths.AvailabilityDetailedView,
+                    arguments: subLocation)
                 : print('_handleIconClick: no subLocations'),
             visualDensity: VisualDensity.compact,
-            trailing: subLocation.floors != null
+            trailing: subLocation.floors!.length > 0
                 ? Icon(Icons.arrow_forward_ios_rounded)
                 : null,
             title: Text(
