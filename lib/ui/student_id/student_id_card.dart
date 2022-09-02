@@ -359,7 +359,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
             padding: EdgeInsets.only(top: 32, bottom: 48),
             child: Container(
               child: Text(
-                  "Your Student ID could not be displayed.\n\nIf the problem persists contact mobile@ucsd.edu"),
+                  "Your Student ID could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
             ),
           ),
         ),

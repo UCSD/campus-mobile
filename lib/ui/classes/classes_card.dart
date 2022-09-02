@@ -114,7 +114,7 @@ class ClassScheduleCard extends StatelessWidget {
             padding: EdgeInsets.only(top: 32, bottom: 48),
             child: Container(
               child: Text(
-                  "Your classes could not be displayed.\n\nIf the problem persists contact mobile@ucsd.edu"),
+                  "Your classes could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
             ),
           ),
         ),

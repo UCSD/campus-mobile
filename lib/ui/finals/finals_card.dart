@@ -105,7 +105,7 @@ class FinalsCard extends StatelessWidget {
             padding: EdgeInsets.only(top: 32, bottom: 48),
             child: Container(
               child: Text(
-                  "Your finals could not be displayed.\n\nIf the problem persists contact mobile@ucsd.edu"),
+                  "Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
             ),
           ),
         ),
