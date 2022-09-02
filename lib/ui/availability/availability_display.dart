@@ -47,7 +47,7 @@ class AvailabilityDisplay extends StatelessWidget {
       for (SubLocations subLocation in model.subLocations!) {
         locations.add(
           ListTile(
-            onTap: () => subLocation.floors != null
+            onTap: () => subLocation.floors!.length > 0
                 ? Navigator.pushNamed(
                     context, RoutePaths.AvailabilityDetailedView,
                     arguments: subLocation)

@@ -29,10 +29,11 @@ class AvailabilityDetailedView extends StatelessWidget {
 
     // Add a tile for every floor in the subLocation list
     for (int i = 0; i < subLocation.floors.length; i++) {
+      Floor floor = subLocation.floors[i];
       list.add(
         ListTile(
           title: Text(
-            "${subLocation.floors[i].name}",
+            "${floor.name}",
             style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
                 fontSize: LOCATION_FONT_SIZE),
@@ -42,9 +43,7 @@ class AvailabilityDetailedView extends StatelessWidget {
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    (100 * percentAvailability(subLocation))
-                            .toInt()
-                            .toString() +
+                    (100 * percentAvailability(floor)).toInt().toString() +
                         '% Availability',
                     // style: TextStyle(color: Colors.black),
                   )),
@@ -56,11 +55,11 @@ class AvailabilityDetailedView extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(BORDER_RADIUS),
                     child: LinearProgressIndicator(
-                      value: percentAvailability(subLocation) as double?,
+                      value: percentAvailability(floor) as double?,
                       backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
                       valueColor: AlwaysStoppedAnimation<Color>(
                         setIndicatorColor(
-                          percentAvailability(subLocation),
+                          percentAvailability(floor),
                         ),
                       ),
                     ),
@@ -79,8 +78,8 @@ class AvailabilityDetailedView extends StatelessWidget {
   }
 
   // Calculate the percent available
-  num percentAvailability(SubLocations subLocation) =>
-      1 - subLocation.percentage!;
+  num percentAvailability(Floor subLocationFloor) =>
+      1 - subLocationFloor.percentage!;
 
   // Color options
   setIndicatorColor(num percentage) {
