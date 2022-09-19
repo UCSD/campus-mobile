@@ -1,9 +1,11 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/ui/availability/manage_availability_view.dart';
+import 'package:campus_mobile_experimental/ui/availability/availability_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_list.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_list.dart';
@@ -98,6 +100,12 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageAvailabilityView();
+        });
+      case RoutePaths.AvailabilityDetailedView:
+        SubLocations subLocation = settings.arguments as SubLocations;
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return AvailabilityDetailedView(subLocation: subLocation);
         });
       case RoutePaths.DiningViewAll:
         return MaterialPageRoute(builder: (_) {

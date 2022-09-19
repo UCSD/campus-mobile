@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_display.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
@@ -43,14 +44,37 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
 
   Widget buildAvailabilityCard(List<AvailabilityModel?> data) {
     List<Widget> locationsList = [];
+
+    // loop through all the models, adding each one to locationsList
     for (AvailabilityModel? model in data) {
       if (model != null) {
-        if (_availabilityDataProvider.locationViewState[model.locationName]!) {
-          locationsList.add(AvailabilityDisplay(
-            model: model,
-          ));
+        if (_availabilityDataProvider.locationViewState[model.name]!) {
+          locationsList.add(AvailabilityDisplay(model: model));
         }
       }
+    }
+
+    // the user chose no location, so instead show "No Location to Display"
+    if (locationsList.length == 0) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            child: Text(
+              "No Location to Display",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: LOCATION_FONT_SIZE,
+              ),
+            ),
+            padding: EdgeInsets.only(
+              bottom: TITLE_BOTTOM_PADDING,
+            ),
+          ),
+          Text("Add Locations via 'Manage Locations'"),
+        ],
+      );
     }
 
     return Column(

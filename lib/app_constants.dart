@@ -42,6 +42,7 @@ class RoutePaths {
   static const String ParkingLotsView = "parking/parking_lots_view";
   static const String NeighborhoodsView = "parking/neighborhoods_view";
   static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
+  static const String AvailabilityDetailedView = "availability/detailed_view";
 }
 
 class RouteTitles {
@@ -70,6 +71,7 @@ class RouteTitles {
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
+    'availability/detailed_view': 'Availability'
   };
 }
 

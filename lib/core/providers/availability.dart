@@ -1,4 +1,3 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/availability.dart';
@@ -45,20 +44,20 @@ class AvailabilityDataProvider extends ChangeNotifier {
     if (await _availabilityService.fetchData()) {
       /// setting the LocationViewState based on user data
       for (AvailabilityModel model in _availabilityService.data!) {
-        newMapOfLots[model.locationName] = model;
+        newMapOfLots[model.name] = model;
 
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
         if (_userDataProvider
             .userProfileModel!.selectedOccuspaceLocations!.isEmpty) {
-          locationViewState[model.locationName] = true;
+          locationViewState[model.name] = true;
         }
 
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
-          _locationViewState[model.locationName] = _userDataProvider
+          _locationViewState[model.name] = _userDataProvider
               .userProfileModel!.selectedOccuspaceLocations!
-              .contains(model.locationName);
+              .contains(model.name);
         }
       }
 
@@ -70,12 +69,6 @@ class AvailabilityDataProvider extends ChangeNotifier {
           _userDataProvider.userProfileModel!.selectedOccuspaceLocations);
       _lastUpdated = DateTime.now();
     } else {
-      if (_error != null &&
-          _error!.contains(ErrorConstants.invalidBearerToken)) {
-        if (await _availabilityService.getNewToken()) {
-          fetchAvailability();
-        }
-      }
       _error = _availabilityService.error;
     }
     _isLoading = false;
@@ -164,7 +157,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
     List<String?> locationsToReturn = [];
     for (AvailabilityModel model
         in _availabilityModels as Iterable<AvailabilityModel>? ?? []) {
-      locationsToReturn.add(model.locationName);
+      locationsToReturn.add(model.name);
     }
     return locationsToReturn;
   }

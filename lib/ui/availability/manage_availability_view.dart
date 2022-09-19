@@ -39,7 +39,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     newOrder.insert(newIndex, item);
     List<String?> orderedLocationNames = [];
     for (AvailabilityModel? item in newOrder) {
-      orderedLocationNames.add(item!.locationName);
+      orderedLocationNames.add(item!.name);
     }
     _availabilityDataProvider.reorderLocations(orderedLocationNames);
   }
@@ -47,22 +47,22 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
     for (AvailabilityModel? model
-        in _availabilityDataProvider.availabilityModels) {
+    in _availabilityDataProvider.availabilityModels) {
       if (model != null) {
         list.add(ListTile(
-          key: Key(model.locationId.toString()),
+          key: Key(model.name.toString()),
           title: Text(
-            model.locationName!,
+            model.name!,
           ),
           leading: Icon(
             Icons.reorder,
           ),
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
-                .locationViewState[model.locationName]!,
+                .locationViewState[model.name]!,
             activeColor: Theme.of(context).buttonColor,
             onChanged: (_) {
-              _availabilityDataProvider.toggleLocation(model.locationName);
+              _availabilityDataProvider.toggleLocation(model.name);
             },
           ),
         ));
