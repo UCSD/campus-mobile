@@ -12,6 +12,9 @@ We look forward to helping you become a published app developer!
 
 ## How to Contribute
 
+### Install Flutter
+Campus Mobile supports Flutter version [2.10.5](https://docs.flutter.dev/development/tools/sdk/releases)
+
 ### Creating a Fork
 
 From the [Campus Mobile GitHub repo](https://github.com/UCSD/campus-mobile) click the "Fork" button. Next, use your favorite git client or command line to clone the repo:
