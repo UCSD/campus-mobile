@@ -118,7 +118,7 @@ class CardContainer extends StatelessWidget {
               )),
         ),
       );
-    } else if (titleText == "Availability") {
+    } else if (titleText == "Busyness") {
       // web cards are still sized with static values
       return Container(
         width: double.infinity,
