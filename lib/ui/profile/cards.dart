@@ -31,21 +31,6 @@ class _CardsViewState extends State<CardsView> {
       onReorder: _onReorder,
     );
 
-    if( _cardsDataProvider!.noInternet! ) {
-      Future.delayed(Duration.zero, () => {
-        showDialog(context: context, builder: (BuildContext ctx) => AlertDialog(
-            title: const Text('No Internet'),
-            content: const Text('Cards requires an internet connection.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'Ok'),
-                child: const Text('Ok'),
-              ),
-            ]
-        ))
-      });
-    }
-
     return tempView;
   }
 
@@ -88,14 +73,11 @@ class _CardsViewState extends State<CardsView> {
             activeColor: Theme.of(context).buttonColor,
           ),
         ));
-      }
-      catch (e) {
+      } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
         FirebaseCrashlytics.instance.recordError(
             e, StackTrace.fromString(e.toString()),
-            reason: "Profile/Cards: Failed to load Cards page",
-            fatal: false
-        );
+            reason: "Profile/Cards: Failed to load Cards page", fatal: false);
 
         _cardsDataProvider!.changeInternetStatus(true);
       }
