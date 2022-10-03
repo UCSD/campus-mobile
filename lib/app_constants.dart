@@ -71,7 +71,7 @@ class RouteTitles {
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
-    'availability/detailed_view': 'Availability'
+    'availability/detailed_view': 'Busyness'
   };
 }
 
@@ -181,7 +181,7 @@ class CardTitleConstants {
     'schedule': 'Classes',
     'shuttle': "Shuttle",
     'dining': 'Dining',
-    'availability': 'Availability',
+    'availability': 'Busyness',
     'events': 'Events',
     'news': 'News',
     'parking': 'Parking',

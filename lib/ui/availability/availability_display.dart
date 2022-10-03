@@ -1,6 +1,6 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
-import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityDisplay extends StatelessWidget {
@@ -70,7 +70,7 @@ class AvailabilityDisplay extends StatelessWidget {
                       (100 * percentAvailability(subLocation))
                               .toInt()
                               .toString() +
-                          '% Availability',
+                          '% Busy',
                       // style: TextStyle(color: Colors.black),
                     )),
                 Align(
@@ -124,14 +124,14 @@ class AvailabilityDisplay extends StatelessWidget {
     );
   }
 
-  num percentAvailability(SubLocations location) => 1 - location.percentage!;
+  num percentAvailability(SubLocations location) => location.percentage!;
 
   setIndicatorColor(num percentage) {
     if (percentage >= .75)
-      return Colors.green;
+      return Colors.red;
     else if (percentage >= .25)
       return Colors.yellow;
     else
-      return Colors.red;
+      return Colors.green;
   }
 }
