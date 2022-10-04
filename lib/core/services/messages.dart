@@ -7,7 +7,7 @@ class MessageService {
   final String myMessagesApiUrl =
       'https://api-qa.ucsd.edu:8243/mp-mymessages/1.0.0/messages?start=';
   final String topicsApiUrl =
-      'https://bvgjvzaakl.execute-api.us-west-2.amazonaws.com/dev/topics?';
+      'https://m00xwea7ka.execute-api.us-west-2.amazonaws.com/qa/topics?';
 
   bool _isLoading = false;
   DateTime? _lastUpdated;
