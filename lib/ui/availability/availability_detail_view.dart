@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/availability.dart';
-import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityDetailedView extends StatelessWidget {
@@ -44,7 +44,7 @@ class AvailabilityDetailedView extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     (100 * percentAvailability(floor)).toInt().toString() +
-                        '% Availability',
+                        '% Busy',
                     // style: TextStyle(color: Colors.black),
                   )),
               Align(
@@ -79,15 +79,15 @@ class AvailabilityDetailedView extends StatelessWidget {
 
   // Calculate the percent available
   num percentAvailability(Floor subLocationFloor) =>
-      1 - subLocationFloor.percentage!;
+      subLocationFloor.percentage!;
 
   // Color options
   setIndicatorColor(num percentage) {
     if (percentage >= .75)
-      return Colors.green;
+      return Colors.red;
     else if (percentage >= .25)
       return Colors.yellow;
     else
-      return Colors.red;
+      return Colors.green;
   }
 }
