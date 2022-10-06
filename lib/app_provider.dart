@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
+import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/employee_id.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
@@ -20,9 +21,7 @@ import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
-import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -184,16 +183,6 @@ List<SingleChildWidget> dependentServices = [
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
-  }),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
-      WayfindingProvider>(create: (_) {
-    var proximityAwarenessSingleton = WayfindingProvider();
-    return proximityAwarenessSingleton;
-  }, update: (_, coordinates, userDataProvider, proximityAwarenessSingleton) {
-    proximityAwarenessSingleton!
-        .coordinateAndLocation(coordinates, locationProvider!);
-    proximityAwarenessSingleton.userProvider = userDataProvider;
-    return proximityAwarenessSingleton;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
       create: (_) {
