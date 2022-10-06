@@ -57,13 +57,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  beacon_broadcast:
-    dependency: "direct main"
-    description:
-      name: beacon_broadcast
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -377,15 +370,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_blue:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "470b128cd463373d0ec4b668d5b4f449dc728d72"
-      resolved-ref: "470b128cd463373d0ec4b668d5b4f449dc728d72"
-      url: "https://github.com/UCSD/flutter_blue.git"
-    source: git
-    version: "0.8.0"
   flutter_linkify:
     dependency: "direct main"
     description:
@@ -806,13 +790,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
-  protobuf:
-    dependency: transitive
-    description:
-      name: protobuf
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   provider:
     dependency: "direct main"
     description:
@@ -841,13 +818,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.26.0"
   shared_preferences:
     dependency: "direct main"
     description:

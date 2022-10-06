@@ -7,7 +7,6 @@ environment:
 dependencies:
   app_settings: 4.1.0
   barcode_widget: 2.0.1
-  beacon_broadcast: 0.3.0
   connectivity: 3.0.6
   device_info: 2.0.2
   dio: 4.0.0
@@ -23,10 +22,6 @@ dependencies:
     git:
       url: https://github.com/UCSD/flutter_scandit.git
       ref: 41fb666299ed90d8277c24e0065149e83cd71494
-  flutter_blue:
-    git:
-      url: https://github.com/UCSD/flutter_blue.git
-      ref: 470b128cd463373d0ec4b668d5b4f449dc728d72
   flutter_linkify: 5.0.2
   flutter_local_notifications: 8.2.0
   flutter_secure_storage: 5.0.2
