@@ -121,8 +121,6 @@ class NotificationsListView extends StatelessWidget {
     }
 
 
-
-
     return ListTile(
       leading: Icon(_chooseIcon(messageType!), color: Colors.black, size: 30),
       title: Column(
