@@ -256,7 +256,9 @@ class _WiFiCardState extends State<WiFiCard>
                               TextButton(
                                   child: Text("Dismiss"),
                                   style: TextButton.styleFrom(
-                                      primary: Theme.of(context).buttonColor),
+                                    // primary: Theme.of(context).buttonColor,
+                                    primary: Theme.of(context).backgroundColor,
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   })
@@ -344,7 +346,10 @@ class _WiFiCardState extends State<WiFiCard>
                                 TextButton(
                                     child: Text("Dismiss"),
                                     style: TextButton.styleFrom(
-                                        primary: Theme.of(context).buttonColor),
+                                      // primary: Theme.of(context).buttonColor
+                                      primary:
+                                          Theme.of(context).backgroundColor,
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       _buttonEnabled = false;
@@ -455,7 +460,10 @@ class _WiFiCardState extends State<WiFiCard>
                                 TextButton(
                                     child: Text("Dismiss"),
                                     style: TextButton.styleFrom(
-                                        primary: Theme.of(context).buttonColor),
+                                      // primary: Theme.of(context).buttonColor,
+                                      primary:
+                                          Theme.of(context).backgroundColor,
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       _buttonEnabled = false;

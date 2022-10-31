@@ -145,7 +145,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.only(left: 32.0, right: 32.0),
-                    primary: Theme.of(context).buttonColor,
+                    // primary: Theme.of(context).buttonColor,
+                    primary: Theme.of(context).backgroundColor,
                   ),
                   onPressed: () {
                     _scannerDataProvider.setDefaultStates();

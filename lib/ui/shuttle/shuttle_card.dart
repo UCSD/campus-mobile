@@ -114,7 +114,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
-        primary: Theme.of(context).buttonColor,
+        // primary: Theme.of(context).buttonColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'Manage Shuttle Stops',

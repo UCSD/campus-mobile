@@ -60,7 +60,8 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
                 .locationViewState[model.locationName]!,
-            activeColor: Theme.of(context).buttonColor,
+            // activeColor: Theme.of(context).buttonColor,
+            activeColor: Theme.of(context).backgroundColor,
             onChanged: (_) {
               _availabilityDataProvider.toggleLocation(model.locationName);
             },
