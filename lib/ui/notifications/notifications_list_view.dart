@@ -122,7 +122,7 @@ class NotificationsListView extends StatelessWidget {
 
 
     return ListTile(
-      leading: Icon(_chooseIcon(messageType!), color: Colors.black, size: 30),
+      leading: Icon(_chooseIcon(messageType!), color: Theme.of(context).colorScheme.secondary, size: 30),
       title: Column(
         children: <Widget>[
           Text(data.message!.title!, style: TextStyle(fontWeight: FontWeight.bold),),
