@@ -35,7 +35,7 @@ dependencies:
     git:
       url: https://github.com/UCSD/liquid_progress_indicator.git
       ref: 9fd5cc0aa1a68d70588741f40bfc6830b46c10c1
-  location: ^4.4.0
+  geolocator: ^9.0.2
   package_info: 2.0.2
   percent_indicator: 3.0.1
   permission_handler: 8.3.0
