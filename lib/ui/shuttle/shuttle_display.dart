@@ -1,9 +1,7 @@
 import 'package:campus_mobile_experimental/core/models/shuttle.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class ShuttleDisplay extends StatelessWidget {
   ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles})
