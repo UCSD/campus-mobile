@@ -23,7 +23,7 @@ dependencies:
       ref: 41fb666299ed90d8277c24e0065149e83cd71494
   flutter_linkify: 5.0.2
   flutter_local_notifications: 8.2.0
-  flutter_secure_storage: 5.0.2
+  flutter_secure_storage: 6.0.0
   flutter_sticky_header: 0.6.0
   get: 4.1.4
   google_maps_flutter: 2.0.6
