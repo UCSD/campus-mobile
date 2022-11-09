@@ -25,7 +25,7 @@ dependencies:
   flutter_local_notifications: 8.2.0
   flutter_secure_storage: 5.0.2
   flutter_sticky_header: 0.6.0
-  get: 4.1.4
+  get: 4.6.5
   google_maps_flutter: 2.0.6
   hive: 2.0.4
   hive_flutter: 1.0.0
