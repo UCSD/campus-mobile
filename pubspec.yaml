@@ -10,7 +10,7 @@ dependencies:
   device_info: 2.0.2
   dio: 4.0.6
   dots_indicator: 2.0.0
-  encrypt: 5.0.0
+  encrypt: 5.0.1
   firebase_analytics: 8.1.0
   firebase_core: 1.2.0
   firebase_crashlytics: 2.0.4
