@@ -9,7 +9,7 @@ dependencies:
   connectivity: 3.0.6
   device_info: 2.0.2
   dio: 4.0.6
-  dots_indicator: 2.0.0
+  dots_indicator: 2.1.0
   encrypt: 5.0.0
   firebase_analytics: 8.1.0
   firebase_core: 1.2.0
