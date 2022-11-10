@@ -112,13 +112,20 @@ class NotificationsListView extends StatelessWidget {
     FreeFoodDataProvider freefoodProvider =
         Provider.of<FreeFoodDataProvider>(context);
 
+    String? messageType;
+    if(data.audience!.topics == null)  {
+      messageType = "DM";
+    }
+    else {
+      messageType = data.audience?.topics![0];
+    }
+
+
     return ListTile(
-      leading: Icon(Icons.info, color: Colors.grey, size: 30),
+      leading: Icon(_chooseIcon(messageType!), color: Theme.of(context).colorScheme.secondary, size: 30),
       title: Column(
         children: <Widget>[
-          Text(_readTimestamp(data.timestamp!),
-              style: TextStyle(fontSize: 10, color: Colors.grey)),
-          Text(data.message!.title!),
+          Text(data.message!.title!, style: TextStyle(fontWeight: FontWeight.bold),),
           Padding(padding: const EdgeInsets.all(3.5))
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,8 +152,30 @@ class NotificationsListView extends StatelessWidget {
               : Container(),
         ],
       ),
+        trailing: Column(
+          children: <Widget>[
+            Text(_readTimestamp(data.timestamp!),
+                style: TextStyle(fontSize: 10, color: Colors.grey)),
+          ]
+      )
     );
   }
+
+  IconData _chooseIcon(String messageType) {
+    if (messageType == "studentAnnouncements" || messageType == "testStudentAnnouncements") {
+      return Icons.school_outlined;
+    }
+    else if (messageType == "freeFood") {
+      return Icons.restaurant_outlined;
+    }
+    else if (messageType == "campusAnnouncements" || messageType == "testCampusAnnouncements") {
+        return Icons.campaign_outlined;
+    }
+    else if (messageType == "DM"){
+      return Icons.info_outline;
+    }
+    return Icons.info_outline;
+}
 
   String _readTimestamp(int timestamp) {
     var now = new DateTime.now();
@@ -155,33 +184,33 @@ class NotificationsListView extends StatelessWidget {
     var time = '';
 
     if (diff.inSeconds < 60) {
-      time = 'A FEW MOMENTS AGO';
+      time = 'JUST NOW';
     } else if (diff.inMinutes < 60) {
       if (diff.inMinutes.floor() == 1) {
-        time = diff.inMinutes.toString() + ' MINUTE AGO';
+        time = diff.inMinutes.toString() + ' MIN';
       } else {
-        time = diff.inMinutes.toString() + ' MINUTES AGO';
+        time = diff.inMinutes.toString() + ' MINS';
       }
     } else if (diff.inHours < 24) {
       if (diff.inHours.floor() == 1) {
-        time = diff.inHours.toString() + ' HOUR AGO';
+        time = diff.inHours.toString() + ' HR';
       } else {
-        time = diff.inHours.toString() + ' HOURS AGO';
+        time = diff.inHours.toString() + ' HRS';
       }
     } else if (diff.inDays > 0 && diff.inDays < 7) {
       if (diff.inDays == 1) {
-        time = diff.inDays.toString() + ' DAY AGO';
+        time = diff.inDays.toString() + ' D';
       } else {
-        time = diff.inDays.toString() + ' DAYS AGO';
+        time = diff.inDays.toString() + ' D';
       }
     } else if (diff.inDays >= 7 && diff.inDays < 365) {
       if (diff.inDays.floor() == 7) {
-        time = (diff.inDays / 7).floor().toString() + ' WEEK AGO';
+        time = (diff.inDays / 7).floor().toString() + ' W';
       } else {
-        time = (diff.inDays / 7).floor().toString() + ' WEEKS AGO';
+        time = (diff.inDays / 7).floor().toString() + ' W';
       }
     } else {
-      time = ((diff.inDays / 7).floor() / 52).floor().toString() + ' YEAR AGO';
+      time = ((diff.inDays / 7).floor() / 52).floor().toString() + ' Y';
     }
     return time;
   }
