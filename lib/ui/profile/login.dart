@@ -66,9 +66,9 @@ class _LoginState extends State<Login> {
         color: Colors.green,
       ),
       title: Text(
-        _userDataProvider.userProfileModel!.username != null
-            ? _userDataProvider.userProfileModel!.username!
-            : _emailTextFieldController.text,
+        _userDataProvider.userProfileModel.username != null
+            ? _userDataProvider.userProfileModel.username!
+            : "",//_emailTextFieldController.text,
         style: TextStyle(fontSize: 17),
       ),
       trailing: OutlinedButton(

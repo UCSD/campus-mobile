@@ -246,10 +246,10 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Text buildChartText(BuildContext context) {
-    if (_userDataProvider.userProfileModel!.classifications?.student ?? false) {
+    if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyStudentChart.");
-    } else if (_userDataProvider.userProfileModel!.classifications?.staff ??
+    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
         false) {
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyUCSDChart.");

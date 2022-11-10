@@ -233,13 +233,13 @@ class SpeedTestProvider extends ChangeNotifier {
 
     offloadDataHeader = {
       'Authorization':
-          'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+          'Bearer ${_userDataProvider.authenticationModel.accessToken}'
     };
     if (_userDataProvider.isLoggedIn) {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
           'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
         };
       }
       // Send to offload API
@@ -255,7 +255,7 @@ class SpeedTestProvider extends ChangeNotifier {
           _userDataProvider.silentLogin();
           offloadDataHeader = {
             'Authorization':
-                'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           };
           _networkHelper.authorizedPost(
               mobileLoggerApiWifi, offloadDataHeader, json.encode(log));
@@ -281,15 +281,15 @@ class SpeedTestProvider extends ChangeNotifier {
 
     offloadDataHeader = {
       'Authorization':
-          'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+          'Bearer ${_userDataProvider.authenticationModel.accessToken}'
     };
     wiFiLog = {
-      "userId": (_userDataProvider.userProfileModel!.pid) == null
+      "userId": (_userDataProvider.userProfileModel.pid) == null
           ? ""
-          : _userDataProvider.userProfileModel!.pid,
-      "userLogin": (_userDataProvider.userProfileModel!.username) == null
+          : _userDataProvider.userProfileModel.pid,
+      "userLogin": (_userDataProvider.userProfileModel.username) == null
           ? ""
-          : _userDataProvider.userProfileModel!.username!,
+          : _userDataProvider.userProfileModel.username!,
       "Platform": _speedTestModel!.platform,
       "SSID": _speedTestModel!.ssid,
       "BSSID": _speedTestModel!.bssid,
@@ -312,7 +312,7 @@ class SpeedTestProvider extends ChangeNotifier {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
           'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
         };
       }
       // Send to offload API
@@ -324,7 +324,7 @@ class SpeedTestProvider extends ChangeNotifier {
           _userDataProvider.silentLogin();
           offloadDataHeader = {
             'Authorization':
-                'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           };
           _networkHelper.authorizedPost(mobileLoggerApiWifiReport,
               offloadDataHeader, json.encode(wiFiLog));
