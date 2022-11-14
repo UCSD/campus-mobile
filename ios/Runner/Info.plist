@@ -47,10 +47,6 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>UC San Diego Mobile uses Bluetooth access to scan for nearby beacons to provide location specific information.</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>UC San Diego Mobile uses Bluetooth access to scan for nearby beacons to provide location specific information.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>UC San Diego mobile would like access to the camera. The app needs access to scan QR Codes.</string>
 	<key>NSHumanReadableCopyright</key>
@@ -63,9 +59,6 @@
 	<string>Allowing location access while using the app allows cards and map search to display information relevant to your location.</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>bluetooth-central</string>
-		<string>bluetooth-peripheral</string>
-		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
