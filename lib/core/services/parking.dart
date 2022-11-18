@@ -24,6 +24,7 @@ class ParkingService {
     _isLoading = true;
     try {
       /// fetch data
+      await getNewToken();
       String _response = await (_networkHelper.authorizedFetch(
           campusParkingServiceApiUrl + "/status", headers));
 

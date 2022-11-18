@@ -26,6 +26,7 @@ class DiningService {
     _isLoading = true;
     try {
       /// fetch data
+      await getNewToken();
       String _response = await _networkHelper.authorizedFetch(
           baseEndpoint + '/locations', headers);
 
