@@ -11,6 +11,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../models/username.dart';
+
 class SpeedTestProvider extends ChangeNotifier {
   bool? _onSimulator;
   bool? _isLoading;
@@ -287,9 +289,9 @@ class SpeedTestProvider extends ChangeNotifier {
       "userId": (_userDataProvider.userProfileModel.pid) == null
           ? ""
           : _userDataProvider.userProfileModel.pid,
-      "userLogin": (_userDataProvider.userProfileModel.username) == null
+      "userLogin": (Username.get()) == null
           ? ""
-          : _userDataProvider.userProfileModel.username!,
+          : Username.get()!,
       "Platform": _speedTestModel!.platform,
       "SSID": _speedTestModel!.ssid,
       "BSSID": _speedTestModel!.bssid,

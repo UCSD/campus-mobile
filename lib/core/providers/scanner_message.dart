@@ -40,7 +40,7 @@ class ScannerMessageDataProvider extends ChangeNotifier {
       /// Initialize header
       final Map<String, String> header = {
         'Authorization':
-            'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+            'Bearer ${_userDataProvider.authenticationModel.accessToken}'
       };
       await _scannerMessageService!.fetchData(header);
       _scannerMessageModel = _scannerMessageService!.scannerMessageModel;

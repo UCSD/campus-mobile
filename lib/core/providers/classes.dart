@@ -71,7 +71,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         _academicTermModel = _classScheduleService.academicTermModel;
         final Map<String, String> headers = {
           'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
         };
 
         /// erase old model

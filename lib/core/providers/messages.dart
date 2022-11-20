@@ -78,7 +78,7 @@ class MessagesDataProvider extends ChangeNotifier {
     Map<String, String> headers = {
       "accept": "application/json",
       "Authorization":
-          "Bearer " + _userDataProvider!.authenticationModel!.accessToken!,
+          "Bearer " + _userDataProvider!.authenticationModel.accessToken!,
     };
 
     if (await _messageService.fetchMyMessagesData(timestamp, headers)) {

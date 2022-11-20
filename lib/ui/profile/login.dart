@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/username.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,9 +67,7 @@ class _LoginState extends State<Login> {
         color: Colors.green,
       ),
       title: Text(
-        _userDataProvider.userProfileModel.username != null
-            ? _userDataProvider.userProfileModel.username!
-            : "",//_emailTextFieldController.text,
+        Username.get()!,
         style: TextStyle(fontSize: 17),
       ),
       trailing: OutlinedButton(

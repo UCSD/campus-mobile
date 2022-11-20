@@ -62,7 +62,7 @@ class _WebViewContainerState extends State<WebViewContainer>
     if (widget.requireAuth!) {
       _userDataProvider = Provider.of<UserDataProvider>(context);
       webCardUrl = widget.initialUrl! +
-          "?expiration=${_userDataProvider.authenticationModel!.expiration}#${_userDataProvider.authenticationModel!.accessToken}";
+          "?expiration=${_userDataProvider.authenticationModel.expiration}#${_userDataProvider.authenticationModel.accessToken}";
     } else {
       webCardUrl = widget.initialUrl;
     }
