@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'onboarding_login.dart';
@@ -21,7 +22,7 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        brightness: Brightness.dark,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Semantics(
         label:
