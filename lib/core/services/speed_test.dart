@@ -71,33 +71,15 @@ class SpeedTestService {
   }
 
   Future<WifiInfo?> fetchNetworkDiagnostics() async {
-
     _isLoading = true;
     // Check connected to wifi
     if (await _connectivity.checkConnectivity() != ConnectivityResult.wifi) {
       _isLoading = false;
       return null;
     }
-    late bool isUCSDWIFI;
-    // Check for UCSD wifi
-    WifiInfo? wiFiInfo = await WifiConnection.wifiInfo.then((value) {
-      if ((!value.ssid!.contains("UCSD-PROTECTED")) &&
-          (!value.ssid!.contains("UCSD-GUEST")) &&
-          (!value.ssid!.contains("ResNet"))) {
-        isUCSDWIFI = false;
-        _isLoading = false;
-        return null;
-      }
-      _isLoading = false;
-      isUCSDWIFI = true;
-      return value;
-    });
 
-    if (!isUCSDWIFI) {
-      _isLoading = false;
-      return null;
-    }
-
+    // Check wifi info
+    WifiInfo? wiFiInfo = await WifiConnection.wifiInfo.then((value) => value);
     return wiFiInfo;
   }
 

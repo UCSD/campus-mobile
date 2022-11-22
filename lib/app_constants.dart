@@ -101,6 +101,7 @@ class ErrorConstants {
   static const invalidMedia =
       'DioError [DioErrorType.response]: Http status error [415]';
   static const silentLoginFailed = "Silent login failed";
+  static const locationFailed = "Location was not available";
 }
 
 class ScannerConstants {
