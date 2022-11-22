@@ -118,7 +118,7 @@ class Router {
       case RoutePaths.DiningNutritionView:
         Map<String, Object?> arguments =
             settings.arguments as Map<String, Object?>;
-        MenuItem data = arguments['data'] as MenuItem;
+        DiningMenuItem data = arguments['data'] as DiningMenuItem;
         String? disclaimer = arguments['disclaimer'] as String?;
         String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
         return MaterialPageRoute(
