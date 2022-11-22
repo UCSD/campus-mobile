@@ -11,7 +11,7 @@ class CardsService {
   Map<String, CardsModel>? _cardsModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  Map<String, String> headers = {
+  final Map<String, String> headers = {
     "accept": "application/json",
   };
 
