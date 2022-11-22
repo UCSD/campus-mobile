@@ -8,8 +8,6 @@ import 'package:campus_mobile_experimental/core/models/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/speed_test.dart';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
-import 'package:cancellation_token_http/http.dart' as httpc;
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 

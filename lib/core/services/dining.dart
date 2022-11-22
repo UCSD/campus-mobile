@@ -85,9 +85,9 @@ class DiningService {
     try {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-
-      headers["Authorization"] = "Bearer " + response["access_token"];
-
+      var splitted = response.split('"');
+      String accessToken = splitted[3];
+      headers["Authorization"] = "Bearer " + accessToken;
       return true;
     } catch (e) {
       _error = e.toString();

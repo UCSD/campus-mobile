@@ -11,7 +11,7 @@ class CardsService {
   Map<String, CardsModel>? _cardsModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final Map<String, String> headers = {
+  Map<String, String> headers = {
     "accept": "application/json",
   };
 
@@ -23,6 +23,7 @@ class CardsService {
 
     /// API Manager Service
     try {
+      await getNewToken();
       String cardListEndpoint =
           "https://api-qa.ucsd.edu:8243/mobilecardsservice/v1.0.0/mobilecardslist?version=9&ucsdaffiliation=" +
               ucsdAffiliation;
@@ -32,6 +33,8 @@ class CardsService {
       _isLoading = false;
       return true;
     } catch (e) {
+      print("Error: ");
+      print(e.toString());
       if (e.toString().contains("401")) {
         if (await getNewToken()) {
           return await fetchCards(ucsdAffiliation);
@@ -43,6 +46,8 @@ class CardsService {
     }
   }
 
+  // curl -k -X POST --header "Authorization: Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh" "https://api-qa.ucsd.edu:8243/token" -d "grant_type=client_credentials"
+
   Future<bool> getNewToken() async {
     final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
     final Map<String, String> tokenHeaders = {
@@ -53,7 +58,9 @@ class CardsService {
     try {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-      headers["Authorization"] = "Bearer " + response["access_token"];
+      var splitted = response.split('"');
+      String accessToken = splitted[3];
+      headers["Authorization"] = "Bearer " + accessToken;
       return true;
     } catch (e) {
       _error = e.toString();

@@ -22,6 +22,7 @@ class FreeFoodService {
     _isLoading = true;
     try {
       /// fetch data
+      await getNewToken();
       var _response = await _networkHelper.authorizedFetch(
           baseEndpoint + 'events/' + id + '/rsvpCount', headers);
 
@@ -53,6 +54,7 @@ class FreeFoodService {
       String _url = baseEndpoint + 'events/' + id + '/rsvpLimit';
 
       /// fetch data
+      await getNewToken();
       var _response = await _networkHelper.authorizedFetch(_url, headers);
 
       /// parse data
@@ -114,8 +116,9 @@ class FreeFoodService {
     try {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-
-      headers["Authorization"] = "Bearer " + response["access_token"];
+      var splitted = response.split('"');
+      String accessToken = splitted[3];
+      headers["Authorization"] = "Bearer " + accessToken;
       return true;
     } catch (e) {
       _error = e.toString();
