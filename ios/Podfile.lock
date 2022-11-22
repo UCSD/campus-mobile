@@ -1,8 +1,4 @@
 PODS:
-  - "app_settings (3.0.0+1)":
-    - Flutter
-  - beacon_broadcast (0.0.1):
-    - Flutter
   - connectivity (0.0.1):
     - Flutter
     - Reachability
@@ -91,18 +87,14 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.4)
     - GoogleUtilities/UserDefaults (~> 7.4)
   - Flutter (1.0.0)
-  - flutter_blue (0.0.1):
-    - Flutter
-    - flutter_blue/Protos (= 0.0.1)
-  - flutter_blue/Protos (0.0.1):
-    - Flutter
-    - Protobuf (~> 3.15.8)
   - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_scandit_plugin (0.0.1):
     - Flutter
     - ScanditBarcodeCapture (~> 6.6.0-beta.2)
   - flutter_secure_storage (3.3.1):
+    - Flutter
+  - geolocator_apple (1.2.0):
     - Flutter
   - google_maps_flutter (0.0.1):
     - Flutter
@@ -148,8 +140,6 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
-  - location (0.0.1):
-    - Flutter
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -159,10 +149,9 @@ PODS:
     - Flutter
   - path_provider_ios (0.0.1):
     - Flutter
-  - "permission_handler (5.1.0+2)":
+  - permission_handler_apple (9.0.4):
     - Flutter
   - PromisesObjC (1.2.12)
-  - Protobuf (3.15.8)
   - Reachability (3.2)
   - ScanditBarcodeCapture (6.6.4):
     - ScanditCaptureCore (= 6.6.4)
@@ -179,8 +168,6 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - app_settings (from `.symlinks/plugins/app_settings/ios`)
-  - beacon_broadcast (from `.symlinks/plugins/beacon_broadcast/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -188,15 +175,14 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
-  - flutter_blue (from `.symlinks/plugins/flutter_blue/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_scandit_plugin (from `.symlinks/plugins/flutter_scandit_plugin/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
-  - location (from `.symlinks/plugins/location/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
-  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - uni_links2 (from `.symlinks/plugins/uni_links2/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
@@ -218,16 +204,11 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - PromisesObjC
-    - Protobuf
     - Reachability
     - ScanditBarcodeCapture
     - ScanditCaptureCore
 
 EXTERNAL SOURCES:
-  app_settings:
-    :path: ".symlinks/plugins/app_settings/ios"
-  beacon_broadcast:
-    :path: ".symlinks/plugins/beacon_broadcast/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
   device_info:
@@ -242,24 +223,22 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
-  flutter_blue:
-    :path: ".symlinks/plugins/flutter_blue/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_scandit_plugin:
     :path: ".symlinks/plugins/flutter_scandit_plugin/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  geolocator_apple:
+    :path: ".symlinks/plugins/geolocator_apple/ios"
   google_maps_flutter:
     :path: ".symlinks/plugins/google_maps_flutter/ios"
-  location:
-    :path: ".symlinks/plugins/location/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
-  permission_handler:
-    :path: ".symlinks/plugins/permission_handler/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   uni_links2:
@@ -272,8 +251,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/wifi_connection/ios"
 
 SPEC CHECKSUMS:
-  app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
-  beacon_broadcast: 2c2562111f7b7e0f1ab59487f6bc805805e3c9f3
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Firebase: 73c3e3b216ec1ecbc54d2ffdd4670c65c749edb1
@@ -287,23 +264,21 @@ SPEC CHECKSUMS:
   FirebaseCrashlytics: 69cddb6bfa7656c5346e603bc85b029392252ee6
   FirebaseInstallations: 40bd9054049b2eae9a2c38ef1c3dd213df3605cd
   FirebaseMessaging: 1a33b4af3c8042ed6ddacb6c031894af2064bfab
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_blue: 0c6281e67dd48996820a5fd1b98d6d532a1e5efb
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_scandit_plugin: 99b341bc008c38d7a2590ed924e4c106ac76841e
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
+  geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
   google_maps_flutter: df4e7de95264aa0a2f11aac0fc7e313acb8ffc7e
   GoogleAppMeasurement: c6bbc9753d046b5456dd4f940057fbad2c28419e
   GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
   GoogleMaps: eb03e327edfd70b06de1e6e321653f73712df7ad
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
-  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
-  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
+  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
-  Protobuf: adb85cd18a15bd1a777c158af9fd6e612a0e6d69
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   ScanditBarcodeCapture: 8de10f1d79cb4c669b75c61ddaed60c7c7daa7f4
   ScanditCaptureCore: 7118e29ef970e70ca1ea6512fa8414e5a3761497
@@ -313,6 +288,6 @@ SPEC CHECKSUMS:
   webview_flutter: 9f491a9b5a66f2573946a389b2677987b0ff8c0b
   wifi_connection: cbd6d42bbd0cb9302ea325efe5bd3945576266cc
 
-PODFILE CHECKSUM: ac6659c17efa3d29f24677f3a1e452cd4c33cd6a
+PODFILE CHECKSUM: 82b8bb61bbea4e579c30d5b19bf20a0f9063bdc0
 
 COCOAPODS: 1.11.3

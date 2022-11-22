@@ -52,12 +52,12 @@ class _DiningMenuListState extends State<DiningMenuList> {
         filters.add('Dinner');
     }
     if (menu!.menuItems != null) {
-      List<MenuItem> menuList =
+      List<DiningMenuItem> menuList =
           Provider.of<DiningDataProvider>(context, listen: false)
               .getMenuItems(widget.model.id, filters)!;
       List<Widget> list = [];
       if (menuList.length > 0) {
-        for (MenuItem item in menuList) {
+        for (DiningMenuItem item in menuList) {
           list.add(GestureDetector(
             child: RichText(
               textAlign: TextAlign.start,
