@@ -139,14 +139,14 @@ class DiningDataProvider extends ChangeNotifier {
     return DiningMenuItemsModel();
   }
 
-  List<MenuItem>? getMenuItems(String? id, List<String> filters) {
-    List<MenuItem>? menuItems;
+  List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
+    List<DiningMenuItem>? menuItems;
     if (_diningMenuItemModels[id!] == null) {
       return null;
     } else {
       menuItems = _diningMenuItemModels[id]!.menuItems;
     }
-    List<MenuItem> filteredMenuItems = [];
+    List<DiningMenuItem> filteredMenuItems = [];
     for (var menuItem in menuItems!) {
       int matched = 0;
       for (int i = 0; i < filters.length; i++) {
