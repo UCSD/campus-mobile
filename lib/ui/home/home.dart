@@ -9,7 +9,6 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
-import 'package:campus_mobile_experimental/core/providers/wayfinding.dart';
 import 'package:campus_mobile_experimental/main.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
@@ -32,7 +31,6 @@ import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links2/uni_links.dart';
 
 class Home extends StatefulWidget {
@@ -87,7 +85,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     initUniLinks(context);
-    checkToResumeBluetooth(context);
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
@@ -181,19 +178,5 @@ class _HomeState extends State<Home> {
       }
     }
     return orderedCards;
-  }
-
-  void checkToResumeBluetooth(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? preference = prefs.getBool("advancedWayfindingEnabled");
-
-    if (prefs.containsKey("advancedWayfindingEnabled") && preference == true) {
-      WayfindingProvider bluetoothSingleton =
-          Provider.of<WayfindingProvider>(context, listen: false);
-      bluetoothSingleton.advancedWayfindingEnabled = true;
-      if (bluetoothSingleton.ongoingScanner == null) {
-        bluetoothSingleton.init();
-      }
-    }
   }
 }

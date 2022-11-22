@@ -14,8 +14,6 @@ class ShuttleDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("Building ${stop.name}");
-    print(arrivingShuttles);
     if (arrivingShuttles == null) {
       return Container(
         width: double.infinity,
@@ -77,12 +75,12 @@ class ShuttleDisplay extends StatelessWidget {
             CircleAvatar(
               minRadius: 40,
               backgroundColor: HexColor(arrivingShuttles!.isEmpty
-                  ? "#B74093"
+                  ? "#CCCCCC"
                   : arrivingShuttles![0].routeColor!),
               foregroundColor: Colors.black,
               child: Text(
                 arrivingShuttles!.isEmpty
-                    ? "S"
+                    ? "?"
                     : arrivingShuttles![0].routeName![0],
                 style: TextStyle(fontSize: 50),
               ),

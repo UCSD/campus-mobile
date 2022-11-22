@@ -13,6 +13,8 @@ class UserProfileService {
   final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
 
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
+    print("user headers:");
+    print(headers.toString());
     _error = null;
     _isLoading = true;
     try {

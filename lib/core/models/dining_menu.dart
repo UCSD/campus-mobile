@@ -11,7 +11,7 @@ String diningMenuItemsModelToJson(DiningMenuItemsModel data) =>
     json.encode(data.toJson());
 
 class DiningMenuItemsModel {
-  List<MenuItem>? menuItems;
+  List<DiningMenuItem>? menuItems;
   String? disclaimer;
   String? disclaimerEmail;
 
@@ -25,8 +25,8 @@ class DiningMenuItemsModel {
       DiningMenuItemsModel(
         menuItems: json["menuitems"] == null
             ? null
-            : List<MenuItem>.from(
-                json["menuitems"].map((x) => MenuItem.fromJson(x))),
+            : List<DiningMenuItem>.from(
+                json["menuitems"].map((x) => DiningMenuItem.fromJson(x))),
         disclaimer: json["disclaimer"] == null ? null : json["disclaimer"],
         disclaimerEmail:
             json["disclaimerEmail"] == null ? null : json["disclaimerEmail"],
@@ -41,7 +41,7 @@ class DiningMenuItemsModel {
       };
 }
 
-class MenuItem {
+class DiningMenuItem {
   String? name;
   String? itemId;
   String? station;
@@ -50,7 +50,7 @@ class MenuItem {
   String? tags;
   Nutrition? nutrition;
 
-  MenuItem({
+  DiningMenuItem({
     this.name,
     this.itemId,
     this.station,
@@ -60,7 +60,7 @@ class MenuItem {
     this.nutrition,
   });
 
-  factory MenuItem.fromJson(Map<String, dynamic> json) => MenuItem(
+  factory DiningMenuItem.fromJson(Map<String, dynamic> json) => DiningMenuItem(
         name: json["name"] == null ? null : json["name"],
         itemId: json["itemID"] == null ? null : json["itemID"],
         station: json["station"] == null ? null : json["station"],

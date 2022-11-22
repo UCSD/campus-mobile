@@ -1,8 +1,10 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
+import 'package:campus_mobile_experimental/ui/availability/availability_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_list.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_detail_view.dart';
@@ -35,9 +37,6 @@ import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
-import 'package:campus_mobile_experimental/ui/wayfinding/beacon_view.dart';
-import 'package:campus_mobile_experimental/ui/wayfinding/bluetooth_logger.dart';
-import 'package:campus_mobile_experimental/ui/wayfinding/wayfinding_permissions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -99,6 +98,12 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageAvailabilityView();
         });
+      case RoutePaths.AvailabilityDetailedView:
+        SubLocations subLocation = settings.arguments as SubLocations;
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return AvailabilityDetailedView(subLocation: subLocation);
+        });
       case RoutePaths.DiningViewAll:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
@@ -113,7 +118,7 @@ class Router {
       case RoutePaths.DiningNutritionView:
         Map<String, Object?> arguments =
             settings.arguments as Map<String, Object?>;
-        MenuItem data = arguments['data'] as MenuItem;
+        DiningMenuItem data = arguments['data'] as DiningMenuItem;
         String? disclaimer = arguments['disclaimer'] as String?;
         String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
         return MaterialPageRoute(
@@ -152,16 +157,6 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsSettingsView();
         });
-      case RoutePaths.BluetoothPermissionsView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return AdvancedWayfindingPermission();
-        });
-      case RoutePaths.AutomaticBluetoothLoggerView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return AutomaticBluetoothLoggerView();
-        });
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
@@ -198,8 +193,6 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return SpotTypesView();
         });
-      case RoutePaths.BeaconView:
-        return MaterialPageRoute(builder: (_) => BeaconView());
       case RoutePaths.ScanditScanner:
         return MaterialPageRoute(builder: (_) => ScanditScanner());
       default:

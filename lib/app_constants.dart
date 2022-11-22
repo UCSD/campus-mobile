@@ -11,11 +11,6 @@ class RoutePaths {
   static const String Notifications = 'notifications';
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
-  static const String BeaconView = 'profile/beacon_view';
-  static const String AutomaticBluetoothLoggerView =
-      'profile/automatic_bluetooth_logger_view';
-  static const String BluetoothPermissionsView =
-      'profile/bluetooth_permissions_view';
   static const String NotificationsSettingsView =
       'notifications/notifications_settings';
 
@@ -42,6 +37,7 @@ class RoutePaths {
   static const String ParkingLotsView = "parking/parking_lots_view";
   static const String NeighborhoodsView = "parking/neighborhoods_view";
   static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
+  static const String AvailabilityDetailedView = "availability/detailed_view";
 }
 
 class RouteTitles {
@@ -70,6 +66,7 @@ class RouteTitles {
     'dining/dining_list_view': 'Dining',
     'dining/dining_detail_view': 'Dining',
     'dining/dining_nutrition_view': 'Dining',
+    'availability/detailed_view': 'Busyness'
   };
 }
 
@@ -104,6 +101,7 @@ class ErrorConstants {
   static const invalidMedia =
       'DioError [DioErrorType.response]: Http status error [415]';
   static const silentLoginFailed = "Silent login failed";
+  static const locationFailed = "Location was not available";
 }
 
 class ScannerConstants {
@@ -179,7 +177,7 @@ class CardTitleConstants {
     'schedule': 'Classes',
     'shuttle': "Shuttle",
     'dining': 'Dining',
-    'availability': 'Availability',
+    'availability': 'Busyness',
     'events': 'Events',
     'news': 'News',
     'parking': 'Parking',

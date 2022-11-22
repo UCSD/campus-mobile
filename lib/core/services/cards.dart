@@ -24,7 +24,7 @@ class CardsService {
     /// API Manager Service
     try {
       String cardListEndpoint =
-          "https://api-qa.ucsd.edu:8243/mobilecardsservice/v1.0.0/mobilecardslist?version=8&ucsdaffiliation=" +
+          "https://api-qa.ucsd.edu:8243/mobilecardsservice/v1.0.0/mobilecardslist?version=9&ucsdaffiliation=" +
               ucsdAffiliation;
       String _response =
           await _networkHelper.authorizedFetch(cardListEndpoint, headers);
