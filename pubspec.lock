@@ -113,20 +113,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.3.2"
-  cancellation_token:
-    dependency: transitive
-    description:
-      name: cancellation_token
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.0"
-  cancellation_token_http:
-    dependency: "direct main"
-    description:
-      name: cancellation_token_http
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   characters:
     dependency: transitive
     description:
@@ -224,7 +210,7 @@ packages:
       name: dbus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.4"
+    version: "0.7.3"
   device_info:
     dependency: "direct main"
     description:
@@ -817,7 +803,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.0"
+    version: "4.4.0"
   platform:
     dependency: transitive
     description:
@@ -1153,7 +1139,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.0"
+    version: "5.3.1"
   yaml:
     dependency: transitive
     description:
@@ -1162,5 +1148,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.18.0 <3.0.0"
+  dart: ">=2.17.0-0 <3.0.0"
   flutter: ">=2.10.0"
