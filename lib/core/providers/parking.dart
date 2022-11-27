@@ -20,15 +20,15 @@ class ParkingDataProvider extends ChangeNotifier {
   late UserDataProvider _userDataProvider;
 
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  int selectedLots, selectedSpots;
+  int selectedLots = 0, selectedSpots = 0;
   static const MAX_SELECTED_LOTS = 10;
   static const MAX_SELECTED_SPOTS = 3;
-  Map<String?, bool>? _parkingViewState = <String?, bool>{};
-  Map<String?, bool>? _selectedSpotTypesState = <String?, bool>{};
-  Map<String?, Spot>? _spotTypeMap = <String?, Spot>{};
+  Map<String?, bool> _parkingViewState = <String?, bool>{};
+  Map<String?, bool> _selectedSpotTypesState = <String?, bool>{};
+  Map<String?, Spot> _spotTypeMap = <String?, Spot>{};
 
   ///MODELS
   Map<String?, ParkingModel>? _parkingModels;
@@ -42,7 +42,7 @@ class ParkingDataProvider extends ChangeNotifier {
     _isLoading = true;
     selectedSpots = 0;
     selectedLots = 0;
-    _error = null;
+    String? _error;
     notifyListeners();
 
     /// create a new map to ensure we remove all unsupported lots
@@ -52,7 +52,7 @@ class ParkingDataProvider extends ChangeNotifier {
     if (await _parkingService.fetchParkingLotData()) {
       if (_userDataProvider.userProfileModel.selectedParkingLots!.isNotEmpty) {
         _parkingViewState =
-            _userDataProvider.userProfileModel.selectedParkingLots;
+            _userDataProvider.userProfileModel.selectedParkingLots!;
       } else {
         for (ParkingModel model in _parkingService.data!) {
           if (ParkingDefaults.defaultLots.contains(model.locationId)) {
@@ -96,14 +96,14 @@ class ParkingDataProvider extends ChangeNotifier {
           .userProfileModel.selectedParkingSpots!.isNotEmpty) {
         //Load selected spots types from user Profile
         _selectedSpotTypesState =
-            _userDataProvider.userProfileModel.selectedParkingSpots;
+            _userDataProvider.userProfileModel.selectedParkingSpots!;
       } else {
         //Load default spot types
         for (Spot spot in _spotTypeModel!.spots!) {
           if (ParkingDefaults.defaultSpots.contains(spot.spotKey)) {
-            _selectedSpotTypesState![spot.spotKey] = true;
+            _selectedSpotTypesState[spot.spotKey] = true;
           } else {
-            _selectedSpotTypesState![spot.spotKey] = false;
+            _selectedSpotTypesState[spot.spotKey] = false;
           }
         }
       }
@@ -123,7 +123,7 @@ class ParkingDataProvider extends ChangeNotifier {
         }
       });
     } else {
-      _error = _spotTypesService.error;
+      _error = _spotTypesService.error!;
     }
 
     _lastUpdated = DateTime.now();

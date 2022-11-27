@@ -16,8 +16,6 @@ import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
 
-import '../models/username.dart';
-
 class UserDataProvider extends ChangeNotifier {
 
   ///STATES
@@ -35,7 +33,7 @@ class UserDataProvider extends ChangeNotifier {
   AuthenticationService _authenticationService = AuthenticationService();
   UserProfileService _userProfileService = UserProfileService();
   late PushNotificationDataProvider _pushNotificationDataProvider;
-  CardsDataProvider? cardsDataProvider;
+  CardsDataProvider? _cardsDataProvider;
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -64,7 +62,6 @@ class UserDataProvider extends ChangeNotifier {
   /// [_loadSavedAuthenticationModel]
   /// [_loadSavedUserProfile]
   Future loadSavedData() async {
-    //TODO: run both of these at the same time, if possible
     await _loadSavedAuthenticationModel();
 
     await _loadSavedUserProfile();
@@ -115,17 +112,17 @@ class UserDataProvider extends ChangeNotifier {
 
   /// Save username to device
   void _saveUsernameToDevice(String username) {
-    Username.set(username);
+    storage.write(key: 'username', value: username);
   }
 
   /// Get username from device
-  String? getUsernameFromDevice() {
-    return Username.get();
+  Future<String?> getUsernameFromDevice() {
+    return storage.read(key: 'username');
   }
 
   /// Delete username from device
   void _deleteUsernameFromDevice() {
-    Username.delete();
+    storage.delete(key: 'username');
   }
 
   /// Delete password from device
@@ -168,9 +165,9 @@ class UserDataProvider extends ChangeNotifier {
 
       if (await silentLogin()) {
         if (_userProfileModel.classifications!.student!) {
-          cardsDataProvider!.showAllStudentCards();
+          _cardsDataProvider!.showAllStudentCards();
         } else if (_userProfileModel.classifications!.staff!) {
-          cardsDataProvider!.showAllStaffCards();
+          _cardsDataProvider!.showAllStaffCards();
         }
         _isLoading = false;
         notifyListeners();
@@ -195,7 +192,7 @@ class UserDataProvider extends ChangeNotifier {
     _isInSilentLogin = true;
     notifyListeners();
 
-    String? username = Username.get();
+    String? username = await getUsernameFromDevice();
     String? encryptedPassword = await _getEncryptedPasswordFromDevice();
 
     /// Allow silentLogin if username, pw are set, and the user is not logged in
@@ -285,7 +282,7 @@ class UserDataProvider extends ChangeNotifier {
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
         } else {
-          //newModel.username = await getUsernameFromDevice();
+          newModel.username = await getUsernameFromDevice();
           newModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
           newModel.pid = _authenticationModel.pid;
           List<String> castSubscriptions =
@@ -340,6 +337,7 @@ class UserDataProvider extends ChangeNotifier {
   Future<UserProfileModel> _createNewUser(UserProfileModel profile) async {
     await _pushNotificationDataProvider.fetchTopicsList();
     try {
+      profile.username = await getUsernameFromDevice();
       profile.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
       profile.pid = _authenticationModel.pid;
       profile.subscribedTopics = _pushNotificationDataProvider.publicTopics();
@@ -416,6 +414,8 @@ class UserDataProvider extends ChangeNotifier {
 
   AuthenticationModel get authenticationModel => _authenticationModel;
 
+  CardsDataProvider? get cardsDataProvider => _cardsDataProvider;
+
   ///GETTERS FOR STATES
   String? get error => _error;
 
@@ -427,4 +427,5 @@ class UserDataProvider extends ChangeNotifier {
 
   bool get isInSilentLogin => _isInSilentLogin;
 
+  set cardsDataProvider(CardsDataProvider? value) => _cardsDataProvider = value;
 }

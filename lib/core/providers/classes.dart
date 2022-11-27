@@ -12,26 +12,26 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     _lastUpdated = DateTime.now();
     _selectedCourse = 0;
     nextDayWithClass = 'Monday';
-    _enrolledClasses = {
-      'MO': [],
-      'TU': [],
-      'WE': [],
-      'TH': [],
-      'FR': [],
-      'SA': [],
-      'SU': [],
-      'OTHER': [],
-    };
-    _finals = {
-      'MO': [],
-      'TU': [],
-      'WE': [],
-      'TH': [],
-      'FR': [],
-      'SA': [],
-      'SU': [],
-      'OTHER': [],
-    };
+    // _enrolledClasses = {
+    //   'MO': [],
+    //   'TU': [],
+    //   'WE': [],
+    //   'TH': [],
+    //   'FR': [],
+    //   'SA': [],
+    //   'SU': [],
+    //   'OTHER': [],
+    // };
+    // _finals = {
+    //   'MO': [],
+    //   'TU': [],
+    //   'WE': [],
+    //   'TH': [],
+    //   'FR': [],
+    //   'SA': [],
+    //   'SU': [],
+    //   'OTHER': [],
+    // };
 
     _midterms = {
       'MI': [],
@@ -43,18 +43,39 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   ///STATES
-  bool? _isLoading;
+  bool? _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
   int? _selectedCourse;
 
-  String? nextDayWithClass;
+  String nextDayWithClass = 'Monday';
 
   ///MODELS
   ClassScheduleModel? _classScheduleModel;
-  Map<String, List<SectionData>>? _enrolledClasses;
-  Map<String, List<SectionData>>? _finals;
-  Map<String, List<SectionData>>? _midterms;
+  Map<String, List<SectionData>> _enrolledClasses = {
+    'MO': [],
+    'TU': [],
+    'WE': [],
+    'TH': [],
+    'FR': [],
+    'SA': [],
+    'SU': [],
+    'OTHER': [],
+  };
+  Map<String, List<SectionData>> _finals = {
+    'MO': [],
+    'TU': [],
+    'WE': [],
+    'TH': [],
+    'FR': [],
+    'SA': [],
+    'SU': [],
+    'OTHER': [],
+  };
+  Map<String, List<SectionData>> _midterms = {
+    'MI': [],
+    'OTHER': [],
+  };
   AcademicTermModel? _academicTermModel;
   late UserDataProvider _userDataProvider;
 

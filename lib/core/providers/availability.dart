@@ -14,7 +14,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
   /// STATES
   /// TODO: create any other states needed for the feature
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
   Map<String?, bool> _locationViewState = <String?, bool>{};
@@ -66,7 +66,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       reorderLocations(
-          _userDataProvider.userProfileModel.selectedOccuspaceLocations);
+          _userDataProvider.userProfileModel.selectedOccuspaceLocations!);
       _lastUpdated = DateTime.now();
     } else {
       _error = _availabilityService.error;
@@ -95,7 +95,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
     return orderedListOfLots;
   }
 
-  void reorderLocations(List<String?>? order) {
+  void reorderLocations(List<String?> order) {
     ///edit the profile and upload user selected lots
     _userDataProvider.userProfileModel.selectedOccuspaceLocations = order;
     // Commented out as this method updates the userDataProvider before it is set up,

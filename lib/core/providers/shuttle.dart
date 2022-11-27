@@ -19,7 +19,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     init();
   }
 
-  bool? _isLoading;
+  bool _isLoading = false;
   String? _error;
   UserDataProvider? userDataProvider;
   late ShuttleService _shuttleService;
@@ -87,7 +87,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   void reorderStops(List<int?>? order) {
     /// update userProfileModel with selectedStops
-    userDataProvider!.userProfileModel.selectedStops = order;
+    userDataProvider!.userProfileModel.selectedStops = order!;
     if (userDataProvider!.isLoggedIn) {
       /// post updated userProfileModel for logged-in users
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);

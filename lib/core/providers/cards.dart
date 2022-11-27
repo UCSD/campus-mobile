@@ -9,43 +9,43 @@ import 'package:connectivity/connectivity.dart';
 class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
     ///DEFAULT STATES
-    _noInternet = false;
-    _isLoading = false;
-    _cardStates = {};
-    _webCards = {};
+    // _noInternet = false;
+    // _isLoading = false;
+    // _cardStates = {};
+    // _webCards = {};
 
     // Default card order for native cards
-    _cardOrder = [
-      'NativeScanner',
-      'MyStudentChart',
-      'MyUCSDChart',
-      'finals',
-      'schedule',
-      'student_id',
-      'employee_id',
-      'availability',
-      'dining',
-      'events',
-      'shuttle',
-      'parking',
-      'news',
-      'weather',
-      'speed_test',
-    ];
+    // _cardOrder = [
+    //   'NativeScanner',
+    //   'MyStudentChart',
+    //   'MyUCSDChart',
+    //   'finals',
+    //   'schedule',
+    //   'student_id',
+    //   'employee_id',
+    //   'availability',
+    //   'dining',
+    //   'events',
+    //   'shuttle',
+    //   'parking',
+    //   'news',
+    //   'weather',
+    //   'speed_test',
+    // ];
 
     // Native student cards
-    _studentCards = [
-      'finals',
-      'schedule',
-      'student_id',
-    ];
+    // _studentCards = [
+    //   'finals',
+    //   'schedule',
+    //   'student_id',
+    // ];
 
     // Native staff cards
-    _staffCards = [
-      'MyUCSDChart',
-      'staff_info',
-      'employee_id',
-    ];
+    // _staffCards = [
+    //   'MyUCSDChart',
+    //   'staff_info',
+    //   'employee_id',
+    // ];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       _cardStates![card] = true;
@@ -60,15 +60,39 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   ///STATES
-  bool? _noInternet;
-  bool? _isLoading;
+  bool _noInternet = false;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<String>? _cardOrder;
-  Map<String, bool>? _cardStates;
-  Map<String, CardsModel?>? _webCards;
-  late List<String> _studentCards;
-  late List<String> _staffCards;
+  List<String> _cardOrder = [
+              'NativeScanner',
+              'MyStudentChart',
+              'MyUCSDChart',
+              'finals',
+              'schedule',
+              'student_id',
+              'employee_id',
+              'availability',
+              'dining',
+              'events',
+              'shuttle',
+              'parking',
+              'news',
+              'weather',
+              'speed_test',
+              ];
+  Map<String, bool> _cardStates = {};
+  Map<String, CardsModel?>? _webCards = {};
+  List<String> _studentCards = [
+    'finals',
+    'schedule',
+    'student_id',
+  ];
+  List<String> _staffCards = [
+    'MyUCSDChart',
+    'staff_info',
+    'employee_id',
+  ];
   Map<String, CardsModel>? _availableCards;
   late Box _cardOrderBox;
   late Box _cardStateBox;
@@ -192,7 +216,7 @@ class CardsDataProvider extends ChangeNotifier {
       _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
     }
-    _cardOrder = newOrder;
+    _cardOrder = newOrder!;
     _lastUpdated = DateTime.now();
     notifyListeners();
   }
