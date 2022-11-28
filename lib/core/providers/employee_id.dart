@@ -3,17 +3,10 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/employee_id.dart';
 import 'package:flutter/material.dart';
 
-class EmployeeIdDataProvider extends ChangeNotifier {
-  EmployeeIdDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _employeeIdService = EmployeeIdService();
-  }
-
+class EmployeeIdDataProvider extends ChangeNotifier
+{
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
@@ -24,7 +17,7 @@ class EmployeeIdDataProvider extends ChangeNotifier {
   late UserDataProvider _userDataProvider;
 
   ///SERVICES
-  late EmployeeIdService _employeeIdService;
+  EmployeeIdService _employeeIdService = EmployeeIdService();
 
   void fetchData() async {
     _isLoading = true;

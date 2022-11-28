@@ -2,26 +2,18 @@ import 'package:campus_mobile_experimental/core/models/weather.dart';
 import 'package:campus_mobile_experimental/core/services/weather.dart';
 import 'package:flutter/material.dart';
 
-class WeatherDataProvider extends ChangeNotifier {
-  WeatherDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _weatherService = WeatherService();
-    _weatherModel = WeatherModel();
-  }
-
+class WeatherDataProvider extends ChangeNotifier
+{
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
   ///MODELS
-  WeatherModel? _weatherModel;
+  WeatherModel? _weatherModel = WeatherModel();
 
   ///SERVICES
-  late WeatherService _weatherService;
+  late WeatherService _weatherService = WeatherService();
 
   void fetchWeather() async {
     _isLoading = true;

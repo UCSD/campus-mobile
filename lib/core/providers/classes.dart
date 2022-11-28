@@ -5,48 +5,13 @@ import 'package:campus_mobile_experimental/core/services/classes.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ClassScheduleDataProvider extends ChangeNotifier {
-  ClassScheduleDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-    _lastUpdated = DateTime.now();
-    _selectedCourse = 0;
-    nextDayWithClass = 'Monday';
-    // _enrolledClasses = {
-    //   'MO': [],
-    //   'TU': [],
-    //   'WE': [],
-    //   'TH': [],
-    //   'FR': [],
-    //   'SA': [],
-    //   'SU': [],
-    //   'OTHER': [],
-    // };
-    // _finals = {
-    //   'MO': [],
-    //   'TU': [],
-    //   'WE': [],
-    //   'TH': [],
-    //   'FR': [],
-    //   'SA': [],
-    //   'SU': [],
-    //   'OTHER': [],
-    // };
-
-    _midterms = {
-      'MI': [],
-      'OTHER': [],
-    };
-
-    ///INITIALIZE SERVICES
-    _classScheduleService = ClassScheduleService();
-  }
-
+class ClassScheduleDataProvider extends ChangeNotifier
+{
   ///STATES
-  bool? _isLoading = false;
-  DateTime? _lastUpdated;
+  bool _isLoading = false;
+  DateTime _lastUpdated = DateTime.now();
   String? _error;
-  int? _selectedCourse;
+  int _selectedCourse = 0;
 
   String nextDayWithClass = 'Monday';
 
@@ -80,10 +45,10 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   late UserDataProvider _userDataProvider;
 
   ///SERVICES
-  late ClassScheduleService _classScheduleService;
+  ClassScheduleService _classScheduleService = ClassScheduleService();
 
   void fetchData() async {
-    if (!_isLoading!) {
+    if (!_isLoading) {
       _isLoading = true;
       _error = null;
       notifyListeners();
@@ -200,23 +165,23 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
         if (sectionData.specialMtgCode != 'FI' &&
             sectionData.specialMtgCode != 'MI') {
-          _enrolledClasses![day!]!.add(sectionData);
+          _enrolledClasses[day!]!.add(sectionData);
         } else if (sectionData.specialMtgCode == 'FI') {
-          _finals![day!]!.add(sectionData);
+          _finals[day!]!.add(sectionData);
         } else if (sectionData.specialMtgCode == 'MI') {
-          _midterms!['MI']!.add(sectionData);
+          _midterms['MI']!.add(sectionData);
         }
       }
     }
 
     /// chronologically sort classes for each day
-    for (List<SectionData> listOfClasses in _enrolledClasses!.values.toList()) {
+    for (List<SectionData> listOfClasses in _enrolledClasses.values.toList()) {
       listOfClasses.sort((a, b) => _compare(a, b));
     }
-    for (List<SectionData> listOfFinals in _finals!.values.toList()) {
+    for (List<SectionData> listOfFinals in _finals.values.toList()) {
       listOfFinals.sort((a, b) => _compare(a, b));
     }
-    for (List<SectionData> listOfMidterms in _midterms!.values.toList()) {
+    for (List<SectionData> listOfMidterms in _midterms.values.toList()) {
       listOfMidterms.sort((a, b) => _compare(a, b));
       listOfMidterms.sort((a, b) => _compareMidterms(a, b));
     }
@@ -298,7 +263,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       /// if no classes are scheduled for today then find the next day with classes
       int daysToAdd = 1;
 
-      while (_enrolledClasses![today]!.isEmpty && daysToAdd <= 7) {
+      while (_enrolledClasses[today]!.isEmpty && daysToAdd <= 7) {
         today = DateFormat('EEEE')
             .format(DateTime.now().add(Duration(days: daysToAdd)))
             .toString()
@@ -309,8 +274,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         daysToAdd += 1;
       }
 
-      if (_enrolledClasses![today]!.isNotEmpty) {
-        listToReturn.addAll(_enrolledClasses![today]!);
+      if (_enrolledClasses[today]!.isNotEmpty) {
+        listToReturn.addAll(_enrolledClasses[today]!);
       } else {
         listToReturn.addAll([]);
       }

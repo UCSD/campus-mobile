@@ -8,19 +8,12 @@ import 'package:flutter/material.dart';
 
 class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
-    /// DEFAULT STATES
-    _isLoading = false;
-    _messages = [];
-    _messageService = MessageService();
-    _statusText = NotificationsConstants.statusFetching;
-    _hasMoreMessagesToLoad = false;
-    _scrollController = ScrollController();
-    _scrollController!.addListener(() {
+    _scrollController.addListener(() {
       var triggerFetchMoreSize =
-          0.9 * _scrollController!.position.maxScrollExtent;
+          0.9 * _scrollController.position.maxScrollExtent;
 
-      if (_scrollController!.position.pixels > triggerFetchMoreSize) {
-        if (!_isLoading! && _hasMoreMessagesToLoad!) {
+      if (_scrollController.position.pixels > triggerFetchMoreSize) {
+        if (!_isLoading && _hasMoreMessagesToLoad) {
           fetchMessages(false);
         }
       }
@@ -28,19 +21,19 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   /// STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
   int? _previousTimestamp;
-  String? _statusText;
-  bool? _hasMoreMessagesToLoad;
-  ScrollController? _scrollController;
+  String _statusText = NotificationsConstants.statusFetching;
+  bool _hasMoreMessagesToLoad = false;
+  ScrollController _scrollController = ScrollController();
 
   /// MODELS
-  List<MessageElement?>? _messages;
+  List<MessageElement?> _messages = [];
   UserDataProvider? _userDataProvider;
 
-  late MessageService _messageService;
+  MessageService _messageService = MessageService();
 
   //Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
@@ -142,16 +135,16 @@ class MessagesDataProvider extends ChangeNotifier {
   void makeOrderedMessagesList() {
     Map<String?, MessageElement?> uniqueMessages =
         Map<String, MessageElement>();
-    uniqueMessages = Map.fromIterable(_messages!,
+    uniqueMessages = Map.fromIterable(_messages,
         key: (message) => message.messageId, value: (message) => message);
-    _messages!.clear();
-    uniqueMessages.forEach((k, v) => _messages!.add(v));
-    _messages!.sort((a, b) => b!.timestamp!.compareTo(a!.timestamp!));
+    _messages.clear();
+    uniqueMessages.forEach((k, v) => _messages.add(v));
+    _messages.sort((a, b) => b!.timestamp!.compareTo(a!.timestamp!));
   }
 
   updateMessages(List<MessageElement> newMessages) {
-    _messages!.addAll(newMessages);
-    if (_messages!.length == 0) {
+    _messages.addAll(newMessages);
+    if (_messages.length == 0) {
       _statusText = NotificationsConstants.statusNoMessages;
     } else {
       _statusText = NotificationsConstants.statusNone;
@@ -172,10 +165,5 @@ class MessagesDataProvider extends ChangeNotifier {
   ScrollController? get scrollController => _scrollController;
   UserDataProvider? get userDataProvider => _userDataProvider;
 
-  List<MessageElement?>? get messages {
-    if (_messages != null) {
-      return _messages;
-    }
-    return [];
-  }
+  List<MessageElement?> get messages => _messages;
 }

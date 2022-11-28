@@ -11,9 +11,6 @@ import 'location.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {
   ShuttleDataProvider() {
-    /// DEFAULT STATES
-    _isLoading = false;
-
     /// TODO: initialize services here
     // _shuttleService = ShuttleService();
     init();
@@ -185,14 +182,12 @@ class ShuttleDataProvider extends ChangeNotifier {
   List<ShuttleStopModel> get stopsToRender {
     List<ShuttleStopModel> stopsToRenderList = <ShuttleStopModel>[];
     if (fetchedStops != null) {
-      if (userDataProvider!.userProfileModel != null) {
-        for (int i = 0;
-            i < userDataProvider!.userProfileModel.selectedStops!.length;
-            i++) {
-          int stopID = userDataProvider!.userProfileModel.selectedStops![i]!;
-          if (fetchedStops![stopID] != null) {
-            stopsToRenderList.add(fetchedStops![stopID]!);
-          }
+      for (int i = 0;
+      i < userDataProvider!.userProfileModel.selectedStops!.length;
+      i++) {
+        int stopID = userDataProvider!.userProfileModel.selectedStops![i]!;
+        if (fetchedStops![stopID] != null) {
+          stopsToRenderList.add(fetchedStops![stopID]!);
         }
       }
     }

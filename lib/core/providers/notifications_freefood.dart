@@ -10,13 +10,6 @@ import 'package:hive/hive.dart';
 
 class FreeFoodDataProvider extends ChangeNotifier {
   FreeFoodDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _freeFoodService = FreeFoodService();
-    _freeFoodModel = FreeFoodModel();
-
     ///INITIALIZE VALUES
     initializeValues();
   }
@@ -27,17 +20,17 @@ class FreeFoodDataProvider extends ChangeNotifier {
   List<String>? _registeredEvents;
 
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   String? _curId;
   DateTime? _lastUpdated;
   String? _error;
 
   ///MODELS
-  FreeFoodModel? _freeFoodModel;
+  FreeFoodModel _freeFoodModel = FreeFoodModel();
   late MessagesDataProvider _messageDataProvider;
 
   ///SERVICES
-  late FreeFoodService _freeFoodService;
+  FreeFoodService _freeFoodService = FreeFoodService();
 
   void initializeValues() {
     _messageToCount = new HashMap<String, int?>();
@@ -53,7 +46,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
 
   void parseMessages() {
     // initializeValues();
-    List<MessageElement?> messages = _messageDataProvider.messages!;
+    List<MessageElement?> messages = _messageDataProvider.messages;
     messages.forEach((m) async {
       if (m!.audience != null &&
           m.audience!.topics != null &&
@@ -88,9 +81,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
 
     if (await _freeFoodService.fetchData(id)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _freeFoodModel = _freeFoodService.freeFoodModel!;
       _lastUpdated = DateTime.now();
-      _messageToCount[id] = _freeFoodModel!.body!.count;
+      _messageToCount[id] = _freeFoodModel.body!.count;
     } else {
       _error = _freeFoodService.error;
       if (_error != null &&
@@ -113,9 +106,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
 
     if (await _freeFoodService.fetchMaxCount(id)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _freeFoodModel = _freeFoodService.freeFoodModel!;
       _lastUpdated = DateTime.now();
-      _messageToMaxCount[id] = _freeFoodModel!.body!.maxCount;
+      _messageToMaxCount[id] = _freeFoodModel.body!.maxCount;
     } else {
       _error = _freeFoodService.error;
       if (_error != null &&
@@ -151,7 +144,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     await updateRegisteredEvents(_registeredEvents);
 
     if (await _freeFoodService.updateCount(id, body)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _freeFoodModel = _freeFoodService.freeFoodModel!;
       _lastUpdated = DateTime.now();
     } else {
       _error = _freeFoodService.error;
@@ -190,7 +183,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   ///SIMPLE GETTERS
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  FreeFoodModel? get freeFoodModel => _freeFoodModel;
+  FreeFoodModel get freeFoodModel => _freeFoodModel;
   List<String>? get registeredEvents => _registeredEvents;
 
   bool isLoading(String? id) => id == _curId;

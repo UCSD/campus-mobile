@@ -17,10 +17,6 @@ import 'package:provider/provider.dart';
 
 class PushNotificationDataProvider extends ChangeNotifier {
   PushNotificationDataProvider() {
-    ///INITIALIZE SERVICES
-    _notificationService = NotificationService();
-    deviceInfoPlugin = DeviceInfoPlugin();
-    _fcm = FirebaseMessaging.instance;
     initState();
   }
 
@@ -28,8 +24,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
   late BuildContext context;
 
   ///Models
-  late FirebaseMessaging _fcm;
-  late DeviceInfoPlugin deviceInfoPlugin;
+  FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
 
   ///STATES
@@ -40,7 +36,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   Set<String> _receivedMessageIds = Set();
 
   ///SERVICES
-  late NotificationService _notificationService;
+  NotificationService _notificationService = NotificationService();
 
   /// invokes correct method to receive device info
   /// invokes [fetchTopicsList]

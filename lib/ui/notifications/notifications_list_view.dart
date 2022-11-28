@@ -13,7 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NotificationsListView extends StatelessWidget {
+class NotificationsListView extends StatelessWidget
+{
   @override
   Widget build(BuildContext context) {
     initUniLinks(context);
@@ -26,7 +27,7 @@ class NotificationsListView extends StatelessWidget {
   }
 
   Widget buildListView(BuildContext context) {
-    if (Provider.of<MessagesDataProvider>(context).messages!.length == 0) {
+    if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
         if (Provider.of<MessagesDataProvider>(context).isLoading!) {
           // empty notifications view until they load in
@@ -56,7 +57,7 @@ class NotificationsListView extends StatelessWidget {
       physics: AlwaysScrollableScrollPhysics(),
       itemBuilder: _buildMessage,
       controller: Provider.of<MessagesDataProvider>(context).scrollController,
-      itemCount: Provider.of<MessagesDataProvider>(context).messages!.length,
+      itemCount: Provider.of<MessagesDataProvider>(context).messages.length,
       separatorBuilder: (BuildContext context, int index) => Divider(),
     );
   }
@@ -108,7 +109,7 @@ class NotificationsListView extends StatelessWidget {
 
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages![index]!;
+        Provider.of<MessagesDataProvider>(context).messages[index]!;
     FreeFoodDataProvider freefoodProvider =
         Provider.of<FreeFoodDataProvider>(context);
 

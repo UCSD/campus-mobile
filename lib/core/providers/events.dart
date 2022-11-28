@@ -2,27 +2,18 @@ import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/services/events.dart';
 import 'package:flutter/material.dart';
 
-class EventsDataProvider extends ChangeNotifier {
-  EventsDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _eventsService = EventsService();
-
-    _eventsModels = [];
-  }
-
+class EventsDataProvider extends ChangeNotifier
+{
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
   ///MODELS
-  List<EventModel>? _eventsModels;
+  List<EventModel>? _eventsModels = [];
 
   ///SERVICES
-  late EventsService _eventsService;
+  EventsService _eventsService = EventsService();
 
   void fetchEvents() async {
     _isLoading = true;

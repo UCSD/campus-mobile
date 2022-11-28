@@ -6,23 +6,13 @@ import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class MapsDataProvider extends ChangeNotifier {
-  MapsDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-    _noResults = false;
-
-    ///INITIALIZE SERVICES
-    _mapSearchService = MapSearchService();
-
-    _mapSearchModels = [];
-  }
-
+class MapsDataProvider extends ChangeNotifier
+{
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  bool? _noResults;
+  bool _noResults = false;
 
   ///Default coordinates for Price Center
   double? _defaultLat = 32.87990969506536;
@@ -39,7 +29,7 @@ class MapsDataProvider extends ChangeNotifier {
   List<String> _searchHistory = [];
 
   ///SERVICES
-  late MapSearchService _mapSearchService;
+  MapSearchService _mapSearchService = MapSearchService();
 
   void addMarker(int listIndex) {
     final Marker marker = Marker(

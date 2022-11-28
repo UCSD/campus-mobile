@@ -3,35 +3,28 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/availability.dart';
 import 'package:flutter/material.dart';
 
-class AvailabilityDataProvider extends ChangeNotifier {
-  AvailabilityDataProvider() {
-    /// DEFAULT STATES
-    _isLoading = false;
-
-    /// TODO: initialize services here
-    _availabilityService = AvailabilityService();
-  }
-
+class AvailabilityDataProvider extends ChangeNotifier
+{
   /// STATES
-  /// TODO: create any other states needed for the feature
+  /// Note: create any other states needed for the feature here
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
   Map<String?, bool> _locationViewState = <String?, bool>{};
 
   /// MODELS
-  /// TODO: add models that will be needed in this data provider
+  /// Note: add models that will be needed in this data provider here
   Map<String?, AvailabilityModel>? _availabilityModels;
   late UserDataProvider _userDataProvider;
 
   ///
   /// DATA PROVIDERS
-  /// TODO: add data providers that will be needed if this is a dependent data provider
+  /// Note: add data providers that will be needed if this is a dependent data provider here
   /// create setters for each of these providers
 
   /// SERVICES
-  /// TODO: add any services that will be needed for this data provider
-  late AvailabilityService _availabilityService;
+  /// Note: add any services that will be needed for this data provider here
+  AvailabilityService _availabilityService = AvailabilityService();
 
   void fetchAvailability() async {
     _isLoading = true;
@@ -142,12 +135,8 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
   List<AvailabilityModel?> get availabilityModels {
     if (_availabilityModels != null) {
-      ///check if we have an offline _userProfileModel
-      if (_userDataProvider.userProfileModel != null) {
-        return makeOrderedList(
-            _userDataProvider.userProfileModel.selectedOccuspaceLocations);
-      }
-      return _availabilityModels!.values.toList();
+      return makeOrderedList(
+          _userDataProvider.userProfileModel.selectedOccuspaceLocations);
     }
     return [];
   }

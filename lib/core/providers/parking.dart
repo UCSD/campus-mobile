@@ -6,17 +6,8 @@ import 'package:campus_mobile_experimental/core/services/parking.dart';
 import 'package:campus_mobile_experimental/core/services/spot_types.dart';
 import 'package:flutter/material.dart';
 
-class ParkingDataProvider extends ChangeNotifier {
-  ParkingDataProvider()
-      : selectedLots = 0,
-        selectedSpots = 0 {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    _parkingService = ParkingService();
-    _spotTypesService = SpotTypesService();
-  }
-
+class ParkingDataProvider extends ChangeNotifier
+{
   late UserDataProvider _userDataProvider;
 
   ///STATES
@@ -35,8 +26,8 @@ class ParkingDataProvider extends ChangeNotifier {
   SpotTypeModel? _spotTypeModel;
 
   ///SERVICES
-  late ParkingService _parkingService;
-  late SpotTypesService _spotTypesService;
+  ParkingService _parkingService = ParkingService();
+  SpotTypesService _spotTypesService = SpotTypesService();
 
   void fetchParkingData() async {
     _isLoading = true;
@@ -56,9 +47,9 @@ class ParkingDataProvider extends ChangeNotifier {
       } else {
         for (ParkingModel model in _parkingService.data!) {
           if (ParkingDefaults.defaultLots.contains(model.locationId)) {
-            _parkingViewState![model.locationName] = true;
+            _parkingViewState[model.locationName] = true;
           } else {
-            _parkingViewState![model.locationName] = false;
+            _parkingViewState[model.locationName] = false;
           }
         }
       }
@@ -66,9 +57,9 @@ class ParkingDataProvider extends ChangeNotifier {
       for (ParkingModel model in _parkingService.data!) {
         newMapOfLots[model.locationName] = model;
         newMapOfLotStates[model.locationName] =
-            (_parkingViewState![model.locationName] == null
+            (_parkingViewState[model.locationName] == null
                 ? false
-                : _parkingViewState![model.locationName])!;
+                : _parkingViewState[model.locationName])!;
       }
 
       ///replace old list of lots with new one
@@ -76,7 +67,7 @@ class ParkingDataProvider extends ChangeNotifier {
       _parkingViewState = newMapOfLotStates;
 
       //Update number of lots selected
-      _parkingViewState!.forEach((key, value) {
+      _parkingViewState.forEach((key, value) {
         if (value) {
           selectedLots++;
         }
@@ -90,7 +81,7 @@ class ParkingDataProvider extends ChangeNotifier {
       _spotTypeModel = _spotTypesService.spotTypeModel;
       //create map of spot types
       for (Spot spot in _spotTypeModel!.spots!) {
-        _spotTypeMap![spot.spotKey] = spot;
+        _spotTypeMap[spot.spotKey] = spot;
       }
       if (_userDataProvider
           .userProfileModel.selectedParkingSpots!.isNotEmpty) {
@@ -112,12 +103,12 @@ class ParkingDataProvider extends ChangeNotifier {
       Map<String?, bool?> newMapOfSpotTypes = Map<String, bool>();
       for (Spot spot in _spotTypeModel!.spots!) {
         newMapOfSpotTypes[spot.spotKey] =
-            _selectedSpotTypesState![spot.spotKey];
+            _selectedSpotTypesState[spot.spotKey];
       }
       _selectedSpotTypesState = newMapOfSpotTypes.cast<String?, bool>();
 
       //Update number of spots selected
-      _selectedSpotTypesState!.forEach((key, value) {
+      _selectedSpotTypesState.forEach((key, value) {
         if (value) {
           selectedSpots++;
         }
@@ -151,13 +142,13 @@ class ParkingDataProvider extends ChangeNotifier {
   void toggleLot(String? location, int numSelected) {
     selectedLots = numSelected;
     if (selectedLots < MAX_SELECTED_LOTS) {
-      _parkingViewState![location] = !_parkingViewState![location]!;
-      _parkingViewState![location]! ? selectedLots++ : selectedLots--;
+      _parkingViewState[location] = !_parkingViewState[location]!;
+      _parkingViewState[location]! ? selectedLots++ : selectedLots--;
     } else {
       //prevent select
-      if (_parkingViewState![location]!) {
+      if (_parkingViewState[location]!) {
         selectedLots--;
-        _parkingViewState![location] = !_parkingViewState![location]!;
+        _parkingViewState[location] = !_parkingViewState[location]!;
       }
     }
     _userDataProvider.userProfileModel.selectedParkingLots = _parkingViewState;
@@ -168,13 +159,13 @@ class ParkingDataProvider extends ChangeNotifier {
   void toggleSpotSelection(String? spotKey, int spotsSelected) {
     selectedSpots = spotsSelected;
     if (selectedSpots < MAX_SELECTED_SPOTS) {
-      _selectedSpotTypesState![spotKey] = !_selectedSpotTypesState![spotKey]!;
-      _selectedSpotTypesState![spotKey]! ? selectedSpots++ : selectedSpots--;
+      _selectedSpotTypesState[spotKey] = !_selectedSpotTypesState[spotKey]!;
+      _selectedSpotTypesState[spotKey]! ? selectedSpots++ : selectedSpots--;
     } else {
       //prevent select
-      if (_selectedSpotTypesState![spotKey]!) {
+      if (_selectedSpotTypesState[spotKey]!) {
         selectedSpots--;
-        _selectedSpotTypesState![spotKey] = !_selectedSpotTypesState![spotKey]!;
+        _selectedSpotTypesState[spotKey] = !_selectedSpotTypesState[spotKey]!;
       }
     }
     _userDataProvider.userProfileModel.selectedParkingSpots =

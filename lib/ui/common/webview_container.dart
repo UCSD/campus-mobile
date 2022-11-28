@@ -56,7 +56,7 @@ class _WebViewContainerState extends State<WebViewContainer>
 
   @override
   Widget build(BuildContext context) {
-    active = Provider.of<CardsDataProvider>(context).cardStates![widget.cardId];
+    active = Provider.of<CardsDataProvider>(context).cardStates[widget.cardId];
 
     // check if this webCard needs an auth token
     if (widget.requireAuth!) {

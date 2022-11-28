@@ -6,17 +6,10 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/student_id.dart';
 import 'package:flutter/material.dart';
 
-class StudentIdDataProvider extends ChangeNotifier {
-  StudentIdDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _studentIdService = StudentIdService();
-  }
-
+class StudentIdDataProvider extends ChangeNotifier
+{
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
   int? _selectedCourse;
@@ -31,7 +24,7 @@ class StudentIdDataProvider extends ChangeNotifier {
   late UserDataProvider _userDataProvider;
 
   ///SERVICES
-  late StudentIdService _studentIdService;
+  StudentIdService _studentIdService = StudentIdService();
 
   //Fetch Information From Models
   void fetchData() async {
