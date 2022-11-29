@@ -8,16 +8,12 @@ import 'package:campus_mobile_experimental/core/services/notifications_freefood.
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-class FreeFoodDataProvider extends ChangeNotifier {
-  FreeFoodDataProvider() {
-    ///INITIALIZE VALUES
-    initializeValues();
-  }
-
+class FreeFoodDataProvider extends ChangeNotifier
+{
   ///VALUES
-  late HashMap<String, int?> _messageToCount;
-  late HashMap<String, int?> _messageToMaxCount;
-  List<String>? _registeredEvents;
+  late HashMap<String, int?> _messageToCount = new HashMap<String, int?>();
+  late HashMap<String, int?> _messageToMaxCount = new HashMap<String, int?>();
+  List<String> _registeredEvents = [];
 
   ///STATES
   bool _isLoading = false;
@@ -32,16 +28,10 @@ class FreeFoodDataProvider extends ChangeNotifier {
   ///SERVICES
   FreeFoodService _freeFoodService = FreeFoodService();
 
-  void initializeValues() {
-    _messageToCount = new HashMap<String, int?>();
-    _messageToMaxCount = new HashMap<String, int?>();
-    _registeredEvents = [];
-  }
-
   void removeId(String id) {
     _messageToCount.remove(id);
     _messageToMaxCount.remove(id);
-    _registeredEvents!.remove(id);
+    _registeredEvents.remove(id);
   }
 
   void parseMessages() {
@@ -66,7 +56,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future updateRegisteredEvents(List<String>? messageIds) async {
+  Future updateRegisteredEvents(List<String> messageIds) async {
     _registeredEvents = messageIds;
     var box = await Hive.openBox('freefoodRegisteredEvents');
     await box.put('freefoodRegisteredEvents', _registeredEvents);
@@ -127,13 +117,13 @@ class FreeFoodDataProvider extends ChangeNotifier {
 
   void incrementCount(String id) async {
     final Map<String, dynamic> body = {'count': '+1'};
-    _registeredEvents!.add(id);
+    _registeredEvents.add(id);
     updateCount(id, body);
   }
 
   void decrementCount(String id) async {
     final Map<String, dynamic> body = {'count': '-1'};
-    _registeredEvents!.remove(id);
+    _registeredEvents.remove(id);
     updateCount(id, body);
   }
 
