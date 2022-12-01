@@ -18,14 +18,11 @@ class SpeedTestProvider extends ChangeNotifier {
   late Coordinates _coordinates;
   String? _error;
   NetworkHelper _networkHelper = new NetworkHelper();
-  // Dio dio = new Dio();
   Stopwatch _timer = new Stopwatch();
   double? _speedDownload;
   double? _speedUpload;
   double _percentDownloaded = 0.0;
   double _percentUploaded = 0.0;
-  // CancelToken? _cancelTokenDownload;
-  // CancelToken? _cancelTokenUpload;
   var _cancelTokenDownload;
   var _cancelTokenUpload;
   bool _speedTestDone = false;
@@ -115,13 +112,8 @@ class SpeedTestProvider extends ChangeNotifier {
         {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
     notifyListeners();
     try {
-      // _cancelTokenUpload = new CancelToken();
       _cancelTokenUpload = http.CancellationToken();
       _timer.start();
-      // await dio.put(_speedTestModel!.uploadUrl!,
-      //     data: formData,
-      //     onSendProgress: _progressCallbackUpload,
-      //     cancelToken: _cancelTokenUpload);
       await http.put(Uri.parse(_speedTestModel!.uploadUrl!),
           body: formData,
           cancellationToken: _cancelTokenUpload);
@@ -140,12 +132,9 @@ class SpeedTestProvider extends ChangeNotifier {
     // _timer.start();
     notifyListeners();
     try {
-      _cancelTokenDownload = new CancelToken();
-      // _cancelTokenDownload = http.CancellationToken();
+      _cancelTokenDownload = http.CancellationToken();
       _timer.start();
-      // await dio.download(_speedTestModel!.downloadUrl!, (tempDownload.path),
-      //     onReceiveProgress: _progressCallbackDownload,
-      //     cancelToken: _cancelTokenDownload);
+
       await http.get(Uri.parse(_speedTestModel!.downloadUrl!), cancellationToken: _cancelTokenDownload);
     } catch (e) {
       print(e);
@@ -369,7 +358,6 @@ class SpeedTestProvider extends ChangeNotifier {
           .then((response) {
         var splitted = response.split('"');
         String accessToken = splitted[3];
-        // headers["Authorization"] = "Bearer " + response["access_token"];
         headers["Authorization"] = "Bearer " + accessToken;
         return true;
       });
