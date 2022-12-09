@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class CMAppBar extends StatelessWidget {
@@ -20,7 +21,6 @@ class CMAppBar extends StatelessWidget {
           preferredSize: Size.fromHeight(42),
           child: AppBar(
               backgroundColor: ColorPrimary,
-              brightness: Brightness.dark,
               primary: true,
               centerTitle: true,
               title: title == null
@@ -56,13 +56,13 @@ class CMAppBar extends StatelessWidget {
                             .changeTitle(CustomAppBar().appBar.title);
                       },
                     ))
-              ]));
+              ],
+              systemOverlayStyle: SystemUiOverlayStyle.light));
     } else {
       return PreferredSize(
         preferredSize: Size.fromHeight(42),
         child: AppBar(
           backgroundColor: ColorPrimary,
-          brightness: Brightness.dark,
           primary: true,
           centerTitle: true,
           title: title == null
@@ -72,6 +72,7 @@ class CMAppBar extends StatelessWidget {
                   height: 28,
                 )
               : Text(title!),
+          systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       );
     }
