@@ -104,7 +104,8 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
-        primary: Theme.of(context).buttonColor,
+        // primary: Theme.of(context).buttonColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'Manage Locations',

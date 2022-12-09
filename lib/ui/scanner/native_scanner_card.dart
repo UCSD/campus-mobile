@@ -67,7 +67,8 @@ class NativeScannerCard extends StatelessWidget {
   Widget buildActionButton(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        primary: Theme.of(context).buttonColor,
+        // primary: Theme.of(context).buttonColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text(
         getActionButtonText(context),
