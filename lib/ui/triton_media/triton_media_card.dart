@@ -9,13 +9,13 @@ import 'package:provider/provider.dart';
 
 const String cardId = 'events';
 //edit these files
-class EventsCard extends StatelessWidget {
-  Widget buildEventsCard(List<EventModel>? data) {
-    return EventsList(listSize: 3);
+class MediaCard extends StatelessWidget {
+  Widget buildEventsCard(List<MediaModel>? data) {
+    return MediaList(listSize: 3);
   }
 
   List<Widget> buildActionButtons(
-      BuildContext context, List<EventModel>? data) {
+      BuildContext context, List<MediaModel>? data) {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
@@ -25,7 +25,7 @@ class EventsCard extends StatelessWidget {
         'View All',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.EventsViewAll, arguments: data);
+        Navigator.pushNamed(context, RoutePaths.MediaViewAll, arguments: data);
       },
     ));
     return actionButtons;
@@ -38,14 +38,14 @@ class EventsCard extends StatelessWidget {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
-          Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
-      isLoading: Provider.of<EventsDataProvider>(context).isLoading,
+          Provider.of<MediaDataProvider>(context, listen: false).fetchEvents(),
+      isLoading: Provider.of<MediaDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<EventsDataProvider>(context).error,
+      errorText: Provider.of<MediaDataProvider>(context).error,
       child: () => buildEventsCard(
-          Provider.of<EventsDataProvider>(context).eventsModels),
+          Provider.of<MediaDataProvider>(context).eventsModels),
       actionButtons: buildActionButtons(
-          context, Provider.of<EventsDataProvider>(context).eventsModels),
+          context, Provider.of<MediaDataProvider>(context).eventsModels),
     );
   }
 }

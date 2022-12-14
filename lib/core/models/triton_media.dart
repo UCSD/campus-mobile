@@ -4,14 +4,14 @@
 
 import 'dart:convert';
 
-List<EventModel> eventModelFromJson(String str) =>
-    List<EventModel>.from(json.decode(str).map((x) => EventModel.fromJson(x)));
+List<MediaModel> eventModelFromJson(String str) =>
+    List<MediaModel>.from(json.decode(str).map((x) => MediaModel.fromJson(x)));
 
-String eventModelToJson(List<EventModel> data) =>
+String mediaModelToJson(List<MediaModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class EventModel {
-  EventModel({
+class MediaModel {
+  MediaModel({
     this.title,
     this.description,
     this.startDate,
@@ -35,7 +35,7 @@ class EventModel {
   List<String>? tags;
   String? location;
 
-  factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
+  factory MediaModel.fromJson(Map<String, dynamic> json) => MediaModel(
         title: json["title"] == null ? null : json["title"],
         description: json["description"] == null ? null : json["description"],
         startDate: DateTime.tryParse(json["startDate"]),

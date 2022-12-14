@@ -1,14 +1,14 @@
-import 'package:campus_mobile_experimental/core/models/events.dart';
-import 'package:campus_mobile_experimental/core/services/events.dart';
+import 'package:campus_mobile_experimental/core/models/triton_media.dart';
+import 'package:campus_mobile_experimental/core/services/triton_media.dart';
 import 'package:flutter/material.dart';
 
-class EventsDataProvider extends ChangeNotifier {
-  EventsDataProvider() {
+class MediaDataProvider extends ChangeNotifier {
+  MediaDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
 
     ///INITIALIZE SERVICES
-    _eventsService = EventsService();
+    _eventsService = MediaService();
 
     _eventsModels = [];
   }
@@ -19,17 +19,17 @@ class EventsDataProvider extends ChangeNotifier {
   String? _error;
 
   ///MODELS
-  List<EventModel>? _eventsModels;
+  List<MediaModel>? _eventsModels;
 
   ///SERVICES
-  late EventsService _eventsService;
+  late MediaService _eventsService;
 
   void fetchEvents() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
     if (await _eventsService.fetchData()) {
-      _eventsModels = _eventsService.eventsModels;
+      _eventsModels = _eventsService.mediaModels;
       _lastUpdated = DateTime.now();
 
       /// check to see if the events feed returns nothing back
@@ -47,5 +47,5 @@ class EventsDataProvider extends ChangeNotifier {
   bool? get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  List<EventModel>? get eventsModels => _eventsModels;
+  List<MediaModel>? get eventsModels => _eventsModels;
 }

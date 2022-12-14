@@ -6,22 +6,22 @@ import 'package:campus_mobile_experimental/ui/triton_media/triton_media_tile.dar
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class EventsList extends StatelessWidget {
-  const EventsList({Key? key, this.listSize}) : super(key: key);
+class MediaList extends StatelessWidget {
+  const MediaList({Key? key, this.listSize}) : super(key: key);
 
   final int? listSize;
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
+    return Provider.of<MediaDataProvider>(context).isLoading!
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : buildEventsList(
-            Provider.of<EventsDataProvider>(context).eventsModels!, context);
+            Provider.of<MediaDataProvider>(context).eventsModels!, context);
   }
 
-  Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
+  Widget buildEventsList(List<MediaModel> listOfEvents, BuildContext context) {
     final List<Widget> eventTiles = [];
 
     /// check to see if we want to display only a limited number of elements
@@ -39,8 +39,8 @@ class EventsList extends StatelessWidget {
     }
 
     for (int i = 0; i < size; i++) {
-      final EventModel item = listOfEvents[i];
-      final tile = EventTile(data: item);
+      final MediaModel item = listOfEvents[i];
+      final tile = MediaTile(data: item);
       final spacer = SizedBox(
         width: 5,
       );
@@ -61,7 +61,7 @@ class EventsList extends StatelessWidget {
       return ContainerView(
         child: listOfEvents.isEmpty
             ? Center(child: Text('No events found.'))
-            : EventsAll(),
+            : MediaAll(),
       );
     }
     // ListView(

@@ -5,33 +5,33 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class EventTile extends StatelessWidget {
-  const EventTile({Key? key, required this.data}) : super(key: key);
-  final EventModel data;
+class MediaTile extends StatelessWidget {
+  const MediaTile({Key? key, required this.data}) : super(key: key);
+  final MediaModel data;
   final double tileWidth = 190;
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
+    return Provider.of<MediaDataProvider>(context).isLoading!
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
-        : buildEventTile(context);
+        : buildMediaTile(context);
   }
 
-  Widget buildEventTile(BuildContext context) {
+  Widget buildMediaTile(BuildContext context) {
     return Container(
       width: tileWidth,
       height: 300,
       margin: EdgeInsets.zero,
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, RoutePaths.EventDetailView,
+          Navigator.pushNamed(context, RoutePaths.MediaDetailView,
               arguments: data);
         },
         child: Column(
           children: [
-            eventImageLoader(data.imageThumb),
+            mediaImageLoader(data.imageThumb),
             SizedBox(
               height: 145,
               width: tileWidth,
@@ -60,7 +60,7 @@ class EventTile extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(bottom: 5),
                         ),
-                        eventsDateTime(data),
+                        mediaDateTime(data),
                       ],
                     ),
                   ),
@@ -73,7 +73,7 @@ class EventTile extends StatelessWidget {
     );
   }
 
-  Widget eventImageLoader(String? url) {
+  Widget mediaImageLoader(String? url) {
     return url!.isEmpty
         ? Container(
             child: Image(
@@ -103,7 +103,7 @@ class EventTile extends StatelessWidget {
           );
   }
 
-  Widget eventsDateTime(EventModel data) {
+  Widget mediaDateTime(MediaModel data) {
     try {
       // Separate dates from times
       String startMonthDayYear =

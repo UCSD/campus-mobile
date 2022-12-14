@@ -1,18 +1,18 @@
 import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/common/event_time.dart';
+import 'package:campus_mobile_experimental/ui/common/media_time.dart';
 import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class EventDetailView extends StatelessWidget {
-  const EventDetailView({Key? key, required this.data}) : super(key: key);
-  final EventModel data;
+class MediaDetailView extends StatelessWidget {
+  const MediaDetailView({Key? key, required this.data}) : super(key: key);
+  final MediaModel data;
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
+    return Provider.of<MediaDataProvider>(context).isLoading!
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
@@ -74,7 +74,7 @@ class EventDetailView extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 10.0),
                   ),
-                  Center(child: EventTime(data: data)),
+                  Center(child: MediaTime(data: data)),
                   data.description != null && data.description!.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.all(20.0),

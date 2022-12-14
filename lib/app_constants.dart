@@ -16,9 +16,12 @@ class RoutePaths {
 
   static const String NewsViewAll = 'news/newslist';
   static const String EventsViewAll = 'events/eventslist';
-  static const String EventsAll = 'events/events_view_all';
+  static const String EventsAll = 'triton_media/triton_media_view_all';
+  static const String MediaViewAll = 'triton_media/triton_media_list';
+  static const String MediaAll = 'events/events_view_all';
   static const String NewsDetailView = 'news/news_detail_view';
   static const String EventDetailView = 'events/event_detail_view';
+  static const String MediaDetailView = 'triton_media/triton_media_detail_view';
   static const String LinksViewAll = 'links/links_list';
   static const String ClassScheduleViewAll = 'class/classList';
   static const String ManageAvailabilityView =

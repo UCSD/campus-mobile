@@ -1,20 +1,20 @@
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/events.dart';
+import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 
-class EventsService {
+class MediaService {
   final String endpoint =
       'https://hmczfnmm84.execute-api.us-west-2.amazonaws.com/qa/v2/events/student';
 
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<EventModel>? _data;
+  List<MediaModel>? _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  EventsService() {
+  MediaService() {
     fetchData();
   }
 
@@ -38,7 +38,7 @@ class EventsService {
   }
 
   String? get error => _error;
-  List<EventModel>? get eventsModels => _data;
+  List<MediaModel>? get mediaModels => _data;
   bool get isLoading => _isLoading;
   DateTime? get lastUpdated => _lastUpdated;
 }
