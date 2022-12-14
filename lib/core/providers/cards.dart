@@ -26,6 +26,7 @@ class CardsDataProvider extends ChangeNotifier {
       'availability',
       'dining',
       'events',
+      'triton_media',
       'shuttle',
       'parking',
       'news',
