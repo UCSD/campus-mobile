@@ -38,7 +38,7 @@ class MediaCard extends StatelessWidget {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
-          Provider.of<MediaDataProvider>(context, listen: false).fetchEvents(),
+          Provider.of<MediaDataProvider>(context, listen: false).fetchMedia(),
       isLoading: Provider.of<MediaDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<MediaDataProvider>(context).error,

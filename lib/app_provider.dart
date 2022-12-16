@@ -63,7 +63,7 @@ List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<MediaDataProvider>(
     create: (_) {
       MediaDataProvider _mediaDataProvider = MediaDataProvider();
-      _mediaDataProvider.fetchEvents();
+      _mediaDataProvider.fetchMedia();
       return _mediaDataProvider;
     },
   ),

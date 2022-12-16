@@ -8,9 +8,9 @@ class MediaDataProvider extends ChangeNotifier {
     _isLoading = false;
 
     ///INITIALIZE SERVICES
-    _eventsService = MediaService();
+    _mediaService = MediaService();
 
-    _eventsModels = [];
+    _mediaModels = [];
   }
 
   ///STATES
@@ -19,25 +19,25 @@ class MediaDataProvider extends ChangeNotifier {
   String? _error;
 
   ///MODELS
-  List<MediaModel>? _eventsModels;
+  List<MediaModel>? _mediaModels;
 
   ///SERVICES
-  late MediaService _eventsService;
+  late MediaService _mediaService;
 
-  void fetchEvents() async {
+  void fetchMedia() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    if (await _eventsService.fetchData()) {
-      _eventsModels = _eventsService.mediaModels;
+    if (await _mediaService.fetchData()) {
+      _mediaModels = _mediaService.mediaModels;
       _lastUpdated = DateTime.now();
 
       /// check to see if the events feed returns nothing back
-      if (_eventsModels!.isEmpty) {
+      if (_mediaModels!.isEmpty) {
         _error = 'No events found.';
       }
     } else {
-      _error = _eventsService.error;
+      _error = _mediaService.error;
     }
     _isLoading = false;
     notifyListeners();
@@ -47,5 +47,5 @@ class MediaDataProvider extends ChangeNotifier {
   bool? get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  List<MediaModel>? get eventsModels => _eventsModels;
+  List<MediaModel>? get eventsModels => _mediaModels;
 }

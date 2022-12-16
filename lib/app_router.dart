@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
+import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/availability/manage_availability_view.dart';
@@ -43,7 +44,6 @@ import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'core/models/triton_media.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
