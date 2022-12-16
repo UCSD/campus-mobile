@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/ui/triton_media/triton_media_list.dar
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-const String cardId = 'events';
+const String cardId = 'triton_media';
 //edit these files
 class MediaCard extends StatelessWidget {
   Widget buildEventsCard(List<MediaModel>? data) {

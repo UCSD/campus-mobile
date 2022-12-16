@@ -60,6 +60,13 @@ List<SingleChildWidget> independentServices = [
       return _eventsDataProvider;
     },
   ),
+  ChangeNotifierProvider<MediaDataProvider>(
+    create: (_) {
+      MediaDataProvider _mediaDataProvider = MediaDataProvider();
+      _mediaDataProvider.fetchEvents();
+      return _mediaDataProvider;
+    },
+  ),
   ChangeNotifierProvider<WeatherDataProvider>(
     create: (_) {
       WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
