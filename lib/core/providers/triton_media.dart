@@ -47,5 +47,5 @@ class MediaDataProvider extends ChangeNotifier {
   bool? get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  List<MediaModel>? get eventsModels => _mediaModels;
+  List<MediaModel>? get mediaModels => _mediaModels;
 }

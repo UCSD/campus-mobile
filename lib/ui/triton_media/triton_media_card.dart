@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 const String cardId = 'triton_media';
 //edit these files
 class MediaCard extends StatelessWidget {
-  Widget buildEventsCard(List<MediaModel>? data) {
+  Widget buildMediaCard(List<MediaModel>? data) {
     return MediaList(listSize: 3);
   }
 
@@ -42,10 +42,10 @@ class MediaCard extends StatelessWidget {
       isLoading: Provider.of<MediaDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<MediaDataProvider>(context).error,
-      child: () => buildEventsCard(
-          Provider.of<MediaDataProvider>(context).eventsModels),
+      child: () => buildMediaCard(
+          Provider.of<MediaDataProvider>(context).mediaModels),
       actionButtons: buildActionButtons(
-          context, Provider.of<MediaDataProvider>(context).eventsModels),
+          context, Provider.of<MediaDataProvider>(context).mediaModels),
     );
   }
 }

@@ -26,7 +26,7 @@ class MediaService {
       String _response = await _networkHelper.fetchData(endpoint);
 
       /// parse data
-      final data = eventModelFromJson(_response);
+      final data = mediaModelFromJson(_response);
       _isLoading = false;
       _data = data;
       return true;

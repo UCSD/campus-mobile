@@ -15,19 +15,19 @@ class MediaAll extends StatelessWidget {
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : buildMediaList(
-            Provider.of<MediaDataProvider>(context).eventsModels!, context);
+            Provider.of<MediaDataProvider>(context).mediaModels!, context);
   }
 
-  Widget buildMediaList(List<MediaModel> listOfEvents, BuildContext context) {
+  Widget buildMediaList(List<MediaModel> listOfMedia, BuildContext context) {
     final List<Widget> mediaTiles = [];
 
-    for (int i = 0; i < listOfEvents.length; i++) {
-      final MediaModel item = listOfEvents[i];
+    for (int i = 0; i < listOfMedia.length; i++) {
+      final MediaModel item = listOfMedia[i];
       final tile = MediaTile(data: item);
       mediaTiles.add(tile);
     }
 
-    if (listOfEvents.length > 0) {
+    if (listOfMedia.length > 0) {
       return GridView.count(
         crossAxisCount: 2,
         crossAxisSpacing: 1,

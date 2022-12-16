@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-List<MediaModel> eventModelFromJson(String str) =>
+List<MediaModel> mediaModelFromJson(String str) =>
     List<MediaModel>.from(json.decode(str).map((x) => MediaModel.fromJson(x)));
 
 String mediaModelToJson(List<MediaModel> data) =>

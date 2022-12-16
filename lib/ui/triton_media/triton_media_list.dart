@@ -18,11 +18,11 @@ class MediaList extends StatelessWidget {
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : buildEventsList(
-            Provider.of<MediaDataProvider>(context).eventsModels!, context);
+            Provider.of<MediaDataProvider>(context).mediaModels!, context);
   }
 
-  Widget buildEventsList(List<MediaModel> listOfEvents, BuildContext context) {
-    final List<Widget> eventTiles = [];
+  Widget buildEventsList(List<MediaModel> listOfMedia, BuildContext context) {
+    final List<Widget> mediaTiles = [];
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
@@ -34,18 +34,18 @@ class MediaList extends StatelessWidget {
       size = listSize;
 
     /// check to see if we have at least 3 events
-    if (size > listOfEvents.length) {
-      size = listOfEvents.length;
+    if (size > listOfMedia.length) {
+      size = listOfMedia.length;
     }
 
     for (int i = 0; i < size; i++) {
-      final MediaModel item = listOfEvents[i];
+      final MediaModel item = listOfMedia[i];
       final tile = MediaTile(data: item);
       final spacer = SizedBox(
         width: 5,
       );
-      eventTiles.add(tile);
-      eventTiles.add(spacer);
+      mediaTiles.add(tile);
+      mediaTiles.add(spacer);
     }
 
     if (listSize != null) {
@@ -54,13 +54,13 @@ class MediaList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: eventTiles,
+          children: mediaTiles,
         ),
       );
     } else {
       return ContainerView(
-        child: listOfEvents.isEmpty
-            ? Center(child: Text('No events found.'))
+        child: listOfMedia.isEmpty
+            ? Center(child: Text('No media found.'))
             : MediaAll(),
       );
     }
