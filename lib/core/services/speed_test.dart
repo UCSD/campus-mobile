@@ -16,7 +16,7 @@ class SpeedTestService {
     try {
       if (Platform.isAndroid) {
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        if (!androidInfo.isPhysicalDevice) {
+        if (!androidInfo.isPhysicalDevice!) {
           return true;
         }
       } else if (Platform.isIOS) {
