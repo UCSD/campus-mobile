@@ -109,7 +109,8 @@ class _ParkingCardState extends State<ParkingCard> {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
-        primary: Theme.of(context).buttonColor,
+        // primary: Theme.of(context).buttonColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'Manage Lots',
@@ -120,7 +121,8 @@ class _ParkingCardState extends State<ParkingCard> {
     ));
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
-        primary: Theme.of(context).buttonColor,
+        // primary: Theme.of(context).buttonColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'Manage Spots',

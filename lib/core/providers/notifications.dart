@@ -153,7 +153,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   showNotification(RemoteMessage message) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-            'your channel id', 'your channel name', 'your channel description',
+            'your channel id', 'your channel name',
             icon: '@drawable/ic_notif_round',
             largeIcon:
                 const DrawableResourceAndroidBitmap('@drawable/app_icon'),

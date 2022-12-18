@@ -6,7 +6,7 @@ class NutritionFactsView extends StatelessWidget {
   const NutritionFactsView(
       {Key? key, required this.data, this.disclaimer, this.disclaimerEmail})
       : super(key: key);
-  final MenuItem data;
+  final DiningMenuItem data;
   final String? disclaimer;
   final String? disclaimerEmail;
   @override

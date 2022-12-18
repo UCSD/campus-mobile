@@ -1,4 +1,3 @@
-<!-- codemagic test -->
 ## UC San Diego - Experimental
 
 UC San Diego - Experimental is the rolling release of the UC San Diego Mobile app. This rolling release is for users interested in developing for, and experimenting with, the absolute latest version of the UC San Diego Mobile app.
@@ -13,7 +12,7 @@ We look forward to helping you become a published app developer!
 ## How to Contribute
 
 ### Install Flutter
-Campus Mobile supports Flutter version [2.10.5](https://docs.flutter.dev/development/tools/sdk/releases)
+Campus Mobile supports [Flutter's stable channel](https://docs.flutter.dev/development/tools/sdk/upgrading#switching-flutter-channels)
 
 ### Creating a Fork
 

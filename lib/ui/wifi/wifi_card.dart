@@ -6,9 +6,7 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -256,7 +254,9 @@ class _WiFiCardState extends State<WiFiCard>
                               TextButton(
                                   child: Text("Dismiss"),
                                   style: TextButton.styleFrom(
-                                      primary: Theme.of(context).buttonColor),
+                                    // primary: Theme.of(context).buttonColor,
+                                    primary: Theme.of(context).backgroundColor,
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   })
@@ -344,7 +344,10 @@ class _WiFiCardState extends State<WiFiCard>
                                 TextButton(
                                     child: Text("Dismiss"),
                                     style: TextButton.styleFrom(
-                                        primary: Theme.of(context).buttonColor),
+                                      // primary: Theme.of(context).buttonColor
+                                      primary:
+                                          Theme.of(context).backgroundColor,
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       _buttonEnabled = false;
@@ -455,7 +458,10 @@ class _WiFiCardState extends State<WiFiCard>
                                 TextButton(
                                     child: Text("Dismiss"),
                                     style: TextButton.styleFrom(
-                                        primary: Theme.of(context).buttonColor),
+                                      // primary: Theme.of(context).buttonColor,
+                                      primary:
+                                          Theme.of(context).backgroundColor,
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       _buttonEnabled = false;

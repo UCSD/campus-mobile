@@ -47,7 +47,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
     for (AvailabilityModel? model
-    in _availabilityDataProvider.availabilityModels) {
+        in _availabilityDataProvider.availabilityModels) {
       if (model != null) {
         list.add(ListTile(
           key: Key(model.name.toString()),
@@ -60,7 +60,8 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
           trailing: Switch(
             value: Provider.of<AvailabilityDataProvider>(context)
                 .locationViewState[model.name]!,
-            activeColor: Theme.of(context).buttonColor,
+            // activeColor: Theme.of(context).buttonColor,
+            activeColor: Theme.of(context).backgroundColor,
             onChanged: (_) {
               _availabilityDataProvider.toggleLocation(model.name);
             },

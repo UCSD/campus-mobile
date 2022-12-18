@@ -52,12 +52,12 @@ class _DiningMenuListState extends State<DiningMenuList> {
         filters.add('Dinner');
     }
     if (menu!.menuItems != null) {
-      List<MenuItem> menuList =
+      List<DiningMenuItem> menuList =
           Provider.of<DiningDataProvider>(context, listen: false)
               .getMenuItems(widget.model.id, filters)!;
       List<Widget> list = [];
       if (menuList.length > 0) {
-        for (MenuItem item in menuList) {
+        for (DiningMenuItem item in menuList) {
           list.add(GestureDetector(
             child: RichText(
               textAlign: TextAlign.start,
@@ -66,7 +66,8 @@ class _DiningMenuListState extends State<DiningMenuList> {
                   TextSpan(
                     text: item.name,
                     style: TextStyle(
-                      color: Theme.of(context).buttonColor,
+                      // color: Theme.of(context).buttonColor,
+                      color: Theme.of(context).backgroundColor,
                       fontSize: 18,
                     ),
                   ),
@@ -133,7 +134,8 @@ class _DiningMenuListState extends State<DiningMenuList> {
         isSelected: Provider.of<DiningDataProvider>(context).filtersSelected,
         textStyle: TextStyle(fontSize: 18),
         selectedColor: Theme.of(context).textTheme.button!.color,
-        fillColor: Theme.of(context).buttonColor,
+        // fillColor: Theme.of(context).buttonColor,
+        fillColor: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(10),
         constraints: BoxConstraints.expand(
             width: (MediaQuery.of(context).size.width - 40) * .33, height: 38),
@@ -214,7 +216,8 @@ class LabeledRadio extends StatelessWidget {
             value: value,
             groupValue: groupValue,
             onChanged: onChanged,
-            activeColor: Theme.of(context).buttonColor,
+            // activeColor: Theme.of(context).buttonColor,
+            activeColor: Theme.of(context).backgroundColor,
           ),
           Container(
             child: Text(

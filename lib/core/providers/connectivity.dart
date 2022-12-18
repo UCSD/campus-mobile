@@ -53,7 +53,8 @@ class InternetConnectivityProvider extends ChangeNotifier {
           onPressed: () => Navigator.pop(context, 'Ok'),
           child: Text('Ok'),
           style: TextButton.styleFrom(
-            primary: Theme.of(context).buttonColor,
+            // primary: Theme.of(context).buttonColor,
+            primary: Theme.of(context).backgroundColor,
           ),
         ),
       ],
