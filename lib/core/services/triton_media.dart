@@ -5,7 +5,7 @@ import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 
 class MediaService {
   final String endpoint =
-      'https://hmczfnmm84.execute-api.us-west-2.amazonaws.com/qa/v2/events/student';
+      'https://mobile.ucsd.edu/replatform/v1/qa/integrations/triton-media/triton-media.json';
 
   bool _isLoading = false;
   DateTime? _lastUpdated;
