@@ -6,10 +6,53 @@ import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-class MediaDetailView extends StatelessWidget {
+
+class MediaDetailView extends StatefulWidget {
   const MediaDetailView({Key? key, required this.data}) : super(key: key);
   final MediaModel data;
+
+  @override
+  State<MediaDetailView> createState() => _MediaDetailView();
+}
+
+class _MediaDetailView extends State<MediaDetailView> {
+  // _MediaDetailView({Key? key, required this.data});
+  // final MediaModel data;
+
+  final player = AudioPlayer();
+  bool isPlaying = false;
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
+
+  String formatTime(int seconds) {
+    return '${(Duration(seconds: seconds))}'.split('.')[0].padLeft(8, '0');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    player.onPlayerStateChanged.listen((state) {
+      setState(() {
+        isPlaying = state == PlayerState.playing;
+      });
+    });
+
+    player.onDurationChanged.listen((newDuration) {
+      setState(() {
+        duration = newDuration;
+      });
+    });
+
+    player.onPositionChanged.listen((newPosition) {
+      setState(() {
+        position = newPosition;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Provider.of<MediaDataProvider>(context).isLoading!
@@ -32,10 +75,10 @@ class MediaDetailView extends StatelessWidget {
           decoration: BoxDecoration(
               image: DecorationImage(
             fit: BoxFit.fill,
-            image: (data.imageHQ!.isEmpty)
+            image: (widget.data.imageHQ!.isEmpty)
                 ? AssetImage('assets/images/UCSDMobile_banner.png')
                     as ImageProvider
-                : NetworkImage(data.imageHQ!),
+                : NetworkImage(widget.data.imageHQ!),
           )),
         ),
         Container(
@@ -50,7 +93,7 @@ class MediaDetailView extends StatelessWidget {
                     color: Theme.of(context).primaryColor,
                   ),
                   Text(
-                    data.title!,
+                    widget.data.title!,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
@@ -60,9 +103,9 @@ class MediaDetailView extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 10.0),
                   ),
-                  data.location != null && data.location!.isNotEmpty
+                  widget.data.location != null && widget.data.location!.isNotEmpty
                       ? LinkifyWithCatch(
-                          text: "Where: " + data.location!,
+                          text: "Where: " + widget.data.location!,
                           looseUrl: true,
                           style: TextStyle(
                               fontSize: 16,
@@ -74,21 +117,83 @@ class MediaDetailView extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 10.0),
                   ),
-                  Center(child: MediaTime(data: data)),
-                  data.description != null && data.description!.isNotEmpty
+                  Center(child: MediaTime(data: widget.data)),
+                  widget.data.description != null && widget.data.description!.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Text(
-                            data.description!,
+                            widget.data.description!,
                             style: TextStyle(fontSize: 16, height: 1.3),
                           ),
                         )
                       : Container(),
-                  data.link != null && data.link!.isNotEmpty
-                      ? LearnMoreButton(link: data.link)
+                  widget.data.link != null && widget.data.link!.isNotEmpty
+                      ? LearnMoreButton(link: widget.data.link)
                       : Container(),
+
                 ],
               ),
+            ),
+          ),
+        ),
+        Container(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon:const Icon(Icons.replay_10_outlined),
+                      onPressed: (){
+                        player.stop();
+                        },
+                    ),
+                    SizedBox(width: 20,),
+                    IconButton(
+                      icon: Icon(
+                        isPlaying ? Icons.pause : Icons.play_arrow,
+                      ),
+                      onPressed: (){
+                        if(isPlaying)
+                        {
+                          player.pause();
+                        }
+                        else{
+                          player.play(AssetSource('theme_01.mp3'));
+                        }
+                        },
+                    ),
+                    SizedBox(width: 20,),
+                    IconButton(
+                      icon:const Icon(Icons.forward_10_outlined),
+                      onPressed: (){
+                        player.stop();},
+                    ),
+                  ],
+                ),
+                Slider(
+                  min: 0,
+                  max: duration.inSeconds.toDouble(),
+                  value: position.inSeconds.toDouble(),
+                  onChanged: (value) {
+                    final position = Duration(seconds: value.toInt());
+                    player.seek(position);
+                    player.resume();
+                  },
+                ),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(formatTime(position.inSeconds)),
+                      Text(formatTime((duration - position).inSeconds)),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         )
