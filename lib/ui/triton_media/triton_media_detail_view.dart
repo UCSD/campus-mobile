@@ -145,15 +145,17 @@ class _MediaDetailView extends State<MediaDetailView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
+                      color: Colors.black,
                       icon:const Icon(Icons.replay_10_outlined),
                       onPressed: (){
                         player.stop();
                         },
                     ),
-                    SizedBox(width: 20,),
                     IconButton(
+                      color: Colors.black,
+                      iconSize: 50.0,
                       icon: Icon(
-                        isPlaying ? Icons.pause : Icons.play_arrow,
+                        isPlaying ? Icons.pause : Icons.play_arrow
                       ),
                       onPressed: (){
                         if(isPlaying)
@@ -165,8 +167,8 @@ class _MediaDetailView extends State<MediaDetailView> {
                         }
                         },
                     ),
-                    SizedBox(width: 20,),
                     IconButton(
+                      color: Colors.black,
                       icon:const Icon(Icons.forward_10_outlined),
                       onPressed: (){
                         player.stop();},
