@@ -50,6 +50,7 @@ dependencies:
       url: https://github.com/UCSD/wifi_connection.git
       ref: 179eb3a322b9d947752b4ff4e810582c3e262e47
   cancellation_token_http: ^1.1.0
+  audioplayers: ^1.1.1
 dev_dependencies:
   build_runner: 2.0.2
   flutter_test:
@@ -58,5 +59,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/theme_01.mp3
     - assets/images/
     - assets/public_key.txt
