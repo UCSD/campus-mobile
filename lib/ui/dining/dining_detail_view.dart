@@ -56,7 +56,8 @@ class DiningDetailView extends StatelessWidget {
         model.coordinates!.lon != null) {
       return TextButton(
         style: TextButton.styleFrom(
-          primary: Theme.of(context).buttonColor,
+          // primary: Theme.of(context).buttonColor,
+          primary: Theme.of(context).backgroundColor,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +101,8 @@ class DiningDetailView extends StatelessWidget {
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
           onPrimary: Theme.of(context).primaryColor, // foreground
-          primary: Theme.of(context).buttonColor,
+          // primary: Theme.of(context).buttonColor,
+          primary: Theme.of(context).backgroundColor,
         ),
         child: Text('Visit Website',
             style: TextStyle(
@@ -127,7 +129,8 @@ class DiningDetailView extends StatelessWidget {
             )),
         style: ElevatedButton.styleFrom(
           onPrimary: Theme.of(context).primaryColor, // foreground
-          primary: Theme.of(context).buttonColor,
+          // primary: Theme.of(context).buttonColor,
+          primary: Theme.of(context).backgroundColor,
         ),
         onPressed: () {
           try {

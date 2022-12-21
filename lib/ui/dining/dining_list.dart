@@ -152,7 +152,8 @@ class DiningList extends StatelessWidget {
   Widget buildIconWithDistance(DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        primary: Theme.of(context).buttonColor,
+        // primary: Theme.of(context).buttonColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       onPressed: () {
         try {
