@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,7 +30,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        brightness: Brightness.dark,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
       body: _userDataProvider.isLoading!
@@ -255,7 +256,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     // set up the button
     Widget okButton = TextButton(
       style: TextButton.styleFrom(
-        primary: Theme.of(context).buttonColor,
+        // primary: Theme.of(context).buttonColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text("OK"),
       onPressed: () {

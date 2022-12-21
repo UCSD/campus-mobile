@@ -4,9 +4,7 @@ import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 class ManageShuttleView extends StatefulWidget {
@@ -91,14 +89,13 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
           onPressed: () {
             if (_shuttleDataProvider.stopsToRender.length < 5) {
               Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
-            }
-            else {
+            } else {
               Get.snackbar(
-                  'Error:',
-                  'Please remove a stop to add more.',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  colorText: Colors.white,
+                'Error:',
+                'Please remove a stop to add more.',
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                colorText: Colors.white,
               );
             }
           },

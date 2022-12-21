@@ -33,7 +33,8 @@ class NotificationsSettingsView extends StatelessWidget {
             Provider.of<UserDataProvider>(context, listen: false)
                 .toggleNotifications(topic);
           },
-          activeColor: Theme.of(context).buttonColor,
+          // activeColor: Theme.of(context).buttonColor,
+          activeColor: Theme.of(context).backgroundColor,
         ),
       ));
     }

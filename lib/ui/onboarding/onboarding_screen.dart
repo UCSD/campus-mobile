@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_affiliations.dart';
 import 'package:dots_indicator/dots_indicator.dart';
