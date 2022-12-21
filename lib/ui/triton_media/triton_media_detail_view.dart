@@ -26,7 +26,11 @@ class _MediaDetailView extends State<MediaDetailView> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
-
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await player.stop();
+  }
 
   String formatTime(int seconds) {
     return '${(Duration(seconds: seconds))}'.split('.')[0].padLeft(8, '0');
