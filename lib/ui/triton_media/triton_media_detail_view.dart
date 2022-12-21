@@ -75,8 +75,9 @@ class _MediaDetailView extends State<MediaDetailView> {
     double height = MediaQuery.of(context).size.height;
     if (widget.data.tags?.last == "Local Audio File")
       player.setSource(AssetSource(widget.data.link ?? ""));
-    if (widget.data.tags?.last == "Remote Audio File")
+    if (widget.data.tags?.last == "Remote Audio File" || widget.data.tags?.last == "Stream Audio File")
       player.setSource(UrlSource(widget.data.link ?? ""));
+      // player.setSource(UrlSource(widget.data.link ?? ""));
     return ListView(
       children: [
         Container(
@@ -129,7 +130,7 @@ class _MediaDetailView extends State<MediaDetailView> {
                 Slider(
                   activeColor: Colors.black,
                   min: 0,
-                  max: duration.inSeconds.toDouble(),
+                  max: widget.data.tags?.last == "Stream Audio File" ? position.inSeconds.toDouble() : duration.inSeconds.toDouble(),
                   value: position.inSeconds.toDouble(),
                   onChanged: (value) {
                     final position = Duration(seconds: value.toInt());
@@ -142,24 +143,23 @@ class _MediaDetailView extends State<MediaDetailView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(formatTime(position.inSeconds)),
-                      Text(formatTime((duration - position).inSeconds)),
+                      widget.data.tags?.last == "Stream Audio File" ? Text(formatTime(0)) : Text(formatTime(position.inSeconds)),
+                      widget.data.tags?.last == "Stream Audio File" ?  Text(formatTime((position).inSeconds)) : Text(formatTime((duration - position).inSeconds)),
                     ],
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
+                    widget.data.tags?.last == "Stream Audio File" ? Text("") : IconButton(
                       color: Colors.black,
                       icon:const Icon(Icons.replay_10_outlined),
                       onPressed: (){
-                        if (position == duration) {
+                        if (position > Duration(seconds: 10)) {
                           if (widget.data.tags?.last == "Local Audio File")
                             player.play(AssetSource(widget.data.link ?? ""));
                           if (widget.data.tags?.last == "Remote Audio File")
                             player.play(UrlSource(widget.data.link ?? ""));
-                          player.seek(duration - Duration(seconds: 10));
                         }
                         else if (!isPlaying) {
                           if (position < Duration(seconds: 10))
@@ -192,7 +192,7 @@ class _MediaDetailView extends State<MediaDetailView> {
                         }
                         },
                     ),
-                    IconButton(
+                    widget.data.tags?.last == "Stream Audio File" ? Text("") : IconButton(
                       color: Colors.black,
                       icon:const Icon(Icons.forward_10_outlined),
                       onPressed: (){
