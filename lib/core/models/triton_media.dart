@@ -22,6 +22,7 @@ class MediaModel {
     this.id,
     this.tags,
     this.location,
+    this.eventDate,
   });
 
   String? title;
@@ -34,12 +35,14 @@ class MediaModel {
   String? id;
   List<String>? tags;
   String? location;
+  DateTime? eventDate;
 
   factory MediaModel.fromJson(Map<String, dynamic> json) => MediaModel(
         title: json["title"] == null ? null : json["title"],
         description: json["description"] == null ? null : json["description"],
         startDate: DateTime.tryParse(json["startDate"]),
         endDate: DateTime.tryParse(json["endDate"]),
+        eventDate: DateTime.tryParse(json["eventdate"]),
         imageHQ: json["imageHQ"] == null ? null : json["imageHQ"],
         imageThumb: json["imageThumb"] == null ? null : json["imageThumb"],
         link: json["link"] == null ? null : json["link"],
@@ -55,6 +58,7 @@ class MediaModel {
         "description": description == null ? null : description,
         "startDate": startDate == null ? null : startDate,
         "endDate": endDate == null ? null : endDate,
+        "eventdate": eventDate == null ? null : eventDate,
         "imageHQ": imageHQ == null ? null : imageHQ,
         "imageThumb": imageThumb == null ? null : imageThumb,
         "link": link == null ? null : link,

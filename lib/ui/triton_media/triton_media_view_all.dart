@@ -34,7 +34,7 @@ class MediaAll extends StatelessWidget {
         mainAxisSpacing: 8,
         children: mediaTiles,
         childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 1.4),
+            (MediaQuery.of(context).size.height / 1.8),
       );
     } else {
       return ContainerView(

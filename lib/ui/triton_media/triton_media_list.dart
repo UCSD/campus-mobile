@@ -17,11 +17,11 @@ class MediaList extends StatelessWidget {
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
-        : buildEventsList(
+        : buildMediaList(
             Provider.of<MediaDataProvider>(context).mediaModels!, context);
   }
 
-  Widget buildEventsList(List<MediaModel> listOfMedia, BuildContext context) {
+  Widget buildMediaList(List<MediaModel> listOfMedia, BuildContext context) {
     final List<Widget> mediaTiles = [];
 
     /// check to see if we want to display only a limited number of elements

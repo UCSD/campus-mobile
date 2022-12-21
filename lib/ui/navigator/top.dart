@@ -3,6 +3,8 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:campus_mobile_experimental/ui/triton_media/triton_media_detail_view.dart' as media;
 
 class CMAppBar extends StatelessWidget {
   CMAppBar({
@@ -12,6 +14,7 @@ class CMAppBar extends StatelessWidget {
 
   final String? title;
   final bool? doneButton;
+  final player = media.player;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +44,7 @@ class CMAppBar extends StatelessWidget {
                         'Done',
                       ),
                       onPressed: () {
+                        player.release();
                         // Set tab bar index to the Home tab
                         Provider.of<BottomNavigationBarProvider>(context,
                                 listen: false)

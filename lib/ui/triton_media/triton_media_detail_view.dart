@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:audioplayers/audioplayers.dart';
 
+final player = AudioPlayer();
 
 class MediaDetailView extends StatefulWidget {
   const MediaDetailView({Key? key, required this.data}) : super(key: key);
@@ -21,7 +22,6 @@ class _MediaDetailView extends State<MediaDetailView> {
   // _MediaDetailView({Key? key, required this.data});
   // final MediaModel data;
 
-  final player = AudioPlayer();
   bool isPlaying = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
@@ -71,10 +71,14 @@ class _MediaDetailView extends State<MediaDetailView> {
       children: [
         Container(
           width: width,
+          height: height * 0.05,
+        ),
+        Container(
+          width: width * 0.95,
           height: height * 0.33,
           decoration: BoxDecoration(
               image: DecorationImage(
-            fit: BoxFit.fill,
+            //fit: BoxFit.fill,
             image: (widget.data.imageHQ!.isEmpty)
                 ? AssetImage('assets/images/UCSDMobile_banner.png')
                     as ImageProvider
@@ -87,50 +91,21 @@ class _MediaDetailView extends State<MediaDetailView> {
               width: width * 0.8,
               child: Column(
                 children: [
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 30,
-                    color: Theme.of(context).primaryColor,
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0),
                   ),
                   Text(
+
                     widget.data.title!,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: 20,
                         fontWeight: FontWeight.w500),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10.0),
                   ),
-                  widget.data.location != null && widget.data.location!.isNotEmpty
-                      ? LinkifyWithCatch(
-                          text: "Where: " + widget.data.location!,
-                          looseUrl: true,
-                          style: TextStyle(
-                              fontSize: 16,
-                              height: 1.3,
-                              color: Theme.of(context).primaryColor),
-                          textAlign: TextAlign.center,
-                        )
-                      : Container(),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                  ),
-                  Center(child: MediaTime(data: widget.data)),
-                  widget.data.description != null && widget.data.description!.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(
-                            widget.data.description!,
-                            style: TextStyle(fontSize: 16, height: 1.3),
-                          ),
-                        )
-                      : Container(),
-                  widget.data.link != null && widget.data.link!.isNotEmpty
-                      ? LearnMoreButton(link: widget.data.link)
-                      : Container(),
-
                 ],
               ),
             ),
@@ -141,6 +116,27 @@ class _MediaDetailView extends State<MediaDetailView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Slider(
+                  activeColor: Colors.black,
+                  min: 0,
+                  max: duration.inSeconds.toDouble(),
+                  value: position.inSeconds.toDouble(),
+                  onChanged: (value) {
+                    final position = Duration(seconds: value.toInt());
+                    player.seek(position);
+
+                  },
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(formatTime(position.inSeconds)),
+                      Text(formatTime((duration - position).inSeconds)),
+                    ],
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -148,12 +144,12 @@ class _MediaDetailView extends State<MediaDetailView> {
                       color: Colors.black,
                       icon:const Icon(Icons.replay_10_outlined),
                       onPressed: (){
-                        player.stop();
+                        player.seek(position - Duration(seconds: 10));
                         },
                     ),
                     IconButton(
                       color: Colors.black,
-                      iconSize: 50.0,
+                      iconSize: 75.0,
                       icon: Icon(
                         isPlaying ? Icons.pause : Icons.play_arrow
                       ),
@@ -163,7 +159,10 @@ class _MediaDetailView extends State<MediaDetailView> {
                           player.pause();
                         }
                         else{
-                          player.play(AssetSource('theme_01.mp3'));
+                          if (widget.data.tags?.last == "Local Audio File")
+                            player.play(AssetSource(widget.data.link ?? ""));
+                          if (widget.data.tags?.last == "Remote Audio File")
+                            player.play(UrlSource(widget.data.link ?? ""));
                         }
                         },
                     ),
@@ -171,30 +170,24 @@ class _MediaDetailView extends State<MediaDetailView> {
                       color: Colors.black,
                       icon:const Icon(Icons.forward_10_outlined),
                       onPressed: (){
-                        player.stop();},
+                        player.seek(position + Duration(seconds: 10));
+                        },
                     ),
                   ],
                 ),
-                Slider(
-                  min: 0,
-                  max: duration.inSeconds.toDouble(),
-                  value: position.inSeconds.toDouble(),
-                  onChanged: (value) {
-                    final position = Duration(seconds: value.toInt());
-                    player.seek(position);
-                    player.resume();
-                  },
-                ),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(formatTime(position.inSeconds)),
-                      Text(formatTime((duration - position).inSeconds)),
-                    ],
+                Center(child: MediaTime(data: widget.data)),
+                widget.data.description != null && widget.data.description!.isNotEmpty
+                    ? Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    widget.data.description!,
+                    style: TextStyle(fontSize: 16,
+                        height: 1.3,
+                        color: Theme.of(context).colorScheme.primary
+                    ),
                   ),
-                ),
+                )
+                    : Container(),
               ],
             ),
           ),
@@ -204,32 +197,3 @@ class _MediaDetailView extends State<MediaDetailView> {
   }
 }
 
-class LearnMoreButton extends StatelessWidget {
-  const LearnMoreButton({Key? key, required this.link}) : super(key: key);
-  final String? link;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            onPrimary: Theme.of(context).primaryColor, // foreground
-            primary: Theme.of(context).buttonColor,
-          ),
-          child: Text(
-            'Learn More',
-            style: TextStyle(
-                fontSize: 16, color: Theme.of(context).textTheme.button!.color),
-          ),
-          onPressed: () async {
-            try {
-              await launch(link!, forceSafariVC: true);
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Could not open.'),
-              ));
-            }
-          }),
-    );
-  }
-}
