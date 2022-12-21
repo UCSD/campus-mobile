@@ -26,6 +26,8 @@ class _MediaDetailView extends State<MediaDetailView> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
+
+
   String formatTime(int seconds) {
     return '${(Duration(seconds: seconds))}'.split('.')[0].padLeft(8, '0');
   }
@@ -67,6 +69,10 @@ class _MediaDetailView extends State<MediaDetailView> {
   Widget buildDetailView(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    if (widget.data.tags?.last == "Local Audio File")
+      player.setSource(AssetSource(widget.data.link ?? ""));
+    if (widget.data.tags?.last == "Remote Audio File")
+      player.setSource(UrlSource(widget.data.link ?? ""));
     return ListView(
       children: [
         Container(
@@ -144,7 +150,26 @@ class _MediaDetailView extends State<MediaDetailView> {
                       color: Colors.black,
                       icon:const Icon(Icons.replay_10_outlined),
                       onPressed: (){
-                        player.seek(position - Duration(seconds: 10));
+                        if (position == duration) {
+                          if (widget.data.tags?.last == "Local Audio File")
+                            player.play(AssetSource(widget.data.link ?? ""));
+                          if (widget.data.tags?.last == "Remote Audio File")
+                            player.play(UrlSource(widget.data.link ?? ""));
+                          player.seek(duration - Duration(seconds: 10));
+                        }
+                        else if (!isPlaying) {
+                          if (position < Duration(seconds: 10))
+                            player.seek(Duration(seconds:0));
+                          else
+                            player.seek(position - Duration(seconds:10));
+                          player.pause();
+                        }
+                        else {
+                          if (position < Duration(seconds: 10))
+                            player.seek(Duration(seconds:0));
+                          else
+                            player.seek(position - Duration(seconds:10));
+                        }
                         },
                     ),
                     IconButton(
@@ -159,10 +184,7 @@ class _MediaDetailView extends State<MediaDetailView> {
                           player.pause();
                         }
                         else{
-                          if (widget.data.tags?.last == "Local Audio File")
-                            player.play(AssetSource(widget.data.link ?? ""));
-                          if (widget.data.tags?.last == "Remote Audio File")
-                            player.play(UrlSource(widget.data.link ?? ""));
+                          player.resume();
                         }
                         },
                     ),
@@ -170,7 +192,22 @@ class _MediaDetailView extends State<MediaDetailView> {
                       color: Colors.black,
                       icon:const Icon(Icons.forward_10_outlined),
                       onPressed: (){
-                        player.seek(position + Duration(seconds: 10));
+                        if (position == Duration(seconds: 0)) {
+                          player.seek(position + Duration(seconds: 10));
+                        }
+                        else if(!isPlaying) {
+                          if (position > duration - Duration(seconds: 10))
+                            player.seek(duration);
+                          else
+                            player.seek(position + Duration(seconds:10));
+                          player.pause();
+                        }
+                        else {
+                          if (position > duration - Duration(seconds: 10))
+                            player.seek(duration);
+                          else
+                            player.seek(position + Duration(seconds:10));
+                        }
                         },
                     ),
                   ],
