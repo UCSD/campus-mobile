@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:video_player/video_player.dart';
 
 final player = AudioPlayer();
+late VideoPlayerController _controller;
 
 class MediaDetailView extends StatefulWidget {
   const MediaDetailView({Key? key, required this.data}) : super(key: key);
@@ -57,6 +59,7 @@ class _MediaDetailView extends State<MediaDetailView> {
         position = newPosition;
       });
     });
+    
   }
 
   @override
@@ -155,7 +158,7 @@ class _MediaDetailView extends State<MediaDetailView> {
                       color: Colors.black,
                       icon:const Icon(Icons.replay_10_outlined),
                       onPressed: (){
-                        if (position > Duration(seconds: 10)) {
+                        if (position == duration) {
                           if (widget.data.tags?.last == "Local Audio File")
                             player.play(AssetSource(widget.data.link ?? ""));
                           if (widget.data.tags?.last == "Remote Audio File")
@@ -236,5 +239,5 @@ class _MediaDetailView extends State<MediaDetailView> {
       ],
     );
   }
-}
 
+}
