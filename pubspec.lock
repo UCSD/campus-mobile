@@ -155,34 +155,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
-  connectivity:
+  connectivity_plus:
     dependency: "direct main"
     description:
-      name: connectivity
+      name: connectivity_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.6"
-  connectivity_for_web:
+    version: "3.0.2"
+  connectivity_plus_platform_interface:
     dependency: transitive
     description:
-      name: connectivity_for_web
+      name: connectivity_plus_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0+1"
-  connectivity_macos:
-    dependency: transitive
-    description:
-      name: connectivity_macos
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1+2"
-  connectivity_platform_interface:
-    dependency: transitive
-    description:
-      name: connectivity_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
+    version: "1.2.3"
   convert:
     dependency: transitive
     description:
@@ -678,6 +664,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  nm:
+    dependency: transitive
+    description:
+      name: nm
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.0"
   package_config:
     dependency: transitive
     description:
@@ -1114,8 +1107,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "179eb3a322b9d947752b4ff4e810582c3e262e47"
-      resolved-ref: "179eb3a322b9d947752b4ff4e810582c3e262e47"
+      ref: a54454483d7c0b6db7b460f0f6249f4fa2507460
+      resolved-ref: a54454483d7c0b6db7b460f0f6249f4fa2507460
       url: "https://github.com/UCSD/wifi_connection.git"
     source: git
     version: "0.0.4"
