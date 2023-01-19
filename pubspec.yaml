@@ -22,7 +22,7 @@ dependencies:
       url: https://github.com/UCSD/flutter_scandit.git
       ref: 41fb666299ed90d8277c24e0065149e83cd71494
   flutter_linkify: 5.0.2
-  flutter_local_notifications: 9.9.1
+  flutter_local_notifications: 12.0.0
   flutter_secure_storage: 5.0.2
   flutter_sticky_header: 0.6.0
   get: 4.1.4
