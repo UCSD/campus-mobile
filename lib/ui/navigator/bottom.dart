@@ -45,8 +45,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
                   .changeTitle("Maps");
               break;
             case NavigatorConstants.NotificationsTab:
-              Provider.of<CustomAppBar>(context, listen: false)
-                  .changeTitle("Notifications");
+              Provider.of<CustomAppBar>(context, listen: false).changeTitle(
+                  "Notifications",
+                  done: false,
+                  notification: true);
               break;
             case NavigatorConstants.ProfileTab:
               Provider.of<CustomAppBar>(context, listen: false)

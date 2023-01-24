@@ -41,15 +41,15 @@ class Profile extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           Login(),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.notifications),
-              title: Text('Notifications'),
-              onTap: () {
-                handleNotificationsTap(context);
-              },
-            ),
-          ),
+          // Card(
+          //   child: ListTile(
+          //     leading: Icon(Icons.notifications),
+          //     title: Text('Notifications'),
+          //     onTap: () {
+          //       handleNotificationsTap(context);
+          //     },
+          //   ),
+          // ),
           Card(
             child: ListTile(
               leading: Icon(Icons.menu),
@@ -79,9 +79,9 @@ class Profile extends StatelessWidget {
     );
   }
 
-  handleNotificationsTap(BuildContext context) {
-    Navigator.pushNamed(context, RoutePaths.NotificationsSettingsView);
-  }
+  // handleNotificationsTap(BuildContext context) {
+  //   Navigator.pushNamed(context, RoutePaths.NotificationsFilter);
+  // }
 
   handleFeedbackTap() async {
     const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=668781";
