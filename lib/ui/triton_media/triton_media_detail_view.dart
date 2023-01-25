@@ -237,11 +237,47 @@ class _MediaDetailView extends State<MediaDetailView> {
                         ),
                       )
                     : Container(),
+                widget.data.tags?.last == "Stream Audio File"
+                    ? BroadcastScheduleButton(
+                        link: "https://spinitron.com/KSDT/calendar")
+                    : Container(),
               ],
             ),
           ),
         )
       ],
+    );
+  }
+}
+
+class BroadcastScheduleButton extends StatelessWidget {
+  const BroadcastScheduleButton({Key? key, required this.link})
+      : super(key: key);
+  final String? link;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            onPrimary: Theme.of(context).primaryColor, // foreground
+            // primary: Theme.of(context).buttonColor,
+            primary: Theme.of(context).backgroundColor,
+          ),
+          child: Text(
+            'Broadcast Schedule',
+            style: TextStyle(
+                fontSize: 16, color: Theme.of(context).textTheme.button!.color),
+          ),
+          onPressed: () async {
+            try {
+              await launch(link!, forceSafariVC: true);
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Could not open.'),
+              ));
+            }
+          }),
     );
   }
 }
