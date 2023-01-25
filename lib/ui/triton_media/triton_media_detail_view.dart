@@ -59,7 +59,6 @@ class _MediaDetailView extends State<MediaDetailView> {
         position = newPosition;
       });
     });
-    
   }
 
   @override
@@ -78,9 +77,9 @@ class _MediaDetailView extends State<MediaDetailView> {
     double height = MediaQuery.of(context).size.height;
     if (widget.data.tags?.last == "Local Audio File")
       player.setSource(AssetSource(widget.data.link ?? ""));
-    if (widget.data.tags?.last == "Remote Audio File" || widget.data.tags?.last == "Stream Audio File")
+    if (widget.data.tags?.last == "Remote Audio File" ||
+        widget.data.tags?.last == "Stream Audio File")
       player.setSource(UrlSource(widget.data.link ?? ""));
-      // player.setSource(UrlSource(widget.data.link ?? ""));
     return ListView(
       children: [
         Container(
@@ -109,7 +108,6 @@ class _MediaDetailView extends State<MediaDetailView> {
                     padding: EdgeInsets.only(top: 20.0),
                   ),
                   Text(
-
                     widget.data.title!,
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -133,12 +131,13 @@ class _MediaDetailView extends State<MediaDetailView> {
                 Slider(
                   activeColor: Colors.black,
                   min: 0,
-                  max: widget.data.tags?.last == "Stream Audio File" ? position.inSeconds.toDouble() : duration.inSeconds.toDouble(),
+                  max: widget.data.tags?.last == "Stream Audio File"
+                      ? position.inSeconds.toDouble()
+                      : duration.inSeconds.toDouble(),
                   value: position.inSeconds.toDouble(),
                   onChanged: (value) {
                     final position = Duration(seconds: value.toInt());
                     player.seek(position);
-
                   },
                 ),
                 Container(
@@ -146,91 +145,97 @@ class _MediaDetailView extends State<MediaDetailView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      widget.data.tags?.last == "Stream Audio File" ? Text(formatTime(0)) : Text(formatTime(position.inSeconds)),
-                      widget.data.tags?.last == "Stream Audio File" ?  Text(formatTime((position).inSeconds)) : Text(formatTime((duration - position).inSeconds)),
+                      widget.data.tags?.last == "Stream Audio File"
+                          ? Text(formatTime(0))
+                          : Text(formatTime(position.inSeconds)),
+                      widget.data.tags?.last == "Stream Audio File"
+                          ? Text(formatTime((position).inSeconds))
+                          : Text(formatTime((duration - position).inSeconds)),
                     ],
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    widget.data.tags?.last == "Stream Audio File" ? Text("") : IconButton(
-                      color: Colors.black,
-                      icon:const Icon(Icons.replay_10_outlined),
-                      onPressed: (){
-                        if (position == duration) {
-                          if (widget.data.tags?.last == "Local Audio File")
-                            player.play(AssetSource(widget.data.link ?? ""));
-                          if (widget.data.tags?.last == "Remote Audio File")
-                            player.play(UrlSource(widget.data.link ?? ""));
-                        }
-                        else if (!isPlaying) {
-                          if (position < Duration(seconds: 10))
-                            player.seek(Duration(seconds:0));
-                          else
-                            player.seek(position - Duration(seconds:10));
-                          player.pause();
-                        }
-                        else {
-                          if (position < Duration(seconds: 10))
-                            player.seek(Duration(seconds:0));
-                          else
-                            player.seek(position - Duration(seconds:10));
-                        }
-                        },
-                    ),
+                    widget.data.tags?.last == "Stream Audio File"
+                        ? Text("")
+                        : IconButton(
+                            color: Colors.black,
+                            icon: const Icon(Icons.replay_10_outlined),
+                            onPressed: () {
+                              if (position == duration) {
+                                if (widget.data.tags?.last ==
+                                    "Local Audio File")
+                                  player.play(
+                                      AssetSource(widget.data.link ?? ""));
+                                if (widget.data.tags?.last ==
+                                    "Remote Audio File")
+                                  player
+                                      .play(UrlSource(widget.data.link ?? ""));
+                              } else if (!isPlaying) {
+                                if (position < Duration(seconds: 10))
+                                  player.seek(Duration(seconds: 0));
+                                else
+                                  player.seek(position - Duration(seconds: 10));
+                                player.pause();
+                              } else {
+                                if (position < Duration(seconds: 10))
+                                  player.seek(Duration(seconds: 0));
+                                else
+                                  player.seek(position - Duration(seconds: 10));
+                              }
+                            },
+                          ),
                     IconButton(
                       color: Colors.black,
                       iconSize: 75.0,
-                      icon: Icon(
-                        isPlaying ? Icons.pause : Icons.play_arrow
-                      ),
-                      onPressed: (){
-                        if(isPlaying)
-                        {
+                      icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                      onPressed: () {
+                        if (isPlaying) {
                           player.pause();
-                        }
-                        else{
+                        } else {
                           player.resume();
                         }
-                        },
+                      },
                     ),
-                    widget.data.tags?.last == "Stream Audio File" ? Text("") : IconButton(
-                      color: Colors.black,
-                      icon:const Icon(Icons.forward_10_outlined),
-                      onPressed: (){
-                        if (position == Duration(seconds: 0)) {
-                          player.seek(position + Duration(seconds: 10));
-                        }
-                        else if(!isPlaying) {
-                          if (position > duration - Duration(seconds: 10))
-                            player.seek(duration);
-                          else
-                            player.seek(position + Duration(seconds:10));
-                          player.pause();
-                        }
-                        else {
-                          if (position > duration - Duration(seconds: 10))
-                            player.seek(duration);
-                          else
-                            player.seek(position + Duration(seconds:10));
-                        }
-                        },
-                    ),
+                    widget.data.tags?.last == "Stream Audio File"
+                        ? Text("")
+                        : IconButton(
+                            color: Colors.black,
+                            icon: const Icon(Icons.forward_10_outlined),
+                            onPressed: () {
+                              if (position == Duration(seconds: 0)) {
+                                player.seek(position + Duration(seconds: 10));
+                              } else if (!isPlaying) {
+                                if (position > duration - Duration(seconds: 10))
+                                  player.seek(duration);
+                                else
+                                  player.seek(position + Duration(seconds: 10));
+                                player.pause();
+                              } else {
+                                if (position > duration - Duration(seconds: 10))
+                                  player.seek(duration);
+                                else
+                                  player.seek(position + Duration(seconds: 10));
+                              }
+                            },
+                          ),
                   ],
                 ),
-                Center(child: MediaTime(data: widget.data)),
-                widget.data.description != null && widget.data.description!.isNotEmpty
+                //Delete date
+                //Center(child: MediaTime(data: widget.data)),
+                widget.data.description != null &&
+                        widget.data.description!.isNotEmpty
                     ? Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    widget.data.description!,
-                    style: TextStyle(fontSize: 16,
-                        height: 1.3,
-                        color: Theme.of(context).colorScheme.primary
-                    ),
-                  ),
-                )
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          widget.data.description!,
+                          style: TextStyle(
+                              fontSize: 16,
+                              height: 1.3,
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                      )
                     : Container(),
               ],
             ),
@@ -239,5 +244,4 @@ class _MediaDetailView extends State<MediaDetailView> {
       ],
     );
   }
-
 }

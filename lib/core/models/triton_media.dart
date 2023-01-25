@@ -10,60 +10,48 @@ List<MediaModel> mediaModelFromJson(String str) =>
 String mediaModelToJson(List<MediaModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+//Remove location as well as end, event and start dates
 class MediaModel {
-  MediaModel({
-    this.title,
-    this.description,
-    this.startDate,
-    this.endDate,
-    this.imageHQ,
-    this.imageThumb,
-    this.link,
-    this.id,
-    this.tags,
-    this.location,
-    this.eventDate,
-  });
+  MediaModel(
+      {this.title,
+      this.description,
+      this.imageHQ,
+      this.imageThumb,
+      this.link,
+      this.id,
+      this.tags,
+      this.eventDate});
 
   String? title;
   String? description;
-  DateTime? startDate;
-  DateTime? endDate;
   String? imageHQ;
   String? imageThumb;
   String? link;
   String? id;
-  List<String>? tags;
-  String? location;
   DateTime? eventDate;
+  List<String>? tags;
 
   factory MediaModel.fromJson(Map<String, dynamic> json) => MediaModel(
         title: json["title"] == null ? null : json["title"],
         description: json["description"] == null ? null : json["description"],
-        startDate: DateTime.tryParse(json["startDate"]),
-        endDate: DateTime.tryParse(json["endDate"]),
-        eventDate: DateTime.tryParse(json["eventdate"]),
         imageHQ: json["imageHQ"] == null ? null : json["imageHQ"],
         imageThumb: json["imageThumb"] == null ? null : json["imageThumb"],
+        eventDate: DateTime.tryParse(json["eventdate"]),
         link: json["link"] == null ? null : json["link"],
         id: json["id"] == null ? null : json["id"],
         tags: json["tags"] == null
             ? null
             : List<String>.from(json["tags"].map((x) => x)),
-        location: json["location"] == null ? null : json["location"],
       );
 
   Map<String, dynamic> toJson() => {
         "title": title == null ? null : title,
         "description": description == null ? null : description,
-        "startDate": startDate == null ? null : startDate,
-        "endDate": endDate == null ? null : endDate,
-        "eventdate": eventDate == null ? null : eventDate,
         "imageHQ": imageHQ == null ? null : imageHQ,
         "imageThumb": imageThumb == null ? null : imageThumb,
         "link": link == null ? null : link,
         "id": id == null ? null : id,
+        "eventDate": eventDate == null ? null : eventDate,
         "tags": tags == null ? null : List<dynamic>.from(tags!.map((x) => x)),
-        "location": location == null ? null : location,
       };
 }

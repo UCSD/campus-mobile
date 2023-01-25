@@ -64,9 +64,5 @@ class MediaList extends StatelessWidget {
             : MediaAll(),
       );
     }
-    // ListView(
-    //   children:
-    //   ListTile.divideTiles(tiles: eventTiles, context: context)
-    //       .toList(),
   }
 }
