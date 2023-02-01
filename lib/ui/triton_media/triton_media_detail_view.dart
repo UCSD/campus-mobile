@@ -1,8 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/common/media_time.dart';
-import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -53,7 +51,6 @@ class _MediaDetailView extends State<MediaDetailView> {
         duration = newDuration;
       });
     });
-
     player.onPositionChanged.listen((newPosition) {
       setState(() {
         position = newPosition;
@@ -128,32 +125,36 @@ class _MediaDetailView extends State<MediaDetailView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Slider(
-                  activeColor: Colors.black,
-                  min: 0,
-                  max: widget.data.tags?.last == "Stream Audio File"
-                      ? position.inSeconds.toDouble()
-                      : duration.inSeconds.toDouble(),
-                  value: position.inSeconds.toDouble(),
-                  onChanged: (value) {
-                    final position = Duration(seconds: value.toInt());
-                    player.seek(position);
-                  },
-                ),
+                widget.data.tags?.last == "Stream Audio File"
+                    ? SizedBox.shrink()
+                    : Slider(
+                        activeColor: Colors.black,
+                        min: 0,
+                        max: widget.data.tags?.last == "Stream Audio File"
+                            ? position.inSeconds.toDouble()
+                            : duration.inSeconds.toDouble(),
+                        value: position.inSeconds.toDouble(),
+                        onChanged: (value) {
+                          final position = Duration(seconds: value.toInt());
+                          player.seek(position);
+                        },
+                      ),
+
                 Container(
                   padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       widget.data.tags?.last == "Stream Audio File"
-                          ? Text(formatTime(0))
+                          ? SizedBox.shrink()
                           : Text(formatTime(position.inSeconds)),
                       widget.data.tags?.last == "Stream Audio File"
-                          ? Text(formatTime((position).inSeconds))
+                          ? SizedBox.shrink()
                           : Text(formatTime((duration - position).inSeconds)),
                     ],
                   ),
                 ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
