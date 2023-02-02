@@ -6,6 +6,8 @@
 	<string></string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array/>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -16,6 +18,16 @@
 	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>UC San Diego</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -29,16 +41,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>UC San Diego</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -51,14 +53,15 @@
 	<string>UC San Diego mobile would like access to the camera. The app needs access to scan QR Codes.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string></string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allowing location access allows cards and map search to display information relevant to your location.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allowing location access allows cards and map search to display information relevant to your location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allowing location access allows cards and map search to display information relevant to your location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allowing location access while using the app allows cards and map search to display information relevant to your location.</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
@@ -82,7 +85,5 @@
 	<false/>
 	<key>com.transistorsoft.fetch</key>
 	<string></string>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
 </dict>
 </plist>
