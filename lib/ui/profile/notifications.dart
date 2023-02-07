@@ -25,6 +25,8 @@ class NotificationsSettingsView extends StatelessWidget {
     for (String? topic in topicsAvailable) {
       list.add(ListTile(
         key: Key(topic!),
+        leading: Icon(_chooseIcons(topic),
+            color: Theme.of(context).colorScheme.secondary, size: 30),
         title: Text(getTopicName(context, topic)!),
         trailing: Switch(
           value: Provider.of<PushNotificationDataProvider>(context)
@@ -39,6 +41,21 @@ class NotificationsSettingsView extends StatelessWidget {
       ));
     }
     return list;
+  }
+
+  IconData _chooseIcons(String messageType) {
+    if (messageType == "studentAnnouncements" ||
+        messageType == "testStudentAnnouncements") {
+      return Icons.school_outlined;
+    } else if (messageType == "freeFood" || messageType == "testFreeFood") {
+      return Icons.restaurant_outlined;
+    } else if (messageType == "campusAnnouncements" ||
+        messageType == "testCampusAnnouncements") {
+      return Icons.campaign_outlined;
+    } else if (messageType == "DM") {
+      return Icons.info_outline;
+    }
+    return Icons.info_outline;
   }
 
   List<String?> getTopics(BuildContext context) {
