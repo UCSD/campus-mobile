@@ -7,48 +7,47 @@ import 'package:campus_mobile_experimental/ui/availability/availability_display.
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 const cardId = 'availability';
 
-class AvailabilityCard extends StatefulWidget {
-  @override
-  _AvailabilityCardState createState() => _AvailabilityCardState();
-}
-
-class _AvailabilityCardState extends State<AvailabilityCard> {
-  PageController _controller = PageController();
-  late AvailabilityDataProvider _availabilityDataProvider;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
-  }
-
+class AvailabilityCard extends HookWidget
+{
   @override
   Widget build(BuildContext context) {
+    final controller = usePageController();
+    final availabilityDataProvider = useMemoized(
+            () => Provider.of<AvailabilityDataProvider>(context)
+    );
+    useListenable(availabilityDataProvider);
+
+    // final availabilityModelList = useAuthorizedFetchData(
+    //     "https://api-qa.ucsd.edu:8243/campusbusyness/v1/busyness", {
+    //       "Authorization": "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+    // });
+
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => _availabilityDataProvider.fetchAvailability(),
-      isLoading: _availabilityDataProvider.isLoading,
+      reload: () => availabilityDataProvider.fetchAvailability(),
+      isLoading: availabilityDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: _availabilityDataProvider.error,
+      errorText: availabilityDataProvider.error,
       child: () =>
-          buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
+          buildAvailabilityCard(availabilityDataProvider.availabilityModels, controller, availabilityDataProvider),
       actionButtons: buildActionButtons(),
     );
   }
 
-  Widget buildAvailabilityCard(List<AvailabilityModel?> data) {
+  Widget buildAvailabilityCard(List<AvailabilityModel?> data, PageController controller, AvailabilityDataProvider provider) {
     List<Widget> locationsList = [];
 
     // loop through all the models, adding each one to locationsList
     for (AvailabilityModel? model in data) {
       if (model != null) {
-        if (_availabilityDataProvider.locationViewState[model.name]!) {
+        if (provider.locationViewState[model.name]!) {
           locationsList.add(AvailabilityDisplay(model: model));
         }
       }
@@ -81,17 +80,17 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       children: <Widget>[
         Flexible(
           child: PageView(
-            controller: _controller,
+            controller: controller,
             children: locationsList,
           ),
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DotsIndicator(
-            controller: _controller,
+            controller: controller,
             itemCount: locationsList.length,
             onPageSelected: (int index) {
-              _controller.animateToPage(index,
+              controller.animateToPage(index,
                   duration: Duration(seconds: 1), curve: Curves.ease);
             },
           ),
@@ -105,13 +104,13 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        primary: Theme.of(context).backgroundColor,
+        primary: Theme.of(useContext()).backgroundColor,
       ),
       child: Text(
         'Manage Locations',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView);
+        Navigator.pushNamed(useContext(), RoutePaths.ManageAvailabilityView);
       },
     ));
     return actionButtons;

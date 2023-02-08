@@ -48,6 +48,7 @@ dependencies:
     git:
       url: https://github.com/UCSD/wifi_connection.git
       ref: 179eb3a322b9d947752b4ff4e810582c3e262e47
+  flutter_hooks: ^0.18.5+1
 dev_dependencies:
   build_runner: 2.0.2
   flutter_test:
