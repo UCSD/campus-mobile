@@ -11,10 +11,10 @@ dependencies:
   dio: 4.0.6
   encrypt: 5.0.1
   dots_indicator: 2.1.0
-  firebase_analytics: 8.1.0
-  firebase_core: 1.2.0
-  firebase_crashlytics: 2.0.4
-  firebase_messaging: 10.0.0
+  firebase_analytics: 10.1.0
+  firebase_core: 2.4.1
+  firebase_crashlytics: 3.0.11
+  firebase_messaging: 14.2.1
   flutter:
     sdk: flutter
   flutter_scandit_plugin:

@@ -34,7 +34,7 @@ List<SingleChildWidget> providers = [
   ...uiConsumableProviders,
 ];
 LocationDataProvider? locationProvider;
-final FirebaseAnalytics analytics = FirebaseAnalytics();
+final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 final FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
 

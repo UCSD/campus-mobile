@@ -227,7 +227,7 @@ class UserDataProvider extends ChangeNotifier {
         _subscribeToPushNotificationTopics(userProfileModel!.subscribedTopics!);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data!.accessToken);
-        await FirebaseAnalytics().logEvent(name: 'loggedIn');
+        await FirebaseAnalytics.instance.logEvent(name: 'loggedIn');
         _isInSilentLogin = false;
         notifyListeners();
         return true;
@@ -255,7 +255,7 @@ class UserDataProvider extends ChangeNotifier {
     _cardsDataProvider.updateAvailableCards("");
     var box = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
     await box.clear();
-    await FirebaseAnalytics().logEvent(name: 'loggedOut');
+    await FirebaseAnalytics.instance.logEvent(name: 'loggedOut');
     _isLoading = false;
 
     notifyListeners();
