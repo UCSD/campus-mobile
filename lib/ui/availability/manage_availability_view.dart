@@ -4,6 +4,8 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/providers/user.dart';
+
 class ManageAvailabilityView extends StatefulWidget {
   _ManageAvailabilityViewState createState() => _ManageAvailabilityViewState();
 }
@@ -58,8 +60,10 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
             Icons.reorder,
           ),
           trailing: Switch(
-            value: Provider.of<AvailabilityDataProvider>(context)
-                .locationViewState[model.name]!,
+            value: !Provider.of<UserDataProvider>(context)
+                .userProfileModel!
+                .selectedOccuspaceLocations!
+                .contains(model.name),
             // activeColor: Theme.of(context).buttonColor,
             activeColor: Theme.of(context).backgroundColor,
             onChanged: (_) {

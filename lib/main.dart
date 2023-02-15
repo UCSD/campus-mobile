@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
-import 'package:campus_mobile_experimental/app_router.dart'
-    as campusMobileRouter;
+import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
@@ -11,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fquery/fquery.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -23,6 +23,16 @@ late bool showOnboardingScreen;
 
 bool isFirstRunFlag = false;
 bool executedInitialDeeplinkQuery = false;
+
+// THIS IS WHERE YOU INITIALIZE FQUERY
+final queryClient = QueryClient(
+  defaultQueryOptions: DefaultQueryOptions(
+    cacheDuration: Duration(minutes: 20),
+    //refetchInterval: Duration(minutes: 5),
+    refetchOnMount: RefetchOnMount.always,
+    staleDuration: Duration(minutes: 3),
+  ),
+);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +57,7 @@ void main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     await initializeHive();
     await initializeApp();
-    runApp(CampusMobile());
+    runApp(QueryClientProvider(queryClient: queryClient, child: CampusMobile()));
   }, FirebaseCrashlytics.instance.recordError);
 }
 

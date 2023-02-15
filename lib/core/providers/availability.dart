@@ -70,6 +70,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
     } else {
       _error = _availabilityService.error;
+      print(_error);
     }
     _isLoading = false;
     notifyListeners();

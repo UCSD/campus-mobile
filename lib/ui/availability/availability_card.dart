@@ -1,53 +1,65 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
-import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_display.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fquery/fquery.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_networking.dart';
+
 const cardId = 'availability';
+
+UseQueryResult<List<AvailabilityModel>, dynamic> useAvailabilityModel()
+{
+  return useQuery(['availability'], () async {
+    /// fetch data
+    String _response = await NetworkHelper().authorizedFetch(
+      "https://api-qa.ucsd.edu:8243/campusbusyness/v1/busyness", {
+      "Authorization": "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+    });
+
+    /// parse data
+    final data = availabilityStatusFromJson(_response).data!;
+    return data;
+  });
+}
 
 class AvailabilityCard extends HookWidget
 {
   @override
   Widget build(BuildContext context) {
     final controller = usePageController();
-    final availabilityDataProvider = useMemoized(
-            () => Provider.of<AvailabilityDataProvider>(context)
-    );
-    useListenable(availabilityDataProvider);
+    final userDataProvider = useMemoized(() => Provider.of<UserDataProvider>(context));
+    useListenable(userDataProvider);
 
-    // final availabilityModelList = useAuthorizedFetchData(
-    //     "https://api-qa.ucsd.edu:8243/campusbusyness/v1/busyness", {
-    //       "Authorization": "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
-    // });
+    final availability = useAvailabilityModel();
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => availabilityDataProvider.fetchAvailability(),
-      isLoading: availabilityDataProvider.isLoading,
+      reload: () => availability.refetch(),
+      isLoading: availability.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: availabilityDataProvider.error,
+      errorText: availability.isError ? "" : null, // TODO: figure out what to do with errorText
       child: () =>
-          buildAvailabilityCard(availabilityDataProvider.availabilityModels, controller, availabilityDataProvider),
-      actionButtons: buildActionButtons(),
+          buildAvailabilityCard(availability.data!, controller, userDataProvider),
+      actionButtons: buildActionButtons(context), // TODO: figure out if this can be useContext
     );
   }
 
-  Widget buildAvailabilityCard(List<AvailabilityModel?> data, PageController controller, AvailabilityDataProvider provider) {
+  Widget buildAvailabilityCard(List<AvailabilityModel?> data, PageController controller, UserDataProvider userDataProvider) {
     List<Widget> locationsList = [];
 
-    // loop through all the models, adding each one to locationsList
     for (AvailabilityModel? model in data) {
       if (model != null) {
-        if (provider.locationViewState[model.name]!) {
+        if (!userDataProvider.userProfileModel!.selectedOccuspaceLocations!.contains(model.name)) {
           locationsList.add(AvailabilityDisplay(model: model));
         }
       }
@@ -99,7 +111,7 @@ class AvailabilityCard extends HookWidget
     );
   }
 
-  List<Widget> buildActionButtons() {
+  List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
@@ -110,7 +122,7 @@ class AvailabilityCard extends HookWidget
         'Manage Locations',
       ),
       onPressed: () {
-        Navigator.pushNamed(useContext(), RoutePaths.ManageAvailabilityView);
+        Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView);
       },
     ));
     return actionButtons;

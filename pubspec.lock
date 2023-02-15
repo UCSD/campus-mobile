@@ -253,6 +253,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.1"
+  fast_immutable_collections:
+    dependency: transitive
+    description:
+      name: fast_immutable_collections
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.4.3"
   ffi:
     dependency: transitive
     description:
@@ -473,6 +480,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fquery:
+    dependency: "direct main"
+    description:
+      name: fquery
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0-beta.3+1"
   frontend_server_client:
     dependency: transitive
     description:
