@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/core/models/location.dart';
-import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
@@ -219,15 +218,6 @@ List<SingleChildWidget> dependentServices = [
       scannerMessageDataProvider.fetchData();
     }
     return scannerMessageDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
-      create: (_) {
-    var availabilityDataProvider = AvailabilityDataProvider();
-    availabilityDataProvider.fetchAvailability();
-    return availabilityDataProvider;
-  }, update: (_, userDataProvider, availabilityDataProvider) {
-    availabilityDataProvider!.userDataProvider = userDataProvider;
-    return availabilityDataProvider;
   }),
   ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
       ShuttleDataProvider>(create: (_) {

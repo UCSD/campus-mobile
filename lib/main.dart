@@ -29,7 +29,7 @@ final queryClient = QueryClient(
   defaultQueryOptions: DefaultQueryOptions(
     cacheDuration: Duration(minutes: 20),
     //refetchInterval: Duration(minutes: 5),
-    refetchOnMount: RefetchOnMount.always,
+    refetchOnMount: RefetchOnMount.stale,
     staleDuration: Duration(minutes: 3),
   ),
 );

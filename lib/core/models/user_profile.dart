@@ -130,6 +130,8 @@ class UserProfileModel extends HiveObject {
             ? null
             : List<dynamic>.from(selectedVentilationLocations!.map((x) => x)),
       };
+
+  bool isOccuspaceLocationDisabled(String name) => selectedOccuspaceLocations!.contains(name);
 }
 
 class Classifications {

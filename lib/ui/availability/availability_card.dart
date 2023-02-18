@@ -8,44 +8,32 @@ import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:fquery/fquery.dart';
 import 'package:provider/provider.dart';
 
-import '../../app_networking.dart';
+import '../../core/hooks/availability_query.dart';
 
 const cardId = 'availability';
-
-UseQueryResult<List<AvailabilityModel>, dynamic> useAvailabilityModel()
-{
-  return useQuery(['availability'], () async {
-    /// fetch data
-    String _response = await NetworkHelper().authorizedFetch(
-      "https://api-qa.ucsd.edu:8243/campusbusyness/v1/busyness", {
-      "Authorization": "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
-    });
-
-    /// parse data
-    final data = availabilityStatusFromJson(_response).data!;
-    return data;
-  });
-}
 
 class AvailabilityCard extends HookWidget
 {
   @override
   Widget build(BuildContext context) {
     final controller = usePageController();
-    final userDataProvider = useMemoized(() => Provider.of<UserDataProvider>(context));
+    final userDataProvider = useMemoized(() {
+      debugPrint("Memoized UserDataProvider!");
+      return Provider.of<UserDataProvider>(context);
+    }, [context]);
     useListenable(userDataProvider);
 
-    final availability = useAvailabilityModel();
+    final availability = useFetchAvailabilityModels();
+    debugPrint("AvailabilityCard: SUCCESSFULLY LOADED DATA!");
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => availability.refetch(),
-      isLoading: availability.isLoading,
+      isLoading: availability.isFetching,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: availability.isError ? "" : null, // TODO: figure out what to do with errorText
       child: () =>
@@ -59,7 +47,7 @@ class AvailabilityCard extends HookWidget
 
     for (AvailabilityModel? model in data) {
       if (model != null) {
-        if (!userDataProvider.userProfileModel!.selectedOccuspaceLocations!.contains(model.name)) {
+        if (!userDataProvider.userProfileModel!.isOccuspaceLocationDisabled(model.name!)) {
           locationsList.add(AvailabilityDisplay(model: model));
         }
       }

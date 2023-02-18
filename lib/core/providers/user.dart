@@ -48,6 +48,15 @@ class UserDataProvider extends ChangeNotifier {
   late PushNotificationDataProvider _pushNotificationDataProvider;
   CardsDataProvider? _cardsDataProvider;
 
+  void toggleOccuspaceLocation(String location)
+  {
+    // try to remove user's selected occuspace location
+    // add it in if it does not exist
+    if(!userProfileModel!.selectedOccuspaceLocations!.remove(location))
+      userProfileModel!.selectedOccuspaceLocations!.add(location);
+    notifyListeners();
+  }
+
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
   Future updateAuthenticationModel(AuthenticationModel? model) async {
