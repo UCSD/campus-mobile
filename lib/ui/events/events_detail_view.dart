@@ -1,18 +1,21 @@
 import 'package:campus_mobile_experimental/core/models/events.dart';
-import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/event_time.dart';
 import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class EventDetailView extends StatelessWidget {
+import '../../core/hooks/events_query.dart';
+
+class EventDetailView extends HookWidget {
   const EventDetailView({Key? key, required this.data}) : super(key: key);
   final EventModel data;
+
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
+    final events = useFetchEventsModels();
+    return events.isFetching
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
