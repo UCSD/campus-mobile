@@ -51,13 +51,6 @@ List<SingleChildWidget> independentServices = [
     },
     lazy: false,
   ),
-  ChangeNotifierProvider<EventsDataProvider>(
-    create: (_) {
-      EventsDataProvider _eventsDataProvider = EventsDataProvider();
-      _eventsDataProvider.fetchEvents();
-      return _eventsDataProvider;
-    },
-  ),
   ChangeNotifierProvider<WeatherDataProvider>(
     create: (_) {
       WeatherDataProvider _weatherDataProvider = WeatherDataProvider();

@@ -1,16 +1,17 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/events/events_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
+import '../../core/hooks/events_query.dart';
 
 const String cardId = 'events';
 
 //edit these files
-class EventsCard extends StatelessWidget {
+class EventsCard extends HookWidget {
   Widget buildEventsCard(List<EventModel>? data) {
     return EventsList(listSize: 3);
   }
@@ -35,19 +36,17 @@ class EventsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final events = useFetchEventsModels();
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () =>
-          Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
-      isLoading: Provider.of<EventsDataProvider>(context).isLoading,
+      reload: events.refetch,
+      isLoading: events.isFetching,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<EventsDataProvider>(context).error,
-      child: () => buildEventsCard(
-          Provider.of<EventsDataProvider>(context).eventsModels),
-      actionButtons: buildActionButtons(
-          context, Provider.of<EventsDataProvider>(context).eventsModels),
+      errorText: events.error,
+      child: () => buildEventsCard(events.data!),
+      actionButtons: buildActionButtons(context, events.data!),
     );
   }
 }

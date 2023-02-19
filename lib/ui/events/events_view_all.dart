@@ -1,21 +1,22 @@
 import 'package:campus_mobile_experimental/core/models/events.dart';
-import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/events/event_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class EventsAll extends StatelessWidget {
+import '../../core/hooks/events_query.dart';
+
+class EventsAll extends HookWidget {
   const EventsAll({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
+    final events = useFetchEventsModels();
+    return events.isFetching
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
-        : buildEventsList(
-            Provider.of<EventsDataProvider>(context).eventsModels!, context);
+        : buildEventsList(events.data!, context);
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {

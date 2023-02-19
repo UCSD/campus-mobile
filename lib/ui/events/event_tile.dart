@@ -1,18 +1,20 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
-import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
-class EventTile extends StatelessWidget {
+import '../../core/hooks/events_query.dart';
+
+class EventTile extends HookWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
   final EventModel data;
   final double tileWidth = 190;
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
+    final events = useFetchEventsModels();
+    return events.isFetching
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
