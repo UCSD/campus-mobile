@@ -367,11 +367,7 @@ packages:
       sha256: "839f1b48032a61962792cea1225fae030d4f27163867f181d6d2072dd40acbee"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
-    version: "2.1.0"
-=======
     version: "1.7.3"
->>>>>>> c3bryant/flutter-migration-3.7.x
   firebase_crashlytics:
     dependency: "direct main"
     description:
@@ -676,8 +672,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-<<<<<<< HEAD
-=======
   http:
     dependency: transitive
     description:
@@ -686,7 +680,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.5"
->>>>>>> c3bryant/flutter-migration-3.7.x
   http_multi_server:
     dependency: transitive
     description:
