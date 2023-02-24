@@ -53,6 +53,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   hive_generator: 1.1.0
+dependency_overrides:
+  firebase_core_platform_interface: 4.4.0
 flutter:
   uses-material-design: true
   assets:
