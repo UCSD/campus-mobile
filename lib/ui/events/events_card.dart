@@ -41,12 +41,12 @@ class EventsCard extends HookWidget {
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: events.refetch,
+      reload: () => events.refetch(),
       isLoading: events.isFetching,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: events.error,
       child: () => buildEventsCard(events.data!),
-      actionButtons: buildActionButtons(context, events.data!),
+      actionButtons: events.isFetching ? null : buildActionButtons(context, events.data!),
     );
   }
 }

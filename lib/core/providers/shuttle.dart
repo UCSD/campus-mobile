@@ -54,7 +54,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       if (userDataProvider != null && !reloading) {
-        reorderStops(userDataProvider!.userProfileModel!.selectedStops);
+        reorderStops(userDataProvider!.userProfileModel!.disabledStops);
       }
 
       // get closest stop to current user
@@ -87,7 +87,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   void reorderStops(List<int?>? order) {
     /// update userProfileModel with selectedStops
-    userDataProvider!.userProfileModel!.selectedStops = order;
+    userDataProvider!.userProfileModel!.disabledStops = order;
     if (userDataProvider!.isLoggedIn) {
       /// post updated userProfileModel for logged-in users
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
@@ -96,8 +96,8 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> addStop(int? stopID) async {
-    if (!userDataProvider!.userProfileModel!.selectedStops!.contains(stopID)) {
-      userDataProvider!.userProfileModel!.selectedStops!.add(stopID);
+    if (!userDataProvider!.userProfileModel!.disabledStops!.contains(stopID)) {
+      userDataProvider!.userProfileModel!.disabledStops!.add(stopID);
       // update userprofilemodel locally and in database after a stop is added
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
       arrivalsToRender![stopID] = await fetchArrivalInformation(stopID!);
@@ -106,8 +106,8 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> removeStop(int? stopID) async {
-    if (userDataProvider!.userProfileModel!.selectedStops!.contains(stopID)) {
-      userDataProvider!.userProfileModel!.selectedStops!.remove(stopID);
+    if (userDataProvider!.userProfileModel!.disabledStops!.contains(stopID)) {
+      userDataProvider!.userProfileModel!.disabledStops!.remove(stopID);
       // update userprofilemodel locally and in database after a stop is removed
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
     }
@@ -187,9 +187,9 @@ class ShuttleDataProvider extends ChangeNotifier {
     if (fetchedStops != null) {
       if (userDataProvider!.userProfileModel != null) {
         for (int i = 0;
-            i < userDataProvider!.userProfileModel!.selectedStops!.length;
+            i < userDataProvider!.userProfileModel!.disabledStops!.length;
             i++) {
-          int stopID = userDataProvider!.userProfileModel!.selectedStops![i]!;
+          int stopID = userDataProvider!.userProfileModel!.disabledStops![i]!;
           if (fetchedStops![stopID] != null) {
             stopsToRenderList.add(fetchedStops![stopID]!);
           }

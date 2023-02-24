@@ -52,8 +52,8 @@ class UserDataProvider extends ChangeNotifier {
   {
     // try to remove user's selected occuspace location
     // add it in if it does not exist
-    if(!userProfileModel!.selectedOccuspaceLocations!.remove(location))
-      userProfileModel!.selectedOccuspaceLocations!.add(location);
+    if(!userProfileModel!.disabledOccuspaceLocations!.remove(location))
+      userProfileModel!.disabledOccuspaceLocations!.add(location);
     notifyListeners();
   }
 

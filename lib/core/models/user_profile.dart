@@ -23,36 +23,36 @@ class UserProfileModel extends HiveObject {
   String? username;
 
   @HiveField(0)
-  List<String>? selectedLots;
+  List<String>? disabledLots;
   @HiveField(1)
-  List<String?>? selectedOccuspaceLocations;
+  List<String?>? disabledOccuspaceLocations;
   @HiveField(2)
   List<String?>? subscribedTopics;
   @HiveField(3)
-  Map<String?, bool>? selectedParkingSpots;
+  Map<String?, bool>? disabledParkingSpots;
   @HiveField(4)
-  Map<String?, bool>? selectedParkingLots;
+  Map<String?, bool>? disabledParkingLots;
   @HiveField(5)
-  List<int?>? selectedStops;
+  List<int?>? disabledStops;
   @HiveField(6)
   List<String>? surveyCompletion;
   @HiveField(7)
-  List<String?>? selectedVentilationLocations;
+  List<String?>? disabledVentilationLocations;
 
   UserProfileModel(
       {this.classifications,
       this.latestTimeStamp,
       this.pid,
-      this.selectedLots,
-      this.selectedOccuspaceLocations,
+      this.disabledLots,
+      this.disabledOccuspaceLocations,
       this.subscribedTopics,
       this.ucsdaffiliation,
       this.username,
-      this.selectedParkingSpots,
-      this.selectedParkingLots,
-      this.selectedStops,
+      this.disabledParkingSpots,
+      this.disabledParkingLots,
+      this.disabledStops,
       this.surveyCompletion,
-      this.selectedVentilationLocations});
+      this.disabledVentilationLocations});
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       UserProfileModel(
@@ -62,10 +62,10 @@ class UserProfileModel extends HiveObject {
         latestTimeStamp:
             json["latestTimeStamp"] == null ? null : json["latestTimeStamp"],
         pid: json["pid"] == null ? null : json["pid"],
-        selectedLots: json["selectedLots"] == null
+        disabledLots: json["selectedLots"] == null
             ? []
             : List<String>.from(json["selectedLots"].map((x) => x)),
-        selectedOccuspaceLocations: json["selectedOccuspaceLocations"] == null
+        disabledOccuspaceLocations: json["selectedOccuspaceLocations"] == null
             ? []
             : List<String>.from(
                 json["selectedOccuspaceLocations"].map((x) => x)),
@@ -75,21 +75,21 @@ class UserProfileModel extends HiveObject {
         ucsdaffiliation:
             json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
         username: json["username"] == null ? null : json["username"],
-        selectedParkingLots: json["selectedParkingLots"] == null
+        disabledParkingLots: json["selectedParkingLots"] == null
             ? Map<String, bool>()
             : Map<String, bool>.from(json["selectedParkingLots"]
                 .map((x, y) => MapEntry<String, bool>(x, y))),
-        selectedParkingSpots: json["selectedParkingSpots"] == null
+        disabledParkingSpots: json["selectedParkingSpots"] == null
             ? Map<String, bool>()
             : Map<String, bool>.from(json["selectedParkingSpots"]
                 .map((x, y) => MapEntry<String, bool>(x, y))),
-        selectedStops: json["selectedStops"] == null
+        disabledStops: json["selectedStops"] == null
             ? []
             : List<int>.from(json["selectedStops"].map((x) => x)),
         surveyCompletion: json["surveyCompletion"] == null
             ? []
             : List<String>.from(json["surveyCompletion"].map((x) => x)),
-        selectedVentilationLocations:
+        disabledVentilationLocations:
             json['selectedVentilationLocations'] == null
                 ? []
                 : List<String>.from(
@@ -101,37 +101,41 @@ class UserProfileModel extends HiveObject {
             classifications == null ? null : classifications!.toJson(),
         "latestTimeStamp": latestTimeStamp == null ? null : latestTimeStamp,
         "pid": pid == null ? null : pid,
-        "selectedLots": selectedLots == null
+        "selectedLots": disabledLots == null
             ? null
-            : List<dynamic>.from(selectedLots!.map((x) => x)),
-        "selectedOccuspaceLocations": selectedOccuspaceLocations == null
+            : List<dynamic>.from(disabledLots!.map((x) => x)),
+        "selectedOccuspaceLocations": disabledOccuspaceLocations == null
             ? null
-            : List<dynamic>.from(selectedOccuspaceLocations!.map((x) => x)),
+            : List<dynamic>.from(disabledOccuspaceLocations!.map((x) => x)),
         "subscribedTopics": subscribedTopics == null
             ? null
             : List<dynamic>.from(subscribedTopics!.map((x) => x)),
         "ucsdaffiliation": ucsdaffiliation == null ? null : ucsdaffiliation,
         "username": username == null ? null : username,
-        "selectedParkingLots": selectedParkingLots == null
+        "selectedParkingLots": disabledParkingLots == null
             ? null
-            : Map.from(selectedParkingLots!
+            : Map.from(disabledParkingLots!
                 .map((x, y) => MapEntry<String?, bool>(x, y))),
-        "selectedParkingSpots": selectedParkingSpots == null
+        "selectedParkingSpots": disabledParkingSpots == null
             ? null
-            : Map.from(selectedParkingSpots!
+            : Map.from(disabledParkingSpots!
                 .map((x, y) => MapEntry<String?, bool>(x, y))),
-        "selectedStops": selectedStops == null
+        "selectedStops": disabledStops == null
             ? null
-            : List<dynamic>.from(selectedStops!.map((x) => x)),
+            : List<dynamic>.from(disabledStops!.map((x) => x)),
         "surveyCompletion": surveyCompletion == null
             ? null
             : List<dynamic>.from(surveyCompletion!.map((x) => x)),
-        "selectedVentilationLocations": selectedVentilationLocations == null
+        "selectedVentilationLocations": disabledVentilationLocations == null
             ? null
-            : List<dynamic>.from(selectedVentilationLocations!.map((x) => x)),
+            : List<dynamic>.from(disabledVentilationLocations!.map((x) => x)),
       };
 
-  bool isOccuspaceLocationDisabled(String name) => selectedOccuspaceLocations!.contains(name);
+  // DATA OPERATION FUNCTIONS
+  bool isOccuspaceLocationDisabled(String name) => disabledOccuspaceLocations!.contains(name);
+  // TODO: test these to make sure it works
+  bool isParkingLotDisabled(String name) => disabledParkingLots!.containsKey(name);
+  bool isParkingSpotDisabled(String name) => disabledParkingSpots!.containsKey(name);
 }
 
 class Classifications {

@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:campus_mobile_experimental/core/models/user_profile.dart';
+
 List<ParkingModel> parkingModelFromJson(String str) => List<ParkingModel>.from(
     json.decode(str).map((x) => ParkingModel.fromJson(x)));
 
@@ -67,4 +69,10 @@ class ParkingModel {
             lastUpdated == null ? null : lastUpdated!.toIso8601String(),
         "AvailabilityType": availabilityType == null ? null : availabilityType
       };
+}
+
+bool compareLocationsToUserProfile(ParkingModel model1, UserProfileModel model2)
+{
+  // blah blah
+  return true || false;
 }
