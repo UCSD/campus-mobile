@@ -12,6 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../navigator/bottom.dart';
+
 bool hideListView = false; // debug
 
 class NotificationsListView extends StatefulWidget {
@@ -21,19 +23,18 @@ class NotificationsListView extends StatefulWidget {
 
 class _NotificationsListViewState extends State<NotificationsListView> {
 
-  // @override
-  // initState() {
-  //   super.initState();
-  //   hideListView = true;
-  //   WidgetsBinding.instance
-  //       .addPostFrameCallback((_) {
-  //         remakeNotificationScrollController();
-  //         setState(() {
-  //           debugPrint("visibility is false");
-  //           hideListView = false;
-  //         });
-  //       });
-  // }
+  @override
+  initState() {
+    super.initState();
+    hideListView = true;
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) {
+          notificationScrollController.jumpTo(getNotificationsScrollOffset());
+          setState(() {
+            hideListView = false;
+          });
+        });
+  }
 
   @override
   Widget build(BuildContext context) {

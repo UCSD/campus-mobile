@@ -10,10 +10,6 @@ import '../../ui/navigator/bottom.dart';
 
 ScrollController notificationScrollController = ScrollController();
 
-void remakeNotificationScrollController() {
-  notificationScrollController.jumpTo(getNotificationsScrollOffset());
-}
-
 class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
     /// DEFAULT STATES
@@ -23,8 +19,6 @@ class MessagesDataProvider extends ChangeNotifier {
     _statusText = NotificationsConstants.statusFetching;
     _hasMoreMessagesToLoad = false;
     notificationScrollController.addListener(() {
-      setNotificationsScrollOffset(notificationScrollController.offset);
-      debugPrint("Listener: getNotificationsScrollOffset = ${getNotificationsScrollOffset()}");
       var triggerFetchMoreSize =
           0.9 * notificationScrollController.position.maxScrollExtent;
       if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
@@ -32,6 +26,7 @@ class MessagesDataProvider extends ChangeNotifier {
           fetchMessages(false);
         }
       }
+      setNotificationsScrollOffset(notificationScrollController.offset);
     });
   }
 
