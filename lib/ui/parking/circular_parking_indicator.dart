@@ -90,7 +90,7 @@ class CircularParkingIndicators extends StatelessWidget {
                           height: 75,
                           width: 75,
                           child: CircularPercentIndicator(
-                            radius: 75,
+                            radius: 37,
                             animation: true,
                             animationDuration: 1000,
                             lineWidth: 7.5,
@@ -146,7 +146,7 @@ class CircularParkingIndicators extends StatelessWidget {
                           height: 75,
                           width: 75,
                           child: CircularPercentIndicator(
-                            radius: 75,
+                            radius: 37,
                             animation: false,
                             lineWidth: 7.5,
                             percent: 0.0,
