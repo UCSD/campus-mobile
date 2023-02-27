@@ -26,7 +26,7 @@ dependencies:
   flutter_secure_storage: 5.0.2
   flutter_sticky_header: 0.6.0
   get: 4.1.4
-  google_maps_flutter: 2.0.6
+  google_maps_flutter: 2.2.2
   hive: 2.0.4
   hive_flutter: 1.0.0
   intl: 0.17.0
@@ -36,7 +36,7 @@ dependencies:
       ref: 9fd5cc0aa1a68d70588741f40bfc6830b46c10c1
   geolocator: ^9.0.2
   package_info: 2.0.2
-  percent_indicator: 3.0.1
+  percent_indicator: 4.2.2
   permission_handler: ^10.2.0
   pointycastle: 3.4.0
   provider: 6.0.1
@@ -53,6 +53,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   hive_generator: 1.1.0
+dependency_overrides:
+  firebase_core_platform_interface: 4.4.0
 flutter:
   uses-material-design: true
   assets:
