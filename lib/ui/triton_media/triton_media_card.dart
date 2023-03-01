@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 const String cardId = 'triton_media';
+
 //edit these files
 class MediaCard extends StatelessWidget {
   Widget buildMediaCard(List<MediaModel>? data) {
@@ -19,7 +20,7 @@ class MediaCard extends StatelessWidget {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
-        primary: Theme.of(context).buttonColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'View All',
@@ -42,8 +43,8 @@ class MediaCard extends StatelessWidget {
       isLoading: Provider.of<MediaDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<MediaDataProvider>(context).error,
-      child: () => buildMediaCard(
-          Provider.of<MediaDataProvider>(context).mediaModels),
+      child: () =>
+          buildMediaCard(Provider.of<MediaDataProvider>(context).mediaModels),
       actionButtons: buildActionButtons(
           context, Provider.of<MediaDataProvider>(context).mediaModels),
     );

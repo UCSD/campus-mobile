@@ -39,7 +39,7 @@ class MediaAll extends StatelessWidget {
     } else {
       return ContainerView(
         child: Center(
-          child: Text('No events found.'),
+          child: Text('No media found.'),
         ),
       );
     }

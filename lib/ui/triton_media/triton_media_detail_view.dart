@@ -4,11 +4,13 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:audioplayers/audioplayers.dart';
+//import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:video_player/video_player.dart';
-
-final player = AudioPlayer();
-late VideoPlayerController _controller;
+import 'package:audio_session/audio_session.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:rxdart/rxdart.dart';
+import 'dart:math';
 
 class MediaDetailView extends StatefulWidget {
   const MediaDetailView({Key? key, required this.data}) : super(key: key);
@@ -19,43 +21,26 @@ class MediaDetailView extends StatefulWidget {
 }
 
 class _MediaDetailView extends State<MediaDetailView> {
-  // _MediaDetailView({Key? key, required this.data});
-  // final MediaModel data;
-
-  bool isPlaying = false;
-  Duration duration = Duration.zero;
-  Duration position = Duration.zero;
+  late AudioPlayer _player;
 
   @override
   Future<void> dispose() async {
     super.dispose();
-    await player.stop();
+    _player.dispose();
   }
 
-  String formatTime(int seconds) {
-    return '${(Duration(seconds: seconds))}'.split('.')[0].padLeft(8, '0');
-  }
+  Stream<PositionData> get _positionDataStream =>
+      Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+          _player.positionStream,
+          _player.bufferedPositionStream,
+          _player.durationStream,
+          (position, bufferedPosition, duration) => PositionData(
+              position, bufferedPosition, duration ?? Duration.zero));
 
   @override
   void initState() {
     super.initState();
-
-    player.onPlayerStateChanged.listen((state) {
-      setState(() {
-        isPlaying = state == PlayerState.playing;
-      });
-    });
-
-    player.onDurationChanged.listen((newDuration) {
-      setState(() {
-        duration = newDuration;
-      });
-    });
-    player.onPositionChanged.listen((newPosition) {
-      setState(() {
-        position = newPosition;
-      });
-    });
+    _player = AudioPlayer();
   }
 
   @override
@@ -70,184 +55,89 @@ class _MediaDetailView extends State<MediaDetailView> {
   }
 
   Widget buildDetailView(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    if (widget.data.tags?.last == "Local Audio File")
-      player.setSource(AssetSource(widget.data.link ?? ""));
-    if (widget.data.tags?.last == "Remote Audio File" ||
-        widget.data.tags?.last == "Stream Audio File")
-      player.setSource(UrlSource(widget.data.link ?? ""));
-    return ListView(
-      children: [
-        Container(
-          width: width,
-          height: height * 0.05,
+    AudioSource _audio;
+
+    if (widget.data.tags?.last == "Local Audio File") {
+      String param = widget.data.link ?? "";
+      _audio = AudioSource.uri(
+        Uri.parse('asset:///assets/' + param),
+        tag: MediaItem(
+          id: '${1}',
+          title: (widget.data.title ?? ""),
+          artUri: Uri.parse(widget.data.imageHQ ?? ""),
         ),
-        Container(
-          width: width * 0.95,
-          height: height * 0.33,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-            //fit: BoxFit.fill,
-            image: (widget.data.imageHQ!.isEmpty)
-                ? AssetImage('assets/images/UCSDMobile_banner.png')
-                    as ImageProvider
-                : NetworkImage(widget.data.imageHQ!),
-          )),
+      );
+    } else {
+      _audio = AudioSource.uri(
+        Uri.parse(widget.data.link ?? ""),
+        tag: MediaItem(
+          id: '${0}',
+          title: (widget.data.title ?? ""),
+          artUri: Uri.parse(widget.data.imageHQ ?? ""),
         ),
-        Container(
-          child: Center(
-            child: Container(
-              width: width * 0.8,
-              child: Column(
+      );
+    }
+    _player.setAudioSource(_audio);
+    return ListView(children: [
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          //Expanded(
+          //child:
+          StreamBuilder<SequenceState?>(
+            stream: _player.sequenceStateStream,
+            builder: (context, snapshot) {
+              final state = snapshot.data;
+              if (state?.sequence.isEmpty ?? true) {
+                return const SizedBox();
+              }
+              final metadata = state!.currentSource!.tag as MediaItem;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  //Expanded(
+                  //child:
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                    padding: const EdgeInsets.all(40.0),
+                    child: Center(
+                        child: Image.network(metadata.artUri.toString())),
                   ),
                   Text(
-                    widget.data.title!,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0),
+                    metadata.title,
+                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
                   ),
                 ],
-              ),
-            ),
+              );
+            },
           ),
-        ),
-        Container(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                widget.data.tags?.last == "Stream Audio File"
-                    ? SizedBox.shrink()
-                    : Slider(
-                        activeColor: Colors.black,
-                        min: 0,
-                        max: widget.data.tags?.last == "Stream Audio File"
-                            ? position.inSeconds.toDouble()
-                            : duration.inSeconds.toDouble(),
-                        value: position.inSeconds.toDouble(),
-                        onChanged: (value) {
-                          final position = Duration(seconds: value.toInt());
-                          player.seek(position);
-                        },
-                      ),
 
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      widget.data.tags?.last == "Stream Audio File"
-                          ? SizedBox.shrink()
-                          : Text(formatTime(position.inSeconds)),
-                      widget.data.tags?.last == "Stream Audio File"
-                          ? SizedBox.shrink()
-                          : Text(formatTime((duration - position).inSeconds)),
-                    ],
-                  ),
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    widget.data.tags?.last == "Stream Audio File"
-                        ? Text("")
-                        : IconButton(
-                            color: Colors.black,
-                            icon: const Icon(Icons.replay_10_outlined),
-                            onPressed: () {
-                              if (position == duration) {
-                                if (widget.data.tags?.last ==
-                                    "Local Audio File")
-                                  player.play(
-                                      AssetSource(widget.data.link ?? ""));
-                                if (widget.data.tags?.last ==
-                                    "Remote Audio File")
-                                  player
-                                      .play(UrlSource(widget.data.link ?? ""));
-                              } else if (!isPlaying) {
-                                if (position < Duration(seconds: 10))
-                                  player.seek(Duration(seconds: 0));
-                                else
-                                  player.seek(position - Duration(seconds: 10));
-                                player.pause();
-                              } else {
-                                if (position < Duration(seconds: 10))
-                                  player.seek(Duration(seconds: 0));
-                                else
-                                  player.seek(position - Duration(seconds: 10));
-                              }
-                            },
-                          ),
-                    IconButton(
-                      color: Colors.black,
-                      iconSize: 75.0,
-                      icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                      onPressed: () {
-                        if (isPlaying) {
-                          player.pause();
-                        } else {
-                          player.resume();
-                        }
+          ControlButtons(_player),
+          widget.data.tags?.last == "Stream Audio File"
+              ? Container()
+              : StreamBuilder<PositionData>(
+                  stream: _positionDataStream,
+                  builder: (context, snapshot) {
+                    final positionData = snapshot.data;
+                    return SeekBar(
+                      duration: positionData?.duration ?? Duration.zero,
+                      position: positionData?.position ?? Duration.zero,
+                      bufferedPosition:
+                          positionData?.bufferedPosition ?? Duration.zero,
+                      onChangeEnd: (newPosition) {
+                        _player.seek(newPosition);
                       },
-                    ),
-                    widget.data.tags?.last == "Stream Audio File"
-                        ? Text("")
-                        : IconButton(
-                            color: Colors.black,
-                            icon: const Icon(Icons.forward_10_outlined),
-                            onPressed: () {
-                              if (position == Duration(seconds: 0)) {
-                                player.seek(position + Duration(seconds: 10));
-                              } else if (!isPlaying) {
-                                if (position > duration - Duration(seconds: 10))
-                                  player.seek(duration);
-                                else
-                                  player.seek(position + Duration(seconds: 10));
-                                player.pause();
-                              } else {
-                                if (position > duration - Duration(seconds: 10))
-                                  player.seek(duration);
-                                else
-                                  player.seek(position + Duration(seconds: 10));
-                              }
-                            },
-                          ),
-                  ],
+                    );
+                  },
                 ),
-                //Delete date
-                //Center(child: MediaTime(data: widget.data)),
-                widget.data.description != null &&
-                        widget.data.description!.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          widget.data.description!,
-                          style: TextStyle(
-                              fontSize: 16,
-                              height: 1.3,
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
-                      )
-                    : Container(),
-                widget.data.tags?.last == "Stream Audio File"
-                    ? BroadcastScheduleButton(
-                        link: "https://spinitron.com/KSDT/calendar")
-                    : Container(),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
+
+          widget.data.tags?.last == "Stream Audio File"
+              ? BroadcastScheduleButton(
+                  link: "https://spinitron.com/KSDT/calendar")
+              : Container(),
+        ],
+      ),
+    ]);
   }
 }
 
@@ -280,4 +170,278 @@ class BroadcastScheduleButton extends StatelessWidget {
           }),
     );
   }
+}
+
+class ControlButtons extends StatelessWidget {
+  final AudioPlayer player;
+
+  const ControlButtons(this.player, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.volume_up),
+          onPressed: () {
+            showSliderDialog(
+              context: context,
+              title: "Adjust volume",
+              divisions: 10,
+              min: 0.0,
+              max: 1.0,
+              stream: player.volumeStream,
+              onChanged: player.setVolume,
+            );
+          },
+        ),
+        StreamBuilder<SequenceState?>(
+          stream: player.sequenceStateStream,
+          builder: (context, snapshot) => IconButton(
+            icon: const Icon(Icons.skip_previous),
+            onPressed: player.hasPrevious ? player.seekToPrevious : null,
+          ),
+        ),
+        StreamBuilder<PlayerState>(
+          stream: player.playerStateStream,
+          builder: (context, snapshot) {
+            final playerState = snapshot.data;
+            final processingState = playerState?.processingState;
+            final playing = playerState?.playing;
+            if (processingState == ProcessingState.loading ||
+                processingState == ProcessingState.buffering) {
+              return Container(
+                margin: const EdgeInsets.all(8.0),
+                width: 64.0,
+                height: 64.0,
+                child: const CircularProgressIndicator(),
+              );
+            } else if (playing != true) {
+              return IconButton(
+                icon: const Icon(Icons.play_arrow),
+                iconSize: 64.0,
+                onPressed: player.play,
+              );
+            } else if (processingState != ProcessingState.completed) {
+              return IconButton(
+                icon: const Icon(Icons.pause),
+                iconSize: 64.0,
+                onPressed: player.pause,
+              );
+            } else {
+              return IconButton(
+                icon: const Icon(Icons.replay),
+                iconSize: 64.0,
+                onPressed: () => player.seek(Duration.zero,
+                    index: player.effectiveIndices!.first),
+              );
+            }
+          },
+        ),
+        StreamBuilder<SequenceState?>(
+          stream: player.sequenceStateStream,
+          builder: (context, snapshot) => IconButton(
+            icon: const Icon(Icons.skip_next),
+            onPressed: player.hasNext ? player.seekToNext : null,
+          ),
+        ),
+        StreamBuilder<double>(
+          stream: player.speedStream,
+          builder: (context, snapshot) => IconButton(
+            icon: Text("${snapshot.data?.toStringAsFixed(1)}x",
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            onPressed: () {
+              showSliderDialog(
+                context: context,
+                title: "Adjust speed",
+                divisions: 10,
+                min: 0.5,
+                max: 1.5,
+                stream: player.speedStream,
+                onChanged: player.setSpeed,
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SeekBar extends StatefulWidget {
+  final Duration duration;
+  final Duration position;
+  final Duration bufferedPosition;
+  final ValueChanged<Duration>? onChanged;
+  final ValueChanged<Duration>? onChangeEnd;
+
+  const SeekBar({
+    Key? key,
+    required this.duration,
+    required this.position,
+    required this.bufferedPosition,
+    this.onChanged,
+    this.onChangeEnd,
+  }) : super(key: key);
+
+  @override
+  SeekBarState createState() => SeekBarState();
+}
+
+class SeekBarState extends State<SeekBar> {
+  double? _dragValue;
+  late SliderThemeData _sliderThemeData;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _sliderThemeData = SliderTheme.of(context).copyWith(
+      trackHeight: 2.0,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        SliderTheme(
+          data: _sliderThemeData.copyWith(
+            thumbShape: HiddenThumbComponentShape(),
+            activeTrackColor: Colors.blue.shade100,
+            inactiveTrackColor: Colors.grey.shade300,
+          ),
+          child: ExcludeSemantics(
+            child: Slider(
+              min: 0.0,
+              max: widget.duration.inMilliseconds.toDouble(),
+              value: min(widget.bufferedPosition.inMilliseconds.toDouble(),
+                  widget.duration.inMilliseconds.toDouble()),
+              onChanged: (value) {
+                setState(() {
+                  _dragValue = value;
+                });
+                if (widget.onChanged != null) {
+                  widget.onChanged!(Duration(milliseconds: value.round()));
+                }
+              },
+              onChangeEnd: (value) {
+                if (widget.onChangeEnd != null) {
+                  widget.onChangeEnd!(Duration(milliseconds: value.round()));
+                }
+                _dragValue = null;
+              },
+            ),
+          ),
+        ),
+        SliderTheme(
+          data: _sliderThemeData.copyWith(
+            inactiveTrackColor: Colors.transparent,
+          ),
+          child: Slider(
+            min: 0.0,
+            max: widget.duration.inMilliseconds.toDouble(),
+            value: min(_dragValue ?? widget.position.inMilliseconds.toDouble(),
+                widget.duration.inMilliseconds.toDouble()),
+            onChanged: (value) {
+              setState(() {
+                _dragValue = value;
+              });
+              if (widget.onChanged != null) {
+                widget.onChanged!(Duration(milliseconds: value.round()));
+              }
+            },
+            onChangeEnd: (value) {
+              if (widget.onChangeEnd != null) {
+                widget.onChangeEnd!(Duration(milliseconds: value.round()));
+              }
+              _dragValue = null;
+            },
+          ),
+        ),
+        Positioned(
+          right: 16.0,
+          bottom: 0.0,
+          child: Text(
+              RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
+                      .firstMatch("$_remaining")
+                      ?.group(1) ??
+                  '$_remaining',
+              style: Theme.of(context).textTheme.caption),
+        ),
+      ],
+    );
+  }
+
+  Duration get _remaining => widget.duration - widget.position;
+}
+
+class HiddenThumbComponentShape extends SliderComponentShape {
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) => Size.zero;
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {}
+}
+
+class PositionData {
+  final Duration position;
+  final Duration bufferedPosition;
+  final Duration duration;
+
+  PositionData(this.position, this.bufferedPosition, this.duration);
+}
+
+void showSliderDialog({
+  required BuildContext context,
+  required String title,
+  required int divisions,
+  required double min,
+  required double max,
+  String valueSuffix = '',
+  required Stream<double> stream,
+  required ValueChanged<double> onChanged,
+}) {
+  showDialog<void>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(title, textAlign: TextAlign.center),
+      content: StreamBuilder<double>(
+        stream: stream,
+        builder: (context, snapshot) => SizedBox(
+          height: 100.0,
+          child: Column(
+            children: [
+              Text('${snapshot.data?.toStringAsFixed(1)}$valueSuffix',
+                  style: const TextStyle(
+                      fontFamily: 'Fixed',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24.0)),
+              Slider(
+                divisions: divisions,
+                min: min,
+                max: max,
+                value: snapshot.data ?? 1.0,
+                onChanged: onChanged,
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
