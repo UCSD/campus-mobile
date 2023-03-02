@@ -11,7 +11,7 @@ dependencies:
   dio: 4.0.6
   encrypt: 5.0.1
   dots_indicator: 2.1.0
-  firebase_analytics: 9.0.5
+  firebase_analytics: 8.1.0
   firebase_core: ^1.2.0
   firebase_crashlytics: 2.4.5
   firebase_messaging: 11.2.6
