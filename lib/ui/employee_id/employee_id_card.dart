@@ -10,6 +10,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// TODO: make both of these one class that extends HookWidget
+
 class EmployeeIdCard extends StatefulWidget {
   @override
   _EmployeeIdCardState createState() => _EmployeeIdCardState();
