@@ -177,8 +177,6 @@ PODS:
     - Flutter
   - url_launcher (0.0.1):
     - Flutter
-  - video_player_avfoundation (0.0.1):
-    - Flutter
   - webview_flutter (0.0.1):
     - Flutter
   - wifi_connection (0.0.2):
@@ -208,7 +206,6 @@ DEPENDENCIES:
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - uni_links2 (from `.symlinks/plugins/uni_links2/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
-  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
   - wifi_connection (from `.symlinks/plugins/wifi_connection/ios`)
 
@@ -279,8 +276,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/uni_links2/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
-  video_player_avfoundation:
-    :path: ".symlinks/plugins/video_player_avfoundation/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
   wifi_connection:
@@ -327,10 +322,9 @@ SPEC CHECKSUMS:
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   uni_links2: fbc37081577fc19c6e0f7e6cdbd3baa150023635
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
-  video_player_avfoundation: 6d971a232d72e6ee25368378d48a079dea01f1cf
   webview_flutter: 9f491a9b5a66f2573946a389b2677987b0ff8c0b
   wifi_connection: cbd6d42bbd0cb9302ea325efe5bd3945576266cc
 
-PODFILE CHECKSUM: 82b8bb61bbea4e579c30d5b19bf20a0f9063bdc0
+PODFILE CHECKSUM: e0bbf5c8e53a75b510552973e41d17cf5c6e2c02
 
 COCOAPODS: 1.11.3
