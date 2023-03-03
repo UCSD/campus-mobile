@@ -51,7 +51,6 @@ dependencies:
       ref: 179eb3a322b9d947752b4ff4e810582c3e262e47
   cancellation_token_http: ^1.1.0
   audioplayers: ^1.1.1
-  video_player: ^2.4.10
   audio_service: ^0.18.9
   just_audio: ^0.9.31
   just_audio_background: ^0.0.1-beta.9
