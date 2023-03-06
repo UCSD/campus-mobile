@@ -11,7 +11,6 @@ UseQueryResult<List<AvailabilityModel>, dynamic> useFetchAvailabilityModels()
         "https://api-qa.ucsd.edu:8243/campusbusyness/v1/busyness", {
       "Authorization": "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     });
-
     debugPrint("AvailabilityModel QUERY HOOK: FETCHING DATA!");
 
     /// parse data

@@ -4,7 +4,6 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
-import 'package:campus_mobile_experimental/core/providers/employee_id.dart';
 import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
@@ -186,18 +185,6 @@ List<SingleChildWidget> dependentServices = [
       studentIdDataProvider.fetchData();
     }
     return studentIdDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, EmployeeIdDataProvider>(
-      create: (_) {
-    var employeeIdDataProvider = EmployeeIdDataProvider();
-    return employeeIdDataProvider;
-  }, update: (_, userDataProvider, employeeIdDataProvider) {
-    employeeIdDataProvider!.userDataProvider = userDataProvider;
-    //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading!) {
-      employeeIdDataProvider.fetchData();
-    }
-    return employeeIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ScannerMessageDataProvider>(
       create: (_) {
