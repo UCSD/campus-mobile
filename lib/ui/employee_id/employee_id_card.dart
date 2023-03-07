@@ -3,50 +3,50 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/employee_id.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/employee_id.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_hooks/flutter_hooks.dart';
+import '../../core/hooks/employee_id_query.dart';
+
+
 // TODO: make both of these one class that extends HookWidget
 
-class EmployeeIdCard extends StatefulWidget {
-  @override
-  _EmployeeIdCardState createState() => _EmployeeIdCardState();
-}
+class EmployeeIdCard extends HookWidget {
 
-class _EmployeeIdCardState extends State<EmployeeIdCard> {
   String cardId = "employee_id";
   String placeholderPhotoUrl =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/resources/img/placeholderPerson.png";
   bool isValidId = false;
 
+
   @override
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
+    final accessToken = Provider.of<UserDataProvider>(context, listen: false).authenticationModel!.accessToken!;
 
-    EmployeeIdModel? employeeModel =
-        Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
-    isValidId = employeeModel != null &&
-        (employeeModel.barcode != null) &&
-        (employeeModel.employeePreferredDisplayName != null &&
-            employeeModel.employeeId != null);
+    final employeeModel = useFetchEmployeeIdModel(accessToken);
+
+    debugPrint("AvailabilityCard: SUCCESSFULLY LOADED DATA!");
+
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<EmployeeIdDataProvider>(context, listen: false)
-          .fetchData(),
-      isLoading: Provider.of<EmployeeIdDataProvider>(context).isLoading,
+      reload: () => employeeModel.refetch(),
+      isLoading: employeeModel.isFetching,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<EmployeeIdDataProvider>(context).error,
-      child: () => isValidId
-          ? buildCardContent(
-              Provider.of<EmployeeIdDataProvider>(context).employeeIdModel,
-              context)
+      errorText: employeeModel.isError ? "" : null, //TODO: figure out what to do with errorText
+      child: () => (employeeModel.data != null) &&
+          (employeeModel.data!.employeePreferredDisplayName != null &&
+              employeeModel.data!.employeeId != null)
+        ? buildCardContent(
+              employeeModel.data!, context)
           : buildErrorCardContent(context),
     );
   }
@@ -270,7 +270,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                           fontWeight: FontWeight.bold,
                           fontSize: tabletFontSize(
                               employeeIdModel.employeePreferredDisplayName,
-                              "name")),
+                              "name", context)),
                       textAlign: TextAlign.left,
                       softWrap: false,
                       maxLines: 1,
@@ -285,7 +285,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize:
-                              tabletFontSize(employeeIdModel.department, "")),
+                              tabletFontSize(employeeIdModel.department, "", context)),
                       textAlign: TextAlign.left,
                       softWrap: false,
                       maxLines: 1,
@@ -298,7 +298,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                       "Employee ID " + employeeIdModel.employeeId,
                       style: TextStyle(
                           fontSize: tabletFontSize(
-                              "Employee ID " + employeeIdModel.employeeId, "")),
+                              "Employee ID " + employeeIdModel.employeeId, "", context)),
                       textAlign: TextAlign.left,
                       softWrap: false,
                       maxLines: 1,
@@ -445,8 +445,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: fontSizeForTablet(),
-                            letterSpacing: letterSpacingForTablet()),
+                            fontSize: fontSizeForTablet(context),
+                            letterSpacing: letterSpacingForTablet(context)),
                       )
                     ],
                   ),
@@ -474,14 +474,14 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     }
   }
 
-  double letterSpacingForTablet() {
+  double letterSpacingForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 1;
     }
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
-  double fontSizeForTablet() {
+  double fontSizeForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 2;
     }
@@ -541,8 +541,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: getRotatedPopUpFontSize(),
-                            letterSpacing: letterSpacing()),
+                            fontSize: getRotatedPopUpFontSize(context),
+                            letterSpacing: letterSpacing(context)),
                       )
                     ],
                   ),
@@ -576,12 +576,12 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     }
   }
 
-  double letterSpacing() =>
+  double letterSpacing(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 1
           : SizeConfig.safeBlockHorizontal * 3;
 
-  double getRotatedPopUpFontSize() =>
+  double getRotatedPopUpFontSize(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 2
           : SizeConfig.safeBlockHorizontal * 4;
@@ -605,9 +605,9 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     return base;
   }
 
-  double tabletFontSize(String input, String textField) {
+  double tabletFontSize(String input, String textField, BuildContext context) {
     /// Base font size
-    double base = letterSpacingForTablet();
+    double base = letterSpacingForTablet(context);
 
     /// If threshold is passed, shrink text
     // if (input.length >= 21) {
