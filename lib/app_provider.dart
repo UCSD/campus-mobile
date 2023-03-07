@@ -8,7 +8,6 @@ import 'package:campus_mobile_experimental/core/providers/employee_id.dart';
 import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
@@ -55,13 +54,6 @@ List<SingleChildWidget> independentServices = [
       WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
       _weatherDataProvider.fetchWeather();
       return _weatherDataProvider;
-    },
-  ),
-  ChangeNotifierProvider<NewsDataProvider>(
-    create: (_) {
-      NewsDataProvider _newsDataProvider = NewsDataProvider();
-      _newsDataProvider.fetchNews();
-      return _newsDataProvider;
     },
   ),
   StreamProvider<Coordinates>(
