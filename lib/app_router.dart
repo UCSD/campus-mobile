@@ -152,7 +152,7 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return CardsView();
         });
-      case RoutePaths.NotificationsSettingsView:
+      case RoutePaths.NotificationsFilter:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsSettingsView();

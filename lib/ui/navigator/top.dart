@@ -9,10 +9,12 @@ class CMAppBar extends StatelessWidget {
   CMAppBar({
     this.title,
     this.doneButton,
+    this.notificationsFilterButton,
   });
 
   final String? title;
   final bool? doneButton;
+  final bool? notificationsFilterButton;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +60,30 @@ class CMAppBar extends StatelessWidget {
                     ))
               ],
               systemOverlayStyle: SystemUiOverlayStyle.light));
+    } else if (notificationsFilterButton == true) {
+      return PreferredSize(
+          preferredSize: Size.fromHeight(42),
+          child: AppBar(
+              backgroundColor: ColorPrimary,
+              primary: true,
+              centerTitle: true,
+              title: title == null
+                  ? Image.asset(
+                      'assets/images/UCSanDiegoLogo-nav.png',
+                      fit: BoxFit.contain,
+                      height: 28,
+                    )
+                  : Text(title!),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.filter_list_outlined),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                        context, RoutePaths.NotificationsFilter);
+                  },
+                )
+              ],
+              systemOverlayStyle: SystemUiOverlayStyle.light));
     } else {
       return PreferredSize(
         preferredSize: Size.fromHeight(42),
@@ -83,6 +109,7 @@ class CustomAppBar extends ChangeNotifier {
   late CMAppBar appBar;
   String? title;
   bool? doneButton;
+  bool? notificationsFilterButton;
 
   CustomAppBar() {
     makeAppBar();
@@ -92,12 +119,21 @@ class CustomAppBar extends ChangeNotifier {
     appBar = CMAppBar(
       title: title,
       doneButton: doneButton,
+      notificationsFilterButton: notificationsFilterButton,
     );
   }
 
-  changeTitle(String? newTitle, {done: false}) {
+  changeTitle(String? newTitle, {done: false, notification: false}) {
     title = RouteTitles.titleMap[newTitle];
     doneButton = done;
+    notificationsFilterButton = notification;
+
+    // if (newTitle == "Notifications") {
+    //   notificationsFilterButton = true;
+    // } else {
+    //   notificationsFilterButton = false;
+    // }
+
     makeAppBar();
   }
 }
