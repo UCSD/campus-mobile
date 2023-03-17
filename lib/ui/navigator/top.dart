@@ -37,7 +37,7 @@ class CMAppBar extends StatelessWidget {
                     padding: EdgeInsets.only(right: 20.0),
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        primary: darkButtonColor,
+                        foregroundColor: darkButtonColor,
                       ),
                       child: Text(
                         'Done',
