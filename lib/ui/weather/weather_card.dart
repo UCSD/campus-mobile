@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/weather.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -28,7 +27,7 @@ class WeatherCard extends HookWidget {
       errorText: weatherModel.isError ? "" : null, // TODO: figure out what to do with errorText,
       child: () {
         return buildCardContent(
-          weatherModel.data!); //Provider.of<WeatherDataProvider>(context).weatherModel!
+          weatherModel.data!);
       },
     );
   }

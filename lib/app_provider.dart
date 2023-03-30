@@ -17,7 +17,6 @@ import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -47,13 +46,6 @@ List<SingleChildWidget> independentServices = [
       return PushNotificationDataProvider();
     },
     lazy: false,
-  ),
-  ChangeNotifierProvider<WeatherDataProvider>(
-    create: (_) {
-      WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
-      _weatherDataProvider.fetchWeather();
-      return _weatherDataProvider;
-    },
   ),
   StreamProvider<Coordinates>(
     initialData: Coordinates(),
