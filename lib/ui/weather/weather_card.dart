@@ -4,26 +4,32 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
+import '../../core/hooks/weather_query.dart';
 
 const String cardId = 'weather';
 const String WEATHER_ICON_BASE_URL =
     'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
 
-class WeatherCard extends StatelessWidget {
+class WeatherCard extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final weatherModel = useFetchWeather();
+    debugPrint("WeatherCard: SUCCESSFULLY LOADED DATA!");
+
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<WeatherDataProvider>(context, listen: false)
-          .fetchWeather(),
-      isLoading: Provider.of<WeatherDataProvider>(context).isLoading,
+      reload: () => weatherModel.refetch(),
+      isLoading: weatherModel.isFetching,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<WeatherDataProvider>(context).error,
-      child: () => buildCardContent(
-          Provider.of<WeatherDataProvider>(context).weatherModel!),
+      errorText: weatherModel.isError ? "" : null, // TODO: figure out what to do with errorText,
+      child: () {
+        return buildCardContent(
+          weatherModel.data!); //Provider.of<WeatherDataProvider>(context).weatherModel!
+      },
     );
   }
 
