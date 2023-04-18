@@ -111,23 +111,23 @@ class CampusMobile extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: GetMaterialApp(
-        debugShowCheckedModeBanner: true,
-        title: 'UC San Diego',
-        theme: theme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(secondary: darkAccentColor),
+          debugShowCheckedModeBanner: true,
+          title: 'UC San Diego',
+          theme: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(secondary: darkAccentColor),
+          ),
+          darkTheme: darkTheme.copyWith(
+            colorScheme:
+                darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+          ),
+          initialRoute: showOnboardingScreen
+              ? RoutePaths.OnboardingInitial
+              : RoutePaths.BottomNavigationBar,
+          onGenerateRoute: campusMobileRouter.Router.generateRoute,
+          navigatorObservers: [
+            observer,
+          ],
         ),
-        darkTheme: darkTheme.copyWith(
-          colorScheme:
-              darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
-        ),
-        initialRoute: showOnboardingScreen
-            ? RoutePaths.OnboardingInitial
-            : RoutePaths.BottomNavigationBar,
-        onGenerateRoute: campusMobileRouter.Router.generateRoute,
-        navigatorObservers: [
-          observer,
-        ],
-      ),
     );
   }
 }
