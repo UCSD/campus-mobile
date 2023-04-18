@@ -60,7 +60,7 @@ class NetworkHelper {
       actions: [
         TextButton(
           style: TextButton.styleFrom(
-            primary: ucLabelColor,
+            foregroundColor: ucLabelColor,
           ),
           onPressed: () {
             Get.back(closeOverlays: true);

@@ -106,9 +106,8 @@ class LearnMoreButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            onPrimary: Theme.of(context).primaryColor, // foreground
-            // primary: Theme.of(context).buttonColor,
-            primary: Theme.of(context).backgroundColor,
+            foregroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).backgroundColor,
           ),
           child: Text(
             'Learn More',
