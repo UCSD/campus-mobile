@@ -15,7 +15,6 @@ import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
-import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -157,18 +156,6 @@ List<SingleChildWidget> dependentServices = [
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
-      create: (_) {
-    var studentIdDataProvider = StudentIdDataProvider();
-    return studentIdDataProvider;
-  }, update: (_, userDataProvider, studentIdDataProvider) {
-    studentIdDataProvider!.userDataProvider = userDataProvider;
-    //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading!) {
-      studentIdDataProvider.fetchData();
-    }
-    return studentIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, ScannerMessageDataProvider>(
       create: (_) {

@@ -1,24 +1,23 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/hooks/student_id_query.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_barcode.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
-class StudentIdCard extends StatefulWidget {
-  @override
-  _StudentIdCardState createState() => _StudentIdCardState();
-}
+import '../../core/providers/user.dart';
 
-class _StudentIdCardState extends State<StudentIdCard> {
-  String cardId = "student_id";
+class StudentIdCard extends HookWidget {
+
+  static const cardId = "student_id";
 
   /// Pop up barcode
   createAlertDialog(
@@ -61,20 +60,36 @@ class _StudentIdCardState extends State<StudentIdCard> {
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
 
+    final userDataProvider = useMemoized(() {
+      debugPrint("Memoized UserDataProvider!");
+      return Provider.of<UserDataProvider>(context);
+    }, [context]);
+    final accessToken = userDataProvider.authenticationModel!.accessToken!;
+    final studentIDBarcode = useFetchStudentIdBarcodeModel(accessToken);
+    final studentIDName = useFetchStudentIdNameModel(accessToken);
+    final studentIDPhoto = useFetchStudentIdPhotoModel(accessToken);
+    final studentIDProfile = useFetchStudentIdProfileModel(accessToken);
+
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<StudentIdDataProvider>(context, listen: false)
-          .fetchData(),
-      isLoading: Provider.of<StudentIdDataProvider>(context).isLoading,
+      reload: () {
+        studentIDBarcode.refetch();
+        studentIDName.refetch();
+        studentIDPhoto.refetch();
+        studentIDProfile.refetch();
+      },
+      isLoading: studentIDBarcode.isFetching || studentIDName.isFetching ||
+          studentIDPhoto.isFetching || studentIDProfile.isFetching,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<StudentIdDataProvider>(context).error,
+      errorText: studentIDBarcode.isError || studentIDName.isError ||
+          studentIDPhoto.isError || studentIDProfile.isError ? "" : null,
       child: () => buildCardContent(
-          Provider.of<StudentIdDataProvider>(context).studentIdBarcodeModel,
-          Provider.of<StudentIdDataProvider>(context).studentIdNameModel,
-          Provider.of<StudentIdDataProvider>(context).studentIdPhotoModel,
-          Provider.of<StudentIdDataProvider>(context).studentIdProfileModel,
+          studentIDBarcode.data!,
+          studentIDName.data!,
+          studentIDPhoto.data!,
+          studentIDProfile.data!,
           context),
     );
   }
@@ -90,10 +105,10 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   Widget buildCardContent(
-      StudentIdBarcodeModel? barcodeModel,
-      StudentIdNameModel? nameModel,
-      StudentIdPhotoModel? photoModel,
-      StudentIdProfileModel? profileModel,
+      StudentIdBarcodeModel barcodeModel,
+      StudentIdNameModel nameModel,
+      StudentIdPhotoModel photoModel,
+      StudentIdProfileModel profileModel,
       BuildContext context) {
     try {
       if (MediaQuery.of(context).size.width < 600) {
@@ -110,7 +125,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     Column(
                       children: <Widget>[
                         Image.network(
-                          photoModel!.photoUrl!,
+                          photoModel.photoUrl!,
                           fit: BoxFit.contain,
                           height: ScalingUtility.verticalSafeBlock * 14,
                         ),
@@ -131,7 +146,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                                     cardMargin),
                             child: FittedBox(
                               child: Text(
-                                (nameModel!.firstName! +
+                                (nameModel.firstName! +
                                     " " +
                                     nameModel.lastName!),
                                 style: TextStyle(
@@ -154,7 +169,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                                 right: ScalingUtility.horizontalSafeBlock *
                                     cardMargin),
                             child: Text(
-                              profileModel!.collegeCurrent!,
+                              profileModel.collegeCurrent!,
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: getFontSize(
@@ -197,7 +212,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: returnBarcodeContainer(
-                                barcodeModel!.barCode.toString(),
+                                barcodeModel.barCode.toString(),
                                 false,
                                 context),
                             onPressed: () {
@@ -259,12 +274,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
             child: Column(
               children: <Widget>[
                 Image.network(
-                  photoModel!.photoUrl!,
+                  photoModel.photoUrl!,
                   fit: BoxFit.contain,
                   height: 125,
                 ),
                 SizedBox(height: 10),
-                Text(profileModel!.classificationType!),
+                Text(profileModel.classificationType!),
               ],
             ),
             padding: EdgeInsets.only(
@@ -279,12 +294,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   Container(
                     padding: new EdgeInsets.only(right: cardMargin),
                     child: Text(
-                      (nameModel!.firstName! + " " + nameModel.lastName!),
+                      (nameModel.firstName! + " " + nameModel.lastName!),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: tabletFontSize(
                               nameModel.firstName! + " " + nameModel.lastName!,
-                              "name")),
+                              "name", context)),
                       textAlign: TextAlign.left,
                       softWrap: false,
                       maxLines: 1,
@@ -299,7 +314,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize: tabletFontSize(
-                              profileModel.collegeCurrent!, "college")),
+                              profileModel.collegeCurrent!, "college", context)),
                       textAlign: TextAlign.left,
                       softWrap: false,
                       maxLines: 1,
@@ -317,7 +332,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                               profileModel.graduatePrimaryMajorCurrent != ""
                                   ? profileModel.graduatePrimaryMajorCurrent
                                   : profileModel.ugPrimaryMajorCurrent!,
-                              "major")),
+                              "major", context)),
                       textAlign: TextAlign.left,
                       softWrap: false,
                       maxLines: 1,
@@ -332,7 +347,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       padding: EdgeInsets.all(0),
                     ),
                     child: returnBarcodeContainerTablet(
-                        barcodeModel!.barCode.toString(), false, context),
+                        barcodeModel.barCode.toString(), false, context),
                     onPressed: () {
                       createAlertDialog(
                           context,
@@ -420,8 +435,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: fontSizeForTablet(),
-                            letterSpacing: letterSpacingForTablet()),
+                            fontSize: fontSizeForTablet(context),
+                            letterSpacing: letterSpacingForTablet(context)),
                       )
                     ],
                   ),
@@ -449,14 +464,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
     }
   }
 
-  double letterSpacingForTablet() {
+  double letterSpacingForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 1;
     }
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
-  double fontSizeForTablet() {
+  double fontSizeForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 2;
     }
@@ -516,8 +531,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: getRotatedPopUpFontSize(),
-                            letterSpacing: letterSpacing()),
+                            fontSize: getRotatedPopUpFontSize(context),
+                            letterSpacing: letterSpacing(context)),
                       )
                     ],
                   ),
@@ -551,12 +566,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
     }
   }
 
-  double letterSpacing() =>
+  double letterSpacing(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 1
           : SizeConfig.safeBlockHorizontal * 3;
 
-  double getRotatedPopUpFontSize() =>
+  double getRotatedPopUpFontSize(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 2
           : SizeConfig.safeBlockHorizontal * 4;
@@ -580,9 +595,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
     return base;
   }
 
-  double tabletFontSize(String input, String textField) {
+  double tabletFontSize(String input, String textField, BuildContext context) {
     /// Base font size
-    double base = letterSpacingForTablet();
+    double base = letterSpacingForTablet(context);
 
     /// If threshold is passed, shrink text
     if (input.length >= 21) {
