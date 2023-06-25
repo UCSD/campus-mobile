@@ -9,16 +9,9 @@ import 'package:flutter/material.dart';
 enum Meal { breakfast, lunch, dinner }
 
 class DiningDataProvider extends ChangeNotifier {
-  DiningDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _diningService = DiningService();
-  }
 
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
@@ -32,7 +25,7 @@ class DiningDataProvider extends ChangeNotifier {
   Meal mealTime = Meal.breakfast;
 
   ///SERVICES
-  late DiningService _diningService;
+  DiningService _diningService = DiningService();
 
   void fetchDiningMenu(String menuId) async {
     _isLoading = true;
@@ -122,7 +115,7 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
+  bool get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
 
@@ -168,5 +161,10 @@ class DiningDataProvider extends ChangeNotifier {
       return reorderLocations();
     }
     return _diningModels.values.toList();
+  }
+
+  //debug test
+  Coordinates? getCoordinates() {
+    return _coordinates;
   }
 }

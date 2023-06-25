@@ -1,13 +1,15 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/hooks/dining_query.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DiningList extends StatelessWidget {
+class DiningList extends HookWidget {
   const DiningList({
     Key? key,
     this.listSize,
@@ -17,12 +19,15 @@ class DiningList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<DiningModel> data =
-        Provider.of<DiningDataProvider>(context).diningModels;
-    return data.length > 0
-        ? buildDiningList(data, context)
-        : CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary);
+    final diningHook = useFetchDiningModels();
+    // Provider.of<DiningDataProvider>(context).diningModels)
+    return diningHook.isFetching
+        ? CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.secondary)
+        : buildDiningList(
+            makeLocationsList(diningHook.data!,
+                Provider.of<DiningDataProvider>(context).getCoordinates()),
+            context);
   }
 
   Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
