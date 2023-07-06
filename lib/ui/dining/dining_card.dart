@@ -20,7 +20,7 @@ class DiningCard extends HookWidget {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => diningHook.refetch(),
-      isLoading: (diningHook.isFetching),
+      isLoading: diningHook.isFetching || diningHook.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: diningHook.isError ? "" : null,
       child: () => buildDiningCard(
@@ -47,7 +47,7 @@ class DiningCard extends HookWidget {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        primary: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'View All',

@@ -22,7 +22,7 @@ class WeatherCard extends HookWidget {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => weatherModel.refetch(),
-      isLoading: weatherModel.isFetching,
+      isLoading: weatherModel.isFetching, // || weatherModel.isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: weatherModel.isError ? "" : null, // TODO: figure out what to do with errorText,
       child: () {

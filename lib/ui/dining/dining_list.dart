@@ -136,10 +136,10 @@ class DiningList extends HookWidget {
   Widget buildDiningTile(DiningModel data, BuildContext context) {
     return ListTile(
       onTap: () {
-        if (data.id != null) {
-          Provider.of<DiningDataProvider>(context, listen: false)
-              .fetchDiningMenu(data.id!);
-        }
+        // if (data.id != null) {
+        //   Provider.of<DiningDataProvider>(context, listen: false)
+        //       .fetchDiningMenu(data.id!);
+        // }
         Navigator.pushNamed(context, RoutePaths.DiningDetailView,
             arguments: data);
       },

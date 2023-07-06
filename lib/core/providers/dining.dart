@@ -17,12 +17,9 @@ class DiningDataProvider extends ChangeNotifier {
 
   ///MODELS
   Map<String?, DiningModel> _diningModels = Map<String, DiningModel>();
-  Map<String, DiningMenuItemsModel?> _diningMenuItemModels =
+  Map<String, DiningMenuItemsModel?> diningMenuItemModels =
       Map<String, DiningMenuItemsModel?>();
   Coordinates? _coordinates;
-
-  List<bool> filtersSelected = [false, false, false];
-  Meal mealTime = Meal.breakfast;
 
   ///SERVICES
   DiningService _diningService = DiningService();
@@ -32,7 +29,7 @@ class DiningDataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     if (await _diningService.fetchMenu(menuId)) {
-      _diningMenuItemModels[menuId] = _diningService.menuData;
+      diningMenuItemModels[menuId] = _diningService.menuData; //_diningService.menuData should be replaced with hook
     } else {
       _error = _diningService.error;
     }
@@ -123,8 +120,8 @@ class DiningDataProvider extends ChangeNotifier {
   /// Fetches menu if not already downloaded
   DiningMenuItemsModel? getMenuData(String? id) {
     if (id != null) {
-      if (_diningMenuItemModels[id] != null) {
-        return _diningMenuItemModels[id];
+      if (diningMenuItemModels[id] != null) {
+        return diningMenuItemModels[id];
       } else {
         fetchDiningMenu(id);
       }
@@ -134,10 +131,10 @@ class DiningDataProvider extends ChangeNotifier {
 
   List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
     List<DiningMenuItem>? menuItems;
-    if (_diningMenuItemModels[id!] == null) {
+    if (diningMenuItemModels[id!] == null) {
       return null;
     } else {
-      menuItems = _diningMenuItemModels[id]!.menuItems;
+      menuItems = diningMenuItemModels[id]!.menuItems;
     }
     List<DiningMenuItem> filteredMenuItems = [];
     for (var menuItem in menuItems!) {
@@ -163,8 +160,11 @@ class DiningDataProvider extends ChangeNotifier {
     return _diningModels.values.toList();
   }
 
-  //debug test
+  //Transition getters
   Coordinates? getCoordinates() {
     return _coordinates;
+  }
+  Map<String, DiningMenuItemsModel?> getDiningMenuItemModels() {
+    return diningMenuItemModels;
   }
 }
