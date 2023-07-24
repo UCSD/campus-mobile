@@ -15,6 +15,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../navigator/bottom.dart';
 
 bool hideListView = false; // debug
+List<String> eventTypesForIamGoing = [
+  "campusInnovationEvents",
+  "freeFood"
+]; // for the "I am Going" feature
 
 class NotificationsListView extends StatefulWidget {
   @override
@@ -22,18 +26,16 @@ class NotificationsListView extends StatefulWidget {
 }
 
 class _NotificationsListViewState extends State<NotificationsListView> {
-
   @override
   initState() {
     super.initState();
     hideListView = true;
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) {
-          notificationScrollController.jumpTo(getNotificationsScrollOffset());
-          setState(() {
-            hideListView = false;
-          });
-        });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notificationScrollController.jumpTo(getNotificationsScrollOffset());
+      setState(() {
+        hideListView = false;
+      });
+    });
   }
 
   @override
@@ -170,7 +172,16 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                 style: TextStyle(fontSize: 12.5),
               ),
             ),
-            freefoodProvider.isFreeFood(data.messageId)
+            // FreeFoodNotification(messageId: data.messageId),
+            // freefoodProvider.isFreeFood(data.messageId)
+            //     ? FreeFoodNotification(messageId: data.messageId)
+            //     : Container(),
+
+            // check if the type of event need "I am going" feature like FreeFood,
+            // if true, use FreeFoodNotification format
+            // if no, use regular format
+            needIAmGoingFeature(
+                    data.messageId, messageType!, eventTypesForIamGoing!)
                 ? FreeFoodNotification(messageId: data.messageId)
                 : Container(),
           ],
@@ -179,6 +190,15 @@ class _NotificationsListViewState extends State<NotificationsListView> {
           Text(_readTimestamp(data.timestamp!),
               style: TextStyle(fontSize: 10, color: Colors.grey)),
         ]));
+  }
+
+  // function that check whether the category of event is the type we want apply "I am Going" feature like FreeFood
+  // currently only apply to innovation event and free food
+  // a list of event types for "I am Going" feature is defined in line 18
+  bool needIAmGoingFeature(
+      String? messageId, String? messageType, List<String> eventTypes) {
+    // print('messageType is: $messageType');
+    return eventTypes.contains(messageType);
   }
 
   IconData _chooseIcon(String messageType) {
