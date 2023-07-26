@@ -5,7 +5,7 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
-import 'package:campus_mobile_experimental/ui/notifications/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_iamgoing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,7 @@ import '../navigator/bottom.dart';
 bool hideListView = false; // debug
 List<String> eventTypesForIamGoing = [
   "campusInnovationEvents",
-  "freeFood"
+  "freeFood",
 ]; // for the "I am Going" feature
 
 class NotificationsListView extends StatefulWidget {
@@ -182,7 +182,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
             // if no, use regular format
             needIAmGoingFeature(
                     data.messageId, messageType!, eventTypesForIamGoing!)
-                ? FreeFoodNotification(messageId: data.messageId)
+                ? IAmGoingNotification(messageId: data.messageId)
                 : Container(),
           ],
         ),

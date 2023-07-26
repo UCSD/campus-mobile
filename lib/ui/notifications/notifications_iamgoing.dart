@@ -2,11 +2,11 @@ import 'package:campus_mobile_experimental/core/providers/notifications_freefood
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FreeFoodNotification extends StatefulWidget {
+class IAmGoingNotification extends StatefulWidget {
   /// required parameters
   final String? messageId;
 
-  const FreeFoodNotification({
+  const IAmGoingNotification({
     Key? key,
     required this.messageId,
   }) : super(key: key);
@@ -15,7 +15,7 @@ class FreeFoodNotification extends StatefulWidget {
   _CheckBoxButtonState createState() => _CheckBoxButtonState(messageId);
 }
 
-class _CheckBoxButtonState extends State<FreeFoodNotification> {
+class _CheckBoxButtonState extends State<IAmGoingNotification> {
   _CheckBoxButtonState(messageId) {
     this.messageId = messageId;
   }
