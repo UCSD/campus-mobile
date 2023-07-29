@@ -24,7 +24,7 @@ class DiningCard extends HookWidget {
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: diningHook.isError ? "" : null,
       child: () => buildDiningCard(
-          makeLocationsList(diningHook.data!, Provider.of<DiningDataProvider>(context).getCoordinates())), // Provider.of<DiningDataProvider>(context).diningModels)
+          makeLocationsList(diningHook.data!, null)), // need to pass in coordinates here
       actionButtons: buildActionButtons(context),
     );
   }

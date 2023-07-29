@@ -47,9 +47,10 @@ UseQueryResult<List<DiningModel>, dynamic> useFetchDiningModels() {
   });
 }
 
-UseQueryResult<DiningMenuItemsModel, dynamic> useFetchDiningMenuModels(
-    String id) {
+UseQueryResult<DiningMenuItemsModel?, dynamic> useFetchDiningMenuModels(
+    String? id) {
   return useQuery(['dining_menu', '$id'], () async {
+    if (id == null) return null;
     while (true) { // run until token is valid
       try {
         /// fetch data

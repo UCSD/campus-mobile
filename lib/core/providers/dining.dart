@@ -1,12 +1,9 @@
 import 'dart:math';
 
 import 'package:campus_mobile_experimental/core/models/dining.dart';
-import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/services/dining.dart';
 import 'package:flutter/material.dart';
-
-enum Meal { breakfast, lunch, dinner }
 
 class DiningDataProvider extends ChangeNotifier {
 
@@ -17,25 +14,10 @@ class DiningDataProvider extends ChangeNotifier {
 
   ///MODELS
   Map<String?, DiningModel> _diningModels = Map<String, DiningModel>();
-  Map<String, DiningMenuItemsModel?> diningMenuItemModels =
-      Map<String, DiningMenuItemsModel?>();
   Coordinates? _coordinates;
 
   ///SERVICES
   DiningService _diningService = DiningService();
-
-  void fetchDiningMenu(String menuId) async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-    if (await _diningService.fetchMenu(menuId)) {
-      diningMenuItemModels[menuId] = _diningService.menuData; //_diningService.menuData should be replaced with hook
-    } else {
-      _error = _diningService.error;
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
 
   void fetchDiningLocations() async {
     _isLoading = true;
@@ -62,20 +44,6 @@ class DiningDataProvider extends ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
-  }
-
-  List<DiningModel> reorderLocations() {
-    if (_coordinates == null) {
-      return _diningModels.values.toList();
-    }
-    List<DiningModel> orderedListOfLots = _diningModels.values.toList();
-    orderedListOfLots.sort((DiningModel a, DiningModel b) {
-      if (a.distance != null && b.distance != null) {
-        return a.distance!.compareTo(b.distance!);
-      }
-      return 0;
-    });
-    return orderedListOfLots;
   }
 
   void populateDistances() {
@@ -116,55 +84,8 @@ class DiningDataProvider extends ChangeNotifier {
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
 
-  /// Returns menu data for given id
-  /// Fetches menu if not already downloaded
-  DiningMenuItemsModel? getMenuData(String? id) {
-    if (id != null) {
-      if (diningMenuItemModels[id] != null) {
-        return diningMenuItemModels[id];
-      } else {
-        fetchDiningMenu(id);
-      }
-    }
-    return DiningMenuItemsModel();
-  }
-
-  List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
-    List<DiningMenuItem>? menuItems;
-    if (diningMenuItemModels[id!] == null) {
-      return null;
-    } else {
-      menuItems = diningMenuItemModels[id]!.menuItems;
-    }
-    List<DiningMenuItem> filteredMenuItems = [];
-    for (var menuItem in menuItems!) {
-      int matched = 0;
-      for (int i = 0; i < filters.length; i++) {
-        if (menuItem.tags!.contains(filters[i])) {
-          matched++;
-        }
-      }
-      if (matched == filters.length) {
-        filteredMenuItems.add(menuItem);
-      }
-    }
-    return filteredMenuItems;
-  }
-
-  ///RETURNS A List<diningModels> sorted by distance
-  List<DiningModel> get diningModels {
-    ///check if we have a coordinates object
-    if (_coordinates != null) {
-      return reorderLocations();
-    }
-    return _diningModels.values.toList();
-  }
-
   //Transition getters
   Coordinates? getCoordinates() {
     return _coordinates;
-  }
-  Map<String, DiningMenuItemsModel?> getDiningMenuItemModels() {
-    return diningMenuItemModels;
   }
 }

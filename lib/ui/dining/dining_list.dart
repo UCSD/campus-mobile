@@ -1,12 +1,10 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/hooks/dining_query.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
-import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DiningList extends HookWidget {
@@ -20,13 +18,12 @@ class DiningList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final diningHook = useFetchDiningModels();
-    // Provider.of<DiningDataProvider>(context).diningModels)
     return diningHook.isFetching
         ? CircularProgressIndicator(
             color: Theme.of(context).colorScheme.secondary)
         : buildDiningList(
-            makeLocationsList(diningHook.data!,
-                Provider.of<DiningDataProvider>(context).getCoordinates()),
+            makeLocationsList(
+                diningHook.data!, null), //need to pass in coordinated here
             context);
   }
 
@@ -113,7 +110,7 @@ class DiningList extends HookWidget {
       default:
         return Text('Closed');
     }
-    if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
+    if (RegExp(r"\b\d{2}").allMatches(dayHours!).length != 2) {
       if (dayHours == 'Closed-Closed') {
         return Text('Closed');
       } else {
@@ -125,7 +122,7 @@ class DiningList extends HookWidget {
         time: dayHours
             .replaceAllMapped(
                 //Add colon in between each time
-                RegExp(r"\b[0-9]{2}"),
+                RegExp(r"\b\d{2}"),
                 (match) => "${match.group(0)}:")
             .replaceAllMapped(
                 //Add space around hyphen
@@ -136,10 +133,6 @@ class DiningList extends HookWidget {
   Widget buildDiningTile(DiningModel data, BuildContext context) {
     return ListTile(
       onTap: () {
-        // if (data.id != null) {
-        //   Provider.of<DiningDataProvider>(context, listen: false)
-        //       .fetchDiningMenu(data.id!);
-        // }
         Navigator.pushNamed(context, RoutePaths.DiningDetailView,
             arguments: data);
       },
@@ -150,7 +143,11 @@ class DiningList extends HookWidget {
         style: TextStyle(fontSize: 18),
       ),
       subtitle: getHoursForToday(data.regularHours),
-      trailing: buildIconWithDistance(data, context),
+      trailing: (data.coordinates != null &&
+              data.coordinates!.lat != null &&
+              data.coordinates!.lon != null)
+          ? buildIconWithDistance(data, context)
+          : null,
     );
   }
 
@@ -158,7 +155,7 @@ class DiningList extends HookWidget {
     return TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        primary: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).backgroundColor,
       ),
       onPressed: () {
         try {

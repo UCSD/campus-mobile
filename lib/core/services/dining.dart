@@ -98,5 +98,4 @@ class DiningService {
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
   List<DiningModel>? get data => _data;
-  DiningMenuItemsModel? get menuData => _menuData;
 }

@@ -8,9 +8,12 @@ import 'package:provider/provider.dart';
 
 import '../../core/hooks/dining_query.dart';
 
+enum Meal { breakfast, lunch, dinner }
+
 class DiningMenuList extends HookWidget {
   late ValueNotifier<Meal> mealTime;
   late ValueNotifier<List<bool>> filtersSelected;
+  late ValueNotifier<Map<String, DiningMenuItemsModel?>> diningMenuItemModels;
 
   DiningMenuList({Key? key, required this.model}) : super(key: key);
   final DiningModel model;
@@ -19,6 +22,7 @@ class DiningMenuList extends HookWidget {
   Widget build(BuildContext context) {
     mealTime = useState(Meal.breakfast);
     filtersSelected = useState([false, false, false]);
+    diningMenuItemModels = useState(Map<String, DiningMenuItemsModel?>());
 
     return Center(
       child: Provider.of<DiningDataProvider>(context).isLoading
@@ -29,26 +33,19 @@ class DiningMenuList extends HookWidget {
   }
 
   Widget buildDiningMenuList(BuildContext context) {
-    Map<String, DiningMenuItemsModel?> diningMenuItemModels =
-        Provider.of<DiningDataProvider>(context).getDiningMenuItemModels();
     DiningMenuItemsModel menu;
-    if (model.id != null) {
-      // TODO CHANGE OUT CONDITIONAL QUERY
-      final diningMenuHook = useFetchDiningMenuModels(model.id!);
-      if (diningMenuItemModels[model.id] != null) {
-        menu = diningMenuItemModels[model.id]!;
+    final diningMenuHook = useFetchDiningMenuModels(model.id);
+    if (diningMenuHook.data != null) {
+      if (diningMenuItemModels.value[model.id!] != null) {
+        menu = diningMenuItemModels.value[model.id]!;
       } else {
-        // while (diningMenuHook.isFetching) {} // waits until dining hook has fetched -- TEMPORARY: Replace/Restructure architecture to wait for hook to load after removing provider
-        diningMenuItemModels[model.id!] = diningMenuHook.data;
+        diningMenuItemModels.value[model.id!] = diningMenuHook.data;
         menu = DiningMenuItemsModel();
       }
-    } else {
+    }
+    else {
       menu = DiningMenuItemsModel();
     }
-
-    // menu =
-    //     Provider.of<DiningDataProvider>(context, listen: false)
-    //         .getMenuData(model.id);
     List<String> filters = [];
     if (filtersSelected.value[0]) {
       filters.add('VT');
@@ -70,9 +67,21 @@ class DiningMenuList extends HookWidget {
         filters.add('Dinner');
     }
     if (menu.menuItems != null) {
-      List<DiningMenuItem> menuList =
-          Provider.of<DiningDataProvider>(context, listen: false)
-              .getMenuItems(model.id, filters)!;
+      List<DiningMenuItem> menuList;
+      List<DiningMenuItem>? menuItems = diningMenuItemModels.value[model.id]!.menuItems;
+      List<DiningMenuItem> filteredMenuItems = [];
+      for (var menuItem in menuItems!) {
+        int matched = 0;
+        for (int i = 0; i < filters.length; i++) {
+          if (menuItem.tags!.contains(filters[i])) {
+            matched++;
+          }
+        }
+        if (matched == filters.length) {
+          filteredMenuItems.add(menuItem);
+        }
+      }
+      menuList = filteredMenuItems;
       List<Widget> list = [];
       if (menuList.length > 0) {
         for (DiningMenuItem item in menuList) {

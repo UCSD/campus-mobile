@@ -3,8 +3,7 @@ import 'package:fquery/fquery.dart';
 import '../../app_networking.dart';
 import '../models/weather.dart';
 
-UseQueryResult<WeatherModel, dynamic> useFetchWeather()
-{
+UseQueryResult<WeatherModel, dynamic> useFetchWeather() {
   return useQuery(['weather'], () async {
     /// fetch data
     String _response = await NetworkHelper().fetchData(
