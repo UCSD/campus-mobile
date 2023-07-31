@@ -12,7 +12,7 @@ We look forward to helping you become a published app developer!
 ## How to Contribute
 
 ### Install Flutter
-Campus Mobile supports [Flutter 3.7.x](https://docs.flutter.dev/development/tools/sdk/upgrading#switching-flutter-channels)
+Campus Mobile supports [Flutter's stable channel](https://docs.flutter.dev/development/tools/sdk/upgrading#switching-flutter-channels)
 
 ### Creating a Fork
 
