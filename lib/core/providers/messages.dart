@@ -4,11 +4,7 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/messages.dart';
 import 'package:flutter/material.dart';
 
-import '../../ui/navigator/bottom.dart';
-
 //MESSAGES API UNIX TIMESTAMPS IN MILLISECONDS NOT SECONDS
-
-ScrollController notificationScrollController = ScrollController();
 
 class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
@@ -18,15 +14,16 @@ class MessagesDataProvider extends ChangeNotifier {
     _messageService = MessageService();
     _statusText = NotificationsConstants.statusFetching;
     _hasMoreMessagesToLoad = false;
-    notificationScrollController.addListener(() {
+    _scrollController = ScrollController();
+    _scrollController!.addListener(() {
       var triggerFetchMoreSize =
-          0.9 * notificationScrollController.position.maxScrollExtent;
-      if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
+          0.9 * _scrollController!.position.maxScrollExtent;
+
+      if (_scrollController!.position.pixels > triggerFetchMoreSize) {
         if (!_isLoading! && _hasMoreMessagesToLoad!) {
           fetchMessages(false);
         }
       }
-      setNotificationsScrollOffset(notificationScrollController.offset);
     });
   }
 
@@ -37,6 +34,7 @@ class MessagesDataProvider extends ChangeNotifier {
   int? _previousTimestamp;
   String? _statusText;
   bool? _hasMoreMessagesToLoad;
+  ScrollController? _scrollController;
 
   /// MODELS
   List<MessageElement?>? _messages;
@@ -167,15 +165,11 @@ class MessagesDataProvider extends ChangeNotifier {
 
   /// SIMPLE GETTERS
   bool? get isLoading => _isLoading;
-
   String? get error => _error;
-
   DateTime? get lastUpdated => _lastUpdated;
-
   String? get statusText => _statusText;
-
   bool? get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
-
+  ScrollController? get scrollController => _scrollController;
   UserDataProvider? get userDataProvider => _userDataProvider;
 
   List<MessageElement?>? get messages {
