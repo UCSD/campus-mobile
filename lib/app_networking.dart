@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,29 +16,40 @@ class NetworkHelper {
   static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
 
   Future<dynamic> fetchData(String url) async {
-    final _response = await http.get(Uri.parse(url));
+    Dio dio = new Dio();
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
+    dio.options.responseType = ResponseType.plain;
+    final _response = await dio.get(url);
 
     if (_response.statusCode == 200) {
       // If server returns an OK response, return the body
-      return _response.body;
+      return _response.data;
     } else {
       ///TODO: log this as a bug because the response was bad
       // If that response was not OK, throw an error.
-      throw Exception('Failed to fetch data: ' + _response.body);
+      throw Exception('Failed to fetch data: ' + _response.data);
     }
   }
 
   Future<dynamic> authorizedFetch(
       String url, Map<String, String> headers) async {
-    final _response = await http.get(Uri.parse(url), headers: headers);
+    Dio dio = new Dio();
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
+    dio.options.responseType = ResponseType.plain;
+    dio.options.headers = headers;
+    final _response = await dio.get(
+      url,
+    );
     if (_response.statusCode == 200) {
       // If server returns an OK response, return the body
-      return _response.body;
+      return _response.data;
     } else {
       ///TODO: log this as a bug because the response was bad
       // If that response was not OK, throw an error.
 
-      throw Exception('Failed to fetch data: ' + _response.body);
+      throw Exception('Failed to fetch data: ' + _response.data);
     }
   }
 
@@ -49,7 +60,7 @@ class NetworkHelper {
       actions: [
         TextButton(
           style: TextButton.styleFrom(
-            primary: ucLabelColor,
+            foregroundColor: ucLabelColor,
           ),
           onPressed: () {
             Get.back(closeOverlays: true);
@@ -99,24 +110,29 @@ class NetworkHelper {
 
   Future<dynamic> authorizedPost(
       String url, Map<String, String>? headers, dynamic body) async {
-    final _response = await http.post(Uri.parse(url), headers: headers, body: body);
+    Dio dio = new Dio();
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
+    dio.options.headers = headers;
+    final _response = await dio.post(url, data: body);
     if (_response.statusCode == 200 || _response.statusCode == 201) {
-      return _response.body;
+      // If server returns an OK response, return the body
+      return _response.data;
     } else if (_response.statusCode == 400) {
       // If that response was not OK, throw an error.
-      String message = _response.body;
+      String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPostErrors + message);
     } else if (_response.statusCode == 401) {
       throw Exception(ErrorConstants.authorizedPostErrors +
           ErrorConstants.invalidBearerToken);
     } else if (_response.statusCode == 404) {
-      String message = _response.body;
+      String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPostErrors + message);
     } else if (_response.statusCode == 500) {
-      String message = _response.body;
+      String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPostErrors + message);
     } else if (_response.statusCode == 409) {
-      String message = _response.body;
+      String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.duplicateRecord + message);
     } else {
       throw Exception(ErrorConstants.authorizedPostErrors + 'unknown error');
@@ -125,22 +141,27 @@ class NetworkHelper {
 
   Future<dynamic> authorizedPut(
       String url, Map<String, String> headers, dynamic body) async {
-    final _response = await http.put(Uri.parse(url), headers: headers, body: body);
+    Dio dio = new Dio();
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
+    dio.options.headers = headers;
+    final _response = await dio.put(url, data: body);
+
     if (_response.statusCode == 200 || _response.statusCode == 201) {
       // If server returns an OK response, return the body
-      return _response.body;
+      return _response.data;
     } else if (_response.statusCode == 400) {
       // If that response was not OK, throw an error.
-      String message = _response.body;
+      String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPutErrors + message);
     } else if (_response.statusCode == 401) {
       throw Exception(ErrorConstants.authorizedPutErrors +
           ErrorConstants.invalidBearerToken);
     } else if (_response.statusCode == 404) {
-      String message = _response.body;
+      String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPutErrors + message);
     } else if (_response.statusCode == 500) {
-      String message = _response.body;
+      String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPutErrors + message);
     } else {
       throw Exception(ErrorConstants.authorizedPutErrors + 'unknown error');
@@ -149,15 +170,19 @@ class NetworkHelper {
 
   Future<dynamic> authorizedDelete(
       String url, Map<String, String> headers) async {
+    Dio dio = new Dio();
+    dio.options.connectTimeout = 20000;
+    dio.options.receiveTimeout = 20000;
+    dio.options.headers = headers;
     try {
-      final _response = await http.delete(Uri.parse(url), headers: headers);
+      final _response = await dio.delete(url);
       if (_response.statusCode == 200) {
         // If server returns an OK response, return the body
-        return _response.body;
+        return _response.data;
       } else {
         ///TODO: log this as a bug because the response was bad
         // If that response was not OK, throw an error.
-        throw Exception('Failed to delete data: ' + _response.body);
+        throw Exception('Failed to delete data: ' + _response.data);
       }
     } on TimeoutException catch (err) {
       print(err);
