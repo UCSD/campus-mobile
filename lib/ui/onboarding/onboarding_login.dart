@@ -148,11 +148,11 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       Expanded(
                           child: TextButton(
                         style: TextButton.styleFrom(
-                          foregroundColor: ColorPrimary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
                             side: BorderSide(color: Colors.white),
                           ),
+                          primary: ColorPrimary,
                           textStyle: TextStyle(
                             color: lightButtonTextColor,
                           ),
@@ -257,7 +257,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     Widget okButton = TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text("OK"),
       onPressed: () {

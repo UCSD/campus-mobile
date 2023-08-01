@@ -15,12 +15,12 @@ import 'package:uni_links2/uni_links.dart';
 class Maps extends StatelessWidget {
   Widget resultsList(BuildContext context) {
     if (Provider.of<MapsDataProvider>(context).markers.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       });
       return MoreResultsList();
     } else if (Provider.of<MapsDataProvider>(context).noResults!) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
           ..showSnackBar(

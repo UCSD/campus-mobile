@@ -116,7 +116,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                         Expanded(
                             child: TextButton(
                           style: TextButton.styleFrom(
-                            foregroundColor: ColorPrimary,
+                            primary: ColorPrimary,
                           ),
                           onPressed: () {},
                           child: Text(
@@ -130,7 +130,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                         Expanded(
                           child: TextButton(
                             style: TextButton.styleFrom(
-                              foregroundColor: ColorPrimary,
+                              primary: ColorPrimary,
                             ),
                             onPressed: () {},
                             child: Text(

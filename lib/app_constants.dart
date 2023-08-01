@@ -11,7 +11,8 @@ class RoutePaths {
   static const String Notifications = 'notifications';
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
-  static const String NotificationsFilter = 'notifications/filter';
+  static const String NotificationsSettingsView =
+      'notifications/notifications_settings';
 
   static const String NewsViewAll = 'news/newslist';
   static const String EventsViewAll = 'events/eventslist';
@@ -50,7 +51,7 @@ class RouteTitles {
     'Notifications': 'Notifications',
     'Profile': 'Profile',
     'profile/cards_view': 'Cards',
-    'notifications/filter': "Filter",
+    'notifications/notifications_settings': "Notification Settings",
     'news/newslist': 'News',
     'news/news_detail_view': 'News',
     'events/eventslist': 'Events',

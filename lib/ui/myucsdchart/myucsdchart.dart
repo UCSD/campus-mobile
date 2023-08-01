@@ -58,7 +58,7 @@ class MyUCSDChartCard extends StatelessWidget {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'Log in to MyUCSDChart',

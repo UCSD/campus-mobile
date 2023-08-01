@@ -45,7 +45,6 @@ class _WiFiCardState extends State<WiFiCard>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
@@ -232,7 +231,7 @@ class _WiFiCardState extends State<WiFiCard>
               borderRadius: BorderRadius.circular(5.0),
               side: BorderSide(color: Colors.black),
             ),
-            color: darkAppBarTheme.backgroundColor,
+            color: darkAppBarTheme.color,
             child: Text(
               "Test WiFi Speed",
               style: TextStyle(color: Colors.white),
@@ -256,8 +255,7 @@ class _WiFiCardState extends State<WiFiCard>
                                   child: Text("Dismiss"),
                                   style: TextButton.styleFrom(
                                     // primary: Theme.of(context).buttonColor,
-                                    foregroundColor:
-                                        Theme.of(context).backgroundColor,
+                                    primary: Theme.of(context).backgroundColor,
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
@@ -321,7 +319,7 @@ class _WiFiCardState extends State<WiFiCard>
                 borderRadius: BorderRadius.circular(5.0),
                 side: BorderSide(color: Colors.black),
               ),
-              color: darkAppBarTheme.backgroundColor,
+              color: darkAppBarTheme.color,
               child: Text(
                 "Rerun Test",
                 style: TextStyle(color: Colors.white),
@@ -347,7 +345,7 @@ class _WiFiCardState extends State<WiFiCard>
                                     child: Text("Dismiss"),
                                     style: TextButton.styleFrom(
                                       // primary: Theme.of(context).buttonColor
-                                      foregroundColor:
+                                      primary:
                                           Theme.of(context).backgroundColor,
                                     ),
                                     onPressed: () {
@@ -435,7 +433,7 @@ class _WiFiCardState extends State<WiFiCard>
                 borderRadius: BorderRadius.circular(5.0),
                 side: BorderSide(color: Colors.black),
               ),
-              color: darkAppBarTheme.backgroundColor,
+              color: darkAppBarTheme.color,
               child: Text(
                 "Rerun Test",
                 style: TextStyle(color: Colors.white),
@@ -461,7 +459,7 @@ class _WiFiCardState extends State<WiFiCard>
                                     child: Text("Dismiss"),
                                     style: TextButton.styleFrom(
                                       // primary: Theme.of(context).buttonColor,
-                                      foregroundColor:
+                                      primary:
                                           Theme.of(context).backgroundColor,
                                     ),
                                     onPressed: () {
@@ -519,7 +517,7 @@ class _WiFiCardState extends State<WiFiCard>
               borderRadius: BorderRadius.circular(5.0),
               side: BorderSide(color: Colors.black),
             ),
-            color: darkAppBarTheme.backgroundColor,
+            color: darkAppBarTheme.color,
             child: Text(
               "Try Again",
               style: TextStyle(color: Colors.white),

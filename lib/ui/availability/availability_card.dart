@@ -105,7 +105,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'Manage Locations',

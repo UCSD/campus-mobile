@@ -114,7 +114,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        primary: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'Manage Shuttle Stops',

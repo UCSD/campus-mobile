@@ -151,7 +151,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
               Expanded(
                   child: TextButton(
                 style: TextButton.styleFrom(
-                  foregroundColor: ColorPrimary,
+                  primary: ColorPrimary,
                 ),
                 onPressed: () {
                   Navigator.of(context).push(_routeToAffiliations());
@@ -172,7 +172,7 @@ class _OnboardingScreen extends State<OnboardingScreen>
               Expanded(
                 child: TextButton(
                   style: TextButton.styleFrom(
-                    foregroundColor: ColorPrimary,
+                    primary: ColorPrimary,
                   ),
                   onPressed: () {
                     Navigator.of(context).push(_routeToLogin());
