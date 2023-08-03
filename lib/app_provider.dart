@@ -25,7 +25,6 @@ import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -150,6 +149,10 @@ List<SingleChildWidget> dependentServices = [
         userDataProvider.cardsDataProvider = cardsDataProvider;
         cardsDataProvider
           ..loadSavedData().then((value) {
+            // Update available cards
+            cardsDataProvider.updateAvailableCards(
+                userDataProvider.authenticationModel!.ucsdaffiliation);
+
             // Student card activation
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel!.classifications?.student ??
@@ -259,12 +262,10 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<UserDataProvider, MessagesDataProvider>(
     create: (_) {
       var messageDataProvider = MessagesDataProvider();
-      debugPrint("ChangeNotifierProxyProvider");
       return messageDataProvider;
     },
     lazy: false,
     update: (_, userDataProvider, messageDataProvider) {
-      debugPrint("ChangeNotifierProxyProvider");
       messageDataProvider!.userDataProvider = userDataProvider;
       messageDataProvider.fetchMessages(true);
       return messageDataProvider;

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
@@ -12,72 +13,50 @@ import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../navigator/bottom.dart';
-
-bool hideListView = false; // debug
-
-class NotificationsListView extends StatefulWidget {
-  @override
-  State<NotificationsListView> createState() => _NotificationsListViewState();
-}
-
-class _NotificationsListViewState extends State<NotificationsListView> {
-
-  @override
-  initState() {
-    super.initState();
-    hideListView = true;
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) {
-          notificationScrollController.jumpTo(getNotificationsScrollOffset());
-          setState(() {
-            hideListView = false;
-          });
-        });
-  }
-
+class NotificationsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initUniLinks(context);
-    return Offstage(
-      offstage: hideListView,
-      child: RefreshIndicator(
-        child: buildListView(context),
-        onRefresh: () {
-          return Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(true);
-        },
-        color: Theme.of(context).colorScheme.secondary,
-      ),
+    return RefreshIndicator(
+      child: buildListView(context),
+      onRefresh: () => Provider.of<MessagesDataProvider>(context, listen: false)
+          .fetchMessages(true),
+      color: Theme.of(context).colorScheme.secondary,
     );
   }
 
   Widget buildListView(BuildContext context) {
-    Widget Function(BuildContext context, int index)? itemBuilder;
-    int itemCount = 0;
     if (Provider.of<MessagesDataProvider>(context).messages!.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
         if (Provider.of<MessagesDataProvider>(context).isLoading!) {
           // empty notifications view until they load in
         } else {
-          itemBuilder =
-              (BuildContext context, int index) => _buildNoMessagesText();
-          itemCount = 1;
+          return ListView.separated(
+            physics: AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) =>
+                _buildNoMessagesText(),
+            controller:
+                Provider.of<MessagesDataProvider>(context).scrollController,
+            itemCount: 1,
+            separatorBuilder: (BuildContext context, int index) => Divider(),
+          );
         }
       } else {
-        itemBuilder = (BuildContext context, int index) => _buildErrorText();
-        itemCount = 1;
+        return ListView.separated(
+          physics: AlwaysScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) => _buildErrorText(),
+          controller:
+              Provider.of<MessagesDataProvider>(context).scrollController,
+          itemCount: 1,
+          separatorBuilder: (BuildContext context, int index) => Divider(),
+        );
       }
-    }
-    if (itemCount == 0) {
-      itemBuilder = _buildMessage;
-      itemCount = Provider.of<MessagesDataProvider>(context).messages!.length;
     }
     return ListView.separated(
       physics: AlwaysScrollableScrollPhysics(),
-      itemBuilder: itemBuilder!,
-      controller: notificationScrollController,
-      itemCount: itemCount,
+      itemBuilder: _buildMessage,
+      controller: Provider.of<MessagesDataProvider>(context).scrollController,
+      itemCount: Provider.of<MessagesDataProvider>(context).messages!.length,
       separatorBuilder: (BuildContext context, int index) => Divider(),
     );
   }
