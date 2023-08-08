@@ -109,24 +109,6 @@ class _OnboardingScreen extends State<OnboardingScreen>
             buildLoginButton(width, height),
           ]),
         ),
-        SlideTransition(
-          position: _offsetAnimation,
-          child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: buildRectangleBar1(width, height)),
-        ),
-        SlideTransition(
-          position: _offsetAnimation2,
-          child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: buildRectangleBar2(width, height)),
-        ),
-        SlideTransition(
-          position: _offsetAnimation3,
-          child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: buildRectangleBar3(width, height)),
-        ),
       ]),
     );
   }
@@ -366,42 +348,6 @@ class _OnboardingScreen extends State<OnboardingScreen>
             ))),
       )
     ]);
-  }
-
-  Widget buildRectangleBar1(double width, double height) {
-    return Transform.rotate(
-        angle: 0.785,
-        child: Transform.translate(
-            offset: Offset(width - (width * 0.773), width * -0.66),
-            child: Container(
-              width: width * 0.266,
-              height: height * 0.625,
-              color: Colors.yellow,
-            )));
-  }
-
-  Widget buildRectangleBar2(double width, double height) {
-    return Transform.rotate(
-        angle: 0.785,
-        child: Transform.translate(
-            offset: Offset(width - (width * 0.459), width * -0.32),
-            child: Container(
-              width: width * 0.266,
-              height: height * 0.625,
-              color: Colors.yellow,
-            )));
-  }
-
-  Widget buildRectangleBar3(double width, double height) {
-    return Transform.rotate(
-        angle: 0.785,
-        child: Transform.translate(
-            offset: Offset(width - (width * 0.145), width * -0.66),
-            child: Container(
-              width: width * 0.266,
-              height: height * 0.625,
-              color: Colors.yellow,
-            )));
   }
 
   Route _routeToLogin() {
