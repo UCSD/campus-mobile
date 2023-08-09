@@ -145,55 +145,9 @@ class _OnboardingInitialState extends State<OnboardingInitial>
                       ]))
             ]),
           ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-            child: Container(
-              width: width,
-              height: height,
-              color: ColorPrimary.withOpacity(0.4),
-            ),
-          ),
-          buildRectangleBar1(width, height),
-          buildRectangleBar2(width, height),
-          buildRectangleBar3(width, height),
         ]));
   }
 
-  Widget buildRectangleBar1(double width, double height) {
-    return Transform.rotate(
-        angle: 0.785,
-        child: Transform.translate(
-            offset: Offset(width - (width * 0.773), width * -0.66),
-            child: Container(
-              width: width * 0.266,
-              height: height * 0.625,
-              color: Colors.yellow,
-            )));
-  }
-
-  Widget buildRectangleBar2(double width, double height) {
-    return Transform.rotate(
-        angle: 0.785,
-        child: Transform.translate(
-            offset: Offset(width - (width * 0.459), width * -0.32),
-            child: Container(
-              width: width * 0.266,
-              height: height * 0.625,
-              color: Colors.yellow,
-            )));
-  }
-
-  Widget buildRectangleBar3(double width, double height) {
-    return Transform.rotate(
-        angle: 0.785,
-        child: Transform.translate(
-            offset: Offset(width - (width * 0.145), width * -0.66),
-            child: Container(
-              width: width * 0.266,
-              height: height * 0.625,
-              color: Colors.yellow,
-            )));
-  }
 
   Route _createRoute() {
     return PageRouteBuilder(
