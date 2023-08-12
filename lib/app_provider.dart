@@ -3,7 +3,6 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
-import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
@@ -77,15 +76,6 @@ List<SingleChildWidget> independentServices = [
   ),
 ];
 List<SingleChildWidget> dependentServices = [
-  ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
-    var diningDataProvider = DiningDataProvider();
-    diningDataProvider.fetchDiningLocations();
-    return diningDataProvider;
-  }, update: (_, coordinates, diningDataProvider) {
-    diningDataProvider!.coordinates = coordinates;
-    diningDataProvider.populateDistances();
-    return diningDataProvider;
-  }),
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;

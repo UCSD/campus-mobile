@@ -1,11 +1,8 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
-import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provider/provider.dart';
-
 import '../../core/hooks/dining_query.dart';
 
 enum Meal { breakfast, lunch, dinner }
@@ -25,16 +22,17 @@ class DiningMenuList extends HookWidget {
     diningMenuItemModels = useState(Map<String, DiningMenuItemsModel?>());
 
     return Center(
-      child: Provider.of<DiningDataProvider>(context).isLoading
-          ? CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.secondary)
-          : buildDiningMenuList(context),
+      child: buildDiningMenuList(context),
     );
   }
 
   Widget buildDiningMenuList(BuildContext context) {
     DiningMenuItemsModel menu;
     final diningMenuHook = useFetchDiningMenuModels(model.id);
+    if (diningMenuHook.isLoading) {
+      return CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.secondary);
+    }
     if (diningMenuHook.data != null) {
       if (diningMenuItemModels.value[model.id!] != null) {
         menu = diningMenuItemModels.value[model.id]!;
@@ -42,8 +40,7 @@ class DiningMenuList extends HookWidget {
         diningMenuItemModels.value[model.id!] = diningMenuHook.data;
         menu = DiningMenuItemsModel();
       }
-    }
-    else {
+    } else {
       menu = DiningMenuItemsModel();
     }
     List<String> filters = [];
@@ -68,7 +65,8 @@ class DiningMenuList extends HookWidget {
     }
     if (menu.menuItems != null) {
       List<DiningMenuItem> menuList;
-      List<DiningMenuItem>? menuItems = diningMenuItemModels.value[model.id]!.menuItems;
+      List<DiningMenuItem>? menuItems =
+          diningMenuItemModels.value[model.id]!.menuItems;
       List<DiningMenuItem> filteredMenuItems = [];
       for (var menuItem in menuItems!) {
         int matched = 0;
@@ -171,7 +169,8 @@ class DiningMenuList extends HookWidget {
           Text('Vegan'),
           Text('Gluten-free'),
         ],
-        onPressed: (int index) => filtersSelected.value[index] = !filtersSelected.value[index],
+        onPressed: (int index) =>
+            filtersSelected.value[index] = !filtersSelected.value[index],
       ),
     );
   }
@@ -189,8 +188,7 @@ class DiningMenuList extends HookWidget {
             title: 'Lunch',
             value: Meal.lunch,
             groupValue: mealTime.value,
-            onChanged: (Meal? value) => mealTime.value = value!
-        ),
+            onChanged: (Meal? value) => mealTime.value = value!),
         LabeledRadio(
             title: 'Dinner',
             value: Meal.dinner,
