@@ -54,10 +54,10 @@ class StudentIdProfileModel {
                 ? ""
                 : json["Graduate_Primary_Major_Current"],
         athleteCurrentCount: json["Athlete_Current_Count"],
-        cardNumber: json["ID_Card_Number"],
-        barcode: json["ID_Card_Bar_Code"],
-        classificationType: json["ID_Card_Classification_Type"],
-        issueNumber: json["ID_Card_Issue_Number"],
+        cardNumber: json["Card_Number"],
+        barcode: json["Barcode"],
+        classificationType: json["Classification_Type"],
+        issueNumber: json["Issue_Number"],
       );
 
   Map<String, dynamic> toJson() => {
