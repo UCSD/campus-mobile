@@ -4,7 +4,6 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:audioplayers/audioplayers.dart';
 
 class CMAppBar extends StatelessWidget {
   CMAppBar({

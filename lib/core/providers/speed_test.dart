@@ -8,7 +8,6 @@ import 'package:campus_mobile_experimental/core/models/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/speed_test.dart';
 import 'package:dio/dio.dart';
-import 'package:cancellation_token_http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -18,13 +17,14 @@ class SpeedTestProvider extends ChangeNotifier {
   late Coordinates _coordinates;
   String? _error;
   NetworkHelper _networkHelper = new NetworkHelper();
+  Dio dio = new Dio();
   Stopwatch _timer = new Stopwatch();
   double? _speedDownload;
   double? _speedUpload;
   double _percentDownloaded = 0.0;
   double _percentUploaded = 0.0;
-  var _cancelTokenDownload;
-  var _cancelTokenUpload;
+  CancelToken? _cancelTokenDownload;
+  CancelToken? _cancelTokenUpload;
   bool _speedTestDone = false;
   int _secondsElapsedDownload = 0;
   int _secondsElapsedUpload = 0;
@@ -65,7 +65,7 @@ class SpeedTestProvider extends ChangeNotifier {
     } else {
       _onSimulator = false;
     }
-    _isLoading = true;
+    // _isLoading = true;
     await _speedTestService.fetchSignedUrls();
     _isLoading = false;
     notifyListeners();
@@ -112,12 +112,12 @@ class SpeedTestProvider extends ChangeNotifier {
         {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
     notifyListeners();
     try {
-      _cancelTokenUpload = http.CancellationToken();
+      _cancelTokenUpload = new CancelToken();
       _timer.start();
-      await http.put(Uri.parse(_speedTestModel!.uploadUrl!),
-          body: formData,
-          cancellationToken: _cancelTokenUpload);
-
+      await dio.put(_speedTestModel!.uploadUrl!,
+          data: formData,
+          onSendProgress: _progressCallbackUpload,
+          cancelToken: _cancelTokenUpload);
     } catch (e) {
       print(e);
     }
@@ -132,10 +132,11 @@ class SpeedTestProvider extends ChangeNotifier {
     // _timer.start();
     notifyListeners();
     try {
-      _cancelTokenDownload = http.CancellationToken();
+      _cancelTokenDownload = new CancelToken();
       _timer.start();
-
-      await http.get(Uri.parse(_speedTestModel!.downloadUrl!), cancellationToken: _cancelTokenDownload);
+      await dio.download(_speedTestModel!.downloadUrl!, (tempDownload.path),
+          onReceiveProgress: _progressCallbackDownload,
+          cancelToken: _cancelTokenDownload);
     } catch (e) {
       print(e);
     }
@@ -356,9 +357,7 @@ class SpeedTestProvider extends ChangeNotifier {
           .authorizedPost(
               tokenEndpoint, tokenHeaders, "grant_type=client_credentials")
           .then((response) {
-        var splitted = response.split('"');
-        String accessToken = splitted[3];
-        headers["Authorization"] = "Bearer " + accessToken;
+        headers["Authorization"] = "Bearer " + response["access_token"];
         return true;
       });
     } catch (e) {

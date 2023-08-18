@@ -9,7 +9,6 @@ dependencies:
   connectivity: 3.0.6
   device_info: 2.0.2
   dio: 4.0.6
-  http: ^0.13.5
   encrypt: 5.0.1
   dots_indicator: 2.1.0
   firebase_analytics: 8.1.0
@@ -27,7 +26,7 @@ dependencies:
   flutter_secure_storage: 5.0.2
   flutter_sticky_header: 0.6.0
   get: 4.1.4
-  google_maps_flutter: 2.0.6
+  google_maps_flutter: 2.2.2
   hive: 2.0.4
   hive_flutter: 1.0.0
   intl: 0.17.0
@@ -37,7 +36,7 @@ dependencies:
       ref: 9fd5cc0aa1a68d70588741f40bfc6830b46c10c1
   geolocator: ^9.0.2
   package_info: 2.0.2
-  percent_indicator: 3.0.1
+  percent_indicator: 4.2.2
   permission_handler: ^10.2.0
   pointycastle: 3.4.0
   provider: 6.0.1
@@ -49,8 +48,6 @@ dependencies:
     git:
       url: https://github.com/UCSD/wifi_connection.git
       ref: 179eb3a322b9d947752b4ff4e810582c3e262e47
-  cancellation_token_http: ^1.1.0
-  audioplayers: ^1.1.1
   audio_service: ^0.18.9
   just_audio: ^0.9.31
   just_audio_background: ^0.0.1-beta.9
@@ -64,6 +61,5 @@ dependency_overrides:
 flutter:
   uses-material-design: true
   assets:
-    - assets/theme_01.mp3
     - assets/images/
     - assets/public_key.txt

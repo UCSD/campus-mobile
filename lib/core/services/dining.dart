@@ -26,7 +26,6 @@ class DiningService {
     _isLoading = true;
     try {
       /// fetch data
-      await getNewToken();
       String _response = await _networkHelper.authorizedFetch(
           baseEndpoint + '/locations', headers);
 
@@ -85,9 +84,9 @@ class DiningService {
     try {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-      var splitted = response.split('"');
-      String accessToken = splitted[3];
-      headers["Authorization"] = "Bearer " + accessToken;
+
+      headers["Authorization"] = "Bearer " + response["access_token"];
+
       return true;
     } catch (e) {
       _error = e.toString();

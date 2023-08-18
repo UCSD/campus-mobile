@@ -44,7 +44,6 @@ import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -173,7 +172,7 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return CardsView();
         });
-      case RoutePaths.NotificationsSettingsView:
+      case RoutePaths.NotificationsFilter:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsSettingsView();

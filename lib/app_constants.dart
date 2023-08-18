@@ -11,12 +11,11 @@ class RoutePaths {
   static const String Notifications = 'notifications';
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
-  static const String NotificationsSettingsView =
-      'notifications/notifications_settings';
+  static const String NotificationsFilter = 'notifications/filter';
 
   static const String NewsViewAll = 'news/newslist';
   static const String EventsViewAll = 'events/eventslist';
-  static const String EventsAll = 'triton_media/triton_media_view_all';
+  static const String EventsAll = 'events/events_view_all';
   static const String MediaViewAll = 'triton_media/triton_media_list';
   static const String MediaAll = 'triton_media/triton_media_view_all';
   static const String NewsDetailView = 'news/news_detail_view';
@@ -51,7 +50,7 @@ class RouteTitles {
     'Notifications': 'Notifications',
     'Profile': 'Profile',
     'profile/cards_view': 'Cards',
-    'notifications/notifications_settings': "Notification Settings",
+    'notifications/filter': "Filter",
     'news/newslist': 'News',
     'news/news_detail_view': 'News',
     'events/eventslist': 'Events',
@@ -100,11 +99,11 @@ class ErrorConstants {
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
   static const notAcceptable =
-      'HttpError [HttpErrorType.response]: Http status error [406]';
+      'DioError [DioErrorType.response]: Http status error [406]';
   static const duplicateRecord =
-      'HttpError [HttpErrorType.response]: Http status error [409]';
+      'DioError [DioErrorType.response]: Http status error [409]';
   static const invalidMedia =
-      'HttpError [HttpErrorType.response]: Http status error [415]';
+      'DioError [DioErrorType.response]: Http status error [415]';
   static const silentLoginFailed = "Silent login failed";
   static const locationFailed = "Location was not available";
 }

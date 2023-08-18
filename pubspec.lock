@@ -73,62 +73,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.16"
-  audioplayers:
-    dependency: "direct main"
-    description:
-      name: audioplayers
-      sha256: bb506873ab4fb663db9b47243754ef669adf684dbe6ba8b57c26e27b834065c4
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
-  audioplayers_android:
-    dependency: transitive
-    description:
-      name: audioplayers_android
-      sha256: "53969a1c5d94ebdaef72e334f1c0ea2f3946ab2baa8d398a9584ac27baf4f037"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.3"
-  audioplayers_darwin:
-    dependency: transitive
-    description:
-      name: audioplayers_darwin
-      sha256: dcd5a4ceef5aa3d04e8ae49441f13a3d9f93fe6e9e88fe121ff6b6f391b2a40b
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
-  audioplayers_linux:
-    dependency: transitive
-    description:
-      name: audioplayers_linux
-      sha256: ea1cb9a5c9389b38f293ee1375b22b02fb1d1f7a2e1517fcb674297dd074dc7b
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
-  audioplayers_platform_interface:
-    dependency: transitive
-    description:
-      name: audioplayers_platform_interface
-      sha256: "589c3106d0c656540e81ac2c7a78a9414a4a6534ae7b77f06ddb5d6aa5dc653c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  audioplayers_web:
-    dependency: transitive
-    description:
-      name: audioplayers_web
-      sha256: "13fb044a443276223774f8ed1f8d2b82f443cf8980edd0e172e55967c1556a49"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  audioplayers_windows:
-    dependency: transitive
-    description:
-      name: audioplayers_windows
-      sha256: "87964ddece7275b97277935df67af60536155914c81c633f708914b99433129b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
   barcode:
     dependency: transitive
     description:
@@ -217,22 +161,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.6.1"
-  cancellation_token:
-    dependency: transitive
-    description:
-      name: cancellation_token
-      sha256: ad95acf9d4b2f3563e25dc937f63587e46a70ce534e910b65d10e115490f1027
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
-  cancellation_token_http:
-    dependency: "direct main"
-    description:
-      name: cancellation_token_http
-      sha256: bb91655e2e47d6274b681261ee6a687b7aa9023f49cfc28f42d095b2f86febc3
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.0"
   characters:
     dependency: transitive
     description:
@@ -717,10 +645,26 @@ packages:
     dependency: "direct main"
     description:
       name: google_maps_flutter
-      sha256: "7cdec2ee1ea553b32dd4dfa66860d65490b64bcd59ca6559ae0f40576618ce23"
+      sha256: "7a4538540c06e5355128f2de0dad8419613a427f75df6b7e2b55b3723ad8aead"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.6"
+    version: "2.2.2"
+  google_maps_flutter_android:
+    dependency: transitive
+    description:
+      name: google_maps_flutter_android
+      sha256: "9512c862df77c1f0fa5f445513dd3c57f5996f0a809dccb74e54b690ee4e3a0f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.15"
+  google_maps_flutter_ios:
+    dependency: transitive
+    description:
+      name: google_maps_flutter_ios
+      sha256: a9462a433bf3ebe60aadcf4906d2d6341a270d69d3e0fcaa8eb2b64699fcfb4f
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   google_maps_flutter_platform_interface:
     dependency: transitive
     description:
@@ -762,7 +706,7 @@ packages:
     source: hosted
     version: "1.1.0"
   http:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: http
       sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
@@ -998,10 +942,10 @@ packages:
     dependency: "direct main"
     description:
       name: percent_indicator
-      sha256: bb8ae7bee5487373222773320669dd4cf2172ba70a42e2a2f591a70fede3d77c
+      sha256: cec41f67181fbd5322aa68b355621d1a4eea827426b8eeb613f6cbe195ff7b4a
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "4.2.2"
   permission_handler:
     dependency: "direct main"
     description:

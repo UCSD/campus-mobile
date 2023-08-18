@@ -80,7 +80,7 @@ class Profile extends StatelessWidget {
   }
 
   handleNotificationsTap(BuildContext context) {
-    Navigator.pushNamed(context, RoutePaths.NotificationsSettingsView);
+    Navigator.pushNamed(context, RoutePaths.NotificationsFilter);
   }
 
   handleFeedbackTap() async {
