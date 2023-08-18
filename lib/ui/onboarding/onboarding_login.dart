@@ -148,11 +148,11 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       Expanded(
                           child: TextButton(
                         style: TextButton.styleFrom(
+                          foregroundColor: ColorPrimary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
                             side: BorderSide(color: Colors.white),
                           ),
-                          foregroundColor: ColorPrimary,
                           textStyle: TextStyle(
                             color: lightButtonTextColor,
                           ),
