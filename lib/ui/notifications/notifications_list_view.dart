@@ -113,69 +113,67 @@ class NotificationsListView extends StatelessWidget {
         Provider.of<FreeFoodDataProvider>(context);
 
     String? messageType;
-    if(data.audience!.topics == null)  {
+    if (data.audience!.topics == null) {
       messageType = "DM";
-    }
-    else {
+    } else {
       messageType = data.audience?.topics![0];
     }
 
-
     return ListTile(
-      leading: Icon(_chooseIcon(messageType!), color: Theme.of(context).colorScheme.secondary, size: 30),
-      title: Column(
-        children: <Widget>[
-          Text(data.message!.title!, style: TextStyle(fontWeight: FontWeight.bold),),
-          Padding(padding: const EdgeInsets.all(3.5))
-        ],
-        crossAxisAlignment: CrossAxisAlignment.start,
-      ),
-      subtitle: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topLeft,
-            child: Linkify(
-              text: data.message!.message!,
-              onOpen: (link) async {
-                try {
-                  await launch(link.url, forceSafariVC: true);
-                } catch (e) {
-                  // an error occurred, do nothing
-                }
-              },
-              options: LinkifyOptions(humanize: false),
-              style: TextStyle(fontSize: 12.5),
-            ),
-          ),
-          freefoodProvider.isFreeFood(data.messageId)
-              ? FreeFoodNotification(messageId: data.messageId)
-              : Container(),
-        ],
-      ),
-        trailing: Column(
+        leading: Icon(_chooseIcon(messageType!),
+            color: Theme.of(context).colorScheme.secondary, size: 30),
+        title: Column(
           children: <Widget>[
-            Text(_readTimestamp(data.timestamp!),
-                style: TextStyle(fontSize: 10, color: Colors.grey)),
-          ]
-      )
-    );
+            Text(
+              data.message!.title!,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Padding(padding: const EdgeInsets.all(3.5))
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        subtitle: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topLeft,
+              child: Linkify(
+                text: data.message!.message!,
+                onOpen: (link) async {
+                  try {
+                    await launch(link.url, forceSafariVC: true);
+                  } catch (e) {
+                    // an error occurred, do nothing
+                  }
+                },
+                options: LinkifyOptions(humanize: false),
+                style: TextStyle(fontSize: 12.5),
+              ),
+            ),
+            freefoodProvider.isFreeFood(data.messageId)
+                ? FreeFoodNotification(messageId: data.messageId)
+                : Container(),
+          ],
+        ),
+        trailing: Column(children: <Widget>[
+          Text(_readTimestamp(data.timestamp!),
+              style: TextStyle(fontSize: 10, color: Colors.grey)),
+        ]));
   }
 
   IconData _chooseIcon(String messageType) {
-    if (messageType == "studentAnnouncements" || messageType == "testStudentAnnouncements") {
+    if (messageType == "studentAnnouncements" ||
+        messageType == "testStudentAnnouncements") {
       return Icons.school_outlined;
-    }
-    else if (messageType == "freeFood") {
+    } else if (messageType == "freeFood") {
       return Icons.restaurant_outlined;
-    }
-    else if (messageType == "campusAnnouncements" || messageType == "testCampusAnnouncements") {
-        return Icons.campaign_outlined;
-    }
-    else if (messageType == "DM"){
+    } else if (messageType == "campusAnnouncements" ||
+        messageType == "testCampusAnnouncements") {
+      return Icons.campaign_outlined;
+    } else if (messageType == "DM") {
       return Icons.info_outline;
     }
     return Icons.info_outline;
-}
+  }
 
   String _readTimestamp(int timestamp) {
     var now = new DateTime.now();
