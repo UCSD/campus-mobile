@@ -16,7 +16,7 @@ import '../navigator/bottom.dart';
 
 bool hideListView = false; // debug
 List<String> eventTypesForIamGoing = [
-  "testCampusInnovationEvents",
+  "campusInnovationEvents",
   "freeFood",
 ]; // for the "I am Going" feature
 
@@ -197,7 +197,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   // a list of event types for "I am Going" feature is defined in line 18
   bool needIAmGoingFeature(
       String? messageId, String? messageType, List<String> eventTypes) {
-    print('messageType is: $messageType');
+    // print('messageType is: $messageType');
     return eventTypes.contains(messageType);
   }
 
