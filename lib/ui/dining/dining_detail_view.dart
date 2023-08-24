@@ -57,7 +57,7 @@ class DiningDetailView extends StatelessWidget {
       return TextButton(
         style: TextButton.styleFrom(
           // primary: Theme.of(context).buttonColor,
-          primary: Theme.of(context).backgroundColor,
+          foregroundColor: Theme.of(context).backgroundColor,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,9 +100,8 @@ class DiningDetailView extends StatelessWidget {
     if (model.url != null && model.url != '') {
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          onPrimary: Theme.of(context).primaryColor, // foreground
-          // primary: Theme.of(context).buttonColor,
-          primary: Theme.of(context).backgroundColor,
+          foregroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).backgroundColor,
         ),
         child: Text('Visit Website',
             style: TextStyle(
@@ -128,9 +127,8 @@ class DiningDetailView extends StatelessWidget {
               color: Theme.of(context).textTheme.button!.color,
             )),
         style: ElevatedButton.styleFrom(
-          onPrimary: Theme.of(context).primaryColor, // foreground
-          // primary: Theme.of(context).buttonColor,
-          primary: Theme.of(context).backgroundColor,
+          foregroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).backgroundColor,
         ),
         onPressed: () {
           try {
