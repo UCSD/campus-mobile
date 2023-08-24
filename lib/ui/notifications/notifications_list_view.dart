@@ -31,12 +31,6 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   initState() {
     super.initState();
     hideListView = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notificationScrollController.jumpTo(getNotificationsScrollOffset());
-      setState(() {
-        hideListView = false;
-      });
-    });
   }
 
   @override
@@ -183,7 +177,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
             // if true, use FreeFoodNotification format
             // if no, use regular format
             needIAmGoingFeature(
-                    data.messageId, messageType!, eventTypesForIamGoing!)
+                    data.messageId, messageType, eventTypesForIamGoing)
                 ? IAmGoingNotification(messageId: data.messageId)
                 : Container(),
           ],
