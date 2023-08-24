@@ -1,27 +1,28 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
-import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import '../../core/hooks/news_query.dart';
 
-class NewsList extends StatelessWidget {
+class NewsList extends HookWidget {
   const NewsList({Key? key, this.listSize}) : super(key: key);
 
   final int? listSize;
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<NewsDataProvider>(context).isLoading!) {
+    final news = useFetchNewsModels();
+    if (news.isFetching) {
       return Center(
           child: CircularProgressIndicator(
               color: Theme.of(context).colorScheme.secondary));
     }
     return buildNewsList(
       context,
-      Provider.of<NewsDataProvider>(context).newsModels!,
+      news.data!,
     );
   }
 

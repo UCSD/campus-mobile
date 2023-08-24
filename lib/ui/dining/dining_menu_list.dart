@@ -1,47 +1,59 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
-import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import '../../core/hooks/dining_query.dart';
 
-class DiningMenuList extends StatefulWidget {
+enum Meal { breakfast, lunch, dinner }
+
+class DiningMenuList extends HookWidget {
+  late ValueNotifier<Meal> mealTime;
+  late ValueNotifier<List<bool>> filtersSelected;
+  late ValueNotifier<Map<String, DiningMenuItemsModel?>> diningMenuItemModels;
+
   DiningMenuList({Key? key, required this.model}) : super(key: key);
   final DiningModel model;
 
   @override
-  _DiningMenuListState createState() => _DiningMenuListState();
-}
-
-class _DiningMenuListState extends State<DiningMenuList> {
-  @override
   Widget build(BuildContext context) {
+    mealTime = useState(Meal.breakfast);
+    filtersSelected = useState([false, false, false]);
+    diningMenuItemModels = useState(Map<String, DiningMenuItemsModel?>());
+
     return Center(
-      child: Provider.of<DiningDataProvider>(context).isLoading!
-          ? CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.secondary)
-          : buildDiningMenuList(context),
+      child: buildDiningMenuList(context),
     );
   }
 
   Widget buildDiningMenuList(BuildContext context) {
-    DiningMenuItemsModel? menu =
-        Provider.of<DiningDataProvider>(context, listen: false)
-            .getMenuData(widget.model.id);
+    DiningMenuItemsModel menu;
+    final diningMenuHook = useFetchDiningMenuModels(model.id);
+    if (diningMenuHook.isLoading) {
+      return CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.secondary);
+    }
+    if (diningMenuHook.data != null) {
+      if (diningMenuItemModels.value[model.id!] != null) {
+        menu = diningMenuItemModels.value[model.id]!;
+      } else {
+        diningMenuItemModels.value[model.id!] = diningMenuHook.data;
+        menu = DiningMenuItemsModel();
+      }
+    } else {
+      menu = DiningMenuItemsModel();
+    }
     List<String> filters = [];
-    if (Provider.of<DiningDataProvider>(context, listen: false)
-        .filtersSelected[0]) {
+    if (filtersSelected.value[0]) {
       filters.add('VT');
     }
-    if (Provider.of<DiningDataProvider>(context, listen: false)
-        .filtersSelected[1]) {
+    if (filtersSelected.value[1]) {
       filters.add('VG');
     }
-    if (Provider.of<DiningDataProvider>(context, listen: false)
-        .filtersSelected[2]) {
+    if (filtersSelected.value[2]) {
       filters.add('GF');
     }
-    switch (Provider.of<DiningDataProvider>(context, listen: false).mealTime) {
+    switch (mealTime.value) {
       case Meal.breakfast:
         filters.add('Breakfast');
         break;
@@ -51,10 +63,23 @@ class _DiningMenuListState extends State<DiningMenuList> {
       case Meal.dinner:
         filters.add('Dinner');
     }
-    if (menu!.menuItems != null) {
-      List<DiningMenuItem> menuList =
-          Provider.of<DiningDataProvider>(context, listen: false)
-              .getMenuItems(widget.model.id, filters)!;
+    if (menu.menuItems != null) {
+      List<DiningMenuItem> menuList;
+      List<DiningMenuItem>? menuItems =
+          diningMenuItemModels.value[model.id]!.menuItems;
+      List<DiningMenuItem> filteredMenuItems = [];
+      for (var menuItem in menuItems!) {
+        int matched = 0;
+        for (int i = 0; i < filters.length; i++) {
+          if (menuItem.tags!.contains(filters[i])) {
+            matched++;
+          }
+        }
+        if (matched == filters.length) {
+          filteredMenuItems.add(menuItem);
+        }
+      }
+      menuList = filteredMenuItems;
       List<Widget> list = [];
       if (menuList.length > 0) {
         for (DiningMenuItem item in menuList) {
@@ -118,7 +143,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
           ),
         ],
       );
-    } else if (widget.model.url != null && widget.model.url!.isNotEmpty) {
+    } else if (model.url != null && model.url!.isNotEmpty) {
       return Center(
         child: Text('Menu not directly available. Try checking their website.'),
       );
@@ -131,7 +156,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
   Widget buildFilterButtons(BuildContext context) {
     return Center(
       child: ToggleButtons(
-        isSelected: Provider.of<DiningDataProvider>(context).filtersSelected,
+        isSelected: filtersSelected.value,
         textStyle: TextStyle(fontSize: 18),
         selectedColor: Theme.of(context).textTheme.button!.color,
         // fillColor: Theme.of(context).buttonColor,
@@ -144,14 +169,8 @@ class _DiningMenuListState extends State<DiningMenuList> {
           Text('Vegan'),
           Text('Gluten-free'),
         ],
-        onPressed: (int index) {
-          setState(() {
-            Provider.of<DiningDataProvider>(context, listen: false)
-                    .filtersSelected[index] =
-                !Provider.of<DiningDataProvider>(context, listen: false)
-                    .filtersSelected[index];
-          });
-        },
+        onPressed: (int index) =>
+            filtersSelected.value[index] = !filtersSelected.value[index],
       ),
     );
   }
@@ -163,30 +182,18 @@ class _DiningMenuListState extends State<DiningMenuList> {
         LabeledRadio(
             title: 'Breakfast',
             value: Meal.breakfast,
-            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-            onChanged: (Meal? value) => setState(() {
-                  Provider.of<DiningDataProvider>(context, listen: false)
-                      .mealTime = value!;
-                })),
+            groupValue: mealTime.value,
+            onChanged: (Meal? value) => mealTime.value = value!),
         LabeledRadio(
-          title: 'Lunch',
-          value: Meal.lunch,
-          groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-          onChanged: (Meal? value) {
-            setState(() {
-              Provider.of<DiningDataProvider>(context, listen: false).mealTime =
-                  value!;
-            });
-          },
-        ),
+            title: 'Lunch',
+            value: Meal.lunch,
+            groupValue: mealTime.value,
+            onChanged: (Meal? value) => mealTime.value = value!),
         LabeledRadio(
             title: 'Dinner',
             value: Meal.dinner,
-            groupValue: Provider.of<DiningDataProvider>(context).mealTime,
-            onChanged: (Meal? value) => setState(() {
-                  Provider.of<DiningDataProvider>(context, listen: false)
-                      .mealTime = value!;
-                })),
+            groupValue: mealTime.value,
+            onChanged: (Meal? value) => mealTime.value = value!),
       ],
     );
   }

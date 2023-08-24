@@ -1,14 +1,15 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/hooks/news_query.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 const String cardId = 'news';
 
-class NewsCard extends StatelessWidget {
+class NewsCard extends HookWidget {
   Widget buildNewsCard() {
     try {
       return NewsList(
@@ -46,16 +47,17 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final news = useFetchNewsModels();
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
-          Provider.of<NewsDataProvider>(context, listen: false).fetchNews(),
-      isLoading: Provider.of<NewsDataProvider>(context).isLoading,
+      news.refetch(),
+      isLoading: news.isFetching,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<NewsDataProvider>(context).error,
+      errorText: news.error,
       child: () => buildNewsCard(),
       actionButtons: buildActionButtons(context),
     );

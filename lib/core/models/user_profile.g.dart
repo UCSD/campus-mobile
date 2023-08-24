@@ -17,12 +17,12 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserProfileModel(
-      selectedLots: (fields[0] as List?)?.cast<String>(),
-      selectedOccuspaceLocations: (fields[1] as List?)?.cast<String?>(),
+      disabledLots: (fields[0] as List?)?.cast<String>(),
+      disabledOccuspaceLocations: (fields[1] as List?)?.cast<String?>(),
       subscribedTopics: (fields[2] as List?)?.cast<String?>(),
-      selectedParkingSpots: (fields[3] as Map?)?.cast<String?, bool>(),
-      selectedParkingLots: (fields[4] as Map?)?.cast<String?, bool>(),
-      selectedStops: (fields[5] as List?)?.cast<int?>(),
+      disabledParkingSpots: (fields[3] as Map?)?.cast<String?, bool>(),
+      disabledParkingLots: (fields[4] as Map?)?.cast<String?, bool>(),
+      disabledStops: (fields[5] as List?)?.cast<int?>(),
       surveyCompletion: (fields[6] as List?)?.cast<String>(),
     );
   }
@@ -32,17 +32,17 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
     writer
       ..writeByte(7)
       ..writeByte(0)
-      ..write(obj.selectedLots)
+      ..write(obj.disabledLots)
       ..writeByte(1)
-      ..write(obj.selectedOccuspaceLocations)
+      ..write(obj.disabledOccuspaceLocations)
       ..writeByte(2)
       ..write(obj.subscribedTopics)
       ..writeByte(3)
-      ..write(obj.selectedParkingSpots)
+      ..write(obj.disabledParkingSpots)
       ..writeByte(4)
-      ..write(obj.selectedParkingLots)
+      ..write(obj.disabledParkingLots)
       ..writeByte(5)
-      ..write(obj.selectedStops)
+      ..write(obj.disabledStops)
       ..writeByte(6)
       ..write(obj.surveyCompletion);
   }

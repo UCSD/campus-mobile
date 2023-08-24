@@ -4,7 +4,15 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
+
+// // custom hook replacement for NetworkHelper
+// AsyncSnapshot<Model> useAuthorizedFetchData<Model>(String url, Map<String, String> headers)
+// {
+//   // TODO: do we need to refetch the data if it changes? (or use streams?)
+//   return useFuture(useMemoized(() => NetworkHelper().authorizedFetch(url, headers)));
+// }
 
 class NetworkHelper {
   ///TODO: inside each service that file place a switch statement to handle all

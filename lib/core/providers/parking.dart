@@ -50,9 +50,9 @@ class ParkingDataProvider extends ChangeNotifier {
     Map<String?, bool> newMapOfLotStates = Map<String?, bool>();
 
     if (await _parkingService.fetchParkingLotData()) {
-      if (_userDataProvider.userProfileModel!.selectedParkingLots!.isNotEmpty) {
+      if (_userDataProvider.userProfileModel!.disabledParkingLots!.isNotEmpty) {
         _parkingViewState =
-            _userDataProvider.userProfileModel!.selectedParkingLots;
+            _userDataProvider.userProfileModel!.disabledParkingLots;
       } else {
         for (ParkingModel model in _parkingService.data!) {
           if (ParkingDefaults.defaultLots.contains(model.locationId)) {
@@ -93,10 +93,10 @@ class ParkingDataProvider extends ChangeNotifier {
         _spotTypeMap![spot.spotKey] = spot;
       }
       if (_userDataProvider
-          .userProfileModel!.selectedParkingSpots!.isNotEmpty) {
+          .userProfileModel!.disabledParkingSpots!.isNotEmpty) {
         //Load selected spots types from user Profile
         _selectedSpotTypesState =
-            _userDataProvider.userProfileModel!.selectedParkingSpots;
+            _userDataProvider.userProfileModel!.disabledParkingSpots;
       } else {
         //Load default spot types
         for (Spot spot in _spotTypeModel!.spots!) {
@@ -160,7 +160,7 @@ class ParkingDataProvider extends ChangeNotifier {
         _parkingViewState![location] = !_parkingViewState![location]!;
       }
     }
-    _userDataProvider.userProfileModel!.selectedParkingLots = _parkingViewState;
+    _userDataProvider.userProfileModel!.disabledParkingLots = _parkingViewState;
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
     notifyListeners();
   }
@@ -177,7 +177,7 @@ class ParkingDataProvider extends ChangeNotifier {
         _selectedSpotTypesState![spotKey] = !_selectedSpotTypesState![spotKey]!;
       }
     }
-    _userDataProvider.userProfileModel!.selectedParkingSpots =
+    _userDataProvider.userProfileModel!.disabledParkingSpots =
         _selectedSpotTypesState;
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
     notifyListeners();

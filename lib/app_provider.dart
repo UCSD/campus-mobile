@@ -1,16 +1,11 @@
 import 'package:campus_mobile_experimental/core/models/location.dart';
-import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
-import 'package:campus_mobile_experimental/core/providers/dining.dart';
-import 'package:campus_mobile_experimental/core/providers/employee_id.dart';
-import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
@@ -19,9 +14,7 @@ import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
-import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -51,27 +44,6 @@ List<SingleChildWidget> independentServices = [
       return PushNotificationDataProvider();
     },
     lazy: false,
-  ),
-  ChangeNotifierProvider<EventsDataProvider>(
-    create: (_) {
-      EventsDataProvider _eventsDataProvider = EventsDataProvider();
-      _eventsDataProvider.fetchEvents();
-      return _eventsDataProvider;
-    },
-  ),
-  ChangeNotifierProvider<WeatherDataProvider>(
-    create: (_) {
-      WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
-      _weatherDataProvider.fetchWeather();
-      return _weatherDataProvider;
-    },
-  ),
-  ChangeNotifierProvider<NewsDataProvider>(
-    create: (_) {
-      NewsDataProvider _newsDataProvider = NewsDataProvider();
-      _newsDataProvider.fetchNews();
-      return _newsDataProvider;
-    },
   ),
   StreamProvider<Coordinates>(
     initialData: Coordinates(),
@@ -104,15 +76,6 @@ List<SingleChildWidget> independentServices = [
   ),
 ];
 List<SingleChildWidget> dependentServices = [
-  ChangeNotifierProxyProvider<Coordinates, DiningDataProvider>(create: (_) {
-    var diningDataProvider = DiningDataProvider();
-    diningDataProvider.fetchDiningLocations();
-    return diningDataProvider;
-  }, update: (_, coordinates, diningDataProvider) {
-    diningDataProvider!.coordinates = coordinates;
-    diningDataProvider.populateDistances();
-    return diningDataProvider;
-  }),
   ChangeNotifierProxyProvider<Coordinates, MapsDataProvider>(create: (_) {
     var mapsDataProvider = MapsDataProvider();
     return mapsDataProvider;
@@ -184,30 +147,6 @@ List<SingleChildWidget> dependentServices = [
     }
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
-      create: (_) {
-    var studentIdDataProvider = StudentIdDataProvider();
-    return studentIdDataProvider;
-  }, update: (_, userDataProvider, studentIdDataProvider) {
-    studentIdDataProvider!.userDataProvider = userDataProvider;
-    //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading!) {
-      studentIdDataProvider.fetchData();
-    }
-    return studentIdDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, EmployeeIdDataProvider>(
-      create: (_) {
-    var employeeIdDataProvider = EmployeeIdDataProvider();
-    return employeeIdDataProvider;
-  }, update: (_, userDataProvider, employeeIdDataProvider) {
-    employeeIdDataProvider!.userDataProvider = userDataProvider;
-    //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading!) {
-      employeeIdDataProvider.fetchData();
-    }
-    return employeeIdDataProvider;
-  }),
   ChangeNotifierProxyProvider<UserDataProvider, ScannerMessageDataProvider>(
       create: (_) {
     var scannerMessageDataProvider = ScannerMessageDataProvider();
@@ -219,15 +158,6 @@ List<SingleChildWidget> dependentServices = [
       scannerMessageDataProvider.fetchData();
     }
     return scannerMessageDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
-      create: (_) {
-    var availabilityDataProvider = AvailabilityDataProvider();
-    availabilityDataProvider.fetchAvailability();
-    return availabilityDataProvider;
-  }, update: (_, userDataProvider, availabilityDataProvider) {
-    availabilityDataProvider!.userDataProvider = userDataProvider;
-    return availabilityDataProvider;
   }),
   ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
       ShuttleDataProvider>(create: (_) {

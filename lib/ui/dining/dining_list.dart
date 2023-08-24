@@ -1,13 +1,15 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/hooks/dining_query.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
-import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:provider/provider.dart';
 
-class DiningList extends StatelessWidget {
+class DiningList extends HookWidget {
   const DiningList({
     Key? key,
     this.listSize,
@@ -17,12 +19,15 @@ class DiningList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<DiningModel> data =
-        Provider.of<DiningDataProvider>(context).diningModels;
-    return data.length > 0
-        ? buildDiningList(data, context)
-        : CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary);
+    Coordinates coordinates = context.read<Coordinates>();
+    final diningHook = useFetchDiningModels();
+    return diningHook.isFetching
+        ? CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.secondary)
+        : buildDiningList(
+            makeLocationsList(
+                diningHook.data!, coordinates), //need to pass in coordinates here
+            context);
   }
 
   Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
@@ -108,7 +113,7 @@ class DiningList extends StatelessWidget {
       default:
         return Text('Closed');
     }
-    if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
+    if (RegExp(r"\b\d{2}").allMatches(dayHours!).length != 2) {
       if (dayHours == 'Closed-Closed') {
         return Text('Closed');
       } else {
@@ -120,7 +125,7 @@ class DiningList extends StatelessWidget {
         time: dayHours
             .replaceAllMapped(
                 //Add colon in between each time
-                RegExp(r"\b[0-9]{2}"),
+                RegExp(r"\b\d{2}"),
                 (match) => "${match.group(0)}:")
             .replaceAllMapped(
                 //Add space around hyphen
@@ -131,10 +136,6 @@ class DiningList extends StatelessWidget {
   Widget buildDiningTile(DiningModel data, BuildContext context) {
     return ListTile(
       onTap: () {
-        if (data.id != null) {
-          Provider.of<DiningDataProvider>(context, listen: false)
-              .fetchDiningMenu(data.id!);
-        }
         Navigator.pushNamed(context, RoutePaths.DiningDetailView,
             arguments: data);
       },
@@ -145,7 +146,11 @@ class DiningList extends StatelessWidget {
         style: TextStyle(fontSize: 18),
       ),
       subtitle: getHoursForToday(data.regularHours),
-      trailing: buildIconWithDistance(data, context),
+      trailing: (data.coordinates != null &&
+              data.coordinates!.lat != null &&
+              data.coordinates!.lon != null)
+          ? buildIconWithDistance(data, context)
+          : null,
     );
   }
 
