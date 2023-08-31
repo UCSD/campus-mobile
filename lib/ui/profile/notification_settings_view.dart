@@ -52,10 +52,11 @@ class NotificationsSettingsView extends StatelessWidget {
     } else if (messageType == "campusAnnouncements" ||
         messageType == "testCampusAnnouncements") {
       return Icons.campaign_outlined;
-    } else if (messageType == "DM") {
+    } else if (messageType == "campusInnovationEvents") {
+      return Icons.event_outlined;
+    } else { // if messageType == "DM" or anything else
       return Icons.info_outline;
     }
-    return Icons.info_outline;
   }
 
   List<String?> getTopics(BuildContext context) {
