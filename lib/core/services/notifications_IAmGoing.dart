@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/core/models/notifications_IAmGoing.dart';
 
 class FreeFoodService {
   final String baseEndpoint =
@@ -8,7 +8,7 @@ class FreeFoodService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  FreeFoodModel? _data;
+  IAmGoingModel? _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
@@ -26,7 +26,7 @@ class FreeFoodService {
           baseEndpoint + 'events/' + id + '/rsvpCount', headers);
 
       /// parse data
-      final data = freeFoodModelFromJson(_response);
+      final data = IAmGoingModelFromJson(_response);
 
       _isLoading = false;
       _data = data;
@@ -56,7 +56,7 @@ class FreeFoodService {
       var _response = await _networkHelper.authorizedFetch(_url, headers);
 
       /// parse data
-      final data = freeFoodModelFromJson(_response);
+      final data = IAmGoingModelFromJson(_response);
       _isLoading = false;
       _data = data;
       return true;
@@ -125,7 +125,7 @@ class FreeFoodService {
 
   // getters
   String? get error => _error;
-  FreeFoodModel? get freeFoodModel => _data;
+  IAmGoingModel? get freeFoodModel => _data;
   bool get isLoading => _isLoading;
   DateTime? get lastUpdated => _lastUpdated;
 }

@@ -5,15 +5,12 @@ import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
-import 'package:campus_mobile_experimental/ui/notifications/notifications_iamgoing.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_IAmGoing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../navigator/bottom.dart';
 
 bool hideListView = false; // debug
 List<String> eventTypesForIamGoing = [
@@ -128,8 +125,6 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
         Provider.of<MessagesDataProvider>(context).messages![index]!;
-    FreeFoodDataProvider freefoodProvider =
-        Provider.of<FreeFoodDataProvider>(context);
 
     String? messageType;
     if (data.audience!.topics == null) {
@@ -168,13 +163,13 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                 style: TextStyle(fontSize: 12.5),
               ),
             ),
-            // FreeFoodNotification(messageId: data.messageId),
-            // freefoodProvider.isFreeFood(data.messageId)
-            //     ? FreeFoodNotification(messageId: data.messageId)
+            // IAmGoingNotification(messageId: data.messageId),
+            // IAmGoingProvider.isIAmGoing(data.messageId)
+            //     ? IAmGoingNotification(messageId: data.messageId)
             //     : Container(),
 
             // check if the type of event need "I am going" feature like FreeFood,
-            // if true, use FreeFoodNotification format
+            // if true, use IAmGoingNotification format
             // if no, use regular format
             needIAmGoingFeature(
                     data.messageId, messageType, eventTypesForIamGoing)

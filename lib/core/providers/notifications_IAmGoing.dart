@@ -2,20 +2,20 @@ import 'dart:collection';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
-import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/core/models/notifications_IAmGoing.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:campus_mobile_experimental/core/services/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/core/services/notifications_IAmGoing.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-class FreeFoodDataProvider extends ChangeNotifier {
-  FreeFoodDataProvider() {
+class IAmGoingProvider extends ChangeNotifier {
+  IAmGoingProvider() {
     ///DEFAULT STATES
     _isLoading = false;
 
     ///INITIALIZE SERVICES
     _freeFoodService = FreeFoodService();
-    _freeFoodModel = FreeFoodModel();
+    _freeFoodModel = IAmGoingModel();
 
     ///INITIALIZE VALUES
     initializeValues();
@@ -33,7 +33,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   String? _error;
 
   ///MODELS
-  FreeFoodModel? _freeFoodModel;
+  IAmGoingModel? _freeFoodModel;
   late MessagesDataProvider _messageDataProvider;
 
   ///SERVICES
@@ -190,7 +190,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   ///SIMPLE GETTERS
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  FreeFoodModel? get freeFoodModel => _freeFoodModel;
+  IAmGoingModel? get freeFoodModel => _freeFoodModel;
   List<String>? get registeredEvents => _registeredEvents;
 
   bool isLoading(String? id) => id == _curId;

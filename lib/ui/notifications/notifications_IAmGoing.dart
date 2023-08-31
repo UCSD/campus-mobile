@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/core/providers/notifications_IAmGoing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +20,7 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
     this.messageId = messageId;
   }
 
-  late FreeFoodDataProvider _freeFoodDataProvider;
+  late IAmGoingProvider _IAmGoingDataProvider;
   String? messageId;
 
   bool _isLoading = false;
@@ -32,9 +32,9 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _freeFoodDataProvider = Provider.of<FreeFoodDataProvider>(context);
-    _isLoading = _freeFoodDataProvider.isLoading(messageId);
-    _isGoing = _freeFoodDataProvider.registeredEvents!.contains(messageId);
+    _IAmGoingDataProvider = Provider.of<IAmGoingProvider>(context);
+    _isLoading = _IAmGoingDataProvider.isLoading(messageId);
+    _isGoing = _IAmGoingDataProvider.registeredEvents!.contains(messageId);
     if (_isGoing) {
       _buttonColor = Colors.green;
       _borderColor = Colors.green;
@@ -48,11 +48,11 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
 
   @override
   Widget build(BuildContext context) {
-    var isOverCount = _freeFoodDataProvider.isOverCount(messageId);
+    var isOverCount = _IAmGoingDataProvider.isOverCount(messageId);
 
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
 
-    var currCount = _freeFoodDataProvider.count(messageId);
+    var currCount = _IAmGoingDataProvider.count(messageId);
     var countText = currCount == 1
         ? '$currCount student is going'
         : '$currCount students are going';
@@ -157,12 +157,12 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
         _textColor = Color(0xFF034161);
-        _freeFoodDataProvider.decrementCount(messageId!);
+        _IAmGoingDataProvider.decrementCount(messageId!);
       } else {
         _buttonColor = Colors.green;
         _borderColor = Colors.green;
         _textColor = Colors.white;
-        _freeFoodDataProvider.incrementCount(messageId!);
+        _IAmGoingDataProvider.incrementCount(messageId!);
       }
       _isGoing = !_isGoing;
     });
