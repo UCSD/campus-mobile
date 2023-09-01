@@ -22,6 +22,7 @@ import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/providers/weather.dart';
+import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -57,6 +58,13 @@ List<SingleChildWidget> independentServices = [
       EventsDataProvider _eventsDataProvider = EventsDataProvider();
       _eventsDataProvider.fetchEvents();
       return _eventsDataProvider;
+    },
+  ),
+  ChangeNotifierProvider<MediaDataProvider>(
+    create: (_) {
+      MediaDataProvider _mediaDataProvider = MediaDataProvider();
+      _mediaDataProvider.fetchMedia();
+      return _mediaDataProvider;
     },
   ),
   ChangeNotifierProvider<WeatherDataProvider>(
