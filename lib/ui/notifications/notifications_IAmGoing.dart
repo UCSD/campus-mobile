@@ -51,7 +51,7 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
   @override
   Widget build(BuildContext context) {
     var isOverCount =
-        _IAmGoingDataProvider.isOverCount(data.messageId); // ---HERE
+        _IAmGoingDataProvider.isOverCount(data.messageId);
     String messageType = data.audience!.topics![0];
 
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
