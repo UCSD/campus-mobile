@@ -2,26 +2,28 @@ import 'package:campus_mobile_experimental/core/providers/notifications_IAmGoing
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/models/notifications.dart';
+
 class IAmGoingNotification extends StatefulWidget {
   /// required parameters
-  final String? messageId;
+  final MessageElement data;
 
   const IAmGoingNotification({
     Key? key,
-    required this.messageId,
+    required this.data,
   }) : super(key: key);
 
   @override
-  _CheckBoxButtonState createState() => _CheckBoxButtonState(messageId);
+  _CheckBoxButtonState createState() => _CheckBoxButtonState(data);
 }
 
 class _CheckBoxButtonState extends State<IAmGoingNotification> {
-  _CheckBoxButtonState(messageId) {
-    this.messageId = messageId;
+  _CheckBoxButtonState(data) {
+    this.data = data;
   }
 
   late IAmGoingProvider _IAmGoingDataProvider;
-  String? messageId;
+  late MessageElement data;
 
   bool _isLoading = false;
   bool _isGoing = false;
@@ -33,8 +35,8 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _IAmGoingDataProvider = Provider.of<IAmGoingProvider>(context);
-    _isLoading = _IAmGoingDataProvider.isLoading(messageId);
-    _isGoing = _IAmGoingDataProvider.registeredEvents!.contains(messageId);
+    _isLoading = _IAmGoingDataProvider.isLoading(data.messageId);
+    _isGoing = _IAmGoingDataProvider.registeredEvents!.contains(data.messageId);
     if (_isGoing) {
       _buttonColor = Colors.green;
       _borderColor = Colors.green;
@@ -48,14 +50,28 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
 
   @override
   Widget build(BuildContext context) {
-    var isOverCount = _IAmGoingDataProvider.isOverCount(messageId);
+    var isOverCount =
+        _IAmGoingDataProvider.isOverCount(data.messageId); // ---HERE
+    String messageType = data.audience!.topics![0];
 
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
 
-    var currCount = _IAmGoingDataProvider.count(messageId);
-    var countText = currCount == 1
-        ? '$currCount student is going'
-        : '$currCount students are going';
+    var currCount = _IAmGoingDataProvider.count(data.messageId);
+    String countText;
+    if (messageType == "campusInnovationEvents") {
+      if (currCount == 1) {
+        countText = '$currCount participant is going';
+      } else {
+        countText = '$currCount participants are going';
+      }
+    } else {
+      // messageType == "freeFood" or anything else
+      if (currCount == 1) {
+        countText = '$currCount student is going';
+      } else {
+        countText = '$currCount students are going';
+      }
+    }
 
     return Container(
         margin: EdgeInsets.only(top: 10.0),
@@ -78,8 +94,14 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
                         child: Row(
                           children: <Widget>[
                             Icon(Icons.report, color: Colors.grey, size: 10),
-                            Text("There may not be enough food",
-                                style: TextStyle(fontSize: 9))
+                            Text(() {
+                              if (messageType == "campusInnovationEvents") {
+                                return "The event may not have enough space for all the participants";
+                              } else {
+                                // messageType == "freeFood" or anything else
+                                return "There may not be enough food";
+                              }
+                            }(), style: TextStyle(fontSize: 9))
                           ],
                         )),
                   ],
@@ -157,12 +179,12 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
         _textColor = Color(0xFF034161);
-        _IAmGoingDataProvider.decrementCount(messageId!);
+        _IAmGoingDataProvider.decrementCount(data.messageId!);
       } else {
         _buttonColor = Colors.green;
         _borderColor = Colors.green;
         _textColor = Colors.white;
-        _IAmGoingDataProvider.incrementCount(messageId!);
+        _IAmGoingDataProvider.incrementCount(data.messageId!);
       }
       _isGoing = !_isGoing;
     });

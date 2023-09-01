@@ -13,7 +13,7 @@ import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 bool hideListView = false; // debug
-List<String> eventTypesForIamGoing = [
+List<String> eventTypesForIAmGoing = [
   "campusInnovationEvents",
   "freeFood",
 ]; // for the "I am Going" feature
@@ -163,17 +163,13 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                 style: TextStyle(fontSize: 12.5),
               ),
             ),
-            // IAmGoingNotification(messageId: data.messageId),
-            // IAmGoingProvider.isIAmGoing(data.messageId)
-            //     ? IAmGoingNotification(messageId: data.messageId)
-            //     : Container(),
 
-            // check if the type of event need "I am going" feature like FreeFood,
+            // check if the event type needs the "I am going" feature (e.g., "freeFood" events),
             // if true, use IAmGoingNotification format
-            // if no, use regular format
+            // if false, use regular notification format
             needIAmGoingFeature(
-                    data.messageId, messageType, eventTypesForIamGoing)
-                ? IAmGoingNotification(messageId: data.messageId)
+                    data.messageId, messageType, eventTypesForIAmGoing)
+                ? IAmGoingNotification(data: data)
                 : Container(),
           ],
         ),
@@ -183,9 +179,9 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         ]));
   }
 
-  // function that check whether the category of event is the type we want apply "I am Going" feature like FreeFood
-  // currently only apply to innovation event and free food
-  // a list of event types for "I am Going" feature is defined in line 18
+  // this function checks whether the current notification's messageType requires the "I am Going" feature
+  // this currently only apply to "campusInnovationEvents" and "freeFood" notifications
+  // a list of event types for "I am Going" feature is defined the eventTypesForIAmGoing variable
   bool needIAmGoingFeature(
       String? messageId, String? messageType, List<String> eventTypes) {
     // print('messageType is: $messageType');
