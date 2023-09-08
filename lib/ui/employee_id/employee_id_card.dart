@@ -28,7 +28,6 @@ class EmployeeIdCard extends HookWidget {
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
     final accessToken = Provider.of<UserDataProvider>(context, listen: false).authenticationModel!.accessToken!;
-
     final employeeModel = useFetchEmployeeIdModel(accessToken);
 
     debugPrint("AvailabilityCard: SUCCESSFULLY LOADED DATA!");
