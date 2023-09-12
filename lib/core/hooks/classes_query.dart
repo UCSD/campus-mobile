@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:fquery/fquery.dart';
+import 'package:intl/intl.dart';
 import '../../app_networking.dart';
 import '../models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import '../models/term.dart';
 
-
-UseQueryResult<ClassScheduleModel, dynamic> useFetchUNCourses() {
+// TODO: add error handling
+UseQueryResult<ClassScheduleModel, dynamic> useFetchUNCourses(String accessToken) {
   final Map<String, String> headers = {
     'Authorization':
-    'Bearer ${UserDataProvider().authenticationModel?.accessToken}'
+    'Bearer $accessToken'
   };
   final termModel = useFetchAcademicTerm();
   String? term = termModel.data?.termCode;
@@ -28,10 +29,11 @@ UseQueryResult<ClassScheduleModel, dynamic> useFetchUNCourses() {
   });
 }
 
-UseQueryResult<ClassScheduleModel, dynamic> useFetchGRCourses() {
+// TODO: add error handling
+UseQueryResult<ClassScheduleModel, dynamic> useFetchGRCourses(String accessToken) {
   final Map<String, String> headers = {
     'Authorization':
-    'Bearer ${UserDataProvider().authenticationModel?.accessToken}'
+    'Bearer $accessToken'
   };
   final termModel = useFetchAcademicTerm();
   String? term = termModel.data?.termCode;
@@ -64,8 +66,9 @@ UseQueryResult<AcademicTermModel, dynamic> useFetchAcademicTerm() {
   });
 }
 
+// TODO: research dependent queries for splitting this function
 /* fetches classes, finals, midterms */
-UseQueryResult<List<Map<String, List<SectionData>>>, dynamic> useFetchAll() {
+List<Map<String, List<SectionData>>> useFetchAll() {
   final unCoursesModel = useFetchUNCourses();
   final grCoursesModel = useFetchGRCourses();
   var classScheduleModel;
@@ -76,17 +79,44 @@ UseQueryResult<List<Map<String, List<SectionData>>>, dynamic> useFetchAll() {
     classScheduleModel = unCoursesModel.data;
   }
 
-  List<ClassData> enrolledCourses = [];
+  List<ClassData> enrolledClassesData = [];
+  Map<String, List<SectionData>> enrolledClasses = {
+    'MO': [],
+    'TU': [],
+    'WE': [],
+    'TH': [],
+    'FR': [],
+    'SA': [],
+    'SU': [],
+    'OTHER': [],
+  };
+
+  Map<String, List<SectionData>> finals = {
+    'MO': [],
+    'TU': [],
+    'WE': [],
+    'TH': [],
+    'FR': [],
+    'SA': [],
+    'SU': [],
+    'OTHER': [],
+  };
+  Map<String, List<SectionData>> midterms = {
+    'MI': [],
+    'OTHER': [],
+  };
+  List<Map<String, List<SectionData>>> finalList = [];
+
 
   /// add only enrolled classes because api returns wait-listed and dropped
   /// courses as well
   for (ClassData classData in classScheduleModel!.data!) {
     if (classData.enrollmentStatus == 'EN') {
-      enrolledCourses.add(classData);
+      enrolledClassesData.add(classData);
     }
   }
 
-  for (ClassData classData in enrolledCourses) {
+  for (ClassData classData in enrolledClassesData) {
     for (SectionData sectionData in classData.sectionData!) {
       /// copy over info from [ClassData] object and put into [SectionData] object
       sectionData.subjectCode = classData.subjectCode;
@@ -102,14 +132,90 @@ UseQueryResult<List<Map<String, List<SectionData>>>, dynamic> useFetchAll() {
 
       if (sectionData.specialMtgCode != 'FI' &&
           sectionData.specialMtgCode != 'MI') {
-        _enrolledClasses![day!]!.add(sectionData);
+        enrolledClasses![day!]!.add(sectionData);
       } else if (sectionData.specialMtgCode == 'FI') {
-        _finals![day!]!.add(sectionData);
+        finals![day!]!.add(sectionData);
       } else if (sectionData.specialMtgCode == 'MI') {
-        _midterms!['MI']!.add(sectionData);
+        midterms!['MI']!.add(sectionData);
       }
     }
   }
+
+  /// chronologically sort classes for each day
+  for (List<SectionData> listOfClasses in enrolledClasses!.values.toList()) {
+    listOfClasses.sort((a, b) => _compare(a, b));
+  }
+  for (List<SectionData> listOfFinals in finals!.values.toList()) {
+    listOfFinals.sort((a, b) => _compare(a, b));
+  }
+  for (List<SectionData> listOfMidterms in midterms!.values.toList()) {
+    listOfMidterms.sort((a, b) => _compare(a, b));
+    listOfMidterms.sort((a, b) => _compareMidterms(a, b));
+  }
+
+  finalList.add(enrolledClasses);
+  finalList.add(midterms);
+  finalList.add(finals);
+  return finalList;
+}
+
+// Helper Functions
+
+buildGradeEvaluation(String? gradeEvaluation) {
+  switch (gradeEvaluation) {
+    case 'L':
+      {
+        return 'Letter Grade';
+      }
+    case 'P':
+      {
+        return 'Pass/No Pass';
+      }
+    case 'S':
+      {
+        return 'Sat/Unsat';
+      }
+    default:
+      {
+        return 'Other';
+      }
+  }
+}
+
+int _compareMidterms(SectionData a, SectionData b) {
+  DateTime dateTimeA = DateFormat('yyyy-M-dd').parse(a.date!);
+  DateTime dateTimeB = DateFormat('yyyy-M-dd').parse(b.date!);
+
+  if (dateTimeA.compareTo(dateTimeB) == 0) {
+    return 0;
+  }
+  if (dateTimeA.compareTo(dateTimeB) < 0) {
+    return -1;
+  }
+  return 1;
+}
+
+/// comparator that sorts according to start time of class
+int _compare(SectionData a, SectionData b) {
+  if (a.time == null || b.time == null) {
+    return 0;
+  }
+  DateTime aStartTime = _getStartTime(a.time!);
+  DateTime bStartTime = _getStartTime(b.time!);
+
+  if (aStartTime == bStartTime) {
+    return 0;
+  }
+  if (aStartTime.isBefore(bStartTime)) {
+    return -1;
+  }
+  return 1;
+}
+
+DateTime _getStartTime(String time) {
+  List<String> times = time.split("-");
+  final format = DateFormat.Hm();
+  return format.parse(times[0]);
 }
 
 
