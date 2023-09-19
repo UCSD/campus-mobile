@@ -11,6 +11,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/providers/user.dart';
+
 const String cardId = 'schedule';
 
 class ClassScheduleCard extends StatelessWidget {
@@ -33,6 +35,7 @@ class ClassScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accessToken = Provider.of<UserDataProvider>(context, listen: false).authenticationModel!.accessToken!;
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)

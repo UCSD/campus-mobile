@@ -66,20 +66,26 @@ UseQueryResult<AcademicTermModel, dynamic> useFetchAcademicTerm() {
   });
 }
 
-// TODO: research dependent queries for splitting this function
-/* fetches classes, finals, midterms */
-List<Map<String, List<SectionData>>> useFetchAll() {
-  final unCoursesModel = useFetchUNCourses();
-  final grCoursesModel = useFetchGRCourses();
+List<ClassData> useFetchEnrolledClassData(String accessToken) {
+  final unCoursesModel = useFetchUNCourses(accessToken);
+  final grCoursesModel = useFetchGRCourses(accessToken);
   var classScheduleModel;
+  List<ClassData> enrolledClassesData = [];
   if (grCoursesModel.data != null) {
     classScheduleModel = grCoursesModel.data;
   }
   else {
     classScheduleModel = unCoursesModel.data;
   }
+  for (ClassData classData in classScheduleModel!.data!) {
+    if (classData.enrollmentStatus == 'EN') {
+      enrolledClassesData.add(classData);
+    }
+  }
+  return enrolledClassesData;
+}
 
-  List<ClassData> enrolledClassesData = [];
+Map<String, List<SectionData>> useFetchEnrolledClasses(List<ClassData> enrolledClassesData) {
   Map<String, List<SectionData>> enrolledClasses = {
     'MO': [],
     'TU': [],
@@ -91,6 +97,41 @@ List<Map<String, List<SectionData>>> useFetchAll() {
     'OTHER': [],
   };
 
+  for (ClassData classData in enrolledClassesData) {
+    for (SectionData sectionData in classData.sectionData!) {
+      sectionData.subjectCode = classData.subjectCode;
+      sectionData.courseCode = classData.courseCode;
+      sectionData.courseTitle = classData.courseTitle;
+      sectionData.gradeOption = buildGradeEvaluation(classData.gradeOption);
+
+      String? day = sectionData.days ?? 'OTHER';
+
+      if (sectionData.specialMtgCode != 'FI' && sectionData.specialMtgCode != 'MI') {
+        enrolledClasses[day]!.add(sectionData);
+      }
+    }
+  }
+
+
+  return enrolledClasses;
+}
+
+Map<String, List<SectionData>> useFetchMidterms(List<ClassData> enrolledClassesData) {
+  Map<String, List<SectionData>> midterms = {
+    'MI': [],
+    'OTHER': [],
+  };
+  for (ClassData classData in enrolledClassesData) {
+    for (SectionData sectionData in classData.sectionData!) {
+      if (sectionData.specialMtgCode == 'MI') {
+        midterms['MI']!.add(sectionData);
+      }
+    }
+  }
+  return midterms;
+}
+
+Map<String, List<SectionData>> useFetchFinals(List<ClassData> enrolledClassesData) {
   Map<String, List<SectionData>> finals = {
     'MO': [],
     'TU': [],
@@ -101,63 +142,109 @@ List<Map<String, List<SectionData>>> useFetchAll() {
     'SU': [],
     'OTHER': [],
   };
-  Map<String, List<SectionData>> midterms = {
-    'MI': [],
-    'OTHER': [],
-  };
-  List<Map<String, List<SectionData>>> finalList = [];
-
-
-  /// add only enrolled classes because api returns wait-listed and dropped
-  /// courses as well
-  for (ClassData classData in classScheduleModel!.data!) {
-    if (classData.enrollmentStatus == 'EN') {
-      enrolledClassesData.add(classData);
-    }
-  }
-
   for (ClassData classData in enrolledClassesData) {
     for (SectionData sectionData in classData.sectionData!) {
-      /// copy over info from [ClassData] object and put into [SectionData] object
-      sectionData.subjectCode = classData.subjectCode;
-      sectionData.courseCode = classData.courseCode;
-      sectionData.courseTitle = classData.courseTitle;
-      sectionData.gradeOption = buildGradeEvaluation(classData.gradeOption);
-      String? day = 'OTHER';
-      if (sectionData.days != null) {
-        day = sectionData.days;
-      } else {
-        continue;
-      }
-
-      if (sectionData.specialMtgCode != 'FI' &&
-          sectionData.specialMtgCode != 'MI') {
-        enrolledClasses![day!]!.add(sectionData);
-      } else if (sectionData.specialMtgCode == 'FI') {
-        finals![day!]!.add(sectionData);
-      } else if (sectionData.specialMtgCode == 'MI') {
-        midterms!['MI']!.add(sectionData);
+      if (sectionData.specialMtgCode == 'FI') {
+        String? day = sectionData.days ?? 'OTHER';
+        finals[day]!.add(sectionData);
       }
     }
   }
 
-  /// chronologically sort classes for each day
-  for (List<SectionData> listOfClasses in enrolledClasses!.values.toList()) {
-    listOfClasses.sort((a, b) => _compare(a, b));
-  }
-  for (List<SectionData> listOfFinals in finals!.values.toList()) {
-    listOfFinals.sort((a, b) => _compare(a, b));
-  }
-  for (List<SectionData> listOfMidterms in midterms!.values.toList()) {
-    listOfMidterms.sort((a, b) => _compare(a, b));
-    listOfMidterms.sort((a, b) => _compareMidterms(a, b));
-  }
-
-  finalList.add(enrolledClasses);
-  finalList.add(midterms);
-  finalList.add(finals);
-  return finalList;
+  return finals;
 }
+// // TODO: research dependent queries for splitting this function
+// /* fetches classes, finals, midterms */
+// List<Map<String, List<SectionData>>> useFetchAll(String accessToken) {
+//   final unCoursesModel = useFetchUNCourses(accessToken);
+//   final grCoursesModel = useFetchGRCourses(accessToken);
+//   var classScheduleModel;
+//   if (grCoursesModel.data != null) {
+//     classScheduleModel = grCoursesModel.data;
+//   }
+//   else {
+//     classScheduleModel = unCoursesModel.data;
+//   }
+//
+//   List<ClassData> enrolledClassesData = [];
+//   Map<String, List<SectionData>> enrolledClasses = {
+//     'MO': [],
+//     'TU': [],
+//     'WE': [],
+//     'TH': [],
+//     'FR': [],
+//     'SA': [],
+//     'SU': [],
+//     'OTHER': [],
+//   };
+//
+//   Map<String, List<SectionData>> finals = {
+//     'MO': [],
+//     'TU': [],
+//     'WE': [],
+//     'TH': [],
+//     'FR': [],
+//     'SA': [],
+//     'SU': [],
+//     'OTHER': [],
+//   };
+//   Map<String, List<SectionData>> midterms = {
+//     'MI': [],
+//     'OTHER': [],
+//   };
+//   List<Map<String, List<SectionData>>> finalList = [];
+//
+//
+//   /// add only enrolled classes because api returns wait-listed and dropped
+//   /// courses as well
+//   for (ClassData classData in classScheduleModel!.data!) {
+//     if (classData.enrollmentStatus == 'EN') {
+//       enrolledClassesData.add(classData);
+//     }
+//   }
+//
+//   for (ClassData classData in enrolledClassesData) {
+//     for (SectionData sectionData in classData.sectionData!) {
+//       /// copy over info from [ClassData] object and put into [SectionData] object
+//       sectionData.subjectCode = classData.subjectCode;
+//       sectionData.courseCode = classData.courseCode;
+//       sectionData.courseTitle = classData.courseTitle;
+//       sectionData.gradeOption = buildGradeEvaluation(classData.gradeOption);
+//       String? day = 'OTHER';
+//       if (sectionData.days != null) {
+//         day = sectionData.days;
+//       } else {
+//         continue;
+//       }
+//
+//       if (sectionData.specialMtgCode != 'FI' &&
+//           sectionData.specialMtgCode != 'MI') {
+//         enrolledClasses![day!]!.add(sectionData);
+//       } else if (sectionData.specialMtgCode == 'FI') {
+//         finals![day!]!.add(sectionData);
+//       } else if (sectionData.specialMtgCode == 'MI') {
+//         midterms!['MI']!.add(sectionData);
+//       }
+//     }
+//   }
+//
+//   /// chronologically sort classes for each day
+//   for (List<SectionData> listOfClasses in enrolledClasses!.values.toList()) {
+//     listOfClasses.sort((a, b) => _compare(a, b));
+//   }
+//   for (List<SectionData> listOfFinals in finals!.values.toList()) {
+//     listOfFinals.sort((a, b) => _compare(a, b));
+//   }
+//   for (List<SectionData> listOfMidterms in midterms!.values.toList()) {
+//     listOfMidterms.sort((a, b) => _compare(a, b));
+//     listOfMidterms.sort((a, b) => _compareMidterms(a, b));
+//   }
+//
+//   finalList.add(enrolledClasses);
+//   finalList.add(midterms);
+//   finalList.add(finals);
+//   return finalList;
+// }
 
 // Helper Functions
 
