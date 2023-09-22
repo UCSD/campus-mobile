@@ -8,7 +8,6 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
-import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/main.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
@@ -32,6 +31,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
+import '../../core/hooks/notices_query.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -86,21 +87,34 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     initUniLinks(context);
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
+    return HookBuilder(
+      builder: (context) {
+        // use Hooks here
+        final noticesModel = useFetchNotices();
+        final notices = noticesModel.data;
+        if (notices != null){
+          return _buildPadding(notices!);
+        }
+        return Text("Loading...");
+      }
+    );
+  }
+
+  Widget _buildPadding(List<NoticesModel> notices) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
         padding: EdgeInsets.only(
             top: cardMargin + 2.0, right: 0.0, bottom: 0.0, left: 0.0),
-        children: createList(context),
+        children: createList(context, notices!),
       ),
     );
   }
 
-  List<Widget> createList(BuildContext context) {
+  List<Widget> createList(BuildContext context, List<NoticesModel> notices) {
     List<Widget> orderedCards =
         getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder!);
-    List<Widget> noticesCards = getNoticesCardsList(
-        Provider.of<NoticesDataProvider>(context).noticesModel!);
+    List<Widget> noticesCards = getNoticesCardsList(notices);
 
     return noticesCards + orderedCards;
   }
@@ -180,3 +194,12 @@ class _HomeState extends State<Home> {
     return orderedCards;
   }
 }
+
+// class NoticesCard extends HookWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final noticesModel = useFetchNotices();
+//     debugPrint("NoticesCard: SUCCESSFULLY LOADED DATA!");
+//     return
+//   }
+// }
