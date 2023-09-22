@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/hooks/classes_query.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
@@ -16,7 +17,10 @@ import '../../core/providers/user.dart';
 
 const String cardId = 'schedule';
 
-class ClassScheduleCard extends StatelessWidget {
+
+//TODO: create small helper class for upcomingCourses
+
+class ClassScheduleCard extends HookWidget {
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
@@ -37,6 +41,12 @@ class ClassScheduleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accessToken = Provider.of<UserDataProvider>(context, listen: false).authenticationModel!.accessToken!;
+    final grCoursesHook = useFetchGRCourses(accessToken);
+    final unCoursesHook = useFetchUNCourses(accessToken);
+    final enrolledClassesData = fetchEnrolledClassData(grCoursesHook.data, unCoursesHook.data);
+    final enrolledClasses = fetchEnrolledClasses(enrolledClassesData);
+    var nextDayWithClass = StringBuffer("Monday");
+    final upcomingCourses = fetchUpcomingCourses(enrolledClasses, nextDayWithClass);
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
@@ -54,10 +64,10 @@ class ClassScheduleCard extends StatelessWidget {
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildClassScheduleCard(
-        Provider.of<ClassScheduleDataProvider>(context).upcomingCourses,
+        upcomingCourses,
         Provider.of<ClassScheduleDataProvider>(context).selectedCourse!,
         Provider.of<ClassScheduleDataProvider>(context).lastUpdated,
-        Provider.of<ClassScheduleDataProvider>(context).nextDayWithClass!,
+        nextDayWithClass as String,
       ),
       actionButtons: buildActionButtons(context),
     );

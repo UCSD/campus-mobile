@@ -3,8 +3,12 @@ import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:campus_mobile_experimental/core/hooks/classes_query.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
+
+import '../../core/providers/user.dart';
 
 class ClassList extends StatelessWidget {
   @override
@@ -16,16 +20,18 @@ class ClassList extends StatelessWidget {
 
   Widget buildSchedule(BuildContext context) {
     List<Widget> list = [];
-    Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses!
-        .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms!);
-    Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses!
+    final accessToken = Provider.of<UserDataProvider>(context, listen: false).authenticationModel!.accessToken!;
+    final grCoursesHook = useFetchGRCourses(accessToken);
+    final unCoursesHook = useFetchUNCourses(accessToken);
+    final enrolledClassesData = fetchEnrolledClassData(grCoursesHook.data, unCoursesHook.data);
+    final enrolledClasses = fetchEnrolledClasses(enrolledClassesData);
+    final midterms = fetchMidterms(enrolledClassesData);
+    enrolledClasses.addAll(midterms);
+    enrolledClasses!
         .keys
         .forEach(
       (key) {
-        if (Provider.of<ClassScheduleDataProvider>(context)
-            .enrolledClasses![key]!
+        if (enrolledClasses![key]!
             .isNotEmpty) {
           list.add(SliverStickyHeader(
             header: buildWeekDayHeader(context, key),
@@ -33,17 +39,14 @@ class ClassList extends StatelessWidget {
               delegate: SliverChildBuilderDelegate((context, index) {
                 if (key == 'MI') {
                   return buildMidterm(
-                      Provider.of<ClassScheduleDataProvider>(context)
-                          .enrolledClasses![key]!
+                      enrolledClasses![key]!
                           .elementAt(index));
                 }
                 return buildClass(
-                    Provider.of<ClassScheduleDataProvider>(context)
-                        .enrolledClasses![key]!
+                    enrolledClasses![key]!
                         .elementAt(index));
               },
-                  childCount: Provider.of<ClassScheduleDataProvider>(context)
-                      .enrolledClasses![key]!
+                  childCount: enrolledClasses![key]!
                       .length),
             ),
           ));

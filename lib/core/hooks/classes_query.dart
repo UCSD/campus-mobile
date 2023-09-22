@@ -190,8 +190,9 @@ buildGradeEvaluation(String? gradeEvaluation) {
   }
 }
 
+//TODO: look into builder and type state pattern for rewriting this function
 // Retrieves a list of upcoming course sections for the given day or the next available day with classes.
-List<SectionData> getUpcomingCourses(Map<String, List<SectionData>> enrolledClasses, String nextDayWithClass) {
+List<SectionData> fetchUpcomingCourses(Map<String, List<SectionData>> enrolledClasses, StringBuffer nextDayWithClass) {
   try {
     /// get weekday and return [List<SectionData>] associated with current weekday
     List<SectionData> listToReturn = [];
@@ -200,7 +201,7 @@ List<SectionData> getUpcomingCourses(Map<String, List<SectionData>> enrolledClas
         .toString()
         .toUpperCase()
         .substring(0, 2);
-    nextDayWithClass = DateFormat('EEEE').format(DateTime.now()).toString();
+    nextDayWithClass = StringBuffer(DateFormat('EEEE').format(DateTime.now()).toString());
 
     /// if no classes are scheduled for today then find the next day with classes
     int daysToAdd = 1;
@@ -211,8 +212,8 @@ List<SectionData> getUpcomingCourses(Map<String, List<SectionData>> enrolledClas
           .toString()
           .toUpperCase()
           .substring(0, 2);
-      nextDayWithClass = DateFormat('EEEE')
-          .format(DateTime.now().add(Duration(days: daysToAdd)));
+      nextDayWithClass = StringBuffer(DateFormat('EEEE')
+          .format(DateTime.now().add(Duration(days: daysToAdd))));
       daysToAdd += 1;
     }
 
