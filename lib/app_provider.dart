@@ -6,7 +6,6 @@ import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
 import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
@@ -56,13 +55,6 @@ List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<CustomAppBar>(
     create: (_) {
       return CustomAppBar();
-    },
-  ),
-  ChangeNotifierProvider<NoticesDataProvider>(
-    create: (_) {
-      NoticesDataProvider _noticesDataProvider = NoticesDataProvider();
-      _noticesDataProvider.fetchNotices();
-      return _noticesDataProvider;
     },
   ),
   ChangeNotifierProvider<InternetConnectivityProvider>(
