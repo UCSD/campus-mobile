@@ -3,12 +3,14 @@ const AbortController = require('abort-controller')
 const moment = require('moment')
 const fs = require('fs')
 const XlsxTemplate = require('xlsx-template')
-const spsave = require('spsave').spsave // eslint-disable-line
+const spsave = require('spsave').spsave
 const ENV_VARS = require('./env-vars.json')
 const SP_CONFIG = require('./sp-config.json')
 
+const INTERNAL_ERROR = { 'error': 'An error occurred.' }
 const INTERNAL_TIMEOUT = 20000
 const finalBuildNumber = parseInt(ENV_VARS.buildNumber) + 1000
+const buildArtifacts = {}
 
 ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
 
@@ -16,12 +18,18 @@ const buildNotify = async () => {
 	try {
 		const buildTimestamp = moment().format('YYYY-MM-DD h:mm A')
 		const fciProjectLink = 'https://codemagic.io/app/' + ENV_VARS.fciProjectId + '/build/' + ENV_VARS.fciBuildId
-		const buildSuccess = (ENV_VARS.fciBuildStepStatus === 'success')
-		let artifactUrl = ''
+		let buildSuccess = (ENV_VARS.fciBuildStepStatus === 'success') ? true : false
+		let buildApkFile = 'app-release.apk'
+		let buildIpaFile = 'UC_San_Diego.ipa'
 		let prAuthor = ''
+		let saveArtifactApkSuccess = false
+		let saveArtifactIpaSuccess = false
 		let testPlanFilename = ''
 		let testPlanUrl = ''
 
+		console.log('ENV_VARS.fciBuildStepStatus: ' + ENV_VARS.fciBuildStepStatus)
+		console.log('buildSuccess: ' + buildSuccess)
+		console.log('buildPlatform: ' + ENV_VARS.buildPlatform)
 		// Check build success
 		if (buildSuccess) {
 			// Supplemental GitHub metadata for PRs
@@ -29,12 +37,19 @@ const buildNotify = async () => {
 				prAuthor = await githubMeta()
 			}
 
-			// Get Artifact URL
-			artifactUrl = getArtifactUrl()
+			// Save build artifacts
+			if (ENV_VARS.buildPlatform === 'IOS') {
+				saveArtifactIpaSuccess = await saveArtifact(buildIpaFile)
+			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
+				saveArtifactApkSuccess = await saveArtifact(buildApkFile)
+			}
 
 			// Generate test plan
-			;({ testPlanFilename, testPlanUrl } = await generateTestPlan(prAuthor)) // eslint-disable-line
+			;({ testPlanFilename, testPlanUrl } = await generateTestPlan(prAuthor))
 		}
+
+		console.log('saveArtifactIpaSuccess: ' + saveArtifactIpaSuccess)
+		console.log('saveArtifactApkSuccess: ' + saveArtifactApkSuccess)
 
 		// Construct build notifier message
 		let teamsMessage = '#### Campus Mobile Build Notifier\n\n'
@@ -53,9 +68,17 @@ const buildNotify = async () => {
 
 		// Build Artifacts
 		if (ENV_VARS.buildPlatform === 'IOS') {
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>iOS:</b></td><td><a href="https://mobile.ucsd.edu/testflight" style="text-decoration:underline">TestFlight ' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')</a></td></tr>'
+			if (saveArtifactIpaSuccess) {
+				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>iOS:</b></td><td><a href="https://mobile.ucsd.edu/testflight" style="text-decoration:underline">TestFlight ' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')</a></td></tr>'
+			} else {
+				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>iOS:</b></td><td><span style="color:#d60000">N/A</span></td></tr>'
+			}
 		} else if (ENV_VARS.buildPlatform === 'ANDROID') {
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><a href="' + artifactUrl + '" download style="text-decoration:underline">APK ' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')</a></td></tr>'
+			if (saveArtifactApkSuccess) {
+				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><a href="' + buildArtifacts.buildApkFinalUrl + '" download style="text-decoration:underline">' + buildArtifacts.buildApkFinalFilename + '</a></td></tr>'
+			} else {
+				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><span style="color:#d60000">N/A</span></td></tr>'
+			}
 		}
 
 		// Test plan
@@ -67,7 +90,9 @@ const buildNotify = async () => {
 		const failedEmojiList = ['🙀','😱','😵']
 
 		// Build success or failure
-		if (buildSuccess) {
+		if (buildSuccess &&
+			((saveArtifactApkSuccess && ENV_VARS.buildPlatform === 'ANDROID') ||
+			(saveArtifactIpaSuccess && ENV_VARS.buildPlatform === 'IOS'))) {
 			const successEmoji = successEmojiList[Math.floor(Math.random() * successEmojiList.length)]
 			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Status:</b></td><td><span style="color:#12a102">BUILD SUCCESS ' + successEmoji + '</span> (<a href="' + fciProjectLink + '" style="text-decoration:underline">detail</a>)</td></tr>'
 		} else {
@@ -94,8 +119,8 @@ const buildNotify = async () => {
 		})
 		clearTimeout(notifyTimeout)
 
-		if (notifyResp.statusText !== 'OK') {
-			throw notifyResp
+		if (notifyResp.statusText != 'OK') {
+			throw 'Error: Unable to POST to webhookUrl (status: ' + notifyResp.statusText + ')'
 		}
 	} catch (err) {
 		console.log(err)
@@ -103,17 +128,46 @@ const buildNotify = async () => {
 	}
 }
 
-const getArtifactUrl = () => {
-	let artifactUrl = ''
-
-	ENV_VARS.fciArtifactLinks.forEach((artifact, index) => {
-		if ( (ENV_VARS.buildPlatform === 'IOS' && artifact.type === 'ipa') ||
-				(ENV_VARS.buildPlatform === 'ANDROID' && artifact.type === 'apk')) {
-			artifactUrl = artifact.url
+const saveArtifact = async (artifactFilename) => {
+	try {
+		// Exit if artifact filename unavailable (build failed)
+		if (!artifactFilename) {
+			console.log('Error1: saveArtifact: artifact filename unavailable (build failed)')
+			return false
 		}
-	})
 
-	return artifactUrl
+		const buildFilenamePrEnvStr = ENV_VARS.prNumber ? '-PR-' + ENV_VARS.prNumber : '-' + ENV_VARS.buildEnv
+		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder	
+		const coreOptions = { siteUrl: SP_CONFIG.spSiteUrl }
+		const fileOptions = { folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder }
+
+		// Save build artifacts to SP
+		if (ENV_VARS.buildPlatform === 'ANDROID') {
+			buildArtifacts.buildApkFilepath = '../../build/app/outputs/apk/release/app-release.apk'
+			buildArtifacts.buildApkFinalFilename = ENV_VARS.appVersion + '-' + finalBuildNumber + buildFilenamePrEnvStr + '.apk'
+			buildArtifacts.buildApkFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildApkFinalFilename).replace(/ /g, '%20')
+			fs.copyFileSync(buildArtifacts.buildApkFilepath, './' + buildArtifacts.buildApkFinalFilename)
+			fileOptions.fileName = buildArtifacts.buildApkFinalFilename
+			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildApkFinalFilename)
+			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
+			await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
+			return true
+		} else if (ENV_VARS.buildPlatform === 'IOS') {
+			buildArtifacts.buildIpaFilepath = '../../build/ios/ipa/UC San Diego.ipa'
+			buildArtifacts.buildIpaFinalFilename = ENV_VARS.appVersion + '-' + finalBuildNumber + buildFilenamePrEnvStr + '.ipa'
+			buildArtifacts.buildIpaFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildIpaFinalFilename).replace(/ /g, '%20')
+			fs.copyFileSync(buildArtifacts.buildIpaFilepath, './' + buildArtifacts.buildIpaFinalFilename)
+			fileOptions.fileName = buildArtifacts.buildIpaFinalFilename
+			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildIpaFinalFilename)
+			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
+			await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
+			return true
+		}
+		return false
+	} catch(err) {
+		console.log(err)
+		return false
+	}
 }
 
 const generateTestPlan = async (prAuthor) => {
@@ -126,6 +180,7 @@ const generateTestPlan = async (prAuthor) => {
 			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spPullRequestTestFolder + testPlanFilename + '?web=1').replace(/ /g, '%20')
 			console.log('  (1/3) Downloading PR test plan template ...')
 			if (ENV_VARS.buildPlatform === 'IOS') {
+				
 				fs.copyFileSync(SP_CONFIG.prTestPlanTemplateUrlIos, testPlanFilename)
 			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
 				fs.copyFileSync(SP_CONFIG.prTestPlanTemplateUrlAndroid, testPlanFilename)
@@ -134,7 +189,7 @@ const generateTestPlan = async (prAuthor) => {
 			console.log('Generating regression test plan for branch ' + ENV_VARS.buildBranch)
 			testPlanFilename = 'Regression-Test-Plan-' + ENV_VARS.appVersion + '-' + ENV_VARS.buildEnv + '-' + finalBuildNumber + '.xlsx'
 			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spRegressionTestFolder + testPlanFilename + '?web=1').replace(/ /g, '%20')
-			switch (ENV_VARS.buildEnv) {
+			switch(ENV_VARS.buildEnv) {
 				case 'PROD':
 					console.log('  (1/3) Downloading PROD regression test plan template ...')
 					if (ENV_VARS.buildPlatform === 'IOS') {
@@ -180,7 +235,7 @@ const generateTestPlan = async (prAuthor) => {
 
 		console.log('  (3/4) Writing ' + testPlanFilename)
 		fs.writeFileSync(testPlanFilename, Buffer.from(
-			template.generate({ type: 'base64' }),
+			template.generate({type: 'base64'}),
 			'base64'
 		))
 
@@ -193,10 +248,10 @@ const generateTestPlan = async (prAuthor) => {
 		}
 		await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 		return {
-			testPlanFilename: testPlanFilename, // eslint-disable-line
-			testPlanUrl: testPlanUrl, // eslint-disable-line
+			testPlanFilename: testPlanFilename,
+			testPlanUrl: testPlanUrl,
 		}
-	} catch (err) {
+	} catch(err) {
 		console.log(err)
 		return null
 	}
@@ -213,7 +268,7 @@ const githubMeta = async () => {
 		return ghRespJson.user.login
 	} catch (err) {
 		console.log(err)
-		return 'N/A'
+		return 'n/a'
 	}
 }
 
