@@ -51,13 +51,15 @@ class IAmGoingProvider extends ChangeNotifier {
     _registeredEvents!.remove(id);
   }
 
+  //parses event message topic to determine if it is an IAmGoing event
   void parseMessages() {
     // initializeValues();
     List<MessageElement?> messages = _messageDataProvider.messages!;
     messages.forEach((m) async {
       if (m!.audience != null &&
           m.audience!.topics != null &&
-          m.audience!.topics!.contains("freeFood")) {
+          (m.audience!.topics!.contains("freeFood") ||
+              m.audience!.topics!.contains("campusInnovationEvents"))) {
         fetchCount(m.messageId!);
         fetchMaxCount(m.messageId!);
       }
@@ -91,6 +93,8 @@ class IAmGoingProvider extends ChangeNotifier {
       _freeFoodModel = _freeFoodService.freeFoodModel;
       _lastUpdated = DateTime.now();
       _messageToCount[id] = _freeFoodModel!.body!.count;
+      debugPrint("notification participant count" +
+          _freeFoodModel!.body!.count.toString());
     } else {
       _error = _freeFoodService.error;
       if (_error != null &&
@@ -189,8 +193,11 @@ class IAmGoingProvider extends ChangeNotifier {
 
   ///SIMPLE GETTERS
   String? get error => _error;
+
   DateTime? get lastUpdated => _lastUpdated;
+
   IAmGoingModel? get freeFoodModel => _freeFoodModel;
+
   List<String>? get registeredEvents => _registeredEvents;
 
   bool isLoading(String? id) => id == _curId;
