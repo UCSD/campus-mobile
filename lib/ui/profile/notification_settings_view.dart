@@ -52,7 +52,8 @@ class NotificationsSettingsView extends StatelessWidget {
     } else if (messageType == "campusAnnouncements" ||
         messageType == "testCampusAnnouncements") {
       return Icons.campaign_outlined;
-    } else if (messageType == "campusInnovationEvents") {
+    } else if (messageType == "campusInnovationEvents" ||
+        messageType == "testCampusInnovationEvents") {
       return Icons.event_outlined;
     } else { // if messageType == "DM" or anything else
       return Icons.info_outline;
