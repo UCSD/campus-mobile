@@ -25,7 +25,7 @@ class NotificationsSettingsView extends StatelessWidget {
     for (String? topic in topicsAvailable) {
       list.add(ListTile(
         key: Key(topic!),
-        leading: Icon(_chooseIcons(topic),
+        leading: Icon(chooseIcon(topic),
             color: Theme.of(context).colorScheme.secondary, size: 30),
         title: Text(getTopicName(context, topic)!),
         trailing: Switch(
@@ -41,23 +41,6 @@ class NotificationsSettingsView extends StatelessWidget {
       ));
     }
     return list;
-  }
-
-  IconData _chooseIcons(String messageType) {
-    if (messageType == "studentAnnouncements" ||
-        messageType == "testStudentAnnouncements") {
-      return Icons.school_outlined;
-    } else if (messageType == "freeFood" || messageType == "testFreeFood") {
-      return Icons.restaurant_outlined;
-    } else if (messageType == "campusAnnouncements" ||
-        messageType == "testCampusAnnouncements") {
-      return Icons.campaign_outlined;
-    } else if (messageType == "campusInnovationEvents" ||
-        messageType == "testCampusInnovationEvents") {
-      return Icons.event_outlined;
-    } else { // if messageType == "DM" or anything else
-      return Icons.info_outline;
-    }
   }
 
   List<String?> getTopics(BuildContext context) {
@@ -79,5 +62,23 @@ class NotificationsSettingsView extends StatelessWidget {
   String? getTopicName(BuildContext context, String topicId) {
     return Provider.of<PushNotificationDataProvider>(context)
         .getTopicName(topicId);
+  }
+}
+
+IconData chooseIcon(String messageType) {
+  if (messageType == "studentAnnouncements" ||
+      messageType == "testStudentAnnouncements") {
+    return Icons.school_outlined;
+  } else if (messageType == "freeFood" ||
+      messageType == "testFreeFood") {
+    return Icons.restaurant_outlined;
+  } else if (messageType == "campusAnnouncements" ||
+      messageType == "testCampusAnnouncements") {
+    return Icons.campaign_outlined;
+  } else if (messageType == "campusInnovationEvents" ||
+      messageType == "testCampusInnovationEvents") {
+    return Icons.event_outlined;
+  } else { // if messageType == "DM" or anything else
+    return Icons.info_outline;
   }
 }
