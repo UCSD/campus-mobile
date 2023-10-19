@@ -16,6 +16,8 @@ bool hideListView = false; // debug
 List<String> eventTypesForIAmGoing = [
   "campusInnovationEvents",
   "freeFood",
+  "testCampusInnovationEvents",
+  "testFreeFood",
 ]; // for the "I am Going" feature
 
 class NotificationsListView extends StatefulWidget {
@@ -192,12 +194,14 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     if (messageType == "studentAnnouncements" ||
         messageType == "testStudentAnnouncements") {
       return Icons.school_outlined;
-    } else if (messageType == "freeFood") {
+    } else if (messageType == "freeFood" ||
+        messageType == "testFreeFood") {
       return Icons.restaurant_outlined;
     } else if (messageType == "campusAnnouncements" ||
         messageType == "testCampusAnnouncements") {
       return Icons.campaign_outlined;
-    } else if (messageType == "campusInnovationEvents") {
+    } else if (messageType == "campusInnovationEvents" ||
+        messageType == "testCampusInnovationEvents") {
       return Icons.event_outlined;
     } else { // if messageType == "DM" or anything else
       return Icons.info_outline;
