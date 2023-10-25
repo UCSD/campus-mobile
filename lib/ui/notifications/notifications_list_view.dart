@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_IAmGoing.dart';
+import 'package:campus_mobile_experimental/ui/profile/notification_settings_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,8 @@ bool hideListView = false; // debug
 List<String> eventTypesForIAmGoing = [
   "campusInnovationEvents",
   "freeFood",
+  "testCampusInnovationEvents",
+  "testFreeFood",
 ]; // for the "I am Going" feature
 
 class NotificationsListView extends StatefulWidget {
@@ -132,9 +135,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     } else {
       messageType = data.audience?.topics![0];
     }
-
     return ListTile(
-        leading: Icon(_chooseIcon(messageType!),
+        leading: Icon(chooseIcon(messageType!),
             color: Theme.of(context).colorScheme.secondary, size: 30),
         title: Column(
           children: <Widget>[
@@ -186,22 +188,6 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       String? messageId, String? messageType, List<String> eventTypes) {
     // print('messageType is: $messageType');
     return eventTypes.contains(messageType);
-  }
-
-  IconData _chooseIcon(String messageType) {
-    if (messageType == "studentAnnouncements" ||
-        messageType == "testStudentAnnouncements") {
-      return Icons.school_outlined;
-    } else if (messageType == "freeFood") {
-      return Icons.restaurant_outlined;
-    } else if (messageType == "campusAnnouncements" ||
-        messageType == "testCampusAnnouncements") {
-      return Icons.campaign_outlined;
-    } else if (messageType == "campusInnovationEvents") {
-      return Icons.event_outlined;
-    } else { // if messageType == "DM" or anything else
-      return Icons.info_outline;
-    }
   }
 
   String _readTimestamp(int timestamp) {
