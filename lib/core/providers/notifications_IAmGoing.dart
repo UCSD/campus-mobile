@@ -93,8 +93,6 @@ class IAmGoingProvider extends ChangeNotifier {
       _freeFoodModel = _freeFoodService.freeFoodModel;
       _lastUpdated = DateTime.now();
       _messageToCount[id] = _freeFoodModel!.body!.count;
-      debugPrint("notification participant count" +
-          _freeFoodModel!.body!.count.toString());
     } else {
       _error = _freeFoodService.error;
       if (_error != null &&
