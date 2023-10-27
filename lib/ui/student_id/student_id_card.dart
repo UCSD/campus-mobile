@@ -236,7 +236,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                                 (ScalingUtility.horizontalSafeBlock * 11.225) +
                                     realignText(Theme.of(context))),
                         child: Text(
-                          barcodeModel.barCode.toString(),
+                          profileModel.barcode.toString(),
                           style: TextStyle(
                               fontSize: ScalingUtility.horizontalSafeBlock * 3,
                               letterSpacing:
