@@ -50,8 +50,7 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
 
   @override
   Widget build(BuildContext context) {
-    var isOverCount =
-        _IAmGoingDataProvider.isOverCount(data.messageId);
+    var isOverCount = _IAmGoingDataProvider.isOverCount(data.messageId);
     String messageType = data.audience!.topics![0];
 
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
@@ -74,12 +73,10 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
     }
 
     return Container(
-        margin: EdgeInsets.only(top: 10.0),
+        margin: EdgeInsets.only(left: 72.0),
         child: Row(
           children: <Widget>[
             Container(
-              height: 25,
-              width: 150,
               child: AnimatedCrossFade(
                 duration: Duration(milliseconds: 300),
                 crossFadeState: isOverCount
@@ -90,18 +87,24 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
                     Text(countText,
                         style: TextStyle(fontSize: 10, color: Colors.red)),
                     Container(
-                        margin: EdgeInsets.only(top: 2.0),
+                        margin: EdgeInsets.only(top: 4.0),
+                        width: 200,
                         child: Row(
                           children: <Widget>[
-                            Icon(Icons.report, color: Colors.grey, size: 10),
-                            Text(() {
-                              if (messageType == "campusInnovationEvents") {
-                                return "The event may not have enough space for all the participants";
-                              } else {
-                                // messageType == "freeFood" or anything else
-                                return "There may not be enough food";
-                              }
-                            }(), style: TextStyle(fontSize: 9))
+                            Padding(
+                                padding: EdgeInsets.only(right: 4.0),
+                                child: Icon(Icons.report,
+                                    color: Colors.grey, size: 10)),
+                            Flexible(
+                              child: Text(() {
+                                if (messageType == "campusInnovationEvents") {
+                                  return "The event may not have enough space for all the participants";
+                                } else {
+                                  // messageType == "freeFood" or anything else
+                                  return "There may not be enough food";
+                                }
+                              }(), style: TextStyle(fontSize: 9)),
+                            )
                           ],
                         )),
                   ],
@@ -114,7 +117,7 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
                 ),
               ),
             ),
-            _checkBoxButton()
+            _checkBoxButton(),
           ],
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
         ));

@@ -135,50 +135,54 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     } else {
       messageType = data.audience?.topics![0];
     }
-    return ListTile(
-        leading: Icon(chooseIcon(messageType!),
-            color: Theme.of(context).colorScheme.secondary, size: 30),
-        title: Column(
-          children: <Widget>[
-            Text(
-              data.message!.title!,
-              style: TextStyle(fontWeight: FontWeight.bold),
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: <Widget>[
+        ListTile(
+            leading: Icon(chooseIcon(messageType!),
+                color: Theme.of(context).colorScheme.secondary, size: 30),
+            title: Column(
+              children: <Widget>[
+                Text(
+                  data.message!.title!,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Padding(padding: const EdgeInsets.all(3.5))
+              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
             ),
-            Padding(padding: const EdgeInsets.all(3.5))
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        subtitle: Column(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: Linkify(
-                text: data.message!.message!,
-                onOpen: (link) async {
-                  try {
-                    await launch(link.url, forceSafariVC: true);
-                  } catch (e) {
-                    // an error occurred, do nothing
-                  }
-                },
-                options: LinkifyOptions(humanize: false),
-                style: TextStyle(fontSize: 12.5),
-              ),
+            subtitle: Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Linkify(
+                    text: data.message!.message!,
+                    onOpen: (link) async {
+                      try {
+                        await launch(link.url, forceSafariVC: true);
+                      } catch (e) {
+                        // an error occurred, do nothing
+                      }
+                    },
+                    options: LinkifyOptions(humanize: false),
+                    style: TextStyle(fontSize: 12.5),
+                  ),
+                ),
+              ],
             ),
-
-            // check if the event type needs the "I am going" feature (e.g., "freeFood" events),
-            // if true, use IAmGoingNotification format
-            // if false, use regular notification format
-            needIAmGoingFeature(
-                    data.messageId, messageType, eventTypesForIAmGoing)
-                ? IAmGoingNotification(data: data)
-                : Container(),
-          ],
-        ),
-        trailing: Column(children: <Widget>[
-          Text(_readTimestamp(data.timestamp!),
-              style: TextStyle(fontSize: 10, color: Colors.grey)),
-        ]));
+            trailing: Column(children: <Widget>[
+              Text(_readTimestamp(data.timestamp!),
+                  style: TextStyle(fontSize: 10, color: Colors.grey)),
+            ])),
+        // check if the event type needs the "I am going" feature (e.g., "freeFood" events),
+        // if true, use IAmGoingNotification format
+        // if false, use regular notification format
+        needIAmGoingFeature(data.messageId, messageType, eventTypesForIAmGoing)
+            ? IAmGoingNotification(data: data)
+            : Container(),
+      ],
+    );
   }
 
   // this function checks whether the current notification's messageType requires the "I am Going" feature
