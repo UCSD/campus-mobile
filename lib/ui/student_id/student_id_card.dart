@@ -1,7 +1,6 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/student_id_barcode.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
@@ -71,7 +70,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<StudentIdDataProvider>(context).error,
       child: () => buildCardContent(
-          Provider.of<StudentIdDataProvider>(context).studentIdBarcodeModel,
           Provider.of<StudentIdDataProvider>(context).studentIdNameModel,
           Provider.of<StudentIdDataProvider>(context).studentIdPhotoModel,
           Provider.of<StudentIdDataProvider>(context).studentIdProfileModel,
@@ -90,7 +88,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   Widget buildCardContent(
-      StudentIdBarcodeModel? barcodeModel,
       StudentIdNameModel? nameModel,
       StudentIdPhotoModel? photoModel,
       StudentIdProfileModel? profileModel,
@@ -197,17 +194,17 @@ class _StudentIdCardState extends State<StudentIdCard> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: returnBarcodeContainer(
-                                barcodeModel!.barCode.toString(),
+                                profileModel.barcode.toString(),
                                 false,
                                 context),
                             onPressed: () {
                               createAlertDialog(
                                   context,
                                   returnBarcodeContainer(
-                                      barcodeModel.barCode.toString(),
+                                      profileModel.barcode.toString(),
                                       true,
                                       context),
-                                  barcodeModel.toString(),
+                                  profileModel.toString(),
                                   true);
                             },
                           ),
@@ -332,13 +329,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       padding: EdgeInsets.all(0),
                     ),
                     child: returnBarcodeContainerTablet(
-                        barcodeModel!.barCode.toString(), false, context),
+                        profileModel!.barcode.toString(), false, context),
                     onPressed: () {
                       createAlertDialog(
                           context,
                           returnBarcodeContainer(
-                              barcodeModel.barCode.toString(), true, context),
-                          barcodeModel.barCode.toString(),
+                              profileModel!.barcode.toString(), true, context),
+                          profileModel.barcode.toString(),
                           true);
                     },
                   ),
