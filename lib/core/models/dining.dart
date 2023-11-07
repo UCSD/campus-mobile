@@ -176,22 +176,31 @@ class RegularHours {
 }
 
 class SpecialHour {
-  String? title;
-  String? hours;
+  String? specialHoursEvent;
+  String? specialHoursEventDetails;
+  String? specialHoursValidFrom;
+  String? specialHoursValidTo;
 
   SpecialHour({
-    this.title,
-    this.hours,
+    this.specialHoursEvent,
+    this.specialHoursEventDetails,
+    this.specialHoursValidFrom,
+    this.specialHoursValidTo
   });
 
   factory SpecialHour.fromJson(Map<String, dynamic> json) => SpecialHour(
-        title: json["title"] == null ? null : json["title"],
-        hours: json["hours"] == null ? null : json["hours"],
+    specialHoursEvent: json["specialHoursEvent"] == null ? null : json["specialHoursEvent"],
+    specialHoursEventDetails: json["specialHoursEventDetails"] == null ? null : json["specialHoursEventDetails"],
+    specialHoursValidFrom: json["specialHoursValidFrom"] == null ? null : json["specialHoursValidFrom"],
+    specialHoursValidTo: json["specialHoursValidTo"] == null ? null : json["specialHoursValidTo"],
       );
 
   Map<String, dynamic> toJson() => {
-        "title": title == null ? null : title,
-        "hours": hours == null ? null : hours,
+        "specialHoursEvent": specialHoursEvent == null ? null : specialHoursEvent,
+        "specialHoursEventDetails": specialHoursEventDetails == null ? null : specialHoursEventDetails,
+        "specialHoursValidFrom": specialHoursValidFrom == null ? null : specialHoursValidFrom,
+        "specialHoursValidTo": specialHoursValidTo == null ? null : specialHoursValidTo
+
       };
 }
 

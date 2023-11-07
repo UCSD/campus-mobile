@@ -39,6 +39,7 @@ class DiningDetailView extends StatelessWidget {
         style: TextStyle(fontSize: 15),
       ),
       buildHours(context, model),
+      buildSpecialHours(context,model),
       buildPaymentOptions(context, model),
       buildPictures(model),
       Divider(),
@@ -168,6 +169,22 @@ class DiningDetailView extends StatelessWidget {
       Divider(height: 10),
     ]);
   }
+Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
+  return RichText(
+    text: TextSpan(
+      style: TextStyle(
+          fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
+          color: Theme.of(context).textTheme.bodyText2!.color),
+      children: [
+        TextSpan(
+          text: "Special Hours:",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        TextSpan(text: model.specialHours?.elementAt(0).toString())
+      ],
+    ),
+  );
+}
 
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions!.join(', ');
