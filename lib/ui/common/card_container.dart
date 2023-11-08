@@ -72,6 +72,7 @@ class CardContainer extends StatelessWidget {
 
   Widget buildBody(context) {
     if (errorText != null) {
+      print(errorText);
       if (titleText == 'News') {
         return Text('No articles found.');
       } else if (titleText == 'Events') {

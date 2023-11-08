@@ -25,7 +25,7 @@ class DiningModel {
   List<Image>? images;
   Coordinates? coordinates;
   RegularHours? regularHours;
-  List<SpecialHour>? specialHours;
+  SpecialHour? specialHours;
   String? url;
   String? menuWebsite;
   double? distance;
@@ -70,10 +70,10 @@ class DiningModel {
         regularHours: json["regularHours"] == null
             ? null
             : RegularHours.fromJson(json["regularHours"]),
-        specialHours: json["specialHours"] == null
+        specialHours: (json["specialHours"] == null || json["specialHours"].isEmpty)
             ? null
-            : List<SpecialHour>.from(
-                json["specialHours"].map((x) => SpecialHour.fromJson(x))),
+            : SpecialHour.fromJson(json["specialHours"]),
+
         url: json["url"] == null ? null : json["url"],
         menuWebsite: json["menuWebsite"] == null ? null : json["menuWebsite"],
       );
@@ -97,7 +97,7 @@ class DiningModel {
         "regularHours": regularHours == null ? null : regularHours!.toJson(),
         "specialHours": specialHours == null
             ? null
-            : List<dynamic>.from(specialHours!.map((x) => x.toJson())),
+            : specialHours?.toJson(),
         "url": url == null ? null : url,
         "menuWebsite": menuWebsite == null ? null : menuWebsite,
         "distance": distance == null ? null : distance,

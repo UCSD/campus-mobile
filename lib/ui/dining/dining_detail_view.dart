@@ -39,7 +39,8 @@ class DiningDetailView extends StatelessWidget {
         style: TextStyle(fontSize: 15),
       ),
       buildHours(context, model),
-      buildSpecialHours(context,model),
+      if(model.specialHours != null)
+        buildSpecialHours(context,model),
       buildPaymentOptions(context, model),
       buildPictures(model),
       Divider(),
@@ -177,10 +178,14 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
           color: Theme.of(context).textTheme.bodyText2!.color),
       children: [
         TextSpan(
-          text: "Special Hours:",
+          text: "Special Hours: \n",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        TextSpan(text: model.specialHours?.elementAt(0).toString())
+        TextSpan(
+          text: model.specialHours!.specialHoursEvent! + "\n"
+        ),
+        TextSpan(text: model.specialHours!.specialHoursEventDetails! + "\n"),
+        TextSpan(text: model.specialHours!.specialHoursValidFrom ! + " to " + model.specialHours!.specialHoursValidTo ! + "\n"),
       ],
     ),
   );
