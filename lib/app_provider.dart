@@ -47,6 +47,8 @@ List<SingleChildWidget> independentServices = [
   StreamProvider<Coordinates>(
     initialData: Coordinates(),
     create: (_) {
+      // replace the provider with hook?
+      // the purpose is to return locationStream
       locationProvider = LocationDataProvider();
       return locationProvider!.locationStream;
     },

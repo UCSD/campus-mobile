@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../core/hooks/location_query.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:provider/provider.dart';
 
@@ -19,14 +20,16 @@ class DiningList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    Coordinates coordinates = context.read<Coordinates>();
+    // Coordinates coordinates = context.read<Coordinates>();
+    final coordinates = useFetchLocation();
     final diningHook = useFetchDiningModels();
-    return diningHook.isFetching
+
+    return (diningHook.isFetching && coordinates.isFetching)
         ? CircularProgressIndicator(
             color: Theme.of(context).colorScheme.secondary)
         : buildDiningList(
             makeLocationsList(
-                diningHook.data!, coordinates), //need to pass in coordinates here
+                diningHook.data!, coordinates.data), //need to pass in coordinates here
             context);
   }
 

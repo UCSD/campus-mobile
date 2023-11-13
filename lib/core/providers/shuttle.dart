@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
 import 'package:flutter/material.dart';
 
-import 'location.dart';
+// import 'location.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {
   ShuttleDataProvider() {
@@ -29,7 +29,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   double closestDistance = 10000000;
   Map<int?, ShuttleStopModel>? fetchedStops;
   Map<int?, List<ArrivingShuttle>>? arrivalsToRender;
-  late LocationDataProvider _locationDataProvider;
+  // late LocationDataProvider _locationDataProvider;
   Coordinates? _userCoords;
 
   init() {
