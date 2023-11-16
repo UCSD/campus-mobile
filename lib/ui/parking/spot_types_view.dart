@@ -3,36 +3,45 @@ import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fquery/fquery.dart';
 import 'package:provider/provider.dart';
 
-class SpotTypesView extends StatefulWidget {
-  @override
-  _SpotTypesViewState createState() => _SpotTypesViewState();
-}
+import '../../core/hooks/spot_types_query.dart';
 
-class _SpotTypesViewState extends State<SpotTypesView> {
-  late ParkingDataProvider spotTypesDataProvider;
+class SpotTypesView extends HookWidget {
+  //late ParkingDataProvider spotTypesDataProvider;
   @override
   Widget build(BuildContext context) {
-    spotTypesDataProvider = Provider.of<ParkingDataProvider>(context);
+    //spotTypesDataProvider = Provider.of<ParkingDataProvider>(context);
+    final spotTypesData = useFetchSpotTypes();
+    //print(spotTypesData.data?.spots?[0].spotKey);
+    //final spotTypesState = useState<Map<String, bool>>({});
     return ContainerView(
-      child: createListWidget(context),
+      child: createListWidget(context, spotTypesData.data!),
     );
   }
 
-  Widget createListWidget(BuildContext context) {
-    return ListView(children: createList(context));
+  Widget createListWidget(BuildContext context, SpotTypeModel spotTypesData) {
+    return ListView(children: createList(context, spotTypesData));
   }
 
-  List<Widget> createList(BuildContext context) {
+  List<Widget> createList(BuildContext context, SpotTypeModel spotTypesData) {
     int selectedSpots = 0;
     List<Widget> list = [];
-    for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
-      if (Provider.of<ParkingDataProvider>(context)
-              .spotTypesState![data.spotKey]! ==
-          true) {
-        selectedSpots++;
-      }
+    // for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
+    //   if (Provider.of<ParkingDataProvider>(context)
+    //           .spotTypesState![data.spotKey]! ==
+    //       true) {
+    //     selectedSpots++;
+    //   }
+
+    List<String> testStr = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+    for (Spot data in spotTypesData.spots!) {
+      // if (spotTypesState[data.spotKey] == true) {
+      //   selectedSpots++;
+      // }
       Color iconColor = HexColor(data.color!);
       Color textColor = HexColor(data.textColor!);
 
@@ -59,8 +68,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
           value: Provider.of<ParkingDataProvider>(context)
               .spotTypesState![data.spotKey]!,
           onChanged: (_) {
-            spotTypesDataProvider.toggleSpotSelection(
-                data.spotKey, selectedSpots);
+            // spotTypesDataProvider.toggleSpotSelection(
+            //     data.spotKey, selectedSpots);
           },
           // activeColor: Theme.of(context).buttonColor,
           activeColor: Theme.of(context).backgroundColor,

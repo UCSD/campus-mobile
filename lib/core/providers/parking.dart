@@ -39,6 +39,7 @@ class ParkingDataProvider extends ChangeNotifier {
   late SpotTypesService _spotTypesService;
 
   void fetchParkingData() async {
+    //create a new parameter that receives hooks data
     _isLoading = true;
     selectedSpots = 0;
     selectedLots = 0;

@@ -33,6 +33,9 @@ import 'package:uni_links2/uni_links.dart';
 import '../../core/hooks/notices_query.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../core/hooks/spot_types_query.dart';
+import '../../core/models/spot_types.dart';
+
 class Home extends HookWidget {
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
@@ -79,6 +82,7 @@ class Home extends HookWidget {
   @override
   Widget build(BuildContext context) {
     initUniLinks(context);
+    //final spotTypesData = useFetchSpotTypes();
 
     // using the notice hook
     final noticesHook = useFetchNotices();
