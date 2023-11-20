@@ -190,9 +190,7 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
           text: model.specialHours!.specialHoursEvent! + "\n"
         ),
         TextSpan(text: model.specialHours!.specialHoursEventDetails! + "\n"),
-        // (model.specialHours!.specialHoursValidFrom != null && model.specialHours!.specialHoursValidTo != null) ?
         TextSpan(text:specialHoursDuration)
-            // : TextSpan(text: ""),
       ],
     ),
   );
