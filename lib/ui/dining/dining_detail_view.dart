@@ -171,6 +171,11 @@ class DiningDetailView extends StatelessWidget {
     ]);
   }
 Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
+    var specialHoursDuration = "";
+  if(model.specialHours?.specialHoursValidFrom != null && model.specialHours?.specialHoursValidTo != null){
+    specialHoursDuration = model.specialHours!.specialHoursValidFrom ! + " to " +
+        model.specialHours!.specialHoursValidTo ! + "\n";
+  }
   return RichText(
     text: TextSpan(
       style: TextStyle(
@@ -185,7 +190,9 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
           text: model.specialHours!.specialHoursEvent! + "\n"
         ),
         TextSpan(text: model.specialHours!.specialHoursEventDetails! + "\n"),
-        TextSpan(text: model.specialHours!.specialHoursValidFrom ! + " to " + model.specialHours!.specialHoursValidTo ! + "\n"),
+        // (model.specialHours!.specialHoursValidFrom != null && model.specialHours!.specialHoursValidTo != null) ?
+        TextSpan(text:specialHoursDuration)
+            // : TextSpan(text: ""),
       ],
     ),
   );
