@@ -98,8 +98,7 @@ class NotificationsListView extends StatelessWidget {
             .searchBarController
             .text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.MapTab;
+        setBottomNavigationBarIndex(NavigatorConstants.MapTab);
         // received deeplink, cancel stream to prevent memory leaks
         _sub.cancel();
       }

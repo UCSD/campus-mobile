@@ -12,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
@@ -93,8 +94,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
             .fetchMessages(true);
 
         ///switch to the notifications tab
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.NotificationsTab;
+        setBottomNavigationBarIndex(NavigatorConstants.NotificationsTab);
       }
 
       /// Foreground messaging
@@ -119,8 +119,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
               .fetchMessages(true);
 
           /// Set tab bar index to the Notifications tab
-          Provider.of<BottomNavigationBarProvider>(context, listen: false)
-              .currentIndex = NavigatorConstants.NotificationsTab;
+          setBottomNavigationBarIndex(NavigatorConstants.NotificationsTab);
 
           /// Navigate to Notifications tab
           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -143,8 +142,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
         RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
 
     /// Set tab bar index to the Notifications tab
-    Provider.of<BottomNavigationBarProvider>(this.context, listen: false)
-        .currentIndex = NavigatorConstants.NotificationsTab;
+    setBottomNavigationBarIndex(NavigatorConstants.NotificationsTab);
     Provider.of<CustomAppBar>(context, listen: false)
         .changeTitle("Notifications");
   }

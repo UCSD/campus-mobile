@@ -219,8 +219,7 @@ class _WebViewContainerState extends State<WebViewContainer>
             .searchBarController
             .text = message.message;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.MapTab;
+        setBottomNavigationBarIndex(NavigatorConstants.MapTab);
         Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
         //Navigator.pushNamed(context, RoutePaths.Map);
       },

@@ -9,7 +9,7 @@ import '../models/dining_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 
-const String baseEndpoint = "https://api-qa.ucsd.edu:8243/dining/v3.0.0";
+const String baseEndpoint = "https://api-qa.ucsd.edu:8243/dining/v4.0.0";
 Map<String, String> headers = {
   "accept": "application/json",
 };

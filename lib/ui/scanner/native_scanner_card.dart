@@ -132,8 +132,7 @@ class NativeScannerCard extends StatelessWidget {
         RoutePaths.ScanditScanner,
       );
     } else {
-      Provider.of<BottomNavigationBarProvider>(context, listen: false)
-          .currentIndex = NavigatorConstants.ProfileTab;
+      setBottomNavigationBarIndex(NavigatorConstants.ProfileTab);
       Provider.of<CustomAppBar>(context, listen: false).changeTitle("Profile");
     }
   }

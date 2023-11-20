@@ -70,8 +70,7 @@ class Home extends HookWidget {
         .searchBarController
         .text = query;
     Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-    Provider.of<BottomNavigationBarProvider>(context, listen: false)
-        .currentIndex = NavigatorConstants.MapTab;
+    setBottomNavigationBarIndex(NavigatorConstants.MapTab);
     Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
   }

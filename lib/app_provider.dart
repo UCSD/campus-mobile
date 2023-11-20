@@ -32,12 +32,12 @@ final FirebaseAnalyticsObserver observer =
 
 List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
-  ChangeNotifierProvider<BottomNavigationBarProvider>(
-    create: (_) {
-      return BottomNavigationBarProvider();
-    },
-    lazy: false,
-  ),
+  // ChangeNotifierProvider<BottomNavigationBarProvider>(
+  //   create: (_) {
+  //     return BottomNavigationBarProvider();
+  //   },
+  //   lazy: false,
+  // ),
   ChangeNotifierProvider<PushNotificationDataProvider>(
     create: (_) {
       return PushNotificationDataProvider();

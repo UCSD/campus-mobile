@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class CMAppBar extends StatelessWidget {
   CMAppBar({
@@ -44,10 +45,8 @@ class CMAppBar extends StatelessWidget {
                       ),
                       onPressed: () {
                         // Set tab bar index to the Home tab
-                        Provider.of<BottomNavigationBarProvider>(context,
-                                listen: false)
-                            .currentIndex = NavigatorConstants.HomeTab;
-
+                        setBottomNavigationBarIndex(NavigatorConstants.HomeTab);
+                        // print(useBottomNavigationBar());
                         // Navigate to Home tab
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             RoutePaths.BottomNavigationBar,

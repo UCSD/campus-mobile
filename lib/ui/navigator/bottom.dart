@@ -8,8 +8,9 @@ import 'package:campus_mobile_experimental/ui/notifications/notifications_list_v
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class BottomTabBar extends StatefulWidget {
+class BottomTabBar extends StatefulHookWidget {
   @override
   _BottomTabBarState createState() => _BottomTabBarState();
 }
@@ -24,21 +25,26 @@ class _BottomTabBarState extends State<BottomTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<BottomNavigationBarProvider>(context);
+    final currentIndexNotifier = useBottomNavigationBar();
+    void handleBottomNavigationBarTap(int index) {
+      setBottomNavigationBarIndex(index);
+    }
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(42),
           child: Provider.of<CustomAppBar>(context).appBar),
-      body: PushNotificationWrapper(child: currentTab[provider.currentIndex]),
+      body: PushNotificationWrapper(child: currentTab[currentIndexNotifier.value]),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: provider.currentIndex,
+        currentIndex: currentIndexNotifier.value,
         onTap: (index) {
-          provider.currentIndex = index;
+          print(index);
+          handleBottomNavigationBarTap(index);
           switch (index) {
             case NavigatorConstants.HomeTab:
               Provider.of<CustomAppBar>(context, listen: false)
                   .changeTitle(null);
+                  print("Working0");
               break;
             case NavigatorConstants.MapTab:
               Provider.of<CustomAppBar>(context, listen: false)
