@@ -4,8 +4,7 @@ import 'package:campus_mobile_experimental/core/services/scanner_message.dart';
 import 'package:flutter/material.dart';
 
 class ScannerMessageDataProvider extends ChangeNotifier {
-  ScannerMessageDataProvider()
-  {
+  ScannerMessageDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
 
