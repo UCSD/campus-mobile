@@ -19,7 +19,7 @@ class DiningService {
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  final String baseEndpoint = "https://api-qa.ucsd.edu:8243/dining/v3.0.0";
+   String baseEndpoint = "https://api-qa.ucsd.edu:8243/dining/v4.0.0";
 
   Future<bool> fetchData() async {
     _error = null;

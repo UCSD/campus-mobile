@@ -39,6 +39,8 @@ class DiningDetailView extends StatelessWidget {
         style: TextStyle(fontSize: 15),
       ),
       buildHours(context, model),
+      if(model.specialHours != null)
+        buildSpecialHours(context,model),
       buildPaymentOptions(context, model),
       buildPictures(model),
       Divider(),
@@ -168,6 +170,31 @@ class DiningDetailView extends StatelessWidget {
       Divider(height: 10),
     ]);
   }
+Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
+    var specialHoursDuration = "";
+  if(model.specialHours?.specialHoursValidFrom != null && model.specialHours?.specialHoursValidTo != null){
+    specialHoursDuration = model.specialHours!.specialHoursValidFrom ! + " to " +
+        model.specialHours!.specialHoursValidTo ! + "\n";
+  }
+  return RichText(
+    text: TextSpan(
+      style: TextStyle(
+          fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
+          color: Theme.of(context).textTheme.bodyText2!.color),
+      children: [
+        TextSpan(
+          text: "Special Hours: \n",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        TextSpan(
+          text: model.specialHours!.specialHoursEvent! + "\n"
+        ),
+        TextSpan(text: model.specialHours!.specialHoursEventDetails! + "\n"),
+        TextSpan(text:specialHoursDuration)
+      ],
+    ),
+  );
+}
 
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions!.join(', ');

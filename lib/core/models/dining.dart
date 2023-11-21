@@ -25,7 +25,7 @@ class DiningModel {
   List<Image>? images;
   Coordinates? coordinates;
   RegularHours? regularHours;
-  List<SpecialHour>? specialHours;
+  SpecialHour? specialHours;
   String? url;
   String? menuWebsite;
   double? distance;
@@ -70,10 +70,10 @@ class DiningModel {
         regularHours: json["regularHours"] == null
             ? null
             : RegularHours.fromJson(json["regularHours"]),
-        specialHours: json["specialHours"] == null
+        specialHours: (json["specialHours"] == null || json["specialHours"].isEmpty)
             ? null
-            : List<SpecialHour>.from(
-                json["specialHours"].map((x) => SpecialHour.fromJson(x))),
+            : SpecialHour.fromJson(json["specialHours"]),
+
         url: json["url"] == null ? null : json["url"],
         menuWebsite: json["menuWebsite"] == null ? null : json["menuWebsite"],
       );
@@ -97,7 +97,7 @@ class DiningModel {
         "regularHours": regularHours == null ? null : regularHours!.toJson(),
         "specialHours": specialHours == null
             ? null
-            : List<dynamic>.from(specialHours!.map((x) => x.toJson())),
+            : specialHours?.toJson(),
         "url": url == null ? null : url,
         "menuWebsite": menuWebsite == null ? null : menuWebsite,
         "distance": distance == null ? null : distance,
@@ -176,22 +176,31 @@ class RegularHours {
 }
 
 class SpecialHour {
-  String? title;
-  String? hours;
+  String? specialHoursEvent;
+  String? specialHoursEventDetails;
+  String? specialHoursValidFrom;
+  String? specialHoursValidTo;
 
   SpecialHour({
-    this.title,
-    this.hours,
+    this.specialHoursEvent,
+    this.specialHoursEventDetails,
+    this.specialHoursValidFrom,
+    this.specialHoursValidTo
   });
 
   factory SpecialHour.fromJson(Map<String, dynamic> json) => SpecialHour(
-        title: json["title"] == null ? null : json["title"],
-        hours: json["hours"] == null ? null : json["hours"],
+    specialHoursEvent: json["specialHoursEvent"] == null ? null : json["specialHoursEvent"],
+    specialHoursEventDetails: json["specialHoursEventDetails"] == null ? null : json["specialHoursEventDetails"],
+    specialHoursValidFrom: json["specialHoursValidFrom"] == null ? null : json["specialHoursValidFrom"],
+    specialHoursValidTo: json["specialHoursValidTo"] == null ? null : json["specialHoursValidTo"],
       );
 
   Map<String, dynamic> toJson() => {
-        "title": title == null ? null : title,
-        "hours": hours == null ? null : hours,
+        "specialHoursEvent": specialHoursEvent == null ? null : specialHoursEvent,
+        "specialHoursEventDetails": specialHoursEventDetails == null ? null : specialHoursEventDetails,
+        "specialHoursValidFrom": specialHoursValidFrom == null ? null : specialHoursValidFrom,
+        "specialHoursValidTo": specialHoursValidTo == null ? null : specialHoursValidTo
+
       };
 }
 
