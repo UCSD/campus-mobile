@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:campus_mobile_experimental/ui/map/directions_button.dart';
 import 'package:campus_mobile_experimental/ui/map/map_search_bar_ph.dart';
 import 'package:campus_mobile_experimental/ui/map/more_results_list.dart';
@@ -25,7 +29,7 @@ class Maps extends StatelessWidget {
 
   ///MODELS
   List<MapSearchModel> _mapSearchModels = [];
-  Coordinates? _coordinates;
+  late Coordinates _coordinates;
   Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
   TextEditingController _searchBarController = TextEditingController();
   GoogleMapController? _mapController;
@@ -39,7 +43,10 @@ class Maps extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       });
-      return MoreResultsList();
+      return MoreResultsList(
+        mapSearchModels: mapSearchModels,
+        addMarker: addMarker,
+      );
     } else if (Provider.of<MapsDataProvider>(context).noResults!) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context)
@@ -61,12 +68,18 @@ class Maps extends StatelessWidget {
       child: Column(
         children: [
           MyLocationButton(
-              mapController:
-                  Provider.of<MapsDataProvider>(context).mapController),
+            mapController: mapController,
+            coordinates: coordinates,
+          ),
           SizedBox(height: 10),
           DirectionsButton(
-              mapController:
-                  Provider.of<MapsDataProvider>(context).mapController),
+            mapController: mapController,
+            fetchLocations: fetchLocations,
+            searchBarController: searchBarController,
+            markers: markers,
+            searchHistory: searchHistory,
+            coordinates: coordinates,
+          ),
         ],
       ),
     );
@@ -97,6 +110,8 @@ class Maps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initUniLinks(context);
+    _coordinates =
+        Provider.of<MapsDataProvider>(context, listen: false).coordinates!;
     return Stack(
       children: <Widget>[
         GoogleMap(
@@ -115,7 +130,12 @@ class Maps extends StatelessWidget {
             zoom: 14.5,
           ),
         ),
-        MapSearchBarPlaceHolder(),
+        MapSearchBarPlaceHolder(
+          fetchLocations: fetchLocations,
+          searchBarController: searchBarController,
+          markers: markers,
+          searchHistory: searchHistory,
+        ),
         buildButtons(context),
         resultsList(context),
       ],
@@ -229,7 +249,7 @@ class Maps extends StatelessWidget {
 
   Map<MarkerId, Marker> get markers => _markers;
 
-  Coordinates? get coordinates => _coordinates;
+  Coordinates get coordinates => _coordinates;
 
   TextEditingController get searchBarController => _searchBarController;
 
