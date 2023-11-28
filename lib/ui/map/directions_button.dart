@@ -1,14 +1,27 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/ui/map/map_search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DirectionsButton extends StatelessWidget {
+  final void Function() fetchLocations;
+  final TextEditingController searchBarController;
+  final Map<MarkerId, Marker> markers;
+  final List<String> searchHistory;
+  final Coordinates coordinates;
+
   const DirectionsButton({
     Key? key,
     required GoogleMapController? mapController,
+    required this.fetchLocations,
+    required this.searchBarController,
+    required this.markers,
+    required this.searchHistory,
+    required this.coordinates,
   })  : _mapController = mapController,
         super(key: key);
 
@@ -24,28 +37,24 @@ class DirectionsButton extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       onPressed: () {
-        if (Provider.of<MapsDataProvider>(context, listen: false)
-                    .coordinates!
-                    .lat ==
-                null ||
-            Provider.of<MapsDataProvider>(context, listen: false)
-                    .coordinates!
-                    .lon ==
-                null) {
+        if (coordinates.lat == null || coordinates.lon == null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
                 'Please turn your location on in order to use this feature.'),
             duration: Duration(seconds: 3),
           ));
         } else {
-          String locationQuery =
-              Provider.of<MapsDataProvider>(context, listen: false)
-                  .searchBarController
-                  .text;
+          String locationQuery = searchBarController.text;
           if (locationQuery.isNotEmpty) {
             getDirections(context);
           } else {
-            Navigator.pushNamed(context, RoutePaths.MapSearch);
+            // Navigator.pushNamed(context, RoutePaths.MapSearch);
+            MapSearchView(
+              fetchLocations: fetchLocations,
+              searchBarController: searchBarController,
+              markers: markers,
+              searchHistory: searchHistory,
+            );
           }
         }
       },
@@ -53,11 +62,7 @@ class DirectionsButton extends StatelessWidget {
   }
 
   Future<void> getDirections(BuildContext context) async {
-    LatLng currentPin = Provider.of<MapsDataProvider>(context, listen: false)
-        .markers
-        .values
-        .toList()[0]
-        .position;
+    LatLng currentPin = markers.values.toList()[0].position;
     double lat = currentPin.latitude;
     double lon = currentPin.longitude;
 

@@ -1,10 +1,16 @@
+import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MoreResultsList extends StatelessWidget {
+  final List<MapSearchModel> mapSearchModels;
+  final void Function(int index) addMarker;
+
   const MoreResultsList({
     Key? key,
+    required this.mapSearchModels,
+    required this.addMarker,
   }) : super(key: key);
 
   @override
@@ -30,24 +36,15 @@ class MoreResultsList extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: Provider.of<MapsDataProvider>(context)
-                        .mapSearchModels
-                        .length,
+                    itemCount: mapSearchModels.length,
                     itemBuilder: (BuildContext cntxt, int index) {
                       return ListTile(
                         title: Text(
-                          Provider.of<MapsDataProvider>(cntxt, listen: false)
-                              .mapSearchModels[index]
-                              .title!,
+                          mapSearchModels[index].title!,
                         ),
                         trailing: Text(
-                          Provider.of<MapsDataProvider>(cntxt, listen: false)
-                                      .mapSearchModels[index]
-                                      .distance !=
-                                  null
-                              ? Provider.of<MapsDataProvider>(cntxt,
-                                          listen: false)
-                                      .mapSearchModels[index]
+                          mapSearchModels[index].distance != null
+                              ? mapSearchModels[index]
                                       .distance!
                                       .toStringAsFixed(1) +
                                   ' mi'
@@ -55,8 +52,7 @@ class MoreResultsList extends StatelessWidget {
                           style: TextStyle(color: Colors.blue[600]),
                         ),
                         onTap: () {
-                          Provider.of<MapsDataProvider>(cntxt, listen: false)
-                              .addMarker(index);
+                          addMarker(index);
                           Navigator.pop(cntxt);
                         },
                       );

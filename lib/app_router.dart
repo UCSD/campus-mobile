@@ -57,8 +57,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Maps());
-      case RoutePaths.MapSearch:
-        return MaterialPageRoute(builder: (_) => MapSearchView());
+      // case RoutePaths.MapSearch:
+      //   return MaterialPageRoute(builder: (_) => MapSearchView();
       case RoutePaths.Notifications:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);

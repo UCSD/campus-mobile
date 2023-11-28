@@ -4,9 +4,24 @@ import 'package:campus_mobile_experimental/ui/map/quick_search_icons.dart';
 import 'package:campus_mobile_experimental/ui/map/search_bar.dart';
 import 'package:campus_mobile_experimental/ui/map/search_history_list.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'map.dart';
+
 class MapSearchView extends StatelessWidget {
+  final void Function() fetchLocations;
+  final TextEditingController searchBarController;
+  final Map<MarkerId, Marker> markers;
+  final List<String> searchHistory;
+
+  const MapSearchView({
+    required this.fetchLocations,
+    required this.searchBarController,
+    required this.markers,
+    required this.searchHistory,
+  });
+
   @override
   Widget build(BuildContext context) {
     return ContainerView(
@@ -14,9 +29,16 @@ class MapSearchView extends StatelessWidget {
         children: <Widget>[
           Hero(
             tag: 'search_bar',
-            child: SearchBar(),
+            child: SearchBar(
+              fetchLocations: fetchLocations,
+              searchBarController: searchBarController,
+              markers: markers,
+            ),
           ),
-          QuickSearchIcons(),
+          QuickSearchIcons(
+            fetchLocations: fetchLocations,
+            searchBarController: searchBarController,
+          ),
           Provider.of<MapsDataProvider>(context).searchHistory.isEmpty
               ? Card(
                   margin: EdgeInsets.all(5),
@@ -26,7 +48,11 @@ class MapSearchView extends StatelessWidget {
                     child: Center(child: Text('You have no recent searches')),
                   ),
                 )
-              : SearchHistoryList()
+              : SearchHistoryList(
+                  fetchLocations: fetchLocations,
+                  searchHistory: searchHistory,
+                  searchBarController: searchBarController,
+                )
         ],
       ),
     );

@@ -1,10 +1,19 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/ui/map/map.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class SearchBar extends StatelessWidget {
+  final void Function() fetchLocations;
+  final TextEditingController searchBarController;
+  final Map<MarkerId, Marker> markers;
+
   const SearchBar({
     Key? key,
+    required this.fetchLocations,
+    required this.searchBarController,
+    required this.markers,
   }) : super(key: key);
 
   @override
@@ -27,19 +36,15 @@ class SearchBar extends StatelessWidget {
               textInputAction: TextInputAction.search,
               onChanged: (text) {},
               onSubmitted: (text) {
-                if (Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text
-                    .isNotEmpty) {
+                if (searchBarController.text.isNotEmpty) {
                   // Don't fetch on empty text field
-                  Provider.of<MapsDataProvider>(context, listen: false)
-                      .fetchLocations(); // Text doesn't need to be sent over because it's already in the controller
+                  /// TODO
+                  fetchLocations(); // Text doesn't need to be sent over because it's already in the controller
                 }
                 Navigator.pop(context);
               },
               autofocus: true,
-              controller:
-                  Provider.of<MapsDataProvider>(context).searchBarController,
+              controller: searchBarController,
               style: TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -48,19 +53,12 @@ class SearchBar extends StatelessWidget {
               ),
             ),
           ),
-          Provider.of<MapsDataProvider>(context)
-                  .searchBarController
-                  .text
-                  .isNotEmpty
+          searchBarController.text.isNotEmpty
               ? IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
-                    Provider.of<MapsDataProvider>(context, listen: false)
-                        .searchBarController
-                        .clear();
-                    Provider.of<MapsDataProvider>(context, listen: false)
-                        .markers
-                        .clear();
+                    searchBarController.clear();
+                    markers.clear();
                   },
                 )
               : Container(height: 0)

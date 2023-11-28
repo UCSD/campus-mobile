@@ -8,8 +8,7 @@ import 'package:provider/provider.dart';
 import '../../core/hooks/availability_query.dart';
 import '../../core/providers/user.dart';
 
-class ManageAvailabilityView extends HookWidget
-{
+class ManageAvailabilityView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final queryClient = useQueryClient();
@@ -19,9 +18,10 @@ class ManageAvailabilityView extends HookWidget
       child: ReorderableListView(
         children: buildLocationsList(context, availability.data!),
         onReorder: (oldIndex, newIndex) {
-          queryClient.setQueryData<List<AvailabilityModel>>(['availability'], (previous) {
+          queryClient.setQueryData<List<AvailabilityModel>>(['availability'],
+              (previous) {
             if (oldIndex < newIndex)
-              previous!.insert(newIndex-1, previous.removeAt(oldIndex));
+              previous!.insert(newIndex - 1, previous.removeAt(oldIndex));
             else //oldIndex > newIndex
               previous!.insert(newIndex, previous.removeAt(oldIndex));
             return previous;
@@ -51,7 +51,8 @@ class ManageAvailabilityView extends HookWidget
   //   _availabilityDataProvider.reorderLocations(orderedLocationNames);
   // }
 
-  List<Widget> buildLocationsList(BuildContext context, List<AvailabilityModel> availabilityModels) {
+  List<Widget> buildLocationsList(
+      BuildContext context, List<AvailabilityModel> availabilityModels) {
     List<Widget> list = [];
     for (AvailabilityModel? model in availabilityModels) {
       if (model != null) {
@@ -66,7 +67,8 @@ class ManageAvailabilityView extends HookWidget
           trailing: Switch(
             value: !Provider.of<UserDataProvider>(context)
                 .userProfileModel!
-                .isOccuspaceLocationDisabled(model.name!), // check if the user did not disable a location
+                .isOccuspaceLocationDisabled(model
+                    .name!), // check if the user did not disable a location
             // activeColor: Theme.of(context).buttonColor,
             activeColor: Theme.of(context).backgroundColor,
             onChanged: (_) {

@@ -1,10 +1,18 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/ui/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchHistoryList extends StatelessWidget {
+  final void Function() fetchLocations;
+  final List<String> searchHistory;
+  final TextEditingController searchBarController;
+
   const SearchHistoryList({
     Key? key,
+    required this.fetchLocations,
+    required this.searchHistory,
+    required this.searchBarController,
   }) : super(key: key);
 
   @override
@@ -14,39 +22,24 @@ class SearchHistoryList extends StatelessWidget {
         margin: EdgeInsets.all(5),
         child: ListView.separated(
           separatorBuilder: (context, index) => Divider(height: 0),
-          itemCount:
-              Provider.of<MapsDataProvider>(context).searchHistory.length,
+          itemCount: searchHistory.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
               leading: Icon(Icons.history),
-              title: Text(Provider.of<MapsDataProvider>(context)
-                  .searchHistory
-                  .reversed
-                  .toList()[index]),
+              title: Text(searchHistory.reversed.toList()[index]),
               trailing: IconButton(
                 iconSize: 20,
                 icon: Icon(Icons.cancel),
                 onPressed: () {
-                  Provider.of<MapsDataProvider>(context, listen: false)
-                      .removeFromSearchHistory(
-                          Provider.of<MapsDataProvider>(context, listen: false)
-                              .searchHistory
-                              .reversed
-                              .toList()[index]);
+                  searchHistory.remove(searchHistory.reversed.toList()[index]);
                 },
               ),
               onTap: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                        .searchBarController
-                        .text =
-                    Provider.of<MapsDataProvider>(context, listen: false)
-                        .searchHistory
-                        .reversed
-                        .toList()[index];
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
+                searchBarController.text =
+                    searchHistory.reversed.toList()[index];
+                fetchLocations();
                 Navigator.pop(context);
               },
             );

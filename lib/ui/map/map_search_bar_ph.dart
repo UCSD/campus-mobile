@@ -1,11 +1,22 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/ui/map/map_search_view.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class MapSearchBarPlaceHolder extends StatelessWidget {
+  final void Function() fetchLocations;
+  final TextEditingController searchBarController;
+  final Map<MarkerId, Marker> markers;
+  final List<String> searchHistory;
+
   const MapSearchBarPlaceHolder({
     Key? key,
+    required this.fetchLocations,
+    required this.searchBarController,
+    required this.markers,
+    required this.searchHistory,
   }) : super(key: key);
 
   @override
@@ -16,7 +27,13 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
           margin: EdgeInsets.all(5),
           child: RawMaterialButton(
             onPressed: () {
-              Navigator.pushNamed(context, RoutePaths.MapSearch);
+              // Navigator.pushNamed(context, RoutePaths.MapSearch);
+              MapSearchView(
+                fetchLocations: fetchLocations,
+                searchBarController: searchBarController,
+                markers: markers,
+                searchHistory: searchHistory,
+              );
             },
             child: Row(
               children: <Widget>[
@@ -40,8 +57,7 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     enabled: false,
-                    controller: Provider.of<MapsDataProvider>(context)
-                        .searchBarController,
+                    controller: searchBarController,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                       border: InputBorder.none,
