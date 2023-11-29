@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/ui/map/map.dart';
 import 'package:campus_mobile_experimental/ui/map/map_search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,6 +11,7 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
   final TextEditingController searchBarController;
   final Map<MarkerId, Marker> markers;
   final List<String> searchHistory;
+  final MapIsLoadingWrapper mapIsLoadingWrapper;
 
   const MapSearchBarPlaceHolder({
     Key? key,
@@ -17,6 +19,7 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
     required this.searchBarController,
     required this.markers,
     required this.searchHistory,
+    required this.mapIsLoadingWrapper,
   }) : super(key: key);
 
   @override
@@ -27,19 +30,18 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
           margin: EdgeInsets.all(5),
           child: RawMaterialButton(
             onPressed: () {
-              // Navigator.pushNamed(context, RoutePaths.MapSearch);
-              MapSearchView(
-                fetchLocations: fetchLocations,
-                searchBarController: searchBarController,
-                markers: markers,
-                searchHistory: searchHistory,
-              );
+              Navigator.pushNamed(context, RoutePaths.MapSearch, arguments: {
+                'arg1': fetchLocations,
+                'arg2': searchBarController,
+                'arg3': markers,
+                'arg4': searchHistory,
+              });
             },
             child: Row(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 9),
-                  child: Provider.of<MapsDataProvider>(context).isLoading!
+                  child: mapIsLoadingWrapper.isLoading
                       ? Padding(
                           padding: const EdgeInsets.all(2.5),
                           child: Container(

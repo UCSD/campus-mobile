@@ -57,8 +57,18 @@ class Router {
         return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Maps());
-      // case RoutePaths.MapSearch:
-      //   return MaterialPageRoute(builder: (_) => MapSearchView();
+      case RoutePaths.MapSearch:
+        final Map<String, dynamic>? args =
+            settings.arguments as Map<String, dynamic>?;
+
+        MapSearchView mapSearchView = MapSearchView(
+          fetchLocations: args!['arg1'],
+          searchBarController: args!['arg2'],
+          markers: args!['arg3'],
+          searchHistory: args!['arg4'],
+        );
+
+        return MaterialPageRoute(builder: (_) => mapSearchView);
       case RoutePaths.Notifications:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);

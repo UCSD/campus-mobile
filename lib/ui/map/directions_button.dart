@@ -48,13 +48,12 @@ class DirectionsButton extends StatelessWidget {
           if (locationQuery.isNotEmpty) {
             getDirections(context);
           } else {
-            // Navigator.pushNamed(context, RoutePaths.MapSearch);
-            MapSearchView(
-              fetchLocations: fetchLocations,
-              searchBarController: searchBarController,
-              markers: markers,
-              searchHistory: searchHistory,
-            );
+            Navigator.pushNamed(context, RoutePaths.MapSearch, arguments: {
+              'arg1': fetchLocations,
+              'arg2': searchBarController,
+              'arg3': markers,
+              'arg4': searchHistory,
+            });
           }
         }
       },

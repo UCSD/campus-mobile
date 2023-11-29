@@ -18,10 +18,10 @@ import 'package:uni_links2/uni_links.dart';
 
 class Maps extends StatelessWidget {
   ///STATES
-  bool? _isLoading;
+  MapIsLoadingWrapper mapIsLoadingWrapper = MapIsLoadingWrapper(false);
   DateTime? _lastUpdated;
   String? _error;
-  bool? _noResults;
+  bool _noResults = false;
 
   ///Default coordinates for Price Center
   double? _defaultLat = 32.87990969506536;
@@ -36,10 +36,10 @@ class Maps extends StatelessWidget {
   List<String> _searchHistory = [];
 
   ///SERVICES (later to be HOOKS)
-  late MapSearchService _mapSearchService;
+  MapSearchService _mapSearchService = MapSearchService();
 
   Widget resultsList(BuildContext context) {
-    if (Provider.of<MapsDataProvider>(context).markers.isNotEmpty) {
+    if (markers.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       });
@@ -47,7 +47,7 @@ class Maps extends StatelessWidget {
         mapSearchModels: mapSearchModels,
         addMarker: addMarker,
       );
-    } else if (Provider.of<MapsDataProvider>(context).noResults!) {
+    } else if (noResults!) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
@@ -96,10 +96,8 @@ class Maps extends StatelessWidget {
         var uri = Uri.dataFromString(link);
         var query = uri.queryParameters['query']!;
         // redirect query to maps tab and search with query
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text = query;
-        Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
+        searchBarController.text = query;
+        fetchLocations();
         setBottomNavigationBarIndex(NavigatorConstants.MapTab);
         // received deeplink, cancel stream to prevent memory leaks
         _sub.cancel();
@@ -115,15 +113,13 @@ class Maps extends StatelessWidget {
     return Stack(
       children: <Widget>[
         GoogleMap(
-          markers: Set<Marker>.of(
-              Provider.of<MapsDataProvider>(context).markers.values),
+          markers: Set<Marker>.of(markers.values),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           mapToolbarEnabled: false,
           zoomControlsEnabled: false,
           onMapCreated: (controller) {
-            Provider.of<MapsDataProvider>(context, listen: false)
-                .mapController = controller;
+            _mapController = controller;
           },
           initialCameraPosition: CameraPosition(
             target: const LatLng(32.8801, -117.2341),
@@ -135,6 +131,7 @@ class Maps extends StatelessWidget {
           searchBarController: searchBarController,
           markers: markers,
           searchHistory: searchHistory,
+          mapIsLoadingWrapper: mapIsLoadingWrapper,
         ),
         buildButtons(context),
         resultsList(context),
@@ -143,6 +140,67 @@ class Maps extends StatelessWidget {
   }
 
   /// MAP HELPER FUNCTIONS BELOW HERE
+  void fetchLocations() async {
+    String query = searchBarController.text;
+    markers.clear();
+    mapIsLoadingWrapper.isLoading = true;
+    _error = null;
+    if (await _mapSearchService.fetchLocations(query)) {
+      _mapSearchModels = _mapSearchService.results;
+      _noResults = false;
+      populateDistances();
+      reorderLocations();
+      addMarker(0);
+      if (!_searchHistory.contains(query)) {
+        // Check to see if this search is already in history...
+        _searchHistory.add(query); // ...If it is not, add it...
+      } else {
+        // ...otherwise...
+        _searchHistory
+            .remove(query); // ...reorder search history to put it back on top
+        _searchHistory.add(query);
+      }
+      _lastUpdated = DateTime.now();
+    } else {
+      ///TODO: determine what error to show to the user
+      _error = _mapSearchService.error;
+      _noResults = true;
+    }
+    mapIsLoadingWrapper.isLoading = false;
+  }
+
+  void populateDistances() {
+    double? latitude =
+        _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
+    double? longitude =
+        _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
+    for (MapSearchModel model in _mapSearchModels) {
+      if (model.mkrLat != null && model.mkrLong != null) {
+        var distance = calculateDistance(
+            latitude!, longitude!, model.mkrLat!, model.mkrLong!);
+        model.distance = distance as double?;
+      }
+    }
+  }
+
+  num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lng2 - lng1) * p)) / 2;
+    return 12742 * asin(sqrt(a)) * 0.621371;
+  }
+
+  void reorderLocations() {
+    _mapSearchModels.sort((MapSearchModel a, MapSearchModel b) {
+      if (a.distance != null && b.distance != null) {
+        return a.distance!.compareTo(b.distance!);
+      }
+      return 0;
+    });
+  }
+
   void addMarker(int listIndex) {
     final Marker marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
@@ -173,72 +231,7 @@ class Maps extends StatelessWidget {
     }
   }
 
-  void reorderLocations() {
-    _mapSearchModels.sort((MapSearchModel a, MapSearchModel b) {
-      if (a.distance != null && b.distance != null) {
-        return a.distance!.compareTo(b.distance!);
-      }
-      return 0;
-    });
-  }
-
-  void fetchLocations() async {
-    String query = searchBarController.text;
-    markers.clear();
-    _isLoading = true;
-    _error = null;
-    if (await _mapSearchService.fetchLocations(query)) {
-      _mapSearchModels = _mapSearchService.results;
-      _noResults = false;
-      populateDistances();
-      reorderLocations();
-      addMarker(0);
-      if (!_searchHistory.contains(query)) {
-        // Check to see if this search is already in history...
-        _searchHistory.add(query); // ...If it is not, add it...
-      } else {
-        // ...otherwise...
-        _searchHistory
-            .remove(query); // ...reorder search history to put it back on top
-        _searchHistory.add(query);
-      }
-      _lastUpdated = DateTime.now();
-    } else {
-      ///TODO: determine what error to show to the user
-      _error = _mapSearchService.error;
-      _noResults = true;
-    }
-    _isLoading = false;
-  }
-
-  void populateDistances() {
-    double? latitude =
-        _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
-    double? longitude =
-        _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
-    if (_coordinates != null) {
-      for (MapSearchModel model in _mapSearchModels) {
-        if (model.mkrLat != null && model.mkrLong != null) {
-          var distance = calculateDistance(
-              latitude!, longitude!, model.mkrLat!, model.mkrLong!);
-          model.distance = distance as double?;
-        }
-      }
-    }
-  }
-
-  num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lng2 - lng1) * p)) / 2;
-    return 12742 * asin(sqrt(a)) * 0.621371;
-  }
-
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-
   String? get error => _error;
 
   DateTime? get lastUpdated => _lastUpdated;
@@ -256,4 +249,12 @@ class Maps extends StatelessWidget {
   bool? get noResults => _noResults;
 
   GoogleMapController? get mapController => _mapController;
+}
+
+class MapIsLoadingWrapper {
+  bool isLoading = false;
+
+  MapIsLoadingWrapper(bool isLoading) {
+    this.isLoading = isLoading;
+  }
 }

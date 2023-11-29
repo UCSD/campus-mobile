@@ -39,7 +39,7 @@ class MapSearchView extends StatelessWidget {
             fetchLocations: fetchLocations,
             searchBarController: searchBarController,
           ),
-          Provider.of<MapsDataProvider>(context).searchHistory.isEmpty
+          searchHistory.isEmpty
               ? Card(
                   margin: EdgeInsets.all(5),
                   child: Container(
