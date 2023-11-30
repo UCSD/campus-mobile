@@ -8,6 +8,7 @@ import '../models/student_id_name.dart';
 
 UseQueryResult<StudentIdBarcodeModel, dynamic> useFetchStudentIdBarcodeModel(String accessToken)
 {
+
   const String myStudentContactApiUrl =
       'https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1';
 

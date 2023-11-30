@@ -1,10 +1,11 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
-import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
+import 'package:campus_mobile_experimental/core/hooks/scanner_message_query.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -263,8 +264,13 @@ class _ScanditScannerState extends State<ScanditScanner> {
   void updateLatestScan(BuildContext context) {
     if (_scannerDataProvider.successfulSubmission! && !hasUpdatedLatestScan) {
       // to fetch the most recent scan and display timestamp to user to confirm success
-      Provider.of<ScannerMessageDataProvider>(context, listen: false)
-          .fetchData();
+      final userDataProvider = useMemoized(() {
+        debugPrint("Memoized UserDataProvider!");
+        return Provider.of<UserDataProvider>(context);
+      }, [context]);
+      final accessToken = userDataProvider.authenticationModel!.accessToken!;
+      final scannerHook = useFetchScannerMessage(accessToken);
+      scannerHook.refetch();
       hasUpdatedLatestScan = true;
     }
   }

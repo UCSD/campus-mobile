@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/location.dart';
-import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/hooks/bottom_nav_query.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
@@ -10,7 +10,7 @@ import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
-import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
+import 'package:campus_mobile_experimental/core/hooks/scanner_message_query.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -138,18 +138,6 @@ List<SingleChildWidget> dependentServices = [
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
-  }),
-  ChangeNotifierProxyProvider<UserDataProvider, ScannerMessageDataProvider>(
-      create: (_) {
-    var scannerMessageDataProvider = ScannerMessageDataProvider();
-    return scannerMessageDataProvider;
-  }, update: (_, userDataProvider, scannerMessageDataProvider) {
-    scannerMessageDataProvider!.userDataProvider = userDataProvider;
-    //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !scannerMessageDataProvider.isLoading!) {
-      scannerMessageDataProvider.fetchData();
-    }
-    return scannerMessageDataProvider;
   }),
   ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
       ShuttleDataProvider>(create: (_) {

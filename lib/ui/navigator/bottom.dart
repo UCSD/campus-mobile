@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/hooks/bottom_nav_query.dart';
 import 'package:campus_mobile_experimental/core/wrappers/push_notifications.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
@@ -38,13 +38,11 @@ class _BottomTabBarState extends State<BottomTabBar> {
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndexNotifier.value,
         onTap: (index) {
-          print(index);
           handleBottomNavigationBarTap(index);
           switch (index) {
             case NavigatorConstants.HomeTab:
               Provider.of<CustomAppBar>(context, listen: false)
                   .changeTitle(null);
-                  print("Working0");
               break;
             case NavigatorConstants.MapTab:
               Provider.of<CustomAppBar>(context, listen: false)

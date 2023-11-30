@@ -1,34 +1,57 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/models/scanner_message.dart';
+import 'package:campus_mobile_experimental/core/hooks/bottom_nav_query.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
-import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
+import 'package:campus_mobile_experimental/core/hooks/scanner_message_query.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+// import '../../core/providers/user.dart';
 
 const String cardId = 'NativeScanner';
 
-class NativeScannerCard extends StatelessWidget {
+class NativeScannerCard extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      active: true,
-      hide: () => null,
-      reload: () =>
-          Provider.of<ScannerMessageDataProvider>(context, listen: false)
-              .fetchData(),
-      isLoading: Provider.of<ScannerMessageDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
-      errorText: null,
-      child: () => buildCardContent(context),
-      actionButtons: [buildActionButton(context)],
-      hideMenu: false,
-    );
+    final userDataProvider = useMemoized(() {
+      debugPrint("Memoized UserDataProvider!");
+      return Provider.of<UserDataProvider>(context);
+    }, [context]);
+
+    ///Fix when migrating UserDataProvider
+    if (userDataProvider.authenticationModel?.accessToken == null) {
+      return CardContainer(
+        active: false,
+        isLoading: true,
+        hide: () => null,
+        reload: () => null,
+        titleText: '',
+        errorText: '',
+        child: () => Container(),
+      );
+    } else {
+      final accessToken = userDataProvider.authenticationModel?.accessToken!;
+
+      final scannerHook = useFetchScannerMessage(accessToken!);
+      return CardContainer(
+        active: true,
+        hide: () => null,
+        reload: () => scannerHook.refetch(),
+        isLoading: scannerHook.isFetching || scannerHook.isLoading,
+        titleText: CardTitleConstants.titleMap[cardId],
+        errorText: scannerHook.isError ? "" : null,
+        child: () => buildCardContent(scannerHook.data!, context),
+        actionButtons: [buildActionButton(context)],
+        hideMenu: false,
+      );
+    }
   }
 
-  Widget buildCardContent(BuildContext context) {
+  Widget buildCardContent(
+      ScannerMessageModel scannerMessage, BuildContext context) {
     return GestureDetector(
       onTap: () {
         getActionButtonNavigateRoute(context);
@@ -55,7 +78,7 @@ class NativeScannerCard extends StatelessWidget {
                   getCardContentText(context),
                   textAlign: TextAlign.left,
                 ),
-                getMessageWidget(context),
+                getMessageWidget(scannerMessage, context),
               ],
             ),
           ),
@@ -91,12 +114,10 @@ class NativeScannerCard extends StatelessWidget {
         : ButtonText.SignIn;
   }
 
-  Widget getMessageWidget(BuildContext context) {
+  Widget getMessageWidget(
+      ScannerMessageModel scannerMessage, BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-      String? myRecentScanTime =
-          Provider.of<ScannerMessageDataProvider>(context, listen: false)
-              .scannerMessageModel!
-              .collectionTime;
+      String? myRecentScanTime = scannerMessage.collectionTime;
       if (myRecentScanTime == "") {
         myRecentScanTime = ScannerConstants.noRecentScan;
       }
@@ -109,10 +130,7 @@ class NativeScannerCard extends StatelessWidget {
                 text: "Last test kit scan: ",
               ),
               TextSpan(
-                  text: Provider.of<ScannerMessageDataProvider>(context,
-                          listen: false)
-                      .scannerMessageModel!
-                      .collectionTime,
+                  text: scannerMessage!.collectionTime,
                   style: TextStyle(fontWeight: FontWeight.w600)),
             ],
           ),
@@ -135,5 +153,11 @@ class NativeScannerCard extends StatelessWidget {
       setBottomNavigationBarIndex(NavigatorConstants.ProfileTab);
       Provider.of<CustomAppBar>(context, listen: false).changeTitle("Profile");
     }
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
   }
 }
