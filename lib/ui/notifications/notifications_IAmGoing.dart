@@ -1,27 +1,29 @@
-import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/core/providers/notifications_IAmGoing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FreeFoodNotification extends StatefulWidget {
-  /// required parameters
-  final String? messageId;
+import '../../core/models/notifications.dart';
 
-  const FreeFoodNotification({
+class IAmGoingNotification extends StatefulWidget {
+  /// required parameters
+  final MessageElement data;
+
+  const IAmGoingNotification({
     Key? key,
-    required this.messageId,
+    required this.data,
   }) : super(key: key);
 
   @override
-  _CheckBoxButtonState createState() => _CheckBoxButtonState(messageId);
+  _CheckBoxButtonState createState() => _CheckBoxButtonState(data);
 }
 
-class _CheckBoxButtonState extends State<FreeFoodNotification> {
-  _CheckBoxButtonState(messageId) {
-    this.messageId = messageId;
+class _CheckBoxButtonState extends State<IAmGoingNotification> {
+  _CheckBoxButtonState(data) {
+    this.data = data;
   }
 
-  late FreeFoodDataProvider _freeFoodDataProvider;
-  String? messageId;
+  late IAmGoingProvider _IAmGoingDataProvider;
+  late MessageElement data;
 
   bool _isLoading = false;
   bool _isGoing = false;
@@ -32,9 +34,9 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _freeFoodDataProvider = Provider.of<FreeFoodDataProvider>(context);
-    _isLoading = _freeFoodDataProvider.isLoading(messageId);
-    _isGoing = _freeFoodDataProvider.registeredEvents!.contains(messageId);
+    _IAmGoingDataProvider = Provider.of<IAmGoingProvider>(context);
+    _isLoading = _IAmGoingDataProvider.isLoading(data.messageId);
+    _isGoing = _IAmGoingDataProvider.registeredEvents!.contains(data.messageId);
     if (_isGoing) {
       _buttonColor = Colors.green;
       _borderColor = Colors.green;
@@ -48,22 +50,33 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
 
   @override
   Widget build(BuildContext context) {
-    var isOverCount = _freeFoodDataProvider.isOverCount(messageId);
+    var isOverCount = _IAmGoingDataProvider.isOverCount(data.messageId);
+    String messageType = data.audience!.topics![0];
 
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
 
-    var currCount = _freeFoodDataProvider.count(messageId);
-    var countText = currCount == 1
-        ? '$currCount student is going'
-        : '$currCount students are going';
+    var currCount = _IAmGoingDataProvider.count(data.messageId);
+    String countText;
+    if (messageType == "campusInnovationEvents") {
+      if (currCount == 1) {
+        countText = '$currCount participant is going';
+      } else {
+        countText = '$currCount participants are going';
+      }
+    } else {
+      // messageType == "freeFood" or anything else
+      if (currCount == 1) {
+        countText = '$currCount student is going';
+      } else {
+        countText = '$currCount students are going';
+      }
+    }
 
     return Container(
-        margin: EdgeInsets.only(top: 10.0),
+        margin: EdgeInsets.only(left: 72.0),
         child: Row(
           children: <Widget>[
             Container(
-              height: 25,
-              width: 150,
               child: AnimatedCrossFade(
                 duration: Duration(milliseconds: 300),
                 crossFadeState: isOverCount
@@ -74,12 +87,24 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                     Text(countText,
                         style: TextStyle(fontSize: 10, color: Colors.red)),
                     Container(
-                        margin: EdgeInsets.only(top: 2.0),
+                        margin: EdgeInsets.only(top: 4.0),
+                        width: 200,
                         child: Row(
                           children: <Widget>[
-                            Icon(Icons.report, color: Colors.grey, size: 10),
-                            Text("There may not be enough food",
-                                style: TextStyle(fontSize: 9))
+                            Padding(
+                                padding: EdgeInsets.only(right: 4.0),
+                                child: Icon(Icons.report,
+                                    color: Colors.grey, size: 10)),
+                            Flexible(
+                              child: Text(() {
+                                if (messageType == "campusInnovationEvents") {
+                                  return "The event may not have enough space for all the participants";
+                                } else {
+                                  // messageType == "freeFood" or anything else
+                                  return "There may not be enough food";
+                                }
+                              }(), style: TextStyle(fontSize: 9)),
+                            )
                           ],
                         )),
                   ],
@@ -92,7 +117,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                 ),
               ),
             ),
-            _checkBoxButton()
+            _checkBoxButton(),
           ],
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
         ));
@@ -157,12 +182,12 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
         _textColor = Color(0xFF034161);
-        _freeFoodDataProvider.decrementCount(messageId!);
+        _IAmGoingDataProvider.decrementCount(data.messageId!);
       } else {
         _buttonColor = Colors.green;
         _borderColor = Colors.green;
         _textColor = Colors.white;
-        _freeFoodDataProvider.incrementCount(messageId!);
+        _IAmGoingDataProvider.incrementCount(data.messageId!);
       }
       _isGoing = !_isGoing;
     });
