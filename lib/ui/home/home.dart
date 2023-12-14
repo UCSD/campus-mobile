@@ -31,8 +31,12 @@ import 'package:campus_mobile_experimental/ui/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
+
+import '../../core/providers/news.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -116,9 +120,10 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = [];
+
     Map<String, CardsModel?>? webCards =
         Provider.of<CardsDataProvider>(context, listen: false).webCards;
-
+    // final webCards = Get.find<CardsDataProvider>().webCards;
     for (String card in order) {
       if (!webCards!.containsKey(card)) {
         switch (card) {

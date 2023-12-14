@@ -4,11 +4,14 @@ import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 const String cardId = 'news';
 
 class NewsCard extends StatelessWidget {
+  final NewsDataProvider newsProvider = Get.put(NewsDataProvider());
   Widget buildNewsCard() {
     try {
       return NewsList(
@@ -46,16 +49,18 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = newsProvider.isLoading;
+    final error = newsProvider.error;
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
-          Provider.of<NewsDataProvider>(context, listen: false).fetchNews(),
-      isLoading: Provider.of<NewsDataProvider>(context).isLoading,
+         Get.find<NewsDataProvider>().fetchNews(),
+      isLoading: isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<NewsDataProvider>(context).error,
+      errorText: error,
       child: () => buildNewsCard(),
       actionButtons: buildActionButtons(context),
     );

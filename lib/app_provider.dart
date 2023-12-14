@@ -74,13 +74,13 @@ List<SingleChildWidget> independentServices = [
       return _weatherDataProvider;
     },
   ),
-  ChangeNotifierProvider<NewsDataProvider>(
-    create: (_) {
-      NewsDataProvider _newsDataProvider = NewsDataProvider();
-      _newsDataProvider.fetchNews();
-      return _newsDataProvider;
-    },
-  ),
+  // ChangeNotifierProvider<NewsDataProvider>(
+  //   create: (_) {
+  //     NewsDataProvider _newsDataProvider = NewsDataProvider();
+  //     _newsDataProvider.fetchNews();
+  //     return _newsDataProvider;
+  //   },
+  // ),
   StreamProvider<Coordinates>(
     initialData: Coordinates(),
     create: (_) {
