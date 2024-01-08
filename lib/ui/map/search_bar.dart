@@ -1,10 +1,14 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchBar extends StatelessWidget {
+  final Function(String) onTextChanged; // Callback for text changes
+
   const SearchBar({
     Key? key,
+    required this.onTextChanged,
   }) : super(key: key);
 
   @override
@@ -25,7 +29,9 @@ class SearchBar extends StatelessWidget {
           Expanded(
             child: TextField(
               textInputAction: TextInputAction.search,
-              onChanged: (text) {},
+              onChanged: (text) {
+                onTextChanged(text);
+              },
               onSubmitted: (text) {
                 if (Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
