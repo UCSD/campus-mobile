@@ -11,15 +11,16 @@ import 'package:provider/provider.dart';
 class NewsList extends StatelessWidget {
 
   NewsList({Key? key, this.listSize}) : super(key: key);
-  final newsProvider = Get.put(NewsDataProvider());
+  final newsController = Get.find<NewsController>();
   // debugPrint(newsProvider.toString());
-  final int? listSize;
+  late int? listSize;
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = newsProvider.isLoading;
-    final newsModels = newsProvider.newsModels;
-
+    // Get.put(NewsController());
+    print("CallonDetailedView---------------");
+    // newsController.fetchNews();
+    final isLoading = newsController.isLoading.value;
     if (isLoading) {
       return Center(
           child: CircularProgressIndicator(
@@ -30,23 +31,27 @@ class NewsList extends StatelessWidget {
     }
     return Obx(() {
       return buildNewsList(
-          context, newsModels!
+          context
       );
     });
   }
 
-  Widget buildNewsList(BuildContext context, NewsModel data) {
-    final List<Item>? listOfNews = data.items;
+  Widget buildNewsList(BuildContext context) {
+    final listOfNews = newsController.newsModels.value.items;
+
     final List<Widget> newsTiles = [];
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
     var size;
+    print(size);
+    print(listOfNews.toString());
     if (listSize == null)
       size = listOfNews!.length;
     else
       size = listSize;
+    print(size);
     for (int i = 0; i < size; i++) {
       final Item item = listOfNews![i];
       final tile = buildNewsTile(item, context);

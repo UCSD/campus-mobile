@@ -11,23 +11,24 @@ import 'package:provider/provider.dart';
 const String cardId = 'news';
 
 class NewsCard extends StatelessWidget {
-  final NewsDataProvider newsProvider = Get.put(NewsDataProvider());
+  // final newsProvider = Get.find<NewsController>();
+  // final NewsController newsProvider = Get.put(NewsController());
   Widget buildNewsCard() {
-    try {
+    // try {
       return NewsList(
         listSize: 3,
       );
-    } catch (e) {
-      print(e);
-      return Container(
-        width: double.infinity,
-        child: Center(
-          child: Container(
-            child: Text('An error occurred, please try again.'),
-          ),
-        ),
-      );
-    }
+    // } catch (e) {
+    //   print(e);
+    //   return Container(
+    //     width: double.infinity,
+    //     child: Center(
+    //       child: Container(
+    //         child: Text('An error occurred, please try again.'),
+    //       ),
+    //     ),
+    //   );
+    // }
   }
 
   List<Widget> buildActionButtons(BuildContext context) {
@@ -49,20 +50,38 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final isLoading = newsProvider.isLoading;
+    // final error = newsProvider.error;
+    // print('----------error----------');
+    // print(error.value);
+    // return CardContainer(
+    //   /// TODO: need to hook up hidden to state using provider
+    //   active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+    //   hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+    //       .toggleCard(cardId),
+    //   reload: () =>
+    //      Get.find<NewsController>().fetchNews(),
+    //   isLoading: isLoading.value,
+    //   titleText: CardTitleConstants.titleMap[cardId],
+    //   errorText: error.value,
+    //   child: () => buildNewsCard(),
+    //   actionButtons: buildActionButtons(context),
+    // );
+    // Get.put(NewsController());
+    // Get.put(NewsController());
+    final NewsController newsProvider = Get.find<NewsController>();
     final isLoading = newsProvider.isLoading;
     final error = newsProvider.error;
-    return CardContainer(
-      /// TODO: need to hook up hidden to state using provider
+    print("error------new-------"+isLoading.value.toString());
+    return Obx(() => CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
-      reload: () =>
-         Get.find<NewsDataProvider>().fetchNews(),
-      isLoading: isLoading,
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      reload: () => newsProvider.fetchNews(),
+      isLoading: newsProvider.isLoading.value,
       titleText: CardTitleConstants.titleMap[cardId],
-      errorText: error,
+      errorText: newsProvider.error.value,
       child: () => buildNewsCard(),
       actionButtons: buildActionButtons(context),
-    );
+    ));
   }
 }

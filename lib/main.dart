@@ -20,6 +20,8 @@ import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 
+import 'core/providers/news.dart';
+
 late bool showOnboardingScreen;
 
 bool isFirstRunFlag = false;
@@ -112,6 +114,7 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
     );
+    Get.put(NewsController());
 
     return MultiProvider(
       providers: providers,
