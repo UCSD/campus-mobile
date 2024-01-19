@@ -6,20 +6,15 @@ import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class NewsList extends StatelessWidget {
 
   NewsList({Key? key, this.listSize}) : super(key: key);
   final newsController = Get.find<NewsController>();
-  // debugPrint(newsProvider.toString());
-  late int? listSize;
+  final int? listSize;
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(NewsController());
-    print("CallonDetailedView---------------");
-    // newsController.fetchNews();
     final isLoading = newsController.isLoading.value;
     if (isLoading) {
       return Center(
@@ -45,13 +40,10 @@ class NewsList extends StatelessWidget {
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
     var size;
-    print(size);
-    print(listOfNews.toString());
     if (listSize == null)
       size = listOfNews!.length;
     else
       size = listSize;
-    print(size);
     for (int i = 0; i < size; i++) {
       final Item item = listOfNews![i];
       final tile = buildNewsTile(item, context);

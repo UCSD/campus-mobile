@@ -7,7 +7,7 @@ class NewsController extends GetxController {
   ///STATES
   var isLoading = false.obs;
   var lastUpdated = DateTime.now().obs;
-  var error = ''.obs;
+  var error = Rxn<String>();
 
   ///MODELS
   var newsModels = NewsModel().obs;
@@ -28,13 +28,10 @@ class NewsController extends GetxController {
     if (await _newsService.fetchData()) {
       newsModels.value = _newsService.newsModels;
       lastUpdated.value = DateTime.now();
-      print("loading newsCard");
     }
     else {
       error.value = _newsService.error!;
-      print("not loading newsCard");
     }
-    print(newsModels.value);
     isLoading.value = false;
   }
 }
