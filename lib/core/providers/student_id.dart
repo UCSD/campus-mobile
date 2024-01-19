@@ -1,4 +1,3 @@
-import 'package:campus_mobile_experimental/core/models/student_id_barcode.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
@@ -22,7 +21,6 @@ class StudentIdDataProvider extends ChangeNotifier {
   int? _selectedCourse;
 
   ///MODELS
-  StudentIdBarcodeModel? _studentIdBarcodeModel;
   StudentIdNameModel? _studentIdNameModel;
   StudentIdPhotoModel? _studentIdPhotoModel;
   StudentIdProfileModel? _studentIdProfileModel;
@@ -46,20 +44,6 @@ class StudentIdDataProvider extends ChangeNotifier {
         'Authorization':
             'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
       };
-
-      /// Fetch Barcode
-      if (await _studentIdService.fetchStudentIdBarcode(header) &&
-          _studentIdService.studentIdBarcodeModel.barCode != null) {
-        _studentIdBarcodeModel = _studentIdService.studentIdBarcodeModel;
-      } else {
-        /// Error Handling
-        _error = _studentIdService.error.toString();
-        _isLoading = false;
-        notifyListeners();
-
-        /// Short Circuit
-        return;
-      }
 
       /// Fetch Name
       if (await _studentIdService.fetchStudentIdName(header) &&
@@ -117,7 +101,6 @@ class StudentIdDataProvider extends ChangeNotifier {
   bool? get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  StudentIdBarcodeModel? get studentIdBarcodeModel => _studentIdBarcodeModel;
   StudentIdNameModel? get studentIdNameModel => _studentIdNameModel;
   StudentIdPhotoModel? get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel? get studentIdProfileModel => _studentIdProfileModel;
