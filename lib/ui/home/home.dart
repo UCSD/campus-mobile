@@ -20,6 +20,7 @@ import 'package:campus_mobile_experimental/ui/triton_media/triton_media_card.dar
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/my_chart/my_chart_card.dart';
 import 'package:campus_mobile_experimental/ui/myucsdchart/myucsdchart.dart';
+import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/notices/notices_card.dart';
@@ -33,6 +34,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
+import 'package:measured_size/measured_size.dart';
+
+Map<String, double> webViewCardHeights = {};
+
+void resetCardHeight(String card) {
+  webViewCardHeights[card] = 0.0;
+}
 
 class Home extends StatefulWidget {
   @override
@@ -40,7 +48,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _controller = ScrollController(
+    initialScrollOffset: getHomeScrollOffset(),
+  );
   InternetConnectivityProvider? _connectivityProvider;
+
+  _HomeState() : super() {
+    _controller.addListener(
+      () {
+        setHomeScrollOffset(_controller.offset);
+      },
+    );
+  }
+
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
@@ -90,6 +110,7 @@ class _HomeState extends State<Home> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
+        controller: _controller,
         padding: EdgeInsets.only(
             top: cardMargin + 2.0, right: 0.0, bottom: 0.0, left: 0.0),
         children: createList(context),
@@ -173,12 +194,27 @@ class _HomeState extends State<Home> {
         }
       } else {
         // dynamically insert webCards into the list
-        orderedCards.add(WebViewContainer(
-          titleText: webCards[card]!.titleText,
-          initialUrl: webCards[card]!.initialURL,
-          cardId: card,
-          requireAuth: webCards[card]!.requireAuth,
-        ));
+        orderedCards.add(MeasuredSize(onChange: (Size size) {
+          setState(() {
+            if (!webViewCardHeights.containsKey(card) ||
+                size.height > webViewCardHeights[card]!) {
+              webViewCardHeights[card] = size.height;
+              debugPrint("current min height: " + size.height.toString());
+            }
+          });
+        }, child: Builder(builder: (BuildContext context) {
+          final currentCard = card;
+          return ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: webViewCardHeights[currentCard] ?? 0.0,
+              ),
+              child: WebViewContainer(
+                titleText: webCards[currentCard]!.titleText,
+                initialUrl: webCards[currentCard]!.initialURL,
+                cardId: currentCard,
+                requireAuth: webCards[currentCard]!.requireAuth,
+              ));
+        })));
       }
     }
     return orderedCards;
