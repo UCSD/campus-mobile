@@ -56,7 +56,8 @@ class WeatherCard extends StatelessWidget {
                 Image.asset(
                   'assets/images/apple-logo.png',
                   fit: BoxFit.contain,
-                  height: 16,
+                  height: 15,
+                  color: Colors.black,
                 ),
                 SizedBox(width: 4),
                 Text("Weather")
