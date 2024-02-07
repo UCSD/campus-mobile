@@ -38,21 +38,30 @@ class WeatherCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
-              onTap: () => openLink('https://www.example.com'),
+              onTap: () => openLink('https://developer.apple.com/weatherkit/data-source-attribution/'),
               child: Text(
-                "Weather attribution",
+                "Weather Attribution",
                 style: TextStyle(
-                  color: Colors.blue, // Make it look like a link
                   decoration: TextDecoration.underline,
                 ),
               ),
             ),
-            Text("Powered by UCSD"),
+            Row(
+              children: [
+                Image.asset(
+                  'assets/images/apple-logo.png',
+                  fit: BoxFit.contain,
+                  height: 16,
+                ),
+                SizedBox(width: 4),
+                Text("Weather")
+              ],
+            ),
           ],
         ),
       ),
