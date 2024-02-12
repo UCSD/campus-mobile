@@ -29,7 +29,6 @@ class WeatherCard extends StatelessWidget {
               Provider.of<WeatherDataProvider>(context).weatherModel!),
           footer: buildFooter(),
         ),
-        // webview openlink()
       ],
     );
   }
@@ -70,7 +69,6 @@ class WeatherCard extends StatelessWidget {
   }
 
   String getDayOfWeek(int epoch) {
-    // Monday == 1
     DateTime dt = new DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
 
     switch (dt.weekday) {
