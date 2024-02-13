@@ -336,7 +336,8 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void toggleCard(String card) {
-    if ((card == "student_health_wellbeing" || card == "student_info") && _cardStates![card]!) {
+    debugPrint("THIS IS THE CURRENT CARD BEING TOGGLED: " + card);
+    if ((card == "student_health_wellbeing" || card == "student_info" || card == "campus_info") && _cardStates![card]!) {
         resetCardHeight(card);
     }
     _cardStates![card] = !_cardStates![card]!;

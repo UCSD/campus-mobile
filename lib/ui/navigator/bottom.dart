@@ -66,6 +66,9 @@ class _BottomTabBarState extends State<BottomTabBar> {
         type: BottomNavigationBarType.fixed,
         currentIndex: provider.currentIndex,
         onTap: (index) {
+          if (provider.currentIndex == NavigatorConstants.HomeTab) {
+
+          }
           provider.currentIndex = index;
           switch (index) {
             case NavigatorConstants.HomeTab:

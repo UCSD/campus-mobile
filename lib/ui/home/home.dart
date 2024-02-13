@@ -34,13 +34,66 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
-import 'package:measured_size/measured_size.dart';
+import 'package:flutter/rendering.dart';
+
+//--- code to track size changes of dynamic web card widget content ---
+typedef void OnWidgetSizeChange(Size size);
+
+class MeasureSizeRenderObject extends RenderProxyBox {
+  Size? oldSize;
+  OnWidgetSizeChange onChange;
+
+  MeasureSizeRenderObject(this.onChange);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    Size newSize = child!.size;
+    if (oldSize == newSize) return;
+
+    oldSize = newSize;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onChange(newSize);
+    });
+  }
+}
+
+class MeasureSize extends SingleChildRenderObjectWidget {
+  final OnWidgetSizeChange onChange;
+
+  const MeasureSize({
+    Key? key,
+    required this.onChange,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return MeasureSizeRenderObject(onChange);
+  }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, covariant MeasureSizeRenderObject renderObject) {
+    renderObject.onChange = onChange;
+  }
+}
 
 Map<String, double> webViewCardHeights = {};
 
 void resetCardHeight(String card) {
   webViewCardHeights[card] = 0.0;
 }
+
+void setNewCardHeight(String card, double height) {
+  if (!webViewCardHeights.containsKey(card) ||
+      height > webViewCardHeights[card]!) {
+    webViewCardHeights[card] = height;
+    debugPrint("current min height: " + height.toString());
+  }
+}
+//---------------------------------------------------------------------
 
 class Home extends StatefulWidget {
   @override
@@ -55,7 +108,7 @@ class _HomeState extends State<Home> {
 
   _HomeState() : super() {
     _controller.addListener(
-      () {
+          () {
         setHomeScrollOffset(_controller.offset);
       },
     );
@@ -93,11 +146,13 @@ class _HomeState extends State<Home> {
   }
 
   void executeQuery(BuildContext context, String query) {
-    Provider.of<MapsDataProvider>(context, listen: false)
+    Provider
+        .of<MapsDataProvider>(context, listen: false)
         .searchBarController
         .text = query;
     Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-    Provider.of<BottomNavigationBarProvider>(context, listen: false)
+    Provider
+        .of<BottomNavigationBarProvider>(context, listen: false)
         .currentIndex = NavigatorConstants.MapTab;
     Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
@@ -120,9 +175,13 @@ class _HomeState extends State<Home> {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> orderedCards =
-        getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder!);
+    getOrderedCardsList(Provider
+        .of<CardsDataProvider>(context)
+        .cardOrder!);
     List<Widget> noticesCards = getNoticesCardsList(
-        Provider.of<NoticesDataProvider>(context).noticesModel!);
+        Provider
+            .of<NoticesDataProvider>(context)
+            .noticesModel!);
 
     return noticesCards + orderedCards;
   }
@@ -138,7 +197,9 @@ class _HomeState extends State<Home> {
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = [];
     Map<String, CardsModel?>? webCards =
-        Provider.of<CardsDataProvider>(context, listen: false).webCards;
+        Provider
+            .of<CardsDataProvider>(context, listen: false)
+            .webCards;
 
     for (String card in order) {
       if (!webCards!.containsKey(card)) {
@@ -194,29 +255,26 @@ class _HomeState extends State<Home> {
         }
       } else {
         // dynamically insert webCards into the list
-        orderedCards.add(MeasuredSize(onChange: (Size size) {
-          setState(() {
-            if (!webViewCardHeights.containsKey(card) ||
-                size.height > webViewCardHeights[card]!) {
-              webViewCardHeights[card] = size.height;
-              debugPrint("current min height: " + size.height.toString());
-            }
-          });
-        }, child: Builder(builder: (BuildContext context) {
-          final currentCard = card;
-          return ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: webViewCardHeights[currentCard] ?? 0.0,
-              ),
-              child: WebViewContainer(
-                titleText: webCards[currentCard]!.titleText,
-                initialUrl: webCards[currentCard]!.initialURL,
-                cardId: currentCard,
-                requireAuth: webCards[currentCard]!.requireAuth,
-              ));
-        })));
-      }
-    }
-    return orderedCards;
-  }
+        orderedCards.add(MeasureSize(
+          onChange: (Size size) {
+            setNewCardHeight(card, size.height);
+          },
+          child: Builder(builder: (BuildContext context) {
+            final currentCard = card;
+            return ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: webViewCardHeights[currentCard] ?? 0.0,
+                ),
+                child: WebViewContainer(
+                  titleText: webCards[currentCard]!.titleText,
+                  initialUrl: webCards[currentCard]!.initialURL,
+                  cardId: currentCard,
+                  requireAuth: webCards[currentCard]!.requireAuth,
+                ));
+          }),
+        ));
+        }
+        }
+            return orderedCards;
+        }
 }
