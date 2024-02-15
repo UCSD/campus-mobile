@@ -36,6 +36,8 @@ import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:flutter/rendering.dart';
 
+import '../common/card_container.dart';
+
 //--- code to track size changes of dynamic web card widget content ---
 typedef void OnWidgetSizeChange(Size size);
 
@@ -81,16 +83,25 @@ class MeasureSize extends SingleChildRenderObjectWidget {
 }
 
 Map<String, double> webViewCardHeights = {};
+Map<String, bool> webViewCardNotLoaded = {};
 
 void resetCardHeight(String card) {
   webViewCardHeights[card] = 0.0;
 }
 
+void resetAllCardHeights() {
+  webViewCardHeights.clear();
+}
+
+void resetAllCardLoadedStates() {
+  webViewCardNotLoaded.clear();
+}
+
 void setNewCardHeight(String card, double height) {
   if (!webViewCardHeights.containsKey(card) ||
       height > webViewCardHeights[card]!) {
+    webViewCardNotLoaded[card] = false;
     webViewCardHeights[card] = height;
-    debugPrint("current min height: " + height.toString());
   }
 }
 //---------------------------------------------------------------------
@@ -108,7 +119,7 @@ class _HomeState extends State<Home> {
 
   _HomeState() : super() {
     _controller.addListener(
-          () {
+      () {
         setHomeScrollOffset(_controller.offset);
       },
     );
@@ -146,13 +157,11 @@ class _HomeState extends State<Home> {
   }
 
   void executeQuery(BuildContext context, String query) {
-    Provider
-        .of<MapsDataProvider>(context, listen: false)
+    Provider.of<MapsDataProvider>(context, listen: false)
         .searchBarController
         .text = query;
     Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-    Provider
-        .of<BottomNavigationBarProvider>(context, listen: false)
+    Provider.of<BottomNavigationBarProvider>(context, listen: false)
         .currentIndex = NavigatorConstants.MapTab;
     Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
@@ -175,13 +184,9 @@ class _HomeState extends State<Home> {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> orderedCards =
-    getOrderedCardsList(Provider
-        .of<CardsDataProvider>(context)
-        .cardOrder!);
+        getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder!);
     List<Widget> noticesCards = getNoticesCardsList(
-        Provider
-            .of<NoticesDataProvider>(context)
-            .noticesModel!);
+        Provider.of<NoticesDataProvider>(context).noticesModel!);
 
     return noticesCards + orderedCards;
   }
@@ -197,9 +202,7 @@ class _HomeState extends State<Home> {
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = [];
     Map<String, CardsModel?>? webCards =
-        Provider
-            .of<CardsDataProvider>(context, listen: false)
-            .webCards;
+        Provider.of<CardsDataProvider>(context, listen: false).webCards;
 
     for (String card in order) {
       if (!webCards!.containsKey(card)) {
@@ -255,26 +258,78 @@ class _HomeState extends State<Home> {
         }
       } else {
         // dynamically insert webCards into the list
-        orderedCards.add(MeasureSize(
-          onChange: (Size size) {
-            setNewCardHeight(card, size.height);
-          },
-          child: Builder(builder: (BuildContext context) {
-            final currentCard = card;
-            return ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: webViewCardHeights[currentCard] ?? 0.0,
+        orderedCards.add(StatefulBuilder(
+          builder: (context, setState) {
+            var currentCard = card;
+            if (webViewCardNotLoaded[currentCard] == null) {
+              webViewCardNotLoaded[currentCard] = true;
+            }
+            return Stack(children: <Widget>[
+              MeasureSize(
+                onChange: (Size size) {
+                  print("Size Check Called!");
+                  print(
+                      "- Saved Height: " + webViewCardHeights[card].toString());
+                  print("- New Height: " + size.height.toString());
+                  setNewCardHeight(card, size.height);
+                  print("equality Check = " +
+                      (size.height == webViewCardHeights[card]).toString());
+                  if (size.height == webViewCardHeights[card]) {
+                    webViewCardNotLoaded[card] = false;
+                  } else {
+                    webViewCardNotLoaded[card] = true;
+                  }
+                  print("visibility: " + webViewCardNotLoaded[card].toString());
+                  setState(() {});
+                },
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: WebViewContainer(
+                    titleText: webCards[currentCard]!.titleText,
+                    initialUrl: webCards[currentCard]!.initialURL,
+                    cardId: currentCard,
+                    requireAuth: webCards[currentCard]!.requireAuth,
+                  ),
                 ),
-                child: WebViewContainer(
-                  titleText: webCards[currentCard]!.titleText,
-                  initialUrl: webCards[currentCard]!.initialURL,
-                  cardId: currentCard,
-                  requireAuth: webCards[currentCard]!.requireAuth,
-                ));
-          }),
+              ),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: webViewCardHeights[currentCard] ?? 0.0,
+                    minWidth: 400.0),
+                child: Builder(builder: (BuildContext context) {
+                  final currentCard = card;
+                  return Visibility(
+                    visible: webViewCardNotLoaded[currentCard]!,
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: Colors.white,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ]);
+          },
         ));
-        }
-        }
-            return orderedCards;
-        }
+      }
+    }
+    return orderedCards;
+  }
 }

@@ -76,16 +76,19 @@ class _BottomTabBarState extends State<BottomTabBar> {
                   .changeTitle(null);
               break;
             case NavigatorConstants.MapTab:
+              resetAllCardLoadedStates();
               Provider.of<CustomAppBar>(context, listen: false)
                   .changeTitle("Maps");
               break;
             case NavigatorConstants.NotificationsTab:
+              resetAllCardLoadedStates();
               Provider.of<CustomAppBar>(context, listen: false).changeTitle(
                   "Notifications",
                   done: false,
                   notification: true);
               break;
             case NavigatorConstants.ProfileTab:
+              resetAllCardLoadedStates();
               Provider.of<CustomAppBar>(context, listen: false)
                   .changeTitle("Profile");
               break;

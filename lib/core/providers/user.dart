@@ -17,6 +17,8 @@ import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
 
+import '../../ui/home/home.dart';
+
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
     ///DEFAULT STATES
@@ -215,6 +217,7 @@ class UserDataProvider extends ChangeNotifier {
       final String base64EncodedWithEncryptedPassword =
           base64.encode(utf8.encode(username + ':' + encryptedPassword));
       resetHomeScrollOffset();
+      resetAllCardHeights();
       resetNotificationsScrollOffset();
       if (await _authenticationService
           .silentLogin(base64EncodedWithEncryptedPassword)) {
@@ -248,6 +251,7 @@ class UserDataProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     resetHomeScrollOffset();
+    resetAllCardHeights();
     resetNotificationsScrollOffset();
     _pushNotificationDataProvider
         .unregisterDevice(_authenticationModel!.accessToken);
