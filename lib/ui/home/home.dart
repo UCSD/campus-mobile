@@ -267,19 +267,12 @@ class _HomeState extends State<Home> {
             return Stack(children: <Widget>[
               MeasureSize(
                 onChange: (Size size) {
-                  print("Size Check Called!");
-                  print(
-                      "- Saved Height: " + webViewCardHeights[card].toString());
-                  print("- New Height: " + size.height.toString());
                   setNewCardHeight(card, size.height);
-                  print("equality Check = " +
-                      (size.height == webViewCardHeights[card]).toString());
                   if (size.height == webViewCardHeights[card]) {
                     webViewCardNotLoaded[card] = false;
                   } else {
                     webViewCardNotLoaded[card] = true;
                   }
-                  print("visibility: " + webViewCardNotLoaded[card].toString());
                   setState(() {});
                 },
                 child: Align(
@@ -308,7 +301,7 @@ class _HomeState extends State<Home> {
                           ),
                           Expanded(
                             child: Container(
-                              color: Colors.white,
+                              color: Theme.of(context).cardColor,
                               child: Center(
                                 child: CircularProgressIndicator(
                                   color: Theme.of(context).colorScheme.secondary,
