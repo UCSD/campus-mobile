@@ -2,20 +2,20 @@ import 'dart:collection';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
-import 'package:campus_mobile_experimental/core/models/notifications_IAmGoing.dart';
+import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:campus_mobile_experimental/core/services/notifications_IAmGoing.dart';
+import 'package:campus_mobile_experimental/core/services/notifications_freefood.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-class IAmGoingProvider extends ChangeNotifier {
-  IAmGoingProvider() {
+class FreeFoodDataProvider extends ChangeNotifier {
+  FreeFoodDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
 
     ///INITIALIZE SERVICES
     _freeFoodService = FreeFoodService();
-    _freeFoodModel = IAmGoingModel();
+    _freeFoodModel = FreeFoodModel();
 
     ///INITIALIZE VALUES
     initializeValues();
@@ -33,7 +33,7 @@ class IAmGoingProvider extends ChangeNotifier {
   String? _error;
 
   ///MODELS
-  IAmGoingModel? _freeFoodModel;
+  FreeFoodModel? _freeFoodModel;
   late MessagesDataProvider _messageDataProvider;
 
   ///SERVICES
@@ -51,15 +51,13 @@ class IAmGoingProvider extends ChangeNotifier {
     _registeredEvents!.remove(id);
   }
 
-  //parses event message topic to determine if it is an IAmGoing event
   void parseMessages() {
     // initializeValues();
     List<MessageElement?> messages = _messageDataProvider.messages!;
     messages.forEach((m) async {
       if (m!.audience != null &&
           m.audience!.topics != null &&
-          (m.audience!.topics!.contains("freeFood") ||
-              m.audience!.topics!.contains("campusInnovationEvents"))) {
+          m.audience!.topics!.contains("freeFood")) {
         fetchCount(m.messageId!);
         fetchMaxCount(m.messageId!);
       }
@@ -191,11 +189,8 @@ class IAmGoingProvider extends ChangeNotifier {
 
   ///SIMPLE GETTERS
   String? get error => _error;
-
   DateTime? get lastUpdated => _lastUpdated;
-
-  IAmGoingModel? get freeFoodModel => _freeFoodModel;
-
+  FreeFoodModel? get freeFoodModel => _freeFoodModel;
   List<String>? get registeredEvents => _registeredEvents;
 
   bool isLoading(String? id) => id == _curId;
