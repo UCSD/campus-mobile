@@ -59,6 +59,23 @@ class _LoginState extends State<Login> {
     );
   }
 
+  /// Parses username by removing trailing spaces and characters + making all
+  /// letters lowercase
+  /// (necessary due to the way SSO is currently set up since it only check if
+  /// the first characters of the input are a valid username, irrespective of
+  /// trailing characters and capitaliation, which can lead to usernames
+  /// displaying very weirdly in our app (e.g., mixed capitalizatio and random
+  /// trailing characters if input in that manner))
+  String parseUsername (String username) {
+    username = username.toLowerCase();
+    RegExpMatch? match = RegExp(r'ucsd.edu').firstMatch(username);
+    if (match != null) {
+      return username.substring(0, match.end);
+    } else {
+      return username;
+    }
+  }
+
   Widget buildUserProfileTile(BuildContext context) {
     return ListTile(
       leading: Icon(
@@ -67,7 +84,7 @@ class _LoginState extends State<Login> {
       ),
       title: Text(
         _userDataProvider.userProfileModel!.username != null
-            ? _userDataProvider.userProfileModel!.username!
+            ? parseUsername(_userDataProvider.userProfileModel!.username!)
             : "",
         style: TextStyle(fontSize: 17),
       ),
