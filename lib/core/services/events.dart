@@ -5,7 +5,7 @@ import 'package:campus_mobile_experimental/core/models/events.dart';
 
 class EventsService {
   final String endpoint =
-      'https://hmczfnmm84.execute-api.us-west-2.amazonaws.com/qa/v2/events/student';
+      'https://hmczfnmm84.execute-api.us-west-2.amazonaws.com/qa/v1/events/student';
 
   bool _isLoading = false;
   DateTime? _lastUpdated;

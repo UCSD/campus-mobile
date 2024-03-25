@@ -14,6 +14,8 @@ class ParkingService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
+    "Authorization":
+        "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
   };
 
   final String campusParkingServiceApiUrl =
@@ -32,35 +34,8 @@ class ParkingService {
       _isLoading = false;
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await getNewToken()) {
-          return await fetchParkingLotData();
-        }
-      }
       _error = e.toString();
       _isLoading = false;
-      return false;
-    }
-  }
-
-  Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
-    final Map<String, String> tokenHeaders = {
-      "content-type": 'application/x-www-form-urlencoded',
-      "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
-    };
-    try {
-      var response = await _networkHelper.authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-
-      headers["Authorization"] = "Bearer " + response["access_token"];
-
-      return true;
-    } catch (e) {
-      _error = e.toString();
       return false;
     }
   }
