@@ -1,9 +1,11 @@
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/parking_getx.dart';
 import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class SpotTypesView extends StatefulWidget {
   @override
@@ -11,10 +13,12 @@ class SpotTypesView extends StatefulWidget {
 }
 
 class _SpotTypesViewState extends State<SpotTypesView> {
-  late ParkingDataProvider spotTypesDataProvider;
+  ParkingGetX parkingController = Get.find();
+
+  // late ParkingDataProvider spotTypesDataProvider;
   @override
   Widget build(BuildContext context) {
-    spotTypesDataProvider = Provider.of<ParkingDataProvider>(context);
+    // spotTypesDataProvider = Provider.of<ParkingDataProvider>(context);
     return ContainerView(
       child: createListWidget(context),
     );
@@ -27,9 +31,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
   List<Widget> createList(BuildContext context) {
     int selectedSpots = 0;
     List<Widget> list = [];
-    for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
-      if (Provider.of<ParkingDataProvider>(context)
-              .spotTypesState![data.spotKey]! ==
+    for (Spot data in parkingController.spotTypeModel!.spots!) {
+      if (parkingController.selectedSpotTypesState.value![data.spotKey]! ==
           true) {
         selectedSpots++;
       }
@@ -56,11 +59,9 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                       ))),
         title: Text(data.name!),
         trailing: Switch(
-          value: Provider.of<ParkingDataProvider>(context)
-              .spotTypesState![data.spotKey]!,
+          value: parkingController.selectedSpotTypesState.value![data.spotKey]!,
           onChanged: (_) {
-            spotTypesDataProvider.toggleSpotSelection(
-                data.spotKey, selectedSpots);
+            parkingController.toggleSpotSelection(data.spotKey, selectedSpots);
           },
           // activeColor: Theme.of(context).buttonColor,
           activeColor: Theme.of(context).backgroundColor,

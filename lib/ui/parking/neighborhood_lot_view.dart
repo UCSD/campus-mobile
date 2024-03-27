@@ -1,7 +1,9 @@
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/parking_getx.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class NeighborhoodLotsView extends StatefulWidget {
   final List<String> args;
@@ -11,12 +13,13 @@ class NeighborhoodLotsView extends StatefulWidget {
 }
 
 class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
-  late ParkingDataProvider parkingDataProvider;
+  ParkingGetX parkingController = Get.find();
+  // late ParkingDataProvider parkingDataProvider;
   bool showedScaffold = false;
 
   @override
   Widget build(BuildContext context) {
-    parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+    // parkingDataProvider = Provider.of<ParkingDataProvider>(context);
     return ContainerView(
       child: lotsList(context),
     );
@@ -42,14 +45,14 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
     ));
 
     int selectedLots = 0;
-    parkingDataProvider.parkingViewState!.forEach((key, value) {
+    parkingController.parkingViewState.value!.forEach((key, value) {
       if (value == true) {
         selectedLots++;
       }
     });
     // loops through and adds buttons for the user to click on
     for (int i = 0; i < arguments.length; i++) {
-      bool lotState = parkingDataProvider.parkingViewState![arguments[i]]!;
+      bool lotState = parkingController.parkingViewState.value![arguments[i]]!;
       list.add(
         ListTile(
           title: Padding(
@@ -73,7 +76,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
               ));
               showedScaffold = !showedScaffold;
             }
-            parkingDataProvider.toggleLot(arguments[i], selectedLots);
+            parkingController.toggleLot(arguments[i], selectedLots);
           },
         ),
       );

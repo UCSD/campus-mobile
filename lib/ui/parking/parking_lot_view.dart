@@ -1,19 +1,22 @@
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/parking_getx.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class ParkingLotsView extends StatefulWidget {
   _ParkingLotViewState createState() => _ParkingLotViewState();
 }
 
 class _ParkingLotViewState extends State<ParkingLotsView> {
-  late ParkingDataProvider parkingDataProvider;
+  ParkingGetX parkingController = Get.find();
+  // late ParkingDataProvider parkingDataProvider;
   bool showedScaffold = false;
 
   @override
   Widget build(BuildContext context) {
-    parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+    // parkingDataProvider = Provider.of<ParkingDataProvider>(context);
     return ContainerView(
       child: parkingLotsList(context),
     );
@@ -21,7 +24,7 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
 
   // builds the listview that will be put into ContainerView
   Widget parkingLotsList(BuildContext context) {
-    List<String> lots = Provider.of<ParkingDataProvider>(context).getLots();
+    List<String> lots = parkingController.getLots();
     // creates a list that will hold the list of building names
     List<Widget> list = [];
     list.add(ListTile(
@@ -38,14 +41,14 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
     ));
 
     int selectedLots = 0;
-    parkingDataProvider.parkingViewState!.forEach((key, value) {
+    parkingController.parkingViewState.value!.forEach((key, value) {
       if (value == true) {
         selectedLots++;
       }
     });
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < lots.length; i++) {
-      bool lotViewState = parkingDataProvider.parkingViewState![lots[i]]!;
+      bool lotViewState = parkingController.parkingViewState.value![lots[i]]!;
       list.add(
         ListTile(
           title: Padding(
@@ -70,7 +73,7 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
               ));
               showedScaffold = !showedScaffold;
             }
-            parkingDataProvider.toggleLot(lots[i], selectedLots);
+            parkingController.toggleLot(lots[i], selectedLots);
           },
         ),
       );

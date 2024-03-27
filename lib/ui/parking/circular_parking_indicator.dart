@@ -1,17 +1,20 @@
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/parking_getx.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class CircularParkingIndicators extends StatelessWidget {
-  const CircularParkingIndicators({
+  CircularParkingIndicators({
     Key? key,
     required this.model,
   }) : super(key: key);
 
   final ParkingModel model;
+  final ParkingGetX parkingController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +31,9 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Widget buildAllParkingAvailability(BuildContext context) {
     List<Widget> listOfCircularParkingInfo = [];
-
     List<String> selectedSpots = [];
 
-    Provider.of<ParkingDataProvider>(context)
-        .spotTypesState!
-        .forEach((key, value) {
+    parkingController.selectedSpotTypesState.value!.forEach((key, value) {
       if (value && selectedSpots.length < 4) {
         selectedSpots.add(key!);
       }
@@ -41,7 +41,7 @@ class CircularParkingIndicators extends StatelessWidget {
     for (String spot in selectedSpots) {
       if (model.availability != null) {
         listOfCircularParkingInfo.add(buildCircularParkingInfo(
-            Provider.of<ParkingDataProvider>(context).spotTypeMap![spot],
+            parkingController.spotTypeMap.value![spot],
             model.availability![spot],
             context));
       }
@@ -246,11 +246,11 @@ class CircularParkingIndicators extends StatelessWidget {
   Widget buildSpotsAvailableText(BuildContext context) {
     return Center(
       child: Text("~" +
-          Provider.of<ParkingDataProvider>(context)
+          parkingController
               .getApproxNumOfOpenSpots(model.locationName)["Open"]
               .toString() +
           " of " +
-          Provider.of<ParkingDataProvider>(context)
+          parkingController
               .getApproxNumOfOpenSpots(model.locationName)["Total"]
               .toString() +
           " Spots Available"),
