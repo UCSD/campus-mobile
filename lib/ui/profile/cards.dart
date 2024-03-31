@@ -33,11 +33,7 @@ class _CardsViewState extends State<CardsView> {
           child: const Text(
               "Hold and Drag to Reorder",
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                // fontFamily: "Inter",
-                // fontWeight: FontWeight.w300,
-                color: const Color(0xFF9A9999)
-              )
+              style: const TextStyle(color: const Color(0xFF9A9999))
           ),
         ),
         children: createList(context),
@@ -101,11 +97,11 @@ class _CardsViewState extends State<CardsView> {
             padding: EdgeInsets.all(cardPaddingInner),
             child: ListTile(
               leading: Icon(Icons.reorder),
-              title: Text(_cardsDataProvider!.availableCards![card]!.titleText!),
+              title: Text(_cardsDataProvider.availableCards[card]!.titleText!),
               trailing: Switch(
-                value: _cardsDataProvider!.cardStates![card]!,
+                value: _cardsDataProvider.cardStates![card]!,
                 onChanged: (_) {
-                  _cardsDataProvider!.toggleCard(card);
+                  _cardsDataProvider.toggleCard(card);
                 },
                 activeColor: Theme.of(context).backgroundColor,
               ),

@@ -78,115 +78,64 @@ class CardsDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-
     if (await _cardsService.fetchCards(ucsdAffiliation)) {
-      _availableCards = _cardsService.cardsModel;
+      _availableCards = _cardsService.cardsModel!;
       _lastUpdated = DateTime.now();
-
       if (_availableCards!.isNotEmpty) {
-        _removeInactiveCards();
-        _addActiveWebCards();
-        _addNewCards();
+        // remove all inactive or non-existent cards from [_cardOrder]
+        var tempCardOrder = List.from(_cardOrder);
+        for (String card in tempCardOrder) {
+          // check to see if card no longer exists
+          if (_availableCards![card] == null) {
+            _cardOrder.remove(card);
+          }
+          // check to see if card is not active
+          else if (!(_availableCards![card]!.cardActive ?? false)) {
+            _cardOrder.remove(card);
+          }
+        }
+        // remove all inactive or non-existent cards from [_cardStates]
+        var tempCardStates = Map.from(_cardStates);
+        for (String card in tempCardStates.keys) {
+          // check to see if card no longer exists
+          if (_availableCards![card] == null) {
+            _cardStates.remove(card);
+          }
+          // check to see if card is not active
+          else if (!(_availableCards![card]!.cardActive ?? false)) {
+            _cardStates.remove(card);
+          }
+        }
+
+        // add active webCards
+        for (String card in _cardStates.keys) {
+          if (_availableCards![card]!.isWebCard!) {
+            _webCards[card] = _availableCards![card];
+          }
+        }
+        // add new cards to the top of the list
+        for (String card in _availableCards!.keys) {
+          if (_studentCards.contains(card)) continue;
+          if (_staffCards.contains(card)) continue;
+          if (!_cardOrder.contains(card) &&
+              (_availableCards![card]!.cardActive ?? false)) {
+            _cardOrder.insert(0, card);
+          }
+          // keep all new cards activated by default
+          if (!_cardStates.containsKey(card)) {
+            _cardStates[card] = true;
+          }
+        }
         updateCardOrder(_cardOrder);
-        updateCardStates(_cardStates.keys.where((card) => _cardStates[card]!).toList());
+        updateCardStates(
+            _cardStates.keys.where((card) => _cardStates[card]!).toList());
       }
     } else {
       _error = _cardsService.error;
     }
-
     _isLoading = false;
     notifyListeners();
   }
-
-  void _removeInactiveCards() {
-    _cardOrder.removeWhere((card) => _availableCards![card]?.cardActive == false);
-    _cardStates.removeWhere((card, _) => _availableCards![card]?.cardActive == false);
-  }
-
-  void _addActiveWebCards() {
-    _cardStates.forEach((card, _) {
-      if (_availableCards![card]?.isWebCard == true) {
-        _webCards[card] = _availableCards![card];
-      }
-    });
-  }
-
-  void _addNewCards() {
-    _availableCards!.forEach((card, model) {
-      if (!_studentCards.contains(card) &&
-          !_staffCards.contains(card) &&
-          !_cardOrder.contains(card) &&
-          (model.cardActive ?? false)) {
-        _cardOrder.insert(0, card);
-      }
-      if (!_cardStates.containsKey(card)) {
-        _cardStates[card] = true;
-      }
-    });
-  }
-
-  // void updateAvailableCards(String? ucsdAffiliation) async {
-  //   _isLoading = true;
-  //   _error = null;
-  //   notifyListeners();
-  //   if (await _cardsService.fetchCards(ucsdAffiliation)) {
-  //     _availableCards = _cardsService.cardsModel!;
-  //     _lastUpdated = DateTime.now();
-  //     if (_availableCards!.isNotEmpty) {
-  //       // remove all inactive or non-existent cards from [_cardOrder]
-  //       var tempCardOrder = List.from(_cardOrder);
-  //       for (String card in tempCardOrder) {
-  //         // check to see if card no longer exists
-  //         if (_availableCards![card] == null) {
-  //           _cardOrder.remove(card);
-  //         }
-  //         // check to see if card is not active
-  //         else if (!(_availableCards![card]!.cardActive ?? false)) {
-  //           _cardOrder.remove(card);
-  //         }
-  //       }
-  //       // remove all inactive or non-existent cards from [_cardStates]
-  //       var tempCardStates = Map.from(_cardStates);
-  //       for (String card in tempCardStates.keys) {
-  //         // check to see if card no longer exists
-  //         if (_availableCards![card] == null) {
-  //           _cardStates.remove(card);
-  //         }
-  //         // check to see if card is not active
-  //         else if (!(_availableCards![card]!.cardActive ?? false)) {
-  //           _cardStates.remove(card);
-  //         }
-  //       }
-  //
-  //       // add active webCards
-  //       for (String card in _cardStates.keys) {
-  //         if (_availableCards![card]!.isWebCard!) {
-  //           _webCards[card] = _availableCards![card];
-  //         }
-  //       }
-  //       // add new cards to the top of the list
-  //       for (String card in _availableCards!.keys) {
-  //         if (_studentCards.contains(card)) continue;
-  //         if (_staffCards.contains(card)) continue;
-  //         if (!_cardOrder.contains(card) &&
-  //             (_availableCards![card]!.cardActive ?? false)) {
-  //           _cardOrder.insert(0, card);
-  //         }
-  //         // keep all new cards activated by default
-  //         if (!_cardStates.containsKey(card)) {
-  //           _cardStates[card] = true;
-  //         }
-  //       }
-  //       updateCardOrder(_cardOrder);
-  //       updateCardStates(
-  //           _cardStates.keys.where((card) => _cardStates[card]!).toList());
-  //     }
-  //   } else {
-  //     _error = _cardsService.error;
-  //   }
-  //   _isLoading = false;
-  //   notifyListeners();
-  // }
 
   Future changeInternetStatus(noInternet) async {
     _noInternet = noInternet;
