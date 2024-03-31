@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -92,17 +93,23 @@ class _CardsViewState extends State<CardsView> {
     for (String card in _cardsDataProvider.cardOrder!) {
       if (card == 'NativeScanner') continue;
       try {
-        list.add(ListTile(
-          leading: Icon(Icons.reorder),
+        list.add(Card(
           key: Key(card),
-          title: Text(_cardsDataProvider.availableCards[card]!.titleText!),
-          trailing: Switch(
-            value: _cardsDataProvider.cardStates![card]!,
-            onChanged: (_) {
-              _cardsDataProvider.toggleCard(card);
-            },
-            // activeColor: Theme.of(context).buttonColor,
-            activeColor: Theme.of(context).backgroundColor,
+          elevation: 2.0,
+          margin: EdgeInsets.all(cardMargin),
+          child: Padding(
+            padding: EdgeInsets.all(cardPaddingInner),
+            child: ListTile(
+              leading: Icon(Icons.reorder),
+              title: Text(_cardsDataProvider!.availableCards![card]!.titleText!),
+              trailing: Switch(
+                value: _cardsDataProvider!.cardStates![card]!,
+                onChanged: (_) {
+                  _cardsDataProvider!.toggleCard(card);
+                },
+                activeColor: Theme.of(context).backgroundColor,
+              ),
+            ),
           ),
         ));
       } catch (e) {
