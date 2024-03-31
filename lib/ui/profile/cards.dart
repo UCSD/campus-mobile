@@ -11,7 +11,7 @@ class CardsView extends StatefulWidget {
 }
 
 class _CardsViewState extends State<CardsView> {
-  CardsDataProvider? _cardsDataProvider;
+  late CardsDataProvider _cardsDataProvider;
 
   @override
   void initState() {
@@ -27,11 +27,23 @@ class _CardsViewState extends State<CardsView> {
 
   Widget buildCardsList(BuildContext context) {
     var tempView = new ReorderableListView(
-      children: createList(context),
-      onReorder: _onReorder,
+        header: Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: const Text(
+              "Hold and Drag to Reorder",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                // fontFamily: "Inter",
+                // fontWeight: FontWeight.w300,
+                color: const Color(0xFF9A9999)
+              )
+          ),
+        ),
+        children: createList(context),
+        onReorder: _onReorder
     );
 
-    if (_cardsDataProvider!.noInternet!) {
+    if (_cardsDataProvider.noInternet!) {
       Future.delayed(
           Duration.zero,
           () => {
@@ -57,9 +69,9 @@ class _CardsViewState extends State<CardsView> {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    List<String> newOrder = _cardsDataProvider!.cardOrder!;
+    List<String> newOrder = _cardsDataProvider.cardOrder!;
     List<String> toRemove = [];
-    if (_cardsDataProvider!.cardOrder!.contains('NativeScanner')) {
+    if (_cardsDataProvider.cardOrder!.contains('NativeScanner')) {
       toRemove.add('NativeScanner');
     }
 
@@ -71,23 +83,23 @@ class _CardsViewState extends State<CardsView> {
       orderList.add(item);
     }
     orderList.addAll(toRemove.toList());
-    _cardsDataProvider!.updateCardOrder(orderList);
+    _cardsDataProvider.updateCardOrder(orderList);
     setState(() {});
   }
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
-    for (String card in _cardsDataProvider!.cardOrder!) {
+    for (String card in _cardsDataProvider.cardOrder!) {
       if (card == 'NativeScanner') continue;
       try {
         list.add(ListTile(
           leading: Icon(Icons.reorder),
           key: Key(card),
-          title: Text(_cardsDataProvider!.availableCards![card]!.titleText!),
+          title: Text(_cardsDataProvider.availableCards[card]!.titleText!),
           trailing: Switch(
-            value: _cardsDataProvider!.cardStates![card]!,
+            value: _cardsDataProvider.cardStates![card]!,
             onChanged: (_) {
-              _cardsDataProvider!.toggleCard(card);
+              _cardsDataProvider.toggleCard(card);
             },
             // activeColor: Theme.of(context).buttonColor,
             activeColor: Theme.of(context).backgroundColor,
@@ -99,7 +111,7 @@ class _CardsViewState extends State<CardsView> {
             e, StackTrace.fromString(e.toString()),
             reason: "Profile/Cards: Failed to load Cards page", fatal: false);
 
-        _cardsDataProvider!.changeInternetStatus(true);
+        _cardsDataProvider.changeInternetStatus(true);
       }
     }
 
