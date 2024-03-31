@@ -9,6 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
 class NeighborhoodsView extends StatefulWidget {
+  final Function args;
+  const NeighborhoodsView(this.args);
+
   _NeighborhoodsViewState createState() => _NeighborhoodsViewState();
 }
 
@@ -60,7 +63,10 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
             // Navigator.pushNamed(context, RoutePaths.NeighborhoodsLotsView,
             //     arguments: value);
             // arguments: {'building': 'Atkinson Hall'},
-            Get.to(() => NeighborhoodLotsView(value!));
+            Get.toNamed(RoutePaths.NeighborhoodsLotsView, arguments: {
+              "stringList": value,
+              "rebuildParkingCard": widget.args
+            });
           },
         ));
       }

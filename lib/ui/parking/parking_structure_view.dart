@@ -6,6 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
 class ParkingStructureView extends StatefulWidget {
+  final Function args;
+  const ParkingStructureView(this.args);
+
   _ParkingStructureViewState createState() => _ParkingStructureViewState();
 }
 
@@ -78,6 +81,8 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
               showedScaffold = !showedScaffold;
             }
             parkingController.toggleLot(structures[i], selectedLots);
+            setState(() {});
+            widget.args();
           },
         ),
       );

@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
 class SpotTypesView extends StatefulWidget {
+  final Function args;
+  const SpotTypesView(this.args);
+
   @override
   _SpotTypesViewState createState() => _SpotTypesViewState();
 }
@@ -62,6 +65,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
           value: parkingController.selectedSpotTypesState.value![data.spotKey]!,
           onChanged: (_) {
             parkingController.toggleSpotSelection(data.spotKey, selectedSpots);
+            setState(() {});
+            widget.args();
           },
           // activeColor: Theme.of(context).buttonColor,
           activeColor: Theme.of(context).backgroundColor,

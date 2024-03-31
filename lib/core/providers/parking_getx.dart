@@ -18,7 +18,7 @@ class ParkingGetX extends GetxController {
   int selectedLots = 0, selectedSpots = 0;
   static const MAX_SELECTED_LOTS = 10;
   static const MAX_SELECTED_SPOTS = 3;
-  static Function rebuildParkingCard = () => {};
+  // var rebuildParkingCard = null.obs;
 
   Rx<Map<String?, bool>?> parkingViewState =
       Rx<Map<String?, bool>?>(<String?, bool>{}.obs);

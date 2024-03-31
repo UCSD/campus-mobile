@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
 class NeighborhoodLotsView extends StatefulWidget {
-  final List<String> args;
+  final Map<String, dynamic> args;
   const NeighborhoodLotsView(this.args);
 
   _NeighborhoodLotsViewState createState() => _NeighborhoodLotsViewState();
@@ -27,7 +27,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
 
   // builds the listview that will be put into ContainerView
   Widget lotsList(BuildContext context) {
-    List<String> arguments = widget.args;
+    List<String> arguments = widget.args["stringList"];
 
     // creates a list that will hold the list of building names
     List<Widget> list = [];
@@ -77,6 +77,8 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
               showedScaffold = !showedScaffold;
             }
             parkingController.toggleLot(arguments[i], selectedLots);
+            setState(() {});
+            widget.args["rebuildParkingCard"]();
           },
         ),
       );

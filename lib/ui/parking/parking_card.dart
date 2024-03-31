@@ -26,12 +26,13 @@ class _ParkingCardState extends State<ParkingCard> {
   final _controller = new PageController();
   String cardId = 'parking';
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    parkingController = Get.find();
-    // _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   // parkingController = Get.find();
+  //   print("\n\n\nmeep\n\n\n");
+  //   // _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+  // }
 
   // ignore: must_call_super
   Widget build(BuildContext context) {
@@ -126,7 +127,7 @@ class _ParkingCardState extends State<ParkingCard> {
       ),
       onPressed: () {
         // Navigator.pushNamed(context, RoutePaths.ManageParkingView);
-        Get.to(() => ManageParkingView());
+        Get.toNamed(RoutePaths.ManageParkingView, arguments: callSetState);
       },
     ));
     actionButtons.add(TextButton(
@@ -139,9 +140,13 @@ class _ParkingCardState extends State<ParkingCard> {
       ),
       onPressed: () {
         // Navigator.pushNamed(context, RoutePaths.SpotTypesView);
-        Get.to(() => SpotTypesView());
+        Get.toNamed(RoutePaths.SpotTypesView, arguments: callSetState);
       },
     ));
     return actionButtons;
+  }
+
+  void callSetState() {
+    setState(() {});
   }
 }

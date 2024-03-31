@@ -9,6 +9,9 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class ManageParkingView extends StatefulWidget {
+  final Function args;
+  const ManageParkingView(this.args);
+
   _ManageParkingViewState createState() => _ManageParkingViewState();
 }
 
@@ -57,21 +60,22 @@ class _ManageParkingViewState extends State<ManageParkingView> {
             //   context,
             //   RoutePaths.NeighborhoodsView,
             // );
-            Get.to(() => NeighborhoodsView());
+            Get.toNamed(RoutePaths.NeighborhoodsView, arguments: widget.args);
           }
           if (i == 1) {
             // Navigator.pushNamed(
             //   context,
             //   RoutePaths.ParkingStructureView,
             // );
-            Get.to(() => ParkingStructureView());
+            Get.toNamed(RoutePaths.ParkingStructureView,
+                arguments: widget.args);
           }
           if (i == 2) {
             // Navigator.pushNamed(
             //   context,
             //   RoutePaths.ParkingLotsView,
             // );
-            Get.to(() => ParkingLotsView());
+            Get.toNamed(RoutePaths.ParkingLotsView, arguments: widget.args);
           }
         },
       ));

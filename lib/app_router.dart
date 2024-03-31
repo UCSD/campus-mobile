@@ -148,14 +148,16 @@ class Router {
                   disclaimerEmail: disclaimerEmail,
                 ));
       case RoutePaths.ManageParkingView:
+        Function data = settings.arguments as Function;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ManageParkingView();
+          return ManageParkingView(data);
         });
       case RoutePaths.SpotTypesView:
+        Function data = settings.arguments as Function;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return SpotTypesView();
+          return SpotTypesView(data);
         });
       case RoutePaths.ManageShuttleView:
         return MaterialPageRoute(builder: (_) {
@@ -183,35 +185,34 @@ class Router {
           return ClassList();
         });
       case RoutePaths.ManageParkingView:
+        Function data = settings.arguments as Function;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ManageParkingView();
+          return ManageParkingView(data);
         });
       case RoutePaths.ParkingLotsView:
+        Function data = settings.arguments as Function;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
-          return ParkingLotsView();
+          return ParkingLotsView(data);
         });
       case RoutePaths.ParkingStructureView:
+        Function data = settings.arguments as Function;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
-          return ParkingStructureView();
+          return ParkingStructureView(data);
         });
       case RoutePaths.NeighborhoodsView:
+        Function data = settings.arguments as Function;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
-          return NeighborhoodsView();
+          return NeighborhoodsView(data);
         });
       case RoutePaths.NeighborhoodsLotsView:
-        List<String> data = settings.arguments as List<String>;
+        Map<String, dynamic> data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return NeighborhoodLotsView(data);
-        });
-      case RoutePaths.SpotTypesView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return SpotTypesView();
         });
       case RoutePaths.ScanditScanner:
         return MaterialPageRoute(builder: (_) => ScanditScanner());
