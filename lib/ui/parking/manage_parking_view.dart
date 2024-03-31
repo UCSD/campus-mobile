@@ -1,6 +1,12 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/navigator/top.dart';
+import 'package:campus_mobile_experimental/ui/parking/neighborhoods_view.dart';
+import 'package:campus_mobile_experimental/ui/parking/parking_lot_view.dart';
+import 'package:campus_mobile_experimental/ui/parking/parking_structure_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class ManageParkingView extends StatefulWidget {
   _ManageParkingViewState createState() => _ManageParkingViewState();
@@ -47,22 +53,25 @@ class _ManageParkingViewState extends State<ManageParkingView> {
         ),
         onTap: () {
           if (i == 0) {
-            Navigator.pushNamed(
-              context,
-              RoutePaths.NeighborhoodsView,
-            );
+            // Navigator.pushNamed(
+            //   context,
+            //   RoutePaths.NeighborhoodsView,
+            // );
+            Get.to(() => NeighborhoodsView());
           }
           if (i == 1) {
-            Navigator.pushNamed(
-              context,
-              RoutePaths.ParkingStructureView,
-            );
+            // Navigator.pushNamed(
+            //   context,
+            //   RoutePaths.ParkingStructureView,
+            // );
+            Get.to(() => ParkingStructureView());
           }
           if (i == 2) {
-            Navigator.pushNamed(
-              context,
-              RoutePaths.ParkingLotsView,
-            );
+            // Navigator.pushNamed(
+            //   context,
+            //   RoutePaths.ParkingLotsView,
+            // );
+            Get.to(() => ParkingLotsView());
           }
         },
       ));

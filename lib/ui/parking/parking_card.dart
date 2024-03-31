@@ -5,7 +5,10 @@ import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/parking_getx.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
+import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/parking/circular_parking_indicator.dart';
+import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
+import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -26,7 +29,7 @@ class _ParkingCardState extends State<ParkingCard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    parkingController.fetchParkingData();
+    parkingController = Get.find();
     // _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
   }
 
@@ -122,7 +125,8 @@ class _ParkingCardState extends State<ParkingCard> {
         'Manage Lots',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+        // Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+        Get.to(() => ManageParkingView());
       },
     ));
     actionButtons.add(TextButton(
@@ -134,7 +138,8 @@ class _ParkingCardState extends State<ParkingCard> {
         'Manage Spots',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.SpotTypesView);
+        // Navigator.pushNamed(context, RoutePaths.SpotTypesView);
+        Get.to(() => SpotTypesView());
       },
     ));
     return actionButtons;

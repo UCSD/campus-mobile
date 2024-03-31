@@ -18,6 +18,7 @@ class ParkingGetX extends GetxController {
   int selectedLots = 0, selectedSpots = 0;
   static const MAX_SELECTED_LOTS = 10;
   static const MAX_SELECTED_SPOTS = 3;
+  static Function rebuildParkingCard = () => {};
 
   Rx<Map<String?, bool>?> parkingViewState =
       Rx<Map<String?, bool>?>(<String?, bool>{}.obs);
@@ -50,6 +51,7 @@ class ParkingGetX extends GetxController {
     selectedSpots = 0;
     selectedLots = 0;
     error.value = null;
+    refresh();
 
     /// create a new map to ensure we remove all unsupported lots
     Map<String?, ParkingModel> newMapOfLots = Map<String?, ParkingModel>();
@@ -135,6 +137,7 @@ class ParkingGetX extends GetxController {
     // _lastUpdated = DateTime.now();
 
     isLoading.value = false;
+    refresh();
   }
 
   ///RETURNS A List<ParkingModels> IN THE CORRECT ORDER
@@ -168,6 +171,7 @@ class ParkingGetX extends GetxController {
     _userDataProvider.userProfileModel!.selectedParkingLots =
         parkingViewState.value;
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+    refresh();
   }
 
   void toggleSpotSelection(String? spotKey, int spotsSelected) {
@@ -189,6 +193,7 @@ class ParkingGetX extends GetxController {
     _userDataProvider.userProfileModel!.selectedParkingSpots =
         selectedSpotTypesState.value;
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
+    refresh();
   }
 
   ///This setter is only used in provider to supply and updated UserDataProvider object

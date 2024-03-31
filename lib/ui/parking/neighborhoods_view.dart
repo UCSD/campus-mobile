@@ -1,4 +1,6 @@
 import 'package:campus_mobile_experimental/core/providers/parking_getx.dart';
+import 'package:campus_mobile_experimental/ui/navigator/top.dart';
+import 'package:campus_mobile_experimental/ui/parking/neighborhood_lot_view.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -55,9 +57,10 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
             color: Theme.of(context).colorScheme.secondary,
           ),
           onTap: () {
-            Navigator.pushNamed(context, RoutePaths.NeighborhoodsLotsView,
-                arguments: value);
+            // Navigator.pushNamed(context, RoutePaths.NeighborhoodsLotsView,
+            //     arguments: value);
             // arguments: {'building': 'Atkinson Hall'},
+            Get.to(() => NeighborhoodLotsView(value!));
           },
         ));
       }

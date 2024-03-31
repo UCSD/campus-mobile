@@ -17,9 +17,9 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
   @override
   Widget build(BuildContext context) {
     // parkingDataProvider = Provider.of<ParkingDataProvider>(context);
-    return ContainerView(
-      child: structureList(context),
-    );
+    return Obx(() => ContainerView(
+          child: structureList(context),
+        ));
   }
 
   // builds the listview that will be put into ContainerView
