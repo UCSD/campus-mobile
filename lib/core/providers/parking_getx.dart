@@ -4,22 +4,22 @@ import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/parking.dart';
 import 'package:campus_mobile_experimental/core/services/spot_types.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class ParkingGetX extends GetxController {
   UserDataProvider _userDataProvider = UserDataProvider();
 
   ///STATES
+  // Observables for tracking loading state, error state, and selection counts
   Rx<bool> isLoading = false.obs;
-  // DateTime? _lastUpdated;
   Rx<String?> error = null.obs;
   int selectedLots = 0, selectedSpots = 0;
+
+  // Constants for maximum allowed selections
   static const MAX_SELECTED_LOTS = 10;
   static const MAX_SELECTED_SPOTS = 3;
-  // var rebuildParkingCard = null.obs;
 
+  // Observables for managing parking view state, selected spot types state, and spot type map
   Rx<Map<String?, bool>?> parkingViewState =
       Rx<Map<String?, bool>?>(<String?, bool>{}.obs);
   Rx<Map<String?, bool>?> selectedSpotTypesState =
@@ -27,17 +27,17 @@ class ParkingGetX extends GetxController {
   Rx<Map<String?, Spot>?> spotTypeMap =
       Rx<Map<String?, Spot>?>(<String?, Spot>{}.obs);
 
-  // RxMap<String?, bool>? parkingViewState = <String?, bool>{}.obs;
-  // RxMap<String?, bool>? selectedSpotTypesState = <String?, bool>{}.obs;
-  // RxMap<String?, Spot>? spotTypeMap = <String?, Spot>{}.obs;
-
   ///MODELS
+  // Observable for storing parking models
   Rx<Map<String?, ParkingModel>?> _parkingModels =
       Rx<Map<String?, ParkingModel>?>(<String?, ParkingModel>{}.obs);
+  // Observable for storing spot type model
   Rx<SpotTypeModel?> _spotTypeModel = SpotTypeModel().obs;
 
   ///SERVICES
+  // Observable for parking service
   Rx<ParkingService> _parkingService = ParkingService().obs;
+  // Spot types service
   late SpotTypesService _spotTypesService = SpotTypesService();
 
   @override
@@ -46,6 +46,7 @@ class ParkingGetX extends GetxController {
     fetchParkingData();
   }
 
+  // Fetch parking data from services
   fetchParkingData() async {
     isLoading.value = true;
     selectedSpots = 0;
@@ -53,11 +54,13 @@ class ParkingGetX extends GetxController {
     error.value = null;
     refresh();
 
-    /// create a new map to ensure we remove all unsupported lots
+    // Create new maps to ensure we remove all unsupported lots and spot types
     Map<String?, ParkingModel> newMapOfLots = Map<String?, ParkingModel>();
     Map<String?, bool> newMapOfLotStates = Map<String?, bool>();
 
+    // Fetch parking lot data
     if (await _parkingService.value.fetchParkingLotData()) {
+      // Populate parking view state from user profile or default lots
       if (_userDataProvider.userProfileModel!.selectedParkingLots!.isNotEmpty) {
         parkingViewState.value =
             _userDataProvider.userProfileModel!.selectedParkingLots;
@@ -71,6 +74,7 @@ class ParkingGetX extends GetxController {
         }
       }
 
+      // Populate new maps of lots and their states
       for (ParkingModel model in _parkingService.value.data!) {
         newMapOfLots[model.locationName] = model;
         newMapOfLotStates[model.locationName] =
@@ -79,34 +83,35 @@ class ParkingGetX extends GetxController {
                 : parkingViewState.value![model.locationName])!;
       }
 
-      ///replace old list of lots with new one
+      // Replace old list of lots with new one
       _parkingModels.value = newMapOfLots;
       parkingViewState.value = newMapOfLotStates;
 
-      //Update number of lots selected
+      // Update number of lots selected
       parkingViewState.value!.forEach((key, value) {
         if (value) {
           selectedLots++;
         }
       });
     } else {
-      ///TODO: determine what error to show to the user
+      // Handle parking service error
       error.value = _parkingService.value.error;
     }
 
+    // Fetch spot types data
     if (await _spotTypesService.fetchSpotTypesData()) {
       _spotTypeModel.value = _spotTypesService.spotTypeModel;
-      //create map of spot types
+      // Create map of spot types
       for (Spot spot in _spotTypeModel.value!.spots!) {
         spotTypeMap.value![spot.spotKey] = spot;
       }
       if (_userDataProvider
           .userProfileModel!.selectedParkingSpots!.isNotEmpty) {
-        //Load selected spots types from user Profile
+        // Load selected spot types from user profile
         selectedSpotTypesState.value =
             _userDataProvider.userProfileModel!.selectedParkingSpots;
       } else {
-        //Load default spot types
+        // Load default spot types
         for (Spot spot in _spotTypeModel.value!.spots!) {
           if (ParkingDefaults.defaultSpots.contains(spot.spotKey)) {
             selectedSpotTypesState.value![spot.spotKey] = true;
@@ -116,7 +121,7 @@ class ParkingGetX extends GetxController {
         }
       }
 
-      /// this block of code is to ensure we remove any unsupported spot types
+      // Update spot types state to remove any unsupported spot types
       Map<String?, bool?> newMapOfSpotTypes = Map<String, bool>();
       for (Spot spot in _spotTypeModel.value!.spots!) {
         newMapOfSpotTypes[spot.spotKey] =
@@ -124,23 +129,22 @@ class ParkingGetX extends GetxController {
       }
       selectedSpotTypesState.value = newMapOfSpotTypes.cast<String?, bool>();
 
-      //Update number of spots selected
+      // Update number of spots selected
       selectedSpotTypesState.value!.forEach((key, value) {
         if (value) {
           selectedSpots++;
         }
       });
     } else {
+      // Handle spot types service error
       error.value = _spotTypesService.error;
     }
-
-    // _lastUpdated = DateTime.now();
 
     isLoading.value = false;
     refresh();
   }
 
-  ///RETURNS A List<ParkingModels> IN THE CORRECT ORDER
+  // Getter for parking models
   List<ParkingModel> get parkingModels {
     if (_parkingModels.value != null) {
       return _parkingModels.value!.values.toList();
@@ -148,6 +152,7 @@ class ParkingGetX extends GetxController {
     return [];
   }
 
+  // Getter for spot type model
   SpotTypeModel? get spotTypeModel {
     if (_spotTypeModel.value != null) {
       return _spotTypeModel.value;
@@ -155,14 +160,14 @@ class ParkingGetX extends GetxController {
     return SpotTypeModel();
   }
 
-// add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
+  // Toggle selection of a parking lot
   void toggleLot(String? location, int numSelected) {
     selectedLots = numSelected;
     if (selectedLots < MAX_SELECTED_LOTS) {
       parkingViewState.value![location] = !parkingViewState.value![location]!;
       parkingViewState.value![location]! ? selectedLots++ : selectedLots--;
     } else {
-      //prevent select
+      // Prevent selection if maximum lots are already selected
       if (parkingViewState.value![location]!) {
         selectedLots--;
         parkingViewState.value![location] = !parkingViewState.value![location]!;
@@ -174,6 +179,7 @@ class ParkingGetX extends GetxController {
     refresh();
   }
 
+  // Toggle selection of a spot type
   void toggleSpotSelection(String? spotKey, int spotsSelected) {
     selectedSpots = spotsSelected;
     if (selectedSpots < MAX_SELECTED_SPOTS) {
@@ -183,7 +189,7 @@ class ParkingGetX extends GetxController {
           ? selectedSpots++
           : selectedSpots--;
     } else {
-      //prevent select
+      // Prevent selection if maximum spots are already selected
       if (selectedSpotTypesState.value![spotKey]!) {
         selectedSpots--;
         selectedSpotTypesState.value![spotKey] =
@@ -196,13 +202,12 @@ class ParkingGetX extends GetxController {
     refresh();
   }
 
-  ///This setter is only used in provider to supply and updated UserDataProvider object
+  // Setter for user data provider
   set userDataProvider(UserDataProvider value) {
     _userDataProvider = value;
   }
 
-  /// Returns the total number of spots open at a given location
-  /// does not filter based on spot type
+  // Calculate and return the total number of spots open at a given location
   Map<String, num> getApproxNumOfOpenSpots(String? locationId) {
     Map<String, num> totalAndOpenSpots = {"Open": 0, "Total": 0};
     if (_parkingModels.value![locationId] != null &&
@@ -239,6 +244,7 @@ class ParkingGetX extends GetxController {
     return totalAndOpenSpots;
   }
 
+  // Generate and return a map of parking locations grouped by neighborhood
   Map<String, List<String>> getParkingMap() {
     Map<String, List<String>> parkingMap = {};
     List<String> neighborhoodsToSort = [];
@@ -257,6 +263,7 @@ class ParkingGetX extends GetxController {
     return parkingMap;
   }
 
+  // Get a list of parking structures
   List<String> getStructures() {
     List<String> structureMap = [];
     for (ParkingModel model in _parkingService.value.data!) {
@@ -267,6 +274,7 @@ class ParkingGetX extends GetxController {
     return structureMap;
   }
 
+  // Get a list of parking lots
   List<String> getLots() {
     List<String> lotMap = [];
     for (ParkingModel model in _parkingService.value.data!) {
@@ -276,13 +284,4 @@ class ParkingGetX extends GetxController {
     }
     return lotMap;
   }
-
-  ///SIMPLE GETTERS
-  // bool? get isLoading => _isLoading;
-  // String? get error => _error;
-  // DateTime? get lastUpdated => _lastUpdated;
-  // Map<String?, bool>? get spotTypesState => _selectedSpotTypesState;
-  // Map<String?, bool>? get parkingViewState => _parkingViewState;
-  // Map<String?, Spot?>? get spotTypeMap => _spotTypeMap;
-// SpotTypeModel? get spotTypeModel => _spotTypeModel;
 }

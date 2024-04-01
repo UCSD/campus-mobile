@@ -1,10 +1,8 @@
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
-import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/parking_getx.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
 class CircularParkingIndicators extends StatelessWidget {
@@ -18,17 +16,24 @@ class CircularParkingIndicators extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Build the circular parking indicators widget
     return Column(
       children: [
+        // Title of the parking location
         buildLocationTitle(),
+        // Context of the parking location
         buildLocationContext(context),
+        // Text showing spots available
         buildSpotsAvailableText(context),
+        // Additional information for historic data
         buildHistoricInfo(),
+        // Circular indicators for each spot type
         buildAllParkingAvailability(context),
       ],
     );
   }
 
+  // Build circular indicators for each spot type
   Widget buildAllParkingAvailability(BuildContext context) {
     List<Widget> listOfCircularParkingInfo = [];
     List<String> selectedSpots = [];
@@ -54,6 +59,7 @@ class CircularParkingIndicators extends StatelessWidget {
     );
   }
 
+  // Build circular parking indicator for a specific spot type
   Widget buildCircularParkingInfo(
       Spot? spotType, dynamic locationData, BuildContext context) {
     int open;
@@ -183,6 +189,7 @@ class CircularParkingIndicators extends StatelessWidget {
           );
   }
 
+  // Convert hex color code to Color object
   Color colorFromHex(String hexColor) {
     final hexCode = hexColor.replaceAll('#', '');
     if (hexColor.length == 6) {
@@ -192,6 +199,7 @@ class CircularParkingIndicators extends StatelessWidget {
     return Color(int.parse('FF$hexCode', radix: 16));
   }
 
+  // Determine color based on availability percentage
   Color getColor(double value) {
     if (value > .75) {
       return Colors.green;
@@ -202,6 +210,7 @@ class CircularParkingIndicators extends StatelessWidget {
     return Colors.red;
   }
 
+  // Build context of the parking location
   Widget buildLocationContext(BuildContext context) {
     return Center(
       child: Text(model.locationContext ?? "",
@@ -211,6 +220,7 @@ class CircularParkingIndicators extends StatelessWidget {
     );
   }
 
+  // Build title of the parking location
   Widget buildLocationTitle() {
     return Text(
       model.locationName ?? "",
@@ -221,6 +231,7 @@ class CircularParkingIndicators extends StatelessWidget {
     );
   }
 
+  // Build additional information for historic data
   Widget buildHistoricInfo() {
     if (model.locationProvider == "Historic") {
       return Row(
@@ -243,6 +254,7 @@ class CircularParkingIndicators extends StatelessWidget {
     }
   }
 
+  // Build text showing spots available
   Widget buildSpotsAvailableText(BuildContext context) {
     return Center(
       child: Text("~" +

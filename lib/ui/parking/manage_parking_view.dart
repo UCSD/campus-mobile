@@ -1,45 +1,44 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/navigator/top.dart';
-import 'package:campus_mobile_experimental/ui/parking/neighborhoods_view.dart';
-import 'package:campus_mobile_experimental/ui/parking/parking_lot_view.dart';
-import 'package:campus_mobile_experimental/ui/parking/parking_structure_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class ManageParkingView extends StatefulWidget {
-  final Function args;
-  const ManageParkingView(this.args);
+  final Function rebuildParkingCard;
+  const ManageParkingView(this.rebuildParkingCard);
 
+  @override
   _ManageParkingViewState createState() => _ManageParkingViewState();
 }
 
 class _ManageParkingViewState extends State<ManageParkingView> {
   @override
   Widget build(BuildContext context) {
+    // Build the container view with the locations list
     return ContainerView(
       child: buildLocationsList(context),
     );
   }
 
+  // Build the list of parking locations
   Widget buildLocationsList(BuildContext context) {
-    // creates a list that will hold the list of building names
+    // Initialize a list to hold the list of building names
     List<Widget> list = [];
 
+    // Define types of parking
     List<String> parkingType = [
       "Neighborhoods",
       "Parking Structure",
       "Parking Lots"
     ];
 
-    List<String> parkingTypeViews = [
-      "NeighborhoodsView",
-      "ParkingStructureView",
-      "ParkingLotsView"
-    ];
+    // List<String> parkingTypeViews = [
+    //   "NeighborhoodsView",
+    //   "ParkingStructureView",
+    //   "ParkingLotsView"
+    // ];
 
-    // loops through and adds buttons for the user to click on
+    // Loop through and add buttons for the user to click on
     for (var i = 0; i < parkingType.length; i++) {
       list.add(ListTile(
         title: Padding(
@@ -55,35 +54,27 @@ class _ManageParkingViewState extends State<ManageParkingView> {
           color: Theme.of(context).colorScheme.secondary,
         ),
         onTap: () {
+          // Navigate to corresponding view based on the parking type
           if (i == 0) {
-            // Navigator.pushNamed(
-            //   context,
-            //   RoutePaths.NeighborhoodsView,
-            // );
-            Get.toNamed(RoutePaths.NeighborhoodsView, arguments: widget.args);
+            Get.toNamed(RoutePaths.NeighborhoodsView,
+                arguments: widget.rebuildParkingCard);
           }
           if (i == 1) {
-            // Navigator.pushNamed(
-            //   context,
-            //   RoutePaths.ParkingStructureView,
-            // );
             Get.toNamed(RoutePaths.ParkingStructureView,
-                arguments: widget.args);
+                arguments: widget.rebuildParkingCard);
           }
           if (i == 2) {
-            // Navigator.pushNamed(
-            //   context,
-            //   RoutePaths.ParkingLotsView,
-            // );
-            Get.toNamed(RoutePaths.ParkingLotsView, arguments: widget.args);
+            Get.toNamed(RoutePaths.ParkingLotsView,
+                arguments: widget.rebuildParkingCard);
           }
         },
       ));
     }
 
-    // adds SizedBox to have a grey underline for the last item in the list
+    // Add SizedBox to have a grey underline for the last item in the list
     list.add(SizedBox());
 
+    // Return ListView with divided ListTile widgets
     return ListView(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,

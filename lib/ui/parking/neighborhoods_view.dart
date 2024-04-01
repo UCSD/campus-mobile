@@ -1,21 +1,19 @@
 import 'package:campus_mobile_experimental/core/providers/parking_getx.dart';
-import 'package:campus_mobile_experimental/ui/navigator/top.dart';
-import 'package:campus_mobile_experimental/ui/parking/neighborhood_lot_view.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/providers/parking.dart';
-import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
 class NeighborhoodsView extends StatefulWidget {
-  final Function args;
-  const NeighborhoodsView(this.args);
+  final Function rebuildParkingCard;
+  const NeighborhoodsView(this.rebuildParkingCard);
 
+  @override
   _NeighborhoodsViewState createState() => _NeighborhoodsViewState();
 }
 
 class _NeighborhoodsViewState extends State<NeighborhoodsView> {
+  // Initialize ParkingGetX controller and retrieve it using Get.find()
   ParkingGetX parkingController = Get.find();
   List<bool> selected = List.filled(5, false);
 
@@ -24,11 +22,13 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
         child: neighborhoodsList(context),
       );
 
-  // builds the listview that will be put into ContainerView
+  // Build the list of neighborhoods
   Widget neighborhoodsList(BuildContext context) {
+    // Get the map of neighborhoods and their corresponding lots
     Map<String, List<String>?>? neighborhoods =
         parkingController.getParkingMap();
-    // creates a list that will hold the list of building names
+
+    // Create a list that will hold the list of neighborhoods
     List<Widget> list = [];
     list.add(ListTile(
       title: Padding(
@@ -43,7 +43,7 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
       ),
     ));
 
-    // loops through and adds buttons for the user to click on
+    // Loop through and add ListTile for each neighborhood
     neighborhoods.forEach((key, value) {
       if (key != "") {
         list.add(ListTile(
@@ -60,21 +60,20 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
             color: Theme.of(context).colorScheme.secondary,
           ),
           onTap: () {
-            // Navigator.pushNamed(context, RoutePaths.NeighborhoodsLotsView,
-            //     arguments: value);
-            // arguments: {'building': 'Atkinson Hall'},
+            // Navigate to NeighborhoodsLotsView when a neighborhood is tapped
             Get.toNamed(RoutePaths.NeighborhoodsLotsView, arguments: {
-              "stringList": value,
-              "rebuildParkingCard": widget.args
+              "neighborhoodList": value,
+              "rebuildParkingCard": widget.rebuildParkingCard
             });
           },
         ));
       }
     });
 
-    // adds SizedBox to have a grey underline for the last item in the list
+    // Add SizedBox to have a grey underline for the last item in the list
     list.add(SizedBox());
 
+    // Return a ListView containing the list of neighborhoods
     return ListView(
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,

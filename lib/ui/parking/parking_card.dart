@@ -1,14 +1,10 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/parking_getx.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
-import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/parking/circular_parking_indicator.dart';
-import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
-import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -19,52 +15,48 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  // Initialize the NewsGetX controller and have it fetch data
+  // Initialize the ParkingGetX controller and have it fetch data
   ParkingGetX parkingController = Get.put(ParkingGetX());
 
-  // late ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
   String cardId = 'parking';
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   // parkingController = Get.find();
-  //   print("\n\n\nmeep\n\n\n");
-  //   // _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
-  // }
-
-  // ignore: must_call_super
+  @override
   Widget build(BuildContext context) {
-    Map<String, Function> menuOption = {
-      "Manage Lots": (context) =>
-          {Navigator.pushNamed(context, RoutePaths.ManageParkingView)},
-      "Manage Spots": (context) =>
-          {Navigator.pushNamed(context, RoutePaths.SpotTypesView)}
-    };
-    //super.build(context);
+    // Build the parking card widget
     return Obx(() => CardContainer(
+          // Set card title
           titleText: CardTitleConstants.titleMap[cardId],
+          // Check if card is loading
           isLoading: parkingController.isLoading.value,
+          // Reload function for refreshing data
           reload: () => {parkingController.fetchParkingData()},
+          // Error message
           errorText: parkingController.error.value,
+          // Child widget containing parking card content
           child: () => buildParkingCard(context),
+          // Check if card is active
           active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+          // Hide function for toggling card visibility
           hide: () => Provider.of<CardsDataProvider>(context, listen: false)
               .toggleCard(cardId),
+          // Action buttons for managing lots and spots
           actionButtons: buildActionButtons(),
         ));
   }
 
+  // Build the content of the parking card
   Widget buildParkingCard(BuildContext context) {
     try {
       List<Widget> selectedLotsViews = [];
+      // Iterate over parking models to display selected lots
       for (ParkingModel model in parkingController.parkingModels) {
         if (parkingController.parkingViewState.value![model.locationName] ==
             true) {
           selectedLotsViews.add(CircularParkingIndicators(model: model));
         }
       }
+      // If no lots are selected, display a message
       if (selectedLotsViews.isEmpty) {
         return (Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,6 +76,7 @@ class _ParkingCardState extends State<ParkingCard> {
           ],
         ));
       }
+      // Display selected lots with a PageView and dots indicator
       return Column(
         children: <Widget>[
           Expanded(
@@ -103,6 +96,7 @@ class _ParkingCardState extends State<ParkingCard> {
         ],
       );
     } catch (e) {
+      // Handle any errors that occur during widget build
       print(e);
       return Container(
         width: double.infinity,
@@ -115,37 +109,37 @@ class _ParkingCardState extends State<ParkingCard> {
     }
   }
 
+  // Build action buttons for managing lots and spots
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = [];
+    // Button for managing lots
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
         foregroundColor: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'Manage Lots',
       ),
       onPressed: () {
-        // Navigator.pushNamed(context, RoutePaths.ManageParkingView);
         Get.toNamed(RoutePaths.ManageParkingView, arguments: callSetState);
       },
     ));
+    // Button for managing spots
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
         foregroundColor: Theme.of(context).backgroundColor,
       ),
       child: Text(
         'Manage Spots',
       ),
       onPressed: () {
-        // Navigator.pushNamed(context, RoutePaths.SpotTypesView);
         Get.toNamed(RoutePaths.SpotTypesView, arguments: callSetState);
       },
     ));
     return actionButtons;
   }
 
+  // Function to trigger state update
   void callSetState() {
     setState(() {});
   }
