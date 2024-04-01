@@ -1,9 +1,8 @@
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/notifications_IAmGoing.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class FreeFoodService {
-  final String baseEndpoint =
-      'https://api-qa.ucsd.edu:8243/campusevents/1.0.0/';
 
   bool _isLoading = false;
   DateTime? _lastUpdated;
@@ -23,7 +22,7 @@ class FreeFoodService {
     try {
       /// fetch data
       var _response = await _networkHelper.authorizedFetch(
-          baseEndpoint + 'events/' + id + '/rsvpCount', headers);
+          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpCount', headers);
 
       /// parse data
       final data = IAmGoingModelFromJson(_response);
@@ -36,7 +35,7 @@ class FreeFoodService {
       /// token for this service
 
       if (e.toString().contains("401")) {
-        if (await getNewToken()) {
+        if (await _networkHelper.getNewToken(headers)) {
           return await fetchData(id);
         }
       }
@@ -50,7 +49,7 @@ class FreeFoodService {
     _error = null;
     _isLoading = true;
     try {
-      String _url = baseEndpoint + 'events/' + id + '/rsvpLimit';
+      String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpLimit';
 
       /// fetch data
       var _response = await _networkHelper.authorizedFetch(_url, headers);
@@ -64,7 +63,7 @@ class FreeFoodService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await getNewToken()) {
+        if (await _networkHelper.getNewToken(headers)) {
           return await fetchMaxCount(id);
         }
       }
@@ -79,7 +78,7 @@ class FreeFoodService {
     _isLoading = true;
 
     try {
-      String _url = baseEndpoint + 'events/' + id;
+      String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id;
 
       /// update count
       var _response = await _networkHelper.authorizedPut(_url, headers, body);
@@ -94,7 +93,7 @@ class FreeFoodService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await getNewToken()) {
+        if (await _networkHelper.getNewToken(headers)) {
           return await updateCount(id, body);
         }
       }
@@ -105,22 +104,7 @@ class FreeFoodService {
   }
 
   Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
-    final Map<String, String> tokenHeaders = {
-      "content-type": 'application/x-www-form-urlencoded',
-      "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
-    };
-    try {
-      var response = await _networkHelper.authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-
-      headers["Authorization"] = "Bearer " + response["access_token"];
-      return true;
-    } catch (e) {
-      _error = e.toString();
-      return false;
-    }
+    return _networkHelper.getNewToken(headers);
   }
 
   // getters
