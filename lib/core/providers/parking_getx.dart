@@ -11,8 +11,9 @@ class ParkingGetX extends GetxController {
 
   ///STATES
   // Observables for tracking loading state, error state, and selection counts
-  Rx<bool> isLoading = false.obs;
-  Rx<String?> error = null.obs;
+  Rx<bool> _isLoading = false.obs;
+  Rxn<String> _error = Rxn<String>();
+  Rxn<DateTime> _lastUpdated = Rxn<DateTime>();
   int selectedLots = 0, selectedSpots = 0;
 
   // Constants for maximum allowed selections
@@ -20,11 +21,11 @@ class ParkingGetX extends GetxController {
   static const MAX_SELECTED_SPOTS = 3;
 
   // Observables for managing parking view state, selected spot types state, and spot type map
-  Rx<Map<String?, bool>?> parkingViewState =
+  Rx<Map<String?, bool>?> _parkingViewState =
       Rx<Map<String?, bool>?>(<String?, bool>{}.obs);
-  Rx<Map<String?, bool>?> selectedSpotTypesState =
+  Rx<Map<String?, bool>?> _selectedSpotTypesState =
       Rx<Map<String?, bool>?>(<String?, bool>{}.obs);
-  Rx<Map<String?, Spot>?> spotTypeMap =
+  Rx<Map<String?, Spot>?> _spotTypeMap =
       Rx<Map<String?, Spot>?>(<String?, Spot>{}.obs);
 
   ///MODELS
@@ -47,11 +48,11 @@ class ParkingGetX extends GetxController {
   }
 
   // Fetch parking data from services
-  fetchParkingData() async {
-    isLoading.value = true;
+  void fetchParkingData() async {
+    _isLoading.value = true;
     selectedSpots = 0;
     selectedLots = 0;
-    error.value = null;
+    _error.value = null;
     refresh();
 
     // Create new maps to ensure we remove all unsupported lots and spot types
@@ -62,14 +63,14 @@ class ParkingGetX extends GetxController {
     if (await _parkingService.value.fetchParkingLotData()) {
       // Populate parking view state from user profile or default lots
       if (_userDataProvider.userProfileModel!.selectedParkingLots!.isNotEmpty) {
-        parkingViewState.value =
+        _parkingViewState.value =
             _userDataProvider.userProfileModel!.selectedParkingLots;
       } else {
         for (ParkingModel model in _parkingService.value.data!) {
           if (ParkingDefaults.defaultLots.contains(model.locationId)) {
-            parkingViewState.value![model.locationName] = true;
+            _parkingViewState.value![model.locationName] = true;
           } else {
-            parkingViewState.value![model.locationName] = false;
+            _parkingViewState.value![model.locationName] = false;
           }
         }
       }
@@ -78,24 +79,24 @@ class ParkingGetX extends GetxController {
       for (ParkingModel model in _parkingService.value.data!) {
         newMapOfLots[model.locationName] = model;
         newMapOfLotStates[model.locationName] =
-            (parkingViewState.value![model.locationName] == null
+            (_parkingViewState.value![model.locationName] == null
                 ? false
-                : parkingViewState.value![model.locationName])!;
+                : _parkingViewState.value![model.locationName])!;
       }
 
       // Replace old list of lots with new one
       _parkingModels.value = newMapOfLots;
-      parkingViewState.value = newMapOfLotStates;
+      _parkingViewState.value = newMapOfLotStates;
 
       // Update number of lots selected
-      parkingViewState.value!.forEach((key, value) {
+      _parkingViewState.value!.forEach((key, value) {
         if (value) {
           selectedLots++;
         }
       });
     } else {
       // Handle parking service error
-      error.value = _parkingService.value.error;
+      _error.value = _parkingService.value.error;
     }
 
     // Fetch spot types data
@@ -103,20 +104,20 @@ class ParkingGetX extends GetxController {
       _spotTypeModel.value = _spotTypesService.spotTypeModel;
       // Create map of spot types
       for (Spot spot in _spotTypeModel.value!.spots!) {
-        spotTypeMap.value![spot.spotKey] = spot;
+        _spotTypeMap.value![spot.spotKey] = spot;
       }
       if (_userDataProvider
           .userProfileModel!.selectedParkingSpots!.isNotEmpty) {
         // Load selected spot types from user profile
-        selectedSpotTypesState.value =
+        _selectedSpotTypesState.value =
             _userDataProvider.userProfileModel!.selectedParkingSpots;
       } else {
         // Load default spot types
         for (Spot spot in _spotTypeModel.value!.spots!) {
           if (ParkingDefaults.defaultSpots.contains(spot.spotKey)) {
-            selectedSpotTypesState.value![spot.spotKey] = true;
+            _selectedSpotTypesState.value![spot.spotKey] = true;
           } else {
-            selectedSpotTypesState.value![spot.spotKey] = false;
+            _selectedSpotTypesState.value![spot.spotKey] = false;
           }
         }
       }
@@ -125,22 +126,22 @@ class ParkingGetX extends GetxController {
       Map<String?, bool?> newMapOfSpotTypes = Map<String, bool>();
       for (Spot spot in _spotTypeModel.value!.spots!) {
         newMapOfSpotTypes[spot.spotKey] =
-            selectedSpotTypesState.value![spot.spotKey];
+            _selectedSpotTypesState.value![spot.spotKey];
       }
-      selectedSpotTypesState.value = newMapOfSpotTypes.cast<String?, bool>();
+      _selectedSpotTypesState.value = newMapOfSpotTypes.cast<String?, bool>();
 
       // Update number of spots selected
-      selectedSpotTypesState.value!.forEach((key, value) {
+      _selectedSpotTypesState.value!.forEach((key, value) {
         if (value) {
           selectedSpots++;
         }
       });
     } else {
       // Handle spot types service error
-      error.value = _spotTypesService.error;
+      _error.value = _spotTypesService.error;
     }
 
-    isLoading.value = false;
+    _isLoading.value = false;
     refresh();
   }
 
@@ -164,17 +165,18 @@ class ParkingGetX extends GetxController {
   void toggleLot(String? location, int numSelected) {
     selectedLots = numSelected;
     if (selectedLots < MAX_SELECTED_LOTS) {
-      parkingViewState.value![location] = !parkingViewState.value![location]!;
-      parkingViewState.value![location]! ? selectedLots++ : selectedLots--;
+      _parkingViewState.value![location] = !_parkingViewState.value![location]!;
+      _parkingViewState.value![location]! ? selectedLots++ : selectedLots--;
     } else {
       // Prevent selection if maximum lots are already selected
-      if (parkingViewState.value![location]!) {
+      if (_parkingViewState.value![location]!) {
         selectedLots--;
-        parkingViewState.value![location] = !parkingViewState.value![location]!;
+        _parkingViewState.value![location] =
+            !_parkingViewState.value![location]!;
       }
     }
     _userDataProvider.userProfileModel!.selectedParkingLots =
-        parkingViewState.value;
+        _parkingViewState.value;
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
     refresh();
   }
@@ -183,21 +185,21 @@ class ParkingGetX extends GetxController {
   void toggleSpotSelection(String? spotKey, int spotsSelected) {
     selectedSpots = spotsSelected;
     if (selectedSpots < MAX_SELECTED_SPOTS) {
-      selectedSpotTypesState.value![spotKey] =
-          !selectedSpotTypesState.value![spotKey]!;
-      selectedSpotTypesState.value![spotKey]!
+      _selectedSpotTypesState.value![spotKey] =
+          !_selectedSpotTypesState.value![spotKey]!;
+      _selectedSpotTypesState.value![spotKey]!
           ? selectedSpots++
           : selectedSpots--;
     } else {
       // Prevent selection if maximum spots are already selected
-      if (selectedSpotTypesState.value![spotKey]!) {
+      if (_selectedSpotTypesState.value![spotKey]!) {
         selectedSpots--;
-        selectedSpotTypesState.value![spotKey] =
-            !selectedSpotTypesState.value![spotKey]!;
+        _selectedSpotTypesState.value![spotKey] =
+            !_selectedSpotTypesState.value![spotKey]!;
       }
     }
     _userDataProvider.userProfileModel!.selectedParkingSpots =
-        selectedSpotTypesState.value;
+        _selectedSpotTypesState.value;
     _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
     refresh();
   }
@@ -284,4 +286,14 @@ class ParkingGetX extends GetxController {
     }
     return lotMap;
   }
+
+  ///SIMPLE GETTERS
+  bool get isLoading => _isLoading.value;
+  String? get error => _error.value;
+  DateTime? get lastUpdated => _lastUpdated.value;
+  Map<String?, bool>? get selectedSpotTypesState =>
+      _selectedSpotTypesState.value;
+  Map<String?, bool>? get parkingViewState => _parkingViewState.value;
+  Map<String?, Spot?>? get spotTypeMap => _spotTypeMap.value;
+// SpotTypeModel? get spotTypeModel => _spotTypeModel;
 }

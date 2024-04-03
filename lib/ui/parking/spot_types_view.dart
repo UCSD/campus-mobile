@@ -38,8 +38,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
     // Loop through each spot type
     for (Spot data in parkingController.spotTypeModel!.spots!) {
       // Check if the spot type is selected
-      if (parkingController.selectedSpotTypesState.value![data.spotKey]! ==
-          true) {
+      if (parkingController.selectedSpotTypesState![data.spotKey]! == true) {
         selectedSpots++;
       }
 
@@ -68,7 +67,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                       ))),
         title: Text(data.name!),
         trailing: Switch(
-          value: parkingController.selectedSpotTypesState.value![data.spotKey]!,
+          value: parkingController.selectedSpotTypesState![data.spotKey]!,
           onChanged: (_) {
             parkingController.toggleSpotSelection(data.spotKey, selectedSpots);
             setState(() {});

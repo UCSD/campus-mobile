@@ -1,19 +1,19 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/news.dart';
+import 'package:campus_mobile_experimental/core/providers/news_getx.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 const String cardId = 'news';
 
 class NewsCard extends StatelessWidget {
+  /// Fill the News Card with the fetched news data (from NewsGetX)
   Widget buildNewsCard() {
     try {
-      return NewsList(
-        listSize: 3,
-      );
+      return NewsList(listSize: 3);
     } catch (e) {
       print(e);
       return Container(
@@ -27,6 +27,7 @@ class NewsCard extends StatelessWidget {
     }
   }
 
+  /// Create the `View All` button on the News Card
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
     actionButtons.add(TextButton(
@@ -38,26 +39,30 @@ class NewsCard extends StatelessWidget {
         'View All',
       ),
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.NewsViewAll);
+        Get.toNamed(RoutePaths.NewsViewAll);
       },
     ));
     return actionButtons;
   }
 
+  /// Create the News Card
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      /// TODO: need to hook up hidden to state using provider
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
-      reload: () =>
-          Provider.of<NewsDataProvider>(context, listen: false).fetchNews(),
-      isLoading: Provider.of<NewsDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
-      errorText: Provider.of<NewsDataProvider>(context).error,
-      child: () => buildNewsCard(),
-      actionButtons: buildActionButtons(context),
-    );
+    // Initialize the NewsGetX controller and have it fetch data
+    NewsGetX newsController = Get.put(NewsGetX());
+
+    // Return a CardContainer, wrapped in an Obx() widget, which allows CardContainer to listen to observable variables from NewsGetX
+    return Obx(() => CardContainer(
+          /// TODO: need to hook up hidden to state using provider
+          active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+          hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+              .toggleCard(cardId),
+          reload: () => newsController.fetchNews(),
+          isLoading: newsController.isLoading,
+          titleText: CardTitleConstants.titleMap[cardId],
+          errorText: newsController.error,
+          child: () => buildNewsCard(),
+          actionButtons: buildActionButtons(context),
+        ));
   }
 }

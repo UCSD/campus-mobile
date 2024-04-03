@@ -45,7 +45,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
 
     int selectedLots = 0;
     // Count the number of selected lots
-    parkingController.parkingViewState.value!.forEach((key, value) {
+    parkingController.parkingViewState!.forEach((key, value) {
       if (value == true) {
         selectedLots++;
       }
@@ -53,8 +53,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
 
     // Loop through and add ListTile for each parking structure
     for (var i = 0; i < structures.length; i++) {
-      bool structureState =
-          parkingController.parkingViewState.value![structures[i]]!;
+      bool structureState = parkingController.parkingViewState![structures[i]]!;
       list.add(
         ListTile(
           title: Padding(

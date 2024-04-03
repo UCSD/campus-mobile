@@ -1,27 +1,33 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
-import 'package:campus_mobile_experimental/core/providers/news.dart';
+import 'package:campus_mobile_experimental/core/providers/news_getx.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class NewsList extends StatelessWidget {
   const NewsList({Key? key, this.listSize}) : super(key: key);
 
   final int? listSize;
 
+  /// Either show Circular Progress Indicator if the news data (from NewsGetX) is still fetching, otherwise build the widget to display the data
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<NewsDataProvider>(context).isLoading!) {
+    NewsGetX newsController = Get.find();
+
+    // If news data is still fetching, show Circular Progress Indicator
+    if (newsController.isLoading) {
       return Center(
           child: CircularProgressIndicator(
               color: Theme.of(context).colorScheme.secondary));
     }
+
+    // Otherwise, build widget to display news data
     return buildNewsList(
       context,
-      Provider.of<NewsDataProvider>(context).newsModels!,
+      newsController.newsModels!,
     );
   }
 
@@ -63,8 +69,7 @@ class NewsList extends StatelessWidget {
       return ListTile(
         isThreeLine: true,
         onTap: () {
-          Navigator.pushNamed(context, RoutePaths.NewsDetailView,
-              arguments: newsItem);
+          Get.toNamed(RoutePaths.NewsDetailView, arguments: newsItem);
         },
         title: Padding(
           padding: const EdgeInsets.symmetric(vertical: 3.0),

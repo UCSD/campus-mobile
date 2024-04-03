@@ -38,7 +38,7 @@ class CircularParkingIndicators extends StatelessWidget {
     List<Widget> listOfCircularParkingInfo = [];
     List<String> selectedSpots = [];
 
-    parkingController.selectedSpotTypesState.value!.forEach((key, value) {
+    parkingController.selectedSpotTypesState!.forEach((key, value) {
       if (value && selectedSpots.length < 4) {
         selectedSpots.add(key!);
       }
@@ -46,7 +46,7 @@ class CircularParkingIndicators extends StatelessWidget {
     for (String spot in selectedSpots) {
       if (model.availability != null) {
         listOfCircularParkingInfo.add(buildCircularParkingInfo(
-            parkingController.spotTypeMap.value![spot],
+            parkingController.spotTypeMap![spot],
             model.availability![spot],
             context));
       }

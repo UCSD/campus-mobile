@@ -10,7 +10,7 @@ import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/core/providers/location.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:campus_mobile_experimental/core/providers/news.dart';
+import 'package:campus_mobile_experimental/core/providers/news_getx.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_IAmGoing.dart';
@@ -20,7 +20,7 @@ import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/providers/weather.dart';
+import 'package:campus_mobile_experimental/core/providers/weather_getx.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -64,20 +64,6 @@ List<SingleChildWidget> independentServices = [
       MediaDataProvider _mediaDataProvider = MediaDataProvider();
       _mediaDataProvider.fetchMedia();
       return _mediaDataProvider;
-    },
-  ),
-  ChangeNotifierProvider<WeatherDataProvider>(
-    create: (_) {
-      WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
-      _weatherDataProvider.fetchWeather();
-      return _weatherDataProvider;
-    },
-  ),
-  ChangeNotifierProvider<NewsDataProvider>(
-    create: (_) {
-      NewsDataProvider _newsDataProvider = NewsDataProvider();
-      _newsDataProvider.fetchNews();
-      return _newsDataProvider;
     },
   ),
   StreamProvider<Coordinates>(

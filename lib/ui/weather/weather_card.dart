@@ -1,11 +1,12 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/weather.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/weather.dart';
+import 'package:campus_mobile_experimental/core/providers/weather_getx.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 const String cardId = 'weather';
 const String WEATHER_ICON_BASE_URL =
@@ -14,21 +15,22 @@ const String WEATHER_ICON_BASE_URL =
 class WeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    WeatherGetX weatherController = Get.put(WeatherGetX());
     return Stack(
       children: [
-        CardContainer(
-          active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
-          hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-              .toggleCard(cardId),
-          reload: () => Provider.of<WeatherDataProvider>(context, listen: false)
-              .fetchWeather(),
-          isLoading: Provider.of<WeatherDataProvider>(context).isLoading,
-          titleText: CardTitleConstants.titleMap[cardId],
-          errorText: Provider.of<WeatherDataProvider>(context).error,
-          child: () => buildCardContent(
-              Provider.of<WeatherDataProvider>(context).weatherModel!),
-          footer: buildFooter(),
-        ),
+        // Obx wrapper makes all variables of the WeatherGetX update whenever they change in WeatherGetX
+        Obx(() => CardContainer(
+              active:
+                  Provider.of<CardsDataProvider>(context).cardStates![cardId],
+              hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+                  .toggleCard(cardId),
+              reload: () => weatherController.fetchWeather(),
+              isLoading: weatherController.isLoading,
+              titleText: CardTitleConstants.titleMap[cardId],
+              errorText: weatherController.error,
+              child: () => buildCardContent(weatherController.weatherModel!),
+              footer: buildFooter(),
+            )),
       ],
     );
   }
@@ -42,7 +44,8 @@ class WeatherCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
-              onTap: () => openLink('https://developer.apple.com/weatherkit/data-source-attribution/'),
+              onTap: () => openLink(
+                  'https://developer.apple.com/weatherkit/data-source-attribution/'),
               child: Text(
                 "Weather Attribution",
                 style: TextStyle(

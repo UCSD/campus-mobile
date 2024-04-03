@@ -28,11 +28,11 @@ class _ParkingCardState extends State<ParkingCard> {
           // Set card title
           titleText: CardTitleConstants.titleMap[cardId],
           // Check if card is loading
-          isLoading: parkingController.isLoading.value,
+          isLoading: parkingController.isLoading,
           // Reload function for refreshing data
           reload: () => {parkingController.fetchParkingData()},
           // Error message
-          errorText: parkingController.error.value,
+          errorText: parkingController.error,
           // Child widget containing parking card content
           child: () => buildParkingCard(context),
           // Check if card is active
@@ -51,8 +51,7 @@ class _ParkingCardState extends State<ParkingCard> {
       List<Widget> selectedLotsViews = [];
       // Iterate over parking models to display selected lots
       for (ParkingModel model in parkingController.parkingModels) {
-        if (parkingController.parkingViewState.value![model.locationName] ==
-            true) {
+        if (parkingController.parkingViewState![model.locationName] == true) {
           selectedLotsViews.add(CircularParkingIndicators(model: model));
         }
       }
