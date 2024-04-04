@@ -7,12 +7,15 @@ import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/parking/circular_parking_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// Get X import package
+import 'package:get/get.dart';
 
 class ParkingCard extends StatefulWidget {
   @override
   _ParkingCardState createState() => _ParkingCardState();
 }
 
+// Old Provider Controller
 class _ParkingCardState extends State<ParkingCard> {
   late ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
@@ -45,7 +48,9 @@ class _ParkingCardState extends State<ParkingCard> {
       actionButtons: buildActionButtons(),
     );
   }
+
 ////////////////
+///// old widget
   Widget buildParkingCard(BuildContext context) {
     try {
       List<Widget> selectedLotsViews = [];
