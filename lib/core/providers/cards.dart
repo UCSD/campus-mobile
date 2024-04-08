@@ -49,15 +49,13 @@ class CardsDataProvider extends ChangeNotifier {
     ];
 
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
+      if(_studentCards.contains(card) || _staffCards.contains(card)) {
+        _cardStates![card] = false;
+        continue;
+      }
       _cardStates![card] = true;
     }
 
-    /// temporary fix that prevents the student cards from causing issues on launch
-    _cardOrder!.removeWhere((element) => _studentCards.contains(element));
-    _cardStates!.removeWhere((key, value) => _studentCards.contains(key));
-
-    _cardOrder!.removeWhere((element) => _staffCards.contains(element));
-    _cardStates!.removeWhere((key, value) => _staffCards.contains(key));
   }
 
   ///STATES
@@ -80,6 +78,7 @@ class CardsDataProvider extends ChangeNotifier {
   Connectivity _connectivity = Connectivity();
 
   void updateAvailableCards(String? ucsdAffiliation) async {
+    print("overrode the saved order and used the current order");
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -89,6 +88,7 @@ class CardsDataProvider extends ChangeNotifier {
       if (_availableCards!.isNotEmpty) {
         // remove all inactive or non-existent cards from [_cardOrder]
         var tempCardOrder = List.from(_cardOrder!);
+
         for (String card in tempCardOrder) {
           // check to see if card no longer exists
           if (_availableCards![card] == null) {
@@ -99,6 +99,7 @@ class CardsDataProvider extends ChangeNotifier {
             _cardOrder!.remove(card);
           }
         }
+
         // remove all inactive or non-existent cards from [_cardStates]
         var tempCardStates = Map.from(_cardStates!);
         for (String card in tempCardStates.keys) {
@@ -179,6 +180,7 @@ class CardsDataProvider extends ChangeNotifier {
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
     await _loadCardOrder();
     await _loadCardStates();
+    print("loaded saved data");
   }
 
   /// Update the [_cardOrder] stored in state
@@ -195,6 +197,7 @@ class CardsDataProvider extends ChangeNotifier {
     }
     _cardOrder = newOrder;
     _lastUpdated = DateTime.now();
+    print("updated card order");
     notifyListeners();
   }
 
