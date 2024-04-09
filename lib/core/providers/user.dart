@@ -178,10 +178,13 @@ class UserDataProvider extends ChangeNotifier {
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
-        if (_userProfileModel!.classifications!.student!) {
-          _cardsDataProvider!.showAllStudentCards();
-        } else if (_userProfileModel!.classifications!.staff!) {
-          _cardsDataProvider!.showAllStaffCards();
+        if ((_cardsDataProvider?.checkDefaultOrder() ?? false) && (_cardsDataProvider?.checkPrivilegeCardsUnactivated() ?? false)) {
+          print(_cardsDataProvider?.cardOrder);
+          if (_userProfileModel!.classifications!.student!) {
+            _cardsDataProvider!.showAllStudentCards();
+          } else if (_userProfileModel!.classifications!.staff!) {
+            _cardsDataProvider!.showAllStaffCards();
+          }
         }
         _isLoading = false;
         notifyListeners();
@@ -222,7 +225,9 @@ class UserDataProvider extends ChangeNotifier {
 
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
         _cardsDataProvider.loadSavedData();
+        print(_cardsDataProvider.cardOrder);
         _cardsDataProvider.updateAvailableCards(_userProfileModel!.ucsdaffiliation);
+        print(_cardsDataProvider.cardOrder);
 
         _subscribeToPushNotificationTopics(userProfileModel!.subscribedTopics!);
         _pushNotificationDataProvider
