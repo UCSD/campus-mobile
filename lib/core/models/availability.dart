@@ -4,8 +4,11 @@
 
 import 'dart:convert';
 
-AvailabilityStatus availabilityStatusFromJson(String str) =>
-    AvailabilityStatus.fromJson(json.decode(str));
+import 'package:flutter/cupertino.dart';
+
+AvailabilityStatus availabilityStatusFromJson(String str) {
+  return AvailabilityStatus.fromJson(json.decode(str));
+}
 
 String availabilityStatusToJson(AvailabilityStatus data) =>
     json.encode(data.toJson());
@@ -26,8 +29,16 @@ class AvailabilityStatus {
         status: json["status"] == null ? null : json["status"],
         data: json["data"] == null
             ? null
-            : List<AvailabilityModel>.from(
-                json["data"].map((x) => AvailabilityModel.fromJson(x))),
+            : ((){
+              List<AvailabilityModel> returnList = List<AvailabilityModel>.from(
+                  json["data"].map((x) => AvailabilityModel.fromJson(x)));
+              for (AvailabilityModel x in returnList) {
+                debugPrint("printing data here");
+                debugPrint(x.name.toString());
+                debugPrint(x.subLocations.toString()); // working here: I need to split availability Models with over 3 sublocations into seperate availability Models with max 3 sub locations each
+              }
+              return returnList;
+            })(),
         timestamp: json["timestamp"] == null
             ? null
             : DateTime.parse(json["timestamp"]),
