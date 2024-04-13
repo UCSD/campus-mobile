@@ -123,6 +123,7 @@ class AvailabilityDisplay extends StatelessWidget {
     return Flexible(
       child: Scrollbar(
         child: ListView(
+          physics: NeverScrollableScrollPhysics(),
           children: locations,
         ),
       ),

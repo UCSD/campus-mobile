@@ -32,10 +32,23 @@ class AvailabilityStatus {
             : ((){
               List<AvailabilityModel> returnList = List<AvailabilityModel>.from(
                   json["data"].map((x) => AvailabilityModel.fromJson(x)));
-              for (AvailabilityModel x in returnList) {
-                debugPrint("printing data here");
-                debugPrint(x.name.toString());
-                debugPrint(x.subLocations.toString()); // working here: I need to split availability Models with over 3 sublocations into seperate availability Models with max 3 sub locations each
+              for (int index = 0; index < returnList.length; index++) {
+                if (returnList[index].subLocations!.length > 3) {
+                    String baseName = returnList[index].name!;
+                    int baseId = returnList[index].id!;
+                    List<SubLocations> baseSubLocations = returnList[index].subLocations!;
+                    returnList.removeAt(index);
+                    index--;
+                    int curPageIndex = 1;
+                    int maxPageIndex = (baseSubLocations.length / 3).ceil();
+                    for (int i = 0; i < baseSubLocations.length; i += 3) {
+                      index++;
+                      List<SubLocations> curSubList = baseSubLocations.sublist(i, i + 3 > baseSubLocations.length ? baseSubLocations.length : i + 3);
+                      String curName = baseName + " ($curPageIndex/$maxPageIndex)";
+                      returnList.insert(index, AvailabilityModel(id: baseId, name: curName, subLocations: curSubList));
+                      curPageIndex++;
+                    }
+                }
               }
               return returnList;
             })(),
