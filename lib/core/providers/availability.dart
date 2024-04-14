@@ -43,21 +43,27 @@ class AvailabilityDataProvider extends ChangeNotifier {
         Map<String?, AvailabilityModel>();
     if (await _availabilityService.fetchData()) {
       /// setting the LocationViewState based on user data
+      RegExp multiPager = RegExp(r' \(\d+/\d+\)$');
       for (AvailabilityModel model in _availabilityService.data!) {
-        newMapOfLots[model.name] = model;
+        String curName = model.name!;
+        RegExpMatch? match = multiPager.firstMatch(curName);
+        if (match != null) {
+          curName = curName.replaceRange(match.start, match.end, '');
+        }
+        newMapOfLots[model.name!] = model;
 
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
         if (_userDataProvider
             .userProfileModel!.selectedOccuspaceLocations!.isEmpty) {
-          locationViewState[model.name] = true;
+          locationViewState[curName] = true;
         }
 
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
-          _locationViewState[model.name] = _userDataProvider
+          _locationViewState[curName] = _userDataProvider
               .userProfileModel!.selectedOccuspaceLocations!
-              .contains(model.name);
+              .contains(curName);
         }
       }
 
