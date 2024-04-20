@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -176,15 +177,11 @@ class UserDataProvider extends ChangeNotifier {
 
     if (username.isNotEmpty && password.isNotEmpty) {
       _encryptAndSaveCredentials(username, password);
-
       if (await silentLogin()) {
-        if ((_cardsDataProvider?.checkDefaultOrder() ?? false) && (_cardsDataProvider?.checkPrivilegeCardsUnactivated() ?? false)) {
-          print(_cardsDataProvider?.cardOrder);
-          if (_userProfileModel!.classifications!.student!) {
-            _cardsDataProvider!.showAllStudentCards();
-          } else if (_userProfileModel!.classifications!.staff!) {
-            _cardsDataProvider!.showAllStaffCards();
-          }
+        if (_userProfileModel!.classifications!.student!) {
+          _cardsDataProvider!.showAllStudentCards();
+        } else if (_userProfileModel!.classifications!.staff!) {
+          _cardsDataProvider!.showAllStaffCards();
         }
         _isLoading = false;
         notifyListeners();
@@ -222,12 +219,8 @@ class UserDataProvider extends ChangeNotifier {
         await updateAuthenticationModel(_authenticationService.data);
 
         await fetchUserProfile();
-
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
         _cardsDataProvider.loadSavedData();
-        print(_cardsDataProvider.cardOrder);
-        _cardsDataProvider.updateAvailableCards(_userProfileModel!.ucsdaffiliation);
-        print(_cardsDataProvider.cardOrder);
 
         _subscribeToPushNotificationTopics(userProfileModel!.subscribedTopics!);
         _pushNotificationDataProvider

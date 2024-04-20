@@ -34,26 +34,6 @@ class CardsDataProvider extends ChangeNotifier {
       'speed_test',
     ];
 
-    // Default card order for native cards
-    _cardOrderDefault = [
-      'NativeScanner',
-      'MyStudentChart',
-      'MyUCSDChart',
-      'finals',
-      'schedule',
-      'student_id',
-      'employee_id',
-      'availability',
-      'dining',
-      'events',
-      'triton_media',
-      'shuttle',
-      'parking',
-      'news',
-      'weather',
-      'speed_test',
-    ];
-
     // Native student cards
     _studentCards = [
       'finals',
@@ -68,6 +48,7 @@ class CardsDataProvider extends ChangeNotifier {
       'employee_id',
     ];
 
+    // Default card states
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       if(_studentCards.contains(card) || _staffCards.contains(card)) {
         _cardStates![card] = false;
@@ -201,7 +182,7 @@ class CardsDataProvider extends ChangeNotifier {
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
     await _loadCardOrder();
     await _loadCardStates();
-    print("loaded saved data");
+    print(_cardOrder);
   }
 
   /// Update the [_cardOrder] stored in state
@@ -218,7 +199,6 @@ class CardsDataProvider extends ChangeNotifier {
     }
     _cardOrder = newOrder;
     _lastUpdated = DateTime.now();
-    print("updated card order");
     notifyListeners();
   }
 
@@ -279,35 +259,12 @@ class CardsDataProvider extends ChangeNotifier {
     }
   }
 
-  bool checkDefaultOrder() {
-    if (_cardOrder == _cardOrderDefault) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  ///Checks to see that the card states are unchanged from the default
-  bool checkPrivilegeCardsUnactivated() {
-    for (String card in CardTitleConstants.titleMap.keys.toList()) {
-      if((_studentCards.contains(card) || _staffCards.contains(card)) && _cardStates![card]!) {
-        continue;
-      }
-      else if (_cardStates![card] == true) {
-        continue;
-      }
-      else {
-        return false;
-      }
-    }
-    return true;
-  }
 
   activateStudentCards() {
     int index = _cardOrder!.indexOf('MyStudentChart') + 1;
     _cardOrder!.insertAll(index, _studentCards.toList());
 
-    // TODO: test w/o this
+    // TODO: test w/o this (duplicated the cards)
     _cardOrder = List.from(_cardOrder!.toSet().toList());
 
     updateCardOrder(_cardOrder);
@@ -319,7 +276,7 @@ class CardsDataProvider extends ChangeNotifier {
     int index = _cardOrder!.indexOf('MyStudentChart') + 1;
     _cardOrder!.insertAll(index, _studentCards.toList());
 
-    // TODO: test w/o this
+    // TODO: test w/o this (duplicated the cards)
     _cardOrder = List.from(_cardOrder!.toSet().toList());
 
     for (String card in _studentCards) {
