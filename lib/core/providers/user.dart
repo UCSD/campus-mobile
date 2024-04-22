@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
