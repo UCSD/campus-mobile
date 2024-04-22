@@ -64,8 +64,7 @@ class CardsDataProvider extends ChangeNotifier {
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
-  List<String>? _cardOrder;
-  List<String>? _cardOrderDefault;
+  List<String>? _cardOrder
   Map<String, bool>? _cardStates;
   Map<String, CardsModel?>? _webCards;
   late List<String> _studentCards;
@@ -182,7 +181,6 @@ class CardsDataProvider extends ChangeNotifier {
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
     await _loadCardOrder();
     await _loadCardStates();
-    print(_cardOrder);
   }
 
   /// Update the [_cardOrder] stored in state
