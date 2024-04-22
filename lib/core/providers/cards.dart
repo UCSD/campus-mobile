@@ -56,7 +56,9 @@ class CardsDataProvider extends ChangeNotifier {
       }
       _cardStates![card] = true;
     }
-
+    //part of temporary fix that prevvents priviledged cards from causing issues on launch
+    _cardOrder!.removeWhere((element) => _staffCards.contains(element));
+    _cardOrder!.removeWhere((element) => _studentCards.contains(element));
   }
 
   ///STATES
