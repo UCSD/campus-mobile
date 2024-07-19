@@ -159,7 +159,7 @@ List<SingleChildWidget> dependentServices = [
           ..loadSavedData().then((value) {
             // Update available cards
             cardsDataProvider.updateAvailableCards(
-                userDataProvider.authenticationModel!.ucsdaffiliation);
+                userDataProvider.authenticationModel.ucsdaffiliation);
 
             // Student card activation
             if (userDataProvider.isLoggedIn &&
@@ -187,7 +187,7 @@ List<SingleChildWidget> dependentServices = [
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider!.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;

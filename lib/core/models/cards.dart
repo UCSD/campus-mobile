@@ -12,32 +12,33 @@ String cardsModelToJson(Map<String, CardsModel> data) => json.encode(
     Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
 
 class CardsModel {
-  CardsModel(
-      {this.cardActive,
-      this.initialURL,
-      this.isWebCard,
-      this.requireAuth,
-      this.titleText});
+  CardsModel({
+    required this.cardActive,
+    required this.initialURL,
+    required this.isWebCard,
+    required this.requireAuth,
+    required this.titleText
+  });
 
-  bool? cardActive;
-  String? initialURL;
-  bool? isWebCard;
-  bool? requireAuth;
-  String? titleText;
+  bool cardActive;
+  String initialURL;
+  bool isWebCard;
+  bool requireAuth;
+  String titleText;
 
   factory CardsModel.fromJson(Map<String, dynamic> json) => CardsModel(
-        cardActive: json["cardActive"] == null ? null : json["cardActive"],
-        initialURL: json["initialURL"] == null ? null : json["initialURL"],
-        isWebCard: json["isWebCard"] == null ? null : json["isWebCard"],
-        requireAuth: json["requireAuth"] == null ? null : json["requireAuth"],
-        titleText: json["titleText"] == null ? null : json["titleText"],
+        cardActive: json["cardActive"]!,
+        initialURL: json["initialURL"]!,
+        isWebCard: json["isWebCard"]!,
+        requireAuth: json["requireAuth"]!,
+        titleText: json["titleText"]!,
       );
 
   Map<String, dynamic> toJson() => {
-        "cardActive": cardActive == null ? null : cardActive,
-        "initialURL": initialURL == null ? null : initialURL,
-        "isWebCard": isWebCard == null ? null : isWebCard,
-        "requireAuth": requireAuth == null ? null : requireAuth,
-        "titleText": titleText == null ? null : titleText,
+        "cardActive": cardActive,
+        "initialURL": initialURL,
+        "isWebCard": isWebCard,
+        "requireAuth": requireAuth,
+        "titleText": titleText,
       };
 }

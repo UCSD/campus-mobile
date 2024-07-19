@@ -15,12 +15,12 @@ class FinalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
         if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
-            .isLoading!) {
+            .isLoading) {
           return null;
         } else {
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
@@ -31,7 +31,7 @@ class FinalsCard extends StatelessWidget {
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildFinalsCard(
-          Provider.of<ClassScheduleDataProvider>(context).finals!,
+          Provider.of<ClassScheduleDataProvider>(context).finals,
           Provider.of<ClassScheduleDataProvider>(context).lastUpdated,
           Provider.of<ClassScheduleDataProvider>(context).nextDayWithClass,
           context),

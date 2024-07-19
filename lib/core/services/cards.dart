@@ -8,7 +8,7 @@ class CardsService {
   DateTime? _lastUpdated;
   String? _error;
 
-  Map<String, CardsModel>? _cardsModel;
+  late Map<String, CardsModel> _cardsModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
@@ -62,7 +62,7 @@ class CardsService {
   }
 
   String? get error => _error;
-  Map<String, CardsModel>? get cardsModel => _cardsModel;
+  Map<String, CardsModel> get cardsModel => _cardsModel;
   bool get isLoading => _isLoading;
   DateTime? get lastUpdated => _lastUpdated;
 }

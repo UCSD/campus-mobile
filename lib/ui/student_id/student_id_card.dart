@@ -61,7 +61,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
     ScalingUtility().getCurrentMeasurements(context);
 
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<StudentIdDataProvider>(context, listen: false)
@@ -329,12 +329,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       padding: EdgeInsets.all(0),
                     ),
                     child: returnBarcodeContainerTablet(
-                        profileModel!.barcode.toString(), false, context),
+                        profileModel.barcode.toString(), false, context),
                     onPressed: () {
                       createAlertDialog(
                           context,
                           returnBarcodeContainer(
-                              profileModel!.barcode.toString(), true, context),
+                              profileModel.barcode.toString(), true, context),
                           profileModel.barcode.toString(),
                           true);
                     },

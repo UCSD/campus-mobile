@@ -3,35 +3,20 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/availability.dart';
 import 'package:flutter/material.dart';
 
-class AvailabilityDataProvider extends ChangeNotifier {
-  AvailabilityDataProvider() {
-    /// DEFAULT STATES
-    _isLoading = false;
-
-    /// TODO: initialize services here
-    _availabilityService = AvailabilityService();
-  }
-
+class AvailabilityDataProvider extends ChangeNotifier
+{
   /// STATES
-  /// TODO: create any other states needed for the feature
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  Map<String?, bool> _locationViewState = <String?, bool>{};
+  Map<String?, bool> _locationViewState = {};
 
   /// MODELS
-  /// TODO: add models that will be needed in this data provider
-  Map<String?, AvailabilityModel>? _availabilityModels;
+  Map<String, AvailabilityModel> _availabilityModels = {};
   late UserDataProvider _userDataProvider;
 
-  ///
-  /// DATA PROVIDERS
-  /// TODO: add data providers that will be needed if this is a dependent data provider
-  /// create setters for each of these providers
-
   /// SERVICES
-  /// TODO: add any services that will be needed for this data provider
-  late AvailabilityService _availabilityService;
+  AvailabilityService _availabilityService = AvailabilityService();
 
   void fetchAvailability() async {
     _isLoading = true;
@@ -39,11 +24,11 @@ class AvailabilityDataProvider extends ChangeNotifier {
     notifyListeners();
 
     /// creating  new map ensures we remove all unsupported lots
-    Map<String?, AvailabilityModel> newMapOfLots =
-        Map<String?, AvailabilityModel>();
+    Map<String, AvailabilityModel> newMapOfLots = {};
+
     if (await _availabilityService.fetchData()) {
       /// setting the LocationViewState based on user data
-      for (AvailabilityModel model in _availabilityService.data!) {
+      for (AvailabilityModel model in _availabilityService.data) {
         newMapOfLots[model.name] = model;
 
         /// if the user is logged out and has not put any preferences,
@@ -77,13 +62,13 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
   List<AvailabilityModel?> makeOrderedList(List<String?>? order) {
     if (order == null) {
-      return _availabilityModels!.values.toList();
+      return _availabilityModels.values.toList();
     }
 
     ///create an empty list that will be returned
     List<AvailabilityModel?> orderedListOfLots = [];
-    Map<String?, AvailabilityModel> tempMap = Map<String?, AvailabilityModel>();
-    tempMap.addAll(_availabilityModels!);
+    Map<String?, AvailabilityModel> tempMap = {};
+    tempMap.addAll(_availabilityModels);
 
     /// remove lots as we add them to the ordered list
     for (String? lotName in order) {
@@ -105,14 +90,10 @@ class AvailabilityDataProvider extends ChangeNotifier {
   }
 
   /// add or remove location availability display from card based on user selection
-  void toggleLocation(String? location) {
-    if (_locationViewState[location] ?? true) {
-      _locationViewState[location] = false;
-    } else {
-      _locationViewState[location] = true;
-    }
-    _userDataProvider
-        .updateUserProfileModel(_userDataProvider.userProfileModel);
+  void toggleLocation(String location)
+  {
+    locationViewState[location] = !locationViewState[location]!;
+    _userDataProvider.updateUserProfileModel(_userDataProvider.userProfileModel!);
     notifyListeners();
   }
 
@@ -132,7 +113,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   }
 
   /// SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
+  bool get isLoading => _isLoading;
 
   String? get error => _error;
 
@@ -141,24 +122,17 @@ class AvailabilityDataProvider extends ChangeNotifier {
   Map<String?, bool> get locationViewState => _locationViewState;
 
   List<AvailabilityModel?> get availabilityModels {
-    if (_availabilityModels != null) {
-      ///check if we have an offline _userProfileModel
-      if (_userDataProvider.userProfileModel != null) {
-        return makeOrderedList(
-            _userDataProvider.userProfileModel!.selectedOccuspaceLocations);
-      }
-      return _availabilityModels!.values.toList();
+    ///check if we have an offline _userProfileModel
+    if (_userDataProvider.userProfileModel != null) {
+      return makeOrderedList(
+          _userDataProvider.userProfileModel!.selectedOccuspaceLocations);
     }
-    return [];
+    return _availabilityModels.values.toList();
   }
 
   /// get all locations
-  List<String?> locations() {
-    List<String?> locationsToReturn = [];
-    for (AvailabilityModel model
-        in _availabilityModels as Iterable<AvailabilityModel>? ?? []) {
-      locationsToReturn.add(model.name);
-    }
-    return locationsToReturn;
-  }
+  List<String> locations() =>
+      _availabilityModels.values
+          .map((model) => model.name)
+          .toList();
 }

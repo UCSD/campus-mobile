@@ -17,7 +17,7 @@ class WeatherCard extends StatelessWidget {
     return Stack(
       children: [
         CardContainer(
-          active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+          active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
           hide: () => Provider.of<CardsDataProvider>(context, listen: false)
               .toggleCard(cardId),
           reload: () => Provider.of<WeatherDataProvider>(context, listen: false)

@@ -29,7 +29,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<ShuttleDataProvider>(context, listen: false)

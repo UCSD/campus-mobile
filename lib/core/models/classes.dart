@@ -130,32 +130,29 @@ class SectionData {
   });
 
   factory SectionData.fromJson(Map<String, dynamic> json) => SectionData(
-        section: json["section"] == null ? null : json["section"],
-        meetingType: json["meeting_type"] == null ? null : json["meeting_type"],
-        time: json["time"] == null ? null : json["time"],
-        days: json["days"] == null ? null : json["days"],
-        date: json["date"] == null ? null : json["date"],
-        building: json["building"] == null ? "" : json["building"],
-        room: json["room"] == null ? "" : json["room"],
-        instructorName:
-            json["instructor_name"] == null ? "" : json["instructor_name"],
-        specialMtgCode:
-            json["special_mtg_code"] == null ? null : json["special_mtg_code"],
-        enrollStatus:
-            json["enrollStatus"] == null ? null : json["enrollStatus"],
+        section: json["section"],
+        meetingType: json["meeting_type"],
+        time: json["time"],
+        days: json["days"],
+        date: json["date"],
+        building: json["building"],
+        room: json["room"],
+        instructorName: json["instructor_name"],
+        specialMtgCode: json["special_mtg_code"],
+        enrollStatus: json["enrollStatus"],
       );
 
   Map<String, dynamic> toJson() => {
-        "section": section == null ? null : section,
-        "meeting_type": meetingType == null ? null : meetingType,
-        "time": time == null ? null : time,
-        "days": days == null ? null : days,
-        "date": date == null ? null : date,
-        "building": building == null ? "" : building,
-        "room": room == null ? "" : room,
-        "instructor_name": instructorName == null ? "" : instructorName,
-        "special_mtg_code": specialMtgCode == null ? null : specialMtgCode,
-        "enrollStatus": enrollStatus == null ? null : enrollStatus,
+        "section": section,
+        "meeting_type": meetingType,
+        "time": time,
+        "days": days,
+        "date": date,
+        "building": building,
+        "room": room,
+        "instructor_name": instructorName,
+        "special_mtg_code": specialMtgCode,
+        "enrollStatus": enrollStatus,
       };
 }
 

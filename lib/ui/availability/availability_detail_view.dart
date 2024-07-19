@@ -79,7 +79,7 @@ class AvailabilityDetailedView extends StatelessWidget {
 
   // Calculate the percent available
   num percentAvailability(Floor subLocationFloor) =>
-      subLocationFloor.percentage!;
+      subLocationFloor.percentage;
 
   // Color options
   setIndicatorColor(num percentage) {

@@ -73,7 +73,7 @@ class ScannerDataProvider extends ChangeNotifier {
   Map<String, dynamic> createUserData() {
     return {
       'barcode': _barcode,
-      'ucsdaffiliation': _userDataProvider.authenticationModel!.ucsdaffiliation
+      'ucsdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation
     };
   }
 
@@ -108,7 +108,7 @@ class ScannerDataProvider extends ChangeNotifier {
 
     try {
       int accessTokenExpiration =
-          _userDataProvider.authenticationModel?.expiration! as int;
+          _userDataProvider.authenticationModel.expiration! as int;
       var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
       var timeDiff = accessTokenExpiration - nowTime;
       var tokenExpired = timeDiff <= 0 ? true : false;
@@ -128,7 +128,7 @@ class ScannerDataProvider extends ChangeNotifier {
           var results = await _barcodeService.uploadResults({
             "Content-Type": "application/json",
             'Authorization':
-                'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           }, {
             'barcode': _barcode
           });
