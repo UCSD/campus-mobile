@@ -10,12 +10,11 @@ class MediaAll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<MediaDataProvider>(context).isLoading!
-        ? Center(
+    return Provider.of<MediaDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : buildMediaList(
-            Provider.of<MediaDataProvider>(context).mediaModels!, context);
+            Provider.of<MediaDataProvider>(context).mediaModels, context);
   }
 
   Widget buildMediaList(List<MediaModel> listOfMedia, BuildContext context) {

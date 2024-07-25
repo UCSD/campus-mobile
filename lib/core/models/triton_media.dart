@@ -13,42 +13,40 @@ String mediaModelToJson(List<MediaModel> data) =>
 //Remove location as well as end, event and start dates
 class MediaModel {
   MediaModel({
-    this.title,
-    this.description,
-    this.imageHQ,
-    this.imageThumb,
-    this.link,
-    this.id,
-    this.tags,
+    required this.title,
+    required this.description,
+    required this.imageHQ,
+    required this.imageThumb,
+    required this.link,
+    required this.id,
+    required this.tags,
   });
 
-  String? title;
-  String? description;
-  String? imageHQ;
-  String? imageThumb;
-  String? link;
-  String? id;
-  List<String>? tags;
+  String title;
+  String description;
+  String imageHQ;
+  String imageThumb;
+  String link;
+  String id;
+  List<String> tags;
 
   factory MediaModel.fromJson(Map<String, dynamic> json) => MediaModel(
-        title: json["title"] == null ? null : json["title"],
-        description: json["description"] == null ? null : json["description"],
-        imageHQ: json["imageHQ"] == null ? null : json["imageHQ"],
-        imageThumb: json["imageThumb"] == null ? null : json["imageThumb"],
-        link: json["link"] == null ? null : json["link"],
-        id: json["id"] == null ? null : json["id"],
-        tags: json["tags"] == null
-            ? null
-            : List<String>.from(json["tags"].map((x) => x)),
-      );
+    title: json["title"] ?? '',
+    description: json["description"] ?? '',
+    imageHQ: json["imageHQ"] ?? '',
+    imageThumb: json["imageThumb"] ?? '',
+    link: json["link"] ?? '',
+    id: json["id"] ?? '',
+    tags: json["tags"] != null ? List<String>.from(json["tags"].map((x) => x)) : [],
+  );
 
   Map<String, dynamic> toJson() => {
-        "title": title == null ? null : title,
-        "description": description == null ? null : description,
-        "imageHQ": imageHQ == null ? null : imageHQ,
-        "imageThumb": imageThumb == null ? null : imageThumb,
-        "link": link == null ? null : link,
-        "id": id == null ? null : id,
-        "tags": tags == null ? null : List<dynamic>.from(tags!.map((x) => x)),
-      };
+    "title": title,
+    "description": description,
+    "imageHQ": imageHQ,
+    "imageThumb": imageThumb,
+    "link": link,
+    "id": id,
+    "tags": List<dynamic>.from(tags.map((x) => x)),
+  };
 }

@@ -42,8 +42,7 @@ class _MediaDetailView extends State<MediaDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<MediaDataProvider>(context).isLoading!
-        ? Center(
+    return Provider.of<MediaDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : ContainerView(
@@ -54,23 +53,23 @@ class _MediaDetailView extends State<MediaDetailView> {
   Widget buildDetailView(BuildContext context) {
     AudioSource _audio;
 
-    if (widget.data.tags?.last == "Local Audio File") {
-      String param = widget.data.link ?? "";
+    if (widget.data.tags.last == "Local Audio File") {
+      String param = widget.data.link;
       _audio = AudioSource.uri(
         Uri.parse('asset:///assets/' + param),
         tag: MediaItem(
           id: '${1}',
-          title: (widget.data.title ?? ""),
-          artUri: Uri.parse(widget.data.imageHQ ?? ""),
+          title: (widget.data.title),
+          artUri: Uri.parse(widget.data.imageHQ),
         ),
       );
     } else {
       _audio = AudioSource.uri(
-        Uri.parse(widget.data.link ?? ""),
+        Uri.parse(widget.data.link),
         tag: MediaItem(
           id: '${0}',
-          title: (widget.data.title ?? ""),
-          artUri: Uri.parse(widget.data.imageHQ ?? ""),
+          title: (widget.data.title),
+          artUri: Uri.parse(widget.data.imageHQ),
         ),
       );
     }
@@ -109,10 +108,10 @@ class _MediaDetailView extends State<MediaDetailView> {
               );
             },
           ),
-          widget.data.tags?.last == "Stream Audio File"
+          widget.data.tags.last == "Stream Audio File"
               ? RadioControlButtons(_player)
               : ControlButtons(_player),
-          widget.data.tags?.last == "Stream Audio File"
+          widget.data.tags.last == "Stream Audio File"
               ? Container()
               : StreamBuilder<PositionData>(
                   stream: _positionDataStream,
@@ -130,7 +129,7 @@ class _MediaDetailView extends State<MediaDetailView> {
                   },
                 ),
 
-          widget.data.tags?.last == "Stream Audio File"
+          widget.data.tags.last == "Stream Audio File"
               ? BroadcastScheduleButton(
                   link: "https://spinitron.com/KSDT/calendar")
               : Container(),

@@ -3,7 +3,6 @@ import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class MediaTile extends StatelessWidget {
   const MediaTile({Key? key, required this.data}) : super(key: key);
@@ -12,8 +11,7 @@ class MediaTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<MediaDataProvider>(context).isLoading!
-        ? Center(
+    return Provider.of<MediaDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : buildMediaTile(context);
@@ -48,7 +46,7 @@ class MediaTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          data.title!,
+                          data.title,
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
