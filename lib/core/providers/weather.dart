@@ -4,21 +4,17 @@ import 'package:flutter/material.dart';
 
 class WeatherDataProvider extends ChangeNotifier {
   WeatherDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
     ///INITIALIZE SERVICES
     _weatherService = WeatherService();
-    _weatherModel = WeatherModel();
   }
 
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
   ///MODELS
-  WeatherModel? _weatherModel;
+  WeatherModel _weatherModel = WeatherModel();
 
   ///SERVICES
   late WeatherService _weatherService;
@@ -39,8 +35,8 @@ class WeatherDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
+  bool get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  WeatherModel? get weatherModel => _weatherModel;
+  WeatherModel get weatherModel => _weatherModel;
 }

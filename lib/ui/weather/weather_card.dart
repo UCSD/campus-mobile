@@ -26,7 +26,7 @@ class WeatherCard extends StatelessWidget {
           titleText: CardTitleConstants.titleMap[cardId],
           errorText: Provider.of<WeatherDataProvider>(context).error,
           child: () => buildCardContent(
-              Provider.of<WeatherDataProvider>(context).weatherModel!),
+              Provider.of<WeatherDataProvider>(context).weatherModel),
           footer: buildFooter(),
         ),
       ],
@@ -93,12 +93,13 @@ class WeatherCard extends StatelessWidget {
 
   Widget buildCardContent(WeatherModel data) {
     return ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          buildCurrentWeather(data.currentWeather!),
-          buildWeeklyForecast(data.weeklyForecast!),
-        ]);
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: <Widget>[
+        buildCurrentWeather(data.currentWeather!),
+        buildWeeklyForecast(data.weeklyForecast!),
+      ],
+    );
   }
 
   Widget buildWeeklyForecast(WeeklyForecast weeklyForecast) {
@@ -106,11 +107,11 @@ class WeatherCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 15.0),
       child: Row(
         children: <Widget>[
-          buildDailyForecast(weeklyForecast.data![0]),
-          buildDailyForecast(weeklyForecast.data![1]),
-          buildDailyForecast(weeklyForecast.data![2]),
-          buildDailyForecast(weeklyForecast.data![3]),
-          buildDailyForecast(weeklyForecast.data![4]),
+          if (weeklyForecast.data != null && weeklyForecast.data!.isNotEmpty) buildDailyForecast(weeklyForecast.data![0]),
+          if (weeklyForecast.data != null && weeklyForecast.data!.length > 1) buildDailyForecast(weeklyForecast.data![1]),
+          if (weeklyForecast.data != null && weeklyForecast.data!.length > 2) buildDailyForecast(weeklyForecast.data![2]),
+          if (weeklyForecast.data != null && weeklyForecast.data!.length > 3) buildDailyForecast(weeklyForecast.data![3]),
+          if (weeklyForecast.data != null && weeklyForecast.data!.length > 4) buildDailyForecast(weeklyForecast.data![4]),
         ],
       ),
     );
@@ -121,14 +122,14 @@ class WeatherCard extends StatelessWidget {
       child: Expanded(
         child: Column(
           children: <Widget>[
-            Text(getDayOfWeek(data.time!)),
+            Text(getDayOfWeek(data.time)),
             Image.network(
-              WEATHER_ICON_BASE_URL + data.icon! + '.png',
+              WEATHER_ICON_BASE_URL + (data.icon) + '.png',
               width: 35,
               height: 35,
             ),
-            Text(data.temperatureHigh!.round().toString() + '\u00B0'),
-            Text(data.temperatureLow!.round().toString() + '\u00B0'),
+            Text(data.temperatureHigh.round().toString()),
+            Text(data.temperatureLow.round().toString()),
           ],
         ),
       ),
@@ -140,20 +141,20 @@ class WeatherCard extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Image.network(
-            WEATHER_ICON_BASE_URL + data.icon! + '.png',
+            WEATHER_ICON_BASE_URL + data.icon + '.png',
             width: 110,
             height: 110,
           ),
           Expanded(
             child: ListTile(
               title: Text(
-                data.temperature!.round().toString() +
+                data.temperature.round().toString() +
                     '\u00B0' +
                     ' in San Diego',
                 textAlign: TextAlign.start,
               ),
               subtitle: Text(
-                data.summary!,
+                data.summary,
                 textAlign: TextAlign.start,
               ),
             ),

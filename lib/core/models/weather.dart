@@ -39,55 +39,55 @@ class WeatherModel {
         "latitude": latitude,
         "longitude": longitude,
         "timezone": timezone,
-        "currently": currentWeather!.toJson(),
-        "daily": weeklyForecast!.toJson(),
+        "currently": currentWeather?.toJson(),
+        "daily": weeklyForecast?.toJson(),
         "offset": offset,
       };
 }
 
 class Weather {
-  int? time;
-  String? summary;
-  String? icon;
-  int? nearestStormDistance;
-  int? nearestStormBearing;
-  int? precipIntensity;
-  int? precipProbability;
-  String? precipType;
-  double? temperature;
-  double? apparentTemperature;
-  double? dewPoint;
-  double? humidity;
-  double? pressure;
-  double? windSpeed;
-  double? windGust;
-  int? windBearing;
-  double? cloudCover;
-  int? uvIndex;
-  int? visibility;
-  double? ozone;
+  int time;
+  String summary;
+  String icon;
+  int nearestStormDistance;
+  int nearestStormBearing;
+  int precipIntensity;
+  int precipProbability;
+  String precipType;
+  double temperature;
+  double apparentTemperature;
+  double dewPoint;
+  double humidity;
+  double pressure;
+  double windSpeed;
+  double windGust;
+  int windBearing;
+  double cloudCover;
+  int uvIndex;
+  int visibility;
+  double ozone;
 
   Weather({
-    this.time,
-    this.summary,
-    this.icon,
-    this.nearestStormDistance,
-    this.nearestStormBearing,
-    this.precipIntensity,
-    this.precipProbability,
-    this.precipType,
-    this.temperature,
-    this.apparentTemperature,
-    this.dewPoint,
-    this.humidity,
-    this.pressure,
-    this.windSpeed,
-    this.windGust,
-    this.windBearing,
-    this.cloudCover,
-    this.uvIndex,
-    this.visibility,
-    this.ozone,
+    required this.time,
+    required this.summary,
+    required this.icon,
+    this.nearestStormDistance = 0,
+    this.nearestStormBearing = 0,
+    this.precipIntensity = 0,
+    this.precipProbability = 0,
+    this.precipType = "None",
+    required this.temperature,
+    required this.apparentTemperature,
+    this.dewPoint = 0.0,
+    this.humidity = 0.0,
+    this.pressure = 0.0,
+    this.windSpeed = 0.0,
+    this.windGust = 0.0,
+    this.windBearing = 0,
+    this.cloudCover = 0.0,
+    this.uvIndex = 0,
+    this.visibility = 0,
+    this.ozone = 0.0,
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) => Weather(
@@ -98,7 +98,7 @@ class Weather {
         nearestStormBearing: json["nearestStormBearing"],
         precipIntensity: json["precipIntensity"],
         precipProbability: json["precipProbability"],
-        precipType: json["precipType"],
+        precipType: json["precipType"] ?? "None",
         temperature: json["temperature"].toDouble(),
         apparentTemperature: json["apparentTemperature"].toDouble(),
         dewPoint: json["dewPoint"].toDouble(),
@@ -158,91 +158,91 @@ class WeeklyForecast {
   Map<String, dynamic> toJson() => {
         "summary": summary,
         "icon": icon,
-        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
+        "data": data?.map((x) => x.toJson()).toList(),
       };
 }
 
 class Forecast {
-  int? time;
-  String? summary;
-  String? icon;
-  int? sunriseTime;
-  int? sunsetTime;
-  double? moonPhase;
-  double? precipIntensity;
-  double? precipIntensityMax;
-  int? precipIntensityMaxTime;
-  double? precipProbability;
-  String? precipType;
-  double? temperatureHigh;
-  int? temperatureHighTime;
-  double? temperatureLow;
-  int? temperatureLowTime;
-  double? apparentTemperatureHigh;
-  int? apparentTemperatureHighTime;
-  double? apparentTemperatureLow;
-  int? apparentTemperatureLowTime;
-  double? dewPoint;
-  double? humidity;
-  double? pressure;
-  double? windSpeed;
-  double? windGust;
-  int? windGustTime;
-  int? windBearing;
-  double? cloudCover;
-  int? uvIndex;
-  int? uvIndexTime;
-  double? visibility;
-  double? ozone;
-  double? temperatureMin;
-  int? temperatureMinTime;
-  double? temperatureMax;
-  int? temperatureMaxTime;
-  double? apparentTemperatureMin;
-  int? apparentTemperatureMinTime;
-  double? apparentTemperatureMax;
-  int? apparentTemperatureMaxTime;
+  int time;
+  String summary;
+  String icon;
+  int sunriseTime;
+  int sunsetTime;
+  double moonPhase;
+  double precipIntensity;
+  double precipIntensityMax;
+  int precipIntensityMaxTime;
+  double precipProbability;
+  String precipType;
+  double temperatureHigh;
+  int temperatureHighTime;
+  double temperatureLow;
+  int temperatureLowTime;
+  double apparentTemperatureHigh;
+  int apparentTemperatureHighTime;
+  double apparentTemperatureLow;
+  int apparentTemperatureLowTime;
+  double dewPoint;
+  double humidity;
+  double pressure;
+  double windSpeed;
+  double windGust;
+  int windGustTime;
+  int windBearing;
+  double cloudCover;
+  int uvIndex;
+  int uvIndexTime;
+  double visibility;
+  double ozone;
+  double temperatureMin;
+  int temperatureMinTime;
+  double temperatureMax;
+  int temperatureMaxTime;
+  double apparentTemperatureMin;
+  int apparentTemperatureMinTime;
+  double apparentTemperatureMax;
+  int apparentTemperatureMaxTime;
 
   Forecast({
-    this.time,
-    this.summary,
-    this.icon,
-    this.sunriseTime,
-    this.sunsetTime,
-    this.moonPhase,
-    this.precipIntensity,
-    this.precipIntensityMax,
-    this.precipIntensityMaxTime,
-    this.precipProbability,
-    this.precipType,
-    this.temperatureHigh,
-    this.temperatureHighTime,
-    this.temperatureLow,
-    this.temperatureLowTime,
-    this.apparentTemperatureHigh,
-    this.apparentTemperatureHighTime,
-    this.apparentTemperatureLow,
-    this.apparentTemperatureLowTime,
-    this.dewPoint,
-    this.humidity,
-    this.pressure,
-    this.windSpeed,
-    this.windGust,
-    this.windGustTime,
-    this.windBearing,
-    this.cloudCover,
-    this.uvIndex,
-    this.uvIndexTime,
-    this.visibility,
-    this.ozone,
-    this.temperatureMin,
-    this.temperatureMinTime,
-    this.temperatureMax,
-    this.temperatureMaxTime,
-    this.apparentTemperatureMin,
-    this.apparentTemperatureMinTime,
-    this.apparentTemperatureMax,
-    this.apparentTemperatureMaxTime,
+    required this.time,
+    required this.summary,
+    required this.icon,
+    this.sunriseTime = 0,
+    this.sunsetTime = 0,
+    this.moonPhase = 0.0,
+    this.precipIntensity = 0.0,
+    this.precipIntensityMax = 0.0,
+    this.precipIntensityMaxTime = 0,
+    this.precipProbability = 0.0,
+    this.precipType = "None",
+    required this.temperatureHigh,
+    this.temperatureHighTime = 0,
+    required this.temperatureLow,
+    this.temperatureLowTime = 0,
+    this.apparentTemperatureHigh = 0.0,
+    this.apparentTemperatureHighTime = 0,
+    this.apparentTemperatureLow = 0.0,
+    this.apparentTemperatureLowTime = 0,
+    this.dewPoint = 0.0,
+    this.humidity = 0.0,
+    this.pressure = 0.0,
+    this.windSpeed = 0.0,
+    this.windGust = 0.0,
+    this.windGustTime = 0,
+    this.windBearing = 0,
+    this.cloudCover = 0.0,
+    this.uvIndex = 0,
+    this.uvIndexTime = 0,
+    this.visibility = 0.0,
+    this.ozone = 0.0,
+    this.temperatureMin = 0.0,
+    this.temperatureMinTime = 0,
+    this.temperatureMax = 0.0,
+    this.temperatureMaxTime = 0,
+    this.apparentTemperatureMin = 0.0,
+    this.apparentTemperatureMinTime = 0,
+    this.apparentTemperatureMax = 0.0,
+    this.apparentTemperatureMaxTime = 0,
   });
 
   factory Forecast.fromJson(Map<String, dynamic> json) => Forecast(
@@ -288,44 +288,44 @@ class Forecast {
       );
 
   Map<String, dynamic> toJson() => {
-        "time": time,
-        "summary": summary,
-        "icon": icon,
-        "sunriseTime": sunriseTime,
-        "sunsetTime": sunsetTime,
-        "moonPhase": moonPhase,
-        "precipIntensity": precipIntensity,
-        "precipIntensityMax": precipIntensityMax,
-        "precipIntensityMaxTime": precipIntensityMaxTime,
-        "precipProbability": precipProbability,
-        "precipType": precipType == null ? null : precipType,
-        "temperatureHigh": temperatureHigh,
-        "temperatureHighTime": temperatureHighTime,
-        "temperatureLow": temperatureLow,
-        "temperatureLowTime": temperatureLowTime,
-        "apparentTemperatureHigh": apparentTemperatureHigh,
-        "apparentTemperatureHighTime": apparentTemperatureHighTime,
-        "apparentTemperatureLow": apparentTemperatureLow,
-        "apparentTemperatureLowTime": apparentTemperatureLowTime,
-        "dewPoint": dewPoint,
-        "humidity": humidity,
-        "pressure": pressure,
-        "windSpeed": windSpeed,
-        "windGust": windGust,
-        "windGustTime": windGustTime,
-        "windBearing": windBearing,
-        "cloudCover": cloudCover,
-        "uvIndex": uvIndex,
-        "uvIndexTime": uvIndexTime,
-        "visibility": visibility,
-        "ozone": ozone,
-        "temperatureMin": temperatureMin,
-        "temperatureMinTime": temperatureMinTime,
-        "temperatureMax": temperatureMax,
-        "temperatureMaxTime": temperatureMaxTime,
-        "apparentTemperatureMin": apparentTemperatureMin,
-        "apparentTemperatureMinTime": apparentTemperatureMinTime,
-        "apparentTemperatureMax": apparentTemperatureMax,
-        "apparentTemperatureMaxTime": apparentTemperatureMaxTime,
-      };
+    "time": time,
+    "summary": summary,
+    "icon": icon,
+    "sunriseTime": sunriseTime,
+    "sunsetTime": sunsetTime,
+    "moonPhase": moonPhase,
+    "precipIntensity": precipIntensity,
+    "precipIntensityMax": precipIntensityMax,
+    "precipIntensityMaxTime": precipIntensityMaxTime,
+    "precipProbability": precipProbability,
+    "precipType": precipType,
+    "temperatureHigh": temperatureHigh,
+    "temperatureHighTime": temperatureHighTime,
+    "temperatureLow": temperatureLow,
+    "temperatureLowTime": temperatureLowTime,
+    "apparentTemperatureHigh": apparentTemperatureHigh,
+    "apparentTemperatureHighTime": apparentTemperatureHighTime,
+    "apparentTemperatureLow": apparentTemperatureLow,
+    "apparentTemperatureLowTime": apparentTemperatureLowTime,
+    "dewPoint": dewPoint,
+    "humidity": humidity,
+    "pressure": pressure,
+    "windSpeed": windSpeed,
+    "windGust": windGust,
+    "windGustTime": windGustTime,
+    "windBearing": windBearing,
+    "cloudCover": cloudCover,
+    "uvIndex": uvIndex,
+    "uvIndexTime": uvIndexTime,
+    "visibility": visibility,
+    "ozone": ozone,
+    "temperatureMin": temperatureMin,
+    "temperatureMinTime": temperatureMinTime,
+    "temperatureMax": temperatureMax,
+    "temperatureMaxTime": temperatureMaxTime,
+    "apparentTemperatureMin": apparentTemperatureMin,
+    "apparentTemperatureMinTime": apparentTemperatureMinTime,
+    "apparentTemperatureMax": apparentTemperatureMax,
+    "apparentTemperatureMaxTime": apparentTemperatureMaxTime,
+  };
 }

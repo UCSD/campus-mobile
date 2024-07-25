@@ -5,7 +5,7 @@ import 'package:campus_mobile_experimental/core/models/weather.dart';
 
 class WeatherService {
   bool _isLoading = false;
-  DateTime? _lastUpdated;
+  DateTime _lastUpdated = DateTime.now();
   String? _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
@@ -36,7 +36,7 @@ class WeatherService {
 
   String? get error => _error;
 
-  DateTime? get lastUpdated => _lastUpdated;
+  DateTime get lastUpdated => _lastUpdated;
 
   NetworkHelper get availabilityService => _networkHelper;
 
