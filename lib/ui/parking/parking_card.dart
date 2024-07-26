@@ -26,12 +26,12 @@ class _ParkingCardState extends State<ParkingCard> {
 
   // ignore: must_call_super
   Widget build(BuildContext context) {
-    Map<String, Function> menuOption = {
-      "Manage Lots": (context) =>
-          {Navigator.pushNamed(context, RoutePaths.ManageParkingView)},
-      "Manage Spots": (context) =>
-          {Navigator.pushNamed(context, RoutePaths.SpotTypesView)}
-    };
+    // Map<String, Function> menuOption = { --> Not Used
+    //   "Manage Lots": (context) =>
+    //       {Navigator.pushNamed(context, RoutePaths.ManageParkingView)},
+    //   "Manage Spots": (context) =>
+    //       {Navigator.pushNamed(context, RoutePaths.SpotTypesView)}
+    // };
     //super.build(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId],
@@ -110,7 +110,7 @@ class _ParkingCardState extends State<ParkingCard> {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).colorScheme.background,
       ),
       child: Text(
         'Manage Lots',
@@ -122,7 +122,7 @@ class _ParkingCardState extends State<ParkingCard> {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).colorScheme.background,
       ),
       child: Text(
         'Manage Spots',

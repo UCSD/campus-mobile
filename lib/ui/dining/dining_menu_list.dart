@@ -67,7 +67,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
                     text: item.name,
                     style: TextStyle(
                       // color: Theme.of(context).buttonColor,
-                      color: Theme.of(context).backgroundColor,
+                      color: Theme.of(context).colorScheme.background,
                       fontSize: 18,
                     ),
                   ),
@@ -135,7 +135,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
         textStyle: TextStyle(fontSize: 18),
         selectedColor: Theme.of(context).textTheme.button!.color,
         // fillColor: Theme.of(context).buttonColor,
-        fillColor: Theme.of(context).backgroundColor,
+        fillColor: Theme.of(context).colorScheme.background,
         borderRadius: BorderRadius.circular(10),
         constraints: BoxConstraints.expand(
             width: (MediaQuery.of(context).size.width - 40) * .33, height: 38),
@@ -217,7 +217,7 @@ class LabeledRadio extends StatelessWidget {
             groupValue: groupValue,
             onChanged: onChanged,
             // activeColor: Theme.of(context).buttonColor,
-            activeColor: Theme.of(context).backgroundColor,
+            activeColor: Theme.of(context).colorScheme.background,
           ),
           Container(
             child: Text(

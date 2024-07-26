@@ -24,11 +24,11 @@ class _ManageParkingViewState extends State<ManageParkingView> {
       "Parking Lots"
     ];
 
-    List<String> parkingTypeViews = [
-      "NeighborhoodsView",
-      "ParkingStructureView",
-      "ParkingLotsView"
-    ];
+    // List<String> parkingTypeViews = [ --> Not Used
+    //   "NeighborhoodsView",
+    //   "ParkingStructureView",
+    //   "ParkingLotsView"
+    // ];
 
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < parkingType.length; i++) {

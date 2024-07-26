@@ -1,10 +1,12 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
+// import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
@@ -25,7 +27,7 @@ class _WiFiCardState extends State<WiFiCard>
   late bool goodSpeed;
   bool timedOut = false;
   SpeedTestProvider _speedTestProvider = SpeedTestProvider();
-  UserDataProvider? _userDataProvider;
+  // UserDataProvider? _userDataProvider; --> Not Used
   bool _buttonEnabled = true;
   Timer? buttonTimer;
   static const int SPEED_TEST_TIMEOUT_CONST = 30;
@@ -257,7 +259,7 @@ class _WiFiCardState extends State<WiFiCard>
                                   style: TextButton.styleFrom(
                                     // primary: Theme.of(context).buttonColor,
                                     foregroundColor:
-                                        Theme.of(context).backgroundColor,
+                                        Theme.of(context).colorScheme.background,
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
@@ -348,7 +350,7 @@ class _WiFiCardState extends State<WiFiCard>
                                     style: TextButton.styleFrom(
                                       // primary: Theme.of(context).buttonColor
                                       foregroundColor:
-                                          Theme.of(context).backgroundColor,
+                                          Theme.of(context).colorScheme.background,
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
@@ -462,7 +464,7 @@ class _WiFiCardState extends State<WiFiCard>
                                     style: TextButton.styleFrom(
                                       // primary: Theme.of(context).buttonColor,
                                       foregroundColor:
-                                          Theme.of(context).backgroundColor,
+                                          Theme.of(context).colorScheme.background,
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();

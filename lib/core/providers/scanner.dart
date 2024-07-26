@@ -19,7 +19,7 @@ class ScannerDataProvider extends ChangeNotifier {
   bool? _hasScanned;
   bool? hasSubmitted;
   bool? _didError;
-  String? _message = '';
+  String? message = '';
 
   String? _licenseKey;
   late BarcodeService _barcodeService;
@@ -188,14 +188,9 @@ class ScannerDataProvider extends ChangeNotifier {
     _controller = value;
   }
 
-  set message(String? value) {
-    _message = value;
-  }
-
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
   String? get barcode => _barcode;
-  String? get message => _message;
   bool? get didError => _didError;
   bool? get hasScanned => _hasScanned;
   String? get licenseKey => _licenseKey;

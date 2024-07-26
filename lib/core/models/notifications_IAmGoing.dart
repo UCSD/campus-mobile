@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-IAmGoingModel IAmGoingModelFromJson(String str) =>
+IAmGoingModel iAmGoingModelFromJson(String str) =>
     IAmGoingModel.fromJson(json.decode(str));
 
 String freeFoodModelToJson(IAmGoingModel data) => json.encode(data.toJson());
@@ -15,14 +15,14 @@ class IAmGoingModel {
   });
 
   factory IAmGoingModel.fromJson(Map<String, dynamic> json) => IAmGoingModel(
-        statusCode: json["statusCode"],
-        body: Body.fromJson(json["body"]),
-      );
+    statusCode: json["statusCode"],
+    body: Body.fromJson(json["body"]),
+  );
 
   Map<String, dynamic> toJson() => {
-        "statusCode": statusCode,
-        "body": body!.toJson(),
-      };
+    "statusCode": statusCode,
+    "body": body!.toJson(),
+  };
 }
 
 class Body {
@@ -32,12 +32,12 @@ class Body {
   Body({this.count, this.maxCount});
 
   factory Body.fromJson(Map<String, dynamic> json) => Body(
-        count: json["count"],
-        maxCount: json["maxCount"],
-      );
+    count: json["count"],
+    maxCount: json["maxCount"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "count": count,
-        "maxCount": maxCount,
-      };
+    "count": count,
+    "maxCount": maxCount,
+  };
 }

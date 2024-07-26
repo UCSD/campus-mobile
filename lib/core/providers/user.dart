@@ -428,8 +428,6 @@ class UserDataProvider extends ChangeNotifier {
 
   AuthenticationModel? get authenticationModel => _authenticationModel;
 
-  CardsDataProvider? get cardsDataProvider => _cardsDataProvider;
-
   ///GETTERS FOR STATES
   String? get error => _error;
 

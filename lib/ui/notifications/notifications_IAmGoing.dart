@@ -22,7 +22,7 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
     this.data = data;
   }
 
-  late IAmGoingProvider _IAmGoingDataProvider;
+  late IAmGoingProvider _iAmGoingDataProvider;
   late MessageElement data;
 
   bool _isLoading = false;
@@ -34,9 +34,9 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _IAmGoingDataProvider = Provider.of<IAmGoingProvider>(context);
-    _isLoading = _IAmGoingDataProvider.isLoading(data.messageId);
-    _isGoing = _IAmGoingDataProvider.registeredEvents!.contains(data.messageId);
+    _iAmGoingDataProvider = Provider.of<IAmGoingProvider>(context);
+    _isLoading = _iAmGoingDataProvider.isLoading(data.messageId);
+    _isGoing = _iAmGoingDataProvider.registeredEvents!.contains(data.messageId);
     if (_isGoing) {
       _buttonColor = Colors.green;
       _borderColor = Colors.green;
@@ -50,12 +50,12 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
 
   @override
   Widget build(BuildContext context) {
-    var isOverCount = _IAmGoingDataProvider.isOverCount(data.messageId);
+    var isOverCount = _iAmGoingDataProvider.isOverCount(data.messageId);
     String messageType = data.audience!.topics![0];
 
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
 
-    var currCount = _IAmGoingDataProvider.count(data.messageId);
+    var currCount = _iAmGoingDataProvider.count(data.messageId);
     String countText;
     if (messageType == "campusInnovationEvents") {
       if (currCount == 1) {
@@ -182,12 +182,12 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
         _textColor = Color(0xFF034161);
-        _IAmGoingDataProvider.decrementCount(data.messageId!);
+        _iAmGoingDataProvider.decrementCount(data.messageId!);
       } else {
         _buttonColor = Colors.green;
         _borderColor = Colors.green;
         _textColor = Colors.white;
-        _IAmGoingDataProvider.incrementCount(data.messageId!);
+        _iAmGoingDataProvider.incrementCount(data.messageId!);
       }
       _isGoing = !_isGoing;
     });
