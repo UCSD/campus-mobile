@@ -31,12 +31,12 @@ class MediaModel {
   List<String> tags;
 
   factory MediaModel.fromJson(Map<String, dynamic> json) => MediaModel(
-    title: json["title"] ?? '',
-    description: json["description"] ?? '',
-    imageHQ: json["imageHQ"] ?? '',
-    imageThumb: json["imageThumb"] ?? '',
-    link: json["link"] ?? '',
-    id: json["id"] ?? '',
+    title: json["title"],
+    description: json["description"],
+    imageHQ: json["imageHQ"],
+    imageThumb: json["imageThumb"],
+    link: json["link"],
+    id: json["id"],
     tags: json["tags"] != null ? List<String>.from(json["tags"].map((x) => x)) : [],
   );
 
