@@ -14,7 +14,7 @@ class WeatherDataProvider extends ChangeNotifier {
   String? _error;
 
   ///MODELS
-  WeatherModel _weatherModel = WeatherModel();
+  late WeatherModel _weatherModel;
 
   ///SERVICES
   late WeatherService _weatherService;
@@ -23,12 +23,17 @@ class WeatherDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    if (await _weatherService.fetchData()) {
-      _weatherModel = _weatherService.weatherModel;
-      _lastUpdated = DateTime.now();
-    } else {
-      ///TODO: determine what error to show to the user
-      _error = _weatherService.error;
+    try {
+      if (await _weatherService.fetchData()) {
+        _weatherModel = _weatherService.weatherModel;
+        _lastUpdated = DateTime.now();
+      } else {
+        _error = _weatherService.error;
+        print('Error from service: $_error'); // Add logging
+      }
+    } catch (e) {
+      _error = e.toString();
+      print('Exception caught: $_error'); // Add logging
     }
     _isLoading = false;
     notifyListeners();

@@ -8,25 +8,28 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 const String cardId = 'weather';
-const String WEATHER_ICON_BASE_URL =
-    'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
+const String WEATHER_ICON_BASE_URL = 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
 
 class WeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final weatherDataProvider = Provider.of<WeatherDataProvider>(context);
     return Stack(
       children: [
         CardContainer(
           active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-          hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-              .toggleCard(cardId),
-          reload: () => Provider.of<WeatherDataProvider>(context, listen: false)
-              .fetchWeather(),
-          isLoading: Provider.of<WeatherDataProvider>(context).isLoading,
+          hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+          reload: () => weatherDataProvider.fetchWeather(),
+          isLoading: weatherDataProvider.isLoading,
           titleText: CardTitleConstants.titleMap[cardId],
-          errorText: Provider.of<WeatherDataProvider>(context).error,
-          child: () => buildCardContent(
-              Provider.of<WeatherDataProvider>(context).weatherModel),
+          errorText: weatherDataProvider.error,
+          child: () {
+            if (weatherDataProvider.error != null) {
+              return Center(child: Text('An error occurred, please try again.'));
+            } else {
+              return buildCardContent(weatherDataProvider.weatherModel);
+            }
+          },
           footer: buildFooter(),
         ),
       ],
@@ -69,8 +72,7 @@ class WeatherCard extends StatelessWidget {
   }
 
   String getDayOfWeek(int epoch) {
-    DateTime dt = new DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
-
+    DateTime dt = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
     switch (dt.weekday) {
       case 1:
         return 'MON';
@@ -96,8 +98,8 @@ class WeatherCard extends StatelessWidget {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
-        buildCurrentWeather(data.currentWeather!),
-        buildWeeklyForecast(data.weeklyForecast!),
+        buildCurrentWeather(data.currentWeather),
+        buildWeeklyForecast(data.weeklyForecast),
       ],
     );
   }
@@ -107,11 +109,11 @@ class WeatherCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 15.0),
       child: Row(
         children: <Widget>[
-          if (weeklyForecast.data != null && weeklyForecast.data!.isNotEmpty) buildDailyForecast(weeklyForecast.data![0]),
-          if (weeklyForecast.data != null && weeklyForecast.data!.length > 1) buildDailyForecast(weeklyForecast.data![1]),
-          if (weeklyForecast.data != null && weeklyForecast.data!.length > 2) buildDailyForecast(weeklyForecast.data![2]),
-          if (weeklyForecast.data != null && weeklyForecast.data!.length > 3) buildDailyForecast(weeklyForecast.data![3]),
-          if (weeklyForecast.data != null && weeklyForecast.data!.length > 4) buildDailyForecast(weeklyForecast.data![4]),
+          buildDailyForecast(weeklyForecast.data[0]),
+          buildDailyForecast(weeklyForecast.data[1]),
+          buildDailyForecast(weeklyForecast.data[2]),
+          buildDailyForecast(weeklyForecast.data[3]),
+          buildDailyForecast(weeklyForecast.data[4]),
         ],
       ),
     );
@@ -124,12 +126,12 @@ class WeatherCard extends StatelessWidget {
           children: <Widget>[
             Text(getDayOfWeek(data.time)),
             Image.network(
-              WEATHER_ICON_BASE_URL + (data.icon) + '.png',
+              WEATHER_ICON_BASE_URL + data.icon + '.png',
               width: 35,
               height: 35,
             ),
-            Text(data.temperatureHigh.round().toString()),
-            Text(data.temperatureLow.round().toString()),
+            Text(data.temperatureHigh.round().toString() + '\u00B0'),
+            Text(data.temperatureLow.round().toString() + '\u00B0'),
           ],
         ),
       ),
@@ -148,9 +150,7 @@ class WeatherCard extends StatelessWidget {
           Expanded(
             child: ListTile(
               title: Text(
-                data.temperature.round().toString() +
-                    '\u00B0' +
-                    ' in San Diego',
+                data.temperature.round().toString() + '\u00B0' + ' in San Diego',
                 textAlign: TextAlign.start,
               ),
               subtitle: Text(
@@ -164,3 +164,4 @@ class WeatherCard extends StatelessWidget {
     );
   }
 }
+
