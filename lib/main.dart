@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, deprecated_member_use
+// ignore_for_file: unused_local_variable
 
 import 'dart:async';
 
@@ -100,17 +100,33 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: lightAppBarTheme, colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(background: lightButtonColor),
     );
 
-    final ThemeData darkTheme = ThemeData(
+    final ColorScheme darkColorScheme = ColorScheme.fromSwatch(
       primarySwatch: ColorPrimary,
-      primaryColor: darkPrimaryColor,
+    ).copyWith(
+      primary: darkPrimaryColor,
+      background: darkButtonColor,
       brightness: Brightness.dark,
-      // buttonColor: darkButtonColor,
-      backgroundColor: darkButtonColor, // added
+    );
+
+    final ThemeData darkTheme = ThemeData(
+      primaryColor: darkPrimaryColor, // added
       textTheme: darkThemeText,
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,
-      unselectedWidgetColor: darkAccentColor,
+      unselectedWidgetColor: darkAccentColor, colorScheme: darkColorScheme.copyWith(background: darkButtonColor),
     );
+
+    // final ThemeData darkTheme = ThemeData(
+    //   primarySwatch: ColorPrimary,
+    //   primaryColor: darkPrimaryColor,
+    //   brightness: Brightness.dark,
+    //   // buttonColor: darkButtonColor,
+    //   backgroundColor: darkButtonColor, // added
+    //   textTheme: darkThemeText,
+    //   iconTheme: darkIconTheme,
+    //   appBarTheme: darkAppBarTheme,
+    //   unselectedWidgetColor: darkAccentColor,
+    // );
 
     return MultiProvider(
       providers: providers,
