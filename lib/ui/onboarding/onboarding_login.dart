@@ -257,7 +257,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     Widget okButton = TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).colorScheme.background,
       ),
       child: Text("OK"),
       onPressed: () {

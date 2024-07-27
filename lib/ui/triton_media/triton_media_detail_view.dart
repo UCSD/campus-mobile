@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -151,7 +153,7 @@ class BroadcastScheduleButton extends StatelessWidget {
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             foregroundColor: Theme.of(context).primaryColor, // foreground
-            backgroundColor: Theme.of(context).backgroundColor,
+            backgroundColor: Theme.of(context).colorScheme.background,
           ),
           child: Text(
             'Broadcast Schedule',

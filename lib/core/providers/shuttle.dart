@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'dart:math' as Math;
 
 import 'package:campus_mobile_experimental/core/models/location.dart';

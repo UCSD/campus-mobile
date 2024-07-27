@@ -26,7 +26,7 @@ class FreeFoodService {
           baseEndpoint + 'events/' + id + '/rsvpCount', headers);
 
       /// parse data
-      final data = IAmGoingModelFromJson(_response);
+      final data = iAmGoingModelFromJson(_response);
 
       _isLoading = false;
       _data = data;
@@ -56,7 +56,7 @@ class FreeFoodService {
       var _response = await _networkHelper.authorizedFetch(_url, headers);
 
       /// parse data
-      final data = IAmGoingModelFromJson(_response);
+      final data = iAmGoingModelFromJson(_response);
       _isLoading = false;
       _data = data;
       return true;

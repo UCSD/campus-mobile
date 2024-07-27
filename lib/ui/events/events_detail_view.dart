@@ -107,7 +107,7 @@ class LearnMoreButton extends StatelessWidget {
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             foregroundColor: Theme.of(context).primaryColor,
-            backgroundColor: Theme.of(context).backgroundColor,
+            backgroundColor: Theme.of(context).colorScheme.background,
           ),
           child: Text(
             'Learn More',

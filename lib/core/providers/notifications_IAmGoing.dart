@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'dart:collection';
 
 import 'package:campus_mobile_experimental/app_constants.dart';

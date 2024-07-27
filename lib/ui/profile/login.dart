@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
       trailing: OutlinedButton(
         style: OutlinedButton.styleFrom(
           // primary: Theme.of(context).buttonColor,
-          foregroundColor: Theme.of(context).backgroundColor,
+          foregroundColor: Theme.of(context).colorScheme.background,
         ),
         child: Text('Log out'),
         onPressed: () => executeLogout(),
@@ -154,7 +154,7 @@ class _LoginState extends State<Login> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       // primary: Theme.of(context).buttonColor,
-                      backgroundColor: Theme.of(context).backgroundColor,
+                      backgroundColor: Theme.of(context).colorScheme.background,
                     ),
                     child: Text(
                       'Sign In',
@@ -217,7 +217,7 @@ class _LoginState extends State<Login> {
     Widget okButton = TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).colorScheme.background,
       ),
       child: Text("OK"),
       onPressed: () {
