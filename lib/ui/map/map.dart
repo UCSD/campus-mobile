@@ -7,6 +7,7 @@ import 'package:campus_mobile_experimental/ui/map/directions_button.dart';
 import 'package:campus_mobile_experimental/ui/map/map_search_bar_ph.dart';
 import 'package:campus_mobile_experimental/ui/map/more_results_list.dart';
 import 'package:campus_mobile_experimental/ui/map/my_location_button.dart';
+import 'package:campus_mobile_experimental/ui/map/whats_around_me_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,10 @@ class Maps extends StatelessWidget {
           MyLocationButton(
               mapController:
                   Provider.of<MapsDataProvider>(context).mapController),
+          SizedBox(height: 10),
+          WhatsAroundMeButton(
+              mapController:
+              Provider.of<MapsDataProvider>(context).mapController),
           SizedBox(height: 10),
           DirectionsButton(
               mapController:
