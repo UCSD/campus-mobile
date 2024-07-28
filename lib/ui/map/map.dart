@@ -44,6 +44,7 @@ class Maps extends StatelessWidget {
               mapController:
                   Provider.of<MapsDataProvider>(context).mapController),
           SizedBox(height: 10),
+          /// Added What's Around Me Button
           WhatsAroundMeButton(
               mapController:
               Provider.of<MapsDataProvider>(context).mapController),
