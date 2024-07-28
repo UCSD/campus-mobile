@@ -17,7 +17,7 @@ class WhatsAroundMeButton extends StatelessWidget {
     return FloatingActionButton(
       heroTag: "whats_around_me",
       child: Icon(
-        Icons.emergency_share_sharp,
+        Icons.explore_sharp, /// or Icons.emergency_share_sharp,
         color: Colors.white,
       ),
       backgroundColor: Colors.amber.shade400,
