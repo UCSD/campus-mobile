@@ -88,9 +88,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   Widget buildCardContent(
-      StudentIdNameModel? nameModel,
-      StudentIdPhotoModel? photoModel,
-      StudentIdProfileModel? profileModel,
+      StudentIdNameModel nameModel,
+      StudentIdPhotoModel photoModel,
+      StudentIdProfileModel profileModel,
       BuildContext context) {
     try {
       if (MediaQuery.of(context).size.width < 600) {
@@ -107,7 +107,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     Column(
                       children: <Widget>[
                         Image.network(
-                          photoModel!.photoUrl,
+                          photoModel.photoUrl,
                           fit: BoxFit.contain,
                           height: ScalingUtility.verticalSafeBlock * 14,
                         ),
@@ -128,15 +128,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
                                     cardMargin),
                             child: FittedBox(
                               child: Text(
-                                (nameModel!.firstName+
-                                    " " +
-                                    nameModel.lastName),
+                                '${nameModel.firstName} ${nameModel.lastName}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: getFontSize(
-                                        nameModel.firstName+
-                                            " " +
-                                            nameModel.lastName,
+                                        '${nameModel.firstName} ${nameModel.lastName}',
                                         "name")),
                                 textAlign: TextAlign.left,
                                 softWrap: true,
@@ -151,7 +147,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                                 right: ScalingUtility.horizontalSafeBlock *
                                     cardMargin),
                             child: Text(
-                              profileModel!.collegeCurrent,
+                              profileModel.collegeCurrent,
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: getFontSize(
@@ -174,9 +170,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
                               style: TextStyle(
                                   fontSize: getFontSize(
                                       profileModel.graduatePrimaryMajorCurrent !=
-                                              ""
+                                          ""
                                           ? profileModel
-                                              .graduatePrimaryMajorCurrent
+                                          .graduatePrimaryMajorCurrent
                                           : profileModel.ugPrimaryMajorCurrent,
                                       "major")),
                               textAlign: TextAlign.left,
@@ -217,7 +213,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     child: Padding(
                       padding: EdgeInsets.only(
                           left:
-                              ScalingUtility.horizontalSafeBlock * cardMargin),
+                          ScalingUtility.horizontalSafeBlock * cardMargin),
                       child: Text(
                         profileModel.classificationType,
                         style: TextStyle(
@@ -230,14 +226,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       Padding(
                         padding: EdgeInsets.only(
                             left:
-                                (ScalingUtility.horizontalSafeBlock * 11.225) +
-                                    realignText(Theme.of(context))),
+                            (ScalingUtility.horizontalSafeBlock * 11.225) +
+                                realignText(Theme.of(context))),
                         child: Text(
                           profileModel.barcode.toString(),
                           style: TextStyle(
                               fontSize: ScalingUtility.horizontalSafeBlock * 3,
                               letterSpacing:
-                                  ScalingUtility.horizontalSafeBlock * 1.5),
+                              ScalingUtility.horizontalSafeBlock * 1.5),
                         ),
                       ),
                     ],
@@ -256,12 +252,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
             child: Column(
               children: <Widget>[
                 Image.network(
-                  photoModel!.photoUrl,
+                  photoModel.photoUrl,
                   fit: BoxFit.contain,
                   height: 125,
                 ),
                 SizedBox(height: 10),
-                Text(profileModel!.classificationType),
+                Text(profileModel.classificationType),
               ],
             ),
             padding: EdgeInsets.only(
@@ -276,11 +272,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   Container(
                     padding: new EdgeInsets.only(right: cardMargin),
                     child: Text(
-                      (nameModel!.firstName+ " " + nameModel.lastName),
+                      '${nameModel.firstName} ${nameModel.lastName}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: tabletFontSize(
-                              nameModel.firstName+ " " + nameModel.lastName,
+                              '${nameModel.firstName} ${nameModel.lastName}',
                               "name")),
                       textAlign: TextAlign.left,
                       softWrap: false,
