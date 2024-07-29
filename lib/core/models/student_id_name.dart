@@ -11,21 +11,21 @@ String studentIdNameModelToJson(StudentIdNameModel data) =>
     json.encode(data.toJson());
 
 class StudentIdNameModel {
-  String? studentId;
-  String? firstName;
-  String? middleName;
-  String? lastName;
-  String? lastUpdatedBy;
-  int? internalId;
+  String studentId;
+  String firstName;
+  String middleName;
+  String lastName;
+  String lastUpdatedBy;
+  int internalId;
   dynamic lastUpdatedDate;
 
   StudentIdNameModel({
-    this.studentId,
-    this.firstName,
-    this.middleName,
-    this.lastName,
-    this.lastUpdatedBy,
-    this.internalId,
+    required this.studentId,
+    required this.firstName,
+    required this.middleName,
+    required this.lastName,
+    required this.lastUpdatedBy,
+    required this.internalId,
     this.lastUpdatedDate,
   });
 
@@ -49,4 +49,14 @@ class StudentIdNameModel {
         "internalId": internalId,
         "lastUpdatedDate": lastUpdatedDate,
       };
+
+  factory StudentIdNameModel.empty() => StudentIdNameModel(
+    studentId: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    lastUpdatedBy: '',
+    internalId: 0,
+    lastUpdatedDate: 0
+  );
 }

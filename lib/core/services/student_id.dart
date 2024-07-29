@@ -14,12 +14,11 @@ class StudentIdService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  StudentIdNameModel _studentIdNameModel = StudentIdNameModel();
-  StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
-  StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel();
+  StudentIdNameModel _studentIdNameModel = StudentIdNameModel.empty();
+  StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel.empty();
+  StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel.empty();
 
   final NetworkHelper _networkHelper = NetworkHelper();
-
 
   //Removed term (not used)
   Future<bool> fetchStudentIdName(Map<String, String> headers) async {
