@@ -4,13 +4,13 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 
 class MediaService {
-  final String endpoint =
+  static final String endpoint =
       'https://mobile.ucsd.edu/replatform/v1/qa/integrations/triton-media/triton-media.json';
 
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<MediaModel>? _data;
+  late List<MediaModel> _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
@@ -38,7 +38,7 @@ class MediaService {
   }
 
   String? get error => _error;
-  List<MediaModel>? get mediaModels => _data;
+  List<MediaModel> get mediaModels => _data;
   bool get isLoading => _isLoading;
   DateTime? get lastUpdated => _lastUpdated;
 }

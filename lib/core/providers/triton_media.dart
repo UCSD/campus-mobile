@@ -3,11 +3,6 @@ import 'package:campus_mobile_experimental/core/services/triton_media.dart';
 import 'package:flutter/material.dart';
 
 class MediaDataProvider extends ChangeNotifier {
-  MediaDataProvider() {
-    ///INITIALIZE SERVICES
-    _mediaService = MediaService();
-  }
-
   ///STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
@@ -17,14 +12,14 @@ class MediaDataProvider extends ChangeNotifier {
   List<MediaModel> _mediaModels = [];
 
   ///SERVICES
-  late MediaService _mediaService;
+  MediaService _mediaService = MediaService();
 
   void fetchMedia() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
     if (await _mediaService.fetchData()) {
-      _mediaModels = _mediaService.mediaModels ?? [];
+      _mediaModels = _mediaService.mediaModels;
       _lastUpdated = DateTime.now();
 
       /// check to see if the events feed returns nothing back
