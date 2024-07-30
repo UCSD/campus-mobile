@@ -24,17 +24,17 @@ class StudentIdProfileModel {
   int issueNumber;
 
   StudentIdProfileModel({
-    required this.studentPid,
-    required this.termYear,
-    required this.studentLevelCurrent,
-    required this.collegeCurrent,
-    required this.ugPrimaryMajorCurrent,
-    required this.graduatePrimaryMajorCurrent,
-    required this.athleteCurrentCount,
-    required this.cardNumber,
-    required this.barcode,
-    required this.classificationType,
-    required this.issueNumber
+    this.studentPid = '',
+    this.termYear = '',
+    this.studentLevelCurrent = '',
+    this.collegeCurrent = '',
+    this.ugPrimaryMajorCurrent = '',
+    this.graduatePrimaryMajorCurrent = '',
+    this.athleteCurrentCount = 0,
+    this.cardNumber = '',
+    this.barcode = '',
+    this.classificationType = '',
+    this.issueNumber = 0
   });
 
   factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) =>
@@ -70,19 +70,5 @@ class StudentIdProfileModel {
         "Barcode": barcode,
         "Classification_Type": classificationType,
         "Issue_Number": issueNumber
-      };
-
-  factory StudentIdProfileModel.empty() => StudentIdProfileModel(
-    studentPid: '',
-    termYear: '',
-    studentLevelCurrent: '',
-    collegeCurrent: '',
-    ugPrimaryMajorCurrent: '',
-    graduatePrimaryMajorCurrent: '',
-    athleteCurrentCount: 0,
-    cardNumber: '',
-    barcode: '',
-    classificationType: '',
-    issueNumber: 0
-  );
+  };
 }

@@ -13,9 +13,9 @@ class StudentIdDataProvider extends ChangeNotifier {
   int? _selectedCourse;
 
   ///MODELS
-  StudentIdNameModel _studentIdNameModel = StudentIdNameModel.empty();
-  StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel.empty();
-  StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel.empty();
+  StudentIdNameModel _studentIdNameModel = StudentIdNameModel();
+  StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
+  StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel();
 
   ///Additional Provider
   late UserDataProvider _userDataProvider;

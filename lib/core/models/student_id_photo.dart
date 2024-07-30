@@ -15,8 +15,8 @@ class StudentIdPhotoModel {
   String photoUrl;
 
   StudentIdPhotoModel({
-    required this.studentId,
-    required this.photoUrl
+    this.studentId = '',
+    this.photoUrl = ''
   });
 
   factory StudentIdPhotoModel.fromJson(Map<String, dynamic> json) =>
@@ -28,10 +28,5 @@ class StudentIdPhotoModel {
   Map<String, dynamic> toJson() => {
         "studentId": studentId,
         "photoUrl": photoUrl
-      };
-
-  factory StudentIdPhotoModel.empty() => StudentIdPhotoModel(
-    studentId: '',
-    photoUrl: ''
-  );
+  };
 }
