@@ -42,7 +42,7 @@ class EventsCard extends StatelessWidget {
       reload: () =>
           Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
       isLoading: Provider.of<EventsDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<EventsDataProvider>(context).error,
       child: () => buildEventsCard(
           Provider.of<EventsDataProvider>(context).eventsModels),

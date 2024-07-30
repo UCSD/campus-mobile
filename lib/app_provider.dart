@@ -34,7 +34,6 @@ List<SingleChildWidget> providers = [
   ...dependentServices,
   ...uiConsumableProviders,
 ];
-LocationDataProvider? locationProvider;
 final FirebaseAnalytics analytics = FirebaseAnalytics();
 final FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
@@ -84,8 +83,7 @@ List<SingleChildWidget> independentServices = [
   StreamProvider<Coordinates>(
     initialData: Coordinates(),
     create: (_) {
-      locationProvider = LocationDataProvider();
-      return locationProvider!.locationStream;
+      return LocationDataProvider().locationStream;
     },
     lazy: false,
   ),
@@ -199,7 +197,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, studentIdDataProvider) {
     studentIdDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
       studentIdDataProvider.fetchData();
     }
     return studentIdDataProvider;
@@ -211,7 +209,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, employeeIdDataProvider) {
     employeeIdDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) {
       employeeIdDataProvider.fetchData();
     }
     return employeeIdDataProvider;
@@ -223,7 +221,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, scannerMessageDataProvider) {
     scannerMessageDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !scannerMessageDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !scannerMessageDataProvider.isLoading) {
       scannerMessageDataProvider.fetchData();
     }
     return scannerMessageDataProvider;

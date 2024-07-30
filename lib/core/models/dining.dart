@@ -12,119 +12,115 @@ List<DiningModel> diningModelFromJson(String str) => List<DiningModel>.from(
 String diningModelToJson(List<DiningModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class DiningModel {
+class DiningModel
+{
+  String name;
+  String description;
+  String location; // empty is valid state
+  String address;
+  String tel;
+  RegularHours regularHours; // doesn't ever seem to be null
+  List<String> paymentOptions;
+
+  // CONFIRMED OPTIONAL
   String? id;
-  String? name;
-  String? description;
-  String? location;
-  String? address;
-  String? tel;
   Meals? meals;
   String? persistentMenu;
-  List<String>? paymentOptions;
+  SpecialHour? specialHours;
+
   List<Image>? images;
   Coordinates? coordinates;
-  RegularHours? regularHours;
-  SpecialHour? specialHours;
   String? url;
   String? menuWebsite;
   double? distance;
 
   DiningModel({
     this.id,
-    this.name,
-    this.description,
-    this.location,
-    this.address,
-    this.tel,
+    required this.name,
+    required this.description,
+    required this.location,
+    required this.address,
+    required this.tel,
     this.meals,
     this.persistentMenu,
-    this.paymentOptions,
+    required this.paymentOptions,
     this.images,
     this.coordinates,
-    this.regularHours,
+    required this.regularHours,
     this.specialHours,
     this.url,
     this.menuWebsite,
   });
 
-  factory DiningModel.fromJson(Map<String, dynamic> json) => DiningModel(
-        id: json["id"] == null ? null : json["id"],
-        name: json["name"] == null ? null : json["name"],
-        description: json["description"] == null ? null : json["description"],
-        location: json["location"] == null ? null : json["location"],
-        address: json["address"] == null ? null : json["address"],
-        tel: json["tel"] == null ? null : json["tel"],
-        meals: json["meals"] == null ? null : mealsValues.map[json["meals"]],
-        persistentMenu:
-            json["persistentMenu"] == null ? null : json["persistentMenu"],
-        paymentOptions: json["paymentOptions"] == null
-            ? null
-            : List<String>.from(json["paymentOptions"].map((x) => x)),
-        images: json["images"] == null
+  DiningModel.fromJson(Map<String, dynamic> json)
+      : id = json["id"],
+        name = json["name"],
+        description = json["description"],
+        location = json["location"],
+        address = json["address"],
+        tel = json["tel"],
+        meals = json["meals"] == null ? null : mealsValues.map[json["meals"]],
+        persistentMenu = json["persistentMenu"],
+        paymentOptions = List<String>.from(json["paymentOptions"].map((x) => x)),
+        images = json["images"] == null
             ? null
             : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
-        coordinates: json["coords"] == null
+        coordinates = json["coords"] == null
             ? null
             : Coordinates.fromJson(json["coords"]),
-        regularHours: json["regularHours"] == null
-            ? null
-            : RegularHours.fromJson(json["regularHours"]),
-        specialHours: (json["specialHours"] == null || json["specialHours"].isEmpty)
+        regularHours = RegularHours.fromJson(json["regularHours"]),
+        specialHours = (json["specialHours"] == null || json["specialHours"].isEmpty)
             ? null
             : SpecialHour.fromJson(json["specialHours"]),
-
-        url: json["url"] == null ? null : json["url"],
-        menuWebsite: json["menuWebsite"] == null ? null : json["menuWebsite"],
-      );
+        url = json["url"],
+        menuWebsite = json["menuWebsite"];
 
   Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "description": description == null ? null : description,
-        "location": location == null ? null : location,
-        "address": address == null ? null : address,
-        "tel": tel == null ? null : tel,
-        "meals": meals == null ? null : mealsValues.reverse![meals!],
-        "persistentMenu": persistentMenu == null ? null : persistentMenu,
-        "paymentOptions": paymentOptions == null
-            ? null
-            : List<dynamic>.from(paymentOptions!.map((x) => x)),
+        "id": id,
+        "name": name,
+        "description": description,
+        "location": location,
+        "address": address,
+        "tel": tel,
+        "meals": meals == null ? null : mealsValues.reverse[meals!],
+        "persistentMenu": persistentMenu,
+        "paymentOptions": List<dynamic>.from(paymentOptions.map((x) => x)),
         "images": images == null
             ? null
             : List<dynamic>.from(images!.map((x) => x.toJson())),
         "coords": coordinates == null ? null : coordinates!.toJson(),
-        "regularHours": regularHours == null ? null : regularHours!.toJson(),
-        "specialHours": specialHours == null
-            ? null
-            : specialHours?.toJson(),
-        "url": url == null ? null : url,
-        "menuWebsite": menuWebsite == null ? null : menuWebsite,
-        "distance": distance == null ? null : distance,
+        "regularHours": regularHours.toJson(),
+        "specialHours": specialHours?.toJson(),
+        "url": url,
+        "menuWebsite": menuWebsite,
+        "distance": distance,
       };
 }
 
-class Image {
-  String? small;
-  String? large;
+class Image
+{
+  // links to different sizes of the image
+  String small;
+  String large;
+
+  // TODO: no caption is valid JSON response. Should this be empty str rather than null?
   String? caption;
 
   Image({
-    this.small,
-    this.large,
+    required this.small,
+    required this.large,
     this.caption,
   });
 
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
-        small: json["small"] == null ? null : json["small"],
-        large: json["large"] == null ? null : json["large"],
-        caption: json["caption"] == null ? null : json["caption"],
-      );
+  Image.fromJson(Map<String, dynamic> json)
+      : small = json["small"],
+        large = json["large"],
+        caption = json["caption"];
 
   Map<String, dynamic> toJson() => {
-        "small": small == null ? null : small,
-        "large": large == null ? null : large,
-        "caption": caption == null ? null : caption,
+        "small": small,
+        "large": large,
+        "caption": caption,
       };
 }
 
@@ -135,7 +131,9 @@ final mealsValues = EnumValues({
   "lunch, dinner": Meals.LUNCH_DINNER
 });
 
-class RegularHours {
+class RegularHours
+{
+  // ALL CONFIRMED OPTIONAL
   String? mon;
   String? tue;
   String? wed;
@@ -154,53 +152,52 @@ class RegularHours {
     this.sun,
   });
 
-  factory RegularHours.fromJson(Map<String, dynamic> json) => RegularHours(
-        mon: json["mon"] == null ? null : json["mon"],
-        tue: json["tue"] == null ? null : json["tue"],
-        wed: json["wed"] == null ? null : json["wed"],
-        thu: json["thu"] == null ? null : json["thu"],
-        fri: json["fri"] == null ? null : json["fri"],
-        sat: json["sat"] == null ? null : json["sat"],
-        sun: json["sun"] == null ? null : json["sun"],
-      );
+  RegularHours.fromJson(Map<String, dynamic> json)
+      : mon = json["mon"],
+        tue = json["tue"],
+        wed = json["wed"],
+        thu = json["thu"],
+        fri = json["fri"],
+        sat = json["sat"],
+        sun = json["sun"];
 
   Map<String, dynamic> toJson() => {
-        "mon": mon == null ? null : mon,
-        "tue": tue == null ? null : tue,
-        "wed": wed == null ? null : wed,
-        "thu": thu == null ? null : thu,
-        "fri": fri == null ? null : fri,
-        "sat": sat == null ? null : sat,
-        "sun": sun == null ? null : sun,
+        "mon": mon,
+        "tue": tue,
+        "wed": wed,
+        "thu": thu,
+        "fri": fri,
+        "sat": sat,
+        "sun": sun,
       };
 }
 
 class SpecialHour {
-  String? specialHoursEvent;
-  String? specialHoursEventDetails;
+  String specialHoursEvent;
+  String specialHoursEventDetails;
+
+  // TODO: double check if these can ever be null
   String? specialHoursValidFrom;
   String? specialHoursValidTo;
 
   SpecialHour({
-    this.specialHoursEvent,
-    this.specialHoursEventDetails,
+    required this.specialHoursEvent,
+    required this.specialHoursEventDetails,
     this.specialHoursValidFrom,
     this.specialHoursValidTo
   });
 
-  factory SpecialHour.fromJson(Map<String, dynamic> json) => SpecialHour(
-    specialHoursEvent: json["specialHoursEvent"] == null ? null : json["specialHoursEvent"],
-    specialHoursEventDetails: json["specialHoursEventDetails"] == null ? null : json["specialHoursEventDetails"],
-    specialHoursValidFrom: json["specialHoursValidFrom"] == null ? null : json["specialHoursValidFrom"],
-    specialHoursValidTo: json["specialHoursValidTo"] == null ? null : json["specialHoursValidTo"],
-      );
+  SpecialHour.fromJson(Map<String, dynamic> json)
+    : specialHoursEvent = json["specialHoursEvent"],
+      specialHoursEventDetails = json["specialHoursEventDetails"],
+      specialHoursValidFrom = json["specialHoursValidFrom"],
+      specialHoursValidTo = json["specialHoursValidTo"];
 
   Map<String, dynamic> toJson() => {
-        "specialHoursEvent": specialHoursEvent == null ? null : specialHoursEvent,
-        "specialHoursEventDetails": specialHoursEventDetails == null ? null : specialHoursEventDetails,
-        "specialHoursValidFrom": specialHoursValidFrom == null ? null : specialHoursValidFrom,
-        "specialHoursValidTo": specialHoursValidTo == null ? null : specialHoursValidTo
-
+        "specialHoursEvent": specialHoursEvent,
+        "specialHoursEventDetails": specialHoursEventDetails,
+        "specialHoursValidFrom": specialHoursValidFrom,
+        "specialHoursValidTo": specialHoursValidTo
       };
 }
 
@@ -210,10 +207,8 @@ class EnumValues<T> {
 
   EnumValues(this.map);
 
-  Map<T, String>? get reverse {
-    if (reverseMap == null) {
-      reverseMap = map.map((k, v) => new MapEntry(v, k));
-    }
-    return reverseMap;
+  Map<T, String> get reverse {
+    reverseMap ??= map.map((k, v) => new MapEntry(v, k));
+    return reverseMap!;
   }
 }

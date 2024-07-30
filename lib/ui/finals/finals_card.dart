@@ -28,7 +28,7 @@ class FinalsCard extends StatelessWidget {
         }
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildFinalsCard(
           Provider.of<ClassScheduleDataProvider>(context).finals,
@@ -62,7 +62,7 @@ class FinalsCard extends StatelessWidget {
   }
 
   Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
-      DateTime? lastUpdated, String? nextDayWithClasses, BuildContext context) {
+      DateTime lastUpdated, String? nextDayWithClasses, BuildContext context) {
     try {
       List<Widget> listToReturn = [];
       finalsData.forEach((key, value) {
@@ -139,7 +139,7 @@ class FinalsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TimeRangeWidget(
-                time: time,
+                time: time!,
               ),
             ],
           ),

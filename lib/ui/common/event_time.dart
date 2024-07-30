@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EventTime extends StatelessWidget {
-  final EventModel? data;
-  const EventTime({Key? key, this.data}) : super(key: key);
+  final EventModel data;
+  const EventTime({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     try {
       // Separate dates from times
       String startMonthDay =
-          DateFormat.MMMd().format(data!.startDate!.toLocal());
-      String endMonthDay = DateFormat.MMMd().format(data!.endDate!.toLocal());
-      String startTime = DateFormat.jm().format(data!.startDate!.toLocal());
-      String endTime = DateFormat.jm().format(data!.endDate!.toLocal());
+          DateFormat.MMMd().format(data.startDate!.toLocal());
+      String endMonthDay = DateFormat.MMMd().format(data.endDate!.toLocal());
+      String startTime = DateFormat.jm().format(data.startDate!.toLocal());
+      String endTime = DateFormat.jm().format(data.endDate!.toLocal());
 
       // Mark any special types of events
       bool sameDay = (startMonthDay == endMonthDay);

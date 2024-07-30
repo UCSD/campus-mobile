@@ -67,7 +67,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
       reload: () => Provider.of<StudentIdDataProvider>(context, listen: false)
           .fetchData(),
       isLoading: Provider.of<StudentIdDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<StudentIdDataProvider>(context).error,
       child: () => buildCardContent(
           Provider.of<StudentIdDataProvider>(context).studentIdNameModel,

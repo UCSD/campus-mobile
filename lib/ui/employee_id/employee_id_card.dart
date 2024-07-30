@@ -39,7 +39,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
       reload: () => Provider.of<EmployeeIdDataProvider>(context, listen: false)
           .fetchData(),
       isLoading: Provider.of<EmployeeIdDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<EmployeeIdDataProvider>(context).error,
       child: () => isValidId
           ? buildCardContent(

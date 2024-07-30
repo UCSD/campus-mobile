@@ -5,15 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class EventTile extends StatelessWidget {
+class EventTile extends StatelessWidget
+{
   const EventTile({Key? key, required this.data}) : super(key: key);
+
   final EventModel data;
   final double tileWidth = 190;
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
-        ? Center(
+    return Provider.of<EventsDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : buildEventTile(context);

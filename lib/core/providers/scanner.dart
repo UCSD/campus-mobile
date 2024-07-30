@@ -7,26 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ScannerDataProvider extends ChangeNotifier {
-  ScannerDataProvider() {
-    ///DEFAULT STATES
-    isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _barcodeService = BarcodeService();
-  }
-
+class ScannerDataProvider extends ChangeNotifier
+{
   bool? _hasScanned;
   bool? hasSubmitted;
   bool? _didError;
   String? _message = '';
 
   String? _licenseKey;
-  late BarcodeService _barcodeService;
+  BarcodeService _barcodeService = BarcodeService();
   late UserDataProvider _userDataProvider;
 
   String? _barcode;
-  late bool isLoading;
+  bool isLoading = false;
   bool? _isDuplicate;
   bool? _successfulSubmission;
   bool? _isValidBarcode;

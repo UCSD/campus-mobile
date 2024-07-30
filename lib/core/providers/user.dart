@@ -28,7 +28,7 @@ class UserDataProvider extends ChangeNotifier
   ///default authentication model and profile is needed in this class
   AuthenticationModel _authenticationModel = AuthenticationModel.fromJson({});
   UserProfileModel _userProfileModel = UserProfileModel.fromJson({});
-  late FlutterSecureStorage storage = FlutterSecureStorage();
+  FlutterSecureStorage storage = FlutterSecureStorage();
 
   ///SERVICES
   AuthenticationService _authenticationService = AuthenticationService();

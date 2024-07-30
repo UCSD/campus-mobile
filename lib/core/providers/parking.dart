@@ -6,24 +6,15 @@ import 'package:campus_mobile_experimental/core/services/parking.dart';
 import 'package:campus_mobile_experimental/core/services/spot_types.dart';
 import 'package:flutter/material.dart';
 
-class ParkingDataProvider extends ChangeNotifier {
-  ParkingDataProvider()
-      : selectedLots = 0,
-        selectedSpots = 0 {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    _parkingService = ParkingService();
-    _spotTypesService = SpotTypesService();
-  }
-
+class ParkingDataProvider extends ChangeNotifier
+{
   late UserDataProvider _userDataProvider;
 
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  int selectedLots, selectedSpots;
+  int selectedLots = 0, selectedSpots = 0;
   static const MAX_SELECTED_LOTS = 10;
   static const MAX_SELECTED_SPOTS = 3;
   Map<String?, bool>? _parkingViewState = <String?, bool>{};
@@ -35,8 +26,8 @@ class ParkingDataProvider extends ChangeNotifier {
   SpotTypeModel? _spotTypeModel;
 
   ///SERVICES
-  late ParkingService _parkingService;
-  late SpotTypesService _spotTypesService;
+  ParkingService _parkingService = ParkingService();
+  SpotTypesService _spotTypesService = SpotTypesService();
 
   void fetchParkingData() async {
     _isLoading = true;
@@ -258,7 +249,7 @@ class ParkingDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
+  bool get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
   Map<String?, bool>? get spotTypesState => _selectedSpotTypesState;

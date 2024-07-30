@@ -34,7 +34,7 @@ class _ParkingCardState extends State<ParkingCard> {
     };
     //super.build(context);
     return CardContainer(
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       isLoading: _parkingDataProvider.isLoading,
       reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,

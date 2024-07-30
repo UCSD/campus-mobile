@@ -109,7 +109,7 @@ class NewsList extends StatelessWidget {
           ),
           SizedBox(width: 4),
           ImageLoader(
-            url: data.image,
+            url: data.image!,
             fullSize: true,
           ),
         ],

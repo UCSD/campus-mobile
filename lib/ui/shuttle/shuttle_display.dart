@@ -7,7 +7,7 @@ class ShuttleDisplay extends StatelessWidget {
   ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles})
       : super(key: key);
 
-  final ShuttleStopModel? stop;
+  final ShuttleStopModel stop;
   final List<ArrivingShuttle>? arrivingShuttles;
 
   @override

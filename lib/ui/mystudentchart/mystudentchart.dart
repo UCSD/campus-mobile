@@ -16,7 +16,7 @@ class MyStudentChartCard extends StatelessWidget {
           .toggleCard(cardId),
       reload: () => null,
       isLoading: false,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: buildActionButtons(context),

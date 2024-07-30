@@ -47,7 +47,7 @@ class ClassScheduleCard extends StatelessWidget {
         }
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildClassScheduleCard(
         Provider.of<ClassScheduleDataProvider>(context).upcomingCourses,
@@ -60,7 +60,7 @@ class ClassScheduleCard extends StatelessWidget {
   }
 
   Widget buildClassScheduleCard(List<SectionData> courseData,
-      int selectedCourse, DateTime? lastUpdated, String nextDayWithClasses) {
+      int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
     try {
       return Padding(
         padding: const EdgeInsets.only(left: 4.0, top: 4.0),
@@ -169,7 +169,7 @@ class ClassScheduleCard extends StatelessWidget {
                 style: TextStyle(color: Colors.grey),
               ),
               TimeRangeWidget(
-                time: time,
+                time: time!,
               ),
             ],
           ),

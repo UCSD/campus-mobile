@@ -28,7 +28,7 @@ class _BuildInfoState extends State<BuildInfo> {
     });
   }
 
-  final String buildEnv = "##BUILD_ENV##";
+  static final String buildEnv = "##BUILD_ENV##";
 
   @override
   Widget build(BuildContext context) {

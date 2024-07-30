@@ -9,33 +9,20 @@ import 'package:flutter/material.dart';
 
 import 'location.dart';
 
-class ShuttleDataProvider extends ChangeNotifier {
-  ShuttleDataProvider() {
-    /// DEFAULT STATES
-    _isLoading = false;
-
-    /// TODO: initialize services here
-    // _shuttleService = ShuttleService();
-    init();
-  }
-
-  bool? _isLoading;
+class ShuttleDataProvider extends ChangeNotifier
+{
+  bool _isLoading = false;
   String? _error;
   UserDataProvider? userDataProvider;
-  late ShuttleService _shuttleService;
+  ShuttleService _shuttleService = ShuttleService();
   ShuttleStopModel? _closestStop;
   double? stopLat;
   double? stopLong;
   double closestDistance = 10000000;
   Map<int?, ShuttleStopModel>? fetchedStops;
-  Map<int?, List<ArrivingShuttle>>? arrivalsToRender;
-  late LocationDataProvider _locationDataProvider;
+  Map<int?, List<ArrivingShuttle>> arrivalsToRender = Map<int, List<ArrivingShuttle>>();
+  //late LocationDataProvider _locationDataProvider;
   Coordinates? _userCoords;
-
-  init() {
-    _shuttleService = ShuttleService();
-    arrivalsToRender = Map<int, List<ArrivingShuttle>>();
-  }
 
   void fetchStops(bool reloading) async {
     _isLoading = true;
@@ -100,7 +87,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       userDataProvider!.userProfileModel!.selectedStops!.add(stopID);
       // update userprofilemodel locally and in database after a stop is added
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
-      arrivalsToRender![stopID] = await fetchArrivalInformation(stopID!);
+      arrivalsToRender[stopID] = await fetchArrivalInformation(stopID!);
     }
     notifyListeners();
   }
@@ -159,11 +146,11 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   Future<void> getArrivalInformation() async {
     if (_closestStop != null) {
-      arrivalsToRender![_closestStop!.id] =
+      arrivalsToRender[_closestStop!.id] =
           await fetchArrivalInformation(_closestStop!.id!);
     }
     for (ShuttleStopModel stop in stopsToRender) {
-      arrivalsToRender![stop.id] = await fetchArrivalInformation(stop.id!);
+      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id!);
     }
 
     notifyListeners();
@@ -177,7 +164,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     return output;
   }
 
-  bool? get isLoading => _isLoading;
+  bool get isLoading => _isLoading;
   String? get error => _error;
 
   ShuttleStopModel? get closestStop => _closestStop;

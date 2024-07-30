@@ -54,7 +54,7 @@ class _WiFiCardState extends State<WiFiCard>
           ? Provider.of<SpeedTestProvider>(context, listen: false).init()
           : print("running test..."),
       isLoading: _speedTestProvider.isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _speedTestProvider.error,
       child: () => buildCardContent(context),
     );

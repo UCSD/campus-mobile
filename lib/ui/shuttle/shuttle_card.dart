@@ -35,7 +35,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       reload: () => Provider.of<ShuttleDataProvider>(context, listen: false)
           .fetchStops(true),
       isLoading: _shuttleCardDataProvider.isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _shuttleCardDataProvider.error,
       child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender,
           _shuttleCardDataProvider.arrivalsToRender),
@@ -44,9 +44,9 @@ class _ShuttleCardState extends State<ShuttleCard> {
   }
 
   Widget buildShuttleCard(List<ShuttleStopModel?> stopsToRender,
-      Map<int?, List<ArrivingShuttle>>? arrivalsToRender) {
+      Map<int?, List<ArrivingShuttle>> arrivalsToRender) {
     print("Stops - ${stopsToRender.length}");
-    print("Arrivals - ${arrivalsToRender?.length}");
+    print("Arrivals - ${arrivalsToRender.length}");
 
     List<Widget> renderList = [];
     try {
@@ -55,15 +55,15 @@ class _ShuttleCardState extends State<ShuttleCard> {
         print(_shuttleCardDataProvider.closestStop!.name);
 
         renderList.add(ShuttleDisplay(
-            stop: _shuttleCardDataProvider.closestStop,
+            stop: _shuttleCardDataProvider.closestStop!,
             arrivingShuttles:
-                arrivalsToRender![_shuttleCardDataProvider.closestStop!.id]));
+                arrivalsToRender[_shuttleCardDataProvider.closestStop!.id]));
       }
 
       for (int i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
-            arrivingShuttles: arrivalsToRender![
+            arrivingShuttles: arrivalsToRender[
                 _shuttleCardDataProvider.stopsToRender[i].id]));
       }
 
@@ -120,7 +120,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
         'Manage Shuttle Stops',
       ),
       onPressed: () {
-        if (!_shuttleCardDataProvider.isLoading!) {
+        if (!_shuttleCardDataProvider.isLoading) {
           Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
         }
       },

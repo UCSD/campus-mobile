@@ -53,8 +53,8 @@ class NewsCard extends StatelessWidget {
           .toggleCard(cardId),
       reload: () =>
           Provider.of<NewsDataProvider>(context, listen: false).fetchNews(),
-      isLoading: Provider.of<NewsDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      isLoading: Provider.of<NewsDataProvider>(context).isLoading!,
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<NewsDataProvider>(context).error,
       child: () => buildNewsCard(),
       actionButtons: buildActionButtons(context),

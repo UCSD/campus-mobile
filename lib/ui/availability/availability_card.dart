@@ -34,7 +34,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
           .toggleCard(cardId),
       reload: () => _availabilityDataProvider.fetchAvailability(),
       isLoading: _availabilityDataProvider.isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _availabilityDataProvider.error,
       child: () =>
           buildAvailabilityCard(_availabilityDataProvider.availabilityModels),

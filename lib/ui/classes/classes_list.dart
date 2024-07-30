@@ -115,7 +115,7 @@ class ClassList extends StatelessWidget {
                     child: Row(children: [
                       Text(sectionData.meetingType! + ' '),
                       TimeRangeWidget(
-                        time: sectionData.time,
+                        time: sectionData.time!,
                       )
                     ]),
                   ),
@@ -178,7 +178,7 @@ class ClassList extends StatelessWidget {
                           formatDate(sectionData.date)! +
                           ' from '),
                       TimeRangeWidget(
-                        time: sectionData.time,
+                        time: sectionData.time!,
                       )
                     ]),
                   ),

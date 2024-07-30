@@ -45,9 +45,9 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   }
 
   Widget buildListView(BuildContext context) {
-    if (Provider.of<MessagesDataProvider>(context).messages!.length == 0) {
+    if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
-        if (Provider.of<MessagesDataProvider>(context).isLoading!) {
+        if (Provider.of<MessagesDataProvider>(context).isLoading) {
           // empty notifications view until they load in
         } else {
           return ListView.separated(
@@ -75,7 +75,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       physics: AlwaysScrollableScrollPhysics(),
       itemBuilder: _buildMessage,
       controller: Provider.of<MessagesDataProvider>(context).scrollController,
-      itemCount: Provider.of<MessagesDataProvider>(context).messages!.length,
+      itemCount: Provider.of<MessagesDataProvider>(context).messages.length,
       separatorBuilder: (BuildContext context, int index) => Divider(),
     );
   }
@@ -127,7 +127,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
 
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages![index]!;
+        Provider.of<MessagesDataProvider>(context).messages[index]!;
 
     String? messageType;
     if (data.audience!.topics == null) {

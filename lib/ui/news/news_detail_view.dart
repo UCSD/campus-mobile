@@ -23,7 +23,7 @@ class NewsDetailView extends StatelessWidget {
     return [
       Center(
         child: ImageLoader(
-          url: data.image,
+          url: data.image!,
           fullSize: true,
         ),
       ),
@@ -40,7 +40,7 @@ class NewsDetailView extends StatelessWidget {
       ),
       SizedBox(height: 20),
       LinkifyWithCatch(
-        text: data.description,
+        text: data.description!,
         style: TextStyle(fontSize: 18),
       ),
       SizedBox(height: 20),

@@ -31,11 +31,8 @@ class DiningList extends StatelessWidget {
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
-    var size;
-    if (listSize == null)
-      size = listOfDiners.length;
-    else
-      size = listSize;
+    int size = listSize ?? listOfDiners.length;
+
     for (int i = 0; i < size; i++) {
       final DiningModel item = listOfDiners[i];
       final tile = buildDiningTile(item, context);
@@ -58,49 +55,49 @@ class DiningList extends StatelessWidget {
           );
   }
 
-  Widget getHoursForToday(RegularHours? hours) {
+  Widget getHoursForToday(RegularHours hours) {
     int weekday = DateTime.now().weekday;
     String? dayHours;
 
     switch (weekday) {
       case 1:
-        if (hours!.mon != null)
+        if (hours.mon != null)
           dayHours = hours.mon;
         else
           return Text('Closed');
         break;
       case 2:
-        if (hours!.tue != null)
+        if (hours.tue != null)
           dayHours = hours.tue;
         else
           return Text('Closed');
         break;
       case 3:
-        if (hours!.wed != null)
+        if (hours.wed != null)
           dayHours = hours.wed;
         else
           return Text('Closed');
         break;
       case 4:
-        if (hours!.thu != null)
+        if (hours.thu != null)
           dayHours = hours.thu;
         else
           return Text('Closed');
         break;
       case 5:
-        if (hours!.fri != null)
+        if (hours.fri != null)
           dayHours = hours.fri;
         else
           return Text('Closed');
         break;
       case 6:
-        if (hours!.sat != null)
+        if (hours.sat != null)
           dayHours = hours.sat;
         else
           return Text('Closed');
         break;
       case 7:
-        if (hours!.sun != null)
+        if (hours.sun != null)
           dayHours = hours.sun;
         else
           return Text('Closed');
@@ -131,15 +128,15 @@ class DiningList extends StatelessWidget {
   Widget buildDiningTile(DiningModel data, BuildContext context) {
     return ListTile(
       onTap: () {
-        if (data.id != null) {
+        if (data.id != null)
           Provider.of<DiningDataProvider>(context, listen: false)
               .fetchDiningMenu(data.id!);
-        }
+
         Navigator.pushNamed(context, RoutePaths.DiningDetailView,
             arguments: data);
       },
       title: Text(
-        data.name!,
+        data.name,
         textAlign: TextAlign.start,
         //overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 18),

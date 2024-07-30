@@ -8,17 +8,10 @@ import 'package:flutter/material.dart';
 
 enum Meal { breakfast, lunch, dinner }
 
-class DiningDataProvider extends ChangeNotifier {
-  DiningDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _diningService = DiningService();
-  }
-
+class DiningDataProvider extends ChangeNotifier
+{
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
@@ -32,7 +25,7 @@ class DiningDataProvider extends ChangeNotifier {
   Meal mealTime = Meal.breakfast;
 
   ///SERVICES
-  late DiningService _diningService;
+  DiningService _diningService = DiningService();
 
   void fetchDiningMenu(String menuId) async {
     _isLoading = true;
@@ -122,7 +115,7 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
+  bool get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
 
@@ -150,7 +143,7 @@ class DiningDataProvider extends ChangeNotifier {
     for (var menuItem in menuItems!) {
       int matched = 0;
       for (int i = 0; i < filters.length; i++) {
-        if (menuItem.tags!.contains(filters[i])) {
+        if (menuItem.tags.contains(filters[i])) {
           matched++;
         }
       }

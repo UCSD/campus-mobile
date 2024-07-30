@@ -21,7 +21,7 @@ class WeatherCard extends StatelessWidget {
           hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
           reload: () => weatherDataProvider.fetchWeather(),
           isLoading: weatherDataProvider.isLoading,
-          titleText: CardTitleConstants.titleMap[cardId],
+          titleText: CardTitleConstants.titleMap[cardId]!,
           errorText: weatherDataProvider.error,
           child: () {
             if (weatherDataProvider.error != null) {

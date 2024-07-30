@@ -12,7 +12,7 @@ class MessageService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  Messages? _data;
+  late Messages _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
@@ -63,7 +63,7 @@ class MessageService {
   }
 
   String? get error => _error;
-  Messages? get messagingModels => _data;
+  Messages get messagingModels => _data;
   bool get isLoading => _isLoading;
   DateTime? get lastUpdated => _lastUpdated;
 }

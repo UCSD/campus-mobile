@@ -54,7 +54,7 @@ class IAmGoingProvider extends ChangeNotifier {
   //parses event message topic to determine if it is an IAmGoing event
   void parseMessages() {
     // initializeValues();
-    List<MessageElement?> messages = _messageDataProvider.messages!;
+    List<MessageElement?> messages = _messageDataProvider.messages;
     messages.forEach((m) async {
       if (m!.audience != null &&
           m.audience!.topics != null &&

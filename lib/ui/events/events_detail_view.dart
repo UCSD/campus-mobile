@@ -9,11 +9,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailView extends StatelessWidget {
   const EventDetailView({Key? key, required this.data}) : super(key: key);
+
   final EventModel data;
+
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
-        ? Center(
+    return Provider.of<EventsDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : ContainerView(

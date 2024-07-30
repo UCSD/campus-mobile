@@ -41,7 +41,7 @@ class MediaCard extends StatelessWidget {
       reload: () =>
           Provider.of<MediaDataProvider>(context, listen: false).fetchMedia(),
       isLoading: Provider.of<MediaDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<MediaDataProvider>(context).error,
       child: () =>
           buildMediaCard(Provider.of<MediaDataProvider>(context).mediaModels),
