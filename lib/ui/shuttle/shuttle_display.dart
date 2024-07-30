@@ -96,7 +96,7 @@ class ShuttleDisplay extends StatelessWidget {
                 decoration: new BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     shape: BoxShape.circle),
-                child: Text(stop!.name!,
+                child: Text(stop.name!,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12, color: Colors.grey))),
           ],
