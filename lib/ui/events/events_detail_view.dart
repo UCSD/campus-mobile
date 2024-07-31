@@ -113,7 +113,7 @@ class LearnMoreButton extends StatelessWidget {
           child: Text(
             'Learn More',
             style: TextStyle(
-                fontSize: 16, color: Theme.of(context).textTheme.button!.color),
+                fontSize: 16, color: Theme.of(context).textTheme.labelLarge!.color),
           ),
           onPressed: () async {
             try {

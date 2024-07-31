@@ -155,7 +155,7 @@ class BroadcastScheduleButton extends StatelessWidget {
           child: Text(
             'Broadcast Schedule',
             style: TextStyle(
-                fontSize: 16, color: Theme.of(context).textTheme.button!.color),
+                fontSize: 16, color: Theme.of(context).textTheme.labelLarge!.color),
           ),
           onPressed: () async {
             try {

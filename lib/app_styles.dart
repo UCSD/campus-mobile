@@ -76,14 +76,14 @@ const IconThemeData darkIconTheme = IconThemeData(
 
 //Colors for text on buttons using light theme
 const TextTheme lightThemeText = TextTheme(
-  button: TextStyle(
+  labelLarge: TextStyle(
     color: lightTextColor,
   ),
 );
 
 //Colors for text on buttons using dark theme
 const TextTheme darkThemeText = TextTheme(
-  button: TextStyle(color: darkTextColor),
+  labelLarge: TextStyle(color: darkTextColor),
 );
 
 //Button color for themes

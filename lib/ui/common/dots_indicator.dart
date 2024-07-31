@@ -42,9 +42,7 @@ class DotsIndicator extends AnimatedWidget {
         1.0 - ((controller.page ?? controller.initialPage) - index).abs(),
       ),
     );
-
     double zoom = 1.0 + (_kMaxZoom - 1.0) * selectedness;
-
     return new Container(
       width: _kDotSpacing,
       child: new Center(
@@ -55,7 +53,7 @@ class DotsIndicator extends AnimatedWidget {
             width: _kDotSize * zoom,
             height: _kDotSize * zoom,
             child: new InkWell(
-              onTap: () => onPageSelected(index),
+              onTap: () => onPageSelected!(index),
             ),
           ),
         ),

@@ -85,7 +85,7 @@ class NewsList extends StatelessWidget {
 
   Widget subtitle(Item data) {
     return Container(
-      height: 60,
+      height: 64,
       child: Row(
         children: <Widget>[
           Flexible(

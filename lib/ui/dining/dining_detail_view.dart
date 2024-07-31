@@ -107,7 +107,7 @@ class DiningDetailView extends StatelessWidget {
         ),
         child: Text('Visit Website',
             style: TextStyle(
-              color: Theme.of(context).textTheme.button!.color,
+              color: Theme.of(context).textTheme.labelLarge!.color,
             )),
         onPressed: () {
           try {
@@ -126,7 +126,7 @@ class DiningDetailView extends StatelessWidget {
       return ElevatedButton(
         child: Text('View Menu',
             style: TextStyle(
-              color: Theme.of(context).textTheme.button!.color,
+              color: Theme.of(context).textTheme.labelLarge!.color,
             )),
         style: ElevatedButton.styleFrom(
           foregroundColor: Theme.of(context).primaryColor,
@@ -179,8 +179,8 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
   return RichText(
     text: TextSpan(
       style: TextStyle(
-          fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
-          color: Theme.of(context).textTheme.bodyText2!.color),
+          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+          color: Theme.of(context).textTheme.bodyMedium!.color),
       children: [
         TextSpan(
           text: "Special Hours: \n",
@@ -201,8 +201,8 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
     return RichText(
       text: TextSpan(
         style: TextStyle(
-            fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
-            color: Theme.of(context).textTheme.bodyText2!.color),
+            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+            color: Theme.of(context).textTheme.bodyMedium!.color),
         children: [
           TextSpan(
             text: "Payment Options:\n",
