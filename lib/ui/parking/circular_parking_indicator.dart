@@ -111,19 +111,19 @@ class CircularParkingIndicators extends StatelessWidget {
                   padding: EdgeInsets.all(8.0),
                   child: spotType != null
                       ? CircleAvatar(
-                          backgroundColor: colorFromHex(spotType.color!),
-                          child: spotType.text!.contains("&#x267f;")
+                          backgroundColor: colorFromHex(spotType.color),
+                          child: spotType.text.contains("&#x267f;")
                               ? Icon(
                                   Icons.accessible,
                                   size: 25.0,
-                                  color: colorFromHex(spotType.textColor!),
+                                  color: colorFromHex(spotType.textColor),
                                 )
                               : Text(
-                                  spotType.spotKey!.contains("SR")
+                                  spotType.spotKey.contains("SR")
                                       ? "RS"
-                                      : spotType.text!,
+                                      : spotType.text,
                                   style: TextStyle(
-                                    color: colorFromHex(spotType.textColor!),
+                                    color: colorFromHex(spotType.textColor),
                                   ),
                                 ),
                         )
@@ -162,17 +162,17 @@ class CircularParkingIndicators extends StatelessWidget {
                   padding: EdgeInsets.all(8.0),
                   child: spotType != null
                       ? CircleAvatar(
-                          backgroundColor: colorFromHex(spotType.color!),
-                          child: spotType.text!.contains("&#x267f;")
+                          backgroundColor: colorFromHex(spotType.color),
+                          child: spotType.text.contains("&#x267f;")
                               ? Icon(Icons.accessible,
                                   size: 25.0,
-                                  color: colorFromHex(spotType.textColor!))
+                                  color: colorFromHex(spotType.textColor))
                               : Text(
-                                  spotType.spotKey!.contains("SR")
+                                  spotType.spotKey.contains("SR")
                                       ? "RS"
-                                      : spotType.text!,
+                                      : spotType.text,
                                   style: TextStyle(
-                                    color: colorFromHex(spotType.textColor!),
+                                    color: colorFromHex(spotType.textColor),
                                   ),
                                 ),
                         )

@@ -33,8 +33,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
           true) {
         selectedSpots++;
       }
-      Color iconColor = HexColor(data.color!);
-      Color textColor = HexColor(data.textColor!);
+      Color iconColor = HexColor(data.color);
+      Color textColor = HexColor(data.textColor);
 
       list.add(ListTile(
         key: Key(data.name.toString()),
@@ -47,14 +47,14 @@ class _SpotTypesViewState extends State<SpotTypesView> {
             ),
             child: Align(
                 alignment: Alignment.center,
-                child: data.text!.contains("&#x267f;")
+                child: data.text.contains("&#x267f;")
                     ? Icon(Icons.accessible,
-                        size: 25.0, color: colorFromHex(data.textColor!))
+                        size: 25.0, color: colorFromHex(data.textColor))
                     : Text(
-                        data.spotKey!.contains("SR") ? "RS" : data.text!,
+                        data.spotKey.contains("SR") ? "RS" : data.text,
                         style: TextStyle(color: textColor),
                       ))),
-        title: Text(data.name!),
+        title: Text(data.name),
         trailing: Switch(
           value: Provider.of<ParkingDataProvider>(context)
               .spotTypesState![data.spotKey]!,
