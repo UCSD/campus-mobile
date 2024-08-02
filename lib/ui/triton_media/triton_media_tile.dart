@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 
 class MediaTile extends StatelessWidget {
   const MediaTile({Key? key, required this.data}) : super(key: key);

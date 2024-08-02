@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_getters_setters
+
 import 'dart:io' show Platform;
 
 import 'package:campus_mobile_experimental/app_constants.dart';

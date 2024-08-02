@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -91,27 +93,40 @@ class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = ThemeData(
-      primarySwatch: ColorPrimary,
       primaryColor: lightPrimaryColor,
-      brightness: Brightness.light,
-      // buttonColor: lightButtonColor,
-      backgroundColor: lightButtonColor, // added
+      brightness: Brightness.light, // added
       textTheme: lightThemeText,
       iconTheme: lightIconTheme,
-      appBarTheme: lightAppBarTheme,
+      appBarTheme: lightAppBarTheme, colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(background: lightButtonColor),
+    );
+
+    final ColorScheme darkColorScheme = ColorScheme.fromSwatch(
+      primarySwatch: ColorPrimary,
+    ).copyWith(
+      primary: darkPrimaryColor,
+      background: darkButtonColor,
+      brightness: Brightness.dark,
     );
 
     final ThemeData darkTheme = ThemeData(
-      primarySwatch: ColorPrimary,
-      primaryColor: darkPrimaryColor,
-      brightness: Brightness.dark,
-      // buttonColor: darkButtonColor,
-      backgroundColor: darkButtonColor, // added
+      primaryColor: darkPrimaryColor, // added
       textTheme: darkThemeText,
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,
-      unselectedWidgetColor: darkAccentColor,
+      unselectedWidgetColor: darkAccentColor, colorScheme: darkColorScheme.copyWith(background: darkButtonColor),
     );
+
+    // final ThemeData darkTheme = ThemeData(
+    //   primarySwatch: ColorPrimary,
+    //   primaryColor: darkPrimaryColor,
+    //   brightness: Brightness.dark,
+    //   // buttonColor: darkButtonColor,
+    //   backgroundColor: darkButtonColor, // added
+    //   textTheme: darkThemeText,
+    //   iconTheme: darkIconTheme,
+    //   appBarTheme: darkAppBarTheme,
+    //   unselectedWidgetColor: darkAccentColor,
+    // );
 
     return MultiProvider(
       providers: providers,

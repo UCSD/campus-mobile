@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, unused_field
+
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
@@ -257,7 +259,7 @@ class _WiFiCardState extends State<WiFiCard>
                                   style: TextButton.styleFrom(
                                     // primary: Theme.of(context).buttonColor,
                                     foregroundColor:
-                                        Theme.of(context).backgroundColor,
+                                        Theme.of(context).colorScheme.background,
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
@@ -348,7 +350,7 @@ class _WiFiCardState extends State<WiFiCard>
                                     style: TextButton.styleFrom(
                                       // primary: Theme.of(context).buttonColor
                                       foregroundColor:
-                                          Theme.of(context).backgroundColor,
+                                          Theme.of(context).colorScheme.background,
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
@@ -462,7 +464,7 @@ class _WiFiCardState extends State<WiFiCard>
                                     style: TextButton.styleFrom(
                                       // primary: Theme.of(context).buttonColor,
                                       foregroundColor:
-                                          Theme.of(context).backgroundColor,
+                                          Theme.of(context).colorScheme.background,
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();

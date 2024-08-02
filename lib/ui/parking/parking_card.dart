@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -110,7 +112,7 @@ class _ParkingCardState extends State<ParkingCard> {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).colorScheme.background,
       ),
       child: Text(
         'Manage Lots',
@@ -122,7 +124,7 @@ class _ParkingCardState extends State<ParkingCard> {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).colorScheme.background,
       ),
       child: Text(
         'Manage Spots',
