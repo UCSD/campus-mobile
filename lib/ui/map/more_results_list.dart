@@ -73,7 +73,7 @@ class MoreResultsList extends StatelessWidget {
         ),
         child: Text(
           'Show More Results',
-          style: TextStyle(color: Theme.of(context).textTheme.button!.color),
+          style: TextStyle(color: Theme.of(context).textTheme.labelLarge!.color),
         ),
       ),
     );

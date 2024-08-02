@@ -74,7 +74,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
                   TextSpan(
                     text: " (\$${item.price})",
                     style: TextStyle(
-                        color: Theme.of(context).textTheme.bodyText2!.color),
+                        color: Theme.of(context).textTheme.bodyMedium!.color),
                   )
                 ],
               ),
@@ -133,7 +133,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
       child: ToggleButtons(
         isSelected: Provider.of<DiningDataProvider>(context).filtersSelected,
         textStyle: TextStyle(fontSize: 18),
-        selectedColor: Theme.of(context).textTheme.button!.color,
+        selectedColor: Theme.of(context).textTheme.labelLarge!.color,
         // fillColor: Theme.of(context).buttonColor,
         fillColor: Theme.of(context).colorScheme.background,
         borderRadius: BorderRadius.circular(10),
