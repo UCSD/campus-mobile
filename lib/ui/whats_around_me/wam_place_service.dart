@@ -33,7 +33,7 @@ class PlaceService {
       return true;
     } catch (e) {
       if (e.toString().contains("401")) {
-        if (await getNewToken()) {
+        if (await getNewArcGISToken()) {
           return await fetchPlaceData(place);
         }
       }
@@ -44,16 +44,26 @@ class PlaceService {
     }
   }
 
-  Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";  /// TODO: Replace url with ArcGIS url that requests access token
+  Future<bool> getNewArcGISToken() async {
+    final clientId = "i4SJG8P4dIUx8j68";
+    final clientSecret = "a5fd8ef37c4b4bcba7735725bbf49c2b";
+
+    final String tokenEndpoint = "https://admin-enterprise-gis.ucsd.edu/portal/sharing/rest/oauth2/token";
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
       "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
+    final Map<String, dynamic> params = {
+      "client_id": clientId,
+      "client_secret": clientSecret,
+      "grant_type": "client_credentials",
+      "f": "json"
+    };
+
     try {
       var response = await _networkHelper.authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
+          tokenEndpoint, tokenHeaders, params);
 
       headers["Authorization"] = "Bearer " + response["access_token"];
 

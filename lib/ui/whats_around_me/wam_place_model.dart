@@ -6,6 +6,7 @@ PlaceModel placeModelFromJson(String str) => PlaceModel.fromJson(json.decode(str
 String placeModelToJson(PlaceModel data) => json.encode(data.toJson());
 
 class PlaceModel {
+  // List to get all the places from a category (?)
   List<Location>? items;
 
   PlaceModel({
