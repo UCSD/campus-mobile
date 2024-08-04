@@ -23,22 +23,21 @@ class PlaceDataProvider extends ChangeNotifier {
   // Service
   PlaceService? _placeService;
 
-  void fetchPlace() async {
+  void fetchPlace(String place) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    if (await _placeService!.fetchData()) {
+    if (await _placeService!.fetchPlaceData(place)) {
       _placeModel = _placeService?.placeModel;
       _lastUpdated = DateTime.now();
     } else {
-      ///TODO: determine what error to show to the user
       _error = _placeService?.error;
     }
     _isLoading = false;
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
+  // SIMPLE GETTERS
   bool? get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;

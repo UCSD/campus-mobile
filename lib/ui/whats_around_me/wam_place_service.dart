@@ -15,17 +15,17 @@ class PlaceService {
   };
 
   final String requestURL =
-      "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?<PARAMETERS>";
+      "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&SingleLine=";
 
   PlaceModel _placeModel = PlaceModel();
 
-  Future<bool> fetchData() async {
+  Future<bool> fetchPlaceData(String place) async {
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response =
-      await (_networkHelper.authorizedFetch(requestURL, headers));
+      await (_networkHelper.authorizedFetch(requestURL + place + "&token=", headers));  /// TODO: Find if this is the way to put access token in url
 
       /// parse data
       _placeModel = placeModelFromJson(_response);
@@ -34,7 +34,7 @@ class PlaceService {
     } catch (e) {
       if (e.toString().contains("401")) {
         if (await getNewToken()) {
-          return await fetchData();
+          return await fetchPlaceData(place);
         }
       }
 
@@ -45,7 +45,7 @@ class PlaceService {
   }
 
   Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
+    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";  /// TODO: Replace url with ArcGIS url that requests access token
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":

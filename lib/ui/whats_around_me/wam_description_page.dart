@@ -6,8 +6,8 @@ import '../../core/providers/map.dart';
 import '../map/directions_button.dart';
 
 /// Upon clicking a location in the What's Around Me list,
-/// This File will fetch all the necessary data to build the
-/// location description page.
+/// This File will fetch all the necessary data to build the location description page.
+/// Using GetPLaceDetails ArcGIS API
 class PlaceDescriptionPage extends StatelessWidget {
   const PlaceDescriptionPage({
     Key? key,
