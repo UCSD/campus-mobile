@@ -8,8 +8,8 @@ import '../map/directions_button.dart';
 /// Upon clicking a location in the What's Around Me list,
 /// This File will fetch all the necessary data to build the
 /// location description page.
-class LocationDescriptionPage extends StatelessWidget {
-  const LocationDescriptionPage({
+class PlaceDescriptionPage extends StatelessWidget {
+  const PlaceDescriptionPage({
     Key? key,
     required GoogleMapController? mapController,
   })  : _mapController = mapController,

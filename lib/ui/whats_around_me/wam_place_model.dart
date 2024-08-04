@@ -1,19 +1,18 @@
 import 'dart:convert';
 
-// Location Name and Address Model (Data Structure for API calls a.k.a JSON response format)
-// From JSON (a.k.a string to object so that you can access properties)
-LocationNameAddressModel locationNameAddressModelFromJson(String str) => LocationNameAddressModel.fromJson(json.decode(str));
-// To Json (a.k.a Stringify, make an object a string to be sent)
-String locationNameAddressModelToJson(LocationNameAddressModel data) => json.encode(data.toJson());
+// From JSON (converts string to object so that you can access properties)
+PlaceModel placeModelFromJson(String str) => PlaceModel.fromJson(json.decode(str));
+// To Json (converts object to string so it can be sent)
+String placeModelToJson(PlaceModel data) => json.encode(data.toJson());
 
-class LocationNameAddressModel {
+class PlaceModel {
   List<Location>? items;
 
-  LocationNameAddressModel({
+  PlaceModel({
     this.items,
   });
 
-  factory LocationNameAddressModel.fromJson(Map<String, dynamic> json) => LocationNameAddressModel(
+  factory PlaceModel.fromJson(Map<String, dynamic> json) => PlaceModel(
     items: json["items"] == null
         ? null
         : List<Location>.from(json["items"].map((x) => Location.fromJson(x))),

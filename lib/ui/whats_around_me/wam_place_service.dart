@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_location_name_address_model.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_model.dart';
 
 // Location Service (Performs API Calls)
-class LocationNameAddressService {
-  LocationNameAddressService();
+class PlaceService {
+  PlaceService();
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
@@ -18,7 +17,7 @@ class LocationNameAddressService {
   final String requestURL =
       "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?<PARAMETERS>";
 
-  LocationNameAddressModel _locationNameAddressModel = LocationNameAddressModel();
+  PlaceModel _placeModel = PlaceModel();
 
   Future<bool> fetchData() async {
     _error = null;
@@ -29,7 +28,7 @@ class LocationNameAddressService {
       await (_networkHelper.authorizedFetch(requestURL, headers));
 
       /// parse data
-      _locationNameAddressModel = locationNameAddressModelFromJson(_response);
+      _placeModel = placeModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {
@@ -66,7 +65,7 @@ class LocationNameAddressService {
   }
 
   String? get error => _error;
-  LocationNameAddressModel? get locationNameAddressModel => _locationNameAddressModel;
+  PlaceModel? get placeModel => _placeModel;
   bool get isLoading => _isLoading;
   DateTime? get lastUpdated => _lastUpdated;
 }

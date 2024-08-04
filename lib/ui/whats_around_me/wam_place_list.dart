@@ -1,11 +1,9 @@
-import 'dart:convert';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_location_description_page.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_description_page.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_location_name_address_provider.dart';
-import 'package:http/http.dart' as http;
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_provider.dart';
 import 'package:provider/provider.dart';
 
-/// Fetches all the necessary data to build the What's Around Me List.
+/// Fetches necessary data to build the What's Around Me List using Provider.
 class BuildWhatsAroundMeList extends StatelessWidget {
   final BuildContext context;
   final dynamic mapController; // Replace 'dynamic' with the correct type
@@ -47,7 +45,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => LocationDescriptionPage(
+                          builder: (context) => PlaceDescriptionPage(
                             mapController: mapController,
                           )),
                     );
@@ -64,7 +62,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => LocationDescriptionPage(
+                          builder: (context) => PlaceDescriptionPage(
                             mapController: mapController,
                           )),
                     );
@@ -81,7 +79,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => LocationDescriptionPage(
+                          builder: (context) => PlaceDescriptionPage(
                             mapController: mapController,
                           )),
                     );
@@ -98,7 +96,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => LocationDescriptionPage(
+                          builder: (context) => PlaceDescriptionPage(
                             mapController: mapController,
                           )),
                     );
@@ -115,7 +113,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => LocationDescriptionPage(
+                          builder: (context) => PlaceDescriptionPage(
                             mapController: mapController,
                           )),
                     );
