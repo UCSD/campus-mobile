@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/providers/map.dart';
-import 'directions_button.dart';
+import '../map/directions_button.dart';
 
 /// Upon clicking a location in the What's Around Me list,
 /// This File will fetch all the necessary data to build the

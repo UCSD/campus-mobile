@@ -1,5 +1,9 @@
-import 'package:campus_mobile_experimental/ui/map/whats_around_me_location_description_page.dart';
+import 'dart:convert';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_location_description_page.dart';
 import 'package:flutter/material.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_location_name_address_provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 /// Fetches all the necessary data to build the What's Around Me List.
 class BuildWhatsAroundMeList extends StatelessWidget {
@@ -10,6 +14,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // String? data = LocationNameAddressDataProvider();
     return Container(
       color: Colors.amber,
       child: Center(
@@ -29,7 +34,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                 'Restaurants',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              subtitle: Text('Nearest: Burger King - 0.01 mi'),
+              subtitle: Text('Nearest: put data here - 0.01 mi'),
               children: <Widget>[
                 ListTile(
                   title: Text('Burger King - Open: Closes 17:00'),

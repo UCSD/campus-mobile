@@ -45,17 +45,17 @@ class NewsList extends StatelessWidget {
 
     return listSize != null
         ? ListView(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            children: ListTile.divideTiles(tiles: newsTiles, context: context)
-                .toList(),
-          )
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      children: ListTile.divideTiles(tiles: newsTiles, context: context)
+          .toList(),
+    )
         : ContainerView(
-            child: ListView(
-              children: ListTile.divideTiles(tiles: newsTiles, context: context)
-                  .toList(),
-            ),
-          );
+      child: ListView(
+        children: ListTile.divideTiles(tiles: newsTiles, context: context)
+            .toList(),
+      ),
+    );
   }
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
@@ -85,7 +85,7 @@ class NewsList extends StatelessWidget {
 
   Widget subtitle(Item data) {
     return Container(
-      height: 60,
+      height: 64,
       child: Row(
         children: <Widget>[
           Flexible(

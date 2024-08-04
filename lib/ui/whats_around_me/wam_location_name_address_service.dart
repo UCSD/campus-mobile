@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/news.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_location_name_address_model.dart';
 
-class NewsService {
-  NewsService();
+// Location Service (Performs API Calls)
+class LocationNameAddressService {
+  LocationNameAddressService();
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
@@ -14,10 +15,10 @@ class NewsService {
     "accept": "application/json",
   };
 
-  final String endpoint =
-      "https://api-qa.ucsd.edu:8243/campusnews/1.0.0/ucsdnewsaggregator";
+  final String requestURL =
+      "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?<PARAMETERS>";
 
-  NewsModel _newsModels = NewsModel();
+  LocationNameAddressModel _locationNameAddressModel = LocationNameAddressModel();
 
   Future<bool> fetchData() async {
     _error = null;
@@ -25,10 +26,10 @@ class NewsService {
     try {
       /// fetch data
       String _response =
-      await (_networkHelper.authorizedFetch(endpoint, headers));
+      await (_networkHelper.authorizedFetch(requestURL, headers));
 
       /// parse data
-      _newsModels = newsModelFromJson(_response);
+      _locationNameAddressModel = locationNameAddressModelFromJson(_response);
       _isLoading = false;
       return true;
     } catch (e) {
@@ -65,7 +66,7 @@ class NewsService {
   }
 
   String? get error => _error;
-  NewsModel get newsModels => _newsModels;
+  LocationNameAddressModel? get locationNameAddressModel => _locationNameAddressModel;
   bool get isLoading => _isLoading;
   DateTime? get lastUpdated => _lastUpdated;
 }

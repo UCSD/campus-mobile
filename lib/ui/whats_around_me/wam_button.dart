@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
-import 'package:campus_mobile_experimental/ui/map/whats_around_me_list.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
