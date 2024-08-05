@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = [];
-    Map<String, CardsModel?>? webCards =
+    Map<String, CardsModel?> webCards =
         Provider.of<CardsDataProvider>(context, listen: false).webCards;
 
     for (String card in order) {

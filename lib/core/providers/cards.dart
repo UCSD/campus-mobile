@@ -45,7 +45,7 @@ class CardsDataProvider extends ChangeNotifier {
   ];
 
   Map<String, bool> _cardStates = {};
-  Map<String, CardsModel?> _webCards = {};
+  Map<String, CardsModel> _webCards = {};
 
   // Native student cards
   static const List<String> _studentCards = [
@@ -106,7 +106,7 @@ class CardsDataProvider extends ChangeNotifier {
         // add active webCards
         for (String card in _cardStates.keys) {
           if (_availableCards[card]!.isWebCard) {
-            _webCards[card] = _availableCards[card];
+            _webCards[card] = _availableCards[card]!;
           }
         }
         // add new cards to the top of the list

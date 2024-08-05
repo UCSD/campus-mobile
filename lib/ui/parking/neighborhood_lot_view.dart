@@ -42,14 +42,14 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
     ));
 
     int selectedLots = 0;
-    parkingDataProvider.parkingViewState!.forEach((key, value) {
+    parkingDataProvider.parkingViewState.forEach((key, value) {
       if (value == true) {
         selectedLots++;
       }
     });
     // loops through and adds buttons for the user to click on
     for (int i = 0; i < arguments.length; i++) {
-      bool lotState = parkingDataProvider.parkingViewState![arguments[i]]!;
+      bool lotState = parkingDataProvider.parkingViewState[arguments[i]]!;
       list.add(
         ListTile(
           title: Padding(

@@ -5,6 +5,8 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'neighborhood_lot_view.dart';
+
 class SpotTypesView extends StatefulWidget {
   @override
   _SpotTypesViewState createState() => _SpotTypesViewState();
@@ -29,7 +31,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
     List<Widget> list = [];
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
       if (Provider.of<ParkingDataProvider>(context)
-              .spotTypesState![data.spotKey]! ==
+              .spotTypesState[data.spotKey]! ==
           true) {
         selectedSpots++;
       }
@@ -57,7 +59,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
         title: Text(data.name),
         trailing: Switch(
           value: Provider.of<ParkingDataProvider>(context)
-              .spotTypesState![data.spotKey]!,
+              .spotTypesState[data.spotKey]!,
           onChanged: (_) {
             spotTypesDataProvider.toggleSpotSelection(
                 data.spotKey, selectedSpots);
@@ -68,14 +70,5 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       ));
     }
     return list;
-  }
-
-  Color colorFromHex(String hexColor) {
-    final hexCode = hexColor.replaceAll('#', '');
-    if (hexColor.length == 6) {
-      hexColor =
-          'FF' + hexColor; // FF as the opacity value if you don't add it.
-    }
-    return Color(int.parse('FF$hexCode', radix: 16));
   }
 }

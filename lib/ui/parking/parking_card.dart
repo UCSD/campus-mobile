@@ -16,7 +16,7 @@ class ParkingCard extends StatefulWidget {
 class _ParkingCardState extends State<ParkingCard> {
   late ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
-  String cardId = 'parking';
+  static const String cardId = 'parking';
 
   @override
   void didChangeDependencies() {
@@ -50,7 +50,7 @@ class _ParkingCardState extends State<ParkingCard> {
     try {
       List<Widget> selectedLotsViews = [];
       for (ParkingModel model in _parkingDataProvider.parkingModels) {
-        if (_parkingDataProvider.parkingViewState![model.locationName] ==
+        if (_parkingDataProvider.parkingViewState[model.locationName] ==
             true) {
           selectedLotsViews.add(CircularParkingIndicators(model: model));
         }

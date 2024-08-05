@@ -18,17 +18,17 @@ class _ManageParkingViewState extends State<ManageParkingView> {
     // creates a list that will hold the list of building names
     List<Widget> list = [];
 
-    List<String> parkingType = [
+    const List<String> parkingType = [
       "Neighborhoods",
       "Parking Structure",
       "Parking Lots"
     ];
 
-    List<String> parkingTypeViews = [
-      "NeighborhoodsView",
-      "ParkingStructureView",
-      "ParkingLotsView"
-    ];
+    // List<String> parkingTypeViews = [
+    //   "NeighborhoodsView",
+    //   "ParkingStructureView",
+    //   "ParkingLotsView"
+    // ];
 
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < parkingType.length; i++) {

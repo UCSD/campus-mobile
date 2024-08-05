@@ -38,14 +38,14 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
     ));
 
     int selectedLots = 0;
-    parkingDataProvider.parkingViewState!.forEach((key, value) {
+    parkingDataProvider.parkingViewState.forEach((key, value) {
       if (value == true) {
         selectedLots++;
       }
     });
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < lots.length; i++) {
-      bool lotViewState = parkingDataProvider.parkingViewState![lots[i]]!;
+      bool lotViewState = parkingDataProvider.parkingViewState[lots[i]]!;
       list.add(
         ListTile(
           title: Padding(
