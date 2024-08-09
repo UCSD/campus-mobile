@@ -34,7 +34,7 @@ class PlaceDescriptionPage extends StatelessWidget {
                 children: [
                   /// Location Name
                   Text(
-                    'Burger King',
+                    'Change title with mock API call',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
