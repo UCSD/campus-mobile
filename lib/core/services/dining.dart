@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
@@ -12,14 +11,14 @@ class DiningService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<DiningModel>? _data;
+  List<DiningModel>? _data = [];
   DiningMenuItemsModel? _menuData;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-   String baseEndpoint = "https://api-qa.ucsd.edu:8243/dining/v4.0.0";
+  String baseEndpoint = "https://api-qa.ucsd.edu:8243/dining/v4.0.0";
 
   Future<bool> fetchData() async {
     _error = null;
@@ -30,9 +29,8 @@ class DiningService {
           baseEndpoint + '/locations', headers);
 
       /// parse data
-      final data = diningModelFromJson(_response);
+      _data = diningModelFromJson(_response);
       _isLoading = false;
-      _data = data;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
@@ -57,8 +55,8 @@ class DiningService {
           baseEndpoint + '/menu/' + id, headers);
 
       /// parse data
-      final data = diningMenuItemsModelFromJson(_response);
-      _menuData = data;
+      _menuData = diningMenuItemsModelFromJson(_response);
+      _isLoading = false;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
@@ -79,14 +77,13 @@ class DiningService {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
           tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
 
       headers["Authorization"] = "Bearer " + response["access_token"];
-
       return true;
     } catch (e) {
       _error = e.toString();
@@ -97,6 +94,6 @@ class DiningService {
   bool get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  List<DiningModel>? get data => _data;
+  List<DiningModel> get data => _data!;
   DiningMenuItemsModel? get menuData => _menuData;
 }
