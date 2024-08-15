@@ -43,8 +43,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
     );
   }
 
-  Widget buildShuttleCard(List<ShuttleStopModel?> stopsToRender,
-      Map<int?, List<ArrivingShuttle>> arrivalsToRender) {
+  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
+      Map<int, List<ArrivingShuttle>> arrivalsToRender) {
     print("Stops - ${stopsToRender.length}");
     print("Arrivals - ${arrivalsToRender.length}");
 

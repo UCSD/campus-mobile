@@ -11,10 +11,10 @@ class EventTime extends StatelessWidget {
     try {
       // Separate dates from times
       String startMonthDay =
-          DateFormat.MMMd().format(data.startDate!.toLocal());
-      String endMonthDay = DateFormat.MMMd().format(data.endDate!.toLocal());
-      String startTime = DateFormat.jm().format(data.startDate!.toLocal());
-      String endTime = DateFormat.jm().format(data.endDate!.toLocal());
+          DateFormat.MMMd().format(data.startDate.toLocal());
+      String endMonthDay = DateFormat.MMMd().format(data.endDate.toLocal());
+      String startTime = DateFormat.jm().format(data.startDate.toLocal());
+      String endTime = DateFormat.jm().format(data.endDate.toLocal());
 
       // Mark any special types of events
       bool sameDay = (startMonthDay == endMonthDay);

@@ -42,7 +42,7 @@ class NoticesService {
 
   DateTime? get lastUpdated => _lastUpdated;
 
-  NetworkHelper get availabilityService => _networkHelper;
+  //NetworkHelper get availabilityService => _networkHelper;
 
   List<NoticesModel> get noticesModel => _noticesModel;
 }

@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 
 const String cardId = 'NativeScanner';
 
-class NativeScannerCard extends StatelessWidget {
+class NativeScannerCard extends StatelessWidget
+{
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -124,7 +125,7 @@ class NativeScannerCard extends StatelessWidget {
   void getActionButtonNavigateRoute(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
       Provider.of<ScannerDataProvider>(context, listen: false)
-          .setDefaultStates();
+          .resetDefaultStates();
       Navigator.pushNamed(
         context,
         RoutePaths.ScanditScanner,

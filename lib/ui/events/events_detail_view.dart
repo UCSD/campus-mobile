@@ -33,10 +33,10 @@ class EventDetailView extends StatelessWidget {
           decoration: BoxDecoration(
               image: DecorationImage(
             fit: BoxFit.fill,
-            image: (data.imageHQ!.isEmpty)
+            image: (data.imageHQ.isEmpty)
                 ? AssetImage('assets/images/UCSDMobile_banner.png')
                     as ImageProvider
-                : NetworkImage(data.imageHQ!),
+                : NetworkImage(data.imageHQ),
           )),
         ),
         Container(
@@ -51,7 +51,7 @@ class EventDetailView extends StatelessWidget {
                     color: Theme.of(context).primaryColor,
                   ),
                   Text(
-                    data.title!,
+                    data.title,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
@@ -86,7 +86,7 @@ class EventDetailView extends StatelessWidget {
                         )
                       : Container(),
                   data.link != null && data.link!.isNotEmpty
-                      ? LearnMoreButton(link: data.link)
+                      ? LearnMoreButton(link: data.link!)
                       : Container(),
                 ],
               ),
@@ -100,7 +100,7 @@ class EventDetailView extends StatelessWidget {
 
 class LearnMoreButton extends StatelessWidget {
   const LearnMoreButton({Key? key, required this.link}) : super(key: key);
-  final String? link;
+  final String link;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -117,7 +117,7 @@ class LearnMoreButton extends StatelessWidget {
           ),
           onPressed: () async {
             try {
-              await launch(link!, forceSafariVC: true);
+              await launch(link, forceSafariVC: true);
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('Could not open.'),

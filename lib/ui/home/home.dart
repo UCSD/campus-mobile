@@ -101,7 +101,7 @@ class _HomeState extends State<Home> {
     List<Widget> orderedCards =
         getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder);
     List<Widget> noticesCards = getNoticesCardsList(
-        Provider.of<NoticesDataProvider>(context).noticesModel!);
+        Provider.of<NoticesDataProvider>(context).noticesModel);
 
     return noticesCards + orderedCards;
   }

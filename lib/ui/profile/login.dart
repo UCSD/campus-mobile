@@ -66,8 +66,8 @@ class _LoginState extends State<Login> {
         color: Colors.green,
       ),
       title: Text(
-        _userDataProvider.userProfileModel!.username != null
-            ? _userDataProvider.userProfileModel!.username!
+        _userDataProvider.userProfileModel.username != null
+            ? _userDataProvider.userProfileModel.username!
             : "",
         style: TextStyle(fontSize: 17),
       ),

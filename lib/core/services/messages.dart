@@ -17,7 +17,7 @@ class MessageService {
   final NetworkHelper _networkHelper = NetworkHelper();
 
   Future<bool> fetchMyMessagesData(
-      int? timestamp, Map<String, String> authHeaders) async {
+      int timestamp, Map<String, String> authHeaders) async {
     _error = null;
     _isLoading = true;
 
@@ -38,7 +38,7 @@ class MessageService {
     }
   }
 
-  Future<bool> fetchTopicData(int? timestamp, List<String?> topics) async {
+  Future<bool> fetchTopicData(int timestamp, List<String?> topics) async {
     _error = null;
     _isLoading = true;
 

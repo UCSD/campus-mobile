@@ -14,7 +14,7 @@ import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 bool hideListView = false; // debug
-List<String> eventTypesForIAmGoing = [
+const List<String> eventTypesForIAmGoing = [
   "campusInnovationEvents",
   "freeFood",
   "testCampusInnovationEvents",
@@ -127,25 +127,25 @@ class _NotificationsListViewState extends State<NotificationsListView> {
 
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages[index]!;
+        Provider.of<MessagesDataProvider>(context).messages[index];
 
     String? messageType;
-    if (data.audience!.topics == null) {
-      messageType = "DM";
-    } else {
-      messageType = data.audience?.topics![0];
-    }
+    // if (data.audience.topics == null) {
+    //   messageType = "DM";
+    // } else {
+      messageType = data.audience.topics[0];
+    //}
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
         ListTile(
-            leading: Icon(chooseIcon(messageType!),
+            leading: Icon(chooseIcon(messageType),
                 color: Theme.of(context).colorScheme.secondary, size: 30),
             title: Column(
               children: <Widget>[
                 Text(
-                  data.message!.title!,
+                  data.message.title,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Padding(padding: const EdgeInsets.all(3.5))
@@ -157,7 +157,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                 Align(
                   alignment: Alignment.topLeft,
                   child: Linkify(
-                    text: data.message!.message!,
+                    text: data.message.message,
                     onOpen: (link) async {
                       try {
                         await launch(link.url, forceSafariVC: true);
@@ -172,7 +172,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               ],
             ),
             trailing: Column(children: <Widget>[
-              Text(_readTimestamp(data.timestamp!),
+              Text(_readTimestamp(data.timestamp),
                   style: TextStyle(fontSize: 10, color: Colors.grey)),
             ])),
         // check if the event type needs the "I am going" feature (e.g., "freeFood" events),

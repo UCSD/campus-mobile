@@ -161,7 +161,7 @@ List<SingleChildWidget> dependentServices = [
 
             // Student card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel!.classifications?.student ??
+                (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
               cardsDataProvider.activateStudentCards();
             } else {
@@ -170,7 +170,7 @@ List<SingleChildWidget> dependentServices = [
 
             // Staff card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel!.classifications?.staff ??
+                (userDataProvider.userProfileModel.classifications?.staff ??
                     false)) {
               cardsDataProvider.activateStaffCards();
             } else {
@@ -292,14 +292,12 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<UserDataProvider, ScannerDataProvider>(
     create: (_) {
       var _scannerDataProvider = ScannerDataProvider();
-      _scannerDataProvider.initState();
-      _scannerDataProvider.setDefaultStates();
       return _scannerDataProvider;
     },
     update: (_, _userDataProvider, scannerDataProvider) {
       scannerDataProvider!.userDataProvider = _userDataProvider;
       scannerDataProvider.initState();
-      scannerDataProvider.setDefaultStates();
+      scannerDataProvider.resetDefaultStates();
       return scannerDataProvider;
     },
     lazy: false,

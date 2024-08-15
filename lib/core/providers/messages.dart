@@ -29,13 +29,13 @@ class MessagesDataProvider extends ChangeNotifier
   int _previousTimestamp = 0;
   String _statusText = NotificationsConstants.statusFetching;
   bool _hasMoreMessagesToLoad = false;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   /// MODELS
-  List<MessageElement?> _messages = [];
+  List<MessageElement> _messages = [];
   UserDataProvider? userDataProvider;
 
-  MessageService _messageService = MessageService();
+  final MessageService _messageService = MessageService();
 
   //Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
@@ -77,7 +77,7 @@ class MessagesDataProvider extends ChangeNotifier
     };
 
     if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
-      List<MessageElement> temp = _messageService.messagingModels.messages!;
+      List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp);
       makeOrderedMessagesList();
 
@@ -108,7 +108,7 @@ class MessagesDataProvider extends ChangeNotifier
 
     if (await _messageService.fetchTopicData(
         _previousTimestamp, userDataProvider!.subscribedTopics!)) {
-      List<MessageElement> temp = _messageService.messagingModels.messages!;
+      List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp);
       makeOrderedMessagesList();
 
@@ -133,16 +133,16 @@ class MessagesDataProvider extends ChangeNotifier
   }
 
   void makeOrderedMessagesList() {
-    Map<String?, MessageElement?> uniqueMessages =
+    Map<String, MessageElement> uniqueMessages =
         Map<String, MessageElement>();
     uniqueMessages = Map.fromIterable(_messages,
         key: (message) => message.messageId, value: (message) => message);
     _messages.clear();
     uniqueMessages.forEach((k, v) => _messages.add(v));
-    _messages.sort((a, b) => b!.timestamp!.compareTo(a!.timestamp!));
+    _messages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
   }
 
-  updateMessages(List<MessageElement> newMessages) {
+  void updateMessages(List<MessageElement> newMessages) {
     _messages.addAll(newMessages);
     if (_messages.length == 0) {
       _statusText = NotificationsConstants.statusNoMessages;
@@ -159,5 +159,5 @@ class MessagesDataProvider extends ChangeNotifier
   bool get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
   ScrollController get scrollController => _scrollController;
 
-  List<MessageElement?> get messages => _messages;
+  List<MessageElement> get messages => _messages;
 }

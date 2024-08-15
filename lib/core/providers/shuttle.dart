@@ -7,8 +7,6 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
 import 'package:flutter/material.dart';
 
-import 'location.dart';
-
 class ShuttleDataProvider extends ChangeNotifier
 {
   bool _isLoading = false;
@@ -16,11 +14,11 @@ class ShuttleDataProvider extends ChangeNotifier
   UserDataProvider? userDataProvider;
   ShuttleService _shuttleService = ShuttleService();
   ShuttleStopModel? _closestStop;
-  double? stopLat;
-  double? stopLong;
+  //double stopLat;
+  //double stopLong;
   double closestDistance = 10000000;
-  Map<int?, ShuttleStopModel>? fetchedStops;
-  Map<int?, List<ArrivingShuttle>> arrivalsToRender = Map<int, List<ArrivingShuttle>>();
+  Map<int, ShuttleStopModel>? fetchedStops;
+  Map<int, List<ArrivingShuttle>> arrivalsToRender = {};
   //late LocationDataProvider _locationDataProvider;
   Coordinates? _userCoords;
 
@@ -30,9 +28,9 @@ class ShuttleDataProvider extends ChangeNotifier
     notifyListeners();
 
     // create new map of shuttles/stops to display
-    Map<int?, ShuttleStopModel> newMapOfStops = Map<int?, ShuttleStopModel>();
+    Map<int, ShuttleStopModel> newMapOfStops = <int, ShuttleStopModel>{};
     if (await _shuttleService.fetchData()) {
-      _shuttleService.data.sort((a, b) => (a.name)!.compareTo(b.name!));
+      _shuttleService.data.sort((a, b) => (a.name).compareTo(b.name));
 
       for (ShuttleStopModel model in _shuttleService.data) {
         newMapOfStops[model.id] = model;
@@ -41,7 +39,7 @@ class ShuttleDataProvider extends ChangeNotifier
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       if (userDataProvider != null && !reloading) {
-        reorderStops(userDataProvider!.userProfileModel!.selectedStops);
+        reorderStops(userDataProvider!.userProfileModel.selectedStops);
       }
 
       // get closest stop to current user
@@ -57,24 +55,25 @@ class ShuttleDataProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  List<ShuttleStopModel?> makeOrderedList(List<int?>? order) {
-    if (order == null) {
-      return [];
-    }
-
-    ///create an empty list that will be returned
-    List<ShuttleStopModel?> orderedListOfStops = [];
-
-    /// remove lots as we add them to the ordered list
-    for (int? stopID in order) {
-      orderedListOfStops.add(fetchedStops![stopID]);
-    }
-    return orderedListOfStops;
-  }
+  // TODO: unused function. If needed, rewrite w/ proper nullability
+  // List<ShuttleStopModel?> makeOrderedList(List<int?>? order) {
+  //   if (order == null) {
+  //     return [];
+  //   }
+  //
+  //   ///create an empty list that will be returned
+  //   List<ShuttleStopModel?> orderedListOfStops = [];
+  //
+  //   /// remove lots as we add them to the ordered list
+  //   for (int? stopID in order) {
+  //     orderedListOfStops.add(fetchedStops![stopID]);
+  //   }
+  //   return orderedListOfStops;
+  // }
 
   void reorderStops(List<int?>? order) {
     /// update userProfileModel with selectedStops
-    userDataProvider!.userProfileModel!.selectedStops = order;
+    userDataProvider!.userProfileModel.selectedStops = order;
     if (userDataProvider!.isLoggedIn) {
       /// post updated userProfileModel for logged-in users
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
@@ -82,19 +81,19 @@ class ShuttleDataProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<void> addStop(int? stopID) async {
-    if (!userDataProvider!.userProfileModel!.selectedStops!.contains(stopID)) {
-      userDataProvider!.userProfileModel!.selectedStops!.add(stopID);
+  Future<void> addStop(int stopID) async {
+    if (!userDataProvider!.userProfileModel.selectedStops!.contains(stopID)) {
+      userDataProvider!.userProfileModel.selectedStops!.add(stopID);
       // update userprofilemodel locally and in database after a stop is added
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
-      arrivalsToRender[stopID] = await fetchArrivalInformation(stopID!);
+      arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
     }
     notifyListeners();
   }
 
   Future<void> removeStop(int? stopID) async {
-    if (userDataProvider!.userProfileModel!.selectedStops!.contains(stopID)) {
-      userDataProvider!.userProfileModel!.selectedStops!.remove(stopID);
+    if (userDataProvider!.userProfileModel.selectedStops!.contains(stopID)) {
+      userDataProvider!.userProfileModel.selectedStops!.remove(stopID);
       // update userprofilemodel locally and in database after a stop is removed
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
     }
@@ -111,8 +110,7 @@ class ShuttleDataProvider extends ChangeNotifier
     }
 
     for (ShuttleStopModel shuttleStop in _shuttleService.data) {
-      stopLat = shuttleStop.lat;
-      stopLong = shuttleStop.lon;
+      double stopLat = shuttleStop.lat, stopLong = shuttleStop.lon;
       if (getHaversineDistance(
               _userCoords!.lat, _userCoords!.lon, stopLat, stopLong) <
           closestDistance) {
@@ -126,7 +124,7 @@ class ShuttleDataProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  double getHaversineDistance(lat1, lon1, lat2, lon2) {
+  double getHaversineDistance(lat1, lon1, double lat2, double lon2) {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1)!; // deg2rad below
     var dLon = deg2rad(lon2 - lon1)!;
@@ -147,10 +145,10 @@ class ShuttleDataProvider extends ChangeNotifier
   Future<void> getArrivalInformation() async {
     if (_closestStop != null) {
       arrivalsToRender[_closestStop!.id] =
-          await fetchArrivalInformation(_closestStop!.id!);
+          await fetchArrivalInformation(_closestStop!.id);
     }
     for (ShuttleStopModel stop in stopsToRender) {
-      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id!);
+      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
     }
 
     notifyListeners();
@@ -160,7 +158,7 @@ class ShuttleDataProvider extends ChangeNotifier
     List<ArrivingShuttle> output =
         await _shuttleService.getArrivingInformation(stopID);
 
-    output.sort((a, b) => a.secondsToArrival!.compareTo(b.secondsToArrival!));
+    output.sort((a, b) => a.secondsToArrival.compareTo(b.secondsToArrival));
     return output;
   }
 
@@ -172,14 +170,12 @@ class ShuttleDataProvider extends ChangeNotifier
   List<ShuttleStopModel> get stopsToRender {
     List<ShuttleStopModel> stopsToRenderList = <ShuttleStopModel>[];
     if (fetchedStops != null) {
-      if (userDataProvider!.userProfileModel != null) {
-        for (int i = 0;
-            i < userDataProvider!.userProfileModel!.selectedStops!.length;
-            i++) {
-          int stopID = userDataProvider!.userProfileModel!.selectedStops![i]!;
-          if (fetchedStops![stopID] != null) {
-            stopsToRenderList.add(fetchedStops![stopID]!);
-          }
+      for (int i = 0;
+          i < userDataProvider!.userProfileModel.selectedStops!.length;
+          i++) {
+        int stopID = userDataProvider!.userProfileModel.selectedStops![i]!;
+        if (fetchedStops![stopID] != null) {
+          stopsToRenderList.add(fetchedStops![stopID]!);
         }
       }
     }

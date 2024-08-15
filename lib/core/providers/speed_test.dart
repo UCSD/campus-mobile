@@ -284,12 +284,12 @@ class SpeedTestProvider extends ChangeNotifier {
           'Bearer ${_userDataProvider.authenticationModel.accessToken}'
     };
     wiFiLog = {
-      "userId": (_userDataProvider.userProfileModel!.pid) == null
+      "userId": (_userDataProvider.userProfileModel.pid) == null
           ? ""
-          : _userDataProvider.userProfileModel!.pid,
-      "userLogin": (_userDataProvider.userProfileModel!.username) == null
+          : _userDataProvider.userProfileModel.pid,
+      "userLogin": (_userDataProvider.userProfileModel.username) == null
           ? ""
-          : _userDataProvider.userProfileModel!.username!,
+          : _userDataProvider.userProfileModel.username!,
       "Platform": _speedTestModel!.platform,
       "SSID": _speedTestModel!.ssid,
       "BSSID": _speedTestModel!.bssid,

@@ -9,24 +9,26 @@ import 'package:permission_handler/permission_handler.dart';
 
 class ScannerDataProvider extends ChangeNotifier
 {
-  bool? _hasScanned;
-  bool? hasSubmitted;
-  bool? _didError;
-  String? _message = '';
+  bool _hasScanned = false;
+  bool hasSubmitted = false;
+  bool _didError = false;
+  String message = '';
 
-  String? _licenseKey;
+  late String _licenseKey;
   BarcodeService _barcodeService = BarcodeService();
   late UserDataProvider _userDataProvider;
 
   String? _barcode;
   bool isLoading = false;
-  bool? _isDuplicate;
-  bool? _successfulSubmission;
-  bool? _isValidBarcode;
+  bool _isDuplicate = false;
+  bool _successfulSubmission = false;
+  bool _isValidBarcode = true;
   late String errorText;
   PermissionStatus? cameraPermissionsStatus;
-  ScanditController? _controller;
+  late ScanditController _controller;
   List<String?> scannedCodes = [];
+
+  ScannerDataProvider()  { initState(); notifyListeners(); }
 
   void initState() {
     if (Platform.isIOS) {
@@ -38,7 +40,7 @@ class ScannerDataProvider extends ChangeNotifier
     errorText = "Something went wrong, please try again.";
   }
 
-  void setDefaultStates() {
+  void resetDefaultStates() {
     _hasScanned = false;
     hasSubmitted = false;
     _didError = false;
@@ -46,7 +48,7 @@ class ScannerDataProvider extends ChangeNotifier
     isLoading = false;
     _isDuplicate = false;
     _isValidBarcode = true;
-    scannedCodes = [];
+    scannedCodes.clear();
     notifyListeners();
   }
 
@@ -76,7 +78,7 @@ class ScannerDataProvider extends ChangeNotifier
     scannedCodes.add(result.data);
     // currently scanning 3 consecutive times
     if (scannedCodes.length < 3) {
-      _controller!.resumeBarcodeScanning();
+      _controller.resumeBarcodeScanning();
     } else {
       String? firstScan = scannedCodes.first;
       // if all scans are not the same, need to go into error state
@@ -101,7 +103,7 @@ class ScannerDataProvider extends ChangeNotifier
 
     try {
       int accessTokenExpiration =
-          _userDataProvider.authenticationModel.expiration! as int;
+          _userDataProvider.authenticationModel.expiration!;
       var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
       var timeDiff = accessTokenExpiration - nowTime;
       var tokenExpired = timeDiff <= 0 ? true : false;
@@ -177,22 +179,14 @@ class ScannerDataProvider extends ChangeNotifier
   }
 
   /// Simple setters and getters
-  set controller(ScanditController? value) {
-    _controller = value;
-  }
-
-  set message(String? value) {
-    _message = value;
-  }
-
+  set controller(ScanditController value) => _controller = value;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
   String? get barcode => _barcode;
-  String? get message => _message;
-  bool? get didError => _didError;
-  bool? get hasScanned => _hasScanned;
-  String? get licenseKey => _licenseKey;
-  bool? get isDuplicate => _isDuplicate;
-  bool? get isValidBarcode => _isValidBarcode;
-  bool? get successfulSubmission => _successfulSubmission;
+  bool get didError => _didError;
+  bool get hasScanned => _hasScanned;
+  String get licenseKey => _licenseKey;
+  bool get isDuplicate => _isDuplicate;
+  bool get isValidBarcode => _isValidBarcode;
+  bool get successfulSubmission => _successfulSubmission;
 }

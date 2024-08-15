@@ -34,14 +34,14 @@ class AvailabilityDataProvider extends ChangeNotifier
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
         if (_userDataProvider
-            .userProfileModel!.selectedOccuspaceLocations!.isEmpty) {
+            .userProfileModel.selectedOccuspaceLocations!.isEmpty) {
           locationViewState[model.name] = true;
         }
 
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
           _locationViewState[model.name] = _userDataProvider
-              .userProfileModel!.selectedOccuspaceLocations!
+              .userProfileModel.selectedOccuspaceLocations!
               .contains(model.name);
         }
       }
@@ -51,7 +51,7 @@ class AvailabilityDataProvider extends ChangeNotifier
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       reorderLocations(
-          _userDataProvider.userProfileModel!.selectedOccuspaceLocations);
+          _userDataProvider.userProfileModel.selectedOccuspaceLocations);
       _lastUpdated = DateTime.now();
     } else {
       _error = _availabilityService.error;
@@ -82,7 +82,7 @@ class AvailabilityDataProvider extends ChangeNotifier
 
   void reorderLocations(List<String?>? order) {
     ///edit the profile and upload user selected lots
-    _userDataProvider.userProfileModel!.selectedOccuspaceLocations = order;
+    _userDataProvider.userProfileModel.selectedOccuspaceLocations = order;
     // Commented out as this method updates the userDataProvider before it is set up,
     // posting null userProfile, was causing issues for parking preferences
     // _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
@@ -93,14 +93,14 @@ class AvailabilityDataProvider extends ChangeNotifier
   void toggleLocation(String location)
   {
     locationViewState[location] = !locationViewState[location]!;
-    _userDataProvider.updateUserProfileModel(_userDataProvider.userProfileModel!);
+    _userDataProvider.updateUserProfileModel(_userDataProvider.userProfileModel);
     notifyListeners();
   }
 
   ///UPLOAD SELECTED LOCATIONS IN THE CORRECT ORDER TO THE DATABASE
   ///IF NOT LOGGED IN THEN SAVE LOCATIONS TO LOCAL PROFILE
   uploadAvailabilityData(List<String> locations) {
-    var userProfile = _userDataProvider.userProfileModel!;
+    var userProfile = _userDataProvider.userProfileModel;
 
     ///set the local user profile to the given lots
     userProfile.selectedOccuspaceLocations = locations;
@@ -123,11 +123,8 @@ class AvailabilityDataProvider extends ChangeNotifier
 
   List<AvailabilityModel?> get availabilityModels {
     ///check if we have an offline _userProfileModel
-    if (_userDataProvider.userProfileModel != null) {
-      return makeOrderedList(
-          _userDataProvider.userProfileModel!.selectedOccuspaceLocations);
-    }
-    return _availabilityModels.values.toList();
+    return makeOrderedList(
+        _userDataProvider.userProfileModel.selectedOccuspaceLocations);
   }
 
   /// get all locations

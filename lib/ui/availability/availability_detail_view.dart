@@ -14,7 +14,7 @@ class AvailabilityDetailedView extends StatelessWidget {
     );
   }
 
-  Widget buildLocationsList(BuildContext context, subLocation) {
+  Widget buildLocationsList(BuildContext context, SubLocations subLocation) {
     // Add a tile for the subLocation name
     List<Widget> list = [];
     list.add(ListTile(

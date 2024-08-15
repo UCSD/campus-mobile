@@ -18,9 +18,7 @@ class IAmGoingNotification extends StatefulWidget {
 }
 
 class _CheckBoxButtonState extends State<IAmGoingNotification> {
-  _CheckBoxButtonState(data) {
-    this.data = data;
-  }
+  _CheckBoxButtonState(data) : data = data;
 
   late IAmGoingProvider _IAmGoingDataProvider;
   late MessageElement data;
@@ -36,7 +34,7 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
     super.didChangeDependencies();
     _IAmGoingDataProvider = Provider.of<IAmGoingProvider>(context);
     _isLoading = _IAmGoingDataProvider.isLoading(data.messageId);
-    _isGoing = _IAmGoingDataProvider.registeredEvents!.contains(data.messageId);
+    _isGoing = _IAmGoingDataProvider.registeredEvents.contains(data.messageId);
     if (_isGoing) {
       _buttonColor = Colors.green;
       _borderColor = Colors.green;
@@ -51,7 +49,7 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
   @override
   Widget build(BuildContext context) {
     var isOverCount = _IAmGoingDataProvider.isOverCount(data.messageId);
-    String messageType = data.audience!.topics![0];
+    String messageType = data.audience.topics[0];
 
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
 
@@ -182,12 +180,12 @@ class _CheckBoxButtonState extends State<IAmGoingNotification> {
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
         _textColor = Color(0xFF034161);
-        _IAmGoingDataProvider.decrementCount(data.messageId!);
+        _IAmGoingDataProvider.decrementCount(data.messageId);
       } else {
         _buttonColor = Colors.green;
         _borderColor = Colors.green;
         _textColor = Colors.white;
-        _IAmGoingDataProvider.incrementCount(data.messageId!);
+        _IAmGoingDataProvider.incrementCount(data.messageId);
       }
       _isGoing = !_isGoing;
     });

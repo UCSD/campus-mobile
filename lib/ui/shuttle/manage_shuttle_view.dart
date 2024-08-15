@@ -60,7 +60,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
         list.add(ListTile(
             key: Key(model.id.toString()),
             title: Text(
-              model.name!,
+              model.name,
             ),
             leading: Icon(
               Icons.reorder,

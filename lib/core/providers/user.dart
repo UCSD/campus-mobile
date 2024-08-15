@@ -31,10 +31,11 @@ class UserDataProvider extends ChangeNotifier
   FlutterSecureStorage storage = FlutterSecureStorage();
 
   ///SERVICES
-  AuthenticationService _authenticationService = AuthenticationService();
-  UserProfileService _userProfileService = UserProfileService();
+  final AuthenticationService _authenticationService = AuthenticationService();
+  final UserProfileService _userProfileService = UserProfileService();
+
   late PushNotificationDataProvider _pushNotificationDataProvider;
-  CardsDataProvider? _cardsDataProvider;
+  late CardsDataProvider cardsDataProvider;
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -98,7 +99,7 @@ class UserDataProvider extends ChangeNotifier
     }
     tempUserProfile = userBox.get('UserProfileModel')!;
     _userProfileModel = tempUserProfile;
-    _subscribeToPushNotificationTopics(_userProfileModel.subscribedTopics!);
+    _subscribeToPushNotificationTopics(_userProfileModel.subscribedTopics as List<String>);
     notifyListeners();
   }
 
@@ -135,7 +136,7 @@ class UserDataProvider extends ChangeNotifier
   /// Encrypt given username and password and store on device
   void _encryptAndSaveCredentials(String username, String password) {
     // TODO: import assets/public_key.txt
-    final String pkString = '-----BEGIN PUBLIC KEY-----\n' +
+    const String pkString = '-----BEGIN PUBLIC KEY-----\n' +
         'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n' +
         'gfN/OmwwPSZcpB/f5IdTUy2gzPxZ/iugsToE+yQ+ob4evmFWhtRjNUXY+lkKUXdi\n' +
         'hqGFS5sSnu19JYhIxeYj3tGyf0Ms+I0lu/MdRLuTMdBRbCkD3kTJmTqACq+MzQ9G\n' +
@@ -167,9 +168,9 @@ class UserDataProvider extends ChangeNotifier
 
       if (await silentLogin()) {
         if (_userProfileModel.classifications!.student!) {
-          _cardsDataProvider!.showAllStudentCards();
+          cardsDataProvider.showAllStudentCards();
         } else if (_userProfileModel.classifications!.staff!) {
-          _cardsDataProvider!.showAllStaffCards();
+          cardsDataProvider.showAllStaffCards();
         }
         _isLoading = false;
         notifyListeners();
@@ -212,7 +213,7 @@ class UserDataProvider extends ChangeNotifier
         _cardsDataProvider
             .updateAvailableCards(_userProfileModel.ucsdaffiliation);
 
-        _subscribeToPushNotificationTopics(userProfileModel!.subscribedTopics!);
+        _subscribeToPushNotificationTopics(userProfileModel.subscribedTopics as List<String>);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data!.accessToken);
         await FirebaseAnalytics().logEvent(name: 'loggedIn');
@@ -251,7 +252,7 @@ class UserDataProvider extends ChangeNotifier
 
   /// Remove topic from [_userProfileModel.subscribedTopics]
   /// Use [_pushNotificationDataProvider] to un/subscribe device from push notifications
-  void toggleNotifications(String? topic) {
+  void toggleNotifications(String topic) {
     if (_userProfileModel.subscribedTopics!.contains(topic)) {
       _userProfileModel.subscribedTopics!.remove(topic);
     } else {
@@ -279,7 +280,7 @@ class UserDataProvider extends ChangeNotifier
       if (await _userProfileService.downloadUserProfile(headers)) {
         /// if the user profile has no ucsd affiliation then we know the user is new
         /// so create a new profile and upload to DB using [postUserProfile]
-        UserProfileModel newModel = _userProfileService.userProfileModel!;
+        UserProfileModel newModel = _userProfileService.userProfileModel;
         if (newModel.ucsdaffiliation == null) {
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
@@ -323,11 +324,11 @@ class UserDataProvider extends ChangeNotifier
   /// Given a list of topics
   /// invoke [_pushNotificationDataProvider.unsubscribeFromAllTopics()]
   /// invoke [_pushNotificationDataProvider.toggleNotificationsForTopic] on each of the topics
-  void _subscribeToPushNotificationTopics(List<String?> topics) {
+  void _subscribeToPushNotificationTopics(List<String> topics) {
     /// turn on all saved push notifications preferences for user
     _pushNotificationDataProvider.unsubscribeFromAllTopics();
     for (String? topic in topics) {
-      _pushNotificationDataProvider.toggleNotificationsForTopic(topic);
+      _pushNotificationDataProvider.toggleNotificationsForTopic(topic!);
     }
   }
 
@@ -371,13 +372,13 @@ class UserDataProvider extends ChangeNotifier
 
   /// Invoke [updateUserProfileModel] with user profile that was passed in
   /// If user is logged in upload [UserProfileModel] to DB
-  Future postUserProfile(UserProfileModel? profile) async {
+  Future postUserProfile(UserProfileModel profile) async {
     _error = null;
     _isLoading = true;
     notifyListeners();
 
     /// save settings to local storage
-    await updateUserProfileModel(profile!);
+    await updateUserProfileModel(profile);
 
     /// check if user is logged in
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
@@ -409,14 +410,13 @@ class UserDataProvider extends ChangeNotifier
     _pushNotificationDataProvider = value;
   }
 
+  // TODO: fix this after UserProfileModel's nullability is fixed
   List<String?>? get subscribedTopics => _userProfileModel.subscribedTopics;
 
   ///GETTERS FOR MODELS
-  UserProfileModel? get userProfileModel => _userProfileModel;
+  UserProfileModel get userProfileModel => _userProfileModel;
 
   AuthenticationModel get authenticationModel => _authenticationModel;
-
-  CardsDataProvider? get cardsDataProvider => _cardsDataProvider;
 
   ///GETTERS FOR STATES
   String? get error => _error;
@@ -428,6 +428,4 @@ class UserDataProvider extends ChangeNotifier
   DateTime? get lastUpdated => _lastUpdated;
 
   bool get isInSilentLogin => _isInSilentLogin;
-
-  set cardsDataProvider(CardsDataProvider? value) => _cardsDataProvider = value;
 }

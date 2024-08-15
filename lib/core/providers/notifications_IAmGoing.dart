@@ -8,47 +8,30 @@ import 'package:campus_mobile_experimental/core/services/notifications_IAmGoing.
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-class IAmGoingProvider extends ChangeNotifier {
-  IAmGoingProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _freeFoodService = FreeFoodService();
-    _freeFoodModel = IAmGoingModel();
-
-    ///INITIALIZE VALUES
-    initializeValues();
-  }
-
+class IAmGoingProvider extends ChangeNotifier
+{
   ///VALUES
-  late HashMap<String, int?> _messageToCount;
-  late HashMap<String, int?> _messageToMaxCount;
-  List<String>? _registeredEvents;
+  HashMap<String, int> _messageToCount = new HashMap<String, int>();
+  HashMap<String, int> _messageToMaxCount = new HashMap<String, int>();
+  List<String> _registeredEvents = [];
 
   ///STATES
-  bool? _isLoading;
-  String? _curId;
+  bool _isLoading = false;
+  String? _curId; // confirmed optional
   DateTime? _lastUpdated;
   String? _error;
 
   ///MODELS
-  IAmGoingModel? _freeFoodModel;
+  late IAmGoingModel _freeFoodModel;
   late MessagesDataProvider _messageDataProvider;
 
   ///SERVICES
-  late FreeFoodService _freeFoodService;
-
-  void initializeValues() {
-    _messageToCount = new HashMap<String, int?>();
-    _messageToMaxCount = new HashMap<String, int?>();
-    _registeredEvents = [];
-  }
+  late FreeFoodService _freeFoodService = FreeFoodService();
 
   void removeId(String id) {
     _messageToCount.remove(id);
     _messageToMaxCount.remove(id);
-    _registeredEvents!.remove(id);
+    _registeredEvents.remove(id);
   }
 
   //parses event message topic to determine if it is an IAmGoing event
@@ -56,12 +39,10 @@ class IAmGoingProvider extends ChangeNotifier {
     // initializeValues();
     List<MessageElement?> messages = _messageDataProvider.messages;
     messages.forEach((m) async {
-      if (m!.audience != null &&
-          m.audience!.topics != null &&
-          (m.audience!.topics!.contains("freeFood") ||
-              m.audience!.topics!.contains("campusInnovationEvents"))) {
-        fetchCount(m.messageId!);
-        fetchMaxCount(m.messageId!);
+      if (m!.audience.topics.contains("freeFood") ||
+              m.audience.topics.contains("campusInnovationEvents")) {
+        fetchCount(m.messageId);
+        fetchMaxCount(m.messageId);
       }
     });
   }
@@ -75,7 +56,7 @@ class IAmGoingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future updateRegisteredEvents(List<String>? messageIds) async {
+  Future updateRegisteredEvents(List<String> messageIds) async {
     _registeredEvents = messageIds;
     var box = await Hive.openBox('freefoodRegisteredEvents');
     await box.put('freefoodRegisteredEvents', _registeredEvents);
@@ -90,9 +71,9 @@ class IAmGoingProvider extends ChangeNotifier {
     notifyListeners();
 
     if (await _freeFoodService.fetchData(id)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _freeFoodModel = _freeFoodService.freeFoodModel!;
       _lastUpdated = DateTime.now();
-      _messageToCount[id] = _freeFoodModel!.body!.count;
+      _messageToCount[id] = _freeFoodModel.body.count;
     } else {
       _error = _freeFoodService.error;
       if (_error != null &&
@@ -115,9 +96,9 @@ class IAmGoingProvider extends ChangeNotifier {
     notifyListeners();
 
     if (await _freeFoodService.fetchMaxCount(id)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _freeFoodModel = _freeFoodService.freeFoodModel!;
       _lastUpdated = DateTime.now();
-      _messageToMaxCount[id] = _freeFoodModel!.body!.maxCount;
+      _messageToMaxCount[id] = _freeFoodModel.body.maxCount;
     } else {
       _error = _freeFoodService.error;
       if (_error != null &&
@@ -136,13 +117,13 @@ class IAmGoingProvider extends ChangeNotifier {
 
   void incrementCount(String id) async {
     final Map<String, dynamic> body = {'count': '+1'};
-    _registeredEvents!.add(id);
+    _registeredEvents.add(id);
     updateCount(id, body);
   }
 
   void decrementCount(String id) async {
     final Map<String, dynamic> body = {'count': '-1'};
-    _registeredEvents!.remove(id);
+    _registeredEvents.remove(id);
     updateCount(id, body);
   }
 
@@ -153,7 +134,7 @@ class IAmGoingProvider extends ChangeNotifier {
     await updateRegisteredEvents(_registeredEvents);
 
     if (await _freeFoodService.updateCount(id, body)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _freeFoodModel = _freeFoodService.freeFoodModel!;
       _lastUpdated = DateTime.now();
     } else {
       _error = _freeFoodService.error;
@@ -172,17 +153,17 @@ class IAmGoingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int? count(String? messageId) => _messageToCount[messageId!];
+  int? count(String messageId) => _messageToCount[messageId];
 
-  bool isOverCount(String? messageId) {
+  bool isOverCount(String messageId) {
     if (_messageToCount.containsKey(messageId) &&
         _messageToMaxCount.containsKey(messageId)) {
-      return _messageToCount[messageId!]! > _messageToMaxCount[messageId]!;
+      return _messageToCount[messageId]! > _messageToMaxCount[messageId]!;
     }
     return false;
   }
 
-  bool isFreeFood(String? messageId) => _messageToCount.containsKey(messageId);
+  bool isFreeFood(String messageId) => _messageToCount.containsKey(messageId);
 
   /// SETTER
   set messageDataProvider(MessagesDataProvider value) {
@@ -194,9 +175,9 @@ class IAmGoingProvider extends ChangeNotifier {
 
   DateTime? get lastUpdated => _lastUpdated;
 
-  IAmGoingModel? get freeFoodModel => _freeFoodModel;
+  //IAmGoingModel get freeFoodModel => _freeFoodModel;
 
-  List<String>? get registeredEvents => _registeredEvents;
+  List<String> get registeredEvents => _registeredEvents;
 
   bool isLoading(String? id) => id == _curId;
 }

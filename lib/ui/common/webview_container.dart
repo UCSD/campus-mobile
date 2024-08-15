@@ -70,7 +70,7 @@ class _WebViewContainerState extends State<WebViewContainer>
 
     checkWebURL();
 
-    if (active != null && active) {
+    if (active) {
       return Card(
         margin: EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
