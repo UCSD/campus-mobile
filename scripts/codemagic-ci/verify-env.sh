@@ -4,10 +4,10 @@ set -e
 echo "Running verify-env.sh $1"
 
 if [ "$1" == "PROD" ]; then
-	qa_slash=$(grep -rio "https.*\/qa" lib | wc -l | sed -e "s/^[ \t]*//")
-	qa_dash=$(grep -rio "https.*-qa" lib | wc -l | sed -e "s/^[ \t]*//")
-	dev_slash=$(grep -rio "https.*\/dev" lib | wc -l | sed -e "s/^[ \t]*//")
-	dev_dash=$(grep -rio "https.*-dev" lib | wc -l | sed -e "s/^[ \t]*//")
+	qa_slash=$(grep -rio "https.*\/qa\." lib | wc -l | sed -e "s/^[ \t]*//")
+	qa_dash=$(grep -rio "https.*-qa\." lib | wc -l | sed -e "s/^[ \t]*//")
+	dev_slash=$(grep -rio "https.*\/dev\." lib | wc -l | sed -e "s/^[ \t]*//")
+	dev_dash=$(grep -rio "https.*-dev\." lib | wc -l | sed -e "s/^[ \t]*//")
 	scandit_android=$(grep -rio "SCANDIT_NATIVE_LICENSE_ANDROID_PH" lib | wc -l | sed -e "s/^[ \t]*//")
 	scandit_ios=$(grep -rio "SCANDIT_NATIVE_LICENSE_IOS_PH" lib | wc -l | sed -e "s/^[ \t]*//")
 
