@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
 import 'package:campus_mobile_experimental/core/services/notifications.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -217,7 +217,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
       'tags': build.tags,
       'type': build.type,
       'isPhysicalDevice': build.isPhysicalDevice,
-      'deviceId': build.androidId,
+      'deviceId': build.id,
       'systemFeatures': build.systemFeatures,
     };
   }
