@@ -17,10 +17,10 @@ if [ "$1" == "PROD" ]; then
 		echo "\nverify-env.sh PROD: PASS"
 	else
 		echo "\nset-env-prod: FAIL (erors: ${invalid_count})"
-		grep -rin "https.*\/qa" lib
-		grep -rin "https.*-qa" lib
-		grep -rin "https.*\/dev" lib
-		grep -rin "https.*-dev" lib
+		grep -rin "https.*\/qa\." lib
+		grep -rin "https.*-qa\." lib
+		grep -rin "https.*\/dev\." lib
+		grep -rin "https.*-dev\." lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_IOS_PH" lib
 		grep -rin "SCANDIT_NATIVE_LICENSE_ANDROID_PH" lib
 		exit 1
