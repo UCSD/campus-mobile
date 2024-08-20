@@ -498,8 +498,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "41fb666299ed90d8277c24e0065149e83cd71494"
-      resolved-ref: "41fb666299ed90d8277c24e0065149e83cd71494"
+      ref: "scandit-6.6.3"
+      resolved-ref: d99208e0ff297e0943075ad2546af4a8ebc03d63
       url: "https://github.com/UCSD/flutter_scandit.git"
     source: git
     version: "1.1.0"
