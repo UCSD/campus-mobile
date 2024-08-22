@@ -13,7 +13,7 @@ import 'package:campus_mobile_experimental/core/providers/messages.dart';
 import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
-import 'package:campus_mobile_experimental/core/providers/notifications_IAmGoing.dart';
+import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
@@ -277,9 +277,9 @@ List<SingleChildWidget> dependentServices = [
       return messageDataProvider;
     },
   ),
-  ChangeNotifierProxyProvider<MessagesDataProvider, IAmGoingProvider>(
+  ChangeNotifierProxyProvider<MessagesDataProvider, FreeFoodDataProvider>(
     create: (_) {
-      var freefoodDataProvider = IAmGoingProvider();
+      var freefoodDataProvider = FreeFoodDataProvider();
       freefoodDataProvider.loadRegisteredEvents();
       return freefoodDataProvider;
     },
