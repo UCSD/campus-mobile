@@ -21,66 +21,61 @@ class DiningMenuItemsModel {
     this.disclaimerEmail,
   });
 
-  factory DiningMenuItemsModel.fromJson(Map<String, dynamic> json) =>
-      DiningMenuItemsModel(
-        menuItems: json["menuitems"] == null
-            ? null
-            : List<DiningMenuItem>.from(
-                json["menuitems"].map((x) => DiningMenuItem.fromJson(x))),
-        disclaimer: json["disclaimer"] == null ? null : json["disclaimer"],
-        disclaimerEmail:
-            json["disclaimerEmail"] == null ? null : json["disclaimerEmail"],
-      );
+  DiningMenuItemsModel.fromJson(Map<String, dynamic> json)
+      : menuItems = json["menuitems"] != null
+      ? List<DiningMenuItem>.from(
+      json["menuitems"].map((x) => DiningMenuItem.fromJson(x)))
+      : [],
+        disclaimer = json["disclaimer"],
+        disclaimerEmail = json["disclaimerEmail"];
 
   Map<String, dynamic> toJson() => {
-        "menuitems": menuItems == null
-            ? null
-            : List<dynamic>.from(menuItems!.map((x) => x.toJson())),
-        "disclaimer": disclaimer == null ? null : disclaimer,
-        "disclaimerEmail": disclaimerEmail == null ? null : disclaimerEmail,
-      };
+    "menuitems": menuItems!.isNotEmpty
+        ? List<dynamic>.from(menuItems!.map((x) => x.toJson()))
+        : null,
+    "disclaimer": disclaimer,
+    "disclaimerEmail": disclaimerEmail,
+  };
 }
 
 class DiningMenuItem {
-  String? name;
+  String name;
+  String price;
+  String tags;
+  Nutrition nutrition;
+
   String? itemId;
   String? station;
-  String? price;
   dynamic images;
-  String? tags;
-  Nutrition? nutrition;
 
   DiningMenuItem({
-    this.name,
+    required this.name,
     this.itemId,
     this.station,
-    this.price,
+    required this.price,
     this.images,
-    this.tags,
-    this.nutrition,
+    required this.tags,
+    required this.nutrition,
   });
 
-  factory DiningMenuItem.fromJson(Map<String, dynamic> json) => DiningMenuItem(
-        name: json["name"] == null ? null : json["name"],
-        itemId: json["itemID"] == null ? null : json["itemID"],
-        station: json["station"] == null ? null : json["station"],
-        price: json["price"] == null ? null : json["price"],
-        images: json["images"],
-        tags: json["tags"] == null ? null : json["tags"],
-        nutrition: json["nutrition"] == null
-            ? null
-            : Nutrition.fromJson(json["nutrition"]),
-      );
+  DiningMenuItem.fromJson(Map<String, dynamic> json)
+      : name = json["name"],
+        itemId = json["itemID"],
+        station = json["station"],
+        price = json["price"],
+        images = json["images"],
+        tags = json["tags"],
+        nutrition = Nutrition.fromJson(json["nutrition"]);
 
   Map<String, dynamic> toJson() => {
-        "name": name == null ? null : name,
-        "itemID": itemId == null ? null : itemId,
-        "station": station == null ? null : station,
-        "price": price == null ? null : price,
-        "images": images,
-        "tags": tags == null ? null : tags,
-        "nutrition": nutrition == null ? null : nutrition!.toJson(),
-      };
+    "name": name,
+    "itemID": itemId,
+    "station": station,
+    "price": price,
+    "images": images,
+    "tags": tags,
+    "nutrition": nutrition.toJson(),
+  };
 }
 
 class Nutrition {
@@ -132,64 +127,52 @@ class Nutrition {
     this.allergens,
   });
 
-  factory Nutrition.fromJson(Map<String, dynamic> json) => Nutrition(
-        servingSize: json["servingSize"] == null ? null : json["servingSize"],
-        calories: json["calories"] == null ? null : json["calories"],
-        totalFat: json["totalFat"] == null ? null : json["totalFat"],
-        totalFatDv: json["totalFat_DV"] == null ? null : json["totalFat_DV"],
-        saturatedFat:
-            json["saturatedFat"] == null ? null : json["saturatedFat"],
-        saturatedFatDv:
-            json["saturatedFat_DV"] == null ? null : json["saturatedFat_DV"],
-        transFat: json["transFat"] == null ? null : json["transFat"],
-        transFatDv: json["transFat_DV"] == null ? null : json["transFat_DV"],
-        cholesterol: json["cholesterol"] == null ? null : json["cholesterol"],
-        cholesterolDv:
-            json["cholesterol_DV"] == null ? null : json["cholesterol_DV"],
-        sodium: json["sodium"] == null ? null : json["sodium"],
-        sodiumDv: json["sodium_DV"] == null ? null : json["sodium_DV"],
-        totalCarbohydrate: json["totalCarbohydrate"] == null
-            ? null
-            : json["totalCarbohydrate"],
-        totalCarbohydrateDv: json["totalCarbohhdrate_DV"] == null
-            ? null
-            : json["totalCarbohhdrate_DV"],
-        dietaryFiber:
-            json["dietaryFiber"] == null ? null : json["dietaryFiber"],
-        dietaryFiberDv:
-            json["dietaryFiber_DV"] == null ? null : json["dietaryFiber_DV"],
-        sugar: json["sugars"] == null ? null : json["sugars"],
-        sugarDv: json["sugars_DV"] == null ? null : json["sugars_DV"],
-        protein: json["protein"] == null ? null : json["protein"],
-        proteinDv: json["protein_DV"] == null ? null : json["protein_DV"],
-        ingredients: json["ingredients"] == null ? null : json["ingredients"],
-        allergens: json["allergens"] == null ? null : json["allergens"],
-      );
+  Nutrition.fromJson(Map<String, dynamic> json)
+      : servingSize = json["servingSize"],
+        calories = json["calories"],
+        totalFat = json["totalFat"],
+        totalFatDv = json["totalFat_DV"],
+        saturatedFat = json["saturatedFat"],
+        saturatedFatDv = json["saturatedFat_DV"],
+        transFat = json["transFat"],
+        transFatDv = json["transFat_DV"],
+        cholesterol = json["cholesterol"],
+        cholesterolDv = json["cholesterol_DV"],
+        sodium = json["sodium"],
+        sodiumDv = json["sodium_DV"],
+        totalCarbohydrate = json["totalCarbohydrate"],
+        totalCarbohydrateDv = json["totalCarbohhdrate_DV"],
+        dietaryFiber = json["dietaryFiber"],
+        dietaryFiberDv = json["dietaryFiber_DV"],
+        sugar = json["sugars"],
+        sugarDv = json["sugars_DV"],
+        protein = json["protein"],
+        proteinDv = json["protein_DV"],
+        ingredients = json["ingredients"],
+        allergens = json["allergens"];
 
   Map<String, dynamic> toJson() => {
-        "servingSize": servingSize == null ? null : servingSize,
-        "calories": calories == null ? null : calories,
-        "totalFat": totalFat == null ? null : totalFat,
-        "totalFat_DV": totalFatDv == null ? null : totalFatDv,
-        "saturatedFat": saturatedFat == null ? null : saturatedFat,
-        "saturatedFat_DV": saturatedFatDv == null ? null : saturatedFatDv,
-        "transFat": transFat == null ? null : transFat,
-        "transFat_DV": transFatDv == null ? null : transFatDv,
-        "cholesterol": cholesterol == null ? null : cholesterol,
-        "cholesterol_DV": cholesterolDv == null ? null : cholesterolDv,
-        "sodium": sodium == null ? null : sodium,
-        "sodium_DV": sodiumDv == null ? null : sodiumDv,
-        "totalCarbohydrate":
-            totalCarbohydrate == null ? null : totalCarbohydrate,
-        "totalCarbohhdrate_DV":
-            totalCarbohydrateDv == null ? null : totalCarbohydrateDv,
-        "dietaryFiber": dietaryFiber == null ? null : dietaryFiber,
-        "dietaryFiber_DV": dietaryFiberDv == null ? null : dietaryFiberDv,
-        "sugar": sugar == null ? null : sugar,
-        "sugar_DV": sugarDv == null ? null : sugarDv,
-        "protein": protein == null ? null : protein,
-        "protein_DV": proteinDv == null ? null : proteinDv,
-        "ingredients": ingredients == null ? null : ingredients,
-        "allergens": allergens == null ? null : allergens,
-      };
+    "servingSize": servingSize,
+    "calories": calories,
+    "totalFat": totalFat,
+    "totalFat_DV": totalFatDv,
+    "saturatedFat": saturatedFat,
+    "saturatedFat_DV": saturatedFatDv,
+    "transFat": transFat,
+    "transFat_DV": transFatDv,
+    "cholesterol": cholesterol,
+    "cholesterol_DV": cholesterolDv,
+    "sodium": sodium,
+    "sodium_DV": sodiumDv,
+    "totalCarbohydrate": totalCarbohydrate,
+    "totalCarbohhdrate_DV": totalCarbohydrateDv,
+    "dietaryFiber": dietaryFiber,
+    "dietaryFiber_DV": dietaryFiberDv,
+    "sugar": sugar,
+    "sugar_DV": sugarDv,
+    "protein": protein,
+    "protein_DV": proteinDv,
+    "ingredients": ingredients,
+    "allergens": allergens,
+  };
 }

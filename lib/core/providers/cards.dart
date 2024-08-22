@@ -8,76 +8,67 @@ import 'package:connectivity/connectivity.dart';
 
 class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
-    ///DEFAULT STATES
-    _noInternet = false;
-    _isLoading = false;
-    _cardStates = {};
-    _webCards = {};
-
-    // Default card order for native cards
-    _cardOrder = [
-      'NativeScanner',
-      'MyStudentChart',
-      'MyUCSDChart',
-      'finals',
-      'schedule',
-      'student_id',
-      'employee_id',
-      'availability',
-      'dining',
-      'events',
-      'triton_media',
-      'shuttle',
-      'parking',
-      'news',
-      'weather',
-      'speed_test',
-    ];
-
-    // Native student cards
-    _studentCards = [
-      'finals',
-      'schedule',
-      'student_id',
-    ];
-
-    // Native staff cards
-    _staffCards = [
-      'MyUCSDChart',
-      'staff_info',
-      'employee_id',
-    ];
-
-    for (String card in CardTitleConstants.titleMap.keys.toList()) {
-      _cardStates![card] = true;
-    }
+    CardTitleConstants.titleMap.keys.forEach((card) => _cardStates[card] = true);
 
     /// temporary fix that prevents the student cards from causing issues on launch
-    _cardOrder!.removeWhere((element) => _studentCards.contains(element));
-    _cardStates!.removeWhere((key, value) => _studentCards.contains(key));
+    _cardOrder.removeWhere((element) => _studentCards.contains(element));
+    _cardStates.removeWhere((key, value) => _studentCards.contains(key));
 
-    _cardOrder!.removeWhere((element) => _staffCards.contains(element));
-    _cardStates!.removeWhere((key, value) => _staffCards.contains(key));
+    _cardOrder.removeWhere((element) => _staffCards.contains(element));
+    _cardStates.removeWhere((key, value) => _staffCards.contains(key));
   }
 
   ///STATES
-  bool? _noInternet;
-  bool? _isLoading;
+  bool _noInternet = false;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<String>? _cardOrder;
-  Map<String, bool>? _cardStates;
-  Map<String, CardsModel?>? _webCards;
-  late List<String> _studentCards;
-  late List<String> _staffCards;
-  Map<String, CardsModel>? _availableCards;
+
+  // Default card order for native cards
+  List<String> _cardOrder = [
+    'NativeScanner',
+    'MyStudentChart',
+    'MyUCSDChart',
+    'finals',
+    'schedule',
+    'student_id',
+    'employee_id',
+    'availability',
+    'dining',
+    'events',
+    'triton_media',
+    'shuttle',
+    'parking',
+    'news',
+    'weather',
+    'speed_test',
+  ];
+
+  Map<String, bool> _cardStates = {};
+  Map<String, CardsModel> _webCards = {};
+
+  // Native student cards
+  static const List<String> _studentCards = [
+    'finals',
+    'schedule',
+    'student_id',
+  ];
+
+  // Native staff cards
+  static const List<String> _staffCards = [
+    'MyUCSDChart',
+    'staff_info',
+    'employee_id',
+  ];
+
+  late Map<String, CardsModel> _availableCards;
   late Box _cardOrderBox;
   late Box _cardStateBox;
   UserDataProvider? _userDataProvider;
 
   ///Services
   final CardsService _cardsService = CardsService();
-  Connectivity _connectivity = Connectivity();
+  final Connectivity _connectivity = Connectivity();
 
   void updateAvailableCards(String? ucsdAffiliation) async {
     _isLoading = true;
@@ -86,54 +77,54 @@ class CardsDataProvider extends ChangeNotifier {
     if (await _cardsService.fetchCards(ucsdAffiliation)) {
       _availableCards = _cardsService.cardsModel;
       _lastUpdated = DateTime.now();
-      if (_availableCards!.isNotEmpty) {
+      if (_availableCards.isNotEmpty) {
         // remove all inactive or non-existent cards from [_cardOrder]
-        var tempCardOrder = List.from(_cardOrder!);
+        var tempCardOrder = List.from(_cardOrder);
         for (String card in tempCardOrder) {
           // check to see if card no longer exists
-          if (_availableCards![card] == null) {
-            _cardOrder!.remove(card);
+          if (_availableCards[card] == null) {
+            _cardOrder.remove(card);
           }
           // check to see if card is not active
-          else if (!(_availableCards![card]!.cardActive ?? false)) {
-            _cardOrder!.remove(card);
+          else if (!(_availableCards[card]!.cardActive)) {
+            _cardOrder.remove(card);
           }
         }
         // remove all inactive or non-existent cards from [_cardStates]
-        var tempCardStates = Map.from(_cardStates!);
+        var tempCardStates = Map.from(_cardStates);
         for (String card in tempCardStates.keys) {
           // check to see if card no longer exists
-          if (_availableCards![card] == null) {
-            _cardStates!.remove(card);
+          if (_availableCards[card] == null) {
+            _cardStates.remove(card);
           }
           // check to see if card is not active
-          else if (!(_availableCards![card]!.cardActive ?? false)) {
-            _cardStates!.remove(card);
+          else if (!(_availableCards[card]!.cardActive)) {
+            _cardStates.remove(card);
           }
         }
 
         // add active webCards
-        for (String card in _cardStates!.keys) {
-          if (_availableCards![card]!.isWebCard!) {
-            _webCards![card] = _availableCards![card];
+        for (String card in _cardStates.keys) {
+          if (_availableCards[card]!.isWebCard) {
+            _webCards[card] = _availableCards[card]!;
           }
         }
         // add new cards to the top of the list
-        for (String card in _availableCards!.keys) {
+        for (String card in _availableCards.keys) {
           if (_studentCards.contains(card)) continue;
           if (_staffCards.contains(card)) continue;
-          if (!_cardOrder!.contains(card) &&
-              (_availableCards![card]!.cardActive ?? false)) {
-            _cardOrder!.insert(0, card);
+          if (!_cardOrder.contains(card) &&
+              (_availableCards[card]!.cardActive)) {
+            _cardOrder.insert(0, card);
           }
           // keep all new cards activated by default
-          if (!_cardStates!.containsKey(card)) {
-            _cardStates![card] = true;
+          if (!_cardStates.containsKey(card)) {
+            _cardStates[card] = true;
           }
         }
         updateCardOrder(_cardOrder);
         updateCardStates(
-            _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+            _cardStates.keys.where((card) => _cardStates[card]!).toList());
       }
     } else {
       _error = _cardsService.error;
@@ -193,7 +184,7 @@ class CardsDataProvider extends ChangeNotifier {
       _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
     }
-    _cardOrder = newOrder;
+    _cardOrder = newOrder!;
     _lastUpdated = DateTime.now();
     notifyListeners();
   }
@@ -220,12 +211,12 @@ class CardsDataProvider extends ChangeNotifier {
     // by default all cards will be on
     if (_cardStateBox.get(DataPersistence.cardStates) == null) {
       await _cardStateBox.put(DataPersistence.cardStates,
-          _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+          _cardStates.keys.where((card) => _cardStates[card]!).toList());
     } else {
       _deactivateAllCards();
     }
     for (String activeCard in _cardStateBox.get(DataPersistence.cardStates)) {
-      _cardStates![activeCard] = true;
+      _cardStates[activeCard] = true;
     }
     notifyListeners();
   }
@@ -237,7 +228,7 @@ class CardsDataProvider extends ChangeNotifier {
       return;
     }
     for (String activeCard in activeCards) {
-      _cardStates![activeCard] = true;
+      _cardStates[activeCard] = true;
     }
     try {
       await _cardStateBox.put(DataPersistence.cardStates, activeCards);
@@ -249,84 +240,84 @@ class CardsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  _deactivateAllCards() {
-    for (String card in _cardStates!.keys) {
-      _cardStates![card] = false;
+  void _deactivateAllCards() {
+    for (String card in _cardStates.keys) {
+      _cardStates[card] = false;
     }
   }
 
-  activateStudentCards() {
-    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _studentCards.toList());
+  void activateStudentCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _studentCards.toList());
 
     // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
+    _cardOrder = List.from(_cardOrder.toSet().toList());
 
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+        _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
-  showAllStudentCards() {
-    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _studentCards.toList());
+  void showAllStudentCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _studentCards.toList());
 
     // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
+    _cardOrder = List.from(_cardOrder.toSet().toList());
 
     for (String card in _studentCards) {
-      _cardStates![card] = true;
+      _cardStates[card] = true;
     }
 
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+        _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
-  deactivateStudentCards() {
+  void deactivateStudentCards() {
     for (String card in _studentCards) {
-      _cardOrder!.remove(card);
-      _cardStates![card] = false;
+      _cardOrder.remove(card);
+      _cardStates[card] = false;
     }
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+        _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
-  activateStaffCards() {
-    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _staffCards.toList());
+  void activateStaffCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _staffCards.toList());
 
     // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
+    _cardOrder = List.from(_cardOrder.toSet().toList());
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+        _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
-  showAllStaffCards() {
-    int index = _cardOrder!.indexOf('MyStudentChart') + 1;
-    _cardOrder!.insertAll(index, _staffCards.toList());
+  void showAllStaffCards() {
+    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _staffCards.toList());
 
     // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
+    _cardOrder = List.from(_cardOrder.toSet().toList());
 
     for (String card in _staffCards) {
-      _cardStates![card] = true;
+      _cardStates[card] = true;
     }
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+        _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
-  deactivateStaffCards() {
+  void deactivateStaffCards() {
     for (String card in _staffCards) {
-      _cardOrder!.remove(card);
-      _cardStates![card] = false;
+      _cardOrder.remove(card);
+      _cardStates[card] = false;
     }
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+        _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
   void reorderCards(List<String> order) {
@@ -335,21 +326,21 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void toggleCard(String card) {
-    _cardStates![card] = !_cardStates![card]!;
+    _cardStates[card] = !_cardStates[card]!;
     updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+        _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  bool? get noInternet => _noInternet;
+  bool get isLoading => _isLoading;
+  bool get noInternet => _noInternet;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
 
-  Map<String, bool>? get cardStates => _cardStates;
-  List<String>? get cardOrder => _cardOrder;
-  Map<String, CardsModel?>? get webCards => _webCards;
-  Map<String, CardsModel>? get availableCards => _availableCards;
+  Map<String, bool> get cardStates => _cardStates;
+  List<String> get cardOrder => _cardOrder;
+  Map<String, CardsModel?> get webCards => _webCards;
+  Map<String, CardsModel> get availableCards => _availableCards;
 }

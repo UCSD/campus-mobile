@@ -17,8 +17,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Provider.of<DiningDataProvider>(context).isLoading!
-          ? CircularProgressIndicator(
+      child: Provider.of<DiningDataProvider>(context).isLoading? CircularProgressIndicator(
               color: Theme.of(context).colorScheme.secondary)
           : buildDiningMenuList(context),
     );
@@ -192,17 +191,18 @@ class _DiningMenuListState extends State<DiningMenuList> {
   }
 }
 
-class LabeledRadio extends StatelessWidget {
-  final String? title;
+class LabeledRadio extends StatelessWidget
+{
+  final String title;
   final Meal value;
-  final Meal? groupValue;
+  final Meal groupValue;
   final void Function(Meal?)? onChanged;
 
   const LabeledRadio(
       {Key? key,
-      this.title,
+      required this.title,
       required this.value,
-      this.groupValue,
+      required this.groupValue,
       this.onChanged})
       : super(key: key);
 
@@ -221,7 +221,7 @@ class LabeledRadio extends StatelessWidget {
           ),
           Container(
             child: Text(
-              title!,
+              title,
               style: TextStyle(fontSize: 16),
             ),
           ),

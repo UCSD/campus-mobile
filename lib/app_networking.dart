@@ -54,7 +54,7 @@ class NetworkHelper {
     }
   }
 
-  Widget getSilentLoginDialog() {
+  static Widget getSilentLoginDialog() {
     return AlertDialog(
       title: const Text(LoginConstants.silentLoginFailedTitle),
       content: Text(LoginConstants.silentLoginFailedDesc),

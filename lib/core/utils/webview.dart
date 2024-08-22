@@ -9,7 +9,7 @@ void reloadWebView(String url, WebViewController controller) {
   controller.loadUrl(url);
 }
 
-openLink(String url) async {
+void openLink(String url) async {
   try {
     launch(url, forceSafariVC: true);
   } catch (e) {
@@ -17,7 +17,7 @@ openLink(String url) async {
   }
 }
 
-validateHeight(context, height) {
+double validateHeight(context, height) {
   double maxHeight = MediaQuery.of(context).size.height;
   if (height < cardContentMinHeight) {
     height = cardContentMinHeight;

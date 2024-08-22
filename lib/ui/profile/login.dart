@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_userDataProvider.isLoading!) {
+    if (!_userDataProvider.isLoading) {
       if (_userDataProvider.isLoggedIn) {
         return buildLoggedInWidget(context);
       } else {
@@ -66,8 +66,8 @@ class _LoginState extends State<Login> {
         color: Colors.green,
       ),
       title: Text(
-        _userDataProvider.userProfileModel!.username != null
-            ? _userDataProvider.userProfileModel!.username!
+        _userDataProvider.userProfileModel.username != null
+            ? _userDataProvider.userProfileModel.username!
             : "",
         style: TextStyle(fontSize: 17),
       ),
@@ -162,8 +162,7 @@ class _LoginState extends State<Login> {
                           fontSize: 18,
                           color: Theme.of(context).textTheme.labelLarge!.color),
                     ),
-                    onPressed: _userDataProvider.isLoading!
-                        ? null
+                    onPressed: _userDataProvider.isLoading? null
                         : () {
                             _userDataProvider
                                 .manualLogin(_emailTextFieldController.text,

@@ -99,9 +99,9 @@ class _HomeState extends State<Home> {
 
   List<Widget> createList(BuildContext context) {
     List<Widget> orderedCards =
-        getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder!);
+        getOrderedCardsList(Provider.of<CardsDataProvider>(context).cardOrder);
     List<Widget> noticesCards = getNoticesCardsList(
-        Provider.of<NoticesDataProvider>(context).noticesModel!);
+        Provider.of<NoticesDataProvider>(context).noticesModel);
 
     return noticesCards + orderedCards;
   }
@@ -116,11 +116,11 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     List<Widget> orderedCards = [];
-    Map<String, CardsModel?>? webCards =
+    Map<String, CardsModel?> webCards =
         Provider.of<CardsDataProvider>(context, listen: false).webCards;
 
     for (String card in order) {
-      if (!webCards!.containsKey(card)) {
+      if (!webCards.containsKey(card)) {
         switch (card) {
           case 'NativeScanner':
             orderedCards.insert(0, NativeScannerCard());

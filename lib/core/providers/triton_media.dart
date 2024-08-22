@@ -3,26 +3,16 @@ import 'package:campus_mobile_experimental/core/services/triton_media.dart';
 import 'package:flutter/material.dart';
 
 class MediaDataProvider extends ChangeNotifier {
-  MediaDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _mediaService = MediaService();
-
-    _mediaModels = [];
-  }
-
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
   ///MODELS
-  List<MediaModel>? _mediaModels;
+  List<MediaModel> _mediaModels = [];
 
   ///SERVICES
-  late MediaService _mediaService;
+  MediaService _mediaService = MediaService();
 
   void fetchMedia() async {
     _isLoading = true;
@@ -33,7 +23,7 @@ class MediaDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
 
       /// check to see if the events feed returns nothing back
-      if (_mediaModels!.isEmpty) {
+      if (_mediaModels.isEmpty) {
         _error = 'No events found.';
       }
     } else {
@@ -44,8 +34,8 @@ class MediaDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
+  bool get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  List<MediaModel>? get mediaModels => _mediaModels;
+  List<MediaModel> get mediaModels => _mediaModels;
 }

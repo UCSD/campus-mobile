@@ -19,13 +19,13 @@ class NutritionFactsView extends StatelessWidget {
       padding: EdgeInsets.all(2.0),
       child: ListView(
         children: <Widget>[
-          buildTitle(data.name!, context),
+          buildTitle(data.name, context),
           nutrientHeader(
-              context, data.nutrition!.calories, data.nutrition!.servingSize),
-          nutrientValues(context, nutrientData: data.nutrition!.toJson()),
+              context, data.nutrition.calories, data.nutrition.servingSize),
+          nutrientValues(context, nutrientData: data.nutrition.toJson()),
           footerCalories(context, 2000),
           buildText(
-              context, data.nutrition!.ingredients, data.nutrition!.allergens),
+              context, data.nutrition.ingredients, data.nutrition.allergens),
         ],
       ),
     );
@@ -68,7 +68,7 @@ class NutritionFactsView extends StatelessWidget {
   }
 }
 
-Widget nutrientValues(BuildContext context, {nutrientData}) {
+Widget nutrientValues(BuildContext context, {required Map<String, dynamic> nutrientData}) {
   //final n = (1.3456).toStringAsFixed(2);
   //final s = double.parse("1.2345");
   final nutrientTypes = [

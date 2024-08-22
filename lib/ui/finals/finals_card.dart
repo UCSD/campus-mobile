@@ -15,12 +15,12 @@ class FinalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () {
         if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
-            .isLoading!) {
+            .isLoading) {
           return null;
         } else {
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
@@ -28,10 +28,10 @@ class FinalsCard extends StatelessWidget {
         }
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildFinalsCard(
-          Provider.of<ClassScheduleDataProvider>(context).finals!,
+          Provider.of<ClassScheduleDataProvider>(context).finals,
           Provider.of<ClassScheduleDataProvider>(context).lastUpdated,
           Provider.of<ClassScheduleDataProvider>(context).nextDayWithClass,
           context),
@@ -62,7 +62,7 @@ class FinalsCard extends StatelessWidget {
   }
 
   Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
-      DateTime? lastUpdated, String? nextDayWithClasses, BuildContext context) {
+      DateTime lastUpdated, String? nextDayWithClasses, BuildContext context) {
     try {
       List<Widget> listToReturn = [];
       finalsData.forEach((key, value) {
@@ -139,7 +139,7 @@ class FinalsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TimeRangeWidget(
-                time: time,
+                time: time!,
               ),
             ],
           ),

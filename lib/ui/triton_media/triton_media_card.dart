@@ -35,13 +35,13 @@ class MediaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
           Provider.of<MediaDataProvider>(context, listen: false).fetchMedia(),
       isLoading: Provider.of<MediaDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<MediaDataProvider>(context).error,
       child: () =>
           buildMediaCard(Provider.of<MediaDataProvider>(context).mediaModels),

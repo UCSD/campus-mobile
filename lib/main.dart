@@ -56,13 +56,13 @@ void main() async {
   }, FirebaseCrashlytics.instance.recordError);
 }
 
-initializeHive() async {
+Future<void> initializeHive() async {
   await Hive.initFlutter('.');
   Hive.registerAdapter(AuthenticationModelAdapter());
   Hive.registerAdapter(UserProfileModelAdapter());
 }
 
-initializeApp() async {
+Future<void> initializeApp() async {
   final prefs = await SharedPreferences.getInstance();
   if (prefs.getBool('first_run') ?? true) {
     await clearSecuredStorage();
@@ -74,12 +74,12 @@ initializeApp() async {
   showOnboardingScreen = prefs.getBool('showOnboardingScreen') ?? true;
 }
 
-clearSecuredStorage() async {
+Future<void> clearSecuredStorage() async {
   FlutterSecureStorage storage = FlutterSecureStorage();
   await storage.deleteAll();
 }
 
-clearHiveStorage() async {
+Future<void> clearHiveStorage() async {
   await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.AuthenticationModel))

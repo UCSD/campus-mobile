@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 
 const String cardId = 'NativeScanner';
 
-class NativeScannerCard extends StatelessWidget {
+class NativeScannerCard extends StatelessWidget
+{
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -20,7 +21,7 @@ class NativeScannerCard extends StatelessWidget {
           Provider.of<ScannerMessageDataProvider>(context, listen: false)
               .fetchData(),
       isLoading: Provider.of<ScannerMessageDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: [buildActionButton(context)],
@@ -95,8 +96,7 @@ class NativeScannerCard extends StatelessWidget {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
       String? myRecentScanTime =
           Provider.of<ScannerMessageDataProvider>(context, listen: false)
-              .scannerMessageModel!
-              .collectionTime;
+              .scannerMessageModel.collectionTime;
       if (myRecentScanTime == "") {
         myRecentScanTime = ScannerConstants.noRecentScan;
       }
@@ -111,8 +111,7 @@ class NativeScannerCard extends StatelessWidget {
               TextSpan(
                   text: Provider.of<ScannerMessageDataProvider>(context,
                           listen: false)
-                      .scannerMessageModel!
-                      .collectionTime,
+                      .scannerMessageModel.collectionTime,
                   style: TextStyle(fontWeight: FontWeight.w600)),
             ],
           ),
@@ -123,10 +122,10 @@ class NativeScannerCard extends StatelessWidget {
     }
   }
 
-  getActionButtonNavigateRoute(BuildContext context) {
+  void getActionButtonNavigateRoute(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
       Provider.of<ScannerDataProvider>(context, listen: false)
-          .setDefaultStates();
+          .resetDefaultStates();
       Navigator.pushNamed(
         context,
         RoutePaths.ScanditScanner,

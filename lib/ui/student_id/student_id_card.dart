@@ -61,13 +61,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
     ScalingUtility().getCurrentMeasurements(context);
 
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<StudentIdDataProvider>(context, listen: false)
           .fetchData(),
       isLoading: Provider.of<StudentIdDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<StudentIdDataProvider>(context).error,
       child: () => buildCardContent(
           Provider.of<StudentIdDataProvider>(context).studentIdNameModel,
@@ -88,9 +88,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   Widget buildCardContent(
-      StudentIdNameModel? nameModel,
-      StudentIdPhotoModel? photoModel,
-      StudentIdProfileModel? profileModel,
+      StudentIdNameModel nameModel,
+      StudentIdPhotoModel photoModel,
+      StudentIdProfileModel profileModel,
       BuildContext context) {
     try {
       if (MediaQuery.of(context).size.width < 600) {
@@ -107,7 +107,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     Column(
                       children: <Widget>[
                         Image.network(
-                          photoModel!.photoUrl!,
+                          photoModel.photoUrl,
                           fit: BoxFit.contain,
                           height: ScalingUtility.verticalSafeBlock * 14,
                         ),
@@ -128,15 +128,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
                                     cardMargin),
                             child: FittedBox(
                               child: Text(
-                                (nameModel!.firstName! +
-                                    " " +
-                                    nameModel.lastName!),
+                                '${nameModel.firstName} ${nameModel.lastName}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: getFontSize(
-                                        nameModel.firstName! +
-                                            " " +
-                                            nameModel.lastName!,
+                                        '${nameModel.firstName} ${nameModel.lastName}',
                                         "name")),
                                 textAlign: TextAlign.left,
                                 softWrap: true,
@@ -151,11 +147,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
                                 right: ScalingUtility.horizontalSafeBlock *
                                     cardMargin),
                             child: Text(
-                              profileModel!.collegeCurrent!,
+                              profileModel.collegeCurrent,
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: getFontSize(
-                                      profileModel.collegeCurrent!, "college")),
+                                      profileModel.collegeCurrent, "college")),
                               textAlign: TextAlign.left,
                               softWrap: false,
                               maxLines: 1,
@@ -170,14 +166,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
                             child: Text(
                               profileModel.graduatePrimaryMajorCurrent != ""
                                   ? profileModel.graduatePrimaryMajorCurrent
-                                  : profileModel.ugPrimaryMajorCurrent!,
+                                  : profileModel.ugPrimaryMajorCurrent,
                               style: TextStyle(
                                   fontSize: getFontSize(
                                       profileModel.graduatePrimaryMajorCurrent !=
-                                              ""
+                                          ""
                                           ? profileModel
-                                              .graduatePrimaryMajorCurrent
-                                          : profileModel.ugPrimaryMajorCurrent!,
+                                          .graduatePrimaryMajorCurrent
+                                          : profileModel.ugPrimaryMajorCurrent,
                                       "major")),
                               textAlign: TextAlign.left,
                               softWrap: false,
@@ -217,9 +213,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     child: Padding(
                       padding: EdgeInsets.only(
                           left:
-                              ScalingUtility.horizontalSafeBlock * cardMargin),
+                          ScalingUtility.horizontalSafeBlock * cardMargin),
                       child: Text(
-                        profileModel.classificationType!,
+                        profileModel.classificationType,
                         style: TextStyle(
                             fontSize: ScalingUtility.horizontalSafeBlock * 3.5),
                       ),
@@ -230,14 +226,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       Padding(
                         padding: EdgeInsets.only(
                             left:
-                                (ScalingUtility.horizontalSafeBlock * 11.225) +
-                                    realignText(Theme.of(context))),
+                            (ScalingUtility.horizontalSafeBlock * 11.225) +
+                                realignText(Theme.of(context))),
                         child: Text(
                           profileModel.barcode.toString(),
                           style: TextStyle(
                               fontSize: ScalingUtility.horizontalSafeBlock * 3,
                               letterSpacing:
-                                  ScalingUtility.horizontalSafeBlock * 1.5),
+                              ScalingUtility.horizontalSafeBlock * 1.5),
                         ),
                       ),
                     ],
@@ -256,12 +252,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
             child: Column(
               children: <Widget>[
                 Image.network(
-                  photoModel!.photoUrl!,
+                  photoModel.photoUrl,
                   fit: BoxFit.contain,
                   height: 125,
                 ),
                 SizedBox(height: 10),
-                Text(profileModel!.classificationType!),
+                Text(profileModel.classificationType),
               ],
             ),
             padding: EdgeInsets.only(
@@ -276,11 +272,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   Container(
                     padding: new EdgeInsets.only(right: cardMargin),
                     child: Text(
-                      (nameModel!.firstName! + " " + nameModel.lastName!),
+                      '${nameModel.firstName} ${nameModel.lastName}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: tabletFontSize(
-                              nameModel.firstName! + " " + nameModel.lastName!,
+                              '${nameModel.firstName} ${nameModel.lastName}',
                               "name")),
                       textAlign: TextAlign.left,
                       softWrap: false,
@@ -291,12 +287,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   Container(
                     padding: new EdgeInsets.only(right: cardMargin),
                     child: Text(
-                      profileModel.collegeCurrent!,
+                      profileModel.collegeCurrent,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize: tabletFontSize(
-                              profileModel.collegeCurrent!, "college")),
+                              profileModel.collegeCurrent, "college")),
                       textAlign: TextAlign.left,
                       softWrap: false,
                       maxLines: 1,
@@ -308,12 +304,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     child: Text(
                       profileModel.graduatePrimaryMajorCurrent != ""
                           ? profileModel.graduatePrimaryMajorCurrent
-                          : profileModel.ugPrimaryMajorCurrent!,
+                          : profileModel.ugPrimaryMajorCurrent,
                       style: TextStyle(
                           fontSize: tabletFontSize(
                               profileModel.graduatePrimaryMajorCurrent != ""
                                   ? profileModel.graduatePrimaryMajorCurrent
-                                  : profileModel.ugPrimaryMajorCurrent!,
+                                  : profileModel.ugPrimaryMajorCurrent,
                               "major")),
                       textAlign: TextAlign.left,
                       softWrap: false,
@@ -329,12 +325,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       padding: EdgeInsets.all(0),
                     ),
                     child: returnBarcodeContainerTablet(
-                        profileModel!.barcode.toString(), false, context),
+                        profileModel.barcode.toString(), false, context),
                     onPressed: () {
                       createAlertDialog(
                           context,
                           returnBarcodeContainer(
-                              profileModel!.barcode.toString(), true, context),
+                              profileModel.barcode.toString(), true, context),
                           profileModel.barcode.toString(),
                           true);
                     },

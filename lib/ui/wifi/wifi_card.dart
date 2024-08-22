@@ -47,14 +47,14 @@ class _WiFiCardState extends State<WiFiCard>
   Widget build(BuildContext context) {
     super.build(context);
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => cardState != TestStatus.running
           ? Provider.of<SpeedTestProvider>(context, listen: false).init()
           : print("running test..."),
       isLoading: _speedTestProvider.isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _speedTestProvider.error,
       child: () => buildCardContent(context),
     );

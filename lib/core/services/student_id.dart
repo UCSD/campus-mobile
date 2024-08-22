@@ -20,7 +20,6 @@ class StudentIdService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-
   //Removed term (not used)
   Future<bool> fetchStudentIdName(Map<String, String> headers) async {
     _error = null;

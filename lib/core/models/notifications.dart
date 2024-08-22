@@ -9,102 +9,88 @@ Messages messagesFromJson(String str) => Messages.fromJson(json.decode(str));
 String messagesToJson(Messages data) => json.encode(data.toJson());
 
 class Messages {
-  List<MessageElement>? messages;
-  int? next;
+  List<MessageElement> messages;
+  int? next; // confirmed optional
 
-  Messages({this.messages, this.next});
+  Messages({required this.messages, this.next});
 
-  factory Messages.fromJson(Map<String, dynamic> json) => Messages(
-        messages: json["messages"] == null
-            ? null
-            : List<MessageElement>.from(
-                json["messages"].map((x) => MessageElement.fromJson(x))),
-        next: json["next"] == null ? null : json["next"],
-      );
+  Messages.fromJson(Map<String, dynamic> json)
+      : messages = List<MessageElement>.from(
+                      json["messages"].map((x) => MessageElement.fromJson(x))),
+        next = json["next"];
 
   Map<String, dynamic> toJson() => {
-        "messages": messages == null
-            ? null
-            : List<dynamic>.from(messages!.map((x) => x.toJson())),
-        "next": next == null ? null : next
+        "messages": List<dynamic>.from(messages.map((x) => x.toJson())),
+        "next": next
       };
 }
 
 class MessageElement {
   MessageElement({
-    this.sender,
-    this.message,
-    this.messageId,
-    this.audience,
-    this.timestamp,
+    required this.sender,
+    required this.message,
+    required this.messageId,
+    required this.audience,
+    required this.timestamp,
   });
 
-  String? sender;
-  Message? message;
-  String? messageId;
-  Audience? audience;
-  int? timestamp;
+  String sender;
+  Message message;
+  String messageId;
+  Audience audience;
+  int timestamp;
 
-  factory MessageElement.fromJson(Map<String, dynamic> json) => MessageElement(
-        sender: json["sender"] == null ? null : json["sender"],
-        message:
-            json["message"] == null ? null : Message.fromJson(json["message"]),
-        messageId: json["messageId"] == null ? null : json["messageId"],
-        audience: json["audience"] == null
-            ? null
-            : Audience.fromJson(json["audience"]),
-        timestamp: json["timestamp"] == null ? null : json["timestamp"],
-      );
+  MessageElement.fromJson(Map<String, dynamic> json)
+      : sender = json["sender"],
+        message = Message.fromJson(json["message"]),
+        messageId = json["messageId"],
+        audience = Audience.fromJson(json["audience"]),
+        timestamp = json["timestamp"];
 
   Map<String, dynamic> toJson() => {
-        "sender": sender == null ? null : sender,
-        "message": message == null ? null : message!.toJson(),
-        "messageId": messageId == null ? null : messageId,
-        "audience": audience == null ? null : audience!.toJson(),
-        "timestamp": timestamp == null ? null : timestamp,
+        "sender": sender,
+        "message": message.toJson(),
+        "messageId": messageId ,
+        "audience": audience.toJson(),
+        "timestamp": timestamp,
       };
 }
 
 class Audience {
   Audience({
-    this.topics,
+    required this.topics,
   });
 
-  List<String>? topics;
+  List<String> topics;
 
-  factory Audience.fromJson(Map<String, dynamic> json) => Audience(
-        topics: json["topics"] == null
-            ? null
-            : List<String>.from(json["topics"].map((x) => x)),
-      );
+  Audience.fromJson(Map<String, dynamic> json)
+      : topics = List<String>.from(json["topics"].map((x) => x));
 
   Map<String, dynamic> toJson() => {
-        "topics":
-            topics == null ? null : List<dynamic>.from(topics!.map((x) => x)),
+        "topics": List<dynamic>.from(topics.map((x) => x))
       };
 }
 
 class Message {
-  String? message;
-  String? title;
-  Data? data;
+  String message;
+  String title;
+  Data data;
 
   Message({
-    this.message,
-    this.title,
-    this.data,
+    required this.message,
+    required this.title,
+    required this.data,
   });
 
-  factory Message.fromJson(Map<String, dynamic> json) => Message(
-        message: json["message"],
-        title: json["title"],
-        data: json["data"] == null ? null : Data.fromJson(json["data"]),
-      );
+  Message.fromJson(Map<String, dynamic> json)
+      : message = json["message"],
+        title = json["title"],
+        data = Data.fromJson(json["data"]);
 
   Map<String, dynamic> toJson() => {
         "message": message,
         "title": title,
-        "data": data == null ? null : data!.toJson(),
+        "data": data.toJson(),
       };
 }
 

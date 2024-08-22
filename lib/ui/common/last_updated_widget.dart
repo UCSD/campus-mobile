@@ -6,20 +6,20 @@ class LastUpdatedWidget extends StatelessWidget {
     required this.time,
   }) : super(key: key);
 
-  final DateTime? time;
+  final DateTime time;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        'Last updated: ' + determineText(time!),
+        'Last updated: ' + determineText(time),
         style: TextStyle(
             color: Colors.grey, fontStyle: FontStyle.italic, fontSize: 16),
       ),
     );
   }
 
-  String determineText(DateTime time) {
+  static String determineText(DateTime time) {
     Duration difference = DateTime.now().difference(time);
     if (difference.compareTo(Duration(seconds: 120)) <= 0) {
       return 'A few seconds ago';

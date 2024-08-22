@@ -10,18 +10,19 @@ class CardContainer extends StatelessWidget {
     required this.reload,
     required this.errorText,
     required this.child,
-    required this.active,
+    required bool? active,
     required this.hide,
     this.overFlowMenu,
     this.actionButtons,
     this.footer,
-    this.hideMenu,
-  }) : super(key: key);
+    this.hideMenu = false,
+  }) : active = active ?? false,
+       super(key: key);
 
   /// required parameters
-  final String? titleText;
-  final bool? isLoading;
-  final bool? active;
+  final String titleText;
+  final bool isLoading;
+  final bool active;
   final Function hide;
   final Function reload;
   final Widget Function() child;
@@ -29,13 +30,13 @@ class CardContainer extends StatelessWidget {
 
   /// optional parameters
   final Map<String, Function>? overFlowMenu;
-  final bool? hideMenu;
+  final bool hideMenu;
   final List<Widget>? actionButtons;
   final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
-    if (active != null && active!) {
+    if (active) {
       return Card(
         margin: EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
@@ -48,21 +49,19 @@ class CardContainer extends StatelessWidget {
                   top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
-                titleText!,
+                titleText,
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 18.0,
                 ),
               ),
-              trailing: buildMenu()!,
+              trailing: buildMenu(),
             ),
             buildBody(context),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: actionButtons != null
-                  ? Row(
-                      children: actionButtons!,
-                    )
+                  ? Row(children: actionButtons!)
                   : Container(),
             ),
             footer ?? Container(),
@@ -109,7 +108,7 @@ class CardContainer extends StatelessWidget {
       } else {
         return Text('An error occurred, please try again.');
       }
-    } else if (isLoading!) {
+    } else if (isLoading) {
       return Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardContentMinHeight),
@@ -154,8 +153,8 @@ class CardContainer extends StatelessWidget {
     }
   }
 
-  Widget? buildMenu() {
-    if (hideMenu ?? false) {
+  Widget buildMenu() {
+    if (hideMenu) {
       return Container();
     } else if (titleText == "Scanner") {
       return ButtonBar(

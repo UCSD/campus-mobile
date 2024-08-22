@@ -9,7 +9,7 @@ class MapSearchService {
   String? _error;
   List<MapSearchModel> _results = [];
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String baseEndpoint =
+  static const String baseEndpoint =
       "https://0dakeo6qfi.execute-api.us-west-2.amazonaws.com/qa/v2/map/search";
 
   Future<bool> fetchLocations(String location) async {
@@ -23,18 +23,16 @@ class MapSearchService {
         /// parse data
         final data = mapSearchModelFromJson(_response!);
         _results = data;
-      } else {
-        _results = [];
-        _isLoading = false;
-        return false;
+        return true;
       }
-      _isLoading = false;
-      return true;
+      // else:
+      _results = [];
     } catch (e) {
       _error = e.toString();
+    } finally {
       _isLoading = false;
-      return false;
     }
+    return false;
   }
 
   bool get isLoading => _isLoading;

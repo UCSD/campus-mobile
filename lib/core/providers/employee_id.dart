@@ -3,17 +3,10 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/employee_id.dart';
 import 'package:flutter/material.dart';
 
-class EmployeeIdDataProvider extends ChangeNotifier {
-  EmployeeIdDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _employeeIdService = EmployeeIdService();
-  }
-
+class EmployeeIdDataProvider extends ChangeNotifier
+{
   ///STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
@@ -24,41 +17,34 @@ class EmployeeIdDataProvider extends ChangeNotifier {
   late UserDataProvider _userDataProvider;
 
   ///SERVICES
-  late EmployeeIdService _employeeIdService;
+  EmployeeIdService _employeeIdService = EmployeeIdService();
 
   void fetchData() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
-    /// Verify that user is logged in
-    if (_userDataProvider.isLoggedIn) {
-      final Map<String, String> header = {
-        'Authorization':
-            'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
-      };
+    final Map<String, String> header = {
+      'Authorization':
+      'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+    };
 
+    /// Verify that user is logged in
+    if (_userDataProvider.isLoggedIn
+        && await _employeeIdService.fetchEmployeeIdProfile(header))
+    {
       // Fetch Profile
-      if (await _employeeIdService.fetchEmployeeIdProfile(header)) {
-        _employeeIdModel = _employeeIdService.employeeIdModel;
-      } else {
-        _error = _employeeIdService.error.toString();
-        _isLoading = false;
-        notifyListeners();
-        return;
-      }
+      _employeeIdModel = _employeeIdService.employeeIdModel;
     } else {
       _error = _employeeIdService.error.toString();
-      _isLoading = false;
-      notifyListeners();
-      return;
     }
+
     _isLoading = false;
     notifyListeners();
   }
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
+  bool get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
   EmployeeIdModel? get employeeIdModel => _employeeIdModel;

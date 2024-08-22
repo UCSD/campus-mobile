@@ -26,9 +26,9 @@ class NotificationsListView extends StatelessWidget {
   }
 
   Widget buildListView(BuildContext context) {
-    if (Provider.of<MessagesDataProvider>(context).messages!.length == 0) {
+    if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
-        if (Provider.of<MessagesDataProvider>(context).isLoading!) {
+        if (Provider.of<MessagesDataProvider>(context).isLoading) {
           // empty notifications view until they load in
         } else {
           return ListView.separated(
@@ -56,7 +56,7 @@ class NotificationsListView extends StatelessWidget {
       physics: AlwaysScrollableScrollPhysics(),
       itemBuilder: _buildMessage,
       controller: Provider.of<MessagesDataProvider>(context).scrollController,
-      itemCount: Provider.of<MessagesDataProvider>(context).messages!.length,
+      itemCount: Provider.of<MessagesDataProvider>(context).messages.length,
       separatorBuilder: (BuildContext context, int index) => Divider(),
     );
   }

@@ -48,13 +48,13 @@ class NewsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       /// TODO: need to hook up hidden to state using provider
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () =>
           Provider.of<NewsDataProvider>(context, listen: false).fetchNews(),
       isLoading: Provider.of<NewsDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<NewsDataProvider>(context).error,
       child: () => buildNewsCard(),
       actionButtons: buildActionButtons(context),

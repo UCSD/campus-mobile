@@ -11,7 +11,8 @@ class TimeRangeWidget extends StatelessWidget {
     required this.time,
   }) : super(key: key);
 
-  final String? time;
+  final String time;
+
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -20,16 +21,16 @@ class TimeRangeWidget extends StatelessWidget {
   }
 
   String getStartTime(BuildContext context) {
-    List<String> times = time!.split("-");
+    List<String> times = time.split("-");
     return stringToTimeOfDay(times[0]).format(context);
   }
 
   String getStopTime(BuildContext context) {
-    List<String> times = time!.split("- ");
+    List<String> times = time.split("- ");
     return stringToTimeOfDay(times[1]).format(context);
   }
 
-  TimeOfDay stringToTimeOfDay(String tod) {
+  static TimeOfDay stringToTimeOfDay(String tod) {
     final format = DateFormat.Hm();
     return TimeOfDay.fromDateTime(format.parse(tod));
   }

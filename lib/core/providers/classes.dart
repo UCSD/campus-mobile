@@ -5,73 +5,58 @@ import 'package:campus_mobile_experimental/core/services/classes.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ClassScheduleDataProvider extends ChangeNotifier {
-  ClassScheduleDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-    _lastUpdated = DateTime.now();
-    _selectedCourse = 0;
-    nextDayWithClass = 'Monday';
-    _enrolledClasses = {
-      'MO': [],
-      'TU': [],
-      'WE': [],
-      'TH': [],
-      'FR': [],
-      'SA': [],
-      'SU': [],
-      'OTHER': [],
-    };
-    _finals = {
-      'MO': [],
-      'TU': [],
-      'WE': [],
-      'TH': [],
-      'FR': [],
-      'SA': [],
-      'SU': [],
-      'OTHER': [],
-    };
-
-    _midterms = {
-      'MI': [],
-      'OTHER': [],
-    };
-
-    ///INITIALIZE SERVICES
-    _classScheduleService = ClassScheduleService();
-  }
-
+class ClassScheduleDataProvider extends ChangeNotifier
+{
   ///STATES
-  bool? _isLoading;
-  DateTime? _lastUpdated;
+  bool _isLoading = false;
+  DateTime _lastUpdated = DateTime.now();
   String? _error;
-  int? _selectedCourse;
-
-  String? nextDayWithClass;
+  int _selectedCourse = 0;
+  String nextDayWithClass = 'Monday';
 
   ///MODELS
-  ClassScheduleModel? _classScheduleModel;
-  Map<String, List<SectionData>>? _enrolledClasses;
-  Map<String, List<SectionData>>? _finals;
-  Map<String, List<SectionData>>? _midterms;
-  AcademicTermModel? _academicTermModel;
+  late ClassScheduleModel _classScheduleModel;
+  Map<String, List<SectionData>> _enrolledClasses = {
+    'MO': [],
+    'TU': [],
+    'WE': [],
+    'TH': [],
+    'FR': [],
+    'SA': [],
+    'SU': [],
+    'OTHER': [],
+  };
+  Map<String, List<SectionData>> _finals = {
+    'MO': [],
+    'TU': [],
+    'WE': [],
+    'TH': [],
+    'FR': [],
+    'SA': [],
+    'SU': [],
+    'OTHER': [],
+  };
+  Map<String, List<SectionData>> _midterms = {
+    'MI': [],
+    'OTHER': [],
+  };
+  late AcademicTermModel _academicTermModel;
   late UserDataProvider _userDataProvider;
 
   ///SERVICES
-  late ClassScheduleService _classScheduleService;
+  ClassScheduleService _classScheduleService = ClassScheduleService();
 
   void fetchData() async {
-    if (!_isLoading!) {
+    if (!_isLoading) {
       _isLoading = true;
       _error = null;
       notifyListeners();
       if (await _classScheduleService.fetchAcademicTerm() &&
           _userDataProvider.isLoggedIn) {
-        _academicTermModel = _classScheduleService.academicTermModel;
+        _academicTermModel = _classScheduleService.academicTermModel!;
         final Map<String, String> headers = {
           'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
         };
 
         /// erase old model
@@ -79,7 +64,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
         /// fetch grad courses
         if (await _classScheduleService.fetchGRCourses(
-            headers, _academicTermModel!.termCode!)) {
+            headers, _academicTermModel.termCode!)) {
           _classScheduleModel = _classScheduleService.grData;
         } else {
           _error = _classScheduleService.error.toString();
@@ -87,9 +72,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
         /// fetch undergrad courses
         if (await _classScheduleService.fetchUNCourses(
-            headers, _academicTermModel!.termCode!)) {
-          if (_classScheduleModel!.data != null) {
-            _classScheduleModel!.data!
+            headers, _academicTermModel.termCode!)) {
+          if (_classScheduleModel.data != null) {
+            _classScheduleModel.data!
                 .addAll(_classScheduleService.unData.data!);
           } else {
             _classScheduleModel = _classScheduleService.unData;
@@ -152,7 +137,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
     /// add only enrolled classes because api returns wait-listed and dropped
     /// courses as well
-    for (ClassData classData in _classScheduleModel!.data!) {
+    for (ClassData classData in _classScheduleModel.data!) {
       if (classData.enrollmentStatus == 'EN') {
         enrolledCourses.add(classData);
       }
@@ -169,39 +154,38 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         sectionData.subjectCode = classData.subjectCode;
         sectionData.courseCode = classData.courseCode;
         sectionData.courseTitle = classData.courseTitle;
-        sectionData.gradeOption = buildGradeEvaluation(classData.gradeOption);
-        String? day = 'OTHER';
-        if (sectionData.days != null) {
-          day = sectionData.days;
-        } else {
-          continue;
-        }
+        sectionData.gradeOption = buildGradeEvaluation(classData.gradeOption ?? "");
 
-        if (sectionData.specialMtgCode != 'FI' &&
-            sectionData.specialMtgCode != 'MI') {
-          _enrolledClasses![day!]!.add(sectionData);
-        } else if (sectionData.specialMtgCode == 'FI') {
-          _finals![day!]!.add(sectionData);
-        } else if (sectionData.specialMtgCode == 'MI') {
-          _midterms!['MI']!.add(sectionData);
+        String day = 'OTHER';
+        if (sectionData.days != null) {
+          day = sectionData.days!;
+
+          if (sectionData.specialMtgCode != 'FI' &&
+              sectionData.specialMtgCode != 'MI') {
+            _enrolledClasses[day]!.add(sectionData);
+          } else if (sectionData.specialMtgCode == 'FI') {
+            _finals[day]!.add(sectionData);
+          } else if (sectionData.specialMtgCode == 'MI') {
+            _midterms['MI']!.add(sectionData);
+          }
         }
       }
     }
 
     /// chronologically sort classes for each day
-    for (List<SectionData> listOfClasses in _enrolledClasses!.values.toList()) {
+    for (List<SectionData> listOfClasses in _enrolledClasses.values.toList()) {
       listOfClasses.sort((a, b) => _compare(a, b));
     }
-    for (List<SectionData> listOfFinals in _finals!.values.toList()) {
+    for (List<SectionData> listOfFinals in _finals.values.toList()) {
       listOfFinals.sort((a, b) => _compare(a, b));
     }
-    for (List<SectionData> listOfMidterms in _midterms!.values.toList()) {
+    for (List<SectionData> listOfMidterms in _midterms.values.toList()) {
       listOfMidterms.sort((a, b) => _compare(a, b));
       listOfMidterms.sort((a, b) => _compareMidterms(a, b));
     }
   }
 
-  int _compareMidterms(SectionData a, SectionData b) {
+  static int _compareMidterms(SectionData a, SectionData b) {
     DateTime dateTimeA = DateFormat('yyyy-M-dd').parse(a.date!);
     DateTime dateTimeB = DateFormat('yyyy-M-dd').parse(b.date!);
 
@@ -215,7 +199,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   /// comparator that sorts according to start time of class
-  int _compare(SectionData a, SectionData b) {
+  static int _compare(SectionData a, SectionData b) {
     if (a.time == null || b.time == null) {
       return 0;
     }
@@ -231,28 +215,20 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     return 1;
   }
 
-  buildGradeEvaluation(String? gradeEvaluation) {
+  static String buildGradeEvaluation(String gradeEvaluation) {
     switch (gradeEvaluation) {
       case 'L':
-        {
           return 'Letter Grade';
-        }
       case 'P':
-        {
           return 'Pass/No Pass';
-        }
       case 'S':
-        {
           return 'Sat/Unsat';
-        }
       default:
-        {
           return 'Other';
-        }
     }
   }
 
-  DateTime _getStartTime(String time) {
+  static DateTime _getStartTime(String time) {
     List<String> times = time.split("-");
     final format = DateFormat.Hm();
     return format.parse(times[0]);
@@ -277,7 +253,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       /// if no classes are scheduled for today then find the next day with classes
       int daysToAdd = 1;
 
-      while (_enrolledClasses![today]!.isEmpty && daysToAdd <= 7) {
+      while (_enrolledClasses[today]!.isEmpty && daysToAdd <= 7) {
         today = DateFormat('EEEE')
             .format(DateTime.now().add(Duration(days: daysToAdd)))
             .toString()
@@ -288,8 +264,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         daysToAdd += 1;
       }
 
-      if (_enrolledClasses![today]!.isNotEmpty) {
-        listToReturn.addAll(_enrolledClasses![today]!);
+      if (_enrolledClasses[today]!.isNotEmpty) {
+        listToReturn.addAll(_enrolledClasses[today]!);
       } else {
         listToReturn.addAll([]);
       }
@@ -306,13 +282,14 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  Map<String, List<SectionData>>? get finals => _finals;
-  Map<String, List<SectionData>>? get midterms => _midterms;
+  Map<String, List<SectionData>> get finals => _finals;
+  Map<String, List<SectionData>> get midterms => _midterms;
+  Map<String, List<SectionData>> get enrolledClasses => _enrolledClasses;
 
-  Map<String, List<SectionData>>? get enrolledClasses => _enrolledClasses;
-  bool? get isLoading => _isLoading;
+  bool get isLoading => _isLoading;
   String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
-  ClassScheduleModel? get classScheduleModel => _classScheduleModel;
-  int? get selectedCourse => _selectedCourse;
+  DateTime get lastUpdated => _lastUpdated;
+
+  ClassScheduleModel get classScheduleModel => _classScheduleModel;
+  int get selectedCourse => _selectedCourse;
 }

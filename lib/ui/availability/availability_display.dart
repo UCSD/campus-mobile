@@ -31,7 +31,7 @@ class AvailabilityDisplay extends StatelessWidget {
         bottom: TITLE_BOTTOM_PADDING,
       ),
       child: Text(
-        model.name!,
+        model.name,
         style: TextStyle(
           fontSize: LOCATION_FONT_SIZE,
           fontWeight: FontWeight.bold,
@@ -43,21 +43,21 @@ class AvailabilityDisplay extends StatelessWidget {
   Widget buildAvailabilityBars(BuildContext context) {
     List<Widget> locations = [];
     // add any children the model contains to the listview
-    if (model.subLocations!.isNotEmpty) {
-      for (SubLocations subLocation in model.subLocations!) {
+    if (model.subLocations.isNotEmpty) {
+      for (SubLocations subLocation in model.subLocations) {
         locations.add(
           ListTile(
-            onTap: () => subLocation.floors!.length > 0
+            onTap: () => subLocation.floors.length > 0
                 ? Navigator.pushNamed(
                     context, RoutePaths.AvailabilityDetailedView,
                     arguments: subLocation)
                 : print('_handleIconClick: no subLocations'),
             visualDensity: VisualDensity.compact,
-            trailing: subLocation.floors!.length > 0
+            trailing: subLocation.floors.length > 0
                 ? Icon(Icons.arrow_forward_ios_rounded)
                 : null,
             title: Text(
-              subLocation.name!,
+              subLocation.name,
               style: TextStyle(
                 fontSize: LOCATION_FONT_SIZE,
               ),
@@ -124,7 +124,7 @@ class AvailabilityDisplay extends StatelessWidget {
     );
   }
 
-  num percentAvailability(SubLocations location) => location.percentage!;
+  num percentAvailability(SubLocations location) => location.percentage;
 
   setIndicatorColor(num percentage) {
     if (percentage >= .75)

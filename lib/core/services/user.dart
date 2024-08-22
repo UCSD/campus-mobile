@@ -5,9 +5,9 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 
 class UserProfileService {
   UserProfileService();
-  bool? _isLoading;
+  bool _isLoading = false;
   String? _error;
-  UserProfileModel? _userProfileModel;
+  late UserProfileModel _userProfileModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
@@ -61,6 +61,6 @@ class UserProfileService {
   }
 
   String? get error => _error;
-  UserProfileModel? get userProfileModel => _userProfileModel;
-  bool? get isLoading => _isLoading;
+  UserProfileModel get userProfileModel => _userProfileModel;
+  bool get isLoading => _isLoading;
 }

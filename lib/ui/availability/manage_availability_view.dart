@@ -52,7 +52,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
         list.add(ListTile(
           key: Key(model.name.toString()),
           title: Text(
-            model.name!,
+            model.name,
           ),
           leading: Icon(
             Icons.reorder,

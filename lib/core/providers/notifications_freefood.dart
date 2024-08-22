@@ -22,13 +22,13 @@ class FreeFoodDataProvider extends ChangeNotifier {
   }
 
   ///VALUES
-  late HashMap<String, int?> _messageToCount;
-  late HashMap<String, int?> _messageToMaxCount;
-  List<String>? _registeredEvents;
+  HashMap<String, int> _messageToCount = new HashMap<String, int>();
+  HashMap<String, int> _messageToMaxCount = new HashMap<String, int>();
+  List<String> _registeredEvents = [];
 
   ///STATES
-  bool? _isLoading;
-  String? _curId;
+  bool _isLoading = false;
+  String? _curId; // confirmed optional
   DateTime? _lastUpdated;
   String? _error;
 
@@ -37,23 +37,23 @@ class FreeFoodDataProvider extends ChangeNotifier {
   late MessagesDataProvider _messageDataProvider;
 
   ///SERVICES
-  late FreeFoodService _freeFoodService;
+  late FreeFoodService _freeFoodService = FreeFoodService();
 
   void initializeValues() {
-    _messageToCount = new HashMap<String, int?>();
-    _messageToMaxCount = new HashMap<String, int?>();
+    _messageToCount = new HashMap<String, int>();
+    _messageToMaxCount = new HashMap<String, int>();
     _registeredEvents = [];
   }
 
   void removeId(String id) {
     _messageToCount.remove(id);
     _messageToMaxCount.remove(id);
-    _registeredEvents!.remove(id);
+    _registeredEvents.remove(id);
   }
 
   void parseMessages() {
     // initializeValues();
-    List<MessageElement?> messages = _messageDataProvider.messages!;
+    List<MessageElement?> messages = _messageDataProvider.messages;
     messages.forEach((m) async {
       if (m!.audience != null &&
           m.audience!.topics != null &&
@@ -73,7 +73,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future updateRegisteredEvents(List<String>? messageIds) async {
+  Future updateRegisteredEvents(List<String> messageIds) async {
     _registeredEvents = messageIds;
     var box = await Hive.openBox('freefoodRegisteredEvents');
     await box.put('freefoodRegisteredEvents', _registeredEvents);
@@ -88,7 +88,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
 
     if (await _freeFoodService.fetchData(id)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _freeFoodModel = _freeFoodService.freeFoodModel!;
       _lastUpdated = DateTime.now();
       _messageToCount[id] = _freeFoodModel!.body!.count;
     } else {
@@ -113,7 +113,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
 
     if (await _freeFoodService.fetchMaxCount(id)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _freeFoodModel = _freeFoodService.freeFoodModel!;
       _lastUpdated = DateTime.now();
       _messageToMaxCount[id] = _freeFoodModel!.body!.maxCount;
     } else {
@@ -134,13 +134,13 @@ class FreeFoodDataProvider extends ChangeNotifier {
 
   void incrementCount(String id) async {
     final Map<String, dynamic> body = {'count': '+1'};
-    _registeredEvents!.add(id);
+    _registeredEvents.add(id);
     updateCount(id, body);
   }
 
   void decrementCount(String id) async {
     final Map<String, dynamic> body = {'count': '-1'};
-    _registeredEvents!.remove(id);
+    _registeredEvents.remove(id);
     updateCount(id, body);
   }
 
@@ -151,7 +151,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     await updateRegisteredEvents(_registeredEvents);
 
     if (await _freeFoodService.updateCount(id, body)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel;
+      _freeFoodModel = _freeFoodService.freeFoodModel!;
       _lastUpdated = DateTime.now();
     } else {
       _error = _freeFoodService.error;
@@ -170,17 +170,17 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int? count(String? messageId) => _messageToCount[messageId!];
+  int? count(String messageId) => _messageToCount[messageId];
 
-  bool isOverCount(String? messageId) {
+  bool isOverCount(String messageId) {
     if (_messageToCount.containsKey(messageId) &&
         _messageToMaxCount.containsKey(messageId)) {
-      return _messageToCount[messageId!]! > _messageToMaxCount[messageId]!;
+      return _messageToCount[messageId]! > _messageToMaxCount[messageId]!;
     }
     return false;
   }
 
-  bool isFreeFood(String? messageId) => _messageToCount.containsKey(messageId);
+  bool isFreeFood(String messageId) => _messageToCount.containsKey(messageId);
 
   /// SETTER
   set messageDataProvider(MessagesDataProvider value) {

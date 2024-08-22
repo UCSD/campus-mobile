@@ -62,10 +62,10 @@ class NotificationsSettingsView extends StatelessWidget {
     UserDataProvider _userDataProvider = Provider.of<UserDataProvider>(context);
     PushNotificationDataProvider _pushNotificationDataProvider =
         Provider.of<PushNotificationDataProvider>(context);
-    if (_userDataProvider.userProfileModel!.classifications?.student ?? false) {
+    if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
       return _pushNotificationDataProvider.publicTopics() +
           _pushNotificationDataProvider.studentTopics();
-    } else if (_userDataProvider.userProfileModel!.classifications?.staff ??
+    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
         false) {
       return _pushNotificationDataProvider.publicTopics() +
           _pushNotificationDataProvider.staffTopics();

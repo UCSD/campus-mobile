@@ -10,7 +10,7 @@ class EventsService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<EventModel>? _data;
+  late List<EventModel> _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
 

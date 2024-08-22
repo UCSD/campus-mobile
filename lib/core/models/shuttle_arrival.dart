@@ -11,37 +11,36 @@ List<ArrivingShuttle> getArrivingShuttles(String str) {
 
 class ArrivingShuttle {
   ArrivingShuttle({
-    this.routeId,
-    this.routeName,
+    required this.routeId,
+    required this.routeName,
     this.routeStopId,
-    this.routeColor,
-    this.secondsToArrival,
+    required this.routeColor,
+    required this.secondsToArrival,
   });
 
-  int? routeId;
-  String? routeName;
-  int? routeStopId;
-  String? routeColor;
-  int? secondsToArrival;
+  int routeId;
+  String routeName;
+  int? routeStopId; // unused, not sure if this is nullable or not
+  String routeColor;
+  int secondsToArrival;
 
   factory ArrivingShuttle.fromJson(Map<String, dynamic> json) {
     print('Arrivals resp--------------------------------:');
     print(json);
     return ArrivingShuttle(
-      routeId: json["routeId"] == null ? null : json["routeId"],
-      routeName: json["routeName"] == null ? null : json["routeName"],
-      routeStopId: json["routeStopId"] == null ? null : json["routeStopId"],
-      routeColor: json["routeColor"] == null ? null : json["routeColor"],
-      secondsToArrival:
-          json["secondsToArrival"] == null ? null : json["secondsToArrival"],
+      routeId: json["routeId"],
+      routeName: json["routeName"],
+      routeStopId: json["routeStopId"],
+      routeColor: json["routeColor"],
+      secondsToArrival: json["secondsToArrival"],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "routeId": routeId == null ? null : routeId,
-        "routeName": routeName == null ? null : routeName,
-        "routeStopId": routeStopId == null ? null : routeStopId,
-        "routeColor": routeColor == null ? null : routeColor,
-        "secondsToArrival": secondsToArrival == null ? null : secondsToArrival,
+        "routeId": routeId,
+        "routeName": routeName,
+        "routeStopId": routeStopId,
+        "routeColor": routeColor,
+        "secondsToArrival": secondsToArrival
       };
 }
