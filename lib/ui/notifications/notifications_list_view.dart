@@ -5,34 +5,15 @@ import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:campus_mobile_experimental/ui/notifications/notifications_IAmGoing.dart';
-import 'package:campus_mobile_experimental/ui/profile/notification_settings_view.dart';
+import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_freefood.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-bool hideListView = false; // debug
-List<String> eventTypesForIAmGoing = [
-  "campusInnovationEvents",
-  "freeFood",
-  "testCampusInnovationEvents",
-  "testFreeFood",
-]; // for the "I am Going" feature
-
-class NotificationsListView extends StatefulWidget {
-  @override
-  State<NotificationsListView> createState() => _NotificationsListViewState();
-}
-
-class _NotificationsListViewState extends State<NotificationsListView> {
-  @override
-  initState() {
-    super.initState();
-    hideListView = true;
-  }
-
+class NotificationsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initUniLinks(context);
@@ -128,6 +109,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
         Provider.of<MessagesDataProvider>(context).messages![index]!;
+    FreeFoodDataProvider freefoodProvider =
+        Provider.of<FreeFoodDataProvider>(context);
 
     String? messageType;
     if (data.audience!.topics == null) {
@@ -135,63 +118,61 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     } else {
       messageType = data.audience?.topics![0];
     }
-    return ListView(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      children: <Widget>[
-        ListTile(
-            leading: Icon(chooseIcon(messageType!),
-                color: Theme.of(context).colorScheme.secondary, size: 30),
-            title: Column(
-              children: <Widget>[
-                Text(
-                  data.message!.title!,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Padding(padding: const EdgeInsets.all(3.5))
-              ],
-              crossAxisAlignment: CrossAxisAlignment.start,
+
+    return ListTile(
+        leading: Icon(_chooseIcon(messageType!),
+            color: Theme.of(context).colorScheme.secondary, size: 30),
+        title: Column(
+          children: <Widget>[
+            Text(
+              data.message!.title!,
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Linkify(
-                    text: data.message!.message!,
-                    onOpen: (link) async {
-                      try {
-                        await launch(link.url, forceSafariVC: true);
-                      } catch (e) {
-                        // an error occurred, do nothing
-                      }
-                    },
-                    options: LinkifyOptions(humanize: false),
-                    style: TextStyle(fontSize: 12.5),
-                  ),
-                ),
-              ],
+            Padding(padding: const EdgeInsets.all(3.5))
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        subtitle: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topLeft,
+              child: Linkify(
+                text: data.message!.message!,
+                onOpen: (link) async {
+                  try {
+                    await launch(link.url, forceSafariVC: true);
+                  } catch (e) {
+                    // an error occurred, do nothing
+                  }
+                },
+                options: LinkifyOptions(humanize: false),
+                style: TextStyle(fontSize: 12.5),
+              ),
             ),
-            trailing: Column(children: <Widget>[
-              Text(_readTimestamp(data.timestamp!),
-                  style: TextStyle(fontSize: 10, color: Colors.grey)),
-            ])),
-        // check if the event type needs the "I am going" feature (e.g., "freeFood" events),
-        // if true, use IAmGoingNotification format
-        // if false, use regular notification format
-        needIAmGoingFeature(data.messageId, messageType, eventTypesForIAmGoing)
-            ? IAmGoingNotification(data: data)
-            : Container(),
-      ],
-    );
+            freefoodProvider.isFreeFood(data.messageId)
+                ? FreeFoodNotification(messageId: data.messageId)
+                : Container(),
+          ],
+        ),
+        trailing: Column(children: <Widget>[
+          Text(_readTimestamp(data.timestamp!),
+              style: TextStyle(fontSize: 10, color: Colors.grey)),
+        ]));
   }
 
-  // this function checks whether the current notification's messageType requires the "I am Going" feature
-  // this currently only apply to "campusInnovationEvents" and "freeFood" notifications
-  // a list of event types for "I am Going" feature is defined the eventTypesForIAmGoing variable
-  bool needIAmGoingFeature(
-      String? messageId, String? messageType, List<String> eventTypes) {
-    // print('messageType is: $messageType');
-    return eventTypes.contains(messageType);
+  IconData _chooseIcon(String messageType) {
+    if (messageType == "studentAnnouncements" ||
+        messageType == "testStudentAnnouncements") {
+      return Icons.school_outlined;
+    } else if (messageType == "freeFood") {
+      return Icons.restaurant_outlined;
+    } else if (messageType == "campusAnnouncements" ||
+        messageType == "testCampusAnnouncements") {
+      return Icons.campaign_outlined;
+    } else if (messageType == "DM") {
+      return Icons.info_outline;
+    }
+    return Icons.info_outline;
   }
 
   String _readTimestamp(int timestamp) {

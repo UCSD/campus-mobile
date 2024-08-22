@@ -1,20 +1,20 @@
 import 'dart:convert';
 
-IAmGoingModel IAmGoingModelFromJson(String str) =>
-    IAmGoingModel.fromJson(json.decode(str));
+FreeFoodModel freeFoodModelFromJson(String str) =>
+    FreeFoodModel.fromJson(json.decode(str));
 
-String freeFoodModelToJson(IAmGoingModel data) => json.encode(data.toJson());
+String freeFoodModelToJson(FreeFoodModel data) => json.encode(data.toJson());
 
-class IAmGoingModel {
+class FreeFoodModel {
   int? statusCode;
   Body? body;
 
-  IAmGoingModel({
+  FreeFoodModel({
     this.statusCode,
     this.body,
   });
 
-  factory IAmGoingModel.fromJson(Map<String, dynamic> json) => IAmGoingModel(
+  factory FreeFoodModel.fromJson(Map<String, dynamic> json) => FreeFoodModel(
         statusCode: json["statusCode"],
         body: Body.fromJson(json["body"]),
       );
