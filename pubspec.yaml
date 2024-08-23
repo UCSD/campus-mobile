@@ -19,7 +19,7 @@ dependencies:
   flutter_scandit_plugin:
     git:
       url: https://github.com/UCSD/flutter_scandit.git
-      ref: 41fb666299ed90d8277c24e0065149e83cd71494
+      ref: scandit-6.6.3
   flutter_linkify: 5.0.2
   flutter_local_notifications: 9.9.1
   flutter_secure_storage: 5.0.2
