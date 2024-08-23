@@ -1,13 +1,12 @@
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/notifications_IAmGoing.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
 
 class FreeFoodService {
-
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  IAmGoingModel? _data;
+  FreeFoodModel? _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
@@ -22,10 +21,14 @@ class FreeFoodService {
     try {
       /// fetch data
       var _response = await _networkHelper.authorizedFetch(
-          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpCount', headers);
+          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') +
+              'events/' +
+              id +
+              '/rsvpCount',
+          headers);
 
       /// parse data
-      final data = IAmGoingModelFromJson(_response);
+      final data = freeFoodModelFromJson(_response);
 
       _isLoading = false;
       _data = data;
@@ -49,13 +52,16 @@ class FreeFoodService {
     _error = null;
     _isLoading = true;
     try {
-      String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpLimit';
+      String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') +
+          'events/' +
+          id +
+          '/rsvpLimit';
 
       /// fetch data
       var _response = await _networkHelper.authorizedFetch(_url, headers);
 
       /// parse data
-      final data = IAmGoingModelFromJson(_response);
+      final data = freeFoodModelFromJson(_response);
       _isLoading = false;
       _data = data;
       return true;
@@ -109,7 +115,7 @@ class FreeFoodService {
 
   // getters
   String? get error => _error;
-  IAmGoingModel? get freeFoodModel => _data;
+  FreeFoodModel? get freeFoodModel => _data;
   bool get isLoading => _isLoading;
   DateTime? get lastUpdated => _lastUpdated;
 }
