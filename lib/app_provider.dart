@@ -156,7 +156,7 @@ List<SingleChildWidget> dependentServices = [
         cardsDataProvider!.userDataProvider = userDataProvider;
         userDataProvider.cardsDataProvider = cardsDataProvider;
         cardsDataProvider
-          ..loadSavedData().then((value) {
+          ..loadSavedData().then((_) {
             // Update available cards
             cardsDataProvider.updateAvailableCards(
                 userDataProvider.authenticationModel!.ucsdaffiliation);
