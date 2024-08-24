@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_provider.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_model.dart';
 import 'package:provider/provider.dart';
-
+/// TODO FIX skeleton
 /// Fetches Nearby Places using the student's current location to build the What's Around Me List.
 class BuildWhatsAroundMeList extends StatelessWidget {
   final BuildContext context;

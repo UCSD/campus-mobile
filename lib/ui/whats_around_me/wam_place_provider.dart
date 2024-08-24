@@ -1,7 +1,7 @@
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_model.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_service.dart';
 import 'package:flutter/material.dart';
-
+/// TODO FIX
 class PlaceDataProvider extends ChangeNotifier {
   PlaceDataProvider() {
     _isLoading = false;
