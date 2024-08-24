@@ -1,7 +1,5 @@
 // Creates Network Request (i.e. generates tokens, uses NetworkHelper())
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/mock_api_call_model.dart';
 

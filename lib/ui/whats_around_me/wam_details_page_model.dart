@@ -4,47 +4,47 @@ import 'dart:convert';
 //
 //     final placeDetails = placeDetailsFromJson(jsonString);
 
-PlaceDetails placeDetailsFromJson(String str) => PlaceDetails.fromJson(json.decode(str));
+PlaceDetailsModel placeDetailsFromJson(String str) => PlaceDetailsModel.fromJson(json.decode(str));
 
-String placeDetailsToJson(PlaceDetails data) => json.encode(data.toJson());
+String placeDetailsToJson(PlaceDetailsModel data) => json.encode(data.toJson());
 
-class PlaceDetails {
-  PlaceDetailsClass placeDetails;
+class PlaceDetailsModel {
+  PlaceDetailsClass? placeDetails;
 
-  PlaceDetails({
-    required this.placeDetails,
+  PlaceDetailsModel({
+    this.placeDetails,
   });
 
-  factory PlaceDetails.fromJson(Map<String, dynamic> json) => PlaceDetails(
+  factory PlaceDetailsModel.fromJson(Map<String, dynamic> json) => PlaceDetailsModel(
     placeDetails: PlaceDetailsClass.fromJson(json["placeDetails"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "placeDetails": placeDetails.toJson(),
+    "placeDetails": placeDetails?.toJson(),
   };
 }
 
 class PlaceDetailsClass {
   String placeId;
-  Address address;
-  Location location;
+  Address? address;
+  Location? location;
   List<Category> categories;
   String name;
   String description;
   ContactInfo contactInfo;
-  SocialMedia socialMedia;
+  SocialMedia? socialMedia;
   Rating rating;
   Hours hours;
 
   PlaceDetailsClass({
     required this.placeId,
-    required this.address,
-    required this.location,
+    this.address,
+    this.location,
     required this.categories,
     required this.name,
     required this.description,
     required this.contactInfo,
-    required this.socialMedia,
+    this.socialMedia,
     required this.rating,
     required this.hours,
   });
@@ -64,13 +64,13 @@ class PlaceDetailsClass {
 
   Map<String, dynamic> toJson() => {
     "placeId": placeId,
-    "address": address.toJson(),
-    "location": location.toJson(),
+    "address": address?.toJson(),
+    "location": location?.toJson(),
     "categories": List<dynamic>.from(categories.map((x) => x.toJson())),
     "name": name,
     "description": description,
     "contactInfo": contactInfo.toJson(),
-    "socialMedia": socialMedia.toJson(),
+    "socialMedia": socialMedia?.toJson(),
     "rating": rating.toJson(),
     "hours": hours.toJson(),
   };
@@ -78,21 +78,21 @@ class PlaceDetailsClass {
 
 class Address {
   String streetAddress;
-  String locality;
-  String designatedMarketArea;
-  String region;
-  String postcode;
+  String? locality;
+  String? designatedMarketArea;
+  String? region;
+  String? postcode;
   dynamic poBox;
-  String country;
+  String? country;
 
   Address({
     required this.streetAddress,
-    required this.locality,
-    required this.designatedMarketArea,
-    required this.region,
-    required this.postcode,
-    required this.poBox,
-    required this.country,
+    this.locality,
+    this.designatedMarketArea,
+    this.region,
+    this.postcode,
+    this.poBox,
+    this.country,
   });
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
@@ -117,11 +117,11 @@ class Address {
 }
 
 class Category {
-  String categoryId;
+  String? categoryId;
   String label;
 
   Category({
-    required this.categoryId,
+    this.categoryId,
     required this.label,
   });
 
@@ -138,15 +138,15 @@ class Category {
 
 class ContactInfo {
   String telephone;
-  String website;
-  String fax;
-  String email;
+  String? website;
+  String? fax;
+  String? email;
 
   ContactInfo({
     required this.telephone,
-    required this.website,
-    required this.fax,
-    required this.email,
+    this.website,
+    this.fax,
+    this.email,
   });
 
   factory ContactInfo.fromJson(Map<String, dynamic> json) => ContactInfo(
@@ -166,13 +166,13 @@ class ContactInfo {
 
 class Hours {
   String opening;
-  String popular;
-  String openingText;
+  String? popular;
+  String? openingText;
 
   Hours({
     required this.opening,
-    required this.popular,
-    required this.openingText,
+    this.popular,
+    this.openingText,
   });
 
   factory Hours.fromJson(Map<String, dynamic> json) => Hours(
@@ -210,11 +210,11 @@ class Location {
 
 class Rating {
   dynamic price;
-  double user;
+  double? user;
 
   Rating({
-    required this.price,
-    required this.user,
+    this.price,
+    this.user,
   });
 
   factory Rating.fromJson(Map<String, dynamic> json) => Rating(
@@ -229,14 +229,14 @@ class Rating {
 }
 
 class SocialMedia {
-  String facebookId;
-  String twitter;
-  String instagram;
+  String? facebookId;
+  String? twitter;
+  String? instagram;
 
   SocialMedia({
-    required this.facebookId,
-    required this.twitter,
-    required this.instagram,
+    this.facebookId,
+    this.twitter,
+    this.instagram,
   });
 
   factory SocialMedia.fromJson(Map<String, dynamic> json) => SocialMedia(
