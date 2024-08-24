@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_description_page.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_provider.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_model.dart';

@@ -21,7 +21,7 @@ class PlaceDescriptionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Instantiate the provider
+    // Instantiate the provider to get API data
     final _mockAPIProvider = Provider.of<MockAPIProvider>(context, listen: false);
     // Fetch location data
     _mockAPIProvider.fetchLocation("Burger King");
