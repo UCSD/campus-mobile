@@ -10,12 +10,13 @@ class MockAPIService {
   // Instance Variables
   bool _isLoading = false;                              // For Network Request Status
   String? _error;                                       // For Error Catch
+  DateTime? _lastUpdated;                               // Timestamp
   final NetworkHelper _networkHelper = NetworkHelper(); // For networkHelper use
   final Map<String, String> headers = {                 // Build Headers
     "accept": "application/json",
   };                                                    // You also need a Request URL (where is the API located)
   final String getLocationTitleURL =
-      "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=";
+      "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&SingleLine=";
   MockAPIModel _mockAPIModel = MockAPIModel();          // For Model use (we'll feed it with the API response data)
 
   // Services have noArgs Constructor.
@@ -55,7 +56,7 @@ class MockAPIService {
   }
 
   /// Step 5) Perform API call to desired endpoint and give the data to Model
-  Future<void> fetchLocation(String locationTitle) async {  // Void because data will be at model
+  Future<bool> fetchLocation(String locationTitle) async {  // Bool because data will be at model and we need to know whether it succeeded.
     // Update Status Variables
     _error = null;
     _isLoading = true;
@@ -74,14 +75,17 @@ class MockAPIService {
         /// Step 6) Successful request, place data in Model
         _mockAPIModel = mockAPIModelFromJson(_response);
         print('Response data: $_mockAPIModel');
+        // Update Request Status
+        _isLoading = false;
+        return true;
       } else {
         // Error Handling
         print('Request failed with status: ${_response.statusCode}');
         print('Response body: ${_response.body}');
       }
-
       // Update Request Status
       _isLoading = false;
+      return false;
     }
     catch (e) {
       // Handle any errors that occur during the request
@@ -89,6 +93,7 @@ class MockAPIService {
       // Update Request Status
       _isLoading = false;
       print('Error: $e');
+      return false;
     }
   }
 
@@ -96,4 +101,5 @@ class MockAPIService {
   String? get error => _error;
   MockAPIModel? get getMockAPIModel => _mockAPIModel;
   bool get isLoading => _isLoading;
+  DateTime? get lastUpdated => _lastUpdated;
 }
