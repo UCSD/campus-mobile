@@ -4,7 +4,7 @@ import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_provider
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_model.dart';
 import 'package:provider/provider.dart';
 
-/// Fetches necessary data to build the What's Around Me List using Provider.
+/// Fetches Nearby Places using the student's current location to build the What's Around Me List.
 class BuildWhatsAroundMeList extends StatelessWidget {
   final BuildContext context;
   final dynamic mapController;
@@ -13,26 +13,6 @@ class BuildWhatsAroundMeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// TODO: Fetch all nearby places (names) of each category, each with its own list (first element being the closest)
-    /// Use findAddressCandidates ArcGIS API
-
-
-
-
-
-
-
-    /// TODO: Calculate the distance of every place and put them in a list
-    /// i.e. fetchPLaceCoordinates(NearbyRestaurants[0])
-    /// then use those coordinates to calculate the distance form the user
-    /// RestaurantDistance[0] = getDistance(NearbyRestaurants[0].X, NearbyRestaurants[0].Y)
-    /// use Distance ArcGIS API
-
-
-
-    /// TODO: Get Busyness of every place and put them in a list - TBD
-
-
     return Container(
       color: Colors.amber,
       child: Center(

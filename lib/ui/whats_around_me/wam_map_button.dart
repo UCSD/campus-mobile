@@ -20,12 +20,12 @@ class WhatsAroundMeButton extends StatelessWidget {
     return FloatingActionButton(
       heroTag: "whats_around_me",
       child: Icon(
-        Icons.emergency_share_sharp, /// or Icons.explore_sharp,
+        Icons.emergency_share_sharp, // or Icons.explore_sharp,
         color: Colors.white,
       ),
       backgroundColor: Colors.amber.shade400,
       onPressed: () {
-        /// Check whether user enabled location access. Prompt if not.
+        /// TODO: Check whether user enabled location access. Prompt if not.
         if (Provider
           .of<MapsDataProvider>(context, listen: false)
           .coordinates!
