@@ -25,28 +25,28 @@ class PlaceDetailsModel {
 }
 
 class PlaceDetailsClass {
-  String placeId;
+  String? placeId;
   Address? address;
   Location? location;
-  List<Category> categories;
-  String name;
-  String description;
-  ContactInfo contactInfo;
+  List<Category>? categories;
+  String? name;
+  String? description;
+  ContactInfo? contactInfo;
   SocialMedia? socialMedia;
-  Rating rating;
-  Hours hours;
+  Rating? rating;
+  Hours? hours;
 
   PlaceDetailsClass({
-    required this.placeId,
+    this.placeId,
     this.address,
     this.location,
-    required this.categories,
-    required this.name,
-    required this.description,
-    required this.contactInfo,
+    this.categories,
+    this.name,
+    this.description,
+    this.contactInfo,
     this.socialMedia,
-    required this.rating,
-    required this.hours,
+    this.rating,
+    this.hours,
   });
 
   factory PlaceDetailsClass.fromJson(Map<String, dynamic> json) => PlaceDetailsClass(
@@ -66,18 +66,18 @@ class PlaceDetailsClass {
     "placeId": placeId,
     "address": address?.toJson(),
     "location": location?.toJson(),
-    "categories": List<dynamic>.from(categories.map((x) => x.toJson())),
+    "categories": List<dynamic>.from(categories!.map((x) => x.toJson())),
     "name": name,
     "description": description,
-    "contactInfo": contactInfo.toJson(),
+    "contactInfo": contactInfo?.toJson(),
     "socialMedia": socialMedia?.toJson(),
-    "rating": rating.toJson(),
-    "hours": hours.toJson(),
+    "rating": rating?.toJson(),
+    "hours": hours?.toJson(),
   };
 }
 
 class Address {
-  String streetAddress;
+  String? streetAddress;
   String? locality;
   String? designatedMarketArea;
   String? region;
@@ -86,7 +86,7 @@ class Address {
   String? country;
 
   Address({
-    required this.streetAddress,
+    this.streetAddress,
     this.locality,
     this.designatedMarketArea,
     this.region,
@@ -118,11 +118,11 @@ class Address {
 
 class Category {
   String? categoryId;
-  String label;
+  String? label;
 
   Category({
     this.categoryId,
-    required this.label,
+    this.label,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
@@ -137,13 +137,13 @@ class Category {
 }
 
 class ContactInfo {
-  String telephone;
+  String? telephone;
   String? website;
   String? fax;
   String? email;
 
   ContactInfo({
-    required this.telephone,
+    this.telephone,
     this.website,
     this.fax,
     this.email,
@@ -165,12 +165,12 @@ class ContactInfo {
 }
 
 class Hours {
-  String opening;
+  String? opening;
   String? popular;
   String? openingText;
 
   Hours({
-    required this.opening,
+    this.opening,
     this.popular,
     this.openingText,
   });
@@ -189,12 +189,12 @@ class Hours {
 }
 
 class Location {
-  double x;
-  double y;
+  double? x;
+  double? y;
 
   Location({
-    required this.x,
-    required this.y,
+    this.x,
+    this.y,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(

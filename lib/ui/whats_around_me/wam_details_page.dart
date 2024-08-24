@@ -4,33 +4,31 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/providers/map.dart';
 import '../map/directions_button.dart';
-import 'mock_api_call_provider.dart';
+import 'wam_details_page_provider.dart';
 
 /// Upon clicking a location in the What's Around Me list,
 /// This File will fetch all the necessary data to build the location description page.
-/// Using GetPLaceDetails ArcGIS API
-class PlaceDescriptionPage extends StatelessWidget {
-  const PlaceDescriptionPage({
+/// Using The Place Details ArcGIS API
+class PlaceDetailsPage extends StatelessWidget {
+  const PlaceDetailsPage({
     Key? key,
     required GoogleMapController? mapController,
-  })
-      : _mapController = mapController,
-        super(key: key);
-
+  }): _mapController = mapController, super(key: key);
   final GoogleMapController? _mapController;
 
   @override
   Widget build(BuildContext context) {
     // Instantiate the provider to get API data
-    final _mockAPIProvider = Provider.of<MockAPIProvider>(context, listen: false);
+    final _placeDetailsProvider = Provider.of<PlaceDetailsProvider>(context);
     // Fetch location data
-    _mockAPIProvider.fetchLocation("Burger King");
+    _placeDetailsProvider.fetchPlaceDetails("bd5f5dfa788b7c5f59f3bfe2cc3d9c60"); // HERE PLACE ID GOTTEN DYNAMICALLY FROM LIST
+    // Once you finish the list, make a function that, given the name, it returns the place ID that will go here^
 
     return Scaffold(
         appBar: AppBar(
           title: const Text('Location Description'),
         ),
-        body: Consumer<MockAPIProvider>(
+        body: Consumer<PlaceDetailsProvider>(
             builder: (context, provider, child) {
               if (provider.isLoading == true) {
                 return Center(
@@ -50,8 +48,8 @@ class PlaceDescriptionPage extends StatelessWidget {
                           children: [
                             // Location Name
                             Text(
-                              'Location Name: ${provider.getMockAPIModel
-                                  ?.locationTitle ?? 'No data available'}',
+                              'Location Name: ${provider.placeDetailsModelData
+                                  ?? 'No data available'}',
                               style: TextStyle(
                                   fontSize: 24, fontWeight: FontWeight.bold),
                             ),

@@ -65,7 +65,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlaceDescriptionPage(
+                          builder: (context) => PlaceDetailsPage(
                             mapController: mapController,
                           )),
                     );
@@ -82,7 +82,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlaceDescriptionPage(
+                          builder: (context) => PlaceDetailsPage(
                             mapController: mapController,
                           )),
                     );
@@ -99,7 +99,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlaceDescriptionPage(
+                          builder: (context) => PlaceDetailsPage(
                             mapController: mapController,
                           )),
                     );
@@ -116,7 +116,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlaceDescriptionPage(
+                          builder: (context) => PlaceDetailsPage(
                             mapController: mapController,
                           )),
                     );
@@ -133,7 +133,7 @@ class BuildWhatsAroundMeList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlaceDescriptionPage(
+                          builder: (context) => PlaceDetailsPage(
                             mapController: mapController,
                           )),
                     );

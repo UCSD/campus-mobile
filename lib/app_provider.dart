@@ -25,6 +25,7 @@ import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/mock_api_call_provider.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:provider/provider.dart';
@@ -64,6 +65,10 @@ List<SingleChildWidget> independentServices = [
   /// Step 11) Add your provider here so you can use this in a file that wants the data
   ChangeNotifierProvider<MockAPIProvider>(
       create: (_) => MockAPIProvider()
+  ),
+  // This is the Provider for What's Around Me Place Details/Description Page
+  ChangeNotifierProvider<PlaceDetailsProvider>(
+    create: (_) => PlaceDetailsProvider(),
   ),
   ChangeNotifierProvider<MediaDataProvider>(
     create: (_) {
