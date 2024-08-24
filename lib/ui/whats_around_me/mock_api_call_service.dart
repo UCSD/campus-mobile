@@ -22,48 +22,17 @@ class MockAPIService {
   // Services have noArgs Constructor.
   MockAPIService();
 
-  /// Step 4) Generate ArcGIS token (last thing needed to perform the API call
-  Future<String> generateArcGISToken() async {
-    // These are fixed client variables that have access to ESRI APIs
-    final String clientId = "i4SJG8P4dIUx8j68";
-    final String clientSecret = "a5fd8ef37c4b4bcba7735725bbf49c2b";
-
-    // Prepare Network Parameters
-    final Map<String, String> params = {
-      'client_id': clientId,
-      'client_secret': clientSecret,
-      'grant_type': 'client_credentials',
-      'expiration': '1440', // Token expiration time in minutes (optional)
-      'f': 'json',
-    };
-
-    // Send the POST request to the endpoint that returns ArcGIS Access Tokens
-    final response = await http.post(
-      Uri.parse('https://admin-enterprise-gis.ucsd.edu/portal/sharing/rest/oauth2/token'),
-      body: params,
-    );
-
-    // Decode the response (token)
-    final Map<String, dynamic> data = json.decode(response.body);
-
-    // Check for errors in the response
-    if (data.containsKey('error')) {
-      throw Exception(data['error']['message']);
-    }
-
-    // Return the access token
-    return data['access_token'];
-  }
-
-  /// Step 5) Perform API call to desired endpoint and give the data to Model
+  /// Step 4) Perform API call to desired endpoint and give the data to Model
   Future<bool> fetchLocation(String locationTitle) async {  // Bool because data will be at model and we need to know whether it succeeded.
     // Update Status Variables
     _error = null;
     _isLoading = true;
 
+    /// Step 5) Generate ArcGIS token (last thing needed to perform the API call
     try {
       // Generate ArcGIS token
-      String token = await generateArcGISToken();
+      String token = await _networkHelper.generateArcGISToken();
+      print('Generated ArcGIS Token: $token');
 
       // Perform API Call using network helper (ESRI doesn't use Authorization token in the header).
       final _response = await _networkHelper.authorizedFetch(
