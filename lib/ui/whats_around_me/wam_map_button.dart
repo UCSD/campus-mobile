@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
-import 'package:campus_mobile_experimental/ui/map/whats_around_me_list.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -20,12 +20,12 @@ class WhatsAroundMeButton extends StatelessWidget {
     return FloatingActionButton(
       heroTag: "whats_around_me",
       child: Icon(
-        Icons.emergency_share_sharp, /// or Icons.explore_sharp,
+        Icons.emergency_share_sharp, // or Icons.explore_sharp,
         color: Colors.white,
       ),
       backgroundColor: Colors.amber.shade400,
       onPressed: () {
-        /// Check whether user enabled location access. Prompt if not.
+        /// TODO: Check whether user enabled location access. Prompt if not.
         if (Provider
           .of<MapsDataProvider>(context, listen: false)
           .coordinates!

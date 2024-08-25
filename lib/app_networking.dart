@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:dio/dio.dart';
@@ -32,8 +32,7 @@ class NetworkHelper {
     }
   }
 
-  Future<dynamic> authorizedFetch(
-      String url, Map<String, String> headers) async {
+  Future<dynamic> authorizedFetch(String url, Map<String, String> headers) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = 20000;
     dio.options.receiveTimeout = 20000;
@@ -190,6 +189,47 @@ class NetworkHelper {
       print('network error');
       print(err);
       return null;
+    }
+  }
+
+  /// Used in What's Around Me
+  Future<String> generateArcGISToken() async {
+    final Dio _dio = Dio();
+    // These are fixed client variables that have access to ESRI APIs
+    final String clientId = "i4SJG8P4dIUx8j68";
+    final String clientSecret = "a5fd8ef37c4b4bcba7735725bbf49c2b";
+
+    // Prepare Network Parameters
+    final Map<String, String> params = {
+      'client_id': clientId,
+      'client_secret': clientSecret,
+      'grant_type': 'client_credentials',
+      'expiration': '1440', // Token expiration time in minutes (optional)
+      'f': 'json'
+    };
+
+    try {
+      // Send the POST request to the endpoint that returns ArcGIS Access Tokens
+      final response = await _dio.post(
+        'https://admin-enterprise-gis.ucsd.edu/portal/sharing/rest/oauth2/token',
+        data: params,
+        options: Options(
+          contentType: Headers.formUrlEncodedContentType,
+        ),
+      );
+
+      // Decode the response (token)
+      final Map<String, dynamic> data = response.data;
+
+      // Check for errors in the response
+      if (data.containsKey('error')) {
+        throw Exception(data['error']['message']);
+      }
+
+      // Return the access token
+      return data['access_token'];
+    } catch (e) {
+      throw Exception('Failed to generate ArcGIS token: $e');
     }
   }
 }

@@ -25,7 +25,7 @@ class NewsService {
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.authorizedFetch(endpoint, headers));
+      await (_networkHelper.authorizedFetch(endpoint, headers));
 
       /// parse data
       _newsModels = newsModelFromJson(_response);
@@ -49,7 +49,7 @@ class NewsService {
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
       "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+      "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
     };
     try {
       var response = await _networkHelper.authorizedPost(
