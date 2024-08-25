@@ -2,18 +2,18 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final placesByCategory = placesByCategoryFromJson(jsonString);
-PlacesByCategory placesByCategoryFromJson(String str) => PlacesByCategory.fromJson(json.decode(str));
+PlacesByCategoryModel placesByCategoryFromJson(String str) => PlacesByCategoryModel.fromJson(json.decode(str));
 
-String placesByCategoryToJson(PlacesByCategory data) => json.encode(data.toJson());
+String placesByCategoryToJson(PlacesByCategoryModel data) => json.encode(data.toJson());
 
-class PlacesByCategory {
+class PlacesByCategoryModel {
   List<Result>? results;
 
-  PlacesByCategory({
+  PlacesByCategoryModel({
     this.results,
   });
 
-  factory PlacesByCategory.fromJson(Map<String, dynamic> json) => PlacesByCategory(
+  factory PlacesByCategoryModel.fromJson(Map<String, dynamic> json) => PlacesByCategoryModel(
     results: List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
   );
 

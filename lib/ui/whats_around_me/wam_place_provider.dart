@@ -1,5 +1,5 @@
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_model.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_service.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_model.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_service.dart';
 import 'package:flutter/material.dart';
 /// TODO FIX
 class PlaceDataProvider extends ChangeNotifier {
@@ -9,7 +9,7 @@ class PlaceDataProvider extends ChangeNotifier {
     // Initialize Service
     _placeService = PlaceService();
     // Initialize Model
-    _placeModel = PlaceModel();
+    _placeModel = PlacesByCategoryModel();
   }
 
   // STATES
@@ -18,7 +18,7 @@ class PlaceDataProvider extends ChangeNotifier {
   String? _error;
 
   // Model
-  PlaceModel? _placeModel;
+  PlacesByCategoryModel? _placeModel;
 
   // Service
   PlaceService? _placeService;
@@ -41,6 +41,6 @@ class PlaceDataProvider extends ChangeNotifier {
   bool? get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  PlaceModel? get placeModel => _placeModel;
+  PlacesByCategoryModel? get placeModel => _placeModel;
 
 }
