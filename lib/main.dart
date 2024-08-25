@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
-import 'package:campus_mobile_experimental/app_router.dart'
-    as campusMobileRouter;
+import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
@@ -19,6 +18,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 late bool showOnboardingScreen;
 
@@ -72,6 +73,46 @@ initializeApp() async {
   }
 
   showOnboardingScreen = prefs.getBool('showOnboardingScreen') ?? true;
+  await _checkLocationPermission();
+}
+
+Future<void> _checkLocationPermission() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Test if location services are enabled.
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // Location services are not enabled don't continue
+    // accessing the position and request users of the
+    // App to enable the location services.
+    return Future.error('Location services are disabled.');
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, next time you could try
+      // requesting permissions again (this is also where
+      // Android's shouldShowRequestPermissionRationale
+      // returned true. According to Android guidelines
+      // your App should show an explanatory UI now.
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately.
+    return Future.error(
+        'Location permissions are permanently denied, we cannot request permissions.');
+  }
+
+  // When we reach here, permissions are granted and we can
+  // continue accessing the position of the device.
+  Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+  print(position);
 }
 
 clearSecuredStorage() async {
@@ -94,8 +135,7 @@ class CampusMobile extends StatelessWidget {
       primarySwatch: ColorPrimary,
       primaryColor: lightPrimaryColor,
       brightness: Brightness.light,
-      // buttonColor: lightButtonColor,
-      backgroundColor: lightButtonColor, // added
+      backgroundColor: lightButtonColor, // updated
       textTheme: lightThemeText,
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
@@ -105,8 +145,7 @@ class CampusMobile extends StatelessWidget {
       primarySwatch: ColorPrimary,
       primaryColor: darkPrimaryColor,
       brightness: Brightness.dark,
-      // buttonColor: darkButtonColor,
-      backgroundColor: darkButtonColor, // added
+      backgroundColor: darkButtonColor, // updated
       textTheme: darkThemeText,
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,
@@ -123,7 +162,7 @@ class CampusMobile extends StatelessWidget {
         ),
         darkTheme: darkTheme.copyWith(
           colorScheme:
-              darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+          darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
         initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingInitial
@@ -136,3 +175,4 @@ class CampusMobile extends StatelessWidget {
     );
   }
 }
+ 
