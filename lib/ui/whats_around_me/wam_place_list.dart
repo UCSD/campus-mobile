@@ -18,10 +18,12 @@ class BuildWhatsAroundMeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Instantiate the provider to get nearby places of an x category
+    final _placesByCategoryProvider = Provider.of<PlacesByCategoryProvider>(context);
     // Fetch all lists from each category using the list provider
     // i.e. List<Results?> nearbyRestaurants = _listProvider.fetchPlacesByCategory(restaurantArcGISCategoryId); DO THIS FOR EACH CATEGORY
+    _placesByCategoryProvider.fetchPlacesByCategory(restaurantArcGISCategoryId); // HERE PLACE ID GOTTEN DYNAMICALLY FROM LIST
     // THEN FEED THE LIST BELOW WITH THAT DATA
-
     return Container(
       color: Colors.amber,
       child: Center(
