@@ -16,7 +16,10 @@ dependencies:
   firebase_messaging: 10.0.0
   flutter:
     sdk: flutter
-  flutter_dotenv: 5.1.0
+  flutter_dotenv:
+    git:
+      url: https://github.com/UCSD/flutter_dotenv.git
+      ref: master
   flutter_scandit_plugin:
     git:
       url: https://github.com/UCSD/flutter_scandit.git

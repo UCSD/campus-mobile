@@ -457,10 +457,11 @@ packages:
   flutter_dotenv:
     dependency: "direct main"
     description:
-      name: flutter_dotenv
-      sha256: "9357883bdd153ab78cbf9ffa07656e336b8bbb2b5a3ca596b0b27e119f7c7d77"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: de801661ffdc20526e91ca3f1d716897b0b8141a
+      url: "https://github.com/UCSD/flutter_dotenv.git"
+    source: git
     version: "5.1.0"
   flutter_linkify:
     dependency: "direct main"
