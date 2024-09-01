@@ -13,7 +13,6 @@ class WhatsAroundMeButton extends StatelessWidget {
         super(key: key);
 
   final GoogleMapController? _mapController;
-  final String _dinningEndPoint = '';
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,6 @@ class WhatsAroundMeButton extends StatelessWidget {
       ),
       backgroundColor: Colors.amber.shade400,
       onPressed: () {
-        /// TODO: Check whether user enabled location access. Prompt if not.
         if (Provider
           .of<MapsDataProvider>(context, listen: false)
           .coordinates!
@@ -34,10 +32,9 @@ class WhatsAroundMeButton extends StatelessWidget {
           .of<MapsDataProvider>(context, listen: false)
           .coordinates!
           .lon == null) {
-          // Geolocator.openLocationSettings(); /// REPLACE with the function that fixed the location issue
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-            'Please turn your location on in order to use this feature.'),
+            'Please turn your location on in your phone settings to use this feature.'),
             duration: Duration(seconds: 3),
           ));
         }
@@ -45,7 +42,7 @@ class WhatsAroundMeButton extends StatelessWidget {
         showModalBottomSheet<void>(
           context: context,
           builder: (BuildContext context) {
-            return BuildWhatsAroundMeList(context: context, mapController: _mapController);
+            return BuildWhatsAroundMeList(mapController: _mapController);
           },
         );
       },
