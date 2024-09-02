@@ -179,8 +179,8 @@ Widget nutrientLiner({
   required qty,
   required context,
   ptg,
-  sub: false,
-  showPercent: true,
+  sub = false,
+  showPercent = true,
 }) {
   final textSize = 15.0;
   final textWeight1 = FontWeight.w900;
