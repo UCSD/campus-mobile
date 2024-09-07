@@ -26,21 +26,44 @@ class PlaceDetailsProvider extends ChangeNotifier {
   }
 
   // Fetch Place Details given the placeId i.e. bd5f5dfa788b7c5f59f3bfe2cc3d9c60
-  void fetchPlaceDetails(placeId) async {
-    // Update fetch status
+  Future<PlaceDetailsModel?> fetchPlaceDetails(String placeId) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    // Call Service to perform API call to Place Details API
-    if (await _placeDetailsService.fetchPlaceDetails(placeId)) {
-      _placeDetailsModel = _placeDetailsService.placeDetailsData!;
-      _lastUpdated = DateTime.now();
-    } else {
-      _error = _placeDetailsService.error;
+
+    try {
+      // Fetch Place Details Data
+      if (await _placeDetailsService.fetchPlaceDetails(placeId)) {
+        _placeDetailsModel = _placeDetailsService.placeDetailsData!;
+        _lastUpdated = DateTime.now();
+        return _placeDetailsModel;
+      } else {
+        _error = _placeDetailsService.error;
+      }
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-    _isLoading = false;
-    notifyListeners();
+    return null;
   }
+
+  // void fetchPlaceDetails(placeId) async {
+  //   // Update fetch status
+  //   _isLoading = true;
+  //   _error = null;
+  //   notifyListeners();
+  //   // Call Service to perform API call to Place Details API
+  //   if (await _placeDetailsService.fetchPlaceDetails(placeId)) {
+  //     _placeDetailsModel = _placeDetailsService.placeDetailsData!;
+  //     _lastUpdated = DateTime.now();
+  //   } else {
+  //     _error = _placeDetailsService.error;
+  //   }
+  //   _isLoading = false;
+  //   notifyListeners();
+  // }
 
   /// SIMPLE GETTERS
   bool? get isLoading => _isLoading;

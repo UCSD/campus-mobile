@@ -25,7 +25,7 @@ import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page_provider.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_provider.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:provider/provider.dart';
