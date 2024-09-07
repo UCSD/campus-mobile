@@ -8,7 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../app_constants.dart';
+import '../../core/models/availability.dart';
+import '../../core/providers/availability.dart';
 import '../../core/providers/map.dart';
+import '../availability/availability_constants.dart';
 import '../map/directions_button.dart';
 import 'wam_details_page_provider.dart';
 
@@ -19,15 +23,18 @@ class PlaceDetailsPage extends StatelessWidget {
   const PlaceDetailsPage({
     Key? key,
     required GoogleMapController? mapController,
-    required this.placeId,
+    required this.placeId, required this.model,
   }) : _mapController = mapController, super(key: key);
 
   final GoogleMapController? _mapController;
   final String placeId; // i.e. "bd5f5dfa788b7c5f59f3bfe2cc3d9c60"
+  /// Models
+  final AvailabilityModel model;
 
   @override
   Widget build(BuildContext context) {
-    final _placeDetailsProvider = Provider.of<PlaceDetailsProvider>(context);
+    late PlaceDetailsProvider _placeDetailsProvider = Provider.of<PlaceDetailsProvider>(context);
+    late AvailabilityDataProvider _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -115,6 +122,7 @@ class PlaceDetailsPage extends StatelessWidget {
                               children: [
                                 Icon(Icons.bar_chart),
                                 Text('Busyness'),
+                                buildAvailabilityBars(context)
                               ],
                             ),
                             // Location's Phone Number
@@ -275,7 +283,102 @@ class PlaceDetailsPage extends StatelessWidget {
       ),
     );
   }
+  Widget buildAvailabilityBars(BuildContext context) {
+    List<Widget> locations = [];
+    // add any children the model contains to the listview
+    if (model.subLocations!.isNotEmpty) {
+      for (SubLocations subLocation in model.subLocations!) {
+        locations.add(
+          ListTile(
+            onTap: () => subLocation.floors!.length > 0
+                ? Navigator.pushNamed(
+                context, RoutePaths.AvailabilityDetailedView,
+                arguments: subLocation)
+                : print('_handleIconClick: no subLocations'),
+            visualDensity: VisualDensity.compact,
+            trailing: subLocation.floors!.length > 0
+                ? Icon(Icons.arrow_forward_ios_rounded)
+                : null,
+            title: Text(
+              subLocation.name!,
+              style: TextStyle(
+                fontSize: LOCATION_FONT_SIZE,
+              ),
+            ),
+            subtitle: Column(
+              children: <Widget>[
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      (100 * percentAvailability(subLocation))
+                          .toInt()
+                          .toString() +
+                          '% Busy',
+                      // style: TextStyle(color: Colors.black),
+                    )),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    height: PROGRESS_BAR_HEIGHT,
+                    width: PROGRESS_BAR_WIDTH,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                      child: LinearProgressIndicator(
+                        value: percentAvailability(subLocation) as double?,
+                        backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          setIndicatorColor(
+                            percentAvailability(subLocation),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }
+
+    // if no children, return an error container
+    else {
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Data Unavailable",
+          style: TextStyle(fontSize: LOCATION_FONT_SIZE),
+        ),
+        padding: EdgeInsets.only(
+          top: DATA_UNAVAILABLE_TOP_PADDING,
+        ),
+      );
+    }
+    locations =
+        ListTile.divideTiles(tiles: locations, context: context).toList();
+
+    return Flexible(
+      child: Scrollbar(
+        child: ListView(
+          children: locations,
+        ),
+      ),
+    );
+  }
+
+  num percentAvailability(SubLocations location) => location.percentage!;
+
+  setIndicatorColor(num percentage) {
+    if (percentage >= .75)
+      return Colors.red;
+    else if (percentage >= .25)
+      return Colors.yellow;
+    else
+      return Colors.green;
+  }
 }
+
 
 // class PlaceDetailsPage extends StatelessWidget {
 //   const PlaceDetailsPage({
