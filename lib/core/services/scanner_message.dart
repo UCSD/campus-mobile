@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/scanner_message.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ScannerMessageService {
   bool _isLoading = false;
@@ -9,8 +10,6 @@ class ScannerMessageService {
   String? _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String endpoint =
-      'https://api-qa.ucsd.edu:8243/scandata/2.0.0/scanData/myrecentscan';
 
   ScannerMessageModel _scannerMessageModel = ScannerMessageModel();
 
@@ -20,7 +19,7 @@ class ScannerMessageService {
     try {
       /// fetch data
       String _response =
-          await _networkHelper.authorizedFetch(endpoint, headers);
+          await _networkHelper.authorizedFetch(dotenv.get('SCANNER_MESSAGE_ENDPOINT'), headers);
 
       /// parse data
       _scannerMessageModel = scannerMessageModelFromJson(_response);
