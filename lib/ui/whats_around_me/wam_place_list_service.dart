@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_model.dart';
+import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 
 // Location Service (Performs API Calls)
@@ -10,7 +11,7 @@ class PlacesByCategoryService {
   String? _error;                                       // For Error Catch
   DateTime? _lastUpdated;                               // Timestamp
   final NetworkHelper _networkHelper = NetworkHelper(); // For networkHelper use   // You also need a Request URL (where is the API located)
-  final String _nearbySearchAPIEndPoint = "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1/places/near-point";
+  final String _nearbySearchAPIEndPoint = "https://gist.githubusercontent.com/klortiz13/1036e7cd8add4cfad17b8bd3a2f1bad5/raw/55497c6d2cdcb216388688262c18788be22fa0fe/place-list-model-sample.json";        // "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1/places/near-point";
   PlacesByCategoryService();                            // Service's noArgs Constructor
   PlacesByCategoryModel _placesByCategoryModelData = PlacesByCategoryModel();
 
@@ -29,11 +30,17 @@ class PlacesByCategoryService {
       double x = position.longitude;  // -117.237 Price Center
       double y = position.latitude;   //  32.88
 
+      print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       // Fetch Place Details Data
-      final _response = await (_networkHelper.fetchData('$_nearbySearchAPIEndPoint?x=$x&y=$y&radius=1000&$categoryId&pageSize=5&f=pjson&token=$token'));
+      //final _response = await _networkHelper.fetchData(_nearbySearchAPIEndPoint);  // (_networkHelper.fetchData('$_nearbySearchAPIEndPoint?x=$x&y=$y&radius=1000&$categoryId&pageSize=5&f=pjson&token=$token'));
+      Dio dio = new Dio();
+
+      final _response = await dio.get(_nearbySearchAPIEndPoint);
 
       // Parse Data to model
-      final data = placesByCategoryFromJson(_response);
+      final data = placesByCategoryFromJson(_response.data);
+      print("DATAAAAAAAAAA: ");
+      print(data);
       _isLoading = false;
       _placesByCategoryModelData = data;  // parse data into model's "results" list
       return true;
