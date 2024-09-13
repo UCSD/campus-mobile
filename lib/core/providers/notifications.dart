@@ -117,14 +117,21 @@ class PushNotificationDataProvider extends ChangeNotifier {
           /// Fetch in-app messages
           Provider.of<MessagesDataProvider>(context, listen: false)
               .fetchMessages(true);
+          print(message);
 
-          /// Set tab bar index to the Notifications tab
-          Provider.of<BottomNavigationBarProvider>(context, listen: false)
-              .currentIndex = NavigatorConstants.NotificationsTab;
+          if (message.data['payload'] == 'whats_around_me') {
+            /// Navigate to What's Around Me
+            Navigator.of(context).pushNamed(RoutePaths.WhatsAroundMe);
+          } else {
 
-          /// Navigate to Notifications tab
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
+            /// Set tab bar index to the Notifications tab
+            Provider.of<BottomNavigationBarProvider>(context, listen: false)
+                .currentIndex = NavigatorConstants.NotificationsTab;
+
+            /// Navigate to Notifications tab
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
+          }
         },
       );
     } on PlatformException {
@@ -134,19 +141,24 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
   ///Handles notification when selected
   Future selectNotification(String? payload) async {
-    /// Fetch in-app messages
-    Provider.of<MessagesDataProvider>(this.context, listen: false)
-        .fetchMessages(true);
+    if (payload == 'whats_around_me') {
+      // Navigate to the "What's Around Me" list if the payload matches
+      Navigator.of(this.context).pushNamed(RoutePaths.WhatsAroundMe);
+    } else {
+      // Default behavior for other notifications
+      Provider.of<MessagesDataProvider>(this.context, listen: false)
+          .fetchMessages(true);
 
-    /// Navigate to Notifications tab
-    Navigator.of(this.context).pushNamedAndRemoveUntil(
-        RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
+      /// Navigate to Notifications tab
+      Navigator.of(this.context).pushNamedAndRemoveUntil(
+          RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
 
-    /// Set tab bar index to the Notifications tab
-    Provider.of<BottomNavigationBarProvider>(this.context, listen: false)
-        .currentIndex = NavigatorConstants.NotificationsTab;
-    Provider.of<CustomAppBar>(context, listen: false)
-        .changeTitle("Notifications");
+      /// Set tab bar index to the Notifications tab
+      Provider.of<BottomNavigationBarProvider>(this.context, listen: false)
+          .currentIndex = NavigatorConstants.NotificationsTab;
+      Provider.of<CustomAppBar>(context, listen: false)
+          .changeTitle("Notifications");
+    }
   }
 
   ///Displays the notification

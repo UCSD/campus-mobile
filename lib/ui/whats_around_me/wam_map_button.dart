@@ -21,7 +21,7 @@ class WhatsAroundMeButton extends StatelessWidget {
       heroTag: "whats_around_me",
       child: Icon(
         Icons.emergency_share_sharp, // or Icons.explore_sharp,
-        color: Colors.white,
+        color: Colors.black,
       ),
       backgroundColor: Colors.amber.shade400,
       onPressed: () {
