@@ -123,7 +123,7 @@ class CustomAppBar extends ChangeNotifier {
     );
   }
 
-  changeTitle(String? newTitle, {done: false, notification: false}) {
+  changeTitle(String? newTitle, {done = false, notification = false}) {
     title = RouteTitles.titleMap[newTitle];
     doneButton = done;
     notificationsFilterButton = notification;

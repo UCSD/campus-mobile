@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/speed_test.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:wifi_connection/WifiConnection.dart';
 import 'package:wifi_connection/WifiInfo.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SpeedTestService {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -37,7 +38,7 @@ class SpeedTestService {
   SpeedTestModel? _speedTestModel;
   bool _isLoading = false;
   String? _error;
-  final Map<String, String> header = {
+  final Map<String, String> headers = {
     "accept": "application/json",
   };
 
@@ -45,14 +46,14 @@ class SpeedTestService {
     _error = null;
     _isLoading = true;
     try {
-      await getNewToken();
+      await _networkHelper.getNewToken(headers);
       // Get download & upload urls
       String? _downloadResponse = await _networkHelper.authorizedFetch(
-          "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/url_generator/download_url",
-          header);
+          dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'),
+          headers);
       String? _uploadResponse = await _networkHelper.authorizedFetch(
-          "https://api-qa.ucsd.edu:8243/wifi_test/v1.0.0/url_generator/upload_url?name=temp.html",
-          header);
+          dotenv.get('SPEED_TEST_UPLOAD_ENDPOINT'),
+          headers);
 
       /// parse data
       await fetchNetworkDiagnostics().then((WifiInfo? data) {
@@ -88,24 +89,4 @@ class SpeedTestService {
   String? get error => _error;
 
   SpeedTestModel? get speedTestModel => _speedTestModel;
-
-  Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
-    final Map<String, String> tokenHeaders = {
-      "content-type": 'application/x-www-form-urlencoded',
-      "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
-    };
-    try {
-      var response = await _networkHelper.authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-
-      header["Authorization"] = "Bearer " + response["access_token"];
-
-      return true;
-    } catch (e) {
-      _error = e.toString();
-      return false;
-    }
-  }
 }
