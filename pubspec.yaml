@@ -16,6 +16,10 @@ dependencies:
   firebase_messaging: 10.0.0
   flutter:
     sdk: flutter
+  flutter_dotenv:
+    git:
+      url: https://github.com/UCSD/flutter_dotenv.git
+      ref: master
   flutter_scandit_plugin:
     git:
       url: https://github.com/UCSD/flutter_scandit.git
@@ -63,4 +67,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/public_key.txt
+    - .env

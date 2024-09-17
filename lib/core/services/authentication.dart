@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthenticationService {
   AuthenticationService();
@@ -12,22 +13,18 @@ class AuthenticationService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  final String authServiceApiUrl =
-      "https://uokdbiyx00.execute-api.us-west-2.amazonaws.com/qa/v1.1/access-profile";
-  final String authServiceApiKey = 'uRgcQKJKMW4WzC2scgUXUjbE7e8TQJN7JsfjVBK6';
-
   Future<bool> silentLogin(String base64EncodedWithEncryptedPassword) async {
     _error = null;
     try {
       final Map<String, String> authServiceHeaders = {
-        'x-api-key': authServiceApiKey,
+        'x-api-key': dotenv.get('AUTH_SERVICE_API_KEY'),
         'Authorization': base64EncodedWithEncryptedPassword,
       };
 
       /// fetch data
       /// MODIFIED TO USE EXPONENTIAL RETRY
       var response = await _networkHelper.authorizedPublicPost(
-          authServiceApiUrl, authServiceHeaders, null);
+          dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
 
       /// check to see if response has an error
       if (response['errorMessage'] != null) {
@@ -50,14 +47,14 @@ class AuthenticationService {
     _error = null;
     try {
       final Map<String, String> authServiceHeaders = {
-        'x-api-key': authServiceApiKey,
+        'x-api-key': dotenv.get('AUTH_SERVICE_API_KEY'),
         'Authorization': base64EncodedWithEncryptedPassword,
       };
 
       /// fetch data
       /// MODIFIED TO USE EXPONENTIAL RETRY
       var response = await _networkHelper.authorizedPost(
-          authServiceApiUrl, authServiceHeaders, null);
+        dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
 
       /// check to see if response has an error
       if (response['errorMessage'] != null) {

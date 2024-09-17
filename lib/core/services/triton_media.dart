@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/triton_media.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MediaService {
-  final String endpoint =
-      'https://mobile.ucsd.edu/replatform/v1/qa/integrations/triton-media/triton-media.json';
+  final String endpoint = dotenv.get('TRITON_MEDIA_ENDPOINT');
 
   bool _isLoading = false;
   DateTime? _lastUpdated;
