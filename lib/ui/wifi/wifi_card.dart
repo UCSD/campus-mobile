@@ -504,7 +504,7 @@ class _WiFiCardState extends State<WiFiCard>
           child: Text(
             "Connect to a UCSD Network",
             style: TextStyle(
-              fontSize: 25,
+              fontSize: 22,
             ),
             textAlign: TextAlign.center,
           ),
@@ -513,7 +513,7 @@ class _WiFiCardState extends State<WiFiCard>
             padding: EdgeInsets.all(4.0),
             elevation: 0.0,
             onPressed: () => tryAgain(),
-            minWidth: 350,
+            minWidth: 300,
             height: 40,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5.0),
