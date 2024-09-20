@@ -22,11 +22,14 @@ class ImageLoader extends StatelessWidget {
             imageUrl: url!,
             width: fullSize ? null : width,
             height: fullSize ? null : height,
-            placeholder: (context, url) => Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
+            progressIndicatorBuilder: (context, url, downloadProgress) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                  value: downloadProgress.progress,
+                ),
+              );
+            },
             errorWidget: (context, url, error) => Icon(Icons.error),
           );
   }
