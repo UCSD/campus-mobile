@@ -64,9 +64,5 @@ class EventsList extends StatelessWidget {
             : EventsAll(),
       );
     }
-    // ListView(
-    //   children:
-    //   ListTile.divideTiles(tiles: eventTiles, context: context)
-    //       .toList(),
   }
 }
