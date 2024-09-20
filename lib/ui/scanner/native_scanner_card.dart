@@ -37,8 +37,8 @@ class NativeScannerCard extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Container(
-            child: Image.asset(
-              'assets/images/QRScanIcon.png',
+            child: Image(
+              image: AssetImage('assets/images/QRScanIcon.png'),
               fit: BoxFit.contain,
               height: 56,
             ),

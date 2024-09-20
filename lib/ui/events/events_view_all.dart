@@ -30,11 +30,9 @@ class EventsAll extends StatelessWidget {
     if (listOfEvents.length > 0) {
       return GridView.count(
         crossAxisCount: 2,
-        crossAxisSpacing: 1,
-        mainAxisSpacing: 8,
         children: eventTiles,
         childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 1.4),
+            (MediaQuery.of(context).size.height / 1.6),
       );
     } else {
       return ContainerView(
