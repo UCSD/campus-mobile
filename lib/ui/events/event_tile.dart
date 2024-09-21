@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
@@ -22,7 +23,7 @@ class EventTile extends StatelessWidget {
   Widget buildEventTile(BuildContext context) {
     return Container(
       width: tileWidth,
-      height: 300,
+      height: 285,
       margin: EdgeInsets.zero,
       child: InkWell(
         onTap: () {
@@ -78,28 +79,24 @@ class EventTile extends StatelessWidget {
         ? Container(
             child: Image(
             image: AssetImage('assets/images/UCSDMobile_sharp.png'),
-            height: 150,
+            height: 125,
             width: tileWidth,
             fit: BoxFit.fill,
           ))
-        : Image.network(
-            url,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
+        : CachedNetworkImage(
+            imageUrl: url,
+            height: 125,
+            width: tileWidth,
+            fit: BoxFit.fill,
+            progressIndicatorBuilder: (context, url, downloadProgress) {
               return Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).colorScheme.secondary,
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
+                  value: downloadProgress.progress,
                 ),
               );
             },
-            fit: BoxFit.fill,
-            height: 150,
-            width: tileWidth,
+            errorWidget: (context, url, error) => Icon(Icons.error),
           );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageLoader extends StatelessWidget {
   final String? url;
@@ -17,23 +18,19 @@ class ImageLoader extends StatelessWidget {
             width: 0,
             height: 0,
           )
-        : Image.network(
-            url!,
+        : CachedNetworkImage(
+            imageUrl: url!,
             width: fullSize ? null : width,
             height: fullSize ? null : height,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
+            progressIndicatorBuilder: (context, url, downloadProgress) {
               return Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).colorScheme.secondary,
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
+                  value: downloadProgress.progress,
                 ),
               );
             },
+            errorWidget: (context, url, error) => Icon(Icons.error),
           );
   }
 }

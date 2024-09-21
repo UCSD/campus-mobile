@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
@@ -32,10 +33,12 @@ class MyStudentChartCard extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Container(
-            child: Image.asset(
-              'assets/images/MyChartLogo.png',
+            child: CachedNetworkImage(
+              imageUrl: 'assets/images/MyChartLogo.png',
               fit: BoxFit.contain,
               height: 56,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
             padding: EdgeInsets.only(
               left: 10,
