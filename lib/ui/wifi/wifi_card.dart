@@ -4,7 +4,6 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
@@ -25,7 +24,6 @@ class _WiFiCardState extends State<WiFiCard>
   late bool goodSpeed;
   bool timedOut = false;
   SpeedTestProvider _speedTestProvider = SpeedTestProvider();
-  UserDataProvider? _userDataProvider;
   bool _buttonEnabled = true;
   Timer? buttonTimer;
   static const int SPEED_TEST_TIMEOUT_CONST = 30;
