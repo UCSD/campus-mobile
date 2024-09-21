@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/weather.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -42,7 +43,8 @@ class WeatherCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
-              onTap: () => openLink('https://developer.apple.com/weatherkit/data-source-attribution/'),
+              onTap: () => openLink(
+                  'https://developer.apple.com/weatherkit/data-source-attribution/'),
               child: Text(
                 "Weather Attribution",
                 style: TextStyle(
@@ -128,11 +130,12 @@ class WeatherCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(getDayOfWeek(data.time!)),
-            Image.network(
-              WEATHER_ICON_BASE_URL + data.icon! + '.png',
-              width: 35,
-              height: 35,
-            ),
+            CachedNetworkImage(
+                imageUrl: WEATHER_ICON_BASE_URL + data.icon! + '.png',
+                width: 35,
+                height: 35,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error)),
             Text(data.temperatureHigh!.round().toString() + '\u00B0'),
             Text(data.temperatureLow!.round().toString() + '\u00B0'),
           ],
@@ -145,11 +148,12 @@ class WeatherCard extends StatelessWidget {
     return Container(
       child: Row(
         children: <Widget>[
-          Image.network(
-            WEATHER_ICON_BASE_URL + data.icon! + '.png',
-            width: 110,
-            height: 110,
-          ),
+          CachedNetworkImage(
+              imageUrl: WEATHER_ICON_BASE_URL + data.icon! + '.png',
+              width: 110,
+              height: 110,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error)),
           Expanded(
             child: ListTile(
               title: Text(
