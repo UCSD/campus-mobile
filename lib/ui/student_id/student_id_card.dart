@@ -111,6 +111,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
                           imageUrl: photoModel!.photoUrl!,
                           fit: BoxFit.contain,
                           height: ScalingUtility.verticalSafeBlock * 14,
+                          progressIndicatorBuilder: (context, url, downloadProgress) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.secondary,
+                                value: downloadProgress.progress,
+                              ),
+                            );
+                          },
                           errorWidget: (context, url, error) => Icon(Icons.error),
                         ),
                         SizedBox(
@@ -261,7 +269,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   imageUrl: photoModel!.photoUrl!,
                   fit: BoxFit.contain,
                   height: 125,
-                  placeholder: (context, url) => CircularProgressIndicator(),
+                  progressIndicatorBuilder: (context, url, downloadProgress) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                        value: downloadProgress.progress,
+                      ),
+                    );
+                  },
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
                 SizedBox(height: 10),
