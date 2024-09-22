@@ -12,13 +12,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class StudentIdCard extends StatefulWidget {
-  @override
-  _StudentIdCardState createState() => _StudentIdCardState();
-}
-
-class _StudentIdCardState extends State<StudentIdCard> {
-  String cardId = "student_id";
+class StudentIdCard extends StatelessWidget {
+  final String cardId = "student_id";
 
   /// Pop up barcode
   createAlertDialog(
@@ -298,7 +293,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       (nameModel!.firstName! + " " + nameModel.lastName!),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: tabletFontSize(
+                          fontSize: tabletFontSize(context,
                               nameModel.firstName! + " " + nameModel.lastName!,
                               "name")),
                       textAlign: TextAlign.left,
@@ -314,7 +309,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: Colors.grey,
-                          fontSize: tabletFontSize(
+                          fontSize: tabletFontSize(context,
                               profileModel.collegeCurrent!, "college")),
                       textAlign: TextAlign.left,
                       softWrap: false,
@@ -329,7 +324,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                           ? profileModel.graduatePrimaryMajorCurrent
                           : profileModel.ugPrimaryMajorCurrent!,
                       style: TextStyle(
-                          fontSize: tabletFontSize(
+                          fontSize: tabletFontSize(context,
                               profileModel.graduatePrimaryMajorCurrent != ""
                                   ? profileModel.graduatePrimaryMajorCurrent
                                   : profileModel.ugPrimaryMajorCurrent!,
@@ -348,12 +343,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       padding: EdgeInsets.all(0),
                     ),
                     child: returnBarcodeContainerTablet(
-                        profileModel!.barcode.toString(), false, context),
+                        profileModel.barcode.toString(), false, context),
                     onPressed: () {
                       createAlertDialog(
                           context,
                           returnBarcodeContainer(
-                              profileModel!.barcode.toString(), true, context),
+                              profileModel.barcode.toString(), true, context),
                           profileModel.barcode.toString(),
                           true);
                     },
@@ -436,8 +431,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: fontSizeForTablet(),
-                            letterSpacing: letterSpacingForTablet()),
+                            fontSize: fontSizeForTablet(context),
+                            letterSpacing: letterSpacingForTablet(context)),
                       )
                     ],
                   ),
@@ -465,14 +460,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
     }
   }
 
-  double letterSpacingForTablet() {
+  double letterSpacingForTablet(context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 1;
     }
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
-  double fontSizeForTablet() {
+  double fontSizeForTablet(context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 2;
     }
@@ -532,8 +527,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: getRotatedPopUpFontSize(),
-                            letterSpacing: letterSpacing()),
+                            fontSize: getRotatedPopUpFontSize(context),
+                            letterSpacing: letterSpacing(context)),
                       )
                     ],
                   ),
@@ -567,12 +562,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
     }
   }
 
-  double letterSpacing() =>
+  double letterSpacing(context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 1
           : SizeConfig.safeBlockHorizontal * 3;
 
-  double getRotatedPopUpFontSize() =>
+  double getRotatedPopUpFontSize(context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 2
           : SizeConfig.safeBlockHorizontal * 4;
@@ -596,9 +591,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
     return base;
   }
 
-  double tabletFontSize(String input, String textField) {
+  double tabletFontSize(BuildContext context, String input, String textField) {
     /// Base font size
-    double base = letterSpacingForTablet();
+    double base = letterSpacingForTablet(context);
 
     /// If threshold is passed, shrink text
     if (input.length >= 21) {
