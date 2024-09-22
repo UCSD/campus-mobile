@@ -134,7 +134,14 @@ class WeatherCard extends StatelessWidget {
                 imageUrl: WEATHER_ICON_BASE_URL + data.icon! + '.png',
                 width: 35,
                 height: 35,
-                placeholder: (context, url) => CircularProgressIndicator(),
+                progressIndicatorBuilder: (context, url, downloadProgress) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.secondary,
+                      value: downloadProgress.progress,
+                    ),
+                  );
+                },
                 errorWidget: (context, url, error) => Icon(Icons.error)),
             Text(data.temperatureHigh!.round().toString() + '\u00B0'),
             Text(data.temperatureLow!.round().toString() + '\u00B0'),
@@ -152,7 +159,14 @@ class WeatherCard extends StatelessWidget {
               imageUrl: WEATHER_ICON_BASE_URL + data.icon! + '.png',
               width: 110,
               height: 110,
-              placeholder: (context, url) => CircularProgressIndicator(),
+              progressIndicatorBuilder: (context, url, downloadProgress) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.secondary,
+                    value: downloadProgress.progress,
+                  ),
+                );
+              },
               errorWidget: (context, url, error) => Icon(Icons.error)),
           Expanded(
             child: ListTile(
