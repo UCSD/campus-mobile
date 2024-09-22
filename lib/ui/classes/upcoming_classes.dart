@@ -16,16 +16,17 @@ class UpcomingCoursesList extends StatelessWidget {
 
   Widget buildListOfCourses(
       List<SectionData> data, int? selectedCourse, BuildContext context) {
-    List<Widget> listOfCourses = List.generate(data.length, (int index) {
-      return buildTile(index, selectedCourse, data[index], context);
-    });
     return Container(
-        constraints:
-            BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3),
-        child: ListView(
-          children: listOfCourses,
-          shrinkWrap: true,
-        ));
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3),
+      child: ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return buildTile(index, selectedCourse, data[index], context);
+        },
+        shrinkWrap: true,
+      ),
+    );
   }
 
   Widget buildTile(
