@@ -64,6 +64,7 @@ class FinalsCard extends StatelessWidget {
   Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
       DateTime? lastUpdated, String? nextDayWithClasses, BuildContext context) {
     try {
+      // Flatten the data into a single list of ListTile widgets
       List<Widget> listToReturn = [];
       finalsData.forEach((key, value) {
         for (SectionData data in value) {
@@ -81,6 +82,7 @@ class FinalsCard extends StatelessWidget {
           ));
         }
       });
+
       listToReturn =
           ListTile.divideTiles(tiles: listToReturn, context: context).toList();
       listToReturn.add(
@@ -89,9 +91,13 @@ class FinalsCard extends StatelessWidget {
           child: LastUpdatedWidget(time: lastUpdated),
         ),
       );
-      return ListView(
+
+      return ListView.builder(
         physics: NeverScrollableScrollPhysics(),
-        children: listToReturn,
+        itemCount: listToReturn.length,
+        itemBuilder: (context, index) {
+          return listToReturn[index];
+        },
         shrinkWrap: true,
       );
     } catch (e) {
