@@ -32,16 +32,9 @@ class NoticesCard extends StatelessWidget {
             onTap: () {
               openLink(notice.link!);
             },
-            child: CachedNetworkImage(
-              imageUrl: notice.imageUrl!,
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  Center(
-                child: CircularProgressIndicator(
-                  value: downloadProgress.progress,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+            child: ImageLoader(
+              url: notice.imageUrl,
+              fullSize: true,
             )
         )
     );
