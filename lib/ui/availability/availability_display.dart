@@ -41,66 +41,8 @@ class AvailabilityDisplay extends StatelessWidget {
   }
 
   Widget buildAvailabilityBars(BuildContext context) {
-    List<Widget> locations = [];
-    // add any children the model contains to the listview
-    if (model.subLocations!.isNotEmpty) {
-      for (SubLocations subLocation in model.subLocations!) {
-        locations.add(
-          ListTile(
-            onTap: () => subLocation.floors!.length > 0
-                ? Navigator.pushNamed(
-                    context, RoutePaths.AvailabilityDetailedView,
-                    arguments: subLocation)
-                : print('_handleIconClick: no subLocations'),
-            visualDensity: VisualDensity.compact,
-            trailing: subLocation.floors!.length > 0
-                ? Icon(Icons.arrow_forward_ios_rounded)
-                : null,
-            title: Text(
-              subLocation.name!,
-              style: TextStyle(
-                fontSize: LOCATION_FONT_SIZE,
-              ),
-            ),
-            subtitle: Column(
-              children: <Widget>[
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      (100 * percentAvailability(subLocation))
-                              .toInt()
-                              .toString() +
-                          '% Busy',
-                      // style: TextStyle(color: Colors.black),
-                    )),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(
-                    height: PROGRESS_BAR_HEIGHT,
-                    width: PROGRESS_BAR_WIDTH,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
-                      child: LinearProgressIndicator(
-                        value: percentAvailability(subLocation) as double?,
-                        backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          setIndicatorColor(
-                            percentAvailability(subLocation),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-    }
-
     // if no children, return an error container
-    else {
+    if (model.subLocations!.isEmpty) {
       return Container(
         alignment: Alignment.center,
         child: Text(
@@ -112,17 +54,64 @@ class AvailabilityDisplay extends StatelessWidget {
         ),
       );
     }
-    locations =
-        ListTile.divideTiles(tiles: locations, context: context).toList();
 
     return Flexible(
       child: Scrollbar(
-        child: ListView(
-          children: locations,
+        child: ListView.builder(
+          itemCount: model.subLocations!.length,
+          itemBuilder: (context, index) {
+            SubLocations subLocation = model.subLocations![index];
+            return ListTile(
+              onTap: () => subLocation.floors!.length > 0
+                  ? Navigator.pushNamed(
+                  context, RoutePaths.AvailabilityDetailedView,
+                  arguments: subLocation)
+                  : print('_handleIconClick: no subLocations'),
+              visualDensity: VisualDensity.compact,
+              trailing: subLocation.floors!.length > 0
+                  ? Icon(Icons.arrow_forward_ios_rounded)
+                  : null,
+              title: Text(
+                subLocation.name!,
+                style: TextStyle(
+                  fontSize: LOCATION_FONT_SIZE,
+                ),
+              ),
+              subtitle: Column(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      (100 * percentAvailability(subLocation)).toInt().toString() +
+                          '% Busy',
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      height: PROGRESS_BAR_HEIGHT,
+                      width: PROGRESS_BAR_WIDTH,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                        child: LinearProgressIndicator(
+                          value: percentAvailability(subLocation) as double?,
+                          backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            setIndicatorColor(percentAvailability(subLocation)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
   }
+
 
   num percentAvailability(SubLocations location) => location.percentage!;
 
