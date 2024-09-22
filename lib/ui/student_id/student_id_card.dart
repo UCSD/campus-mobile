@@ -1,4 +1,5 @@
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
@@ -106,10 +107,19 @@ class _StudentIdCardState extends State<StudentIdCard> {
                             left: cardMargin * 1.5, right: cardMargin * 1.5)),
                     Column(
                       children: <Widget>[
-                        Image.network(
-                          photoModel!.photoUrl!,
+                        CachedNetworkImage(
+                          imageUrl: photoModel!.photoUrl!,
                           fit: BoxFit.contain,
                           height: ScalingUtility.verticalSafeBlock * 14,
+                          progressIndicatorBuilder: (context, url, downloadProgress) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.secondary,
+                                value: downloadProgress.progress,
+                              ),
+                            );
+                          },
+                          errorWidget: (context, url, error) => Icon(Icons.error),
                         ),
                         SizedBox(
                           height: ScalingUtility.verticalSafeBlock * 1.5,
@@ -255,10 +265,19 @@ class _StudentIdCardState extends State<StudentIdCard> {
           Container(
             child: Column(
               children: <Widget>[
-                Image.network(
-                  photoModel!.photoUrl!,
+                CachedNetworkImage(
+                  imageUrl: photoModel!.photoUrl!,
                   fit: BoxFit.contain,
                   height: 125,
+                  progressIndicatorBuilder: (context, url, downloadProgress) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                        value: downloadProgress.progress,
+                      ),
+                    );
+                  },
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
                 SizedBox(height: 10),
                 Text(profileModel!.classificationType!),

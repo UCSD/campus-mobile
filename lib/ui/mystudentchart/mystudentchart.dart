@@ -33,12 +33,10 @@ class MyStudentChartCard extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Container(
-            child: CachedNetworkImage(
-              imageUrl: 'assets/images/MyChartLogo.png',
+            child: Image.asset(
+              'assets/images/MyChartLogo.png',
               fit: BoxFit.contain,
               height: 56,
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
             padding: EdgeInsets.only(
               left: 10,

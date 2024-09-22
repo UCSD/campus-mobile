@@ -48,66 +48,44 @@ class _ShuttleCardState extends State<ShuttleCard> {
     print("Stops - ${stopsToRender.length}");
     print("Arrivals - ${arrivalsToRender?.length}");
 
-    List<Widget> renderList = [];
-    try {
-      if (_shuttleCardDataProvider.closestStop != null) {
-        print("CLOSEST STOP");
-        print(_shuttleCardDataProvider.closestStop!.name);
+    // Handle the case where there are no stops to display
+    if (stopsToRender.isEmpty) {
+      return Center(child: Text('No shuttles found. Please add a stop.'));
+    }
 
-        renderList.add(ShuttleDisplay(
-            stop: _shuttleCardDataProvider.closestStop,
-            arrivingShuttles:
-                arrivalsToRender![_shuttleCardDataProvider.closestStop!.id]));
-      }
-
-      for (int i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
-        renderList.add(ShuttleDisplay(
-            stop: _shuttleCardDataProvider.stopsToRender[i],
-            arrivingShuttles: arrivalsToRender![
-                _shuttleCardDataProvider.stopsToRender[i].id]));
-      }
-
-      // Initialize first shuttle display with arrival information
-      if (renderList.isEmpty) {
-        // if (stopsToRender.isEmpty) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 42.0),
-          child: Center(child: Text('No shuttles found. Please add a stop.')),
-        );
-      }
-
-      return Column(
-        children: <Widget>[
-          Flexible(
-            child: PageView(
-              controller: _controller,
-              children: renderList,
-              onPageChanged: (index) async {
-                // print(index);
-              },
-            ),
-          ),
-          DotsIndicator(
+    // Lazy loading by using PageView.builder
+    return Column(
+      children: <Widget>[
+        Flexible(
+          child: PageView.builder(
             controller: _controller,
-            itemCount: renderList.length,
-            onPageSelected: (int index) {
-              _controller.animateToPage(index,
-                  duration: Duration(seconds: 1), curve: Curves.ease);
+            itemCount: stopsToRender.length,
+            itemBuilder: (context, index) {
+              final stop = stopsToRender[index];
+              final arrivingShuttles = arrivalsToRender?[stop?.id];
+
+              return ShuttleDisplay(
+                stop: stop,
+                arrivingShuttles: arrivingShuttles,
+              );
             },
-          )
-        ],
-      );
-    } catch (e) {
-      return Container(
-        width: double.infinity,
-        child: Center(
-          child: Container(
-            child: Text('An error occurred, please try again.' + e.toString()),
+            onPageChanged: (index) {
+              // Optional: Handle page change if needed
+            },
           ),
         ),
-      );
-    }
+        DotsIndicator(
+          controller: _controller,
+          itemCount: stopsToRender.length,
+          onPageSelected: (int index) {
+            _controller.animateToPage(index,
+                duration: Duration(seconds: 1), curve: Curves.ease);
+          },
+        ),
+      ],
+    );
   }
+
 
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = [];

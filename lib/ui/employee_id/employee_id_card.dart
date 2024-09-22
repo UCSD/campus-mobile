@@ -1,4 +1,5 @@
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/employee_id.dart';
@@ -103,8 +104,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                             left: cardMargin * 1.5, right: cardMargin * 1.5)),
                     Column(
                       children: <Widget>[
-                        Image.network(
-                          employeeIdModel!.photo.contains("https")
+                        CachedNetworkImage(
+                          imageUrl: employeeIdModel!.photo.contains("https")
                               ? employeeIdModel.photo
                               : placeholderPhotoUrl,
                           fit: BoxFit.contain,
@@ -240,8 +241,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
           Container(
             child: Column(
               children: <Widget>[
-                Image.network(
-                  employeeIdModel!.photo.contains("https")
+                CachedNetworkImage(
+                  imageUrl: employeeIdModel!.photo.contains("https")
                       ? employeeIdModel.photo
                       : placeholderPhotoUrl,
                   fit: BoxFit.contain,

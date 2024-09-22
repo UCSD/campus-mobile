@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/weather.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -42,7 +43,8 @@ class WeatherCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
-              onTap: () => openLink('https://developer.apple.com/weatherkit/data-source-attribution/'),
+              onTap: () => openLink(
+                  'https://developer.apple.com/weatherkit/data-source-attribution/'),
               child: Text(
                 "Weather Attribution",
                 style: TextStyle(
@@ -92,13 +94,19 @@ class WeatherCard extends StatelessWidget {
   }
 
   Widget buildCardContent(WeatherModel data) {
-    return ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          buildCurrentWeather(data.currentWeather!),
-          buildWeeklyForecast(data.weeklyForecast!),
-        ]);
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: 2, // Number of items you want to display
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return buildCurrentWeather(data.currentWeather!);
+        } else if (index == 1) {
+          return buildWeeklyForecast(data.weeklyForecast!);
+        }
+        return SizedBox.shrink(); // Return an empty widget for safety
+      },
+    );
   }
 
   Widget buildWeeklyForecast(WeeklyForecast weeklyForecast) {
@@ -122,11 +130,19 @@ class WeatherCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(getDayOfWeek(data.time!)),
-            Image.network(
-              WEATHER_ICON_BASE_URL + data.icon! + '.png',
-              width: 35,
-              height: 35,
-            ),
+            CachedNetworkImage(
+                imageUrl: WEATHER_ICON_BASE_URL + data.icon! + '.png',
+                width: 35,
+                height: 35,
+                progressIndicatorBuilder: (context, url, downloadProgress) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.secondary,
+                      value: downloadProgress.progress,
+                    ),
+                  );
+                },
+                errorWidget: (context, url, error) => Icon(Icons.error)),
             Text(data.temperatureHigh!.round().toString() + '\u00B0'),
             Text(data.temperatureLow!.round().toString() + '\u00B0'),
           ],
@@ -139,11 +155,19 @@ class WeatherCard extends StatelessWidget {
     return Container(
       child: Row(
         children: <Widget>[
-          Image.network(
-            WEATHER_ICON_BASE_URL + data.icon! + '.png',
-            width: 110,
-            height: 110,
-          ),
+          CachedNetworkImage(
+              imageUrl: WEATHER_ICON_BASE_URL + data.icon! + '.png',
+              width: 110,
+              height: 110,
+              progressIndicatorBuilder: (context, url, downloadProgress) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.secondary,
+                    value: downloadProgress.progress,
+                  ),
+                );
+              },
+              errorWidget: (context, url, error) => Icon(Icons.error)),
           Expanded(
             child: ListTile(
               title: Text(

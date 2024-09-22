@@ -43,19 +43,16 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   }
 
   Widget buildAvailabilityCard(List<AvailabilityModel?> data) {
-    List<Widget> locationsList = [];
+    // Filter the models and create a list of only the valid ones
+    List<AvailabilityModel> filteredData = data
+        .where((model) =>
+            model != null &&
+            _availabilityDataProvider.locationViewState[model!.name]!)
+        .cast<AvailabilityModel>()
+        .toList();
 
-    // loop through all the models, adding each one to locationsList
-    for (AvailabilityModel? model in data) {
-      if (model != null) {
-        if (_availabilityDataProvider.locationViewState[model.name]!) {
-          locationsList.add(AvailabilityDisplay(model: model));
-        }
-      }
-    }
-
-    // the user chose no location, so instead show "No Location to Display"
-    if (locationsList.length == 0) {
+    // If no location is available, show "No Location to Display"
+    if (filteredData.isEmpty) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -80,16 +77,19 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     return Column(
       children: <Widget>[
         Flexible(
-          child: PageView(
+          child: PageView.builder(
             controller: _controller,
-            children: locationsList,
+            itemCount: filteredData.length,
+            itemBuilder: (context, index) {
+              return AvailabilityDisplay(model: filteredData[index]);
+            },
           ),
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DotsIndicator(
             controller: _controller,
-            itemCount: locationsList.length,
+            itemCount: filteredData.length,
             onPageSelected: (int index) {
               _controller.animateToPage(index,
                   duration: Duration(seconds: 1), curve: Curves.ease);

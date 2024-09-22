@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
@@ -24,17 +25,18 @@ class NoticesCard extends StatelessWidget {
   Widget buildBannerView(NoticesModel notice) {
     // The screen reader will read - "image - (text on the image)"
     return Semantics(
-      label: notice.title,
-      image: true,
-      button: true,
-      child: GestureDetector(
-          onTap: () {
-            openLink(notice.link!);
-          },
-          child: ImageLoader(
-            url: notice.imageUrl,
-            fullSize: true,
-          )),
+        label: notice.title,
+        image: true,
+        button: true,
+        child: GestureDetector(
+            onTap: () {
+              openLink(notice.link!);
+            },
+            child: ImageLoader(
+              url: notice.imageUrl,
+              fullSize: true,
+            )
+        )
     );
   }
 

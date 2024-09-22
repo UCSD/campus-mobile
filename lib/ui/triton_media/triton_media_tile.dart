@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class MediaTile extends StatelessWidget {
   const MediaTile({Key? key, required this.data}) : super(key: key);
@@ -78,18 +78,13 @@ class MediaTile extends StatelessWidget {
             width: tileWidth,
             fit: BoxFit.fill,
           ))
-        : Image.network(
-            url,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
+        : CachedNetworkImage(
+            imageUrl: url,
+            progressIndicatorBuilder: (context, url, downloadProgress) {
               return Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).colorScheme.secondary,
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
+                  value: downloadProgress.progress,
                 ),
               );
             },
