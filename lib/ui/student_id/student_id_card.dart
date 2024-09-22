@@ -460,14 +460,14 @@ class StudentIdCard extends StatelessWidget {
     }
   }
 
-  double letterSpacingForTablet(context) {
+  double letterSpacingForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 1;
     }
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
-  double fontSizeForTablet(context) {
+  double fontSizeForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 2;
     }
@@ -562,12 +562,12 @@ class StudentIdCard extends StatelessWidget {
     }
   }
 
-  double letterSpacing(context) =>
+  double letterSpacing(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 1
           : SizeConfig.safeBlockHorizontal * 3;
 
-  double getRotatedPopUpFontSize(context) =>
+  double getRotatedPopUpFontSize(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 2
           : SizeConfig.safeBlockHorizontal * 4;
