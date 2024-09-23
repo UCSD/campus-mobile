@@ -20,6 +20,7 @@ import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platf
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 late bool showOnboardingScreen;
 
@@ -43,6 +44,9 @@ void main() async {
     mapRenderer = await mapsImplementation
         .initializeWithRenderer(AndroidMapRenderer.latest);
   }
+
+  // dotenv loading
+  await dotenv.load(isOptional: true);
 
   /// Record zoned errors - https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
   runZonedGuarded<Future<void>>(() async {

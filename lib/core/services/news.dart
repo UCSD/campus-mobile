@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NewsService {
   NewsService();
@@ -14,9 +14,6 @@ class NewsService {
     "accept": "application/json",
   };
 
-  final String endpoint =
-      "https://api-qa.ucsd.edu:8243/campusnews/1.0.0/ucsdnewsaggregator";
-
   NewsModel _newsModels = NewsModel();
 
   Future<bool> fetchData() async {
@@ -25,7 +22,7 @@ class NewsService {
     try {
       /// fetch data
       String _response =
-      await (_networkHelper.authorizedFetch(endpoint, headers));
+          await (_networkHelper.authorizedFetch(dotenv.get('NEWS_ENDPOINT'), headers));
 
       /// parse data
       _newsModels = newsModelFromJson(_response);
@@ -33,7 +30,7 @@ class NewsService {
       return true;
     } catch (e) {
       if (e.toString().contains("401")) {
-        if (await getNewToken()) {
+        if (await _networkHelper.getNewToken(headers)) {
           return await fetchData();
         }
       }
