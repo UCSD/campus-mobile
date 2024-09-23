@@ -193,7 +193,7 @@ class NetworkHelper {
     }
   }
 
-  /// Used in What's Around Me
+  /// Used in What's Around Me TODO: Make it so that it uses env variables like getToken() below
   Future<String> generateArcGISToken() async {
     final Dio _dio = Dio();
     // These are fixed client variables that have access to ESRI APIs

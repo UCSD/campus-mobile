@@ -2,7 +2,9 @@ import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page.d
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_provider.dart';
 import 'package:provider/provider.dart';
+import '../../core/models/availability.dart';
 
+/// TODO: BUILD THE LIST DYNAMICALLY
 /// Fetches Nearby Places using the student's current location to build the What's Around Me List.
 class BuildWhatsAroundMeList extends StatefulWidget {
   final dynamic mapController;
@@ -15,6 +17,7 @@ class BuildWhatsAroundMeList extends StatefulWidget {
 
 class _BuildWhatsAroundMeListState extends State<BuildWhatsAroundMeList> {
   late PlacesByCategoryProvider _placesByCategoryProvider;
+  late AvailabilityModel availabilityModel;
 
   // Category Ids (Constants) to fetch nearby places from
   final Map<String, String> categories = {
@@ -44,6 +47,7 @@ class _BuildWhatsAroundMeListState extends State<BuildWhatsAroundMeList> {
     "Student Resources": "",
     "Theaters": "",
   };
+
 
   @override
   void didChangeDependencies() {
@@ -116,6 +120,7 @@ class _BuildWhatsAroundMeListState extends State<BuildWhatsAroundMeList> {
                               builder: (context) => PlaceDetailsPage(
                                 mapController: widget.mapController,
                                 placeId: place.placeId!, // Pass in the placeId also contained in response
+                                model: availabilityModel
                               ),
                             ),
                           );
