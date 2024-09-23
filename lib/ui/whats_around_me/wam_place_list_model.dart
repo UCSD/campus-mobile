@@ -1,201 +1,109 @@
-import 'dart:convert';
-/// TODO: CHANGE THIS WHOLE MODEL TO REFLECT NEW GITHUB GIST
 // To parse this JSON data, do
 //
 //     final placesByCategory = placesByCategoryFromJson(jsonString);
+
+import 'dart:convert';
 
 PlacesByCategoryModel placesByCategoryFromJson(String str) => PlacesByCategoryModel.fromJson(json.decode(str));
 
 String placesByCategoryToJson(PlacesByCategoryModel data) => json.encode(data.toJson());
 
 class PlacesByCategoryModel {
-  List<Result>? results;
+  List<Category>? categories;
 
   PlacesByCategoryModel({
-    this.results,
+    this.categories,
   });
 
   factory PlacesByCategoryModel.fromJson(Map<String, dynamic> json) => PlacesByCategoryModel(
-    results: json["results"] == null
-        ? [] // Handle null or empty list
-        : List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
+    categories: List<Category>.from(json["categories"].map((x) => Category.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "results": results == null
-        ? []
-        : List<dynamic>.from(results!.map((x) => x.toJson())),
-  };
-}
-
-class Result {
-  String? placeId;
-  Location? location;
-  List<Category>? categories;
-  String? name;
-  double? distance;
-
-  Result({
-    this.placeId,
-    this.location,
-    this.categories,
-    this.name,
-    this.distance,
-  });
-
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
-    placeId: json["placeId"] ?? '', // Fallback to empty string if null
-    location: json["location"] != null ? Location.fromJson(json["location"]) : null,
-    categories: json["categories"] == null
-        ? [] // Handle missing or empty categories list
-        : List<Category>.from(json["categories"].map((x) => Category.fromJson(x))),
-    name: json["name"] ?? '', // Fallback to empty string if null
-    distance: json["distance"] != null ? json["distance"].toDouble() : 0.0, // Fallback to 0.0 if null
-  );
-
-  Map<String, dynamic> toJson() => {
-    "placeId": placeId,
-    "location": location?.toJson(),
-    "categories": categories == null
-        ? []
-        : List<dynamic>.from(categories!.map((x) => x.toJson())),
-    "name": name,
-    "distance": distance,
+    "categories": List<dynamic>.from(categories!.map((x) => x.toJson())),
   };
 }
 
 class Category {
-  String? categoryId;
-  String? label;
+  Restaurants? restaurants;
+  LectureHalls? lectureHalls;
+  CoffeeShops? coffeeShops;
 
   Category({
-    this.categoryId,
-    this.label,
+    this.restaurants,
+    this.lectureHalls,
+    this.coffeeShops,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
-    categoryId: json["categoryId"] ?? '', // Fallback to empty string if null
-    label: json["label"] ?? '', // Fallback to empty string if null
+    restaurants: Restaurants.fromJson(json["restaurants"]),
+    lectureHalls: LectureHalls.fromJson(json["lecture_halls"]),
+    coffeeShops: CoffeeShops.fromJson(json["coffee_shops"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "categoryId": categoryId,
-    "label": label,
+    "restaurants": restaurants?.toJson(),
+    "lecture_halls": lectureHalls?.toJson(),
+    "coffee_shops": coffeeShops?.toJson(),
   };
 }
 
-class Location {
-  double? x;
-  double? y;
+class CoffeeShops {
+  String? coffeeShop1;
+  String? coffeeShop2;
 
-  Location({
-    this.x,
-    this.y,
+  CoffeeShops({
+    this.coffeeShop1,
+    this.coffeeShop2,
   });
 
-  factory Location.fromJson(Map<String, dynamic> json) => Location(
-    x: json["x"] != null ? json["x"].toDouble() : 0.0, // Fallback to 0.0 if null
-    y: json["y"] != null ? json["y"].toDouble() : 0.0, // Fallback to 0.0 if null
+  factory CoffeeShops.fromJson(Map<String, dynamic> json) => CoffeeShops(
+    coffeeShop1: json["coffee_shop_1"],
+    coffeeShop2: json["coffee_shop_2"],
   );
 
   Map<String, dynamic> toJson() => {
-    "x": x,
-    "y": y,
+    "coffee_shop_1": coffeeShop1,
+    "coffee_shop_2": coffeeShop2,
   };
 }
 
-// import 'dart:convert';
-// // To parse this JSON data, do
-// //
-// //     final placesByCategory = placesByCategoryFromJson(jsonString);
-// PlacesByCategoryModel placesByCategoryFromJson(String str) => PlacesByCategoryModel.fromJson(json.decode(str));
-//
-// String placesByCategoryToJson(PlacesByCategoryModel data) => json.encode(data.toJson());
-//
-// class PlacesByCategoryModel {
-//   List<Result>? results;
-//
-//   PlacesByCategoryModel({
-//     this.results,
-//   });
-//
-//   factory PlacesByCategoryModel.fromJson(Map<String, dynamic> json) => PlacesByCategoryModel(
-//     results: List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
-//   );
-//
-//   Map<String, dynamic> toJson() => {
-//     "results": List<dynamic>.from(results!.map((x) => x.toJson())),
-//   };
-// }
-//
-// class Result {
-//   String? placeId;
-//   Location? location;
-//   List<Category>? categories;
-//   String? name;
-//   double? distance;
-//
-//   Result({
-//     this.placeId,
-//     this.location,
-//     this.categories,
-//     this.name,
-//     this.distance,
-//   });
-//
-//   factory Result.fromJson(Map<String, dynamic> json) => Result(
-//     placeId: json["placeId"],
-//     location: Location.fromJson(json["location"]),
-//     categories: List<Category>.from(json["categories"].map((x) => Category.fromJson(x))),
-//     name: json["name"],
-//     distance: json["distance"].toDouble(),
-//   );
-//
-//   Map<String, dynamic> toJson() => {
-//     "placeId": placeId,
-//     "location": location?.toJson(),
-//     "categories": List<dynamic>.from(categories!.map((x) => x.toJson())),
-//     "name": name,
-//     "distance": distance,
-//   };
-// }
-//
-// class Category {
-//   String? categoryId;
-//   String? label;
-//
-//   Category({
-//     this.categoryId,
-//     this.label,
-//   });
-//
-//   factory Category.fromJson(Map<String, dynamic> json) => Category(
-//     categoryId: json["categoryId"],
-//     label: json["label"],
-//   );
-//
-//   Map<String, dynamic> toJson() => {
-//     "categoryId": categoryId,
-//     "label": label,
-//   };
-// }
-//
-// class Location {
-//   double? x;
-//   double? y;
-//
-//   Location({
-//     this.x,
-//     this.y,
-//   });
-//
-//   factory Location.fromJson(Map<String, dynamic> json) => Location(
-//     x: json["x"].toDouble(),
-//     y: json["y"].toDouble(),
-//   );
-//
-//   Map<String, dynamic> toJson() => {
-//     "x": x,
-//     "y": y,
-//   };
-// }
+class LectureHalls {
+  String? lectureHall1;
+  String? lectureHall2;
+
+  LectureHalls({
+    this.lectureHall1,
+    this.lectureHall2,
+  });
+
+  factory LectureHalls.fromJson(Map<String, dynamic> json) => LectureHalls(
+    lectureHall1: json["lecture_hall_1"],
+    lectureHall2: json["lecture_hall_2"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "lecture_hall_1": lectureHall1,
+    "lecture_hall_2": lectureHall2,
+  };
+}
+
+class Restaurants {
+  String? restaurant1;
+  String? restaurant2;
+
+  Restaurants({
+    this.restaurant1,
+    this.restaurant2,
+  });
+
+  factory Restaurants.fromJson(Map<String, dynamic> json) => Restaurants(
+    restaurant1: json["restaurant_1"],
+    restaurant2: json["restaurant_2"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "restaurant_1": restaurant1,
+    "restaurant_2": restaurant2,
+  };
+}

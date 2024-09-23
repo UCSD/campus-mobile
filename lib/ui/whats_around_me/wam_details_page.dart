@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../app_constants.dart';
 import '../../core/models/availability.dart';
-import '../../core/providers/availability.dart';
 import '../../core/providers/map.dart';
 import '../availability/availability_constants.dart';
 import '../map/directions_button.dart';
