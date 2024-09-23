@@ -40,6 +40,7 @@ class RoutePaths {
   static const String NeighborhoodsView = "parking/neighborhoods_view";
   static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
   static const String AvailabilityDetailedView = "availability/detailed_view";
+  static const String WhatsAroundMe= "lib/ui/whats_around_me";
 }
 
 class RouteTitles {

@@ -2,12 +2,14 @@ import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page.d
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_provider.dart';
 import 'package:provider/provider.dart';
+import '../../core/models/availability.dart';
 
+/// TODO: BUILD THE LIST DYNAMICALLY
 /// Fetches Nearby Places using the student's current location to build the What's Around Me List.
 class BuildWhatsAroundMeList extends StatefulWidget {
   final dynamic mapController;
 
-  BuildWhatsAroundMeList({required this.mapController});
+  BuildWhatsAroundMeList({required this.mapController, required BuildContext context});
 
   @override
   _BuildWhatsAroundMeListState createState() => _BuildWhatsAroundMeListState();
@@ -15,6 +17,7 @@ class BuildWhatsAroundMeList extends StatefulWidget {
 
 class _BuildWhatsAroundMeListState extends State<BuildWhatsAroundMeList> {
   late PlacesByCategoryProvider _placesByCategoryProvider;
+  late AvailabilityModel availabilityModel;
 
   // Category Ids (Constants) to fetch nearby places from
   final Map<String, String> categories = {
@@ -44,6 +47,7 @@ class _BuildWhatsAroundMeListState extends State<BuildWhatsAroundMeList> {
     "Student Resources": "",
     "Theaters": "",
   };
+
 
   @override
   void didChangeDependencies() {
@@ -116,6 +120,7 @@ class _BuildWhatsAroundMeListState extends State<BuildWhatsAroundMeList> {
                               builder: (context) => PlaceDetailsPage(
                                 mapController: widget.mapController,
                                 placeId: place.placeId!, // Pass in the placeId also contained in response
+                                model: availabilityModel
                               ),
                             ),
                           );
@@ -421,3 +426,132 @@ class _BuildWhatsAroundMeListState extends State<BuildWhatsAroundMeList> {
 //     );
 //   }
 // }
+//   // Instantiate the provider to get nearby places of an x category
+//     final _placesByCategoryProvider = Provider.of<PlacesByCategoryProvider>(context);
+//     _placesByCategoryProvider.fetchPlacesByCategory(restaurantArcGISCategoryId);
+//
+//     return Scaffold( // Added Scaffold here
+//       appBar: AppBar(
+//         title: Text("What's Around Me"),
+//       ),
+//       body: Container(
+//         color: Colors.amber,
+//         child: Center(
+//           child: ListView(
+//             children: <Widget>[
+//               Padding(
+//                 padding: const EdgeInsets.only(top: 20.0),
+//                 child: Center(
+//                   child: const Text(
+//                     'What\'s Around Me',
+//                     style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+//                   ),
+//                 ),
+//               ),
+//               ExpansionTile(
+//                 title: Text(
+//                   'Restaurants',
+//                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//                 ),
+//                 subtitle: Text('Nearest: NearbyRestaurants[0] - 0.01 mi'),
+//                 children: <Widget>[
+//                   ListTile(
+//                     title: Text('NearbyRestaurants[0] - Open: Closes 17:00'),
+//                     subtitle: Text('(Not too busy) - RestaurantDistance[0] mi'),
+//                     trailing: Icon(
+//                       Icons.arrow_forward,
+//                       color: Colors.black,
+//                     ),
+//                     onTap: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) => PlaceDetailsPage(
+//                             mapController: mapController,
+//                           ),
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                   ListTile(
+//                     title: Text('NearbyRestaurants[1] - Open: Closes 17:00'),
+//                     subtitle: Text('(Busy) - RestaurantDistance[1] mi'),
+//                     trailing: Icon(
+//                       Icons.arrow_forward,
+//                       color: Colors.black,
+//                     ),
+//                     onTap: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                             builder: (context) => PlaceDetailsPage(
+//                               mapController: mapController,
+//                             )),
+//                       );
+//                     },
+//                   ),
+//                   ListTile(
+//                     title: Text('NearbyRestaurants[2] - Open: Closes 17:00 '),
+//                     subtitle: Text('(Not busy) - RestaurantDistance[2] mi'),
+//                     trailing: Icon(
+//                       Icons.arrow_forward,
+//                       color: Colors.black,
+//                     ),
+//                     onTap: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                             builder: (context) => PlaceDetailsPage(
+//                               mapController: mapController,
+//                             )),
+//                       );
+//                     },
+//                   ),
+//                   ListTile(
+//                     title: Text('NearbyRestaurants[3] - Open: Closes 17:00'),
+//                     subtitle: Text('(Very busy) - RestaurantDistance[3] mi'),
+//                     trailing: Icon(
+//                       Icons.arrow_forward,
+//                       color: Colors.black,
+//                     ),
+//                     onTap: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                             builder: (context) => PlaceDetailsPage(
+//                               mapController: mapController,
+//                             )),
+//                       );
+//                     },
+//                   ),
+//                   ListTile(
+//                     title: Text('NearbyRestaurants[4] - Open: Closes 17:00'),
+//                     subtitle: Text('(Not Busy) - RestaurantDistance[4] mi'),
+//                     trailing: Icon(
+//                       Icons.arrow_forward,
+//                       color: Colors.black,
+//                     ),
+//                     onTap: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                             builder: (context) => PlaceDetailsPage(
+//                               mapController: mapController,
+//                             )),
+//                       );
+//                     },
+//                   ),
+//                 ],
+//               ),
+//               ElevatedButton(
+//                 child: const Text('Close List'),
+//                 onPressed: () => Navigator.pop(context),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+//

@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
+import 'package:get/get.dart';
 
 class Maps extends StatelessWidget {
   Widget resultsList(BuildContext context) {
@@ -42,7 +43,7 @@ class Maps extends StatelessWidget {
         children: [
           MyLocationButton(
               mapController:
-                  Provider.of<MapsDataProvider>(context).mapController),
+              Provider.of<MapsDataProvider>(context).mapController),
           SizedBox(height: 10),
           /// Added What's Around Me Button
           WhatsAroundMeButton(
@@ -51,30 +52,30 @@ class Maps extends StatelessWidget {
           SizedBox(height: 10),
           DirectionsButton(
               mapController:
-                  Provider.of<MapsDataProvider>(context).mapController),
+              Provider.of<MapsDataProvider>(context).mapController),
         ],
       ),
     );
   }
 
   Future<Null> initUniLinks(BuildContext context) async {
-    // deep links are received by this method
-    // the specific host needs to be added in AndroidManifest.xml and Info.plist
-    // currently, this method handles executing custom map query
     late StreamSubscription _sub;
     _sub = linkStream.listen((String? link) async {
-      // handling for map query
-      if (link!.contains("deeplinking.searchmap")) {
+      if (link != null && link.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);
         var query = uri.queryParameters['query']!;
-        // redirect query to maps tab and search with query
+
         Provider.of<MapsDataProvider>(context, listen: false)
             .searchBarController
             .text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
-        // received deeplink, cancel stream to prevent memory leaks
+
+        _sub.cancel();
+      } else if (link != null && link.contains("whats_around_me")) {
+        // Navigate to the What's Around Me feature
+        Get.toNamed('/whats_around_me');
         _sub.cancel();
       }
     });
