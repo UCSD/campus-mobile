@@ -1,11 +1,7 @@
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_provider.dart';
 import 'package:provider/provider.dart';
-import '../../core/models/availability.dart';
 
-/// TODO: BUILD THE LIST DYNAMICALLY
-/// Fetches Nearby Places using the student's current location to build the What's Around Me List.
 class BuildWhatsAroundMeList extends StatefulWidget {
   final dynamic mapController;
 
@@ -16,11 +12,79 @@ class BuildWhatsAroundMeList extends StatefulWidget {
 }
 
 class _BuildWhatsAroundMeListState extends State<BuildWhatsAroundMeList> {
-  late PlacesByCategoryProvider _placesByCategoryProvider;
-  late AvailabilityModel availabilityModel;
+  @override
+  void initState() {
+    super.initState();
+    // Fetch the categories when the widget initializes
+    Provider.of<PlacesByCategoryProvider>(context, listen: false).fetchWhatsAroundYou();
+  }
 
-  // Category Ids (Constants) to fetch nearby places from
-  final Map<String, String> categories = {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<PlacesByCategoryProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading == true) {
+          return Center(child: CircularProgressIndicator());
+        } else if (provider.error != null) {
+          return Center(child: Text("Error: ${provider.error}"));
+        } else if (provider.categoriesAroundMe == null || provider.categoriesAroundMe!.isEmpty) {
+          return Center(child: Text("No categories found"));
+        } else {
+          return Expanded(
+            child: ListView.builder(
+              itemCount: provider.categoriesAroundMe?.length ?? 0,
+              itemBuilder: (context, index) {
+                // Dynamically get the category (e.g., restaurants, lecture halls, etc.)
+                final category = provider.categoriesAroundMe![index];
+
+                // Extract the dynamic list of places inside each category
+                final Map<String, dynamic> placesMap = category.restaurants != null
+                    ? category.restaurants!.toJson()
+                    : category.lectureHalls != null
+                    ? category.lectureHalls!.toJson()
+                    : category.coffeeShops?.toJson() ?? {};
+
+                return ExpansionTile(
+                  title: Text(category.restaurants != null
+                      ? "Restaurants"
+                      : category.lectureHalls != null
+                      ? "Lecture Halls"
+                      : "Coffee Shops"),
+                  children: placesMap.entries.map((entry) {
+                    return ListTile(
+                      title: Text(entry.value),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
+  }
+}
+
+// OLD VERSIONS - DO NOT DELETE UNTIL ENSURING FUNCTIONALITY OF THE ABOVE AFTER JACK ENABLES ACCESS TO APIs //
+
+// @override
+// void didChangeDependencies() {
+//   super.didChangeDependencies();
+//   _placesByCategoryProvider = Provider.of<PlacesByCategoryProvider>(context);
+//   _fetchAllCategories();
+// }
+
+// Future<void> _fetchAllCategories() async {
+//   for (var id in categories.values) {
+//     if (id.isNotEmpty) {
+//       await _placesByCategoryProvider.fetchPlacesByCategory(id);
+//     }
+//   }
+// }
+
+/**
+ *  // Category Ids (Constants) to fetch nearby places from
+    final Map<String, String> categories = {
     "Art": "", // exhibitions, stuart collection
     "ATMs": "",
     "Bathrooms": "",
@@ -46,103 +110,84 @@ class _BuildWhatsAroundMeListState extends State<BuildWhatsAroundMeList> {
     "Student Organizations": "",
     "Student Resources": "",
     "Theaters": "",
-  };
+    };
+ */
+//     return Consumer<PlacesByCategoryProvider>(
+//       builder: (context, provider, child) {
+//         if (provider.isLoading == true) {
+//           return Center(child: CircularProgressIndicator());
+//         }
+//
+//         if (provider.error != null) {
+//           return Center(child: Text('Error: ${provider.error}'));
+//         }
+//
+//         return Container(
+//           color: Colors.amber,
+//           child: Center(
+//             child: ListView(
+//               children: <Widget>[
+//                 Padding(
+//                   padding: const EdgeInsets.only(top: 20.0),
+//                   child: Center(
+//                     child: const Text(
+//                       'What\'s Around Me',
+//                       style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+//                     ),
+//                   ),
+//                 ),
+//                 ...categories.entries.map((entry) {
+//                   String category = entry.key;
+//                   String categoryId = entry.value;
+//                   var nearbyPlaces = provider.getPlacesByCategory(categoryId);
+//
+//                   return ExpansionTile(
+//                     title: Text(
+//                       category,
+//                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//                     ),
+//                     subtitle: Text(
+//                       nearbyPlaces?.isNotEmpty == true
+//                           ? 'Nearest: ${nearbyPlaces![0].name} - ${nearbyPlaces[0].distance?.toStringAsFixed(2)} mi'
+//                           : 'No places found',
+//                     ),
+//                     children: nearbyPlaces?.map((place) {
+//                       return ListTile(
+//                         title: Text('${place.name} - Open: Closes 17:00'),
+//                         subtitle: Text('(Not too busy) - ${place.distance?.toStringAsFixed(2)} mi'),
+//                         trailing: Icon(
+//                           Icons.arrow_forward,
+//                           color: Colors.black,
+//                         ),
+//                         onTap: () {
+//                           Navigator.push(
+//                             context,
+//                             MaterialPageRoute(
+//                               builder: (context) => PlaceDetailsPage(
+//                                 mapController: widget.mapController,
+//                                 placeId: place.placeId!, // Pass in the placeId also contained in response
+//                                 model: availabilityModel
+//                               ),
+//                             ),
+//                           );
+//                         },
+//                       );
+//                     }).toList() ?? [],
+//                   );
+//                 }).toList(),
+//                 ElevatedButton(
+//                   child: const Text('Close List'),
+//                   onPressed: () => Navigator.pop(context),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _placesByCategoryProvider = Provider.of<PlacesByCategoryProvider>(context);
-    _fetchAllCategories();
-  }
-
-  Future<void> _fetchAllCategories() async {
-    for (var id in categories.values) {
-      if (id.isNotEmpty) {
-        await _placesByCategoryProvider.fetchPlacesByCategory(id);
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<PlacesByCategoryProvider>(
-      builder: (context, provider, child) {
-        if (provider.isLoading == true) {
-          return Center(child: CircularProgressIndicator());
-        }
-
-        if (provider.error != null) {
-          return Center(child: Text('Error: ${provider.error}'));
-        }
-
-        return Container(
-          color: Colors.amber,
-          child: Center(
-            child: ListView(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Center(
-                    child: const Text(
-                      'What\'s Around Me',
-                      style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                ...categories.entries.map((entry) {
-                  String category = entry.key;
-                  String categoryId = entry.value;
-                  var nearbyPlaces = provider.getPlacesByCategory(categoryId);
-
-                  return ExpansionTile(
-                    title: Text(
-                      category,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      nearbyPlaces?.isNotEmpty == true
-                          ? 'Nearest: ${nearbyPlaces![0].name} - ${nearbyPlaces[0].distance?.toStringAsFixed(2)} mi'
-                          : 'No places found',
-                    ),
-                    children: nearbyPlaces?.map((place) {
-                      return ListTile(
-                        title: Text('${place.name} - Open: Closes 17:00'),
-                        subtitle: Text('(Not too busy) - ${place.distance?.toStringAsFixed(2)} mi'),
-                        trailing: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.black,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PlaceDetailsPage(
-                                mapController: widget.mapController,
-                                placeId: place.placeId!, // Pass in the placeId also contained in response
-                                model: availabilityModel
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }).toList() ?? [],
-                  );
-                }).toList(),
-                ElevatedButton(
-                  child: const Text('Close List'),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-// OLD VERSIONS - DO NOT DELETE UNTIL ENSURING FUNCTIONALITY OF THE ABOVE AFTER JACK ENABLES ACCESS TO APIs //
 // import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page.dart';
 // import 'package:flutter/material.dart';
 // import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_provider.dart';
