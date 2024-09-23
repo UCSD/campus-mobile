@@ -32,16 +32,21 @@ class PlacesByCategoryService {
       //final _response = await (_networkHelper.fetchData(dotenv.get('LIST_BUILDER_ENDPOINT')+'?x=$x&y=$y&radius=1000&$categoryId&pageSize=5&f=pjson&token=$token'));
       final _response = await (_networkHelper.fetchData(dotenv.get('LIST_BUILDER_ENDPOINT')));
 
-      // Parse Data to model
-      final data = _response;
+      // Make the response a string first
+      String dataString = _response.toString();
+      print("DATA STRING: ");
+      print(dataString);
+      // Then Parse Data (response) to model now as an object
+      final data = placesByCategoryFromJson(dataString);
       // final data = placesByCategoryFromJson(_response.data); DO THIS IF YOURE NOT DEALING WITH RAW DATA
       print("Here's the fetched data, should be the same as your Github Gist: ");
       print(data);
+      print(data.categories);
       _isLoading = false;
-      _placesByCategoryModelData = data;  // parse data into model's "results" list
+      _placesByCategoryModelData.categories = data.categories;  // parse data into model's "results" list
       return true;
-    } catch (e) {
-      print('Error fetching place details: $e');
+    } catch (error) {
+      print('Error fetching categories: $error');
     }
     return false;
   }

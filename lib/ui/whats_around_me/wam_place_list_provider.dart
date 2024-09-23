@@ -26,6 +26,8 @@ class PlacesByCategoryProvider extends ChangeNotifier {
       _categoriesAroundMe = _placesByCategoryService.placesByCategoryData!.categories;
     }
     catch(error) {
+      print("Error inside wam place list provider");
+      print(error);
       _error = _placesByCategoryService.error;
     }
 
