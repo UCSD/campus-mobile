@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
@@ -9,6 +8,7 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -27,12 +27,16 @@ late bool showOnboardingScreen;
 bool isFirstRunFlag = false;
 bool executedInitialDeeplinkQuery = false;
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
 void main() async {
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
   );
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -48,6 +52,11 @@ void main() async {
   // dotenv loading
   await dotenv.load(isOptional: true);
 
+  // Initialize notification plugin
+  var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+  var initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+
   /// Record zoned errors - https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
   runZonedGuarded<Future<void>>(() async {
     /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
@@ -59,6 +68,12 @@ void main() async {
     await initializeApp();
     runApp(CampusMobile());
   }, FirebaseCrashlytics.instance.recordError);
+}
+
+Future onSelectNotification(String? payload) async {
+  if (payload == 'whats_around_me') {
+    Get.toNamed('/whats_around_me');
+  }
 }
 
 initializeHive() async {
@@ -78,6 +93,28 @@ initializeApp() async {
 
   showOnboardingScreen = prefs.getBool('showOnboardingScreen') ?? true;
   await _checkLocationPermission();
+  await showWhatsAroundMeNotification(); // Show notification on app startup
+}
+
+Future<void> showWhatsAroundMeNotification() async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+    'your channel id',
+    'your channel name',
+    channelDescription: 'your channel description',
+    importance: Importance.max,
+    priority: Priority.high,
+    showWhen: false,
+  );
+  const NotificationDetails platformChannelSpecifics =
+  NotificationDetails(android: androidPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    'UC San Diego',
+    'Find a list of interesting nearby places that you didn\'t know existed in our campus.',
+    platformChannelSpecifics,
+    payload: 'whats_around_me',
+  );
 }
 
 Future<void> _checkLocationPermission() async {
@@ -179,4 +216,3 @@ class CampusMobile extends StatelessWidget {
     );
   }
 }
- 

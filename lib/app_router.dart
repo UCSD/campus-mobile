@@ -43,6 +43,7 @@ import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dar
 import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -137,16 +138,16 @@ class Router {
         });
       case RoutePaths.DiningNutritionView:
         Map<String, Object?> arguments =
-            settings.arguments as Map<String, Object?>;
+        settings.arguments as Map<String, Object?>;
         DiningMenuItem data = arguments['data'] as DiningMenuItem;
         String? disclaimer = arguments['disclaimer'] as String?;
         String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
         return MaterialPageRoute(
             builder: (_) => NutritionFactsView(
-                  data: data,
-                  disclaimer: disclaimer,
-                  disclaimerEmail: disclaimerEmail,
-                ));
+              data: data,
+              disclaimer: disclaimer,
+              disclaimerEmail: disclaimerEmail,
+            ));
       case RoutePaths.ManageParkingView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
@@ -215,6 +216,13 @@ class Router {
         });
       case RoutePaths.ScanditScanner:
         return MaterialPageRoute(builder: (_) => ScanditScanner());
+      case RoutePaths.WhatsAroundMe:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => BuildWhatsAroundMeList(
+                context: context,
+                mapController: null
+            )
+        );
       default:
         return MaterialPageRoute(builder: (_) => Home());
     }
