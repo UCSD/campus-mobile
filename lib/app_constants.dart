@@ -23,8 +23,7 @@ class RoutePaths {
   static const String MediaDetailView = 'triton_media/triton_media_detail_view';
   static const String LinksViewAll = 'links/links_list';
   static const String ClassScheduleViewAll = 'class/classList';
-  static const String ManageAvailabilityView = // working here: I need to fix the manage availability locations setting menu so that it displays on toggle per type of location rather than one toggle per location page even if the pages are the same type (e.g., dinging halls (1/2) and dinging halls (2/2))
-      'availability/manage_locations_view';
+  static const String ManageAvailabilityView = 'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
   static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
   static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
