@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 AvailabilityStatus availabilityStatusFromJson(String str) =>
     AvailabilityStatus.fromJson(json.decode(str));
 
@@ -26,8 +28,29 @@ class AvailabilityStatus {
         status: json["status"] == null ? null : json["status"],
         data: json["data"] == null
             ? null
-            : List<AvailabilityModel>.from(
-                json["data"].map((x) => AvailabilityModel.fromJson(x))),
+            : ((){
+              List<AvailabilityModel> returnList = List<AvailabilityModel>.from(
+                  json["data"].map((x) => AvailabilityModel.fromJson(x)));
+              for (int index = 0; index < returnList.length; index++) {
+                if (returnList[index].subLocations!.length > 3) {
+                    String baseName = returnList[index].name!;
+                    int baseId = returnList[index].id!;
+                    List<SubLocations> baseSubLocations = returnList[index].subLocations!;
+                    returnList.removeAt(index);
+                    index--;
+                    int curPageIndex = 1;
+                    int maxPageIndex = (baseSubLocations.length / 3).ceil();
+                    for (int i = 0; i < baseSubLocations.length; i += 3) {
+                      index++;
+                      List<SubLocations> curSubList = baseSubLocations.sublist(i, i + 3 > baseSubLocations.length ? baseSubLocations.length : i + 3);
+                      String curName = baseName + " ($curPageIndex/$maxPageIndex)";
+                      returnList.insert(index, AvailabilityModel(id: baseId, name: curName, subLocations: curSubList));
+                      curPageIndex++;
+                    }
+                }
+              }
+              return returnList;
+            })(),
         timestamp: json["timestamp"] == null
             ? null
             : DateTime.parse(json["timestamp"]),
