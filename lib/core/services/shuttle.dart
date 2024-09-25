@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ShuttleService {
   ShuttleService();
@@ -19,11 +20,8 @@ class ShuttleService {
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization":
-        "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+    "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
   };
-
-  final shuttleEndpoint = "https://api-qa.ucsd.edu:8243/shuttles/v1.0.0/stops";
 
   Future<bool> fetchData() async {
     _error = null;
@@ -32,7 +30,7 @@ class ShuttleService {
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.authorizedFetch(shuttleEndpoint, headers));
+          await (_networkHelper.authorizedFetch(dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
 
       /// parse data
       var data = shuttleStopModelFromJson(_response);
@@ -53,7 +51,7 @@ class ShuttleService {
     try {
       /// fetch data
       String _response = await (_networkHelper.authorizedFetch(
-          shuttleEndpoint + "/$stopId/arrivals", headers));
+          dotenv.get('SHUTTLE_API_ENDPOINT') + "/$stopId/arrivals", headers));
 
       /// parse data
       final arrivingData = getArrivingShuttles(_response);

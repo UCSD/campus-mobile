@@ -177,7 +177,7 @@ class _LoginState extends State<Login> {
                       'Sign In',
                       style: TextStyle(
                           fontSize: 18,
-                          color: Theme.of(context).textTheme.button!.color),
+                          color: Theme.of(context).textTheme.labelLarge!.color),
                     ),
                     onPressed: _userDataProvider.isLoading!
                         ? null

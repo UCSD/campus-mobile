@@ -14,6 +14,7 @@ class CardContainer extends StatelessWidget {
     required this.hide,
     this.overFlowMenu,
     this.actionButtons,
+    this.footer,
     this.hideMenu,
   }) : super(key: key);
 
@@ -30,6 +31,7 @@ class CardContainer extends StatelessWidget {
   final Map<String, Function>? overFlowMenu;
   final bool? hideMenu;
   final List<Widget>? actionButtons;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,7 @@ class CardContainer extends StatelessWidget {
                     )
                   : Container(),
             ),
+            footer ?? Container(),
           ],
         ),
       );

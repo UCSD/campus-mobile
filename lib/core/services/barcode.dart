@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class BarcodeService {
   BarcodeService();
@@ -6,16 +7,16 @@ class BarcodeService {
   String? _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String _endpoint =
-      'https://api-qa.ucsd.edu:8243/scandata/2.0.0/scanData';
 
   Future<bool> uploadResults(
       Map<String, String> headers, Map<String, dynamic> body) async {
     _error = null;
     _isLoading = true;
     try {
-      final response =
-          await _networkHelper.authorizedPost(_endpoint, headers, body);
+      final response = await _networkHelper.authorizedPost(
+          dotenv.get('BARCODE_SERVICE_ENDPOINT'),
+          headers, body
+      );
       if (response != null && validateUploadResults(body, response)) {
         _isLoading = false;
         return true;

@@ -4,12 +4,13 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class StudentIdService {
   final String myStudentProfileApiUrl =
-      'https://api-qa.ucsd.edu:8243/student/my/v1';
+      dotenv.get('MY_STUDENT_PROFILE_API_ENDPOINT');
   final String myStudentContactApiUrl =
-      'https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1';
+      dotenv.get('MY_STUDENT_CONTACT_API_ENDPOINT');
 
   bool _isLoading = false;
   DateTime? _lastUpdated;

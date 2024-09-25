@@ -3,12 +3,9 @@ import 'dart:async';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/term.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ClassScheduleService {
-  final String academicTermEndpoint =
-      'https://o17lydfach.execute-api.us-west-2.amazonaws.com/qa/v1/term/current';
-  final String myAcademicHistoryApiEndpoint =
-      'https://api-qa.ucsd.edu:8243/student/my/academic_history/v1/class_list';
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
@@ -24,7 +21,7 @@ class ClassScheduleService {
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
-          myAcademicHistoryApiEndpoint + '?academic_level=UN&term_code=' + term,
+          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=UN&term_code=' + term,
           headers);
 
       /// parse data
@@ -44,7 +41,7 @@ class ClassScheduleService {
     try {
       /// fetch data
       String _response = _networkHelper.authorizedFetch(
-          myAcademicHistoryApiEndpoint + '?academic_level=GR&term_code=' + term,
+          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=GR&term_code=' + term,
           headers) as String;
 
       /// parse data
@@ -62,7 +59,7 @@ class ClassScheduleService {
     _error = null;
     _isLoading = true;
     try {
-      String _response = await _networkHelper.fetchData(academicTermEndpoint);
+      String _response = await _networkHelper.fetchData(dotenv.get('ACADEMIC_TERM_API_ENDPOINT'));
       _academicTermModel = academicTermModelFromJson(_response);
       return true;
     } catch (e) {

@@ -60,11 +60,11 @@ else
 fi
 
 echo "Installing Node.js ..."
-curl "https://nodejs.org/dist/v14.16.0/node-v14.16.0.pkg" > "$HOME/Downloads/node-stable.pkg" && sudo installer -store -pkg "$HOME/Downloads/node-stable.pkg" -target "/"
+curl "https://nodejs.org/dist/v18.16.0/node-v18.16.0.pkg" > "$HOME/Downloads/node-stable.pkg" && sudo installer -store -pkg "$HOME/Downloads/node-stable.pkg" -target "/"
 node --version
 
-echo "Writing app-config.js from \$APP_CONFIG ..."
-echo $APP_CONFIG | base64 --decode > ./scripts/codemagic-ci/app-config.js
+echo "Writing .env from \$APP_CONFIG ..."
+echo $APP_CONFIG | base64 --decode > ./.env
 
 echo "Writing sp-config.json from \$SP_CONFIG ..."
 echo $SP_CONFIG | base64 --decode > ./scripts/codemagic-ci/sp-config.json
@@ -74,25 +74,6 @@ echo $FIREBASE_IOS | base64 --decode > ./ios/Runner/GoogleService-Info.plist
 
 echo "./android/app/google-services.json --> $BUILD_ENV"
 echo $FIREBASE_ANDROID | base64 --decode > ./android/app/google-services.json
-
-# Set env vars
-echo "Setting build environment: $BUILD_ENV"
-if [ "$BUILD_ENV" == "PROD" ]; then
-    node ./scripts/codemagic-ci/set-env.js PROD $APP_VERSION $PROJECT_BUILD_NUMBER
-    sh ./scripts/codemagic-ci/verify-env.sh PROD $BUILD_PLATFORM
-elif [ "$BUILD_ENV" == "PROD-TEST" ]; then
-    node ./scripts/codemagic-ci/set-env.js PROD $APP_VERSION $PROJECT_BUILD_NUMBER
-    sh ./scripts/codemagic-ci/verify-env.sh PROD $BUILD_PLATFORM
-    node ./scripts/codemagic-ci/set-env.js PROD-TEST
-    sh ./scripts/codemagic-ci/verify-env.sh PROD-TEST $BUILD_PLATFORM
-elif [ "$BUILD_ENV" == "QA" ]; then
-    node ./scripts/codemagic-ci/set-env.js QA $APP_VERSION $PROJECT_BUILD_NUMBER
-    sh ./scripts/codemagic-ci/verify-env.sh QA $BUILD_PLATFORM
-else
-    echo "Error: BUILD_ENV not found, exiting."
-    echo "End: post-clone.sh"
-    exit 1
-fi
 
 # Write release notes
 if [ -n "$FCI_PULL_REQUEST_NUMBER" ]; then
