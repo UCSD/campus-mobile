@@ -103,7 +103,7 @@ class UserDataProvider extends ChangeNotifier
     }
     tempUserProfile = userBox.get('UserProfileModel')!;
     _userProfileModel = tempUserProfile;
-    _subscribeToPushNotificationTopics(_userProfileModel.subscribedTopics as List<String>);
+    _subscribeToPushNotificationTopics(_userProfileModel.subscribedTopics!.whereType<String>().toList());
     notifyListeners();
   }
 

@@ -218,9 +218,8 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
     List<ImageLoader> images = [];
     if (model.images != null && model.images!.length > 0) {
       for (prefix0.Image item in model.images!) {
-        images.add(ImageLoader(
-          url: item.small,
-        ));
+        if (item.small != null)
+          images.add(ImageLoader(url: item.small!));
       }
       return Center(
         child: Container(

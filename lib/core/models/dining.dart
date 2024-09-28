@@ -100,15 +100,16 @@ class DiningModel
 class Image
 {
   // links to different sizes of the image
-  String small;
-  String large;
+  // TODO: BUG ON SERVER?? There have been images with no images observed in the wild...
+  String? small;
+  String? large;
 
   // TODO: no caption is valid JSON response. Should this be empty str rather than null?
   String? caption;
 
   Image({
-    required this.small,
-    required this.large,
+    this.small,
+    this.large,
     this.caption,
   });
 

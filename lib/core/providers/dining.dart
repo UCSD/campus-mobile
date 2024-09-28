@@ -76,8 +76,10 @@ class DiningDataProvider extends ChangeNotifier {
     });
     return orderedListOfLots;
   }
+
   void populateDistances() {
-    if (_coordinates != null) {
+    // TODO: fix the Coordinates system! Totally messed up design
+    if (_coordinates != null && _coordinates!.lat != null && _coordinates!.lon != null) {
       for (DiningModel model in _diningModels.values.toList()) {
         if (model.coordinates != null) {
           var distance = calculateDistance(

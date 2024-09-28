@@ -286,7 +286,7 @@ class PushNotificationDataProvider extends ChangeNotifier
   }
 
   void unsubscribeFromAllTopics() {
-    _unsubscribeToTopics(_topicSubscriptionState.keys.toList() as List<String>);
+    _unsubscribeToTopics(_topicSubscriptionState.keys.whereType<String>().toList());
     for (String? topic in _topicSubscriptionState.keys) {
       topicSubscriptionState[topic] = false;
     }
