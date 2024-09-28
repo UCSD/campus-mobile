@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NoticesService {
   bool _isLoading = false;
@@ -9,8 +10,6 @@ class NoticesService {
   String? _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String endpoint =
-      'https://mobile.ucsd.edu/replatform/v1/qa/notices-v2.json';
 
   List<NoticesModel> _noticesModel = [];
 
@@ -19,7 +18,7 @@ class NoticesService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(endpoint);
+      String _response = await _networkHelper.fetchData(dotenv.get('NOTICES_ENDPOINT'));
 
       /// parse data
       _noticesModel = noticesModelFromJson(_response);

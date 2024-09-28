@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/barcode.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -32,9 +33,9 @@ class ScannerDataProvider extends ChangeNotifier
 
   void initState() {
     if (Platform.isIOS) {
-      _licenseKey = 'SCANDIT_NATIVE_LICENSE_IOS_PH';
+      _licenseKey = dotenv.get('SCANDIT_NATIVE_LICENSE_IOS');
     } else if (Platform.isAndroid) {
-      _licenseKey = 'SCANDIT_NATIVE_LICENSE_ANDROID_PH';
+      _licenseKey = dotenv.get('SCANDIT_NATIVE_LICENSE_ANDROID');
     }
 
     errorText = "Something went wrong, please try again.";

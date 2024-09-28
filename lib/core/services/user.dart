@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserProfileService {
   UserProfileService();
@@ -10,7 +11,7 @@ class UserProfileService {
   late UserProfileModel _userProfileModel;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String _endpoint = 'https://api-qa.ucsd.edu:8243/mp-registration/1.0.0';
+  final String _endpoint = dotenv.get('USER_ENDPOINT');
 
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
     print("user headers:");

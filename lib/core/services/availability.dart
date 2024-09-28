@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AvailabilityService {
   AvailabilityService();
@@ -22,9 +23,8 @@ class AvailabilityService {
     try {
       /// fetch data
       String _response = await (_networkHelper.authorizedFetch(
-          "https://api-qa.ucsd.edu:8243/campusbusyness/v1/busyness", {
-        "Authorization":
-            "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
+          dotenv.get('AVAILABILITY_API_ENDPOINT'), {
+        "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
       }));
 
       /// parse data

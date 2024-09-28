@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NetworkHelper {
   ///TODO: inside each service that file place a switch statement to handle all
@@ -14,7 +16,7 @@ class NetworkHelper {
   static const int SSO_REFRESH_MAX_RETRIES = 3;
   static const int SSO_REFRESH_RETRY_INCREMENT = 5000;
   static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
-  static const int DEFAULT_TIMEOUT = 60000;
+  static final int DEFAULT_TIMEOUT = int.parse(dotenv.get('DEFAULT_TIMEOUT'));
 
   Future<dynamic> fetchData(String url) async {
     Dio dio = new Dio();
@@ -191,6 +193,22 @@ class NetworkHelper {
       print('network error');
       print(err);
       return null;
+    }
+  }
+
+  Future<bool> getNewToken(Map<String, String> headers) async {
+    final String tokenEndpoint = dotenv.get('NEW_TOKEN_ENDPOINT');
+    final Map<String, String> tokenHeaders = {
+      "content-type": 'application/x-www-form-urlencoded',
+      "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
+    };
+    try {
+      var response = await authorizedPost(
+          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
+      headers["Authorization"] = "Bearer " + response["access_token"];
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

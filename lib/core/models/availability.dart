@@ -3,6 +3,7 @@
 //     final availabilityStatus = availabilityStatusFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 
 AvailabilityStatus availabilityStatusFromJson(String str) =>
     AvailabilityStatus.fromJson(json.decode(str));
@@ -24,17 +25,38 @@ class AvailabilityStatus {
   factory AvailabilityStatus.fromJson(Map<String, dynamic> json) =>
       AvailabilityStatus(
         status: json["status"]!,
-        data: List<AvailabilityModel>.from(
-                json["data"]!.map((x) => AvailabilityModel.fromJson(x))
-        ),
+        // TODO: rewrite this to be shorter! Hint: use functional style iterators...
+        data: ((){
+          List<AvailabilityModel> returnList = List<AvailabilityModel>.from(
+              json["data"]!.map((x) => AvailabilityModel.fromJson(x)));
+          for (int index = 0; index < returnList.length; index++) {
+            if (returnList[index].subLocations!.length > 3) {
+              String baseName = returnList[index].name!;
+              int baseId = returnList[index].id!;
+              List<SubLocations> baseSubLocations = returnList[index].subLocations!;
+              returnList.removeAt(index);
+              index--;
+              int curPageIndex = 1;
+              int maxPageIndex = (baseSubLocations.length / 3).ceil();
+              for (int i = 0; i < baseSubLocations.length; i += 3) {
+                index++;
+                List<SubLocations> curSubList = baseSubLocations.sublist(i, i + 3 > baseSubLocations.length ? baseSubLocations.length : i + 3);
+                String curName = baseName + " ($curPageIndex/$maxPageIndex)";
+                returnList.insert(index, AvailabilityModel(id: baseId, name: curName, subLocations: curSubList));
+                curPageIndex++;
+              }
+            }
+          }
+          return returnList;
+        })(),
         timestamp: DateTime.parse(json["timestamp"]!),
       );
 
   Map<String, dynamic> toJson() => {
-        "status": status,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
-        "timestamp": timestamp.toIso8601String(),
-      };
+    "status": status,
+    "data": List<dynamic>.from(data.map((x) => x.toJson())),
+    "timestamp": timestamp.toIso8601String(),
+  };
 }
 
 class AvailabilityModel {
@@ -53,17 +75,15 @@ class AvailabilityModel {
         id: json["id"]!,
         name: json["name"]!,
         subLocations: List<SubLocations>.from(
-                json["childCounts"]!.map((x) => SubLocations.fromJson(x))
+            json["childCounts"]!.map((x) => SubLocations.fromJson(x))
         ),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "childCounts": List<dynamic>.from(
-            subLocations.map((x) => x.toJson())
-        ),
-      };
+    "id": id,
+    "name": name,
+    "childCounts": List<dynamic>.from(subLocations.map((x) => x.toJson())),
+  };
 }
 
 class SubLocations {
@@ -92,12 +112,12 @@ class SubLocations {
   );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "percentage": percentage,
-        "isActive": isActive,
-        "floors": floors
-      };
+    "id": id,
+    "name": name,
+    "percentage": percentage,
+    "isActive": isActive,
+    "floors": floors
+  };
 }
 
 class Floor {
@@ -116,17 +136,17 @@ class Floor {
   bool isActive;
 
   factory Floor.fromJson(Map<String, dynamic> json) => Floor(
-        id: json["id"]!,
-        name: json["name"]!,
-        count: json["count"]!,
-        percentage: json["percentage"]!.toDouble(),
-        isActive: json["isActive"]!,
-      );
+    id: json["id"]!,
+    name: json["name"]!,
+    count: json["count"]!,
+    percentage: json["percentage"]!.toDouble(),
+    isActive: json["isActive"]!,
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "percentage": percentage,
-        "isActive": isActive,
-      };
+    "id": id,
+    "name": name,
+    "percentage": percentage,
+    "isActive": isActive,
+  };
 }

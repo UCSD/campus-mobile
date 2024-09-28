@@ -3,8 +3,7 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/availability.dart';
 import 'package:flutter/material.dart';
 
-class AvailabilityDataProvider extends ChangeNotifier
-{
+class AvailabilityDataProvider extends ChangeNotifier {
   /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
@@ -29,22 +28,26 @@ class AvailabilityDataProvider extends ChangeNotifier
     if (await _availabilityService.fetchData()) {
       /// setting the LocationViewState based on user data
       for (AvailabilityModel model in _availabilityService.data) {
+        String curName = model.name;
+        RegExpMatch? match = RegExp(r' \(\d+/\d+\)$').firstMatch(curName);
+        if (match != null) {
+          curName = curName.replaceRange(match.start, match.end, '');
+        }
         newMapOfLots[model.name] = model;
 
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
         if (_userDataProvider
-            .userProfileModel.selectedOccuspaceLocations!.isEmpty) {
-          locationViewState[model.name] = true;
+            .userProfileModel!.selectedOccuspaceLocations!.isEmpty) {
+          locationViewState[curName] = true;
         }
 
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
-          _locationViewState[model.name] = _userDataProvider
-              .userProfileModel.selectedOccuspaceLocations!
-              .contains(model.name);
+          _locationViewState[curName] = _userDataProvider
+              .userProfileModel!.selectedOccuspaceLocations!
+              .contains(curName);
         }
-      }
 
       ///replace old list of lots with new one
       _availabilityModels = newMapOfLots;
@@ -61,14 +64,13 @@ class AvailabilityDataProvider extends ChangeNotifier
   }
 
   List<AvailabilityModel?> makeOrderedList(List<String?>? order) {
-    if (order == null) {
+    if (order == null)
       return _availabilityModels.values.toList();
-    }
 
     ///create an empty list that will be returned
     List<AvailabilityModel?> orderedListOfLots = [];
     Map<String?, AvailabilityModel> tempMap = {};
-    tempMap.addAll(_availabilityModels);
+    tempMap.addAll(_availabilityModels!);
 
     /// remove lots as we add them to the ordered list
     for (String? lotName in order) {
@@ -122,14 +124,13 @@ class AvailabilityDataProvider extends ChangeNotifier
   Map<String?, bool> get locationViewState => _locationViewState;
 
   List<AvailabilityModel?> get availabilityModels {
-    ///check if we have an offline _userProfileModel
     return makeOrderedList(
-        _userDataProvider.userProfileModel.selectedOccuspaceLocations);
+      _userDataProvider.userProfileModel.selectedOccuspaceLocations);
   }
 
   /// get all locations
   List<String> locations() =>
-      _availabilityModels.values
-          .map((model) => model.name)
-          .toList();
+    _availabilityModels.values
+        .map((model) => model.name)
+    .toList();
 }

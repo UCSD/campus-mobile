@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/cards.dart';
+import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:connectivity/connectivity.dart';
@@ -184,7 +185,7 @@ class CardsDataProvider extends ChangeNotifier {
       _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
     }
-    _cardOrder = newOrder!;
+    _cardOrder = newOrder;
     _lastUpdated = DateTime.now();
     notifyListeners();
   }
@@ -240,13 +241,13 @@ class CardsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _deactivateAllCards() {
+  _deactivateAllCards() {
     for (String card in _cardStates.keys) {
       _cardStates[card] = false;
     }
   }
 
-  void activateStudentCards() {
+  activateStudentCards() {
     int index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
@@ -258,7 +259,7 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
-  void showAllStudentCards() {
+  showAllStudentCards() {
     int index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
@@ -274,7 +275,7 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
-  void deactivateStudentCards() {
+  deactivateStudentCards() {
     for (String card in _studentCards) {
       _cardOrder.remove(card);
       _cardStates[card] = false;
@@ -284,18 +285,18 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
-  void activateStaffCards() {
+  activateStaffCards() {
     int index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _staffCards.toList());
 
     // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder.toSet().toList());
+    _cardOrder = List.from(_cardOrder!.toSet().toList());
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates.keys.where((card) => _cardStates[card]!).toList());
+        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
-  void showAllStaffCards() {
+  showAllStaffCards() {
     int index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _staffCards.toList());
 
@@ -310,14 +311,14 @@ class CardsDataProvider extends ChangeNotifier {
         _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
-  void deactivateStaffCards() {
+  deactivateStaffCards() {
     for (String card in _staffCards) {
       _cardOrder.remove(card);
       _cardStates[card] = false;
     }
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates.keys.where((card) => _cardStates[card]!).toList());
+        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
   void reorderCards(List<String> order) {
@@ -326,6 +327,8 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void toggleCard(String card) {
+    if (_availableCards[card]!.isWebCard && _cardStates[card]!)
+      resetCardHeight(card);
     _cardStates[card] = !_cardStates[card]!;
     updateCardStates(
         _cardStates.keys.where((card) => _cardStates[card]!).toList());

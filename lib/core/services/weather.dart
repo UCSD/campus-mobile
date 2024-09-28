@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/weather.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WeatherService {
   bool _isLoading = false;
@@ -8,7 +9,7 @@ class WeatherService {
   String? _error;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-  final String endpoint = 'https://77hpgmqp7k.execute-api.us-west-2.amazonaws.com/dev-v1/weatherservice/weatherforecast';
+  final String endpoint = dotenv.get('WEATHER_ENDPOINT');
 
   late WeatherModel _weatherModel;
 

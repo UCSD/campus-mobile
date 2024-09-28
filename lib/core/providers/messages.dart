@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/messages.dart';
 import 'package:flutter/material.dart';
+import '../../ui/navigator/bottom.dart';
 
 //MESSAGES API UNIX TIMESTAMPS IN MILLISECONDS NOT SECONDS
 
@@ -10,15 +11,16 @@ class MessagesDataProvider extends ChangeNotifier
 {
   MessagesDataProvider() {
     /// DEFAULT STATES
-    _scrollController.addListener(() {
+    notificationScrollController.addListener(() {
       var triggerFetchMoreSize =
-          0.9 * _scrollController.position.maxScrollExtent;
+          0.9 * notificationScrollController.position.maxScrollExtent;
 
-      if (_scrollController.position.pixels > triggerFetchMoreSize) {
-        if (!_isLoading&& _hasMoreMessagesToLoad) {
+      if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
+        if (!_isLoading! && _hasMoreMessagesToLoad!) {
           fetchMessages(false);
         }
       }
+      setNotificationsScrollOffset(notificationScrollController.offset);
     });
   }
 
@@ -29,7 +31,7 @@ class MessagesDataProvider extends ChangeNotifier
   int _previousTimestamp = 0;
   String _statusText = NotificationsConstants.statusFetching;
   bool _hasMoreMessagesToLoad = false;
-  final ScrollController _scrollController = ScrollController();
+  final notificationScrollController = ScrollController();
 
   /// MODELS
   List<MessageElement> _messages = [];
@@ -83,11 +85,11 @@ class MessagesDataProvider extends ChangeNotifier
 
       returnedTimestamp = _messageService.messagingModels.next ?? 0;
       // this is to check if we can no more message to paginate through
-      if (_previousTimestamp == returnedTimestamp || returnedTimestamp == 0) {
+      if (_previousTimestamp == returnedTimestamp || returnedTimestamp == 0)
         _hasMoreMessagesToLoad = false;
-      } else {
+      else
         _hasMoreMessagesToLoad = true;
-      }
+
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
       _isLoading = false;
