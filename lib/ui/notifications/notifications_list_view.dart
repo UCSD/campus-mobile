@@ -14,6 +14,7 @@ import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../navigator/bottom.dart';
 
+// TODO: make this not global. Probably put into Widget as stateful variable...
 bool hideListView = false;
 
 class NotificationsListView extends StatefulWidget {

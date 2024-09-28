@@ -10,8 +10,6 @@ class MapSearchService {
   String? _error;
   List<MapSearchModel> _results = [];
   final NetworkHelper _networkHelper = NetworkHelper();
-  static const String baseEndpoint =
-      "https://0dakeo6qfi.execute-api.us-west-2.amazonaws.com/qa/v2/map/search";
 
   Future<bool> fetchLocations(String location) async {
     _error = null;
