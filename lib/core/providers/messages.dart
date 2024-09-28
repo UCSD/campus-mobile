@@ -16,7 +16,7 @@ class MessagesDataProvider extends ChangeNotifier
           0.9 * notificationScrollController.position.maxScrollExtent;
 
       if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
-        if (!_isLoading! && _hasMoreMessagesToLoad!) {
+        if (!_isLoading&& _hasMoreMessagesToLoad) {
           fetchMessages(false);
         }
       }
@@ -159,7 +159,7 @@ class MessagesDataProvider extends ChangeNotifier
   DateTime? get lastUpdated => _lastUpdated;
   String get statusText => _statusText;
   bool get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
-  ScrollController get scrollController => _scrollController;
+  ScrollController get scrollController => notificationScrollController;
 
   List<MessageElement> get messages => _messages;
 }

@@ -48,7 +48,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     // loop through all the models, adding each one to locationsList
     for (AvailabilityModel? model in data) {
       if (model != null) {
-        String curName = model.name!;
+        String curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
         if (match != null) {
           curName = curName.replaceRange(match.start, match.end, '');

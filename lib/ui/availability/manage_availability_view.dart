@@ -27,15 +27,13 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
-    List<AvailabilityModel?> newOrder =
-        _availabilityDataProvider.availabilityModels;
+    final multiPager = RegExp(r' \((\d+)/(\d+)\)$');
+    List<AvailabilityModel?> newOrder = _availabilityDataProvider.availabilityModels;
     List<AvailabilityModel?> extraPages = [];
+
     // -----Must remove pages after head of multi pagers and reinsert later to avoid reordering errors-----
     for (AvailabilityModel? item in newOrder) {
-      RegExpMatch? match = multiPager.firstMatch(item!.name!);
+      RegExpMatch? match = multiPager.firstMatch(item!.name);
       if (match != null) {
         if (match.group(1) != "1") {
           extraPages.add(item);
@@ -48,7 +46,6 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     // ----------------------------------------------------------------------------------------------------
     List<AvailabilityModel> toRemove = [];
     newOrder.removeWhere((element) => toRemove.contains(element));
-
     AvailabilityModel? item = newOrder.removeAt(oldIndex);
     if (newIndex > oldIndex) {
       newIndex--;

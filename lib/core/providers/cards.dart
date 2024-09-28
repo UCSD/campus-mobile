@@ -185,7 +185,7 @@ class CardsDataProvider extends ChangeNotifier {
       _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
     }
-    _cardOrder = newOrder;
+    _cardOrder = newOrder!;
     _lastUpdated = DateTime.now();
     notifyListeners();
   }
@@ -290,10 +290,10 @@ class CardsDataProvider extends ChangeNotifier {
     _cardOrder.insertAll(index, _staffCards.toList());
 
     // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder!.toSet().toList());
+    _cardOrder = List.from(_cardOrder.toSet().toList());
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+        _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
   showAllStaffCards() {
@@ -318,7 +318,7 @@ class CardsDataProvider extends ChangeNotifier {
     }
     updateCardOrder(_cardOrder);
     updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+        _cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
   void reorderCards(List<String> order) {

@@ -3,7 +3,6 @@
 //     final availabilityStatus = availabilityStatusFromJson(jsonString);
 
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 
 AvailabilityStatus availabilityStatusFromJson(String str) =>
     AvailabilityStatus.fromJson(json.decode(str));
@@ -30,10 +29,10 @@ class AvailabilityStatus {
           List<AvailabilityModel> returnList = List<AvailabilityModel>.from(
               json["data"]!.map((x) => AvailabilityModel.fromJson(x)));
           for (int index = 0; index < returnList.length; index++) {
-            if (returnList[index].subLocations!.length > 3) {
-              String baseName = returnList[index].name!;
-              int baseId = returnList[index].id!;
-              List<SubLocations> baseSubLocations = returnList[index].subLocations!;
+            if (returnList[index].subLocations.length > 3) {
+              String baseName = returnList[index].name;
+              int baseId = returnList[index].id;
+              List<SubLocations> baseSubLocations = returnList[index].subLocations;
               returnList.removeAt(index);
               index--;
               int curPageIndex = 1;

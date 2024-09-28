@@ -71,7 +71,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     }
     if (itemCount == 0) {
       itemBuilder = _buildMessage;
-      itemCount = Provider.of<MessagesDataProvider>(context).messages!.length;
+      itemCount = Provider.of<MessagesDataProvider>(context).messages.length;
     }
     return ListView.separated(
       physics: AlwaysScrollableScrollPhysics(),
@@ -129,27 +129,27 @@ class _NotificationsListViewState extends State<NotificationsListView> {
 
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages![index]!;
+        Provider.of<MessagesDataProvider>(context).messages[index];
     FreeFoodDataProvider freefoodProvider =
         Provider.of<FreeFoodDataProvider>(context);
 
     String? messageType;
-    if (data.audience!.topics == null) {
+    if (data.audience.topics == null) {
       messageType = "DM";
     } else {
-      messageType = data.audience?.topics![0];
+      messageType = data.audience.topics[0];
     }
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
         ListTile(
-            leading: Icon(_chooseIcon(messageType!),
+            leading: Icon(_chooseIcon(messageType),
                 color: Theme.of(context).colorScheme.secondary, size: 30),
             title: Column(
               children: <Widget>[
                 Text(
-                  data.message!.title!,
+                  data.message.title,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Padding(padding: const EdgeInsets.all(3.5))
@@ -161,7 +161,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                 Align(
                   alignment: Alignment.topLeft,
                   child: Linkify(
-                    text: data.message!.message!,
+                    text: data.message.message,
                     onOpen: (link) async {
                       try {
                         await launch(link.url, forceSafariVC: true);
@@ -179,7 +179,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               ],
             ),
             trailing: Column(children: <Widget>[
-              Text(_readTimestamp(data.timestamp!),
+              Text(_readTimestamp(data.timestamp),
                   style: TextStyle(fontSize: 10, color: Colors.grey)),
             ])),
       ],

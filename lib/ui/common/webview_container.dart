@@ -257,7 +257,7 @@ class _WebViewContainerState extends State<WebViewContainer>
   void checkWebURL() async {
     String? currentUrl = await _webViewController?.currentUrl();
     if (_webViewController != null && webCardUrl != currentUrl) {
-      _webViewController?.loadUrl(webCardUrl!);
+      _webViewController?.loadUrl(webCardUrl);
     }
   }
 }
