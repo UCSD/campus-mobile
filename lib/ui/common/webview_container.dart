@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewContainer extends StatefulWidget {
@@ -172,11 +173,13 @@ class _WebViewContainerState extends State<WebViewContainer>
       case CardMenuOptionConstants.reloadCard:
         {
           _webViewController?.loadUrl(webCardUrl!);
+          resetCardHeight(widget.cardId);
         }
         break;
       case CardMenuOptionConstants.hideCard:
         {
           hide!();
+          resetCardHeight(widget.cardId);
         }
         break;
       default:

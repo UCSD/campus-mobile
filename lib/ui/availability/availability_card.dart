@@ -43,16 +43,24 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   }
 
   Widget buildAvailabilityCard(List<AvailabilityModel?> data) {
+    // RegExp multiPager = RegExp(r' \(\d+/\d+\)$');
     // Filter the models and create a list of only the valid ones
-    List<AvailabilityModel> filteredData = data
-        .where((model) =>
-            model != null &&
-            _availabilityDataProvider.locationViewState[model!.name]!)
-        .cast<AvailabilityModel>()
+    List<Widget> locationsList = data
+        .where((model) {
+      if (model == null) return false;
+      String curName = model.name!;
+      RegExp multiPager = RegExp(r' \(\d+/\d+\)$');
+      RegExpMatch? match = multiPager.firstMatch(curName);
+      if (match != null) {
+        curName = curName.replaceRange(match.start, match.end, '');
+      }
+      return _availabilityDataProvider.locationViewState[curName]!;
+    })
+        .map((model) => AvailabilityDisplay(model: model!))
         .toList();
 
     // If no location is available, show "No Location to Display"
-    if (filteredData.isEmpty) {
+    if (locationsList.isEmpty) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -79,9 +87,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         Flexible(
           child: PageView.builder(
             controller: _controller,
-            itemCount: filteredData.length,
+            itemCount: locationsList.length,
             itemBuilder: (context, index) {
-              return AvailabilityDisplay(model: filteredData[index]);
+              return locationsList[index];
             },
           ),
         ),
@@ -89,7 +97,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
           scrollDirection: Axis.horizontal,
           child: DotsIndicator(
             controller: _controller,
-            itemCount: filteredData.length,
+            itemCount: locationsList.length,
             onPageSelected: (int index) {
               _controller.animateToPage(index,
                   duration: Duration(seconds: 1), curve: Curves.ease);

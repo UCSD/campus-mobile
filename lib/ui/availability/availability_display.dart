@@ -112,7 +112,6 @@ class AvailabilityDisplay extends StatelessWidget {
     );
   }
 
-
   num percentAvailability(SubLocations location) => location.percentage!;
 
   setIndicatorColor(num percentage) {

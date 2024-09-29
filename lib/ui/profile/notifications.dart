@@ -36,7 +36,7 @@ class NotificationsSettingsView extends StatelessWidget {
                 .toggleNotifications(topic);
           },
           // activeColor: Theme.of(context).buttonColor,
-          activeColor: Theme.of(context).backgroundColor,
+          activeColor: Theme.of(context).colorScheme.surface,
         ),
       ));
     }
