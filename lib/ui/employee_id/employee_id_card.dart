@@ -11,28 +11,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class EmployeeIdCard extends StatefulWidget {
-  @override
-  _EmployeeIdCardState createState() => _EmployeeIdCardState();
-}
-
-class _EmployeeIdCardState extends State<EmployeeIdCard> {
-  String cardId = "employee_id";
-  String placeholderPhotoUrl =
+class EmployeeIdCard extends StatelessWidget {
+  final String cardId = "employee_id";
+  final String placeholderPhotoUrl =
       "https://mobile.ucsd.edu/replatform/v1/qa/webview/resources/img/placeholderPerson.png";
-  bool isValidId = false;
 
-  @override
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
 
     EmployeeIdModel? employeeModel =
         Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
-    isValidId = employeeModel != null &&
-        (employeeModel.barcode != null) &&
-        (employeeModel.employeePreferredDisplayName != null &&
-            employeeModel.employeeId != null);
-
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
@@ -42,7 +30,10 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
       isLoading: Provider.of<EmployeeIdDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId],
       errorText: Provider.of<EmployeeIdDataProvider>(context).error,
-      child: () => isValidId
+      child: () => (employeeModel != null &&
+              (employeeModel.barcode != null) &&
+              (employeeModel.employeePreferredDisplayName != null &&
+                  employeeModel.employeeId != null))
           ? buildCardContent(
               Provider.of<EmployeeIdDataProvider>(context).employeeIdModel,
               context)
@@ -60,7 +51,6 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
             bottom: 32.0,
           ),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
@@ -267,7 +257,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                       employeeIdModel.employeePreferredDisplayName,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: tabletFontSize(
+                          fontSize: tabletFontSize(context,
                               employeeIdModel.employeePreferredDisplayName,
                               "name")),
                       textAlign: TextAlign.left,
@@ -284,7 +274,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize:
-                              tabletFontSize(employeeIdModel.department, "")),
+                              tabletFontSize(context, employeeIdModel.department, "")),
                       textAlign: TextAlign.left,
                       softWrap: false,
                       maxLines: 1,
@@ -296,7 +286,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                     child: Text(
                       "Employee ID " + employeeIdModel.employeeId,
                       style: TextStyle(
-                          fontSize: tabletFontSize(
+                          fontSize: tabletFontSize(context,
                               "Employee ID " + employeeIdModel.employeeId, "")),
                       textAlign: TextAlign.left,
                       softWrap: false,
@@ -444,8 +434,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: fontSizeForTablet(),
-                            letterSpacing: letterSpacingForTablet()),
+                            fontSize: fontSizeForTablet(context),
+                            letterSpacing: letterSpacingForTablet(context)),
                       )
                     ],
                   ),
@@ -473,14 +463,14 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     }
   }
 
-  double letterSpacingForTablet() {
+  double letterSpacingForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 1;
     }
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
-  double fontSizeForTablet() {
+  double fontSizeForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 2;
     }
@@ -540,8 +530,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: getRotatedPopUpFontSize(),
-                            letterSpacing: letterSpacing()),
+                            fontSize: getRotatedPopUpFontSize(context),
+                            letterSpacing: letterSpacing(context)),
                       )
                     ],
                   ),
@@ -575,12 +565,12 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     }
   }
 
-  double letterSpacing() =>
+  double letterSpacing(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 1
           : SizeConfig.safeBlockHorizontal * 3;
 
-  double getRotatedPopUpFontSize() =>
+  double getRotatedPopUpFontSize(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 2
           : SizeConfig.safeBlockHorizontal * 4;
@@ -604,9 +594,9 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     return base;
   }
 
-  double tabletFontSize(String input, String textField) {
+  double tabletFontSize(BuildContext context, String input, String textField) {
     /// Base font size
-    double base = letterSpacingForTablet();
+    double base = letterSpacingForTablet(context);
 
     /// If threshold is passed, shrink text
     // if (input.length >= 21) {
