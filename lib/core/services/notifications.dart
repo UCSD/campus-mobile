@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/topics.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,6 +11,7 @@ class NotificationService {
   List<TopicsModel>? _topicsModel;
 
   Future<bool> fetchTopics() async {
+    _error = null; _isLoading = true;
     try {
       String? response = await _networkHelper.fetchData(
           dotenv.get('NOTIFICATIONS_TOPICS_ENDPOINT')
@@ -26,6 +26,9 @@ class NotificationService {
     } catch (e) {
       _error = e.toString();
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 
@@ -45,8 +48,7 @@ class NotificationService {
     }
   }
 
-  Future<bool> deletePushToken(
-      Map<String, String> headers, String token) async {
+  Future<bool> deletePushToken(Map<String, String> headers, String token) async {
     token = Uri.encodeComponent(token);
     try {
       String? response = await _networkHelper.authorizedDelete(

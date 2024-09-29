@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/speed_test.dart';
 import 'package:connectivity/connectivity.dart';
@@ -11,8 +10,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SpeedTestService {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
   SpeedTestService();
+
   Future<bool> checkSimulation() async {
     try {
       if (Platform.isAndroid) {
@@ -34,7 +33,6 @@ class SpeedTestService {
 
   Connectivity _connectivity = Connectivity();
   final NetworkHelper _networkHelper = NetworkHelper();
-
   SpeedTestModel? _speedTestModel;
   bool _isLoading = false;
   String? _error;
@@ -43,8 +41,7 @@ class SpeedTestService {
   };
 
   Future<bool> fetchSignedUrls() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       await _networkHelper.getNewToken(headers);
       // Get download & upload urls
@@ -60,14 +57,15 @@ class SpeedTestService {
         _speedTestModel = speedTestModelFromJson(
             data, _downloadResponse!, _uploadResponse!, data != null);
       });
-      _isLoading = false;
       return true;
     } catch (exception) {
       // Occurs when there is no connection
       _speedTestModel = SpeedTestModel.fromJson(null, null, null, false);
       _error = exception.toString();
-      _isLoading = false;
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 
@@ -85,8 +83,6 @@ class SpeedTestService {
   }
 
   bool get isLoading => _isLoading;
-
   String? get error => _error;
-
   SpeedTestModel? get speedTestModel => _speedTestModel;
 }

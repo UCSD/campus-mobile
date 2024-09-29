@@ -1,5 +1,4 @@
 import 'dart:io' show Platform;
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/barcode.dart';
@@ -181,7 +180,9 @@ class ScannerDataProvider extends ChangeNotifier {
       isLoading = false;
       errorText = ScannerConstants.unknownError;
     }
-    notifyListeners();
+    finally{
+      notifyListeners();
+    }
   }
 
   /// Simple setters and getters

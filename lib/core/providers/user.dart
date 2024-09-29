@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -71,8 +70,10 @@ class UserDataProvider extends ChangeNotifier {
     } catch (e) {
       box = await Hive.openBox<UserProfileModel?>('UserProfileModel');
     }
-    await box.put('UserProfileModel', model);
-    _lastUpdated = DateTime.now();
+    finally{
+      await box.put('UserProfileModel', model);
+      _lastUpdated = DateTime.now();
+    }
   }
 
   /// Load data from persistent storage by invoking the following methods:
@@ -80,7 +81,6 @@ class UserDataProvider extends ChangeNotifier {
   /// [_loadSavedUserProfile]
   Future loadSavedData() async {
     await _loadSavedAuthenticationModel();
-
     await _loadSavedUserProfile();
   }
 

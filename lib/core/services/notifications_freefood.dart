@@ -7,17 +7,14 @@ class FreeFoodService {
   DateTime? _lastUpdated;
   String? _error;
   FreeFoodModel? _data;
-
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-
   FreeFoodService();
 
   Future<bool> fetchData(String id) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       var _response = await _networkHelper.authorizedFetch(
@@ -29,40 +26,35 @@ class FreeFoodService {
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
-
-      _isLoading = false;
       _data = data;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-
       if (e.toString().contains("401")) {
         if (await _networkHelper.getNewToken(headers)) {
           return await fetchData(id);
         }
       }
       _error = e.toString();
-      _isLoading = false;
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 
   Future<bool> fetchMaxCount(String id) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') +
-          'events/' +
-          id +
-          '/rsvpLimit';
+          'events/' + id + '/rsvpLimit';
 
       /// fetch data
       var _response = await _networkHelper.authorizedFetch(_url, headers);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
-      _isLoading = false;
       _data = data;
       return true;
     } catch (e) {
@@ -74,15 +66,15 @@ class FreeFoodService {
         }
       }
       _error = e.toString();
-      _isLoading = false;
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 
   Future<bool> updateCount(String id, Map<String, dynamic> body) async {
-    _error = null;
-    _isLoading = true;
-
+    _error = null; _isLoading = true;
     try {
       String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id;
 
@@ -90,7 +82,6 @@ class FreeFoodService {
       var _response = await _networkHelper.authorizedPut(_url, headers, body);
 
       if (_response != null) {
-        _isLoading = false;
         return true;
       } else {
         throw (_response.toString());
@@ -104,8 +95,10 @@ class FreeFoodService {
         }
       }
       _error = e.toString();
-      _isLoading = false;
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 

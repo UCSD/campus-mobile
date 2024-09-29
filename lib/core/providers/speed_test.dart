@@ -121,15 +121,16 @@ class SpeedTestProvider extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
-    _timer.stop();
-    notifyListeners();
+    finally{
+      _timer.stop();
+      notifyListeners();
+    }
   }
 
   Future downloadSpeedTest() async {
     String path = (await getApplicationDocumentsDirectory()).path;
     //create file
     File tempDownload = File(path + "/temp.html");
-    // _timer.start();
     notifyListeners();
     try {
       _cancelTokenDownload = new CancelToken();
@@ -140,17 +141,17 @@ class SpeedTestProvider extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
-    _timer.stop();
-    notifyListeners();
+    finally{
+      _timer.stop();
+      notifyListeners();
+    }
   }
 
   _progressCallbackDownload(int bytesDownloaded, int totalBytes) {
     _secondsElapsedDownload = _timer.elapsed.inSeconds;
     double speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
     _speedDownload = _convertToMbps(speedInBytes);
-
     _percentDownloaded = bytesDownloaded / totalBytes;
-
     notifyListeners();
   }
 

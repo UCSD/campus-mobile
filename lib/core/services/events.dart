@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,14 +10,10 @@ class EventsService {
   List<EventModel>? _data;
 
   final NetworkHelper _networkHelper = NetworkHelper();
-
-  EventsService() {
-    fetchData();
-  }
+  EventsService() { fetchData(); }
 
   Future<bool> fetchData() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response =
@@ -26,13 +21,14 @@ class EventsService {
 
       /// parse data
       final data = eventModelFromJson(_response);
-      _isLoading = false;
       _data = data;
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 

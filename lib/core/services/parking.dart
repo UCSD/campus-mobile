@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,8 +18,7 @@ class ParkingService {
   };
 
   Future<bool> fetchParkingLotData() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await (_networkHelper.authorizedFetch(
@@ -28,7 +26,6 @@ class ParkingService {
 
       /// parse data
       _data = parkingModelFromJson(_response);
-      _isLoading = false;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
@@ -39,8 +36,10 @@ class ParkingService {
         }
       }
       _error = e.toString();
-      _isLoading = false;
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 

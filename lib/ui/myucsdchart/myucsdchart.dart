@@ -26,7 +26,7 @@ class MyUCSDChartCard extends StatelessWidget {
   Widget buildCardContent(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        handleTap();
+        openMyUCSDChart();
       },
       behavior: HitTestBehavior.translucent,
       child: Row(
@@ -64,21 +64,16 @@ class MyUCSDChartCard extends StatelessWidget {
         'Log in to MyUCSDChart',
       ),
       onPressed: () {
-        handleTap();
+        openMyUCSDChart();
       },
     ));
     return actionButtons;
   }
 
-  void handleTap() {
-    String myChartUrl =
-        'https://myucsdchart.ucsd.edu/UCSD/Authentication/Login';
-    openLink(myChartUrl);
-  }
-
-  openLink(String url) async {
+  void openMyUCSDChart() {
     try {
-      launch(url, forceSafariVC: true);
+      launch('https://myucsdchart.ucsd.edu/UCSD/Authentication/Login',
+          forceSafariVC: true);
     } catch (e) {
       // an error occurred, do nothing
     }

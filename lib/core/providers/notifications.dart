@@ -130,6 +130,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } on PlatformException {
       _error = 'Failed to get platform info.';
     }
+    catch(e) {}
   }
 
   ///Handles notification when selected

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
@@ -18,14 +17,11 @@ class StudentIdService {
   StudentIdNameModel _studentIdNameModel = StudentIdNameModel();
   StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
   StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel();
-
   final NetworkHelper _networkHelper = NetworkHelper();
-
 
   //Removed term (not used)
   Future<bool> fetchStudentIdName(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
@@ -33,19 +29,19 @@ class StudentIdService {
 
       /// parse data
       _studentIdNameModel = studentIdNameModelFromJson(_response);
-      _isLoading = false;
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 
   //Removed term (not used)
   Future<bool> fetchStudentIdPhoto(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
@@ -53,31 +49,32 @@ class StudentIdService {
 
       /// parse data
       _studentIdPhotoModel = studentIdPhotoModelFromJson(_response);
-      _isLoading = false;
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 
   /// Removed term (not used)
   Future<bool> fetchStudentIdProfile(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
           myStudentProfileApiUrl + '/profile', headers);
 
       _studentIdProfileModel = studentIdProfileModelFromJson(_response);
-      _isLoading = false;
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    }
+    finally {
+      _isLoading = false;
     }
   }
 
