@@ -6,7 +6,7 @@ import time
 import json
 import select
 
-# Set the path to the Campus Mobile project
+# Define the default campus mobile installation folder
 project_path = os.path.expanduser('~/development/campus-mobile')
 
 ##############################################################################################################
@@ -38,6 +38,7 @@ def main():
     proceed = input("Press 'Y' to continue with the installation, any other key to exit: ").strip().upper()
     if proceed == "Y":
         print("\nStarting installation... Please be patient as this process may take up to 10 minutes.\n")
+        backup_zshrc() # 0/10
         install_homebrew() # 1/10
         install_git() # 2/10
         install_java() # 3/10
@@ -466,6 +467,14 @@ def run_campus_mobile():
 ##############################################################################################################
 # 0/0  Utility functions
 ##############################################################################################################
+def backup_zshrc():
+    zshrc_path = os.path.expanduser('~/.zshrc')
+    if os.path.exists(zshrc_path):
+        timestamp = int(time.time())
+        backup_path = f'{zshrc_path}.{timestamp}.bak'
+        with open(zshrc_path, 'r') as original, open(backup_path, 'w') as backup:
+            backup.write(original.read())
+
 def ensure_zshrc_exists():
     zshrc_path = os.path.expanduser('~/.zshrc')
     if not os.path.exists(zshrc_path):
