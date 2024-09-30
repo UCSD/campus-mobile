@@ -84,52 +84,52 @@ class CardsDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
       if (_availableCards!.isNotEmpty) {
         // remove all inactive or non-existent cards from [_cardOrder]
-        var tempCardOrder = List.from(_cardOrder!);
+        var tempCardOrder = List.from(_cardOrder);
         for (String card in tempCardOrder) {
           // check to see if card no longer exists
           if (_availableCards![card] == null) {
-            _cardOrder!.remove(card);
+            _cardOrder.remove(card);
           }
           // check to see if card is not active
           else if (!(_availableCards![card]!.cardActive ?? false)) {
-            _cardOrder!.remove(card);
+            _cardOrder.remove(card);
           }
         }
         // remove all inactive or non-existent cards from [_cardStates]
-        var tempCardStates = Map.from(_cardStates!);
+        var tempCardStates = Map.from(_cardStates);
         for (String card in tempCardStates.keys) {
           // check to see if card no longer exists
           if (_availableCards![card] == null) {
-            _cardStates!.remove(card);
+            _cardStates.remove(card);
           }
           // check to see if card is not active
           else if (!(_availableCards![card]!.cardActive ?? false)) {
-            _cardStates!.remove(card);
+            _cardStates.remove(card);
           }
         }
 
         // add active webCards
-        for (String card in _cardStates!.keys) {
+        for (String card in _cardStates.keys) {
           if (_availableCards![card]!.isWebCard!) {
-            _webCards![card] = _availableCards![card];
+            _webCards[card] = _availableCards![card];
           }
         }
         // add new cards to the top of the list
         for (String card in _availableCards!.keys) {
           if (_studentCards.contains(card)) continue;
           if (_staffCards.contains(card)) continue;
-          if (!_cardOrder!.contains(card) &&
+          if (!_cardOrder.contains(card) &&
               (_availableCards![card]!.cardActive ?? false)) {
-            _cardOrder!.insert(0, card);
+            _cardOrder.insert(0, card);
           }
           // keep all new cards activated by default
-          if (!_cardStates!.containsKey(card)) {
-            _cardStates![card] = true;
+          if (!_cardStates.containsKey(card)) {
+            _cardStates[card] = true;
           }
         }
         updateCardOrder(_cardOrder);
         updateCardStates(
-            _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+            _cardStates.keys.where((card) => _cardStates[card]!).toList());
       }
     } else {
       _error = _cardsService.error;
@@ -179,7 +179,7 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
-  Future updateCardOrder(List<String>? newOrder) async {
+  Future updateCardOrder(List<String> newOrder) async {
     if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
       return;
     }
@@ -325,7 +325,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void toggleCard(String card) {
-    if (_availableCards![card]!.isWebCard! && _cardStates![card]!) {
+    if (_availableCards![card]!.isWebCard! && _cardStates[card]!) {
         resetCardHeight(card);
     }
     _cardStates[card] = !_cardStates[card]!;

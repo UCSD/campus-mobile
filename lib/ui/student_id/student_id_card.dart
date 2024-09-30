@@ -329,12 +329,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       padding: EdgeInsets.all(0),
                     ),
                     child: returnBarcodeContainerTablet(
-                        profileModel!.barcode.toString(), false, context),
+                        profileModel.barcode.toString(), false, context),
                     onPressed: () {
                       createAlertDialog(
                           context,
                           returnBarcodeContainer(
-                              profileModel!.barcode.toString(), true, context),
+                              profileModel.barcode.toString(), true, context),
                           profileModel.barcode.toString(),
                           true);
                     },
