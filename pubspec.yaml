@@ -16,6 +16,10 @@ dependencies:
   firebase_messaging: 10.0.0
   flutter:
     sdk: flutter
+  flutter_dotenv:
+    git:
+      url: https://github.com/UCSD/flutter_dotenv.git
+      ref: master
   flutter_scandit_plugin:
     git:
       url: https://github.com/UCSD/flutter_scandit.git
@@ -33,6 +37,7 @@ dependencies:
     git:
       url: https://github.com/UCSD/liquid_progress_indicator.git
       ref: 9fd5cc0aa1a68d70588741f40bfc6830b46c10c1
+  measured_size: ^1.0.0
   geolocator: ^9.0.2
   package_info: 2.0.2
   percent_indicator: 4.2.2
@@ -42,7 +47,7 @@ dependencies:
   shared_preferences: 2.0.6
   uni_links2: 0.6.0+2
   url_launcher: 6.0.6
-  webview_flutter: 2.0.8
+  webview_flutter: ^2.0.13
   wifi_connection:
     git:
       url: https://github.com/UCSD/wifi_connection.git
@@ -62,4 +67,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/public_key.txt
+    - .env

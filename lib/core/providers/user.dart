@@ -7,14 +7,18 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
 import 'package:campus_mobile_experimental/core/services/user.dart';
+import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
+
+import '../../ui/home/home.dart';
 
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
@@ -146,13 +150,7 @@ class UserDataProvider extends ChangeNotifier {
 
   /// Encrypt given username and password and store on device
   void _encryptAndSaveCredentials(String username, String password) {
-    // TODO: import assets/public_key.txt
-    final String pkString = '-----BEGIN PUBLIC KEY-----\n' +
-        'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJD70ejMwsmes6ckmxkNFgKley\n' +
-        'gfN/OmwwPSZcpB/f5IdTUy2gzPxZ/iugsToE+yQ+ob4evmFWhtRjNUXY+lkKUXdi\n' +
-        'hqGFS5sSnu19JYhIxeYj3tGyf0Ms+I0lu/MdRLuTMdBRbCkD3kTJmTqACq+MzQ9G\n' +
-        'CaCUGqS6FN1nNKARGwIDAQAB\n' +
-        '-----END PUBLIC KEY-----';
+    final String pkString = dotenv.get('USER_CREDENTIALS_PUBLIC_KEY');
 
     final rsaParser = RSAKeyParser();
     final pc.RSAPublicKey publicKey = rsaParser.parse(pkString) as RSAPublicKey;
@@ -213,7 +211,9 @@ class UserDataProvider extends ChangeNotifier {
     if (username != null && encryptedPassword != null) {
       final String base64EncodedWithEncryptedPassword =
           base64.encode(utf8.encode(username + ':' + encryptedPassword));
-
+      resetHomeScrollOffset();
+      resetAllCardHeights();
+      resetNotificationsScrollOffset();
       if (await _authenticationService
           .silentLogin(base64EncodedWithEncryptedPassword)) {
         await updateAuthenticationModel(_authenticationService.data);
@@ -245,6 +245,9 @@ class UserDataProvider extends ChangeNotifier {
     _error = null;
     _isLoading = true;
     notifyListeners();
+    resetHomeScrollOffset();
+    resetAllCardHeights();
+    resetNotificationsScrollOffset();
     _pushNotificationDataProvider
         .unregisterDevice(_authenticationModel!.accessToken);
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
@@ -257,7 +260,6 @@ class UserDataProvider extends ChangeNotifier {
     await box.clear();
     await FirebaseAnalytics().logEvent(name: 'loggedOut');
     _isLoading = false;
-
     notifyListeners();
   }
 

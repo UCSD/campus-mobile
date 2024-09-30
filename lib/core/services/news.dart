@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NewsService {
   NewsService();
@@ -14,9 +15,6 @@ class NewsService {
     "accept": "application/json",
   };
 
-  final String endpoint =
-      "https://api-qa.ucsd.edu:8243/campusnews/1.0.0/ucsdnewsaggregator";
-
   NewsModel _newsModels = NewsModel();
 
   Future<bool> fetchData() async {
@@ -25,7 +23,7 @@ class NewsService {
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.authorizedFetch(endpoint, headers));
+          await (_networkHelper.authorizedFetch(dotenv.get('NEWS_ENDPOINT'), headers));
 
       /// parse data
       _newsModels = newsModelFromJson(_response);
@@ -33,33 +31,13 @@ class NewsService {
       return true;
     } catch (e) {
       if (e.toString().contains("401")) {
-        if (await getNewToken()) {
+        if (await _networkHelper.getNewToken(headers)) {
           return await fetchData();
         }
       }
 
       _error = e.toString();
       _isLoading = false;
-      return false;
-    }
-  }
-
-  Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
-    final Map<String, String> tokenHeaders = {
-      "content-type": 'application/x-www-form-urlencoded',
-      "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
-    };
-    try {
-      var response = await _networkHelper.authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-
-      headers["Authorization"] = "Bearer " + response["access_token"];
-
-      return true;
-    } catch (e) {
-      _error = e.toString();
       return false;
     }
   }

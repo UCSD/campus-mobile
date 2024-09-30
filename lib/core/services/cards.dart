@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CardsService {
   bool _isLoading = false;
@@ -23,9 +24,7 @@ class CardsService {
 
     /// API Manager Service
     try {
-      String cardListEndpoint =
-          "https://api-qa.ucsd.edu:8243/mobilecardsservice/v1.0.0/mobilecardslist?version=10&ucsdaffiliation=" +
-              ucsdAffiliation;
+      String cardListEndpoint = dotenv.get('CARD_LIST_ENDPOINT') + ucsdAffiliation;
       String _response =
           await _networkHelper.authorizedFetch(cardListEndpoint, headers);
       _cardsModel = cardsModelFromJson(_response);
@@ -33,30 +32,12 @@ class CardsService {
       return true;
     } catch (e) {
       if (e.toString().contains("401")) {
-        if (await getNewToken()) {
+        if (await _networkHelper.getNewToken(headers)) {
           return await fetchCards(ucsdAffiliation);
         }
       }
       _error = e.toString();
       _isLoading = false;
-      return false;
-    }
-  }
-
-  Future<bool> getNewToken() async {
-    final String tokenEndpoint = "https://api-qa.ucsd.edu:8243/token";
-    final Map<String, String> tokenHeaders = {
-      "content-type": 'application/x-www-form-urlencoded',
-      "Authorization":
-          "Basic djJlNEpYa0NJUHZ5akFWT0VRXzRqZmZUdDkwYTp2emNBZGFzZWpmaWZiUDc2VUJjNDNNVDExclVh"
-    };
-    try {
-      var response = await _networkHelper.authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
-      headers["Authorization"] = "Bearer " + response["access_token"];
-      return true;
-    } catch (e) {
-      _error = e.toString();
       return false;
     }
   }
