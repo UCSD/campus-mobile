@@ -47,6 +47,7 @@ void main() async {
   // dotenv loading
   await dotenv.load(isOptional: true);
 
+  // TODO: remove the zone it's deprecated
   /// Record zoned errors - https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
   runZonedGuarded<Future<void>>(() async {
     /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
@@ -95,26 +96,32 @@ class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = ThemeData(
-      primarySwatch: ColorPrimary,
+      useMaterial3: false,
       primaryColor: lightPrimaryColor,
-      brightness: Brightness.light,
-      // buttonColor: lightButtonColor,
-      backgroundColor: lightButtonColor, // added
       textTheme: lightThemeText,
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
+      colorScheme:
+        ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
+          .copyWith(
+            background: lightButtonColor,
+            brightness: Brightness.light, // added
+          ),
     );
 
     final ThemeData darkTheme = ThemeData(
-      primarySwatch: ColorPrimary,
+      useMaterial3: false,
       primaryColor: darkPrimaryColor,
-      brightness: Brightness.dark,
-      // buttonColor: darkButtonColor,
-      backgroundColor: darkButtonColor, // added
       textTheme: darkThemeText,
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
+      colorScheme:
+        ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
+          .copyWith(
+            background: darkButtonColor,
+            brightness: Brightness.dark, // added
+          ),
     );
 
     return MultiProvider(

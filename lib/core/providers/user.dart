@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -9,7 +10,6 @@ import 'package:campus_mobile_experimental/core/services/authentication.dart';
 import 'package:campus_mobile_experimental/core/services/user.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:encrypt/encrypt.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -227,7 +227,7 @@ class UserDataProvider extends ChangeNotifier {
         _subscribeToPushNotificationTopics(userProfileModel!.subscribedTopics!);
         _pushNotificationDataProvider
             .registerDevice(_authenticationService.data!.accessToken);
-        await FirebaseAnalytics().logEvent(name: 'loggedIn');
+        await analytics.logEvent(name: 'loggedIn');
         _isInSilentLogin = false;
         notifyListeners();
         return true;
@@ -258,7 +258,7 @@ class UserDataProvider extends ChangeNotifier {
     _cardsDataProvider.updateAvailableCards("");
     var box = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
     await box.clear();
-    await FirebaseAnalytics().logEvent(name: 'loggedOut');
+    await analytics.logEvent(name: 'loggedOut');
     _isLoading = false;
     notifyListeners();
   }
