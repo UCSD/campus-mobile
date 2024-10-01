@@ -68,8 +68,7 @@ class UserDataProvider extends ChangeNotifier {
       box = Hive.box<UserProfileModel?>('UserProfileModel');
     } catch (e) {
       box = await Hive.openBox<UserProfileModel?>('UserProfileModel');
-    }
-    finally{
+    } finally {
       await box.put('UserProfileModel', model);
       _lastUpdated = DateTime.now();
     }

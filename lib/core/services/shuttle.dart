@@ -33,8 +33,7 @@ class ShuttleService {
     } catch (e) {
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }
@@ -52,8 +51,7 @@ class ShuttleService {
     } catch (e) {
       _error = e.toString();
       return [];
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }

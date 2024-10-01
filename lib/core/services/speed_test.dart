@@ -63,8 +63,7 @@ class SpeedTestService {
       _speedTestModel = SpeedTestModel.fromJson(null, null, null, false);
       _error = exception.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }

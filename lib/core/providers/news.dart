@@ -6,7 +6,6 @@ class NewsDataProvider extends ChangeNotifier {
   NewsDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
-
     ///INITIALIZE SERVICES
     _newsService = NewsService();
     _newsModels = NewsModel();
@@ -24,8 +23,7 @@ class NewsDataProvider extends ChangeNotifier {
   late NewsService _newsService;
 
   void fetchNews() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     if (await _newsService.fetchData()) {
       _newsModels = _newsService.newsModels;

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/topics.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
@@ -130,7 +129,6 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } on PlatformException {
       _error = 'Failed to get platform info.';
     }
-    catch(e) {}
   }
 
   ///Handles notification when selected

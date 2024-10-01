@@ -4,7 +4,6 @@ import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ParkingService {
-
   ParkingService() {
     fetchParkingLotData();
   }
@@ -37,8 +36,7 @@ class ParkingService {
       }
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }

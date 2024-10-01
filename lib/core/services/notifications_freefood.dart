@@ -38,8 +38,7 @@ class FreeFoodService {
       }
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }
@@ -67,8 +66,7 @@ class FreeFoodService {
       }
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }
@@ -96,8 +94,7 @@ class FreeFoodService {
       }
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }

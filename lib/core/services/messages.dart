@@ -24,8 +24,7 @@ class MessageService {
     } catch (e) {
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }
@@ -46,8 +45,7 @@ class MessageService {
     } catch (e) {
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }

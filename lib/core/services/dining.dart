@@ -40,8 +40,7 @@ class DiningService {
       }
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }
@@ -67,8 +66,7 @@ class DiningService {
       }
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }

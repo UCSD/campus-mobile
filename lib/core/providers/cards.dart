@@ -56,7 +56,6 @@ class CardsDataProvider extends ChangeNotifier {
     /// temporary fix that prevents the student cards from causing issues on launch
     _cardOrder!.removeWhere((element) => _studentCards.contains(element));
     _cardStates!.removeWhere((key, value) => _studentCards.contains(key));
-
     _cardOrder!.removeWhere((element) => _staffCards.contains(element));
     _cardStates!.removeWhere((key, value) => _staffCards.contains(key));
   }
@@ -150,13 +149,8 @@ class CardsDataProvider extends ChangeNotifier {
   Future<void> initConnectivity() async {
     try {
       var status = await _connectivity.checkConnectivity();
-      if (status == ConnectivityResult.none) {
-        _noInternet = true;
-        notifyListeners();
-      } else {
-        _noInternet = false;
-        notifyListeners();
-      }
+      _noInternet = (status == ConnectivityResult.none);
+      notifyListeners();
     } catch (e) {
       print("Encounter $e when monitoring Internet for cards");
     }
@@ -165,13 +159,8 @@ class CardsDataProvider extends ChangeNotifier {
   void monitorInternet() async {
     await initConnectivity();
     _connectivity.onConnectivityChanged.listen((result) async {
-      if (result == ConnectivityResult.none) {
-        _noInternet = true;
-        notifyListeners();
-      } else {
-        _noInternet = false;
-        notifyListeners();
-      }
+      _noInternet = (result == ConnectivityResult.none);
+      notifyListeners();
     });
   }
 
@@ -262,10 +251,8 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder!.toSet().toList());
-
     updateCardOrder(_cardOrder);
-    updateCardStates(
-        _cardStates!.keys.where((card) => _cardStates![card]!).toList());
+    updateCardStates(_cardStates!.keys.where((card) => _cardStates![card]!).toList());
   }
 
   showAllStudentCards() {

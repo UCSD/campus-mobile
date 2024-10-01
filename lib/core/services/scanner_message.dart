@@ -23,8 +23,7 @@ class ScannerMessageService {
     } catch (e) {
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }

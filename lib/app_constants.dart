@@ -12,7 +12,6 @@ class RoutePaths {
   static const String Profile = 'profile';
   static const String CardsView = 'profile/cards_view';
   static const String NotificationsFilter = 'notifications/filter';
-
   static const String NewsViewAll = 'news/newslist';
   static const String EventsViewAll = 'events/eventslist';
   static const String EventsAll = 'events/events_view_all';

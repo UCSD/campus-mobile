@@ -22,8 +22,7 @@ class UserProfileService {
     } catch (e) {
       _error = e.toString();
       return false;
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
   }
@@ -40,8 +39,7 @@ class UserProfileService {
       }
     } catch (e) {
       _error = e.toString();
-    }
-    finally {
+    } finally {
       _isLoading = false;
     }
     return false;
