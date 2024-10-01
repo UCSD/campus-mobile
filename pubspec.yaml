@@ -3,9 +3,9 @@ description: Mobile app platform for campus.
 version: 1.0.0+1
 publish_to: none
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
 dependencies:
-  barcode_widget: 2.0.3
+  barcode_widget: ^2.0.4
   connectivity: 3.0.6
   dio: 4.0.6
   encrypt: 5.0.1
