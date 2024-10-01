@@ -132,9 +132,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   ///Handles notification when selected
-  void selectNotification(NotificationResponse details) {
-    String? payload = details.payload;
-
+  void selectNotification(NotificationResponse details)
+  {
     /// Fetch in-app messages
     Provider.of<MessagesDataProvider>(this.context, listen: false)
         .fetchMessages(true);
