@@ -25,7 +25,7 @@ def main():
     print("Welcome to the Campus Mobile (MacOS) Installer.")
     print("\nThe installer will perform the following actions:")
     print("  1. Install Homebrew")
-    print("  2. Configure Git")
+    print("  2. Install Git")
     print("  3. Install Java")
     print("  4. Install VS Code")
     print("  5. Install Flutter")
