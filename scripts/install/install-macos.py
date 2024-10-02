@@ -62,7 +62,7 @@ def install_homebrew():
 		subprocess.run(['brew', 'upgrade'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 		print(" 1/10  Homebrew upgrade complete.")
 	else:
-		subprocess.run('/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"', shell=True)
+		subprocess.run('echo | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 		print(" 1/10  Homebrew installation complete.")
 
 
@@ -120,8 +120,7 @@ def check_openjdk_version(min_version=17):
 ##############################################################################################################
 def install_vs_code():
 	if not is_installed('code'):
-		print("Visual Studio Code is not installed. Installing...")
-		subprocess.run(['brew', 'install', '--cask', 'visual-studio-code'], check=True)
+		subprocess.run(['brew', 'install', '--cask', 'visual-studio-code'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 	# Install extensions
 	install_vs_code_extensions()
 	print(" 4/10  VS Code installation complete.")
@@ -136,7 +135,6 @@ def install_vs_code_extensions():
 	# Install required extensions if they are not already installed
 	for extension in required_extensions:
 		if extension not in installed_extensions:
-			print(f"Installing {extension}...")
 			subprocess.run(['code', '--install-extension', extension], check=True)
 
 
