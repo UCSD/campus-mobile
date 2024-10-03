@@ -25,7 +25,6 @@ import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -35,7 +34,7 @@ List<SingleChildWidget> providers = [
   ...uiConsumableProviders,
 ];
 LocationDataProvider? locationProvider;
-final FirebaseAnalytics analytics = FirebaseAnalytics();
+final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 final FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
 

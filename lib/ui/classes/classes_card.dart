@@ -19,7 +19,7 @@ class ClassScheduleCard extends StatelessWidget {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).colorScheme.background,
       ),
       child: Text(
         'View All',

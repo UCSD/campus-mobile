@@ -151,7 +151,7 @@ class BroadcastScheduleButton extends StatelessWidget {
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             foregroundColor: Theme.of(context).primaryColor, // foreground
-            backgroundColor: Theme.of(context).backgroundColor,
+            backgroundColor: Theme.of(context).colorScheme.background,
           ),
           child: Text(
             'Broadcast Schedule',
@@ -418,7 +418,7 @@ class SeekBarState extends State<SeekBar> {
                       .firstMatch("$_remaining")
                       ?.group(1) ??
                   '$_remaining',
-              style: Theme.of(context).textTheme.caption),
+              style: Theme.of(context).textTheme.bodySmall),
         ),
       ],
     );

@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-
 AvailabilityStatus availabilityStatusFromJson(String str) =>
     AvailabilityStatus.fromJson(json.decode(str));
 

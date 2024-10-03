@@ -76,14 +76,13 @@ class PushNotificationDataProvider extends ChangeNotifier {
       this.context = context;
       const AndroidInitializationSettings initializationSettingsAndroid =
           AndroidInitializationSettings("@drawable/ic_notif_round");
-      final IOSInitializationSettings initializationSettingsIOS =
-          IOSInitializationSettings();
+      final initializationSettingsIOS = DarwinInitializationSettings();
       final InitializationSettings initializationSettings =
           InitializationSettings(
               android: initializationSettingsAndroid,
               iOS: initializationSettingsIOS);
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-          onSelectNotification: selectNotification);
+          onDidReceiveNotificationResponse: selectNotification);
 
       RemoteMessage? initialMessage =
           await FirebaseMessaging.instance.getInitialMessage();
@@ -133,7 +132,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   ///Handles notification when selected
-  Future selectNotification(String? payload) async {
+  void selectNotification(NotificationResponse details)
+  {
     /// Fetch in-app messages
     Provider.of<MessagesDataProvider>(this.context, listen: false)
         .fetchMessages(true);
@@ -160,10 +160,10 @@ class PushNotificationDataProvider extends ChangeNotifier {
             importance: Importance.max,
             priority: Priority.high,
             showWhen: false);
-    const IOSNotificationDetails();
+    const DarwinNotificationDetails();
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
-        iOS: IOSNotificationDetails());
+        iOS: DarwinNotificationDetails());
     //This is where you put info from firebase
     await flutterLocalNotificationsPlugin.show(0, message.notification!.title,
         message.notification!.body, platformChannelSpecifics,

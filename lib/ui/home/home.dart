@@ -36,8 +36,6 @@ import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:flutter/rendering.dart';
 
-import '../common/card_container.dart';
-
 //--- code to track size changes of dynamic web card widget content ---
 typedef void OnWidgetSizeChange(Size size);
 
