@@ -18,8 +18,8 @@ import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart'
 import 'package:campus_mobile_experimental/ui/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/triton_media/triton_media_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
-import 'package:campus_mobile_experimental/ui/my_chart/my_chart_card.dart';
-import 'package:campus_mobile_experimental/ui/myucsdchart/myucsdchart.dart';
+import 'package:campus_mobile_experimental/ui/mystudentchart/mystudentchart_card.dart';
+import 'package:campus_mobile_experimental/ui/myucsdchart/myucsdchart_card.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/news/news_card.dart';
