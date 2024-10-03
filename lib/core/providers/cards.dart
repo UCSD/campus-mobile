@@ -50,15 +50,14 @@ class CardsDataProvider extends ChangeNotifier {
 
     // Default card states
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
-      if(_studentCards.contains(card) || _staffCards.contains(card)) {
-        _cardStates![card] = false;
-        continue;
-      }
       _cardStates![card] = true;
     }
-    //part of temporary fix that prevents privileged cards from causing issues on launch
-    _cardOrder!.removeWhere((element) => _staffCards.contains(element));
+
+    /// temporary fix that prevents the student cards from causing issues on launch
     _cardOrder!.removeWhere((element) => _studentCards.contains(element));
+    _cardStates!.removeWhere((key, value) => _studentCards.contains(key));
+    _cardOrder!.removeWhere((element) => _staffCards.contains(element));
+    _cardStates!.removeWhere((key, value) => _staffCards.contains(key));
   }
 
   ///STATES
