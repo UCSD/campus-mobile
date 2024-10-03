@@ -506,12 +506,11 @@ packages:
   flutter_scandit_plugin:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "scandit-6.6.3"
-      resolved-ref: d99208e0ff297e0943075ad2546af4a8ebc03d63
-      url: "https://github.com/UCSD/flutter_scandit.git"
-    source: git
-    version: "1.1.0"
+      name: flutter_scandit_plugin
+      sha256: "20cdf834e95a46253c585e56a8c3f97817f0d82e9d34f652b2e54ffc32b73c39"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   flutter_secure_storage:
     dependency: "direct main"
     description:
