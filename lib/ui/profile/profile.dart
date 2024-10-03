@@ -53,7 +53,7 @@ class Profile extends StatelessWidget {
           Card(
             child: ListTile(
               leading: Icon(Icons.menu),
-              title: Text('Cards'),
+              title: Text('Card Settings'),
               onTap: () {
                 Navigator.pushNamed(context, RoutePaths.CardsView);
               },
