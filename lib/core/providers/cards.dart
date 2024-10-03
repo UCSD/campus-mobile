@@ -49,6 +49,7 @@ class CardsDataProvider extends ChangeNotifier {
       'employee_id',
     ];
 
+    // Default card states
     for (String card in CardTitleConstants.titleMap.keys.toList()) {
       _cardStates![card] = true;
     }
@@ -256,11 +257,12 @@ class CardsDataProvider extends ChangeNotifier {
     }
   }
 
+
   activateStudentCards() {
     int index = _cardOrder!.indexOf('MyStudentChart') + 1;
     _cardOrder!.insertAll(index, _studentCards.toList());
 
-    // TODO: test w/o this
+    // TODO: test w/o this (duplicated the cards)
     _cardOrder = List.from(_cardOrder!.toSet().toList());
 
     updateCardOrder(_cardOrder);
@@ -272,7 +274,7 @@ class CardsDataProvider extends ChangeNotifier {
     int index = _cardOrder!.indexOf('MyStudentChart') + 1;
     _cardOrder!.insertAll(index, _studentCards.toList());
 
-    // TODO: test w/o this
+    // TODO: test w/o this (duplicated the cards)
     _cardOrder = List.from(_cardOrder!.toSet().toList());
 
     for (String card in _studentCards) {

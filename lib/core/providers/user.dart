@@ -174,7 +174,6 @@ class UserDataProvider extends ChangeNotifier {
 
     if (username.isNotEmpty && password.isNotEmpty) {
       _encryptAndSaveCredentials(username, password);
-
       if (await silentLogin()) {
         if (_userProfileModel!.classifications!.student!) {
           _cardsDataProvider!.showAllStudentCards();
@@ -219,8 +218,8 @@ class UserDataProvider extends ChangeNotifier {
         await updateAuthenticationModel(_authenticationService.data);
 
         await fetchUserProfile();
-
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
+        //_cardsDataProvider.loadSavedData();
         _cardsDataProvider
             .updateAvailableCards(_userProfileModel!.ucsdaffiliation);
 
