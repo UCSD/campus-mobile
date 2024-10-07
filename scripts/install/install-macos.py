@@ -23,7 +23,7 @@ def main():
  | |   / _` | '_ ` _ \| '_ \| | | / __| | |\/| |/ _ \| '_ \| | |/ _ \  | || '_ \/ __| __/ _` | | |/ _ \ '__|
  | |__| (_| | | | | | | |_) | |_| \__ \ | |  | | (_) | |_) | | |  __/  | || | | \__ \ || (_| | | |  __/ |   
   \____\__,_|_| |_| |_| .__/ \__,_|___/ |_|  |_|\___/|_.__/|_|_|\___| |___|_| |_|___/\__\__,_|_|_|\___|_|   
-					  |_|                                                                                   
+                      |_|                                                                                   
 """)
 	print("Welcome to the Campus Mobile (MacOS) Installer.")
 	print("\nThe installer will perform the following actions:")
@@ -44,16 +44,16 @@ def main():
 		print("\nStarting installation... Please be patient as this process may take up to 15 minutes.\n")
 		backup_zshrc() # 0/11
 		install_xcode_command_line_tools() # 1/11
-		# install_homebrew() # 2/11
-		# install_git() # 3/11
-		# install_java() # 4/11
-		# install_vs_code() # 5/11
-		# install_flutter() # 6/11
-		# install_android_tools() # 7/11
-		# create_android_emulator() # 8/11
-		# install_campus_mobile() # 9/11
-		# configure_campus_mobile() # 10/11
-		# run_campus_mobile() # 11/11
+		install_homebrew() # 2/11
+		install_git() # 3/11
+		install_java() # 4/11
+		install_vs_code() # 5/11
+		install_flutter() # 6/11
+		install_android_tools() # 7/11
+		create_android_emulator() # 8/11
+		install_campus_mobile() # 9/11
+		configure_campus_mobile() # 10/11
+		run_campus_mobile() # 11/11
 	else:
 		print("Installation canceled.")
 		sys.exit(0)
@@ -396,7 +396,7 @@ def configure_campus_mobile():
 				sys.exit(0)
 
 	clean_up_config_installer(installer_path)
-	print(" 10/11  Campus Mobile configuration complete.")
+	print("10/11  Campus Mobile configuration complete.")
 
 def verify_and_extract(downloads_path, zip_files, installer_path):
 	# Check if all zip files are present
@@ -511,7 +511,7 @@ def run_campus_mobile():
 	# Summary of the operation with enhanced Git instructions
 	print(f"""
 *********************************************************************************
-* Campus Mobile (MacOS) Installation and Configuration Summary                  *
+* Campus Mobile (MacOS) Installation Summary                                    *
 *********************************************************************************
 - Installation directory: ~/development/campus-mobile
 
