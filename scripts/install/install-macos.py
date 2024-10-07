@@ -269,8 +269,8 @@ def avd_exists(name):
 # 8/10  Install Campus Mobile
 ##############################################################################################################
 def install_campus_mobile():
-	git_username = get_git_username()
-	origin_url = f'https://github.com/{git_username}/campus-mobile.git'
+	github_username = get_github_username()
+	origin_url = f'https://github.com/{github_username}/campus-mobile.git'
 	upstream_url = 'https://github.com/UCSD/campus-mobile.git'
 
 	if os.path.exists(project_path):
@@ -484,12 +484,12 @@ def run_campus_mobile():
 *********************************************************************************
 * Campus Mobile (MacOS) Installation and Configuration Summary                  *
 *********************************************************************************
-- Installation Directory: ~/development/campus-mobile
+- Installation directory: ~/development/campus-mobile
 
-- To restore unsaved changes in your existing ~/development/campus-mobile folder:
-  git stash pop
+- Git remote origin: {get_git_remote_origin()}
 
-- Start the emulator using: emulator -avd {avd_name}
+  If this is incorrect, set the correct remote using:
+    git remote set-url origin https://github.com/<Your-GitHub-Username>/campus-mobile.git
 *********************************************************************************
 """)
 
@@ -566,15 +566,19 @@ def get_android_system_image():
 		print("Unsupported system architecture: " + architecture)
 		sys.exit(1)
 
-def get_git_username():
-	default_username = "yourgithubusername"
-	result = subprocess.run(['git', 'config', 'user.name'], capture_output=True, text=True)
-	git_username = result.stdout.strip()
-	if git_username:
-		return git_username
-	else:
-		return default_username
+def get_github_username():
+    default_username = "Your_GitHub_Username"
+    email_result = subprocess.run(['git', 'config', 'user.email'], capture_output=True, text=True)
+    git_email = email_result.stdout.strip()
+    if '@' in git_email:
+        return git_email.split('@')[0]
+    return default_username
 
+def get_git_remote_origin():
+    result = subprocess.run(['git', 'remote', 'get-url', 'origin'], capture_output=True, text=True)
+    if result.returncode == 0:
+        return result.stdout.strip()
+    return "Not set"
 
 # Initialize the script
 if __name__ == "__main__":
