@@ -180,36 +180,42 @@ def check_and_switch_flutter_version(flutter_bin_path):
 # 6/10  Install Android tools
 ##############################################################################################################
 def install_android_tools():
-	# Install command-line tools for Android SDK management
-	subprocess.run(['brew', 'install', '--cask', 'android-commandlinetools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-	subprocess.run(['brew', 'install', '--cask', 'android-platform-tools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+	try:
+		# Install Android SDK command-line tools and platform tools
+		subprocess.run(['brew', 'install', '--cask', 'android-commandlinetools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+		subprocess.run(['brew', 'install', '--cask', 'android-platform-tools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
-	# Install sdkmanager components
-	subprocess.run(['sdkmanager', '--update'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-	subprocess.run('yes | sdkmanager --licenses', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
-	subprocess.run(['sdkmanager', '--install', 'platform-tools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-	subprocess.run(['sdkmanager', '--install', 'platforms'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-	subprocess.run(['sdkmanager', '--install', 'android-34'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+		# Update sdkmanager and accept licenses
+		subprocess.run(['sdkmanager', '--update'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+		subprocess.run('yes | sdkmanager --licenses', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
-	# Get system image based on the system architecture
-	system_image = get_android_system_image()
-	print(f"System image: {system_image}")
-	subprocess.run(['sdkmanager', '--install', system_image], check=True)
+		# Install specific SDK platform and build tools
+		subprocess.run(['sdkmanager', '--install', 'platform-tools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+		subprocess.run(['sdkmanager', '--install', 'platforms;android-34'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+		subprocess.run(['sdkmanager', '--install', 'build-tools;30.0.3'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
-	# Install emulator and the determined system image
-	subprocess.run(['sdkmanager', '--install', 'emulator'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+		# Install system image based on architecture
+		system_image = get_android_system_image()
+		subprocess.run(['sdkmanager', '--install', system_image], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
-	# Set environment variables
-	android_home = subprocess.run(['brew', '--prefix'], capture_output=True, text=True).stdout.strip()
-	android_home += '/share/android-commandlinetools'
+		# Install the Android emulator
+		subprocess.run(['sdkmanager', '--install', 'emulator'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
-	# Add Android tools to PATH
-	android_cmdline_tools = os.path.join(android_home, 'cmdline-tools', 'latest', 'bin')
-	platform_tools = os.path.join(android_home, 'platform-tools')
-	android_emulator = os.path.join(android_home, 'emulator')
-	add_path_to_zshrc([android_cmdline_tools, platform_tools, android_emulator])
-	add_export_to_zshrc("ANDROID_SDK_ROOT", android_home)
-	print(" 6/10  Android Tools installation complete.")
+		# Configure Android SDK environment variables and add to PATH
+		android_home = subprocess.run(['brew', '--prefix'], capture_output=True, text=True).stdout.strip()
+		android_home += '/share/android-commandlinetools'
+		android_cmdline_tools = os.path.join(android_home, 'cmdline-tools', 'latest', 'bin')
+		platform_tools = os.path.join(android_home, 'platform-tools')
+		platforms = os.path.join(android_home, 'platforms', 'android-34')
+		build_tools = os.path.join(android_home, 'build-tools', '30.0.3')
+		android_emulator = os.path.join(android_home, 'emulator')
+		add_path_to_zshrc([android_cmdline_tools, platform_tools, android_emulator, platforms, build_tools])
+		add_export_to_zshrc("ANDROID_SDK_ROOT", android_home)
+
+		print(" 6/10  Android Tools installation complete.")
+	except subprocess.CalledProcessError as e:
+		print(f"Failed to install Android tools: {e}")
+		sys.exit(1)
 
 
 ##############################################################################################################
@@ -229,13 +235,12 @@ def create_android_emulator():
 	def emulator_is_ready():
 		start_time = time.time()
 		while True:
-			if (time.time() - start_time) > 30:
+			if (time.time() - start_time) > 120:
 				return False
 
 			if select.select([emulator_process.stdout], [], [], 0.1)[0]:
-				line = emulator_process.stdout.readline()
-				print(line, end='')
-				if "boot completed" in line or "ready" in line or "Successfully loaded" in line:
+				line = emulator_process.stdout.readline().lower()
+				if "boot completed" in line or "ready" in line or "successfully loaded" in line:
 					return True
 			else:
 				time.sleep(0.1)
