@@ -5,53 +5,56 @@ import re
 import time
 import json
 import select
+import platform
 
-# Define the default campus mobile installation folder
-project_path = os.path.expanduser('~/development/campus-mobile')
+# Global definitions
+project_path = os.path.expanduser('~/development/campus-mobile')  # Default installation folder for Campus Mobile
+avd_name = ""  # Global variable to store the name of the Android Virtual Device (AVD)
+
 
 ##############################################################################################################
 # 0/10  Main
 ##############################################################################################################
 
 def main():
-    print(r"""
+	print(r"""
    ____                                  __  __       _     _ _        ___           _        _ _           
   / ___|__ _ _ __ ___  _ __  _   _ ___  |  \/  | ___ | |__ (_) | ___  |_ _|_ __  ___| |_ __ _| | | ___ _ __ 
  | |   / _` | '_ ` _ \| '_ \| | | / __| | |\/| |/ _ \| '_ \| | |/ _ \  | || '_ \/ __| __/ _` | | |/ _ \ '__|
  | |__| (_| | | | | | | |_) | |_| \__ \ | |  | | (_) | |_) | | |  __/  | || | | \__ \ || (_| | | |  __/ |   
   \____\__,_|_| |_| |_| .__/ \__,_|___/ |_|  |_|\___/|_.__/|_|_|\___| |___|_| |_|___/\__\__,_|_|_|\___|_|   
-                      |_|                                                                                   
+					  |_|                                                                                   
 """)
-    print("Welcome to the Campus Mobile (MacOS) Installer.")
-    print("\nThe installer will perform the following actions:")
-    print("  1. Install Homebrew")
-    print("  2. Install Git")
-    print("  3. Install Java")
-    print("  4. Install VS Code")
-    print("  5. Install Flutter")
-    print("  6. Install Android Tools")
-    print("  7. Create & Launch Android Emulator")
-    print("  8. Install Campus Mobile")
-    print("  9. Configure Campus Mobile")
-    print(" 10. Build & Run Campus Mobile")
+	print("Welcome to the Campus Mobile (MacOS) Installer.")
+	print("\nThe installer will perform the following actions:")
+	print("  1. Install Homebrew")
+	print("  2. Install Git")
+	print("  3. Install Java")
+	print("  4. Install VS Code")
+	print("  5. Install Flutter")
+	print("  6. Install Android Tools")
+	print("  7. Create & Launch Android Emulator")
+	print("  8. Install Campus Mobile")
+	print("  9. Configure Campus Mobile")
+	print(" 10. Build & Run Campus Mobile")
 
-    proceed = input("Press 'Y' to continue with the installation, any other key to exit: ").strip().upper()
-    if proceed == "Y":
-        print("\nStarting installation... Please be patient as this process may take up to 10 minutes.\n")
-        backup_zshrc() # 0/10
-        install_homebrew() # 1/10
-        install_git() # 2/10
-        install_java() # 3/10
-        install_vs_code() # 4/10
-        install_flutter() # 5/10
-        install_android_tools() # 6/10
-        create_android_emulator() # 7/10
-        install_campus_mobile() # 8/10
-        configure_campus_mobile() # 9/10
-        run_campus_mobile() # 10/10
-    else:
-        print("Installation canceled.")
-        sys.exit(0)
+	proceed = input("Press 'Y' to continue with the installation, any other key to exit: ").strip().upper()
+	if proceed == "Y":
+		print("\nStarting installation... Please be patient as this process may take up to 10 minutes.\n")
+		backup_zshrc() # 0/10
+		install_homebrew() # 1/10
+		install_git() # 2/10
+		install_java() # 3/10
+		install_vs_code() # 4/10
+		install_flutter() # 5/10
+		install_android_tools() # 6/10
+		create_android_emulator() # 7/10
+		install_campus_mobile() # 8/10
+		configure_campus_mobile() # 9/10
+		run_campus_mobile() # 10/10
+	else:
+		print("Installation canceled.")
+		sys.exit(0)
 
 
 ##############################################################################################################
@@ -177,15 +180,24 @@ def check_and_switch_flutter_version(flutter_bin_path):
 # 6/10  Install Android tools
 ##############################################################################################################
 def install_android_tools():
-	# Install command-line tools and platform tools
+	# Install command-line tools for Android SDK management
 	subprocess.run(['brew', 'install', '--cask', 'android-commandlinetools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 	subprocess.run(['brew', 'install', '--cask', 'android-platform-tools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
-	# Auto-accept licenses using 'yes'
+	# Install sdkmanager components
+	subprocess.run(['sdkmanager', '--update'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 	subprocess.run('yes | sdkmanager --licenses', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+	subprocess.run(['sdkmanager', '--install', 'platform-tools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+	subprocess.run(['sdkmanager', '--install', 'platforms'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+	subprocess.run(['sdkmanager', '--install', 'android-34'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
-	# Install emulator and system image for Android API level 34
-	# subprocess.run(['sdkmanager', '--install' 'platform-tools'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+	# Get system image based on the system architecture
+	system_image = get_android_system_image()
+	print(f"System image: {system_image}")
+	subprocess.run(['sdkmanager', '--install', system_image], check=True)
+
+	# Install emulator and the determined system image
+	subprocess.run(['sdkmanager', '--install', 'emulator'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
 	# Set environment variables
 	android_home = subprocess.run(['brew', '--prefix'], capture_output=True, text=True).stdout.strip()
@@ -204,43 +216,56 @@ def install_android_tools():
 # 7/10  Create & Launch Android Emulator
 ##############################################################################################################
 def create_android_emulator():
-    # Create an Android Virtual Device (AVD) for Pixel 6 ARM64
-    if not avd_exists('Pixel_6'):
-        subprocess.run(['avdmanager', 'create', 'avd', '-n', 'Pixel_6', '-k', 'system-images;android-34;google_apis;arm64-v8a', '--device', 'pixel_6'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    global avd_name
+    system_image = get_android_system_image()
+    avd_name = get_available_avd_name("Pixel_6")
+    
+    subprocess.run(['avdmanager', 'create', 'avd', '-n', avd_name, '-k', system_image, '--device', 'pixel_6'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
     
     # Start the emulator in the background
-    emulator_process = subprocess.Popen(['emulator', '-avd', 'Pixel_6'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True)
+    emulator_process = subprocess.Popen(['emulator', '-avd', avd_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True)
 
     # Check if the emulator is ready
     def emulator_is_ready():
         start_time = time.time()
         while True:
-            if (time.time() - start_time) > 300:
+            if (time.time() - start_time) > 30:
                 return False
 
-            if select.select([emulator_process.stdout], [], [], 1.0)[0]:
+            if select.select([emulator_process.stdout], [], [], 0.1)[0]:
                 line = emulator_process.stdout.readline()
+                print(line, end='')
                 if "boot completed" in line or "ready" in line or "Successfully loaded" in line:
                     return True
             else:
-                time.sleep(1.0)
+                time.sleep(0.1)
 
     if not emulator_is_ready():
         print("Emulator failed to start within the timeout period. Please try again.")
         sys.exit(1)
+    
     print(" 7/10  Android Emulator creation complete.")
 
+def get_available_avd_name(base_name):
+    counter = 1
+    avd_name = base_name
+    while avd_exists(avd_name):
+        avd_name = f"{base_name}_{counter}"
+        counter += 1
+    return avd_name
+
 def avd_exists(name):
-    # Check if an AVD with the given name already exists
-    result = subprocess.run(['avdmanager', 'list', 'avd'], capture_output=True, text=True)
-    return name in result.stdout
+	# Check if an AVD with the given name already exists
+	result = subprocess.run(['avdmanager', 'list', 'avd'], capture_output=True, text=True)
+	return name in result.stdout
 
 
 ##############################################################################################################
 # 8/10  Install Campus Mobile
 ##############################################################################################################
 def install_campus_mobile():
-	origin_url = 'https://github.com/yourgithubusername/campus-mobile.git'
+	git_username = get_git_username()
+	origin_url = f'https://github.com/{git_username}/campus-mobile.git'
 	upstream_url = 'https://github.com/UCSD/campus-mobile.git'
 
 	if os.path.exists(project_path):
@@ -292,84 +317,84 @@ def configure_origin(origin_url, upstream_url):
 # 9/10  Configure Campus Mobile
 ##############################################################################################################
 def configure_campus_mobile():
-    downloads_path = os.path.expanduser('~/Downloads')
-    installer_path = os.path.join(downloads_path, 'campus-mobile-installer')
-    ios_path = os.path.join(project_path, 'ios', 'Runner')
-    android_path = os.path.join(project_path, 'android', 'app')
-    zip_files = ['campus-mobile-7.27-qa.env.zip', 'campus-mobile-push-qa.zip']
+	downloads_path = os.path.expanduser('~/Downloads')
+	installer_path = os.path.join(downloads_path, 'campus-mobile-installer')
+	ios_path = os.path.join(project_path, 'ios', 'Runner')
+	android_path = os.path.join(project_path, 'android', 'app')
+	zip_files = ['campus-mobile-7.27-qa.env.zip', 'campus-mobile-push-qa.zip']
 
-    expected_files = {
-        'campus-mobile-7.27-qa.env.zip': os.path.join(installer_path, '.env'),
-        'campus-mobile-push-qa.zip': [
-            os.path.join(installer_path, 'ios', 'Runner', 'GoogleService-Info.plist'),
-            os.path.join(installer_path, 'android', 'app', 'google-services.json')
-        ]
-    }
+	expected_files = {
+		'campus-mobile-7.27-qa.env.zip': os.path.join(installer_path, '.env'),
+		'campus-mobile-push-qa.zip': [
+			os.path.join(installer_path, 'ios', 'Runner', 'GoogleService-Info.plist'),
+			os.path.join(installer_path, 'android', 'app', 'google-services.json')
+		]
+	}
 
-    all_files_present = False  # Initialize the variable to control the loop
+	all_files_present = False  # Initialize the variable to control the loop
 
-    while not all_files_present:
-        try:
-            if verify_and_extract(downloads_path, zip_files, installer_path):
-                if check_files_present(expected_files):
-                    move_config_files(installer_path, project_path, ios_path, android_path)
-                    write_vscode_tasks(project_path)
-                    set_flutter_device_id(project_path)
-                    all_files_present = True
-            else:
-                print("\nError: Not all required files are in the ~/Downloads folder. Please check and try again.")
-        
-        except KeyboardInterrupt:
-            sys.exit(0)
-        except subprocess.CalledProcessError:
-            pass
-        except Exception as e:
-            pass
+	while not all_files_present:
+		try:
+			if verify_and_extract(downloads_path, zip_files, installer_path):
+				if check_files_present(expected_files):
+					move_config_files(installer_path, project_path, ios_path, android_path)
+					write_vscode_tasks(project_path)
+					set_flutter_device_id(project_path)
+					all_files_present = True
+			else:
+				print("\nError: Not all required files are in the ~/Downloads folder. Please check and try again.")
+		
+		except KeyboardInterrupt:
+			sys.exit(0)
+		except subprocess.CalledProcessError:
+			pass
+		except Exception as e:
+			pass
 
-        # Prompting user if initial file check fails
-        if not all_files_present:
-            print("\n  *** USER ACTION REQUIRED ***")
-            print("  1. Navigate to LastPass -> All Items -> Search for 'Shared-Campus Mobile Config' -> View")
-            print("  2. Save the files 'campus-mobile-7.27-qa.env.zip' and 'campus-mobile-push-qa.zip' directly to your '~/Downloads' folder.")
-            try:
-                input("\nPress any key to continue (or Control-C to exit).")
-            except KeyboardInterrupt:
-                sys.exit(0)
+		# Prompting user if initial file check fails
+		if not all_files_present:
+			print("\n  *** USER ACTION REQUIRED ***")
+			print("  1. Navigate to LastPass -> All Items -> Search for 'Shared-Campus Mobile Config' -> View")
+			print("  2. Save the files 'campus-mobile-7.27-qa.env.zip' and 'campus-mobile-push-qa.zip' directly to your '~/Downloads' folder.")
+			try:
+				input("\nPress any key to continue (or Control-C to exit).")
+			except KeyboardInterrupt:
+				sys.exit(0)
 
-    clean_up_config_installer(installer_path)
-    print(" 9/10  Campus Mobile configuration complete.")
+	clean_up_config_installer(installer_path)
+	print(" 9/10  Campus Mobile configuration complete.")
 
 def verify_and_extract(downloads_path, zip_files, installer_path):
-    # Check if all zip files are present
-    if all(os.path.exists(os.path.join(downloads_path, zip_file)) for zip_file in zip_files):
-        os.makedirs(installer_path, exist_ok=True)  # Ensures installer directory is created here
-        for zip_file in zip_files:
-            command = ["unzip", "-o", os.path.join(downloads_path, zip_file), "-d", installer_path]
-            subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-        return True
-    else:
-        return False
+	# Check if all zip files are present
+	if all(os.path.exists(os.path.join(downloads_path, zip_file)) for zip_file in zip_files):
+		os.makedirs(installer_path, exist_ok=True)  # Ensures installer directory is created here
+		for zip_file in zip_files:
+			command = ["unzip", "-o", os.path.join(downloads_path, zip_file), "-d", installer_path]
+			subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+		return True
+	else:
+		return False
 
 def check_files_present(expected_files):
-    all_files_present = True
-    for zip_file, paths in expected_files.items():
-        if isinstance(paths, list):
-            for file_path in paths:
-                if not os.path.exists(file_path):
-                    all_files_present = False
-        else:
-            if not os.path.exists(paths):
-                all_files_present = False
-    return all_files_present
+	all_files_present = True
+	for zip_file, paths in expected_files.items():
+		if isinstance(paths, list):
+			for file_path in paths:
+				if not os.path.exists(file_path):
+					all_files_present = False
+		else:
+			if not os.path.exists(paths):
+				all_files_present = False
+	return all_files_present
 
 def handle_missing_files(downloads_path, zip_files, expected_files, installer_path):
-    verify_and_extract(downloads_path, zip_files, installer_path)
-    if not check_files_present(expected_files):
-        raise Exception("Repeated extraction attempts failed. Please check the source files.")
+	verify_and_extract(downloads_path, zip_files, installer_path)
+	if not check_files_present(expected_files):
+		raise Exception("Repeated extraction attempts failed. Please check the source files.")
 
 def clean_up_config_installer(installer_path):
-    if 'campus-mobile-installer' in installer_path and os.path.exists(installer_path):
-        subprocess.run(["rm", "-rf", installer_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+	if 'campus-mobile-installer' in installer_path and os.path.exists(installer_path):
+		subprocess.run(["rm", "-rf", installer_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
 def move_config_files(installer_path, project_path, ios_path, android_path):
 	try:
@@ -444,13 +469,13 @@ def update_task_json_device_id(device_id, project_path):
 # 10/10  Run Campus Mobile
 ##############################################################################################################
 def run_campus_mobile():
-    print("10/10  Campus Mobile build & run in progress...")
+	print("10/10  Campus Mobile build & run in progress...")
 
-    # Open the project in VS Code
-    subprocess.run(['code', project_path], check=True)
+	# Open the project in VS Code
+	subprocess.run(['code', project_path], check=True)
 
-    # Summary of the operation with enhanced Git instructions
-    print("""
+	# Summary of the operation with enhanced Git instructions
+	print(f"""
 *********************************************************************************
 * Campus Mobile (MacOS) Installation and Configuration Summary                  *
 *********************************************************************************
@@ -458,6 +483,8 @@ def run_campus_mobile():
 
 - To restore unsaved changes in your existing ~/development/campus-mobile folder:
   git stash pop
+
+- Start the emulator using: emulator -avd {avd_name}
 *********************************************************************************
 """)
 
@@ -466,65 +493,84 @@ def run_campus_mobile():
 # 0/0  Utility functions
 ##############################################################################################################
 def backup_zshrc():
-    zshrc_path = os.path.expanduser('~/.zshrc')
-    if os.path.exists(zshrc_path):
-        timestamp = int(time.time())
-        backup_path = f'{zshrc_path}.{timestamp}.bak'
-        with open(zshrc_path, 'r') as original, open(backup_path, 'w') as backup:
-            backup.write(original.read())
+	zshrc_path = os.path.expanduser('~/.zshrc')
+	if os.path.exists(zshrc_path):
+		timestamp = int(time.time())
+		backup_path = f'{zshrc_path}.{timestamp}.bak'
+		with open(zshrc_path, 'r') as original, open(backup_path, 'w') as backup:
+			backup.write(original.read())
 
 def ensure_zshrc_exists():
-    zshrc_path = os.path.expanduser('~/.zshrc')
-    if not os.path.exists(zshrc_path):
-        with open(zshrc_path, 'w') as file:
-            file.write('# Created by installer script\n')
-    return zshrc_path
+	zshrc_path = os.path.expanduser('~/.zshrc')
+	if not os.path.exists(zshrc_path):
+		with open(zshrc_path, 'w') as file:
+			file.write('# Created by installer script\n')
+	return zshrc_path
 
 def add_path_to_zshrc(paths):
-    zshrc_path = ensure_zshrc_exists()
-    with open(zshrc_path, 'r+') as file:
-        lines = file.readlines()
-        export_found = any('export PATH' in line for line in lines)
-        new_paths = [f'PATH={path}:$PATH' for path in paths if f'PATH={path}:$PATH' not in ''.join(lines)]
+	zshrc_path = ensure_zshrc_exists()
+	with open(zshrc_path, 'r+') as file:
+		lines = file.readlines()
+		export_found = any('export PATH' in line for line in lines)
+		new_paths = [f'PATH={path}:$PATH' for path in paths if f'PATH={path}:$PATH' not in ''.join(lines)]
 
-        if new_paths:
-            if not export_found:
-                lines.append('\n'.join(new_paths) + '\n')
-                lines.append('export PATH\n')
-            else:
-                index = next(i for i, line in enumerate(lines) if 'export PATH' in line)
-                lines[index:index] = [path + '\n' for path in new_paths]
-            file.seek(0)
-            file.truncate()
-            file.writelines(lines)
+		if new_paths:
+			if not export_found:
+				lines.append('\n'.join(new_paths) + '\n')
+				lines.append('export PATH\n')
+			else:
+				index = next(i for i, line in enumerate(lines) if 'export PATH' in line)
+				lines[index:index] = [path + '\n' for path in new_paths]
+			file.seek(0)
+			file.truncate()
+			file.writelines(lines)
 
 def add_export_to_zshrc(var_name, value):
-    zshrc_path = ensure_zshrc_exists()
-    with open(zshrc_path, 'r+') as file:
-        lines = file.readlines()
-        export_string = f'export {var_name}="{value}"\n'
-        
-        # Check if the variable is already defined
-        found = False
-        for i, line in enumerate(lines):
-            if line.startswith(f'export {var_name}='):
-                lines[i] = export_string  # Update the existing line
-                found = True
-                break
-        
-        # If the variable was not found, append it
-        if not found:
-            lines.append(export_string)
-        
-        # Rewrite the file with updated or added export
-        file.seek(0)
-        file.truncate()
-        file.writelines(lines)
+	zshrc_path = ensure_zshrc_exists()
+	with open(zshrc_path, 'r+') as file:
+		lines = file.readlines()
+		export_string = f'export {var_name}="{value}"\n'
+		
+		# Check if the variable is already defined
+		found = False
+		for i, line in enumerate(lines):
+			if line.startswith(f'export {var_name}='):
+				lines[i] = export_string  # Update the existing line
+				found = True
+				break
+		
+		# If the variable was not found, append it
+		if not found:
+			lines.append(export_string)
+		
+		# Rewrite the file with updated or added export
+		file.seek(0)
+		file.truncate()
+		file.writelines(lines)
 
 def is_installed(command):
 	return subprocess.run(['command', '-v', command], capture_output=True).returncode == 0
 
+def get_android_system_image():
+	architecture = platform.machine()
+	if 'aarch64' in architecture or 'arm64' in architecture:
+		return 'system-images;android-34;google_apis;arm64-v8a'
+	elif 'x86_64' in architecture:
+		return 'system-images;android-34;google_apis;x86_64'
+	else:
+		print("Unsupported system architecture: " + architecture)
+		sys.exit(1)
+
+def get_git_username():
+    default_username = "yourgithubusername"
+    result = subprocess.run(['git', 'config', 'user.name'], capture_output=True, text=True)
+    git_username = result.stdout.strip()
+    if git_username:
+        return git_username
+    else:
+        return default_username
+
 
 # Initialize the script
 if __name__ == "__main__":
-    main()
+	main()
