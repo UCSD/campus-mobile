@@ -23,7 +23,7 @@ def main():
  | |   / _` | '_ ` _ \| '_ \| | | / __| | |\/| |/ _ \| '_ \| | |/ _ \  | || '_ \/ __| __/ _` | | |/ _ \ '__|
  | |__| (_| | | | | | | |_) | |_| \__ \ | |  | | (_) | |_) | | |  __/  | || | | \__ \ || (_| | | |  __/ |   
   \____\__,_|_| |_| |_| .__/ \__,_|___/ |_|  |_|\___/|_.__/|_|_|\___| |___|_| |_|___/\__\__,_|_|_|\___|_|   
-					  |_|                                                                                   
+                      |_|                                                                                   
 """)
 	print("Welcome to the Campus Mobile (MacOS) Installer.")
 	print("\nThe installer will perform the following actions:")
@@ -216,43 +216,43 @@ def install_android_tools():
 # 7/10  Create & Launch Android Emulator
 ##############################################################################################################
 def create_android_emulator():
-    global avd_name
-    system_image = get_android_system_image()
-    avd_name = get_available_avd_name("Pixel_6")
-    
-    subprocess.run(['avdmanager', 'create', 'avd', '-n', avd_name, '-k', system_image, '--device', 'pixel_6'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-    
-    # Start the emulator in the background
-    emulator_process = subprocess.Popen(['emulator', '-avd', avd_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True)
+	global avd_name
+	system_image = get_android_system_image()
+	avd_name = get_available_avd_name("Pixel_6")
+	
+	subprocess.run(['avdmanager', 'create', 'avd', '-n', avd_name, '-k', system_image, '--device', 'pixel_6'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+	
+	# Start the emulator in the background
+	emulator_process = subprocess.Popen(['emulator', '-avd', avd_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True)
 
-    # Check if the emulator is ready
-    def emulator_is_ready():
-        start_time = time.time()
-        while True:
-            if (time.time() - start_time) > 30:
-                return False
+	# Check if the emulator is ready
+	def emulator_is_ready():
+		start_time = time.time()
+		while True:
+			if (time.time() - start_time) > 30:
+				return False
 
-            if select.select([emulator_process.stdout], [], [], 0.1)[0]:
-                line = emulator_process.stdout.readline()
-                print(line, end='')
-                if "boot completed" in line or "ready" in line or "Successfully loaded" in line:
-                    return True
-            else:
-                time.sleep(0.1)
+			if select.select([emulator_process.stdout], [], [], 0.1)[0]:
+				line = emulator_process.stdout.readline()
+				print(line, end='')
+				if "boot completed" in line or "ready" in line or "Successfully loaded" in line:
+					return True
+			else:
+				time.sleep(0.1)
 
-    if not emulator_is_ready():
-        print("Emulator failed to start within the timeout period. Please try again.")
-        sys.exit(1)
-    
-    print(" 7/10  Android Emulator creation complete.")
+	if not emulator_is_ready():
+		print("Emulator failed to start within the timeout period. Please try again.")
+		sys.exit(1)
+	
+	print(" 7/10  Android Emulator creation complete.")
 
 def get_available_avd_name(base_name):
-    counter = 1
-    avd_name = base_name
-    while avd_exists(avd_name):
-        avd_name = f"{base_name}_{counter}"
-        counter += 1
-    return avd_name
+	counter = 1
+	avd_name = base_name
+	while avd_exists(avd_name):
+		avd_name = f"{base_name}_{counter}"
+		counter += 1
+	return avd_name
 
 def avd_exists(name):
 	# Check if an AVD with the given name already exists
@@ -562,13 +562,13 @@ def get_android_system_image():
 		sys.exit(1)
 
 def get_git_username():
-    default_username = "yourgithubusername"
-    result = subprocess.run(['git', 'config', 'user.name'], capture_output=True, text=True)
-    git_username = result.stdout.strip()
-    if git_username:
-        return git_username
-    else:
-        return default_username
+	default_username = "yourgithubusername"
+	result = subprocess.run(['git', 'config', 'user.name'], capture_output=True, text=True)
+	git_username = result.stdout.strip()
+	if git_username:
+		return git_username
+	else:
+		return default_username
 
 
 # Initialize the script
