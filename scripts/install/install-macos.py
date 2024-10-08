@@ -296,7 +296,7 @@ def create_android_emulator():
 	def emulator_is_ready():
 		start_time = time.time()
 		while True:
-			if (time.time() - start_time) > 120:
+			if (time.time() - start_time) > 300:
 				return False
 
 			if select.select([emulator_process.stdout], [], [], 0.1)[0]:
