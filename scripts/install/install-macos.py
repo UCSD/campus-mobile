@@ -220,6 +220,10 @@ def install_flutter():
 			os.makedirs(flutter_dir, exist_ok=True)
 			subprocess.run(['git', 'clone', 'https://github.com/flutter/flutter.git', '-b', '3.7.3', flutter_dir], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 		add_flutter_to_path(flutter_dir)
+
+	# Trigger the installation of additional required Flutter components
+	subprocess.run(['flutter', 'devices'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+
 	print(" 6/11  Flutter installation complete.")
 
 def add_flutter_to_path(flutter_dir):
