@@ -63,7 +63,7 @@ def main():
 # 1/11  Install Xcode Command Line Tools
 ##############################################################################################################
 def install_xcode_command_line_tools():
-    # Check if Xcode Command Line Tools need to be installed
+	# Check if Xcode Command Line Tools need to be installed
 	if not pkg_installed('com.apple.pkg.CLTools_Executables'):
 		prompt_until_xcode_tools_installed()
 	print(" 1/11  Xcode Command Line Tools installation complete.")
@@ -120,29 +120,63 @@ def install_git():
 # 4/11  Install Java
 ##############################################################################################################
 def install_java():
-	if not check_openjdk_version():
-		subprocess.run(['brew', 'install', 'openjdk@17'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-		subprocess.run(['brew', 'link', 'openjdk@17', '--force', '--overwrite'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+	java_version, java_make = get_java_info()
+	java_installed = False
 
-		# Get the path to the installed Java version
+	if java_make == "openjdk" and java_version >= 17:
 		java_home = subprocess.check_output(['/usr/libexec/java_home', '-v', '17']).decode().strip()
+	else:
+		if java_version is None or java_version < 17 or java_make != "openjdk":
+			subprocess.run(['brew', 'install', 'openjdk@17'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+			subprocess.run(['brew', 'link', 'openjdk@17', '--force', '--overwrite'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+			java_home = subprocess.check_output(['brew', '--prefix', 'openjdk@17']).decode().strip()
+			java_installed = True
 
-		# Add JAVA_HOME and its bin directory to the PATH
-		add_path_to_zshrc([f'{java_home}', f'{java_home}/bin'])
+	# Configure JAVA_HOME and PATH
+	configure_java(java_home, java_installed)
 	print(" 4/11  Java installation complete.")
 
-def check_openjdk_version(min_version=17):
+def get_java_info():
 	try:
 		result = subprocess.run(['java', '-version'], stderr=subprocess.PIPE, text=True)
-		version_output = result.stderr
-		if 'openjdk' in version_output.lower():
-			version_match = re.search(r'\"(\d+)\.\d+\.\d+\"', version_output)
-			if version_match:
-				major_version = int(version_match.group(1))
-				return major_version >= min_version
-		return False
+		version_output = result.stderr.lower()
+		java_version = extract_java_version(version_output)
+		java_make = extract_java_make(version_output)
+		return java_version, java_make
 	except FileNotFoundError:
-		return False
+		return None, None
+
+def extract_java_version(output):
+	version_match = re.search(r'\"(\d+)\.\d+', output)
+	if version_match:
+		return int(version_match.group(1))
+	return None
+
+def extract_java_make(output):
+	output = output.lower()
+	if 'openjdk' in output:
+		return 'openjdk'
+	elif 'oracle' in output:
+		return 'oracle'
+	elif 'corretto' in output:
+		return 'corretto'
+	elif 'ibm' in output:
+		return 'ibm'
+	elif 'zulu' in output:
+		return 'zulu'
+	elif 'adoptopenjdk' in output or 'adoptium' in output or 'temurin' in output:
+		return 'adoptopenjdk'
+	elif 'sapmachine' in output:
+		return 'sapmachine'
+	elif 'graalvm' in output:
+		return 'graalvm'
+	return 'unknown'
+
+def configure_java(java_home, java_installed):
+	if java_installed or not java_home:
+		java_home = subprocess.check_output(['brew', '--prefix', 'openjdk@17']).decode().strip()
+	add_path_to_zshrc([f"{java_home}", f"{java_home}/bin"])
+	add_or_update_export_to_zshrc('JAVA_HOME', java_home)
 
 
 ##############################################################################################################
@@ -237,7 +271,7 @@ def install_android_tools():
 		build_tools = os.path.join(android_home, 'build-tools', '30.0.3')
 		android_emulator = os.path.join(android_home, 'emulator')
 		add_path_to_zshrc([android_cmdline_tools, platform_tools, android_emulator, platforms, build_tools])
-		add_export_to_zshrc("ANDROID_SDK_ROOT", android_home)
+		add_or_update_export_to_zshrc("ANDROID_SDK_ROOT", android_home)
 
 		print(" 7/11  Android Tools installation complete.")
 	except subprocess.CalledProcessError as e:
@@ -559,25 +593,18 @@ def add_path_to_zshrc(paths):
 			file.truncate()
 			file.writelines(lines)
 
-def add_export_to_zshrc(var_name, value):
+def add_or_update_export_to_zshrc(var_name, value):
 	zshrc_path = ensure_zshrc_exists()
+	updated = False
 	with open(zshrc_path, 'r+') as file:
 		lines = file.readlines()
-		export_string = f'export {var_name}="{value}"\n'
-		
-		# Check if the variable is already defined
-		found = False
 		for i, line in enumerate(lines):
 			if line.startswith(f'export {var_name}='):
-				lines[i] = export_string  # Update the existing line
-				found = True
+				lines[i] = f'export {var_name}="{value}"\n'
+				updated = True
 				break
-		
-		# If the variable was not found, append it
-		if not found:
-			lines.append(export_string)
-		
-		# Rewrite the file with updated or added export
+		if not updated:
+			lines.append(f'export {var_name}="{value}"\n')
 		file.seek(0)
 		file.truncate()
 		file.writelines(lines)
