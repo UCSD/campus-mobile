@@ -506,11 +506,12 @@ packages:
   flutter_scandit_plugin:
     dependency: "direct main"
     description:
-      name: flutter_scandit_plugin
-      sha256: "20cdf834e95a46253c585e56a8c3f97817f0d82e9d34f652b2e54ffc32b73c39"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
+      path: "."
+      ref: "scandit-6.6.3"
+      resolved-ref: d99208e0ff297e0943075ad2546af4a8ebc03d63
+      url: "https://github.com/UCSD/flutter_scandit.git"
+    source: git
+    version: "1.1.0"
   flutter_secure_storage:
     dependency: "direct main"
     description:
@@ -989,10 +990,10 @@ packages:
     dependency: "direct main"
     description:
       name: permission_handler
-      sha256: bc56bfe9d3f44c3c612d8d393bd9b174eb796d706759f9b495ac254e4294baa5
+      sha256: "33c6a1253d1f95fd06fa74b65b7ba907ae9811f9d5c1d3150e51417d04b8d6a8"
       url: "https://pub.dev"
     source: hosted
-    version: "10.4.5"
+    version: "10.2.0"
   permission_handler_android:
     dependency: transitive
     description:
@@ -1442,34 +1443,10 @@ packages:
     dependency: "direct main"
     description:
       name: webview_flutter
-      sha256: "6886b3ceef1541109df5001054aade5ee3c36b5780302e41701c78357233721c"
+      sha256: "065b52f7d10520db76c598fc50a07d2ab4596b9e0960c59da6653fc7d41c6650"
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.0"
-  webview_flutter_android:
-    dependency: transitive
-    description:
-      name: webview_flutter_android
-      sha256: "8b3b2450e98876c70bfcead876d9390573b34b9418c19e28168b74f6cb252dbd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.10.4"
-  webview_flutter_platform_interface:
-    dependency: transitive
-    description:
-      name: webview_flutter_platform_interface
-      sha256: "812165e4e34ca677bdfbfa58c01e33b27fd03ab5fa75b70832d4b7d4ca1fa8cf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.9.5"
-  webview_flutter_wkwebview:
-    dependency: transitive
-    description:
-      name: webview_flutter_wkwebview
-      sha256: a5364369c758892aa487cbf59ea41d9edd10f9d9baf06a94e80f1bd1b4c7bbc0
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.9.5"
+    version: "2.0.13"
   wifi_connection:
     dependency: "direct main"
     description:
@@ -1520,5 +1497,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.5.0 <4.0.0"
+  dart: ">=3.5.3 <4.0.0"
   flutter: ">=3.22.0"
