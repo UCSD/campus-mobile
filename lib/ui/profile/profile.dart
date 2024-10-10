@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
@@ -8,7 +7,7 @@ import 'package:campus_mobile_experimental/ui/profile/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../../core/utils/webview.dart';
 
 class Profile extends StatelessWidget {
   Future<Null> initUniLinks(BuildContext context) async {
@@ -91,13 +90,5 @@ class Profile extends StatelessWidget {
   handlePrivacyTap() async {
     const privacyUrl = "https://mobile.ucsd.edu/privacy-policy.html";
     openLink(privacyUrl);
-  }
-
-  openLink(String url) async {
-    try {
-      launch(url, forceSafariVC: true);
-    } catch (e) {
-      // an error occurred, do nothing
-    }
   }
 }

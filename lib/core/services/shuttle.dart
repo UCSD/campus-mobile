@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -11,12 +10,9 @@ class ShuttleService {
   DateTime? _lastUpdated;
   String? _error;
   List<ShuttleStopModel> _data = [];
-
+  List<ShuttleStopModel> get data => _data;
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
-
-  List<ShuttleStopModel> get data => _data;
-
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
@@ -24,9 +20,7 @@ class ShuttleService {
   };
 
   Future<bool> fetchData() async {
-    _error = null;
-    _isLoading = true;
-
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response =
@@ -35,19 +29,17 @@ class ShuttleService {
       /// parse data
       var data = shuttleStopModelFromJson(_response);
       _data = data;
-      _isLoading = false;
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 
   Future<List<ArrivingShuttle>> getArrivingInformation(stopId) async {
-    _error = null;
-    _isLoading = true;
-
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await (_networkHelper.authorizedFetch(
@@ -55,12 +47,12 @@ class ShuttleService {
 
       /// parse data
       final arrivingData = getArrivingShuttles(_response);
-      _isLoading = false;
       return arrivingData;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return [];
+    } finally {
+      _isLoading = false;
     }
   }
 

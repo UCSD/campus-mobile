@@ -6,7 +6,6 @@ class NoticesDataProvider extends ChangeNotifier {
   NoticesDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
-
     ///INITIALIZE SERVICES
     _noticesService = NoticesService();
     _noticesModel = [];

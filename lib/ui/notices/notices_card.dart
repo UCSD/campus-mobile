@@ -2,7 +2,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../../core/utils/webview.dart';
 
 class NoticesCard extends StatelessWidget {
   const NoticesCard({
@@ -36,13 +36,5 @@ class NoticesCard extends StatelessWidget {
             fullSize: true,
           )),
     );
-  }
-
-  openLink(String url) async {
-    try {
-      launch(url, forceSafariVC: true);
-    } catch (e) {
-      // an error occurred, do nothing
-    }
   }
 }

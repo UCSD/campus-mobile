@@ -8,17 +8,14 @@ class BarcodeService {
 
   final NetworkHelper _networkHelper = NetworkHelper();
 
-  Future<bool> uploadResults(
-      Map<String, String> headers, Map<String, dynamic> body) async {
-    _error = null;
-    _isLoading = true;
+  Future<bool> uploadResults(Map<String, String> headers, Map<String, dynamic> body) async {
+    _error = null; _isLoading = true;
     try {
       final response = await _networkHelper.authorizedPost(
           dotenv.get('BARCODE_SERVICE_ENDPOINT'),
           headers, body
       );
       if (response != null && validateUploadResults(body, response)) {
-        _isLoading = false;
         return true;
       } else {
         throw (response.toString());
@@ -27,8 +24,9 @@ class BarcodeService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 

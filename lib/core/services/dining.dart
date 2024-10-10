@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
@@ -15,15 +14,13 @@ class DiningService {
   String? _error;
   List<DiningModel>? _data;
   DiningMenuItemsModel? _menuData;
-
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
 
   Future<bool> fetchData() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
@@ -31,7 +28,6 @@ class DiningService {
 
       /// parse data
       final data = diningModelFromJson(_response);
-      _isLoading = false;
       _data = data;
       return true;
     } catch (e) {
@@ -43,14 +39,14 @@ class DiningService {
         }
       }
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 
   Future<bool> fetchMenu(String id) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
@@ -69,8 +65,9 @@ class DiningService {
         }
       }
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 
