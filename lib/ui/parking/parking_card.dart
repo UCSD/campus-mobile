@@ -77,9 +77,12 @@ class _ParkingCardState extends State<ParkingCard> {
       return Column(
         children: <Widget>[
           Expanded(
-            child: PageView(
+            child: PageView.builder(
               controller: _controller,
-              children: selectedLotsViews,
+              itemCount: selectedLotsViews.length,
+              itemBuilder: (context, index) {
+                return selectedLotsViews[index];
+              },
             ),
           ),
           DotsIndicator(

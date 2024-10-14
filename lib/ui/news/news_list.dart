@@ -27,33 +27,31 @@ class NewsList extends StatelessWidget {
 
   Widget buildNewsList(BuildContext context, NewsModel data) {
     final List<Item>? listOfNews = data.items;
-    final List<Widget> newsTiles = [];
 
-    /// check to see if we want to display only a limited number of elements
-    /// if no constraint is given on the size of the list then all elements
-    /// are rendered
+    /// Check to see if we want to display only a limited number of elements
+    /// If no constraint is given on the size of the list, all elements are rendered
     var size;
     if (listSize == null)
       size = listOfNews!.length;
-    else
-      size = listSize;
-    for (int i = 0; i < size; i++) {
-      final Item item = listOfNews![i];
-      final tile = buildNewsTile(item, context);
-      newsTiles.add(tile);
-    }
+    else size = listSize;
 
     return listSize != null
-        ? ListView(
+        ? ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            children: ListTile.divideTiles(tiles: newsTiles, context: context)
-                .toList(),
+            itemCount: size,
+            itemBuilder: (context, index) {
+              final Item item = listOfNews![index];
+              return buildNewsTile(item, context);
+            },
           )
         : ContainerView(
-            child: ListView(
-              children: ListTile.divideTiles(tiles: newsTiles, context: context)
-                  .toList(),
+            child: ListView.builder(
+              itemCount: size,
+              itemBuilder: (context, index) {
+                final Item item = listOfNews![index];
+                return buildNewsTile(item, context);
+              },
             ),
           );
   }

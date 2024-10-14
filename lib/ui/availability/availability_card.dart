@@ -43,24 +43,24 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   }
 
   Widget buildAvailabilityCard(List<AvailabilityModel?> data) {
-    List<Widget> locationsList = [];
-    RegExp multiPager = RegExp(r' \(\d+/\d+\)$');
-    // loop through all the models, adding each one to locationsList
-    for (AvailabilityModel? model in data) {
-      if (model != null) {
-        String curName = model.name!;
-        RegExpMatch? match = multiPager.firstMatch(curName);
-        if (match != null) {
-          curName = curName.replaceRange(match.start, match.end, '');
-        }
-        if (_availabilityDataProvider.locationViewState[curName]!) {
-          locationsList.add(AvailabilityDisplay(model: model));
-        }
+    // RegExp multiPager = RegExp(r' \(\d+/\d+\)$');
+    // Filter the models and create a list of only the valid ones
+    List<Widget> locationsList = data
+        .where((model) {
+      if (model == null) return false;
+      String curName = model.name!;
+      RegExp multiPager = RegExp(r' \(\d+/\d+\)$');
+      RegExpMatch? match = multiPager.firstMatch(curName);
+      if (match != null) {
+        curName = curName.replaceRange(match.start, match.end, '');
       }
-    }
+      return _availabilityDataProvider.locationViewState[curName]!;
+    })
+        .map((model) => AvailabilityDisplay(model: model!))
+        .toList();
 
-    // the user chose no location, so instead show "No Location to Display"
-    if (locationsList.length == 0) {
+    // If no location is available, show "No Location to Display"
+    if (locationsList.isEmpty) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -85,9 +85,12 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     return Column(
       children: <Widget>[
         Flexible(
-          child: PageView(
+          child: PageView.builder(
             controller: _controller,
-            children: locationsList,
+            itemCount: locationsList.length,
+            itemBuilder: (context, index) {
+              return locationsList[index];
+            },
           ),
         ),
         SingleChildScrollView(
