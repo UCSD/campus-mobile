@@ -18,8 +18,9 @@ import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart'
 import 'package:campus_mobile_experimental/ui/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/triton_media/triton_media_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
-import 'package:campus_mobile_experimental/ui/my_chart/my_chart_card.dart';
-import 'package:campus_mobile_experimental/ui/myucsdchart/myucsdchart.dart';
+import 'package:campus_mobile_experimental/ui/mystudentchart/mystudentchart_card.dart';
+import 'package:campus_mobile_experimental/ui/myucsdchart/myucsdchart_card.dart';
+import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/notices/notices_card.dart';
@@ -33,6 +34,77 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
+import 'package:flutter/rendering.dart';
+
+import '../common/card_container.dart';
+
+//--- code to track size changes of dynamic web card widget content ---
+typedef void OnWidgetSizeChange(Size size);
+
+class MeasureSizeRenderObject extends RenderProxyBox {
+  Size? oldSize;
+  OnWidgetSizeChange onChange;
+
+  MeasureSizeRenderObject(this.onChange);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    Size newSize = child!.size;
+    if (oldSize == newSize) return;
+
+    oldSize = newSize;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onChange(newSize);
+    });
+  }
+}
+
+class MeasureSize extends SingleChildRenderObjectWidget {
+  final OnWidgetSizeChange onChange;
+
+  const MeasureSize({
+    Key? key,
+    required this.onChange,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return MeasureSizeRenderObject(onChange);
+  }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, covariant MeasureSizeRenderObject renderObject) {
+    renderObject.onChange = onChange;
+  }
+}
+
+Map<String, double> webViewCardHeights = {};
+Map<String, bool> webViewCardNotLoaded = {};
+
+void resetCardHeight(String card) {
+  webViewCardHeights[card] = 0.0;
+}
+
+void resetAllCardHeights() {
+  webViewCardHeights.clear();
+}
+
+void resetAllCardLoadedStates() {
+  webViewCardNotLoaded.clear();
+}
+
+void setNewCardHeight(String card, double height) {
+  if (!webViewCardHeights.containsKey(card) ||
+      height > webViewCardHeights[card]!) {
+    webViewCardNotLoaded[card] = false;
+    webViewCardHeights[card] = height;
+  }
+}
+//---------------------------------------------------------------------
 
 class Home extends StatefulWidget {
   @override
@@ -40,7 +112,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _controller = ScrollController(
+    initialScrollOffset: getHomeScrollOffset(),
+  );
   InternetConnectivityProvider? _connectivityProvider;
+
+  _HomeState() : super() {
+    _controller.addListener(
+      () {
+        setHomeScrollOffset(_controller.offset);
+      },
+    );
+  }
+
   Future<Null> initUniLinks(BuildContext context) async {
     // deep links are received by this method
     // the specific host needs to be added in AndroidManifest.xml and Info.plist
@@ -90,6 +174,7 @@ class _HomeState extends State<Home> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
+        controller: _controller,
         padding: EdgeInsets.only(
             top: cardMargin + 2.0, right: 0.0, bottom: 0.0, left: 0.0),
         children: createList(context),
@@ -173,11 +258,68 @@ class _HomeState extends State<Home> {
         }
       } else {
         // dynamically insert webCards into the list
-        orderedCards.add(WebViewContainer(
-          titleText: webCards[card]!.titleText,
-          initialUrl: webCards[card]!.initialURL,
-          cardId: card,
-          requireAuth: webCards[card]!.requireAuth,
+        orderedCards.add(StatefulBuilder(
+          builder: (context, setState) {
+            var currentCard = card;
+            if (webViewCardNotLoaded[currentCard] == null) {
+              webViewCardNotLoaded[currentCard] = true;
+            }
+            return Stack(children: <Widget>[
+              MeasureSize(
+                onChange: (Size size) {
+                  setNewCardHeight(card, size.height);
+                  if (size.height == webViewCardHeights[card]) {
+                    webViewCardNotLoaded[card] = false;
+                  } else {
+                    webViewCardNotLoaded[card] = true;
+                  }
+                  setState(() {});
+                },
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: WebViewContainer(
+                    titleText: webCards[currentCard]!.titleText,
+                    initialUrl: webCards[currentCard]!.initialURL,
+                    cardId: currentCard,
+                    requireAuth: webCards[currentCard]!.requireAuth,
+                  ),
+                ),
+              ),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: webViewCardHeights[currentCard] ?? 0.0,
+                    minWidth: 400.0),
+                child: Builder(builder: (BuildContext context) {
+                  final currentCard = card;
+                  return Visibility(
+                    visible: webViewCardNotLoaded[currentCard]!,
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: Theme.of(context).cardColor,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ]);
+          },
         ));
       }
     }

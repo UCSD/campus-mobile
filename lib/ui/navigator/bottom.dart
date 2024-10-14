@@ -9,6 +9,38 @@ import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+//---saved scroll offsets for Home Screen---
+var _homeScrollOffset = 0.0;
+
+double getHomeScrollOffset() {
+  return _homeScrollOffset;
+}
+
+void setHomeScrollOffset(double currentScrollOffset) {
+  _homeScrollOffset = currentScrollOffset;
+}
+
+void resetHomeScrollOffset () {
+  _homeScrollOffset = 0.0;
+}
+//-------------------------------------------------
+
+//---saved scroll offsets for Notification Screen---
+var _notificationsScrollOffset = 0.0;
+
+double getNotificationsScrollOffset() {
+  return _notificationsScrollOffset;
+}
+
+void setNotificationsScrollOffset(double currentScrollOffset) {
+  _notificationsScrollOffset = currentScrollOffset;
+}
+
+void resetNotificationsScrollOffset () {
+  _notificationsScrollOffset = 0.0;
+}
+//-------------------------------------------------
+
 class BottomTabBar extends StatefulWidget {
   @override
   _BottomTabBarState createState() => _BottomTabBarState();
@@ -34,6 +66,9 @@ class _BottomTabBarState extends State<BottomTabBar> {
         type: BottomNavigationBarType.fixed,
         currentIndex: provider.currentIndex,
         onTap: (index) {
+          if (provider.currentIndex == NavigatorConstants.HomeTab) {
+
+          }
           provider.currentIndex = index;
           switch (index) {
             case NavigatorConstants.HomeTab:
@@ -41,16 +76,19 @@ class _BottomTabBarState extends State<BottomTabBar> {
                   .changeTitle(null);
               break;
             case NavigatorConstants.MapTab:
+              resetAllCardLoadedStates();
               Provider.of<CustomAppBar>(context, listen: false)
                   .changeTitle("Maps");
               break;
             case NavigatorConstants.NotificationsTab:
+              resetAllCardLoadedStates();
               Provider.of<CustomAppBar>(context, listen: false).changeTitle(
                   "Notifications",
                   done: false,
                   notification: true);
               break;
             case NavigatorConstants.ProfileTab:
+              resetAllCardLoadedStates();
               Provider.of<CustomAppBar>(context, listen: false)
                   .changeTitle("Profile");
               break;

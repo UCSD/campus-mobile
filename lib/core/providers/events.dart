@@ -6,10 +6,8 @@ class EventsDataProvider extends ChangeNotifier {
   EventsDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
-
     ///INITIALIZE SERVICES
     _eventsService = EventsService();
-
     _eventsModels = [];
   }
 
@@ -25,8 +23,7 @@ class EventsDataProvider extends ChangeNotifier {
   late EventsService _eventsService;
 
   void fetchEvents() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     if (await _eventsService.fetchData()) {
       _eventsModels = _eventsService.eventsModels;

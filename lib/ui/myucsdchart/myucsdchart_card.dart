@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const String cardId = 'MyStudentChart';
+const String cardId = 'MyUCSDChart';
 
-class MyStudentChartCard extends StatelessWidget {
+class MyUCSDChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -26,7 +26,7 @@ class MyStudentChartCard extends StatelessWidget {
   Widget buildCardContent(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        handleTap();
+        openMyUCSDChart();
       },
       behavior: HitTestBehavior.translucent,
       child: Row(
@@ -61,24 +61,19 @@ class MyStudentChartCard extends StatelessWidget {
         foregroundColor: Theme.of(context).backgroundColor,
       ),
       child: Text(
-        'Log in to MyStudentChart',
+        'Log in to MyUCSDChart',
       ),
       onPressed: () {
-        handleTap();
+        openMyUCSDChart();
       },
     ));
     return actionButtons;
   }
 
-  void handleTap() {
-    String myChartUrl =
-        'https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN';
-    openLink(myChartUrl);
-  }
-
-  openLink(String url) async {
+  void openMyUCSDChart() {
     try {
-      launch(url, forceSafariVC: true);
+      launch('https://myucsdchart.ucsd.edu/UCSD/Authentication/Login',
+          forceSafariVC: true);
     } catch (e) {
       // an error occurred, do nothing
     }

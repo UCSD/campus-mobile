@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ffi';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:dio/dio.dart';

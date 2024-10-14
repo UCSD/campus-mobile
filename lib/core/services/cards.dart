@@ -10,15 +10,13 @@ class CardsService {
   String? _error;
 
   Map<String, CardsModel>? _cardsModel;
-
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
 
   Future<bool> fetchCards(String? ucsdAffiliation) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
 
     if (ucsdAffiliation == null) ucsdAffiliation = "";
 
@@ -28,7 +26,6 @@ class CardsService {
       String _response =
           await _networkHelper.authorizedFetch(cardListEndpoint, headers);
       _cardsModel = cardsModelFromJson(_response);
-      _isLoading = false;
       return true;
     } catch (e) {
       if (e.toString().contains("401")) {
@@ -37,8 +34,9 @@ class CardsService {
         }
       }
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 

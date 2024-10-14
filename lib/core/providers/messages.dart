@@ -3,8 +3,11 @@ import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/messages.dart';
 import 'package:flutter/material.dart';
+import '../../ui/navigator/bottom.dart';
 
 //MESSAGES API UNIX TIMESTAMPS IN MILLISECONDS NOT SECONDS
+
+ScrollController notificationScrollController = ScrollController();
 
 class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
@@ -14,16 +17,15 @@ class MessagesDataProvider extends ChangeNotifier {
     _messageService = MessageService();
     _statusText = NotificationsConstants.statusFetching;
     _hasMoreMessagesToLoad = false;
-    _scrollController = ScrollController();
-    _scrollController!.addListener(() {
+    notificationScrollController.addListener(() {
       var triggerFetchMoreSize =
-          0.9 * _scrollController!.position.maxScrollExtent;
-
-      if (_scrollController!.position.pixels > triggerFetchMoreSize) {
+          0.9 * notificationScrollController.position.maxScrollExtent;
+      if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
         if (!_isLoading! && _hasMoreMessagesToLoad!) {
           fetchMessages(false);
         }
       }
+      setNotificationsScrollOffset(notificationScrollController.offset);
     });
   }
 
@@ -34,7 +36,6 @@ class MessagesDataProvider extends ChangeNotifier {
   int? _previousTimestamp;
   String? _statusText;
   bool? _hasMoreMessagesToLoad;
-  ScrollController? _scrollController;
 
   /// MODELS
   List<MessageElement?>? _messages;
@@ -44,21 +45,18 @@ class MessagesDataProvider extends ChangeNotifier {
 
   //Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null; var returnVal;
     notifyListeners();
     if (clearMessages) {
       _clearMessages();
     }
     if (_userDataProvider != null && _userDataProvider!.isLoggedIn) {
-      var returnVal = await retrieveMoreMyMessages();
-      _isLoading = false;
-      return returnVal;
+      returnVal = await retrieveMoreMyMessages();
     } else {
-      var returnVal = await retrieveMoreTopicMessages();
-      _isLoading = false;
-      return returnVal;
+      returnVal = await retrieveMoreTopicMessages();
     }
+    _isLoading = false;
+    return returnVal;
   }
 
   void _clearMessages() {
@@ -68,11 +66,8 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   Future<bool> retrieveMoreMyMessages() async {
-    _isLoading = true;
-    _error = null;
-
+    _isLoading = true; _error = null;
     notifyListeners();
-
     int? returnedTimestamp;
     int? timestamp = _previousTimestamp;
     Map<String, String> headers = {
@@ -85,32 +80,23 @@ class MessagesDataProvider extends ChangeNotifier {
       List<MessageElement> temp = _messageService.messagingModels!.messages!;
       updateMessages(temp);
       makeOrderedMessagesList();
-
       returnedTimestamp = _messageService.messagingModels!.next == null
           ? 0
           : _messageService.messagingModels!.next;
-      // this is to check if we can no more message to paginate through
-      if (_previousTimestamp == returnedTimestamp || returnedTimestamp == 0) {
-        _hasMoreMessagesToLoad = false;
-      } else {
-        _hasMoreMessagesToLoad = true;
-      }
+      // checks if we have no more messages to paginate through
+      _hasMoreMessagesToLoad = !(_previousTimestamp == returnedTimestamp || returnedTimestamp == 0);
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
       _isLoading = false;
       notifyListeners();
       return true;
     }
-
     return false;
   }
 
   Future<bool> retrieveMoreTopicMessages() async {
-    _isLoading = true;
-    _error = null;
-
+    _isLoading = true; _error = null;
     notifyListeners();
-
     int returnedTimestamp;
 
     if (await _messageService.fetchTopicData(
@@ -118,14 +104,9 @@ class MessagesDataProvider extends ChangeNotifier {
       List<MessageElement> temp = _messageService.messagingModels!.messages!;
       updateMessages(temp);
       makeOrderedMessagesList();
-
       returnedTimestamp = _messageService.messagingModels!.next ?? 0;
-      // this is to check if we can no more message to paginate through
-      if (_previousTimestamp == returnedTimestamp || returnedTimestamp == 0) {
-        _hasMoreMessagesToLoad = false;
-      } else {
-        _hasMoreMessagesToLoad = true;
-      }
+      // checks if we have no more messages to paginate through
+      _hasMoreMessagesToLoad = !(_previousTimestamp == returnedTimestamp || returnedTimestamp == 0);
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
       _isLoading = false;
@@ -169,7 +150,6 @@ class MessagesDataProvider extends ChangeNotifier {
   DateTime? get lastUpdated => _lastUpdated;
   String? get statusText => _statusText;
   bool? get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
-  ScrollController? get scrollController => _scrollController;
   UserDataProvider? get userDataProvider => _userDataProvider;
 
   List<MessageElement?>? get messages {

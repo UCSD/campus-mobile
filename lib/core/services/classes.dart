@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/term.dart';
@@ -12,12 +11,10 @@ class ClassScheduleService {
   ClassScheduleModel _unData = ClassScheduleModel();
   ClassScheduleModel _grData = ClassScheduleModel();
   AcademicTermModel? _academicTermModel;
-
   final NetworkHelper _networkHelper = NetworkHelper();
 
   Future<bool> fetchUNCourses(Map<String, String> headers, String term) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await _networkHelper.authorizedFetch(
@@ -26,18 +23,17 @@ class ClassScheduleService {
 
       /// parse data
       _unData = classScheduleModelFromJson(_response);
-      _isLoading = false;
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 
   Future<bool> fetchGRCourses(Map<String, String> headers, String term) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = _networkHelper.authorizedFetch(
@@ -46,26 +42,26 @@ class ClassScheduleService {
 
       /// parse data
       _grData = classScheduleModelFromJson(_response);
-      _isLoading = false;
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 
   Future<bool> fetchAcademicTerm() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       String _response = await _networkHelper.fetchData(dotenv.get('ACADEMIC_TERM_API_ENDPOINT'));
       _academicTermModel = academicTermModelFromJson(_response);
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 
