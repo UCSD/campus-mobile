@@ -1,4 +1,5 @@
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
@@ -11,13 +12,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class StudentIdCard extends StatefulWidget {
-  @override
-  _StudentIdCardState createState() => _StudentIdCardState();
-}
-
-class _StudentIdCardState extends State<StudentIdCard> {
-  String cardId = "student_id";
+class StudentIdCard extends StatelessWidget {
+  final String cardId = "student_id";
 
   /// Pop up barcode
   createAlertDialog(
@@ -106,10 +102,19 @@ class _StudentIdCardState extends State<StudentIdCard> {
                             left: cardMargin * 1.5, right: cardMargin * 1.5)),
                     Column(
                       children: <Widget>[
-                        Image.network(
-                          photoModel!.photoUrl!,
+                        CachedNetworkImage(
+                          imageUrl: photoModel!.photoUrl!,
                           fit: BoxFit.contain,
                           height: ScalingUtility.verticalSafeBlock * 14,
+                          progressIndicatorBuilder: (context, url, downloadProgress) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.secondary,
+                                value: downloadProgress.progress,
+                              ),
+                            );
+                          },
+                          errorWidget: (context, url, error) => Icon(Icons.error),
                         ),
                         SizedBox(
                           height: ScalingUtility.verticalSafeBlock * 1.5,
@@ -255,10 +260,19 @@ class _StudentIdCardState extends State<StudentIdCard> {
           Container(
             child: Column(
               children: <Widget>[
-                Image.network(
-                  photoModel!.photoUrl!,
+                CachedNetworkImage(
+                  imageUrl: photoModel!.photoUrl!,
                   fit: BoxFit.contain,
                   height: 125,
+                  progressIndicatorBuilder: (context, url, downloadProgress) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                        value: downloadProgress.progress,
+                      ),
+                    );
+                  },
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
                 SizedBox(height: 10),
                 Text(profileModel!.classificationType!),
@@ -279,7 +293,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       (nameModel!.firstName! + " " + nameModel.lastName!),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: tabletFontSize(
+                          fontSize: tabletFontSize(context,
                               nameModel.firstName! + " " + nameModel.lastName!,
                               "name")),
                       textAlign: TextAlign.left,
@@ -295,7 +309,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: Colors.grey,
-                          fontSize: tabletFontSize(
+                          fontSize: tabletFontSize(context,
                               profileModel.collegeCurrent!, "college")),
                       textAlign: TextAlign.left,
                       softWrap: false,
@@ -310,7 +324,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                           ? profileModel.graduatePrimaryMajorCurrent
                           : profileModel.ugPrimaryMajorCurrent!,
                       style: TextStyle(
-                          fontSize: tabletFontSize(
+                          fontSize: tabletFontSize(context,
                               profileModel.graduatePrimaryMajorCurrent != ""
                                   ? profileModel.graduatePrimaryMajorCurrent
                                   : profileModel.ugPrimaryMajorCurrent!,
@@ -417,8 +431,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: fontSizeForTablet(),
-                            letterSpacing: letterSpacingForTablet()),
+                            fontSize: fontSizeForTablet(context),
+                            letterSpacing: letterSpacingForTablet(context)),
                       )
                     ],
                   ),
@@ -446,14 +460,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
     }
   }
 
-  double letterSpacingForTablet() {
+  double letterSpacingForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 1;
     }
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
-  double fontSizeForTablet() {
+  double fontSizeForTablet(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return ScalingUtility.horizontalSafeBlock * 2;
     }
@@ -513,8 +527,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         cardNumber,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: getRotatedPopUpFontSize(),
-                            letterSpacing: letterSpacing()),
+                            fontSize: getRotatedPopUpFontSize(context),
+                            letterSpacing: letterSpacing(context)),
                       )
                     ],
                   ),
@@ -548,12 +562,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
     }
   }
 
-  double letterSpacing() =>
+  double letterSpacing(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 1
           : SizeConfig.safeBlockHorizontal * 3;
 
-  double getRotatedPopUpFontSize() =>
+  double getRotatedPopUpFontSize(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape
           ? SizeConfig.safeBlockHorizontal * 2
           : SizeConfig.safeBlockHorizontal * 4;
@@ -577,9 +591,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
     return base;
   }
 
-  double tabletFontSize(String input, String textField) {
+  double tabletFontSize(BuildContext context, String input, String textField) {
     /// Base font size
-    double base = letterSpacingForTablet();
+    double base = letterSpacingForTablet(context);
 
     /// If threshold is passed, shrink text
     if (input.length >= 21) {

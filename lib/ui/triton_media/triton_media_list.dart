@@ -15,46 +15,36 @@ class MediaList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider.of<MediaDataProvider>(context).isLoading!
         ? Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary))
+        child: CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.secondary))
         : buildMediaList(
-            Provider.of<MediaDataProvider>(context).mediaModels!, context);
+        Provider.of<MediaDataProvider>(context).mediaModels!, context);
   }
 
   Widget buildMediaList(List<MediaModel> listOfMedia, BuildContext context) {
-    final List<Widget> mediaTiles = [];
+    // Determine the number of items to show
+    int size = listSize ?? 3; // If listSize is null, default to 3
 
-    /// check to see if we want to display only a limited number of elements
-    /// if no constraint is given on the size of the list then all elements
-    /// are rendered
-    var size;
-    if (listSize == null) {
-      size = 3;
-    } else
-      size = listSize;
-
-    /// check to see if we have at least 3 events
-    if (size > listOfMedia.length) {
-      size = listOfMedia.length;
-    }
-
-    for (int i = 0; i < size; i++) {
-      final MediaModel item = listOfMedia[i];
-      final tile = MediaTile(data: item);
-      final spacer = SizedBox(
-        width: 5,
-      );
-      mediaTiles.add(tile);
-      mediaTiles.add(spacer);
-    }
+    // check to see if we want to display only a limited number of elements
+    // if no constraint is given on the size of the list then all elements are rendered
+    size = size > listOfMedia.length ? listOfMedia.length : size; // Handle case where size exceeds list length
 
     if (listSize != null) {
-      return SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: mediaTiles,
+      // check to see if we have at least 3 events
+      return SizedBox(
+        height: 250, // Set an appropriate height for the horizontal list
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: size,
+          itemBuilder: (context, index) {
+            final MediaModel item = listOfMedia[index];
+            return Row(
+              children: [
+                MediaTile(data: item),
+                SizedBox(width: 5), // Spacer between tiles
+              ],
+            );
+          },
         ),
       );
     } else {

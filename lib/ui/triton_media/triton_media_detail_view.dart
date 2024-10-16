@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -98,7 +99,19 @@ class _MediaDetailView extends State<MediaDetailView> {
                   Padding(
                     padding: const EdgeInsets.all(40.0),
                     child: Center(
-                        child: Image.network(metadata.artUri.toString())),
+                        child: CachedNetworkImage(
+                      imageUrl: metadata.artUri.toString(),
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.secondary,
+                            value: downloadProgress.progress,
+                          ),
+                        );
+                      },
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    )),
                   ),
                   Text(
                     metadata.title,
@@ -156,7 +169,8 @@ class BroadcastScheduleButton extends StatelessWidget {
           child: Text(
             'Broadcast Schedule',
             style: TextStyle(
-                fontSize: 16, color: Theme.of(context).textTheme.labelLarge!.color),
+                fontSize: 16,
+                color: Theme.of(context).textTheme.labelLarge!.color),
           ),
           onPressed: () async {
             try {
@@ -193,7 +207,9 @@ class RadioControlButtons extends StatelessWidget {
                 margin: const EdgeInsets.all(8.0),
                 width: 64.0,
                 height: 64.0,
-                child: const CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               );
             } else if (playing != true) {
               return IconButton(
@@ -265,7 +281,9 @@ class ControlButtons extends StatelessWidget {
                 margin: const EdgeInsets.all(8.0),
                 width: 64.0,
                 height: 64.0,
-                child: const CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               );
             } else if (playing != true) {
               return IconButton(

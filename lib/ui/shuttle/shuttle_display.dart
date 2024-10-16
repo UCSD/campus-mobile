@@ -159,7 +159,7 @@ class ShuttleDisplay extends StatelessWidget {
 
   Widget whetherNextArrivals() {
     if (arrivingShuttles!.length <= 1) {
-      return Text("");
+      return Text("No future arrivals.");
     } else {
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,

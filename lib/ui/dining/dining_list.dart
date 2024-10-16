@@ -26,34 +26,32 @@ class DiningList extends StatelessWidget {
   }
 
   Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
-    final List<Widget> diningTiles = [];
-
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
-    /// are rendered
+    /// are rendered Lazily
     var size;
     if (listSize == null)
       size = listOfDiners.length;
     else
       size = listSize;
-    for (int i = 0; i < size; i++) {
-      final DiningModel item = listOfDiners[i];
-      final tile = buildDiningTile(item, context);
-      diningTiles.add(tile);
-    }
 
     return listSize != null
-        ? ListView(
+        ? ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            children: ListTile.divideTiles(tiles: diningTiles, context: context)
-                .toList(),
+            itemCount: size,
+            itemBuilder: (context, index) {
+              final DiningModel item = listOfDiners[index];
+              return buildDiningTile(item, context);
+            },
           )
         : ContainerView(
-            child: ListView(
-              children:
-                  ListTile.divideTiles(tiles: diningTiles, context: context)
-                      .toList(),
+            child: ListView.builder(
+              itemCount: size,
+              itemBuilder: (context, index) {
+                final DiningModel item = listOfDiners[index];
+                return buildDiningTile(item, context);
+              },
             ),
           );
   }

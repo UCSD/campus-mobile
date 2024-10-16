@@ -15,65 +15,63 @@ class AvailabilityDetailedView extends StatelessWidget {
   }
 
   Widget buildLocationsList(BuildContext context, subLocation) {
-    // Add a tile for the subLocation name
-    List<Widget> list = [];
-    list.add(ListTile(
-      title: Text(
-        "${subLocation.name}",
-        style: TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-            fontSize: 24,
-            fontWeight: FontWeight.bold),
-      ),
-    ));
-
-    // Add a tile for every floor in the subLocation list
-    for (int i = 0; i < subLocation.floors.length; i++) {
-      Floor floor = subLocation.floors[i];
-      list.add(
-        ListTile(
-          title: Text(
-            "${floor.name}",
-            style: TextStyle(
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      itemCount: subLocation.floors.length + 1, // +1 to include the subLocation name tile
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          // Add the subLocation name as the first ListTile
+          return ListTile(
+            title: Text(
+              "${subLocation.name}",
+              style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
-                fontSize: LOCATION_FONT_SIZE),
-          ),
-          subtitle: Column(
-            children: <Widget>[
-              Align(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        } else {
+          // Add tiles for each floor in the subLocation
+          Floor floor = subLocation.floors[index - 1]; // Adjust index for floors
+          return ListTile(
+            title: Text(
+              "${floor.name}",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: LOCATION_FONT_SIZE,
+              ),
+            ),
+            subtitle: Column(
+              children: <Widget>[
+                Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    (100 * percentAvailability(floor)).toInt().toString() +
-                        '% Busy',
-                    // style: TextStyle(color: Colors.black),
-                  )),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  height: PROGRESS_BAR_HEIGHT,
-                  width: PROGRESS_BAR_WIDTH,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(BORDER_RADIUS),
-                    child: LinearProgressIndicator(
-                      value: percentAvailability(floor) as double?,
-                      backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        setIndicatorColor(
-                          percentAvailability(floor),
+                    (100 * percentAvailability(floor)).toInt().toString() + '% Busy',
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    height: PROGRESS_BAR_HEIGHT,
+                    width: PROGRESS_BAR_WIDTH,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                      child: LinearProgressIndicator(
+                        value: percentAvailability(floor) as double?,
+                        backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          setIndicatorColor(percentAvailability(floor)),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return ListView(
-      physics: BouncingScrollPhysics(),
-      children: list,
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 
