@@ -15,11 +15,8 @@ class RoutePaths {
   static const String NewsViewAll = 'news/newslist';
   static const String EventsViewAll = 'events/eventslist';
   static const String EventsAll = 'events/events_view_all';
-  static const String MediaViewAll = 'triton_media/triton_media_list';
-  static const String MediaAll = 'triton_media/triton_media_view_all';
   static const String NewsDetailView = 'news/news_detail_view';
   static const String EventDetailView = 'events/event_detail_view';
-  static const String MediaDetailView = 'triton_media/triton_media_detail_view';
   static const String LinksViewAll = 'links/links_list';
   static const String ClassScheduleViewAll = 'class/classList';
   static const String ManageAvailabilityView = 'availability/manage_locations_view';
@@ -53,8 +50,6 @@ class RouteTitles {
     'news/news_detail_view': 'News',
     'events/eventslist': 'Events',
     'events/event_detail_view': 'Events',
-    'triton_media/triton_media_list': 'Triton Media',
-    'triton_media/triton_media_detail_view': 'Triton Media',
     'class/classList': 'Class Schedule',
     'availability/manage_locations_view': 'Manage Locations',
     'shuttle/manage_shuttle_view': 'Manage Shuttle Stops',
@@ -181,7 +176,6 @@ class CardTitleConstants {
     'dining': 'Dining',
     'availability': 'Busyness',
     'events': 'Events',
-    'triton_media': 'Triton Media',
     'news': 'News',
     'parking': 'Parking',
     'weather': 'Weather',

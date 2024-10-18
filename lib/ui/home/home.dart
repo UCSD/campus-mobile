@@ -16,7 +16,6 @@ import 'package:campus_mobile_experimental/ui/common/webview_container.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_card.dart';
 import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart';
 import 'package:campus_mobile_experimental/ui/events/events_card.dart';
-import 'package:campus_mobile_experimental/ui/triton_media/triton_media_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
 import 'package:campus_mobile_experimental/ui/mystudentchart/mystudentchart_card.dart';
 import 'package:campus_mobile_experimental/ui/myucsdchart/myucsdchart_card.dart';
@@ -221,9 +220,6 @@ class _HomeState extends State<Home> {
             break;
           case 'events':
             orderedCards.add(EventsCard());
-            break;
-          case 'triton_media':
-            orderedCards.add(MediaCard());
             break;
           case 'weather':
             orderedCards.add(WeatherCard());
