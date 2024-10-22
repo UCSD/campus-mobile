@@ -28,7 +28,7 @@ class _BuildInfoState extends State<BuildInfo> {
     });
   }
 
-  final String buildEnv = "##BUILD_ENV##";
+  final String buildEnv = dotenv.get('BUILD_ENV');
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +43,7 @@ class _BuildInfoState extends State<BuildInfo> {
                 ' (' +
                 _packageInfo.buildNumber +
                 ')' +
-                ((buildEnv == 'PROD' || buildEnv == '##BUILD_ENV##')
-                    ? ''
-                    : ' ' + buildEnv) +
-                ((buildEnv == '##BUILD_ENV##') ? ' QA' : ''),
+                (buildEnv == 'PROD' ? '' : buildEnv)
             style: TextStyle(color: agnosticDisabled),
             textAlign: TextAlign.center,
           ));
