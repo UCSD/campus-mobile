@@ -43,7 +43,7 @@ class _BuildInfoState extends State<BuildInfo> {
                 ' (' +
                 _packageInfo.buildNumber +
                 ')' +
-                (buildEnv == 'PROD' ? '' : buildEnv)
+                (buildEnv == 'PROD' ? '' : buildEnv),
             style: TextStyle(color: agnosticDisabled),
             textAlign: TextAlign.center,
           ));
