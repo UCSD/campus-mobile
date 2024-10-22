@@ -7,10 +7,8 @@ class ScannerMessageDataProvider extends ChangeNotifier {
   ScannerMessageDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
-
     ///INITIALIZE SERVICES
     _scannerMessageService = ScannerMessageService();
-
     ///INITIALIZE MODELS
     _scannerMessageModel = ScannerMessageModel();
   }
@@ -31,8 +29,7 @@ class ScannerMessageDataProvider extends ChangeNotifier {
   void fetchData() async {
     // forcing fetchData() to be executed async
     await Future.delayed(Duration.zero);
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
 
     /// Verify that user is logged in
@@ -57,6 +54,5 @@ class ScannerMessageDataProvider extends ChangeNotifier {
   String? get error => _error;
   ScannerMessageService? get scannerMessageService => _scannerMessageService;
   ScannerMessageModel? get scannerMessageModel => _scannerMessageModel;
-
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 }

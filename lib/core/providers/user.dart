@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -17,7 +16,6 @@ import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
-
 import '../../ui/home/home.dart';
 
 class UserDataProvider extends ChangeNotifier {
@@ -70,9 +68,10 @@ class UserDataProvider extends ChangeNotifier {
       box = Hive.box<UserProfileModel?>('UserProfileModel');
     } catch (e) {
       box = await Hive.openBox<UserProfileModel?>('UserProfileModel');
+    } finally {
+      await box.put('UserProfileModel', model);
+      _lastUpdated = DateTime.now();
     }
-    await box.put('UserProfileModel', model);
-    _lastUpdated = DateTime.now();
   }
 
   /// Load data from persistent storage by invoking the following methods:
@@ -80,7 +79,6 @@ class UserDataProvider extends ChangeNotifier {
   /// [_loadSavedUserProfile]
   Future loadSavedData() async {
     await _loadSavedAuthenticationModel();
-
     await _loadSavedUserProfile();
   }
 
@@ -168,8 +166,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Upon logging in we should make sure that users has an account
   /// If the user doesn't have an account one will be made by invoking [_createNewUser]
   Future manualLogin(String username, String password) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
 
     if (username.isNotEmpty && password.isNotEmpty) {
@@ -217,7 +214,6 @@ class UserDataProvider extends ChangeNotifier {
       if (await _authenticationService
           .silentLogin(base64EncodedWithEncryptedPassword)) {
         await updateAuthenticationModel(_authenticationService.data);
-
         await fetchUserProfile();
 
         CardsDataProvider _cardsDataProvider = CardsDataProvider();
@@ -248,8 +244,7 @@ class UserDataProvider extends ChangeNotifier {
     resetHomeScrollOffset();
     resetAllCardHeights();
     resetNotificationsScrollOffset();
-    _pushNotificationDataProvider
-        .unregisterDevice(_authenticationModel!.accessToken);
+    _pushNotificationDataProvider.unregisterDevice(_authenticationModel!.accessToken);
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
     updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
     _deletePasswordFromDevice();
@@ -281,8 +276,7 @@ class UserDataProvider extends ChangeNotifier {
   /// invoke [postUserProfile] once user profile is created
   /// if user has a profile then we invoke [updateUserProfileModel]
   Future fetchUserProfile() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
 
     if (isLoggedIn) {
@@ -357,7 +351,6 @@ class UserDataProvider extends ChangeNotifier {
       profile.ucsdaffiliation = _authenticationModel!.ucsdaffiliation;
       profile.pid = _authenticationModel!.pid;
       profile.subscribedTopics = _pushNotificationDataProvider.publicTopics();
-
       final studentPattern = RegExp('[BGJMU]');
       final staffPattern = RegExp('[E]');
 
@@ -386,8 +379,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Invoke [updateUserProfileModel] with user profile that was passed in
   /// If user is logged in upload [UserProfileModel] to DB
   Future postUserProfile(UserProfileModel? profile) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
 
     /// save settings to local storage
@@ -427,21 +419,14 @@ class UserDataProvider extends ChangeNotifier {
 
   ///GETTERS FOR MODELS
   UserProfileModel? get userProfileModel => _userProfileModel;
-
   AuthenticationModel? get authenticationModel => _authenticationModel;
-
   CardsDataProvider? get cardsDataProvider => _cardsDataProvider;
 
   ///GETTERS FOR STATES
   String? get error => _error;
-
   bool get isLoggedIn => _authenticationModel!.isLoggedIn(_lastUpdated);
-
   bool? get isLoading => _isLoading;
-
   DateTime? get lastUpdated => _lastUpdated;
-
   bool get isInSilentLogin => _isInSilentLogin;
-
   set cardsDataProvider(CardsDataProvider? value) => _cardsDataProvider = value;
 }

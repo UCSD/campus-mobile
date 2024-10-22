@@ -15,10 +15,8 @@ class WiFiCard extends StatefulWidget {
   _WiFiCardState createState() => _WiFiCardState();
 }
 
-class _WiFiCardState extends State<WiFiCard>
-    with AutomaticKeepAliveClientMixin {
+class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
-
   String cardId = "speed_test";
   TestStatus? cardState;
   int? lastSpeed;
