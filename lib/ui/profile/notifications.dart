@@ -25,7 +25,7 @@ class NotificationsSettingsView extends StatelessWidget {
     for (String? topic in topicsAvailable) {
       list.add(ListTile(
         key: Key(topic!),
-        leading: Icon(_chooseIcons(topic),
+        leading: Icon(chooseIcons(topic),
             color: Theme.of(context).colorScheme.secondary, size: 30),
         title: Text(getTopicName(context, topic)!),
         trailing: Switch(
@@ -43,19 +43,28 @@ class NotificationsSettingsView extends StatelessWidget {
     return list;
   }
 
-  IconData _chooseIcons(String messageType) {
-    if (messageType == "studentAnnouncements" ||
-        messageType == "testStudentAnnouncements") {
-      return Icons.school_outlined;
-    } else if (messageType == "freeFood" || messageType == "testFreeFood") {
-      return Icons.restaurant_outlined;
-    } else if (messageType == "campusAnnouncements" ||
-        messageType == "testCampusAnnouncements") {
-      return Icons.campaign_outlined;
-    } else if (messageType == "DM") {
-      return Icons.info_outline;
+  static IconData chooseIcons(String messageType) {
+    // TODO: change this to a switch expression after Dart 3 upgrade
+    switch (messageType)
+    {
+      case "studentAnnouncements":
+      case "testStudentAnnouncements":
+        return Icons.school_outlined;
+
+      case "freeFood":
+      case "testFreeFood":
+        return Icons.restaurant_outlined;
+
+      case "campusAnnouncements":
+      case "testCampusAnnouncements":
+        return Icons.campaign_outlined;
+
+      case "DM":
+        return Icons.info_outline;
+
+      default:
+        return Icons.info_outline;
     }
-    return Icons.info_outline;
   }
 
   List<String?> getTopics(BuildContext context) {

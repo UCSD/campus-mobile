@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:package_info/package_info.dart';
 
 class BuildInfo extends StatefulWidget {
@@ -28,7 +29,7 @@ class _BuildInfoState extends State<BuildInfo> {
     });
   }
 
-  final String buildEnv = "##BUILD_ENV##";
+  final String buildEnv = dotenv.get('BUILD_ENV');
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +44,7 @@ class _BuildInfoState extends State<BuildInfo> {
                 ' (' +
                 _packageInfo.buildNumber +
                 ')' +
-                ((buildEnv == 'PROD' || buildEnv == '##BUILD_ENV##')
-                    ? ''
-                    : ' ' + buildEnv) +
-                ((buildEnv == '##BUILD_ENV##') ? ' QA' : ''),
+                (buildEnv == 'PROD' ? '' : buildEnv),
             style: TextStyle(color: agnosticDisabled),
             textAlign: TextAlign.center,
           ));

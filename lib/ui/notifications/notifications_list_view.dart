@@ -7,6 +7,7 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/ui/profile/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
@@ -143,7 +144,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
         ListTile(
-            leading: Icon(_chooseIcon(messageType!),
+            leading: Icon(NotificationsSettingsView.chooseIcons(messageType!),
                 color: Theme.of(context).colorScheme.secondary, size: 30),
             title: Column(
               children: <Widget>[
@@ -183,21 +184,6 @@ class _NotificationsListViewState extends State<NotificationsListView> {
             ])),
       ],
     );
-  }
-
-  IconData _chooseIcon(String messageType) {
-    if (messageType == "studentAnnouncements" ||
-        messageType == "testStudentAnnouncements") {
-      return Icons.school_outlined;
-    } else if (messageType == "freeFood") {
-      return Icons.restaurant_outlined;
-    } else if (messageType == "campusAnnouncements" ||
-        messageType == "testCampusAnnouncements") {
-      return Icons.campaign_outlined;
-    } else if (messageType == "DM") {
-      return Icons.info_outline;
-    }
-    return Icons.info_outline;
   }
 
   String _readTimestamp(int timestamp) {

@@ -56,7 +56,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     messages.forEach((m) async {
       if (m!.audience != null &&
           m.audience!.topics != null &&
-          m.audience!.topics!.contains("freeFood")) {
+          (m.audience!.topics!.contains("freeFood") || m.audience!.topics!.contains("testFreeFood"))) {
         fetchCount(m.messageId!);
         fetchMaxCount(m.messageId!);
       }
