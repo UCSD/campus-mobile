@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:package_info/package_info.dart';
 
 class BuildInfo extends StatefulWidget {
