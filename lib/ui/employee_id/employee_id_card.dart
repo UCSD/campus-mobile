@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 class EmployeeIdCard extends StatefulWidget {
@@ -17,8 +18,7 @@ class EmployeeIdCard extends StatefulWidget {
 
 class _EmployeeIdCardState extends State<EmployeeIdCard> {
   String cardId = "employee_id";
-  String placeholderPhotoUrl =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/resources/img/placeholderPerson.png";
+  final placeholderPhotoUrl = dotenv.get('PLACEHOLDER_PERSON_PHOTO');
   bool isValidId = false;
 
   @override
