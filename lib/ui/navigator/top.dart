@@ -23,6 +23,7 @@ class CMAppBar extends StatelessWidget {
           preferredSize: Size.fromHeight(42),
           child: AppBar(
               backgroundColor: ColorPrimary,
+              foregroundColor: lightTextColor,
               primary: true,
               centerTitle: true,
               title: title == null
@@ -65,6 +66,7 @@ class CMAppBar extends StatelessWidget {
           preferredSize: Size.fromHeight(42),
           child: AppBar(
               backgroundColor: ColorPrimary,
+              foregroundColor: lightTextColor,
               primary: true,
               centerTitle: true,
               title: title == null
@@ -89,6 +91,7 @@ class CMAppBar extends StatelessWidget {
         preferredSize: Size.fromHeight(42),
         child: AppBar(
           backgroundColor: ColorPrimary,
+          foregroundColor: lightTextColor,
           primary: true,
           centerTitle: true,
           title: title == null
