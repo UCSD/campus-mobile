@@ -5,25 +5,25 @@ import 'package:flutter/material.dart';
 
 class ScannerMessageDataProvider extends ChangeNotifier {
   ScannerMessageDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _scannerMessageService = ScannerMessageService();
-    ///INITIALIZE MODELS
+    /// INITIALIZE MODELS
     _scannerMessageModel = ScannerMessageModel();
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   String? _error;
 
-  ///Additional Provider
+  /// Additional Provider
   late UserDataProvider _userDataProvider;
 
-  ///SERVICES
+  /// SERVICES
   ScannerMessageService? _scannerMessageService;
 
-  ///MODELS
+  /// MODELS
   ScannerMessageModel? _scannerMessageModel;
 
   void fetchData() async {
@@ -49,10 +49,12 @@ class ScannerMessageDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
+  /// SIMPLE SETTERS
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
   ScannerMessageService? get scannerMessageService => _scannerMessageService;
   ScannerMessageModel? get scannerMessageModel => _scannerMessageModel;
-  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 }

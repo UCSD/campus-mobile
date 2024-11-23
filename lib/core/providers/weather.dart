@@ -4,43 +4,41 @@ import 'package:flutter/material.dart';
 
 class WeatherDataProvider extends ChangeNotifier {
   WeatherDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
-
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _weatherService = WeatherService();
     _weatherModel = WeatherModel();
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
+  /// MODELS
   WeatherModel? _weatherModel;
 
-  ///SERVICES
+  /// SERVICES
   late WeatherService _weatherService;
 
   void fetchWeather() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     if (await _weatherService.fetchData()) {
       _weatherModel = _weatherService.weatherModel;
       _lastUpdated = DateTime.now();
     } else {
-      ///TODO: determine what error to show to the user
+      /// TODO: determine what error to show to the user
       _error = _weatherService.error;
     }
     _isLoading = false;
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   WeatherModel? get weatherModel => _weatherModel;
 }

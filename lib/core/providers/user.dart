@@ -21,31 +21,29 @@ import '../../ui/home/home.dart';
 
 class UserDataProvider extends ChangeNotifier {
   UserDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
-
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _authenticationService = AuthenticationService();
     _userProfileService = UserProfileService();
     storage = FlutterSecureStorage();
-
-    ///default authentication model and profile is needed in this class
+    /// default authentication model and profile is needed in this class
     _authenticationModel = AuthenticationModel.fromJson({});
     _userProfileModel = UserProfileModel.fromJson({});
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
-  bool _isInSilentLogin = false;
+  var _isInSilentLogin = false;
 
-  ///MODELS
+  /// MODELS
   AuthenticationModel? _authenticationModel;
   UserProfileModel? _userProfileModel;
   late FlutterSecureStorage storage;
 
-  ///SERVICES
+  /// SERVICES
   late AuthenticationService _authenticationService;
   late UserProfileService _userProfileService;
   late PushNotificationDataProvider _pushNotificationDataProvider;
@@ -150,7 +148,6 @@ class UserDataProvider extends ChangeNotifier {
   /// Encrypt given username and password and store on device
   void _encryptAndSaveCredentials(String username, String password) {
     final String pkString = dotenv.get('USER_CREDENTIALS_PUBLIC_KEY');
-
     final rsaParser = RSAKeyParser();
     final pc.RSAPublicKey publicKey = rsaParser.parse(pkString) as RSAPublicKey;
     var cipher = OAEPEncoding(pc.AsymmetricBlockCipher('RSA'));
@@ -189,7 +186,6 @@ class UserDataProvider extends ChangeNotifier {
         return false;
       }
     }
-
     _error = 'Username or password not found';
     _isLoading = false;
     notifyListeners();
@@ -201,7 +197,6 @@ class UserDataProvider extends ChangeNotifier {
   Future<bool> silentLogin() async {
     _isInSilentLogin = true;
     notifyListeners();
-
     String? username = await getUsernameFromDevice();
     String? encryptedPassword = await _getEncryptedPasswordFromDevice();
 
@@ -239,8 +234,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Unregisters device from direct push notification using [_pushNotificationDataProvider]
   /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage
   void logout() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
     resetHomeScrollOffset();
     resetAllCardHeights();
@@ -296,8 +290,7 @@ class UserDataProvider extends ChangeNotifier {
           newModel.username = await getUsernameFromDevice();
           newModel.ucsdaffiliation = _authenticationModel!.ucsdaffiliation;
           newModel.pid = _authenticationModel!.pid;
-          List<String> castSubscriptions =
-              newModel.subscribedTopics!.cast<String>();
+          var castSubscriptions = newModel.subscribedTopics!.cast<String>();
           newModel.subscribedTopics = castSubscriptions.toSet().toList();
 
           final studentPattern = RegExp('[BGJMU]');
@@ -416,18 +409,18 @@ class UserDataProvider extends ChangeNotifier {
     _pushNotificationDataProvider = value;
   }
 
-  List<String?>? get subscribedTopics => _userProfileModel!.subscribedTopics;
+  /// SIMPLE SETTERS
+  set cardsDataProvider(CardsDataProvider? value) => _cardsDataProvider = value;
 
-  ///GETTERS FOR MODELS
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
+  get lastUpdated => _lastUpdated;
+  bool get isInSilentLogin => _isInSilentLogin;
+  bool get isLoggedIn => _authenticationModel!.isLoggedIn(_lastUpdated);
+  /// GETTERS FOR MODELS
   UserProfileModel? get userProfileModel => _userProfileModel;
   AuthenticationModel? get authenticationModel => _authenticationModel;
   CardsDataProvider? get cardsDataProvider => _cardsDataProvider;
-
-  ///GETTERS FOR STATES
-  String? get error => _error;
-  bool get isLoggedIn => _authenticationModel!.isLoggedIn(_lastUpdated);
-  bool? get isLoading => _isLoading;
-  DateTime? get lastUpdated => _lastUpdated;
-  bool get isInSilentLogin => _isInSilentLogin;
-  set cardsDataProvider(CardsDataProvider? value) => _cardsDataProvider = value;
+  List<String?>? get subscribedTopics => _userProfileModel!.subscribedTopics;
 }

@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationDataProvider extends ChangeNotifier {
-  bool _permission = false;
+  var _permission = false;
   String? error;
   late LocationPermission locationPermission;
   final LocationSettings locationSettings = LocationSettings(
@@ -14,8 +14,7 @@ class LocationDataProvider extends ChangeNotifier {
     distanceFilter: 100,
   );
 
-  StreamController<Coordinates> _locationController =
-      StreamController<Coordinates>.broadcast();
+  var _locationController = StreamController<Coordinates>.broadcast();
   Stream<Coordinates> get locationStream => _locationController.stream;
 
   LocationDataProvider() {
@@ -29,9 +28,7 @@ class LocationDataProvider extends ChangeNotifier {
     if (!serviceStatus) {
       /// check to see if permission has been granted to the app
       locationPermission = await Geolocator.requestPermission();
-      if (_permission) {
-        _enableListener();
-      }
+      if (_permission) _enableListener();
     } else {
       _permission = true;
       _enableListener();

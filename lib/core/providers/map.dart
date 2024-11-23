@@ -7,34 +7,33 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapsDataProvider extends ChangeNotifier {
   MapsDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-    _noResults = false;
-    ///INITIALIZE SERVICES
+    /// DEFAULT STATES
+    _isLoading = false; _noResults = false;
+    /// INITIALIZE SERVICES
     _mapSearchService = MapSearchService();
     _mapSearchModels = [];
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
   bool? _noResults;
 
-  ///Default coordinates for Price Center
-  double? _defaultLat = 32.87990969506536;
-  double? _defaultLong = -117.2362059310055;
+  /// Default coordinates for Price Center
+  var _defaultLat = 32.87990969506536;
+  var _defaultLong = -117.2362059310055;
 
-  ///MODELS
+  /// MODELS
   List<MapSearchModel> _mapSearchModels = [];
 
   Coordinates? _coordinates;
   Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
-  TextEditingController _searchBarController = TextEditingController();
+  var _searchBarController = TextEditingController();
   GoogleMapController? _mapController;
   List<String> _searchHistory = [];
 
-  ///SERVICES
+  /// SERVICES
   late MapSearchService _mapSearchService;
 
   void addMarker(int listIndex) {
@@ -85,8 +84,7 @@ class MapsDataProvider extends ChangeNotifier {
   void fetchLocations() async {
     String query = searchBarController.text;
     markers.clear();
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     if (await _mapSearchService.fetchLocations(query)) {
       _mapSearchModels = _mapSearchService.results;
@@ -113,10 +111,8 @@ class MapsDataProvider extends ChangeNotifier {
   }
 
   void populateDistances() {
-    double? latitude =
-        _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
-    double? longitude =
-        _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
+    var latitude = _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
+    var longitude = _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
     if (_coordinates != null) {
       for (MapSearchModel model in _mapSearchModels) {
         if (model.mkrLat != null && model.mkrLong != null) {
@@ -137,10 +133,10 @@ class MapsDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   List<MapSearchModel> get mapSearchModels => _mapSearchModels;
   List<String> get searchHistory => _searchHistory;
   Map<MarkerId, Marker> get markers => _markers;
@@ -149,7 +145,7 @@ class MapsDataProvider extends ChangeNotifier {
   bool? get noResults => _noResults;
   GoogleMapController? get mapController => _mapController;
 
-  ///Setters
+  /// SIMPLE SETTERS
   set coordinates(Coordinates? value) {
     _coordinates = value;
     notifyListeners();

@@ -4,27 +4,26 @@ import 'package:flutter/material.dart';
 
 class NoticesDataProvider extends ChangeNotifier {
   NoticesDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _noticesService = NoticesService();
     _noticesModel = [];
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
+  /// MODELS
   List<NoticesModel>? _noticesModel;
 
-  ///SERVICES
+  /// SERVICES
   late NoticesService _noticesService;
 
   void fetchNotices() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     if (await _noticesService.fetchData()) {
       _noticesModel = _noticesService.noticesModel;
@@ -38,8 +37,8 @@ class NoticesDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   List<NoticesModel>? get noticesModel => _noticesModel;
 }

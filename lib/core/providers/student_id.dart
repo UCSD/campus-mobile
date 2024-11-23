@@ -7,34 +7,32 @@ import 'package:flutter/material.dart';
 
 class StudentIdDataProvider extends ChangeNotifier {
   StudentIdDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
-
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _studentIdService = StudentIdService();
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
   int? _selectedCourse;
 
-  ///MODELS
+  /// MODELS
   StudentIdNameModel? _studentIdNameModel;
   StudentIdPhotoModel? _studentIdPhotoModel;
   StudentIdProfileModel? _studentIdProfileModel;
 
-  ///Additional Provider
+  /// Additional Provider
   late UserDataProvider _userDataProvider;
 
-  ///SERVICES
+  /// SERVICES
   late StudentIdService _studentIdService;
 
-  //Fetch Information From Models
+  // Fetch Information From Models
   void fetchData() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
 
     /// Verify that user is logged in
@@ -97,15 +95,15 @@ class StudentIdDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
+  int? get selectedCourse => _selectedCourse;
   StudentIdNameModel? get studentIdNameModel => _studentIdNameModel;
   StudentIdPhotoModel? get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel? get studentIdProfileModel => _studentIdProfileModel;
-  int? get selectedCourse => _selectedCourse;
 
-  ///Simple Setters
+  /// SIMPLE SETTERS
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 }

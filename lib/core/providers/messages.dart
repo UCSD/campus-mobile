@@ -5,9 +5,8 @@ import 'package:campus_mobile_experimental/core/services/messages.dart';
 import 'package:flutter/material.dart';
 import '../../ui/navigator/bottom.dart';
 
-//MESSAGES API UNIX TIMESTAMPS IN MILLISECONDS NOT SECONDS
-
-ScrollController notificationScrollController = ScrollController();
+// MESSAGES API UNIX TIMESTAMPS IN MILLISECONDS NOT SECONDS
+var notificationScrollController = ScrollController();
 
 class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
@@ -21,9 +20,7 @@ class MessagesDataProvider extends ChangeNotifier {
       var triggerFetchMoreSize =
           0.9 * notificationScrollController.position.maxScrollExtent;
       if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
-        if (!_isLoading! && _hasMoreMessagesToLoad!) {
-          fetchMessages(false);
-        }
+        if (!_isLoading! && _hasMoreMessagesToLoad!) fetchMessages(false);
       }
       setNotificationsScrollOffset(notificationScrollController.offset);
     });
@@ -47,9 +44,7 @@ class MessagesDataProvider extends ChangeNotifier {
   Future<bool> fetchMessages(bool clearMessages) async {
     _isLoading = true; _error = null; var returnVal;
     notifyListeners();
-    if (clearMessages) {
-      _clearMessages();
-    }
+    if (clearMessages) _clearMessages();
     if (_userDataProvider != null && _userDataProvider!.isLoggedIn) {
       returnVal = await retrieveMoreMyMessages();
     } else {
@@ -139,23 +134,15 @@ class MessagesDataProvider extends ChangeNotifier {
     }
   }
 
-  ///This setter is only used in provider to supply and updated UserDataProvider object
-  set userDataProvider(UserDataProvider? value) {
-    _userDataProvider = value;
-  }
+  /// This setter is only used in provider to supply and updated UserDataProvider object
+  set userDataProvider(UserDataProvider? value) => _userDataProvider = value;
 
   /// SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   String? get statusText => _statusText;
   bool? get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
   UserDataProvider? get userDataProvider => _userDataProvider;
-
-  List<MessageElement?>? get messages {
-    if (_messages != null) {
-      return _messages;
-    }
-    return [];
-  }
+  List<MessageElement?>? get messages => _messages ?? [];
 }

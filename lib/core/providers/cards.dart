@@ -22,13 +22,13 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   /// DEFAULT STATES
-  bool _noInternet = false;
-  bool _isLoading = false;
+  DateTime? _lastUpdated;
+  String? _error;
+  var _isLoading = false;
+  var _noInternet = false;
   Map<String, bool> _cardStates = {};
   Map<String, CardsModel?> _webCards = {};
 
-  DateTime? _lastUpdated;
-  String? _error;
 
   // Default card order for native cards
   List<String> _cardOrder = [
@@ -69,13 +69,12 @@ class CardsDataProvider extends ChangeNotifier {
 
   UserDataProvider? _userDataProvider;
 
-  ///Services
+  /// Services
   final CardsService _cardsService = CardsService();
   final Connectivity _connectivity = Connectivity();
 
   void updateAvailableCards(String? ucsdAffiliation) async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     if (await _cardsService.fetchCards(ucsdAffiliation)) {
       _availableCards = _cardsService.cardsModel;
@@ -168,9 +167,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder(List<String> newOrder) async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
-      return;
-    }
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
     try {
       await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
     } catch (e) {
@@ -185,9 +182,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardOrder] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardOrder() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
-      return;
-    }
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
     if (_cardOrderBox.get(DataPersistence.cardOrder) == null) {
       await _cardOrderBox.put(DataPersistence.cardOrder, _cardOrder);
@@ -217,9 +212,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardStates] stored in state
   /// overwrite the [_cardStates] in persistent storage with the model passed in
   Future updateCardStates(List<String> activeCards) async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
-      return;
-    }
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
     for (String activeCard in activeCards) {
       _cardStates[activeCard] = true;
     }
@@ -240,7 +233,9 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void activateStudentCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    /// TODO: Find a way to remove all instances of
+    /// TODO: var index = _cardOrder.indexOf('MyStudentChart') + 1; in this file
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
     // TODO: test w/o this
@@ -250,7 +245,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void showAllStudentCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
     // TODO: test w/o this
@@ -274,7 +269,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void activateStaffCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _staffCards.toList());
 
     // TODO: test w/o this
@@ -284,7 +279,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void showAllStaffCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _staffCards.toList());
 
     // TODO: test w/o this
@@ -322,11 +317,10 @@ class CardsDataProvider extends ChangeNotifier {
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  bool? get noInternet => _noInternet;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
-
+  get isLoading => _isLoading;
+  get noInternet => _noInternet;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   Map<String, bool>? get cardStates => _cardStates;
   List<String>? get cardOrder => _cardOrder;
   Map<String, CardsModel?>? get webCards => _webCards;

@@ -9,33 +9,31 @@ import 'package:hive/hive.dart';
 
 class FreeFoodDataProvider extends ChangeNotifier {
   FreeFoodDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
-
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _freeFoodService = FreeFoodService();
     _freeFoodModel = FreeFoodModel();
-
-    ///INITIALIZE VALUES
+    /// INITIALIZE VALUES
     initializeValues();
   }
 
-  ///VALUES
+  /// VALUES
   late HashMap<String, int?> _messageToCount;
   late HashMap<String, int?> _messageToMaxCount;
   List<String>? _registeredEvents;
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   String? _curId;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
+  /// MODELS
   FreeFoodModel? _freeFoodModel;
   late MessagesDataProvider _messageDataProvider;
 
-  ///SERVICES
+  /// SERVICES
   late FreeFoodService _freeFoodService;
 
   void initializeValues() {
@@ -81,9 +79,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   }
 
   Future<void> fetchCount(String id) async {
-    _isLoading = true;
-    _curId = id;
-
+    _isLoading = true; _curId = id;
     notifyListeners();
 
     if (await _freeFoodService.fetchData(id)) {
@@ -100,15 +96,12 @@ class FreeFoodDataProvider extends ChangeNotifier {
       }
       removeId(id);
     }
-    _isLoading = false;
-    _curId = null;
+    _isLoading = false; _curId = null;
     notifyListeners();
   }
 
   Future<void> fetchMaxCount(String id) async {
-    _isLoading = true;
-    _curId = id;
-
+    _isLoading = true; _curId = id;
     notifyListeners();
 
     if (await _freeFoodService.fetchMaxCount(id)) {
@@ -126,8 +119,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
       removeId(id);
     }
 
-    _isLoading = false;
-    _curId = null;
+    _isLoading = false; _curId = null;
     notifyListeners();
   }
 
@@ -144,8 +136,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   }
 
   Future<void> updateCount(String id, Map<String, dynamic> body) async {
-    _isLoading = true;
-    _curId = id;
+    _isLoading = true; _curId = id;
     notifyListeners();
     await updateRegisteredEvents(_registeredEvents);
 
@@ -163,8 +154,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
       removeId(id);
     }
 
-    _isLoading = false;
-    _curId = null;
+    _isLoading = false; _curId = null;
     fetchCount(id);
     notifyListeners();
   }
@@ -181,14 +171,12 @@ class FreeFoodDataProvider extends ChangeNotifier {
 
   bool isFreeFood(String? messageId) => _messageToCount.containsKey(messageId);
 
-  /// SETTER
-  set messageDataProvider(MessagesDataProvider value) {
-    _messageDataProvider = value;
-  }
+  /// SIMPLE SETTERS
+  set messageDataProvider(MessagesDataProvider value) => _messageDataProvider = value;
 
   ///SIMPLE GETTERS
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   FreeFoodModel? get freeFoodModel => _freeFoodModel;
   List<String>? get registeredEvents => _registeredEvents;
   bool isLoading(String? id) => id == _curId;

@@ -16,29 +16,29 @@ import 'package:provider/provider.dart';
 
 class PushNotificationDataProvider extends ChangeNotifier {
   PushNotificationDataProvider() {
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _notificationService = NotificationService();
     deviceInfoPlugin = DeviceInfoPlugin();
     _fcm = FirebaseMessaging.instance;
     initState();
   }
 
-  ///Context as Global Variable
+  /// Context as Global Variable
   late BuildContext context;
 
-  ///Models
+  /// MODELS
   late FirebaseMessaging _fcm;
   late DeviceInfoPlugin deviceInfoPlugin;
   Map<String, dynamic> _deviceData = <String, dynamic>{};
 
-  ///STATES
+  /// STATES
   DateTime? _lastUpdated;
   String? _error;
   List<TopicsModel>? _topicsModel;
   Map<String?, bool> _topicSubscriptionState = <String?, bool>{};
   Set<String> _receivedMessageIds = Set();
 
-  ///SERVICES
+  /// SERVICES
   late NotificationService _notificationService;
 
   /// invokes correct method to receive device info
@@ -57,7 +57,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
       //     .listen((IosNotificationSettings settings) {});
     }
 
-    ///listen for token changes and register user
+    /// listen for token changes and register user
     _fcm.onTokenRefresh.listen(
       (token) {
         registerDevice(token);
@@ -65,8 +65,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
     );
   }
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   /// Configures the [_fcm] object to receive push notifications
   Future<void> initPlatformState(BuildContext context) async {
@@ -90,7 +89,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
         await Provider.of<MessagesDataProvider>(context, listen: false)
             .fetchMessages(true);
 
-        ///switch to the notifications tab
+        /// switch to the notifications tab
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.NotificationsTab;
       }
@@ -130,7 +129,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
   }
 
-  ///Handles notification when selected
+  /// Handles notification when selected
   void selectNotification(NotificationResponse details)
   {
     /// Fetch in-app messages
@@ -385,8 +384,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     return topicsToReturn;
   }
 
-  ///SIMPLE GETTERS
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   Map<String?, bool> get topicSubscriptionState => _topicSubscriptionState;
 }

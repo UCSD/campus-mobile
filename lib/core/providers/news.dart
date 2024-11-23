@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 
 class NewsDataProvider extends ChangeNotifier {
   NewsDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _newsService = NewsService();
     _newsModels = NewsModel();
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
+  /// MODELS
   NewsModel? _newsModels;
 
-  ///SERVICES
+  /// SERVICES
   late NewsService _newsService;
 
   void fetchNews() async {
@@ -29,7 +29,7 @@ class NewsDataProvider extends ChangeNotifier {
       _newsModels = _newsService.newsModels;
       _lastUpdated = DateTime.now();
     } else {
-      ///TODO: determine what error to show to the user
+      /// TODO: determine what error to show to the user
       _error = _newsService.error;
     }
     _isLoading = false;
@@ -37,8 +37,8 @@ class NewsDataProvider extends ChangeNotifier {
   }
 
   ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   NewsModel? get newsModels => _newsModels;
 }

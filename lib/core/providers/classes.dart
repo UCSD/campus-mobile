@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 class ClassScheduleDataProvider extends ChangeNotifier {
   ClassScheduleDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
     _lastUpdated = DateTime.now();
     _selectedCourse = 0;
@@ -38,19 +38,18 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       'OTHER': [],
     };
 
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _classScheduleService = ClassScheduleService();
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
   int? _selectedCourse;
-
   String? nextDayWithClass;
 
-  ///MODELS
+  /// MODELS
   ClassScheduleModel? _classScheduleModel;
   Map<String, List<SectionData>>? _enrolledClasses;
   Map<String, List<SectionData>>? _finals;
@@ -58,13 +57,12 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   AcademicTermModel? _academicTermModel;
   late UserDataProvider _userDataProvider;
 
-  ///SERVICES
+  /// SERVICES
   late ClassScheduleService _classScheduleService;
 
   void fetchData() async {
     if (!_isLoading!) {
-      _isLoading = true;
-      _error = null;
+      _isLoading = true; _error = null;
       notifyListeners();
       if (await _classScheduleService.fetchAcademicTerm() &&
           _userDataProvider.isLoggedIn) {
@@ -99,7 +97,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
           _error = _classScheduleService.error.toString();
           _isLoading = false;
           notifyListeners();
-
           /// short circuit
           return;
         }
@@ -131,6 +128,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
           'MI': [],
           'OTHER': [],
         };
+
         try {
           _createMapOfClasses();
         } catch (e) {
@@ -202,53 +200,34 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   int _compareMidterms(SectionData a, SectionData b) {
-    DateTime dateTimeA = DateFormat('yyyy-M-dd').parse(a.date!);
-    DateTime dateTimeB = DateFormat('yyyy-M-dd').parse(b.date!);
-
-    if (dateTimeA.compareTo(dateTimeB) == 0) {
-      return 0;
-    }
-    if (dateTimeA.compareTo(dateTimeB) < 0) {
-      return -1;
-    }
+    var dateTimeA = DateFormat('yyyy-M-dd').parse(a.date!);
+    var dateTimeB = DateFormat('yyyy-M-dd').parse(b.date!);
+    if (dateTimeA.compareTo(dateTimeB) == 0) return 0;
+    if (dateTimeA.compareTo(dateTimeB) < 0) return -1;
     return 1;
   }
 
   /// comparator that sorts according to start time of class
   int _compare(SectionData a, SectionData b) {
-    if (a.time == null || b.time == null) {
-      return 0;
-    }
+    if (a.time == null || b.time == null) return 0;
     DateTime aStartTime = _getStartTime(a.time!);
     DateTime bStartTime = _getStartTime(b.time!);
 
-    if (aStartTime == bStartTime) {
-      return 0;
-    }
-    if (aStartTime.isBefore(bStartTime)) {
-      return -1;
-    }
+    if (aStartTime == bStartTime) return 0;
+    if (aStartTime.isBefore(bStartTime)) return -1;
     return 1;
   }
 
   buildGradeEvaluation(String? gradeEvaluation) {
     switch (gradeEvaluation) {
       case 'L':
-        {
           return 'Letter Grade';
-        }
       case 'P':
-        {
           return 'Pass/No Pass';
-        }
       case 'S':
-        {
           return 'Sat/Unsat';
-        }
       default:
-        {
           return 'Other';
-        }
     }
   }
 
@@ -301,18 +280,16 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     }
   }
 
-  set userDataProvider(UserDataProvider value) {
-    _userDataProvider = value;
-  }
+  /// SIMPLE SETTERS
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
-  ///SIMPLE GETTERS
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   Map<String, List<SectionData>>? get finals => _finals;
   Map<String, List<SectionData>>? get midterms => _midterms;
-
   Map<String, List<SectionData>>? get enrolledClasses => _enrolledClasses;
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
   ClassScheduleModel? get classScheduleModel => _classScheduleModel;
   int? get selectedCourse => _selectedCourse;
 }

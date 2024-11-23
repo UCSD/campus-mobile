@@ -12,45 +12,43 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path_provider/path_provider.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
+  /// STATES
   bool? _onSimulator;
   bool? _isLoading;
-  late Coordinates _coordinates;
+  bool? isUCSDWiFi = false;
   String? _error;
-  NetworkHelper _networkHelper = new NetworkHelper();
-  Dio dio = new Dio();
-  Stopwatch _timer = new Stopwatch();
   double? _speedDownload;
   double? _speedUpload;
-  double _percentDownloaded = 0.0;
-  double _percentUploaded = 0.0;
   CancelToken? _cancelTokenDownload;
   CancelToken? _cancelTokenUpload;
-  bool _speedTestDone = false;
-  int _secondsElapsedDownload = 0;
-  int _secondsElapsedUpload = 0;
-  late SpeedTestService _speedTestService;
-  SpeedTestModel? _speedTestModel;
-  bool? isUCSDWiFi = false;
   Map? wiFiLog;
-  late UserDataProvider _userDataProvider;
+  Map<String, String>? offloadDataHeader;
+  var _percentDownloaded = 0.0;
+  var _percentUploaded = 0.0;
+  var _speedTestDone = false;
+  var _secondsElapsedDownload = 0;
+  var _secondsElapsedUpload = 0;
+  late Coordinates _coordinates;
+  final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  Map<String, String>? offloadDataHeader;
-  final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
+
+  /// SERVICES
+  NetworkHelper _networkHelper = new NetworkHelper();
+  late SpeedTestService _speedTestService;
+  var dio = new Dio();
+  var _timer = new Stopwatch();
+
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+
+  /// MODELS
+  SpeedTestModel? _speedTestModel;
 
   SpeedTestProvider() {
     _isLoading = false;
     init();
-  }
-
-  ///This setter is only used in provider to supply an updated Coordinates object
-  set coordinates(Coordinates value) {
-    _coordinates = value;
-  }
-
-  set userDataProvider(UserDataProvider userDataProvider) {
-    _userDataProvider = userDataProvider;
   }
 
   Future<void> init() async {
@@ -106,7 +104,6 @@ class SpeedTestProvider extends ChangeNotifier {
     }
 
     var tempDownload = temp.readAsBytesSync();
-
     FormData formData = new FormData.fromMap(
         {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
     notifyListeners();
@@ -160,9 +157,7 @@ class SpeedTestProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  double _convertToMbps(double speed) {
-    return speed / 125000;
-  }
+  double _convertToMbps(double speed) => (speed / 125000);
 
   void resetSpeedTest() {
     _speedTestDone = false;
@@ -343,17 +338,23 @@ class SpeedTestProvider extends ChangeNotifier {
     }
   }
 
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  double? get speed => _speedDownload;
+  /// SIMPLE SETTERS
+  set userDataProvider(UserDataProvider userDataProvider) => _userDataProvider = userDataProvider;
+  /// This setter is only used in provider to supply an updated Coordinates object
+  set coordinates(Coordinates value) => _coordinates = value;
   set speed(double? lastSpeed) => _speedDownload = lastSpeed;
-  double? get uploadSpeed => _speedUpload;
-  Stopwatch get timer => _timer;
-  double get percentDownloaded => _percentDownloaded;
-  double get percentUploaded => _percentUploaded;
-  bool get speedTestDone => _speedTestDone;
-  int get timeElapsedDownload => _secondsElapsedDownload;
-  int get timeElapsedUpload => _secondsElapsedUpload;
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
   bool? get isUCSDNetwork => isUCSDWiFi;
   bool? get onSimulator => _onSimulator;
+  bool get speedTestDone => _speedTestDone;
+  double? get speed => _speedDownload;
+  double? get uploadSpeed => _speedUpload;
+  double get percentDownloaded => _percentDownloaded;
+  double get percentUploaded => _percentUploaded;
+  int get timeElapsedDownload => _secondsElapsedDownload;
+  int get timeElapsedUpload => _secondsElapsedUpload;
+  Stopwatch get timer => _timer;
 }

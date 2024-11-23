@@ -2,11 +2,14 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class BarcodeService {
-  BarcodeService();
+  /// STATES
   bool? _isLoading;
   String? _error;
 
-  final NetworkHelper _networkHelper = NetworkHelper();
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
+
+  BarcodeService();
 
   Future<bool> uploadResults(Map<String, String> headers, Map<String, dynamic> body) async {
     _error = null; _isLoading = true;
@@ -55,6 +58,7 @@ class BarcodeService {
     }
   }
 
-  String? get error => _error;
-  bool? get isLoading => _isLoading;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
 }

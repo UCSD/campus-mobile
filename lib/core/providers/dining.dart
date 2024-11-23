@@ -10,33 +10,29 @@ enum Meal { breakfast, lunch, dinner }
 
 class DiningDataProvider extends ChangeNotifier {
   DiningDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
-
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _diningService = DiningService();
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
-  Map<String?, DiningModel> _diningModels = Map<String, DiningModel>();
-  Map<String, DiningMenuItemsModel?> _diningMenuItemModels =
-      Map<String, DiningMenuItemsModel?>();
+  /// MODELS
   Coordinates? _coordinates;
-
-  List<bool> filtersSelected = [false, false, false];
   Meal mealTime = Meal.breakfast;
+  Map<String?, DiningModel> _diningModels = Map<String, DiningModel>();
+  var _diningMenuItemModels = Map<String, DiningMenuItemsModel?>();
+  var filtersSelected = [false, false, false];
 
-  ///SERVICES
+  /// SERVICES
   late DiningService _diningService;
 
   void fetchDiningMenu(String menuId) async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     if (await _diningService.fetchMenu(menuId)) {
       _diningMenuItemModels[menuId] = _diningService.menuData;
@@ -48,26 +44,24 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   void fetchDiningLocations() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
 
     /// creating  new map ensures we remove all unsupported locations
-    Map<String?, DiningModel> mapOfDiningLocations =
-        Map<String?, DiningModel>();
+    var mapOfDiningLocations = Map<String?, DiningModel>();
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data!) {
         mapOfDiningLocations[model.name] = model;
       }
 
-      ///replace old list of locations with new one
+      /// replace old list of locations with new one
       _diningModels = mapOfDiningLocations;
 
-      ///calculate distance of each eatery to user's current location
+      /// calculate distance of each eatery to user's current location
       populateDistances();
       _lastUpdated = DateTime.now();
     } else {
-      ///TODO: determine what error to show to the user
+      /// TODO: determine what error to show to the user
       _error = _diningService.error;
     }
     _isLoading = false;
@@ -75,9 +69,7 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   List<DiningModel> reorderLocations() {
-    if (_coordinates == null) {
-      return _diningModels.values.toList();
-    }
+    if (_coordinates == null) return _diningModels.values.toList();
     List<DiningModel> orderedListOfLots = _diningModels.values.toList();
     orderedListOfLots.sort((DiningModel a, DiningModel b) {
       if (a.distance != null && b.distance != null) {
@@ -116,43 +108,34 @@ class DiningDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  ///This setter is only used in provider to supply an updated Coordinates object
-  set coordinates(Coordinates value) {
-    _coordinates = value;
-  }
+  /// This setter is only used in provider to supply an updated Coordinates object
+  set coordinates(Coordinates value) => _coordinates = value;
 
-  ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
 
   /// Returns menu data for given id
   /// Fetches menu if not already downloaded
   DiningMenuItemsModel? getMenuData(String? id) {
     if (id != null) {
-      if (_diningMenuItemModels[id] != null) {
-        return _diningMenuItemModels[id];
-      } else {
-        fetchDiningMenu(id);
-      }
+      if (_diningMenuItemModels[id] != null) return _diningMenuItemModels[id];
+      fetchDiningMenu(id);
     }
     return DiningMenuItemsModel();
   }
 
   List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
     List<DiningMenuItem>? menuItems;
-    if (_diningMenuItemModels[id!] == null) {
-      return null;
-    } else {
-      menuItems = _diningMenuItemModels[id]!.menuItems;
-    }
+    if (_diningMenuItemModels[id!] == null) return null;
+
+    menuItems = _diningMenuItemModels[id]!.menuItems;
     List<DiningMenuItem> filteredMenuItems = [];
     for (var menuItem in menuItems!) {
       int matched = 0;
       for (int i = 0; i < filters.length; i++) {
-        if (menuItem.tags!.contains(filters[i])) {
-          matched++;
-        }
+        if (menuItem.tags!.contains(filters[i])) matched++;
       }
       if (matched == filters.length) {
         filteredMenuItems.add(menuItem);
@@ -161,12 +144,10 @@ class DiningDataProvider extends ChangeNotifier {
     return filteredMenuItems;
   }
 
-  ///RETURNS A List<diningModels> sorted by distance
+  /// RETURNS A List<diningModels> sorted by distance
   List<DiningModel> get diningModels {
-    ///check if we have a coordinates object
-    if (_coordinates != null) {
-      return reorderLocations();
-    }
+    /// check if we have a coordinates object
+    if (_coordinates != null) return reorderLocations();
     return _diningModels.values.toList();
   }
 }

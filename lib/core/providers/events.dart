@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 
 class EventsDataProvider extends ChangeNotifier {
   EventsDataProvider() {
-    ///DEFAULT STATES
+    /// DEFAULT STATES
     _isLoading = false;
-    ///INITIALIZE SERVICES
+    /// INITIALIZE SERVICES
     _eventsService = EventsService();
     _eventsModels = [];
   }
 
-  ///STATES
+  /// STATES
   bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
+  /// MODELS
   List<EventModel>? _eventsModels;
 
-  ///SERVICES
+  /// SERVICES
   late EventsService _eventsService;
 
   void fetchEvents() async {
@@ -40,9 +40,9 @@ class EventsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   List<EventModel>? get eventsModels => _eventsModels;
 }

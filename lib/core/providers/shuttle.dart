@@ -13,24 +13,30 @@ class ShuttleDataProvider extends ChangeNotifier {
   ShuttleDataProvider() {
     /// DEFAULT STATES
     _isLoading = false;
-
     /// TODO: initialize services here
     // _shuttleService = ShuttleService();
     init();
   }
 
+  /// STATES
   bool? _isLoading;
   String? _error;
-  UserDataProvider? userDataProvider;
-  late ShuttleService _shuttleService;
-  ShuttleStopModel? _closestStop;
   double? stopLat;
   double? stopLong;
   double closestDistance = 10000000;
+  Coordinates? _userCoords;
+  late LocationDataProvider _locationDataProvider;
   Map<int?, ShuttleStopModel>? fetchedStops;
   Map<int?, List<ArrivingShuttle>>? arrivalsToRender;
-  late LocationDataProvider _locationDataProvider;
-  Coordinates? _userCoords;
+
+  /// SERVICES
+  late ShuttleService _shuttleService;
+
+  /// PROVIDERS
+  UserDataProvider? userDataProvider;
+
+  /// MODELS
+  ShuttleStopModel? _closestStop;
 
   init() {
     _shuttleService = ShuttleService();
@@ -38,8 +44,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   void fetchStops(bool reloading) async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
 
     // create new map of shuttles/stops to display
@@ -71,11 +76,9 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   List<ShuttleStopModel?> makeOrderedList(List<int?>? order) {
-    if (order == null) {
-      return [];
-    }
+    if (order == null) return [];
 
-    ///create an empty list that will be returned
+    /// create an empty list that will be returned
     List<ShuttleStopModel?> orderedListOfStops = [];
 
     /// remove lots as we add them to the ordered list
@@ -98,7 +101,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   Future<void> addStop(int? stopID) async {
     if (!userDataProvider!.userProfileModel!.selectedStops!.contains(stopID)) {
       userDataProvider!.userProfileModel!.selectedStops!.add(stopID);
-      // update userprofilemodel locally and in database after a stop is added
+      // update userProfileModel locally and in database after a stop is added
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
       arrivalsToRender![stopID] = await fetchArrivalInformation(stopID!);
     }
@@ -108,14 +111,14 @@ class ShuttleDataProvider extends ChangeNotifier {
   Future<void> removeStop(int? stopID) async {
     if (userDataProvider!.userProfileModel!.selectedStops!.contains(stopID)) {
       userDataProvider!.userProfileModel!.selectedStops!.remove(stopID);
-      // update userprofilemodel locally and in database after a stop is removed
+      // update userProfileModel locally and in database after a stop is removed
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
     }
     notifyListeners();
   }
 
   Future<void> calculateClosestStop() async {
-    //make sure we have users location before we do any calculations
+    // make sure we have users location before we do any calculations
     if (_userCoords == null ||
         _userCoords!.lon == null ||
         _userCoords!.lat == null) {
@@ -135,7 +138,6 @@ class ShuttleDataProvider extends ChangeNotifier {
         print('closest=' + shuttleStop.name.toString());
       }
     }
-
     notifyListeners();
   }
 
@@ -153,9 +155,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     return d;
   }
 
-  double? deg2rad(deg) {
-    return deg * (Math.pi / 180);
-  }
+  double? deg2rad(deg) => deg * (Math.pi / 180);
 
   Future<void> getArrivalInformation() async {
     if (_closestStop != null) {
@@ -165,7 +165,6 @@ class ShuttleDataProvider extends ChangeNotifier {
     for (ShuttleStopModel stop in stopsToRender) {
       arrivalsToRender![stop.id] = await fetchArrivalInformation(stop.id!);
     }
-
     notifyListeners();
   }
 
@@ -177,11 +176,10 @@ class ShuttleDataProvider extends ChangeNotifier {
     return output;
   }
 
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
   ShuttleStopModel? get closestStop => _closestStop;
-
   List<ShuttleStopModel> get stopsToRender {
     List<ShuttleStopModel> stopsToRenderList = <ShuttleStopModel>[];
     if (fetchedStops != null) {
