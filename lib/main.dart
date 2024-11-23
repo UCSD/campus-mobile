@@ -19,9 +19,9 @@ import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-bool showOnboardingScreen = true;
-bool isFirstRunFlag = false;
-bool executedInitialDeeplinkQuery = false;
+var showOnboardingScreen = true;
+var isFirstRunFlag = false;
+var executedInitialDeeplinkQuery = false;
 
 void main() async
 {

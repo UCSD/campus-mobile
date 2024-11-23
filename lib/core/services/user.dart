@@ -4,12 +4,18 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserProfileService {
-  UserProfileService();
+  /// STATES
   bool? _isLoading;
   String? _error;
+
+  /// MODELS
   UserProfileModel? _userProfileModel;
-  final NetworkHelper _networkHelper = NetworkHelper();
+
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
   final String _endpoint = dotenv.get('USER_ENDPOINT');
+
+  UserProfileService();
 
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
     print("user headers:");
@@ -45,10 +51,10 @@ class UserProfileService {
     return false;
   }
 
-  ///correctly format the profile to be uploaded
-  ///required json format:
-  ///[{'attribute': 'name of column to edit in db, 'value': 'value to put in db'}]
-  ///if attribute does not exists in db then it will be created
+  /// correctly format the profile to be uploaded
+  /// required json format:
+  /// [{'attribute': 'name of column to edit in db, 'value': 'value to put in db'}]
+  /// if attribute does not exists in db then it will be created
   List<Map<String, dynamic>> createAttributeValueJson(Map<String, dynamic> json) {
     List<Map<String, dynamic>> correctlyFormattedData = [];
     json.forEach((key, value) {
@@ -57,7 +63,8 @@ class UserProfileService {
     return correctlyFormattedData;
   }
 
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
   UserProfileModel? get userProfileModel => _userProfileModel;
-  bool? get isLoading => _isLoading;
 }

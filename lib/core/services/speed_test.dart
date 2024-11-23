@@ -9,7 +9,21 @@ import 'package:wifi_connection/WifiInfo.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SpeedTestService {
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  /// STATES
+  bool _isLoading = false;
+  String? _error;
+  final Map<String, String> headers = {
+    "accept": "application/json",
+  };
+
+  /// MODELS
+  SpeedTestModel? _speedTestModel;
+
+  /// SERVICES
+  final deviceInfo = DeviceInfoPlugin();
+  final _connectivity = Connectivity();
+  final _networkHelper = NetworkHelper();
+
   SpeedTestService();
 
   Future<bool> checkSimulation() async {
@@ -30,15 +44,6 @@ class SpeedTestService {
     }
     return false;
   }
-
-  Connectivity _connectivity = Connectivity();
-  final NetworkHelper _networkHelper = NetworkHelper();
-  SpeedTestModel? _speedTestModel;
-  bool _isLoading = false;
-  String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
 
   Future<bool> fetchSignedUrls() async {
     _error = null; _isLoading = true;
@@ -81,7 +86,8 @@ class SpeedTestService {
     return wiFiInfo;
   }
 
-  bool get isLoading => _isLoading;
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
   SpeedTestModel? get speedTestModel => _speedTestModel;
 }

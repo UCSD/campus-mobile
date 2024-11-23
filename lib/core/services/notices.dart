@@ -4,11 +4,16 @@ import 'package:campus_mobile_experimental/core/models/notices.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NoticesService {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final NetworkHelper _networkHelper = NetworkHelper();
+
+  /// MODELS
   List<NoticesModel> _noticesModel = [];
+
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
@@ -30,9 +35,10 @@ class NoticesService {
     }
   }
 
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   NetworkHelper get availabilityService => _networkHelper;
   List<NoticesModel> get noticesModel => _noticesModel;
 }

@@ -103,9 +103,9 @@ class FreeFoodService {
     return _networkHelper.getNewToken(headers);
   }
 
-  // getters
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
+  get lastUpdated => _lastUpdated;
   FreeFoodModel? get freeFoodModel => _data;
-  bool get isLoading => _isLoading;
-  DateTime? get lastUpdated => _lastUpdated;
 }

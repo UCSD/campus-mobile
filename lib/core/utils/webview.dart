@@ -18,7 +18,7 @@ openLink(String url) async {
 }
 
 validateHeight(context, height) {
-  double maxHeight = MediaQuery.of(context).size.height;
+  var maxHeight = MediaQuery.of(context).size.height;
   if (height < cardContentMinHeight) {
     height = cardContentMinHeight;
   } else if (height > maxHeight) {
