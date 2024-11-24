@@ -17,11 +17,10 @@ class StudentIdCard extends StatefulWidget {
 }
 
 class _StudentIdCardState extends State<StudentIdCard> {
-  String cardId = "student_id";
+  var cardId = "student_id";
 
   /// Pop up barcode
-  createAlertDialog(
-      BuildContext context, Column image, String cardNumber, bool rotated) {
+  createAlertDialog(BuildContext context, Column image, String cardNumber, bool rotated) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -48,11 +47,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
         });
   }
 
-  Column checkForRotation(
-      Column image, BuildContext context, String cardNumber, bool rotated) {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+  Column checkForRotation(Column image, BuildContext context, String cardNumber, bool rotated) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape)
       return returnBarcodeContainer(cardNumber, rotated, context);
-    }
     return image;
   }
 
@@ -364,8 +361,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   /// Determine barcode to display
-  returnBarcodeContainer(
-      String cardNumber, bool rotated, BuildContext context) {
+  returnBarcodeContainer(String cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
 
     /// Initialize sizing
@@ -447,21 +443,18 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   double letterSpacingForTablet() {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape)
       return ScalingUtility.horizontalSafeBlock * 1;
-    }
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
   double fontSizeForTablet() {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape)
       return ScalingUtility.horizontalSafeBlock * 2;
-    }
     return ScalingUtility.horizontalSafeBlock * 4;
   }
 
-  returnBarcodeContainerTablet(
-      String cardNumber, bool rotated, BuildContext context) {
+  returnBarcodeContainerTablet(String cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
     SizeConfig().init(context);
     if (rotated) {
@@ -561,32 +554,23 @@ class _StudentIdCardState extends State<StudentIdCard> {
   /// Determine the font size for user's textFields
   double getFontSize(String input, String textField) {
     /// Base font size
-    double base = ScalingUtility.horizontalSafeBlock * 3.5;
-
+    var base = ScalingUtility.horizontalSafeBlock * 3.5;
     /// If threshold is passed, shrink text
-    if (input.length >= 21) {
-      return (base - (0.175 * (input.length - 18)));
-    }
-
-    //// The name should be large than subheadings
+    if (input.length >= 21) return (base - (0.175 * (input.length - 18)));
+    /// The name should be large than subheadings
     if (textField == "name") {
       base = ScalingUtility.horizontalSafeBlock * 5;
       return base;
     }
-
     return base;
   }
 
   double tabletFontSize(String input, String textField) {
     /// Base font size
-    double base = letterSpacingForTablet();
-
+    var base = letterSpacingForTablet();
     /// If threshold is passed, shrink text
-    if (input.length >= 21) {
-      return (base - (0.1725 * (input.length - 18)));
-    }
-
-    //// The name should be large than subheadings
+    if (input.length >= 21) return (base - (0.1725 * (input.length - 18)));
+    /// The name should be large than subheadings
     if (textField == "name") {
       base = ScalingUtility.horizontalSafeBlock * 1.75;
       return base;
@@ -604,9 +588,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   /// Determine the padding for the text to realign
-  double realignText(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark ? 7 : 0;
-  }
+  double realignText(ThemeData currentTheme) => currentTheme.brightness == Brightness.dark ? 7 : 0;
 
   /// Determine the  color of hint above the barcode
   Color decideColor(ThemeData currentTheme) {

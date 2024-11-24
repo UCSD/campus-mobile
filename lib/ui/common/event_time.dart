@@ -10,15 +10,14 @@ class EventTime extends StatelessWidget {
   Widget build(BuildContext context) {
     try {
       // Separate dates from times
-      String startMonthDay =
-          DateFormat.MMMd().format(data!.startDate!.toLocal());
-      String endMonthDay = DateFormat.MMMd().format(data!.endDate!.toLocal());
-      String startTime = DateFormat.jm().format(data!.startDate!.toLocal());
-      String endTime = DateFormat.jm().format(data!.endDate!.toLocal());
+      var startMonthDay = DateFormat.MMMd().format(data!.startDate!.toLocal());
+      var endMonthDay = DateFormat.MMMd().format(data!.endDate!.toLocal());
+      var startTime = DateFormat.jm().format(data!.startDate!.toLocal());
+      var endTime = DateFormat.jm().format(data!.endDate!.toLocal());
 
       // Mark any special types of events
-      bool sameDay = (startMonthDay == endMonthDay);
-      bool unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
+      var sameDay = (startMonthDay == endMonthDay);
+      var unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
 
       if (sameDay) {
         if (!unspecifiedTime) {

@@ -38,15 +38,19 @@ class WebViewContainer extends StatefulWidget {
   _WebViewContainerState createState() => _WebViewContainerState();
 }
 
-class _WebViewContainerState extends State<WebViewContainer>
-    with AutomaticKeepAliveClientMixin {
-  bool get wantKeepAlive => true;
-  late UserDataProvider _userDataProvider;
-  WebViewController? _webViewController;
-  double _contentHeight = cardContentMinHeight;
+class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepAliveClientMixin {
+  /// STATES
   bool? active;
   Function? hide;
   String? webCardUrl;
+  double _contentHeight = cardContentMinHeight;
+
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+  WebViewController? _webViewController;
+
+  /// SIMPLE GETTERS
+  get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -108,7 +112,7 @@ class _WebViewContainerState extends State<WebViewContainer>
     return Container();
   }
 
-  // builds the actual webview widget
+  // builds the actual webView widget
   Widget buildBody(context) {
     print('webview_container:buildBody: ' + webCardUrl!);
     return Container(
@@ -132,9 +136,7 @@ class _WebViewContainerState extends State<WebViewContainer>
   }
 
   Widget? buildMenu() {
-    if (widget.hideMenu ?? false) {
-      return Container();
-    }
+    if (widget.hideMenu ?? false) return Container();
     return ButtonBar(
       buttonPadding: EdgeInsets.all(0),
       mainAxisSize: MainAxisSize.min,
@@ -225,7 +227,7 @@ class _WebViewContainerState extends State<WebViewContainer>
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
         Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
-        //Navigator.pushNamed(context, RoutePaths.Map);
+        // Navigator.pushNamed(context, RoutePaths.Map);
       },
     );
   }
@@ -243,7 +245,7 @@ class _WebViewContainerState extends State<WebViewContainer>
     );
   }
 
-  // javascript channel for redirecting the user to a new webcard URL
+  // javascript channel for redirecting the user to a new webCard URL
   JavascriptChannel _permanentRedirect(BuildContext context) {
     return JavascriptChannel(
       name: 'Redirect',

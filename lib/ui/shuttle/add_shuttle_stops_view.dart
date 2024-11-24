@@ -11,7 +11,7 @@ class AddShuttleStopsView extends StatefulWidget {
 
 class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
   late ShuttleDataProvider _shuttleDataProvider;
-  bool isAddingStop = false;
+  var isAddingStop = false;
 
   @override
   Widget build(BuildContext context) {

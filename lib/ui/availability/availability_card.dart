@@ -17,7 +17,7 @@ class AvailabilityCard extends StatefulWidget {
 }
 
 class _AvailabilityCardState extends State<AvailabilityCard> {
-  PageController _controller = PageController();
+  final _controller = PageController();
   late AvailabilityDataProvider _availabilityDataProvider;
 
   @override
@@ -44,7 +44,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
 
   Widget buildAvailabilityCard(List<AvailabilityModel?> data) {
     List<Widget> locationsList = [];
-    RegExp multiPager = RegExp(r' \(\d+/\d+\)$');
+    final multiPager = RegExp(r' \(\d+/\d+\)$');
     // loop through all the models, adding each one to locationsList
     for (AvailabilityModel? model in data) {
       if (model != null) {

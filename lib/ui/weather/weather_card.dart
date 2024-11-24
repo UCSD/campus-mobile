@@ -7,9 +7,8 @@ import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-const String cardId = 'weather';
-const String WEATHER_ICON_BASE_URL =
-    'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
+const cardId = 'weather';
+const WEATHER_ICON_BASE_URL = 'https://s3-us-west-2.amazonaws.com/ucsd-its-wts/images/v1/weather-icons/';
 
 class WeatherCard extends StatelessWidget {
   @override
@@ -70,7 +69,6 @@ class WeatherCard extends StatelessWidget {
 
   String getDayOfWeek(int epoch) {
     DateTime dt = new DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
-
     switch (dt.weekday) {
       case 1:
         return 'MON';

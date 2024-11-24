@@ -5,11 +5,13 @@ class ImageLoader extends StatelessWidget {
   final double width;
   final double height;
   final bool fullSize;
+
   ImageLoader(
       {required this.url,
       this.width = 100.0,
       this.height = 100.0,
       this.fullSize = false});
+
   @override
   Widget build(BuildContext context) {
     return url!.isEmpty

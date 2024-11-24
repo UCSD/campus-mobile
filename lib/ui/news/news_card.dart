@@ -6,7 +6,7 @@ import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-const String cardId = 'news';
+const cardId = 'news';
 
 class NewsCard extends StatelessWidget {
   Widget buildNewsCard() {

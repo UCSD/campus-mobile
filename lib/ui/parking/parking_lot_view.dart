@@ -9,7 +9,7 @@ class ParkingLotsView extends StatefulWidget {
 
 class _ParkingLotViewState extends State<ParkingLotsView> {
   late ParkingDataProvider parkingDataProvider;
-  bool showedScaffold = false;
+  var showedScaffold = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +39,11 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
 
     int selectedLots = 0;
     parkingDataProvider.parkingViewState!.forEach((key, value) {
-      if (value == true) {
-        selectedLots++;
-      }
+      if (value == true) selectedLots++;
     });
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < lots.length; i++) {
-      bool lotViewState = parkingDataProvider.parkingViewState![lots[i]]!;
+      var lotViewState = parkingDataProvider.parkingViewState![lots[i]]!;
       list.add(
         ListTile(
           title: Padding(

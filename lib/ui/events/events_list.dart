@@ -8,8 +8,7 @@ import 'package:provider/provider.dart';
 
 class EventsList extends StatelessWidget {
   const EventsList({Key? key, this.listSize}) : super(key: key);
-
-  final int? listSize;
+  final listSize;
 
   @override
   Widget build(BuildContext context) {
@@ -27,23 +26,14 @@ class EventsList extends StatelessWidget {
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
-    var size;
-    if (listSize == null) {
-      size = 3;
-    } else
-      size = listSize;
-
+    var size = listSize ?? 3;
     /// check to see if we have at least 3 events
-    if (size > listOfEvents.length) {
-      size = listOfEvents.length;
-    }
+    if (size > listOfEvents.length) size = listOfEvents.length;
 
     for (int i = 0; i < size; i++) {
       final EventModel item = listOfEvents[i];
       final tile = EventTile(data: item);
-      final spacer = SizedBox(
-        width: 5,
-      );
+      final spacer = SizedBox(width: 5);
       eventTiles.add(tile);
       eventTiles.add(spacer);
     }
@@ -64,9 +54,5 @@ class EventsList extends StatelessWidget {
             : EventsAll(),
       );
     }
-    // ListView(
-    //   children:
-    //   ListTile.divideTiles(tiles: eventTiles, context: context)
-    //       .toList(),
   }
 }

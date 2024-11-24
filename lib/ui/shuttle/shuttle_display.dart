@@ -57,7 +57,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget buildTimetoArrivalText() {
-    int minutesToArrival = arrivingShuttles![0].secondsToArrival! ~/ 60;
+    var minutesToArrival = arrivingShuttles![0].secondsToArrival! ~/ 60;
     return Text(
       "Arriving in: $minutesToArrival minutes",
       style: TextStyle(color: Colors.grey, fontSize: 20),
@@ -105,17 +105,14 @@ class ShuttleDisplay extends StatelessWidget {
 
   Widget buildArrivalData() {
     List<Widget> arrivalsToRender = [];
-    for (int index = 1;
-        index < arrivingShuttles!.length && index <= 2;
-        index++) {
-      arrivalsToRender.add(buildArrivingShuttle(arrivingShuttles![index]));
+    for (var i = 1; i < arrivingShuttles!.length && i <= 2; i++) {
+      arrivalsToRender.add(buildArrivingShuttle(arrivingShuttles![i]));
     }
-
     return Column(children: arrivalsToRender);
   }
 
   Widget buildArrivingShuttle(ArrivingShuttle shuttle) {
-    int minutesToArrival = shuttle.secondsToArrival! ~/ 60;
+    var minutesToArrival = shuttle.secondsToArrival! ~/ 60;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -158,9 +155,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget whetherNextArrivals() {
-    if (arrivingShuttles!.length <= 1) {
-      return Text("");
-    } else {
+    if (arrivingShuttles!.length <= 1) return Text("");
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -174,6 +169,5 @@ class ShuttleDisplay extends StatelessWidget {
           ),
         ],
       );
-    }
   }
 }

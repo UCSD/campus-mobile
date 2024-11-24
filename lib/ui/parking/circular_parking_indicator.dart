@@ -28,15 +28,12 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Widget buildAllParkingAvailability(BuildContext context) {
     List<Widget> listOfCircularParkingInfo = [];
-
     List<String> selectedSpots = [];
 
     Provider.of<ParkingDataProvider>(context)
         .spotTypesState!
         .forEach((key, value) {
-      if (value && selectedSpots.length < 4) {
-        selectedSpots.add(key!);
-      }
+      if (value && selectedSpots.length < 4) selectedSpots.add(key!);
     });
     for (String spot in selectedSpots) {
       if (model.availability != null) {
@@ -54,25 +51,18 @@ class CircularParkingIndicators extends StatelessWidget {
     );
   }
 
-  Widget buildCircularParkingInfo(
-      Spot? spotType, dynamic locationData, BuildContext context) {
-    int open;
-    int total;
+  Widget buildCircularParkingInfo(Spot? spotType, dynamic locationData, BuildContext context) {
+    var open, total;
     if (locationData != null) {
-      if (locationData["Open"] is String) {
-        open = locationData["Open"] == "" ? 0 : int.parse(locationData["Open"]);
-      } else {
-        open = locationData["Open"] == null ? 0 : locationData["Open"];
-      }
-      if (locationData["Total"] is String) {
-        total =
-            locationData["Total"] == "" ? 0 : int.parse(locationData["Total"]);
-      } else {
-        total = locationData["Total"] == null ? 0 : locationData["Total"];
-      }
+      open = locationData["Open"] is String
+          ? (locationData["Open"] == "" ? 0 : int.parse(locationData["Open"]))
+          : (locationData["Open"] ?? 0);
+
+      total = locationData["Total"] is String
+          ? (locationData["Total"] == "" ? 0 : int.parse(locationData["Total"]))
+          : (locationData["Total"] ?? 0);
     } else {
-      open = 0;
-      total = 0;
+      open = total = 0;
     }
 
     return locationData != null
@@ -182,20 +172,13 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Color colorFromHex(String hexColor) {
     final hexCode = hexColor.replaceAll('#', '');
-    if (hexColor.length == 6) {
-      hexColor =
-          'FF' + hexColor; // FF as the opacity value if you don't add it.
-    }
+    if (hexColor.length == 6) hexColor = 'FF' + hexColor; // FF as the opacity value if you don't add it.
     return Color(int.parse('FF$hexCode', radix: 16));
   }
 
   Color getColor(double value) {
-    if (value > .75) {
-      return Colors.green;
-    }
-    if (value > .25) {
-      return Colors.yellow;
-    }
+    if (value > .75) return Colors.green;
+    if (value > .25) return Colors.yellow;
     return Colors.red;
   }
 

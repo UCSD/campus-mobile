@@ -9,6 +9,7 @@ class NutritionFactsView extends StatelessWidget {
   final DiningMenuItem data;
   final String? disclaimer;
   final String? disclaimerEmail;
+
   @override
   Widget build(BuildContext context) {
     return ContainerView(child: nutrientWidget(context));

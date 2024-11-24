@@ -20,6 +20,7 @@ class LinkifyWithCatch extends StatelessWidget {
       this.textAlign = TextAlign.start,
       this.looseUrl = false})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Linkify(

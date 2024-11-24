@@ -45,8 +45,7 @@ class NotificationsSettingsView extends StatelessWidget {
 
   static IconData chooseIcons(String messageType) {
     // TODO: change this to a switch expression after Dart 3 upgrade
-    switch (messageType)
-    {
+    switch (messageType) {
       case "studentAnnouncements":
       case "testStudentAnnouncements":
         return Icons.school_outlined;

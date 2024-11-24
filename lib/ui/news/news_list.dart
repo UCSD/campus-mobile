@@ -9,8 +9,7 @@ import 'package:provider/provider.dart';
 
 class NewsList extends StatelessWidget {
   const NewsList({Key? key, this.listSize}) : super(key: key);
-
-  final int? listSize;
+  final listSize;
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +31,9 @@ class NewsList extends StatelessWidget {
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
-    var size;
-    if (listSize == null)
-      size = listOfNews!.length;
-    else
-      size = listSize;
-    for (int i = 0; i < size; i++) {
+    var size = listSize ?? listOfNews!.length;
+
+    for (var i = 0; i < size; i++) {
       final Item item = listOfNews![i];
       final tile = buildNewsTile(item, context);
       newsTiles.add(tile);

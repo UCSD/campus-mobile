@@ -10,9 +10,8 @@ class OnboardingScreen extends StatefulWidget {
   _OnboardingScreen createState() => _OnboardingScreen();
 }
 
-class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderStateMixin
-{
-  int currentIndex = 0;
+class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderStateMixin {
+  var currentIndex = 0;
 
   @override
   void didChangeDependencies() {

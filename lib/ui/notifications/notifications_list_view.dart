@@ -15,7 +15,7 @@ import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../navigator/bottom.dart';
 
-bool hideListView = false;
+var hideListView = false;
 
 class NotificationsListView extends StatefulWidget {
   @override
@@ -133,12 +133,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     FreeFoodDataProvider freefoodProvider =
         Provider.of<FreeFoodDataProvider>(context);
 
-    String? messageType;
-    if (data.audience!.topics == null) {
-      messageType = "DM";
-    } else {
-      messageType = data.audience?.topics![0];
-    }
+    var messageType = data.audience?.topics?.first ?? "DM";
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -195,31 +190,15 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     if (diff.inSeconds < 60) {
       time = 'JUST NOW';
     } else if (diff.inMinutes < 60) {
-      if (diff.inMinutes.floor() == 1) {
-        time = diff.inMinutes.toString() + ' MIN';
-      } else {
-        time = diff.inMinutes.toString() + ' MINS';
-      }
+      time = '${diff.inMinutes} ${diff.inMinutes == 1 ? 'MIN' : 'MINS'}';
     } else if (diff.inHours < 24) {
-      if (diff.inHours.floor() == 1) {
-        time = diff.inHours.toString() + ' HR';
-      } else {
-        time = diff.inHours.toString() + ' HRS';
-      }
-    } else if (diff.inDays > 0 && diff.inDays < 7) {
-      if (diff.inDays == 1) {
-        time = diff.inDays.toString() + ' D';
-      } else {
-        time = diff.inDays.toString() + ' D';
-      }
-    } else if (diff.inDays >= 7 && diff.inDays < 365) {
-      if (diff.inDays.floor() == 7) {
-        time = (diff.inDays / 7).floor().toString() + ' W';
-      } else {
-        time = (diff.inDays / 7).floor().toString() + ' W';
-      }
+      time = '${diff.inHours} ${diff.inHours == 1 ? 'HR' : 'HRS'}';
+    } else if (diff.inDays < 7) {
+      time = '${diff.inDays} D';
+    } else if (diff.inDays < 365) {
+      time = '${(diff.inDays / 7).floor()} W';
     } else {
-      time = ((diff.inDays / 7).floor() / 52).floor().toString() + ' Y';
+      time = '${(diff.inDays / 365).floor()} Y';
     }
     return time;
   }

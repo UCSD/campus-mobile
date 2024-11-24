@@ -40,7 +40,6 @@ typedef void OnWidgetSizeChange(Size size);
 class MeasureSizeRenderObject extends RenderProxyBox {
   Size? oldSize;
   OnWidgetSizeChange onChange;
-
   MeasureSizeRenderObject(this.onChange);
 
   @override

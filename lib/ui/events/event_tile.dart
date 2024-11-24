@@ -106,18 +106,15 @@ class EventTile extends StatelessWidget {
   Widget eventsDateTime(EventModel data) {
     try {
       // Separate dates from times
-      String startMonthDayYear =
-          DateFormat.yMMMMd('en_US').format(data.startDate!.toLocal());
-      String endMonthDayYear =
-          DateFormat.yMMMMd('en_US').format(data.endDate!.toLocal());
-      String startTime = DateFormat.jm().format(data.startDate!.toLocal());
-      String endTime = DateFormat.jm().format(data.endDate!.toLocal());
+      var startMonthDayYear = DateFormat.yMMMMd('en_US').format(data.startDate!.toLocal());
+      var endMonthDayYear = DateFormat.yMMMMd('en_US').format(data.endDate!.toLocal());
+      var startTime = DateFormat.jm().format(data.startDate!.toLocal());
+      var endTime = DateFormat.jm().format(data.endDate!.toLocal());
 
       // Mark any special types of events
-      bool sameDay = (startMonthDayYear == endMonthDayYear);
-      bool unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
-      Widget date;
-      Widget time;
+      var sameDay = (startMonthDayYear == endMonthDayYear);
+      var unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
+      Widget date; Widget time;
       if (sameDay) {
         date = Text(
           startMonthDayYear,
@@ -125,22 +122,22 @@ class EventTile extends StatelessWidget {
         ); // Ex. June 11, 2021
       } else {
         // if not the same date, check if the same year
-        String startYear = startMonthDayYear.substring(
+        var startYear = startMonthDayYear.substring(
             startMonthDayYear.indexOf(',') + 2, startMonthDayYear.length);
-        String endYear = endMonthDayYear.substring(
+        var endYear = endMonthDayYear.substring(
             endMonthDayYear.indexOf(',') + 2, endMonthDayYear.length);
         if (startYear == endYear) {
           // if the same year, check if the same month
-          String startMonth =
+          var startMonth =
               startMonthDayYear.substring(0, startMonthDayYear.indexOf(' '));
-          String endMonth =
+          var endMonth =
               endMonthDayYear.substring(0, endMonthDayYear.indexOf(' '));
           if (startMonth == endMonth) {
             // if different date in the same month and year
-            String startDay = startMonthDayYear.substring(
+            var startDay = startMonthDayYear.substring(
                 startMonthDayYear.indexOf(' ') + 1,
                 startMonthDayYear.indexOf(','));
-            String endDay = endMonthDayYear.substring(
+            var endDay = endMonthDayYear.substring(
                 endMonthDayYear.indexOf(' ') + 1, endMonthDayYear.indexOf(','));
             date = Text(
               startMonth + ' ' + startDay + ' - ' + endDay + ', ' + startYear,
@@ -148,9 +145,9 @@ class EventTile extends StatelessWidget {
             ); // Ex. September 11 - 26, 2021
           } else {
             // if different month in the same year
-            String startMonthDay =
+            var startMonthDay =
                 startMonthDayYear.substring(0, startMonthDayYear.indexOf(','));
-            String endMonthDay =
+            var endMonthDay =
                 endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
             date = Text(
               startMonthDay + ' - ' + endMonthDay + ', ' + startYear,

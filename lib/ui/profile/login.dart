@@ -14,7 +14,7 @@ class _LoginState extends State<Login> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
   late UserDataProvider _userDataProvider;
-  bool _passwordObscured = true;
+  var _passwordObscured = true;
 
   @override
   void didChangeDependencies() {

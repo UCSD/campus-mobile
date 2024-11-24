@@ -31,8 +31,8 @@ class Maps extends StatelessWidget {
   }
 
   Widget buildButtons(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
 
     return Positioned(
       bottom: height * 0.05,

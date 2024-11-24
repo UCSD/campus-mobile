@@ -20,12 +20,12 @@ class TimeRangeWidget extends StatelessWidget {
   }
 
   String getStartTime(BuildContext context) {
-    List<String> times = time!.split("-");
+    var times = time!.split("-");
     return stringToTimeOfDay(times[0]).format(context);
   }
 
   String getStopTime(BuildContext context) {
-    List<String> times = time!.split("- ");
+    var times = time!.split("- ");
     return stringToTimeOfDay(times[1]).format(context);
   }
 

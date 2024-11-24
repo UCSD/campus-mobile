@@ -16,17 +16,22 @@ class WiFiCard extends StatefulWidget {
 }
 
 class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin {
-  bool get wantKeepAlive => true;
-  String cardId = "speed_test";
+  /// STATES
+  var cardId = "speed_test";
+  var _buttonEnabled = true;
+  var timedOut = false;
+  late var goodSpeed;
+  static const int SPEED_TEST_TIMEOUT_CONST = 30;
+  var lastSpeed;
   TestStatus? cardState;
-  int? lastSpeed;
-  late bool goodSpeed;
-  bool timedOut = false;
+  Timer? buttonTimer;
+
+  /// PROVIDERS
   SpeedTestProvider _speedTestProvider = SpeedTestProvider();
   UserDataProvider? _userDataProvider;
-  bool _buttonEnabled = true;
-  Timer? buttonTimer;
-  static const int SPEED_TEST_TIMEOUT_CONST = 30;
+
+  /// SIMPLE GETTER
+  get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -83,7 +88,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       );
     }
     _speedTestProvider.addListener(() {
-      //TODO: Add print statements to verify not reloading
+      /// TODO: Add print statements to verify not reloading
       try {
         if (_speedTestProvider.onSimulator!) {
           cardState = TestStatus.simulated;
@@ -110,7 +115,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       } catch (e) {}
     });
     switch (cardState) {
-      //TODO: Add check to verify not over-checking states
+      /// TODO: Add check to verify not over-checking states
       case TestStatus.initial:
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -283,10 +288,8 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
 
   Column timedOutState() {
     _speedTestProvider.sendNetworkDiagnostics(lastSpeed);
-    bool showDownload = false;
-    if (lastSpeed != null && lastSpeed! > 0) {
-      showDownload = true;
-    }
+    var showDownload = false;
+    if (lastSpeed != null && lastSpeed! > 0) showDownload = true;
     return Column(
       children: [
         RichText(
@@ -298,8 +301,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                 fontSize: 36,
               )),
           TextSpan(
-            text:
-                '\n Download speed: ${lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3)} Mbps \n Upload speed: ${_speedTestProvider.uploadSpeed!.toStringAsPrecision(3)} Mbps\n',
+            text: '\n Download speed: ${lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3)} Mbps \n Upload speed: ${_speedTestProvider.uploadSpeed!.toStringAsPrecision(3)} Mbps\n',
             style: TextStyle(fontSize: 15, color: Colors.grey),
           )
         ])),
@@ -385,17 +387,10 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     String downloadSpeed = lastSpeed != null
         ? lastSpeed!.toStringAsPrecision(3)
         : _speedTestProvider.speed!.toStringAsPrecision(3) + " Mbps";
-    String uploadSpeed =
-        _speedTestProvider.uploadSpeed!.toStringAsPrecision(3) + " Mbps";
+    String uploadSpeed = _speedTestProvider.uploadSpeed!.toStringAsPrecision(3) + " Mbps";
 
-    if (downloadSpeed.contains("Infinity")) {
-      downloadSpeed = "N/A";
-    }
-
-    if (uploadSpeed.contains("Infinity")) {
-      uploadSpeed = "N/A";
-    }
-
+    if (downloadSpeed.contains("Infinity")) downloadSpeed = "N/A";
+    if (uploadSpeed.contains("Infinity")) uploadSpeed = "N/A";
     if (timedOut) {
       goodSpeed = false;
       if (_speedTestProvider.percentDownloaded == 1.0) {

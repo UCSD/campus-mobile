@@ -25,8 +25,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
   }
 
   Widget buildDiningMenuList(BuildContext context) {
-    DiningMenuItemsModel? menu =
-        Provider.of<DiningDataProvider>(context, listen: false)
+    DiningMenuItemsModel? menu = Provider.of<DiningDataProvider>(context, listen: false)
             .getMenuData(widget.model.id);
     List<String> filters = [];
     if (Provider.of<DiningDataProvider>(context, listen: false)
@@ -193,7 +192,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
 }
 
 class LabeledRadio extends StatelessWidget {
-  final String? title;
+  final title;
   final Meal value;
   final Meal? groupValue;
   final void Function(Meal?)? onChanged;

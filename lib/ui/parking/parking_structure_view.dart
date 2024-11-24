@@ -9,7 +9,7 @@ class ParkingStructureView extends StatefulWidget {
 
 class _ParkingStructureViewState extends State<ParkingStructureView> {
   late ParkingDataProvider parkingDataProvider;
-  bool showedScaffold = false;
+  var showedScaffold = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +41,11 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
 
     int selectedLots = 0;
     parkingDataProvider.parkingViewState!.forEach((key, value) {
-      if (value == true) {
-        selectedLots++;
-      }
+      if (value == true) selectedLots++;
     });
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < structures.length; i++) {
-      bool structureState =
-          parkingDataProvider.parkingViewState![structures[i]]!;
+      var structureState = parkingDataProvider.parkingViewState![structures[i]]!;
       list.add(
         ListTile(
           title: Padding(

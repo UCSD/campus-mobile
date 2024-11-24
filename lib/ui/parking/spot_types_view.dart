@@ -20,17 +20,14 @@ class _SpotTypesViewState extends State<SpotTypesView> {
     );
   }
 
-  Widget createListWidget(BuildContext context) {
-    return ListView(children: createList(context));
-  }
+  Widget createListWidget(BuildContext context) => ListView(children: createList(context));
 
   List<Widget> createList(BuildContext context) {
-    int selectedSpots = 0;
+    var selectedSpots = 0;
     List<Widget> list = [];
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
       if (Provider.of<ParkingDataProvider>(context)
-              .spotTypesState![data.spotKey]! ==
-          true) {
+              .spotTypesState![data.spotKey]! == true) {
         selectedSpots++;
       }
       Color iconColor = HexColor(data.color!);
@@ -72,10 +69,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
 
   Color colorFromHex(String hexColor) {
     final hexCode = hexColor.replaceAll('#', '');
-    if (hexColor.length == 6) {
-      hexColor =
-          'FF' + hexColor; // FF as the opacity value if you don't add it.
-    }
+    if (hexColor.length == 6) hexColor = 'FF' + hexColor; // FF as the opacity value if you don't add it.
     return Color(int.parse('FF$hexCode', radix: 16));
   }
 }

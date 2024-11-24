@@ -13,12 +13,11 @@ class DiningList extends StatelessWidget {
     this.listSize,
   }) : super(key: key);
 
-  final int? listSize;
+  final listSize;
 
   @override
   Widget build(BuildContext context) {
-    List<DiningModel> data =
-        Provider.of<DiningDataProvider>(context).diningModels;
+    List<DiningModel> data = Provider.of<DiningDataProvider>(context).diningModels;
     return data.length > 0
         ? buildDiningList(data, context)
         : CircularProgressIndicator(

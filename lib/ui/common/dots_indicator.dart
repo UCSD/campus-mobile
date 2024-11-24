@@ -22,27 +22,26 @@ class DotsIndicator extends AnimatedWidget {
   final ValueChanged<int>? onPageSelected;
 
   /// The color of the dots.
-  ///
   /// Defaults to `Colors.grey`.
   final Color color;
 
   // The base size of the dots
-  static const double _kDotSize = 8.0;
+  static const _kDotSize = 8.0;
 
   // The increase in the size of the selected dot
-  static const double _kMaxZoom = 1.5;
+  static const _kMaxZoom = 1.5;
 
   // The distance between the center of each dot
-  static const double _kDotSpacing = 20.0;
+  static const _kDotSpacing = 20.0;
 
   Widget _buildDot(int index) {
-    double selectedness = Curves.easeOut.transform(
+    var selectedness = Curves.easeOut.transform(
       max(
         0.0,
         1.0 - ((controller.page ?? controller.initialPage) - index).abs(),
       ),
     );
-    double zoom = 1.0 + (_kMaxZoom - 1.0) * selectedness;
+    var zoom = 1.0 + (_kMaxZoom - 1.0) * selectedness;
     return new Container(
       width: _kDotSpacing,
       child: new Center(

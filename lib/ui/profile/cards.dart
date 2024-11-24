@@ -63,9 +63,7 @@ class _CardsViewState extends State<CardsView> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
+    if (newIndex > oldIndex) newIndex -= 1;
     List<String> newOrder = _cardsDataProvider.cardOrder!;
     List<String> toRemove = [];
     if (_cardsDataProvider.cardOrder!.contains('NativeScanner')) {
@@ -73,7 +71,7 @@ class _CardsViewState extends State<CardsView> {
     }
 
     newOrder.removeWhere((element) => toRemove.contains(element));
-    String item = newOrder.removeAt(oldIndex);
+    var item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
     List<String> orderList = [];
     for (String item in newOrder) {
@@ -117,7 +115,6 @@ class _CardsViewState extends State<CardsView> {
         _cardsDataProvider.changeInternetStatus(true);
       }
     }
-
     return list;
   }
 }

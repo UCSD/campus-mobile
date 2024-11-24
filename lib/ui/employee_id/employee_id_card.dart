@@ -17,9 +17,9 @@ class EmployeeIdCard extends StatefulWidget {
 }
 
 class _EmployeeIdCardState extends State<EmployeeIdCard> {
-  String cardId = "employee_id";
+  var cardId = "employee_id";
   final placeholderPhotoUrl = dotenv.get('PLACEHOLDER_PERSON_PHOTO');
-  bool isValidId = false;
+  var isValidId = false;
 
   @override
   Widget build(BuildContext context) {
@@ -390,10 +390,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   /// Determine barcode to display
-  returnBarcodeContainer(
-      String? cardNumber, bool rotated, BuildContext context) {
+  returnBarcodeContainer(String? cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
-
     /// Initialize sizing
     ScalingUtility().getCurrentMeasurements(context);
     if (rotated) {
@@ -486,8 +484,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     return ScalingUtility.horizontalSafeBlock * 4;
   }
 
-  returnBarcodeContainerTablet(
-      String? cardNumber, bool rotated, BuildContext context) {
+  returnBarcodeContainerTablet(String? cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
     SizeConfig().init(context);
     if (rotated) {
@@ -590,9 +587,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     double base = ScalingUtility.horizontalSafeBlock * 3.5;
 
     /// If threshold is passed, shrink text
-    if (input.length >= 21) {
-      return (base - (0.175 * (input.length - 18)));
-    }
+    if (input.length >= 21) return (base - (0.175 * (input.length - 18)));
 
     //// The name should be large than subheadings
     if (textField == "name") {
@@ -628,9 +623,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   /// Determine the padding for the text to realign
-  double realignText(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark ? 7 : 0;
-  }
+  double realignText(ThemeData currentTheme) => currentTheme.brightness == Brightness.dark ? 7 : 0;
 
   /// Determine the  color of hint above the barcode
   Color decideColor(ThemeData currentTheme) {

@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 class NewsDetailView extends StatelessWidget {
   const NewsDetailView({Key? key, required this.data}) : super(key: key);
   final Item data;
+
   @override
   Widget build(BuildContext context) {
     return ContainerView(

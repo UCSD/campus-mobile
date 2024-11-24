@@ -17,8 +17,8 @@ class ShuttleCard extends StatefulWidget {
 }
 
 class _ShuttleCardState extends State<ShuttleCard> {
-  ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
-  PageController _controller = PageController();
+  var _shuttleCardDataProvider = ShuttleDataProvider();
+  var _controller = PageController();
   List<ArrivingShuttle>? arrivals;
 
   @override
@@ -60,7 +60,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
                 arrivalsToRender![_shuttleCardDataProvider.closestStop!.id]));
       }
 
-      for (int i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
+      for (var i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
             arrivingShuttles: arrivalsToRender![
@@ -120,9 +120,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
         'Manage Shuttle Stops',
       ),
       onPressed: () {
-        if (!_shuttleCardDataProvider.isLoading!) {
+        if (!_shuttleCardDataProvider.isLoading!)
           Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
-        }
       },
     ));
     return actionButtons;

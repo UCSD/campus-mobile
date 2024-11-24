@@ -16,7 +16,7 @@ class ParkingCard extends StatefulWidget {
 class _ParkingCardState extends State<ParkingCard> {
   late ParkingDataProvider _parkingDataProvider;
   final _controller = new PageController();
-  String cardId = 'parking';
+  var cardId = 'parking';
 
   @override
   void didChangeDependencies() {

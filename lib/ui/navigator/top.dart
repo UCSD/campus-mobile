@@ -12,7 +12,7 @@ class CMAppBar extends StatelessWidget {
     this.notificationsFilterButton,
   });
 
-  final String? title;
+  final title;
   final bool? doneButton;
   final bool? notificationsFilterButton;
 
@@ -110,13 +110,11 @@ class CMAppBar extends StatelessWidget {
 
 class CustomAppBar extends ChangeNotifier {
   late CMAppBar appBar;
-  String? title;
-  bool? doneButton;
-  bool? notificationsFilterButton;
+  var title;
+  var doneButton;
+  var notificationsFilterButton;
 
-  CustomAppBar() {
-    makeAppBar();
-  }
+  CustomAppBar() { makeAppBar(); }
 
   makeAppBar() {
     appBar = CMAppBar(
@@ -130,13 +128,6 @@ class CustomAppBar extends ChangeNotifier {
     title = RouteTitles.titleMap[newTitle];
     doneButton = done;
     notificationsFilterButton = notification;
-
-    // if (newTitle == "Notifications") {
-    //   notificationsFilterButton = true;
-    // } else {
-    //   notificationsFilterButton = false;
-    // }
-
     makeAppBar();
   }
 }

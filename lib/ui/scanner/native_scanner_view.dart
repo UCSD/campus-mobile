@@ -18,7 +18,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
   late ScannerDataProvider _scannerDataProvider;
   late UserDataProvider _userDataProvider;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-  bool hasUpdatedLatestScan = false;
+  var hasUpdatedLatestScan = false;
 
   @override
   Widget build(BuildContext context) {
@@ -170,10 +170,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
   Widget renderSuccessScreen(BuildContext context) {
     final dateFormat = new DateFormat('dd-MM-yyyy hh:mm:ss a');
     final String scanTime = dateFormat.format(new DateTime.now());
-
-    RegExp bloodScreenTest = RegExp(r'^ZAP');
-    bool isBloodScreen =
-        bloodScreenTest.hasMatch(_scannerDataProvider.barcode!);
+    final bloodScreenTest = RegExp(r'^ZAP');
+    var isBloodScreen = bloodScreenTest.hasMatch(_scannerDataProvider.barcode!);
 
     updateLatestScan(context);
     return Column(

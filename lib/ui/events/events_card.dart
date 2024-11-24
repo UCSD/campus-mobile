@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/ui/events/events_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-const String cardId = 'events';
+const cardId = 'events';
 
 //edit these files
 class EventsCard extends StatelessWidget {

@@ -74,7 +74,7 @@ class QuickSearchIcons extends StatelessWidget {
 
 class LabeledIconButton extends StatelessWidget {
   final IconData? icon;
-  final String? text;
+  final text;
   final Function? onPressed;
   LabeledIconButton({this.icon, this.text, this.onPressed});
   @override

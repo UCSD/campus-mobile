@@ -6,13 +6,12 @@ import 'package:provider/provider.dart';
 class NeighborhoodLotsView extends StatefulWidget {
   final List<String> args;
   const NeighborhoodLotsView(this.args);
-
   _NeighborhoodLotsViewState createState() => _NeighborhoodLotsViewState();
 }
 
 class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
   late ParkingDataProvider parkingDataProvider;
-  bool showedScaffold = false;
+  var showedScaffold = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
 
   // builds the listview that will be put into ContainerView
   Widget lotsList(BuildContext context) {
-    List<String> arguments = widget.args;
+    var arguments = widget.args;
 
     // creates a list that will hold the list of building names
     List<Widget> list = [];
@@ -43,13 +42,11 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
 
     int selectedLots = 0;
     parkingDataProvider.parkingViewState!.forEach((key, value) {
-      if (value == true) {
-        selectedLots++;
-      }
+      if (value == true) selectedLots++;
     });
     // loops through and adds buttons for the user to click on
-    for (int i = 0; i < arguments.length; i++) {
-      bool lotState = parkingDataProvider.parkingViewState![arguments[i]]!;
+    for (var i = 0; i < arguments.length; i++) {
+      var lotState = parkingDataProvider.parkingViewState![arguments[i]]!;
       list.add(
         ListTile(
           title: Padding(
@@ -92,14 +89,11 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
 
 Color colorFromHex(String hexColor) {
   final hexCode = hexColor.replaceAll('#', '');
-  if (hexColor.length == 6) {
-    hexColor = 'FF' + hexColor; // FF as the opacity value if you don't add it.
-  }
+  if (hexColor.length == 6) hexColor = 'FF' + hexColor; // FF as the opacity value if you don't add it.
   return Color(int.parse('FF$hexCode', radix: 16));
 }
 
 class ScreenArguments {
   final List<String> lotList;
-
   ScreenArguments(this.lotList);
 }
