@@ -95,15 +95,15 @@ class StudentIdDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// SIMPLE SETTERS
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;
   get lastUpdated => _lastUpdated;
-  int? get selectedCourse => _selectedCourse;
+  get selectedCourse => _selectedCourse;
   StudentIdNameModel? get studentIdNameModel => _studentIdNameModel;
   StudentIdPhotoModel? get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel? get studentIdProfileModel => _studentIdProfileModel;
-
-  /// SIMPLE SETTERS
-  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 }

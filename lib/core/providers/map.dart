@@ -19,6 +19,9 @@ class MapsDataProvider extends ChangeNotifier {
   DateTime? _lastUpdated;
   String? _error;
   bool? _noResults;
+  Coordinates? _coordinates;
+  List<String> _searchHistory = [];
+
 
   /// Default coordinates for Price Center
   var _defaultLat = 32.87990969506536;
@@ -27,17 +30,16 @@ class MapsDataProvider extends ChangeNotifier {
   /// MODELS
   List<MapSearchModel> _mapSearchModels = [];
 
-  Coordinates? _coordinates;
-  Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
-  var _searchBarController = TextEditingController();
-  GoogleMapController? _mapController;
-  List<String> _searchHistory = [];
-
   /// SERVICES
   late MapSearchService _mapSearchService;
+  var _searchBarController = TextEditingController();
+
+  /// PROVIDERS
+  Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
+  GoogleMapController? _mapController;
 
   void addMarker(int listIndex) {
-    final Marker marker = Marker(
+    final marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
       position: LatLng(_mapSearchModels[listIndex].mkrLat!,
           _mapSearchModels[listIndex].mkrLong!),
@@ -47,7 +49,6 @@ class MapsDataProvider extends ChangeNotifier {
     );
     _markers.clear();
     _markers[marker.markerId] = marker;
-
     updateMapPosition();
     notifyListeners();
   }
@@ -82,7 +83,7 @@ class MapsDataProvider extends ChangeNotifier {
   }
 
   void fetchLocations() async {
-    String query = searchBarController.text;
+    var query = searchBarController.text;
     markers.clear();
     _isLoading = true; _error = null;
     notifyListeners();
@@ -133,31 +134,29 @@ class MapsDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  /// SIMPLE GETTERS
-  get isLoading => _isLoading;
-  get error => _error;
-  get lastUpdated => _lastUpdated;
-  List<MapSearchModel> get mapSearchModels => _mapSearchModels;
-  List<String> get searchHistory => _searchHistory;
-  Map<MarkerId, Marker> get markers => _markers;
-  Coordinates? get coordinates => _coordinates;
-  TextEditingController get searchBarController => _searchBarController;
-  bool? get noResults => _noResults;
-  GoogleMapController? get mapController => _mapController;
-
   /// SIMPLE SETTERS
   set coordinates(Coordinates? value) {
     _coordinates = value;
     notifyListeners();
   }
-
   set searchBarController(TextEditingController value) {
     _searchBarController = value;
     notifyListeners();
   }
-
   set mapController(GoogleMapController? value) {
     _mapController = value;
     notifyListeners();
   }
+  
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
+  bool? get noResults => _noResults;
+  List<MapSearchModel> get mapSearchModels => _mapSearchModels;
+  List<String> get searchHistory => _searchHistory;
+  Coordinates? get coordinates => _coordinates;
+  TextEditingController get searchBarController => _searchBarController;
+  Map<MarkerId, Marker> get markers => _markers;
+  GoogleMapController? get mapController => _mapController;
 }

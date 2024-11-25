@@ -38,6 +38,7 @@ class MessagesDataProvider extends ChangeNotifier {
   List<MessageElement?>? _messages;
   UserDataProvider? _userDataProvider;
 
+  /// SERVICES
   late MessageService _messageService;
 
   //Fetch messages
@@ -92,7 +93,7 @@ class MessagesDataProvider extends ChangeNotifier {
   Future<bool> retrieveMoreTopicMessages() async {
     _isLoading = true; _error = null;
     notifyListeners();
-    int returnedTimestamp;
+    var returnedTimestamp;
 
     if (await _messageService.fetchTopicData(
         _previousTimestamp, _userDataProvider!.subscribedTopics!)) {
@@ -116,8 +117,7 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   void makeOrderedMessagesList() {
-    Map<String?, MessageElement?> uniqueMessages =
-        Map<String, MessageElement>();
+    Map<String?, MessageElement?> uniqueMessages = Map<String, MessageElement>();
     uniqueMessages = Map.fromIterable(_messages!,
         key: (message) => message.messageId, value: (message) => message);
     _messages!.clear();
@@ -127,13 +127,11 @@ class MessagesDataProvider extends ChangeNotifier {
 
   updateMessages(List<MessageElement> newMessages) {
     _messages!.addAll(newMessages);
-    if (_messages!.length == 0) {
-      _statusText = NotificationsConstants.statusNoMessages;
-    } else {
-      _statusText = NotificationsConstants.statusNone;
-    }
+    _statusText = _messages!.isEmpty ? NotificationsConstants.statusNoMessages
+        : NotificationsConstants.statusNone;
   }
 
+  /// SIMPLE SETTERS
   /// This setter is only used in provider to supply and updated UserDataProvider object
   set userDataProvider(UserDataProvider? value) => _userDataProvider = value;
 
@@ -141,8 +139,8 @@ class MessagesDataProvider extends ChangeNotifier {
   get isLoading => _isLoading;
   get error => _error;
   get lastUpdated => _lastUpdated;
-  String? get statusText => _statusText;
-  bool? get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
+  get statusText => _statusText;
+  get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
   UserDataProvider? get userDataProvider => _userDataProvider;
   List<MessageElement?>? get messages => _messages ?? [];
 }

@@ -61,8 +61,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Update the [UserProfileModel] stored in state
   /// overwrite the [UserProfileModel] in persistent storage with the model passed in
   Future updateUserProfileModel(UserProfileModel? model) async {
-    _userProfileModel = model;
-    var box;
+    _userProfileModel = model; var box;
     try {
       box = Hive.box<UserProfileModel?>('UserProfileModel');
     } catch (e) {
@@ -84,9 +83,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Load [AuthenticationModel] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadSavedAuthenticationModel() async {
-    var authBox =
-        await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
-
+    var authBox = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
     AuthenticationModel? temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already
     if (authBox.get('AuthenticationModel') == null) {
@@ -102,10 +99,8 @@ class UserDataProvider extends ChangeNotifier {
   /// Will create persistent storage if no data is found
   Future _loadSavedUserProfile() async {
     var userBox = await Hive.openBox<UserProfileModel?>('UserProfileModel');
-
     // Create new user from temp profile
-    UserProfileModel? tempUserProfile =
-        await _createNewUser(UserProfileModel.fromJson({}));
+    UserProfileModel? tempUserProfile = await _createNewUser(UserProfileModel.fromJson({}));
     if (userBox.get('UserProfileModel') == null) {
       await userBox.put('UserProfileModel', tempUserProfile);
     }
@@ -121,9 +116,7 @@ class UserDataProvider extends ChangeNotifier {
   }
 
   /// Get encrypted password that has been saved to device
-  Future<String?> _getEncryptedPasswordFromDevice() {
-    return storage.read(key: 'encrypted_password');
-  }
+  Future<String?> _getEncryptedPasswordFromDevice() => storage.read(key: 'encrypted_password');
 
   /// Save username to device
   void _saveUsernameToDevice(String username) {
@@ -131,9 +124,7 @@ class UserDataProvider extends ChangeNotifier {
   }
 
   /// Get username from device
-  Future<String?> getUsernameFromDevice() {
-    return storage.read(key: 'username');
-  }
+  Future<String?> getUsernameFromDevice() => storage.read(key: 'username');
 
   /// Delete username from device
   void _deleteUsernameFromDevice() {
@@ -147,12 +138,11 @@ class UserDataProvider extends ChangeNotifier {
 
   /// Encrypt given username and password and store on device
   void _encryptAndSaveCredentials(String username, String password) {
-    final String pkString = dotenv.get('USER_CREDENTIALS_PUBLIC_KEY');
+    final pkString = dotenv.get('USER_CREDENTIALS_PUBLIC_KEY');
     final rsaParser = RSAKeyParser();
     final pc.RSAPublicKey publicKey = rsaParser.parse(pkString) as RSAPublicKey;
     var cipher = OAEPEncoding(pc.AsymmetricBlockCipher('RSA'));
-    pc.AsymmetricKeyParameter<pc.RSAPublicKey> keyParametersPublic =
-        new pc.PublicKeyParameter(publicKey);
+    pc.AsymmetricKeyParameter<pc.RSAPublicKey> keyParametersPublic = new pc.PublicKeyParameter(publicKey);
     cipher.init(true, keyParametersPublic);
     Uint8List output = cipher.process(utf8.encode(password));
     var base64EncodedText = base64.encode(output);
@@ -282,7 +272,7 @@ class UserDataProvider extends ChangeNotifier {
       if (await _userProfileService.downloadUserProfile(headers)) {
         /// if the user profile has no ucsd affiliation then we know the user is new
         /// so create a new profile and upload to DB using [postUserProfile]
-        UserProfileModel newModel = _userProfileService.userProfileModel!;
+        var newModel = _userProfileService.userProfileModel!;
         if (newModel.ucsdaffiliation == null) {
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
@@ -350,19 +340,16 @@ class UserDataProvider extends ChangeNotifier {
 
       if ((profile.ucsdaffiliation ?? "").contains(studentPattern)) {
         profile
-          ..classifications =
-              Classifications.fromJson({'student': true, 'staff': false})
+          ..classifications = Classifications.fromJson({'student': true, 'staff': false})
           ..subscribedTopics!
               .addAll(_pushNotificationDataProvider.studentTopics());
       } else if ((profile.ucsdaffiliation ?? "").contains(staffPattern)) {
         profile
-          ..classifications =
-              Classifications.fromJson({'staff': true, 'student': false})
+          ..classifications = Classifications.fromJson({'staff': true, 'student': false})
           ..subscribedTopics!
               .addAll(_pushNotificationDataProvider.staffTopics());
       } else {
-        profile.classifications =
-            Classifications.fromJson({'student': false, 'staff': false});
+        profile.classifications = Classifications.fromJson({'student': false, 'staff': false});
       }
     } catch (e) {
       print(e.toString());
@@ -393,8 +380,7 @@ class UserDataProvider extends ChangeNotifier {
         }
       }
       if (await _userProfileService.uploadUserProfile(headers, tempJson)) {
-        _error = null;
-        _isLoading = false;
+        _error = null; _isLoading = false;
       } else {
         _error = _userProfileService.error;
       }
@@ -405,19 +391,16 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set pushNotificationDataProvider(PushNotificationDataProvider value) {
-    _pushNotificationDataProvider = value;
-  }
-
   /// SIMPLE SETTERS
   set cardsDataProvider(CardsDataProvider? value) => _cardsDataProvider = value;
+  set pushNotificationDataProvider(PushNotificationDataProvider value) => _pushNotificationDataProvider = value;
 
   /// SIMPLE GETTERS
   get error => _error;
   get isLoading => _isLoading;
   get lastUpdated => _lastUpdated;
-  bool get isInSilentLogin => _isInSilentLogin;
-  bool get isLoggedIn => _authenticationModel!.isLoggedIn(_lastUpdated);
+  get isInSilentLogin => _isInSilentLogin;
+  get isLoggedIn => _authenticationModel!.isLoggedIn(_lastUpdated);
   /// GETTERS FOR MODELS
   UserProfileModel? get userProfileModel => _userProfileModel;
   AuthenticationModel? get authenticationModel => _authenticationModel;

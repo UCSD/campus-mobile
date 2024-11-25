@@ -13,21 +13,21 @@ import 'package:path_provider/path_provider.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
   /// STATES
-  bool? _onSimulator;
-  bool? _isLoading;
-  bool? isUCSDWiFi = false;
   String? _error;
+  bool? _isLoading;
+  bool? _onSimulator;
+  bool? isUCSDWiFi = false;
+  var _speedTestDone = false;
   double? _speedDownload;
   double? _speedUpload;
+  var _percentDownloaded = 0.0;
+  var _percentUploaded = 0.0;
+  var _secondsElapsedDownload = 0;
+  var _secondsElapsedUpload = 0;
   CancelToken? _cancelTokenDownload;
   CancelToken? _cancelTokenUpload;
   Map? wiFiLog;
   Map<String, String>? offloadDataHeader;
-  var _percentDownloaded = 0.0;
-  var _percentUploaded = 0.0;
-  var _speedTestDone = false;
-  var _secondsElapsedDownload = 0;
-  var _secondsElapsedUpload = 0;
   late Coordinates _coordinates;
   final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
   final Map<String, String> headers = {
@@ -35,10 +35,10 @@ class SpeedTestProvider extends ChangeNotifier {
   };
 
   /// SERVICES
-  NetworkHelper _networkHelper = new NetworkHelper();
   late SpeedTestService _speedTestService;
-  var dio = new Dio();
-  var _timer = new Stopwatch();
+  final dio = new Dio();
+  final _timer = new Stopwatch();
+  final _networkHelper = new NetworkHelper();
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
@@ -91,8 +91,8 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   Future uploadSpeedTest() async {
-    String path = (await getApplicationDocumentsDirectory()).path;
-    File temp = File(path + "/temp.html");
+    var path = (await getApplicationDocumentsDirectory()).path;
+    var temp = File(path + "/temp.html");
 
     // if not on UCSD wifi OR the file above does not exist,
     // we should not upload the speed test results
@@ -104,7 +104,7 @@ class SpeedTestProvider extends ChangeNotifier {
     }
 
     var tempDownload = temp.readAsBytesSync();
-    FormData formData = new FormData.fromMap(
+    var formData = new FormData.fromMap(
         {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
     notifyListeners();
     try {
@@ -123,9 +123,8 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   Future downloadSpeedTest() async {
-    String path = (await getApplicationDocumentsDirectory()).path;
-    //create file
-    File tempDownload = File(path + "/temp.html");
+    var path = (await getApplicationDocumentsDirectory()).path;
+    var tempDownload = File(path + "/temp.html");
     notifyListeners();
     try {
       _cancelTokenDownload = new CancelToken();
@@ -143,7 +142,7 @@ class SpeedTestProvider extends ChangeNotifier {
 
   _progressCallbackDownload(int bytesDownloaded, int totalBytes) {
     _secondsElapsedDownload = _timer.elapsed.inSeconds;
-    double speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
+    var speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
     _speedDownload = _convertToMbps(speedInBytes);
     _percentDownloaded = bytesDownloaded / totalBytes;
     notifyListeners();
@@ -151,13 +150,11 @@ class SpeedTestProvider extends ChangeNotifier {
 
   _progressCallbackUpload(int bytesDownloaded, int totalBytes) {
     _secondsElapsedUpload = _timer.elapsed.inSeconds;
-    double speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
+    var speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
     _speedUpload = _convertToMbps(speedInBytes);
     _percentUploaded = bytesDownloaded / totalBytes;
     notifyListeners();
   }
-
-  double _convertToMbps(double speed) => (speed / 125000);
 
   void resetSpeedTest() {
     _speedTestDone = false;
@@ -192,7 +189,7 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   Future<bool> sendNetworkDiagnostics(int? lastSpeed) async {
-    bool sentSuccessfully = false;
+    var sentSuccessfully = false;
 
     wiFiLog = {
       "Platform": _speedTestModel!.platform,
@@ -343,18 +340,19 @@ class SpeedTestProvider extends ChangeNotifier {
   /// This setter is only used in provider to supply an updated Coordinates object
   set coordinates(Coordinates value) => _coordinates = value;
   set speed(double? lastSpeed) => _speedDownload = lastSpeed;
+  double _convertToMbps(double speed) => (speed / 125000);
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;
-  bool? get isUCSDNetwork => isUCSDWiFi;
-  bool? get onSimulator => _onSimulator;
-  bool get speedTestDone => _speedTestDone;
-  double? get speed => _speedDownload;
-  double? get uploadSpeed => _speedUpload;
-  double get percentDownloaded => _percentDownloaded;
-  double get percentUploaded => _percentUploaded;
+  get isUCSDNetwork => isUCSDWiFi;
+  get onSimulator => _onSimulator;
+  get speedTestDone => _speedTestDone;
   int get timeElapsedDownload => _secondsElapsedDownload;
   int get timeElapsedUpload => _secondsElapsedUpload;
+  double get percentDownloaded => _percentDownloaded;
+  double get percentUploaded => _percentUploaded;
+  double? get speed => _speedDownload;
+  double? get uploadSpeed => _speedUpload;
   Stopwatch get timer => _timer;
 }

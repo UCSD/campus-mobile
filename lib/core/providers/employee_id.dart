@@ -55,12 +55,12 @@ class EmployeeIdDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// SIMPLE SETTERS
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;
   get lastUpdated => _lastUpdated;
   EmployeeIdModel? get employeeIdModel => _employeeIdModel;
-
-  /// SIMPLE SETTERS
-  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 }

@@ -22,13 +22,11 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   /// DEFAULT STATES
+  bool? _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  var _isLoading = false;
   var _noInternet = false;
   Map<String, bool> _cardStates = {};
-  Map<String, CardsModel?> _webCards = {};
-
 
   // Default card order for native cards
   List<String> _cardOrder = [
@@ -63,15 +61,18 @@ class CardsDataProvider extends ChangeNotifier {
     'employee_id',
   ];
 
+  /// MODELS
+  Map<String, CardsModel?> _webCards = {};
   Map<String, CardsModel>? _availableCards;
   late Box _cardOrderBox;
   late Box _cardStateBox;
 
+  /// PROVIDERS
   UserDataProvider? _userDataProvider;
 
-  /// Services
-  final CardsService _cardsService = CardsService();
-  final Connectivity _connectivity = Connectivity();
+  /// SERVICES
+  final _cardsService = CardsService();
+  final _connectivity = Connectivity();
 
   void updateAvailableCards(String? ucsdAffiliation) async {
     _isLoading = true; _error = null;
@@ -314,6 +315,7 @@ class CardsDataProvider extends ChangeNotifier {
     updateCardStates(_cardStates.keys.where((card) => _cardStates[card]!).toList());
   }
 
+  /// SIMPLE SETTERS
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
   ///SIMPLE GETTERS

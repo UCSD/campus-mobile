@@ -18,16 +18,16 @@ class FreeFoodDataProvider extends ChangeNotifier {
     initializeValues();
   }
 
-  /// VALUES
-  late HashMap<String, int?> _messageToCount;
-  late HashMap<String, int?> _messageToMaxCount;
-  List<String>? _registeredEvents;
-
   /// STATES
   bool? _isLoading;
   String? _curId;
   DateTime? _lastUpdated;
   String? _error;
+
+  /// VALUES
+  List<String>? _registeredEvents;
+  late HashMap<String, int?> _messageToCount;
+  late HashMap<String, int?> _messageToMaxCount;
 
   /// MODELS
   FreeFoodModel? _freeFoodModel;
@@ -52,8 +52,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     // initializeValues();
     List<MessageElement?> messages = _messageDataProvider.messages!;
     messages.forEach((m) async {
-      if (m!.audience != null &&
-          m.audience!.topics != null &&
+      if (m!.audience != null && m.audience!.topics != null &&
           (m.audience!.topics!.contains("freeFood") || m.audience!.topics!.contains("testFreeFood"))) {
         fetchCount(m.messageId!);
         fetchMaxCount(m.messageId!);
@@ -159,8 +158,6 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int? count(String? messageId) => _messageToCount[messageId!];
-
   bool isOverCount(String? messageId) {
     if (_messageToCount.containsKey(messageId) &&
         _messageToMaxCount.containsKey(messageId)) {
@@ -169,15 +166,15 @@ class FreeFoodDataProvider extends ChangeNotifier {
     return false;
   }
 
-  bool isFreeFood(String? messageId) => _messageToCount.containsKey(messageId);
-
   /// SIMPLE SETTERS
   set messageDataProvider(MessagesDataProvider value) => _messageDataProvider = value;
+  int? count(String? messageId) => _messageToCount[messageId!];
+  bool isFreeFood(String? messageId) => _messageToCount.containsKey(messageId);
+  bool isLoading(String? id) => id == _curId;
 
   ///SIMPLE GETTERS
   get error => _error;
   get lastUpdated => _lastUpdated;
   FreeFoodModel? get freeFoodModel => _freeFoodModel;
   List<String>? get registeredEvents => _registeredEvents;
-  bool isLoading(String? id) => id == _curId;
 }

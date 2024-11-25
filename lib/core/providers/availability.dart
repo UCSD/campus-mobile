@@ -74,9 +74,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   }
 
   List<AvailabilityModel?> makeOrderedList(List<String?>? order) {
-    if (order == null) {
-      return _availabilityModels!.values.toList();
-    }
+    if (order == null) return _availabilityModels!.values.toList();
 
     /// create an empty list that will be returned
     List<AvailabilityModel?> orderedListOfLots = [];
@@ -104,13 +102,8 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
   /// add or remove location availability display from card based on user selection
   void toggleLocation(String? location) {
-    if (_locationViewState[location] ?? true) {
-      _locationViewState[location] = false;
-    } else {
-      _locationViewState[location] = true;
-    }
-    _userDataProvider
-        .updateUserProfileModel(_userDataProvider.userProfileModel);
+    _locationViewState[location] = !(_locationViewState[location] ?? true);
+    _userDataProvider.updateUserProfileModel(_userDataProvider.userProfileModel);
     notifyListeners();
   }
 
@@ -123,15 +116,6 @@ class AvailabilityDataProvider extends ChangeNotifier {
     userProfile.selectedOccuspaceLocations = locations;
     _userDataProvider.postUserProfile(userProfile);
   }
-
-  /// This setter is only used in provider to supply and updated UserDataProvider object
-  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-
-  /// SIMPLE GETTERS
-  get isLoading => _isLoading;
-  get error => _error;
-  get lastUpdated => _lastUpdated;
-  Map<String?, bool> get locationViewState => _locationViewState;
 
   List<AvailabilityModel?> get availabilityModels {
     if (_availabilityModels != null) {
@@ -154,4 +138,14 @@ class AvailabilityDataProvider extends ChangeNotifier {
     }
     return locationsToReturn;
   }
+
+  /// SIMPLE SETTERS
+  /// This setter is only used in provider to supply and updated UserDataProvider object
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
+  Map<String?, bool> get locationViewState => _locationViewState;
 }

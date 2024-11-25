@@ -17,7 +17,7 @@ class ScannerMessageDataProvider extends ChangeNotifier {
   bool? _isLoading;
   String? _error;
 
-  /// Additional Provider
+  /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
   /// SERVICES

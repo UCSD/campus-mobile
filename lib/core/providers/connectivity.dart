@@ -4,9 +4,10 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:get/get.dart';
 
 class InternetConnectivityProvider extends ChangeNotifier {
+  /// STATES
   var _noInternet = false;
-  bool get noInternet => _noInternet;
-  Connectivity _connectivity = Connectivity();
+  /// SERVICES
+  final _connectivity = Connectivity();
 
   Future<void> initConnectivity() async {
     try {
@@ -70,4 +71,7 @@ class InternetConnectivityProvider extends ChangeNotifier {
               )
             });
   }
+
+  /// SIMPLE GETTERS
+  get noInternet => _noInternet;
 }

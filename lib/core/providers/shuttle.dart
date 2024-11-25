@@ -25,7 +25,6 @@ class ShuttleDataProvider extends ChangeNotifier {
   double? stopLong;
   double closestDistance = 10000000;
   Coordinates? _userCoords;
-  late LocationDataProvider _locationDataProvider;
   Map<int?, ShuttleStopModel>? fetchedStops;
   Map<int?, List<ArrivingShuttle>>? arrivalsToRender;
 
@@ -34,6 +33,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   /// PROVIDERS
   UserDataProvider? userDataProvider;
+  late LocationDataProvider _locationDataProvider;
 
   /// MODELS
   ShuttleStopModel? _closestStop;
@@ -47,8 +47,8 @@ class ShuttleDataProvider extends ChangeNotifier {
     _isLoading = true; _error = null;
     notifyListeners();
 
-    // create new map of shuttles/stops to display
-    Map<int?, ShuttleStopModel> newMapOfStops = Map<int?, ShuttleStopModel>();
+    /// create new map of shuttles/stops to display
+    var newMapOfStops = Map<int?, ShuttleStopModel>();
     if (await _shuttleService.fetchData()) {
       _shuttleService.data.sort((a, b) => (a.name)!.compareTo(b.name!));
 
@@ -58,9 +58,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       fetchedStops = newMapOfStops;
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      if (userDataProvider != null && !reloading) {
-        reorderStops(userDataProvider!.userProfileModel!.selectedStops);
-      }
+      if (userDataProvider != null && !reloading) reorderStops(userDataProvider!.userProfileModel!.selectedStops);
 
       // get closest stop to current user
       print('Start closest stop calc');
@@ -155,8 +153,6 @@ class ShuttleDataProvider extends ChangeNotifier {
     return d;
   }
 
-  double? deg2rad(deg) => deg * (Math.pi / 180);
-
   Future<void> getArrivalInformation() async {
     if (_closestStop != null) {
       arrivalsToRender![_closestStop!.id] =
@@ -176,18 +172,23 @@ class ShuttleDataProvider extends ChangeNotifier {
     return output;
   }
 
+  /// SIMPLE SETTERS
+  double? deg2rad(deg) => deg * (Math.pi / 180);
+  set userCoords(Coordinates value) {
+    print("Coordinates set to: $value in shuttle provider");
+    _userCoords = value;
+  }
+
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;
   ShuttleStopModel? get closestStop => _closestStop;
   List<ShuttleStopModel> get stopsToRender {
-    List<ShuttleStopModel> stopsToRenderList = <ShuttleStopModel>[];
+    var stopsToRenderList = <ShuttleStopModel>[];
     if (fetchedStops != null) {
       if (userDataProvider!.userProfileModel != null) {
-        for (int i = 0;
-            i < userDataProvider!.userProfileModel!.selectedStops!.length;
-            i++) {
-          int stopID = userDataProvider!.userProfileModel!.selectedStops![i]!;
+        for (var i = 0; i < userDataProvider!.userProfileModel!.selectedStops!.length; i++) {
+          var stopID = userDataProvider!.userProfileModel!.selectedStops![i]!;
           if (fetchedStops![stopID] != null) {
             stopsToRenderList.add(fetchedStops![stopID]!);
           }
@@ -196,17 +197,11 @@ class ShuttleDataProvider extends ChangeNotifier {
     }
     return stopsToRenderList;
   }
-
   Map<int, ShuttleStopModel> get stopsNotSelected {
     var output = new Map<int, ShuttleStopModel>.from(fetchedStops!);
     for (ShuttleStopModel? stop in stopsToRender) {
       output.remove(stop!.id);
     }
     return output;
-  }
-
-  set userCoords(Coordinates value) {
-    print("Coordinates set to: $value in shuttle provider");
-    _userCoords = value;
   }
 }

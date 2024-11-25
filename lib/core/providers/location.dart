@@ -6,16 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationDataProvider extends ChangeNotifier {
-  var _permission = false;
+  /// STATES
   String? error;
+  var _permission = false;
   late LocationPermission locationPermission;
-  final LocationSettings locationSettings = LocationSettings(
+
+  /// SERVICES
+  final locationSettings = LocationSettings(
     accuracy: LocationAccuracy.high,
     distanceFilter: 100,
   );
-
   var _locationController = StreamController<Coordinates>.broadcast();
-  Stream<Coordinates> get locationStream => _locationController.stream;
 
   LocationDataProvider() {
     locationStream;
@@ -24,7 +25,7 @@ class LocationDataProvider extends ChangeNotifier {
 
   _init() async {
     /// check to see if gps service is enabled on device
-    bool serviceStatus = await Geolocator.isLocationServiceEnabled();
+    var serviceStatus = await Geolocator.isLocationServiceEnabled();
     if (!serviceStatus) {
       /// check to see if permission has been granted to the app
       locationPermission = await Geolocator.requestPermission();
@@ -39,9 +40,7 @@ class LocationDataProvider extends ChangeNotifier {
     if (_permission) {
       Geolocator.getPositionStream(locationSettings: locationSettings).listen(
               (Position? position) {
-                if (position == null) {
-                  error = ErrorConstants.locationFailed;
-                }
+                if (position == null) error = ErrorConstants.locationFailed;
                 _locationController.add(Coordinates(
                   lat: position?.latitude,
                   lon: position?.longitude
@@ -49,4 +48,7 @@ class LocationDataProvider extends ChangeNotifier {
           });
     }
   }
+
+  /// SIMPLE GETTERS
+  Stream<Coordinates> get locationStream => _locationController.stream;
 }

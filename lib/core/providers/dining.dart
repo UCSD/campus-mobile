@@ -108,14 +108,6 @@ class DiningDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  /// This setter is only used in provider to supply an updated Coordinates object
-  set coordinates(Coordinates value) => _coordinates = value;
-
-  /// SIMPLE GETTERS
-  get isLoading => _isLoading;
-  get error => _error;
-  get lastUpdated => _lastUpdated;
-
   /// Returns menu data for given id
   /// Fetches menu if not already downloaded
   DiningMenuItemsModel? getMenuData(String? id) {
@@ -129,17 +121,14 @@ class DiningDataProvider extends ChangeNotifier {
   List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
     List<DiningMenuItem>? menuItems;
     if (_diningMenuItemModels[id!] == null) return null;
-
     menuItems = _diningMenuItemModels[id]!.menuItems;
     List<DiningMenuItem> filteredMenuItems = [];
     for (var menuItem in menuItems!) {
-      int matched = 0;
-      for (int i = 0; i < filters.length; i++) {
+      var matched = 0;
+      for (var i = 0; i < filters.length; i++) {
         if (menuItem.tags!.contains(filters[i])) matched++;
       }
-      if (matched == filters.length) {
-        filteredMenuItems.add(menuItem);
-      }
+      if (matched == filters.length) filteredMenuItems.add(menuItem);
     }
     return filteredMenuItems;
   }
@@ -150,4 +139,13 @@ class DiningDataProvider extends ChangeNotifier {
     if (_coordinates != null) return reorderLocations();
     return _diningModels.values.toList();
   }
+
+  /// SIMPLE SETTERS
+  /// This setter is only used in provider to supply an updated Coordinates object
+  set coordinates(Coordinates value) => _coordinates = value;
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
 }

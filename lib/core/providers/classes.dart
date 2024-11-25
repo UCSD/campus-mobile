@@ -232,7 +232,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   DateTime _getStartTime(String time) {
-    List<String> times = time.split("-");
+    var times = time.split("-");
     final format = DateFormat.Hm();
     return format.parse(times[0]);
   }
@@ -254,7 +254,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       nextDayWithClass = DateFormat('EEEE').format(DateTime.now()).toString();
 
       /// if no classes are scheduled for today then find the next day with classes
-      int daysToAdd = 1;
+      var daysToAdd = 1;
 
       while (_enrolledClasses![today]!.isEmpty && daysToAdd <= 7) {
         today = DateFormat('EEEE')
@@ -287,9 +287,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   get isLoading => _isLoading;
   get error => _error;
   get lastUpdated => _lastUpdated;
+  get selectedCourse => _selectedCourse;
   Map<String, List<SectionData>>? get finals => _finals;
   Map<String, List<SectionData>>? get midterms => _midterms;
   Map<String, List<SectionData>>? get enrolledClasses => _enrolledClasses;
   ClassScheduleModel? get classScheduleModel => _classScheduleModel;
-  int? get selectedCourse => _selectedCourse;
 }
