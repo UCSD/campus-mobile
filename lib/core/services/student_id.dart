@@ -10,10 +10,8 @@ class StudentIdService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final String myStudentProfileApiUrl =
-      dotenv.get('MY_STUDENT_PROFILE_API_ENDPOINT');
-  final String myStudentContactApiUrl =
-      dotenv.get('MY_STUDENT_CONTACT_API_ENDPOINT');
+  final myStudentProfileApiUrl = dotenv.get('MY_STUDENT_PROFILE_API_ENDPOINT');
+  final myStudentContactApiUrl = dotenv.get('MY_STUDENT_CONTACT_API_ENDPOINT');
 
   /// MODELS
   StudentIdNameModel _studentIdNameModel = StudentIdNameModel();

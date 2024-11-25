@@ -14,7 +14,7 @@ class WeatherService {
 
   /// SERVICES
   final  _networkHelper = NetworkHelper();
-  final String endpoint = dotenv.get('WEATHER_ENDPOINT');
+  final endpoint = dotenv.get('WEATHER_ENDPOINT');
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;

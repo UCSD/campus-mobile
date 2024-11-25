@@ -13,7 +13,7 @@ class UserProfileService {
 
   /// SERVICES
   final _networkHelper = NetworkHelper();
-  final String _endpoint = dotenv.get('USER_ENDPOINT');
+  final _endpoint = dotenv.get('USER_ENDPOINT');
 
   UserProfileService();
 

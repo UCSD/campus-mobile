@@ -3,14 +3,20 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
 
 class FreeFoodService {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  FreeFoodModel? _data;
-  final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
+
+  /// MODELS
+  FreeFoodModel? _data;
+
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
+
   FreeFoodService();
 
   Future<bool> fetchData(String id) async {
@@ -99,9 +105,7 @@ class FreeFoodService {
     }
   }
 
-  Future<bool> getNewToken() async {
-    return _networkHelper.getNewToken(headers);
-  }
+  Future<bool> getNewToken() async => _networkHelper.getNewToken(headers);
 
   /// SIMPLE GETTERS
   get error => _error;
