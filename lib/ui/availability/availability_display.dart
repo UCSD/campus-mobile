@@ -117,8 +117,7 @@ class AvailabilityDisplay extends StatelessWidget {
         ),
       );
     }
-    locations =
-        ListTile.divideTiles(tiles: locations, context: context).toList();
+    locations = ListTile.divideTiles(tiles: locations, context: context).toList();
 
     return Flexible(
       child: Scrollbar(

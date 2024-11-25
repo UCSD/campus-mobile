@@ -54,14 +54,13 @@ class _NotificationsListViewState extends State<NotificationsListView> {
 
   Widget buildListView(BuildContext context) {
     Widget Function(BuildContext context, int index)? itemBuilder;
-    int itemCount = 0;
+    var itemCount = 0;
     if (Provider.of<MessagesDataProvider>(context).messages!.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
         if (Provider.of<MessagesDataProvider>(context).isLoading!) {
           // empty notifications view until they load in
         } else {
-          itemBuilder =
-              (BuildContext context, int index) => _buildNoMessagesText();
+          itemBuilder = (BuildContext context, int index) => _buildNoMessagesText();
           itemCount = 1;
         }
       } else {

@@ -114,7 +114,7 @@ class EventTile extends StatelessWidget {
       // Mark any special types of events
       var sameDay = (startMonthDayYear == endMonthDayYear);
       var unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
-      Widget date; Widget time;
+      Widget date, time;
       if (sameDay) {
         date = Text(
           startMonthDayYear,
@@ -145,10 +145,8 @@ class EventTile extends StatelessWidget {
             ); // Ex. September 11 - 26, 2021
           } else {
             // if different month in the same year
-            var startMonthDay =
-                startMonthDayYear.substring(0, startMonthDayYear.indexOf(','));
-            var endMonthDay =
-                endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
+            var startMonthDay = startMonthDayYear.substring(0, startMonthDayYear.indexOf(','));
+            var endMonthDay = endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
             date = Text(
               startMonthDay + ' - ' + endMonthDay + ', ' + startYear,
               style: TextStyle(fontSize: 12),

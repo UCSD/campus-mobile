@@ -22,11 +22,11 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
 
   late FreeFoodDataProvider _freeFoodDataProvider;
   var messageId;
-  bool _isLoading = false;
-  bool _isGoing = false;
-  Color _buttonColor = Colors.white;
-  Color _borderColor = Color(0xFF034161);
-  Color _textColor = Color(0xFF034161);
+  var _isLoading = false;
+  var _isGoing = false;
+  var _buttonColor = Colors.white;
+  var _borderColor = Color(0xFF034161);
+  var _textColor = Color(0xFF034161);
 
   @override
   void didChangeDependencies() {

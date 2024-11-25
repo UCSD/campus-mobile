@@ -147,7 +147,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   String getArrivingShuttles() {
-    String str = "";
+    var str = "";
     arrivingShuttles!.forEach((element) {
       str += "Route: ${element.routeId!} - ${element.routeName!}\n";
     });

@@ -197,7 +197,7 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
 }
 
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
-    String options = model.paymentOptions!.join(', ');
+    var options = model.paymentOptions!.join(', ');
     return RichText(
       text: TextSpan(
         style: TextStyle(
@@ -245,7 +245,6 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
 class HoursOfDay extends StatelessWidget {
   final int? weekday;
   final prefix0.DiningModel? model;
-
   const HoursOfDay({Key? key, this.weekday, this.model}) : super(key: key);
 
   @override

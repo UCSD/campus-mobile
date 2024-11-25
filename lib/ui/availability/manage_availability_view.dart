@@ -62,8 +62,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
           var maxPageIndex = int.parse(match.group(2)!);
           while (curPageIndex <= maxPageIndex) {
             index++;
-            orderedLocationNames.insert(
-                index, baseName + " ($curPageIndex/$maxPageIndex)");
+            orderedLocationNames.insert(index, baseName + " ($curPageIndex/$maxPageIndex)");
             curPageIndex++;
           }
         } else {
@@ -81,11 +80,9 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     final multiPager = RegExp(r' \(\d+/\d+\)$');
     for (AvailabilityModel? model in _availabilityDataProvider.availabilityModels) {
       if (model != null) {
-        String curName = model.name!;
+        var curName = model.name!;
         RegExpMatch? match = multiPager.firstMatch(curName);
-        if (match != null) {
-          curName = curName.replaceRange(match.start, match.end, '');
-        }
+        if (match != null) curName = curName.replaceRange(match.start, match.end, '');
         if (existingKeys.contains(curName)) continue;
         existingKeys.add(curName);
         list.add(ListTile(

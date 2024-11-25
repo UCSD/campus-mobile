@@ -95,8 +95,7 @@ class FinalsCard extends StatelessWidget {
         shrinkWrap: true,
       );
     } catch (e) {
-      FirebaseCrashlytics.instance.recordError(
-          e, StackTrace.fromString(e.toString()),
+      FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
           reason: "Finals Card: Failed to build card content.", fatal: false);
       return Container(
         width: double.infinity,

@@ -15,7 +15,7 @@ class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderState
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
+    /// TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 

@@ -25,8 +25,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
 
-    EmployeeIdModel? employeeModel =
-        Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
+    EmployeeIdModel? employeeModel = Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
     isValidId = employeeModel != null &&
         (employeeModel.barcode != null) &&
         (employeeModel.employeePreferredDisplayName != null &&
@@ -371,8 +370,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
         });
   }
 
-  Column checkForRotation(
-      Column image, BuildContext context, String? cardNumber, bool rotated) {
+  Column checkForRotation(Column image, BuildContext context, String? cardNumber, bool rotated) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return returnBarcodeContainer(cardNumber, rotated, context);
     }
@@ -589,7 +587,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     /// If threshold is passed, shrink text
     if (input.length >= 21) return (base - (0.175 * (input.length - 18)));
 
-    //// The name should be large than subheadings
+    /// The name should be large than subheadings
     if (textField == "name") {
       base = ScalingUtility.horizontalSafeBlock * 5;
       return base;
@@ -645,11 +643,9 @@ class ScalingUtility {
 
     /// Calculate blocks accounting for notches and home bar
     horizontalSafeBlock = (_queryData.size.width -
-            (_queryData.padding.left + _queryData.padding.right)) /
-        100;
+            (_queryData.padding.left + _queryData.padding.right)) / 100;
     verticalSafeBlock = (_queryData.size.height -
-            (_queryData.padding.top + _queryData.padding.bottom)) /
-        100;
+            (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 
@@ -672,10 +668,8 @@ class SizeConfig {
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
-    _safeAreaHorizontal =
-        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
-    _safeAreaVertical =
-        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
+    _safeAreaHorizontal = _mediaQueryData.padding.left + _mediaQueryData.padding.right;
+    _safeAreaVertical = _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }

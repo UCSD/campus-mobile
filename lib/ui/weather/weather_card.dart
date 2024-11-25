@@ -68,7 +68,7 @@ class WeatherCard extends StatelessWidget {
   }
 
   String getDayOfWeek(int epoch) {
-    DateTime dt = new DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+    var dt = new DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
     switch (dt.weekday) {
       case 1:
         return 'MON';

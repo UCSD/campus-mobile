@@ -610,11 +610,9 @@ class ScalingUtility {
 
     /// Calculate blocks accounting for notches and home bar
     horizontalSafeBlock = (_queryData.size.width -
-            (_queryData.padding.left + _queryData.padding.right)) /
-        100;
+            (_queryData.padding.left + _queryData.padding.right)) / 100;
     verticalSafeBlock = (_queryData.size.height -
-            (_queryData.padding.top + _queryData.padding.bottom)) /
-        100;
+            (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 

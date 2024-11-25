@@ -30,7 +30,7 @@ class EventsList extends StatelessWidget {
     /// check to see if we have at least 3 events
     if (size > listOfEvents.length) size = listOfEvents.length;
 
-    for (int i = 0; i < size; i++) {
+    for (var i = 0; i < size; i++) {
       final EventModel item = listOfEvents[i];
       final tile = EventTile(data: item);
       final spacer = SizedBox(width: 5);

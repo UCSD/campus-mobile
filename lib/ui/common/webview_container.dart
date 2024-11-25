@@ -43,7 +43,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
   bool? active;
   Function? hide;
   String? webCardUrl;
-  double _contentHeight = cardContentMinHeight;
+  var _contentHeight = cardContentMinHeight;
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
