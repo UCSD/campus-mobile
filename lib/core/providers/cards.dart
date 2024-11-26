@@ -22,7 +22,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   /// DEFAULT STATES
-  bool? _isLoading = false;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
   var _noInternet = false;
