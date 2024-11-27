@@ -16,12 +16,12 @@ class FreeFoodModel {
 
   factory FreeFoodModel.fromJson(Map<String, dynamic> json) => FreeFoodModel(
         statusCode: json["statusCode"],
-        body: Body.fromJson(json["body"]),
+        body: json["body"] != null ? Body.fromJson(json["body"]) : null,
       );
 
   Map<String, dynamic> toJson() => {
         "statusCode": statusCode,
-        "body": body!.toJson(),
+        "body": body?.toJson(),
       };
 }
 
