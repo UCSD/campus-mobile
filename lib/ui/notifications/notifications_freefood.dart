@@ -16,12 +16,11 @@ class FreeFoodNotification extends StatefulWidget {
 }
 
 class _CheckBoxButtonState extends State<FreeFoodNotification> {
-  _CheckBoxButtonState(messageId) {
-    this.messageId = messageId;
-  }
+  _CheckBoxButtonState(messageId)
+    : this.messageId = messageId;
 
   late FreeFoodDataProvider _freeFoodDataProvider;
-  String? messageId;
+  String messageId;
 
   bool _isLoading = false;
   bool _isGoing = false;
@@ -48,11 +47,11 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
 
   @override
   Widget build(BuildContext context) {
-    var isOverCount = _freeFoodDataProvider.isOverCount(messageId!);
+    var isOverCount = _freeFoodDataProvider.isOverCount(messageId);
 
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
 
-    var currCount = _freeFoodDataProvider.count(messageId!);
+    var currCount = _freeFoodDataProvider.count(messageId);
     var countText = currCount == 1
         ? '$currCount student is going'
         : '$currCount students are going';
@@ -157,12 +156,12 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
         _buttonColor = Colors.white;
         _borderColor = Color(0xFF034161);
         _textColor = Color(0xFF034161);
-        _freeFoodDataProvider.decrementCount(messageId!);
+        _freeFoodDataProvider.decrementCount(messageId);
       } else {
         _buttonColor = Colors.green;
         _borderColor = Colors.green;
         _textColor = Colors.white;
-        _freeFoodDataProvider.incrementCount(messageId!);
+        _freeFoodDataProvider.incrementCount(messageId);
       }
       _isGoing = !_isGoing;
     });

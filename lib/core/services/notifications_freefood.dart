@@ -6,7 +6,7 @@ class FreeFoodService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  FreeFoodModel? _data;
+  late FreeFoodModel _data;
   final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
@@ -105,7 +105,7 @@ class FreeFoodService {
 
   // getters
   String? get error => _error;
-  FreeFoodModel? get freeFoodModel => _data;
+  FreeFoodModel get freeFoodModel => _data;
   bool get isLoading => _isLoading;
   DateTime? get lastUpdated => _lastUpdated;
 }
