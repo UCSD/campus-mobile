@@ -107,10 +107,6 @@ class AvailabilityDataProvider extends ChangeNotifier {
     userDataProvider.postUserProfile(userProfile);
   }
 
-  /// SIMPLE SETTERS
-  /// This setter is only used in provider to supply and updated UserDataProvider object
-  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;

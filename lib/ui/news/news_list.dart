@@ -20,7 +20,7 @@ class NewsList extends StatelessWidget {
     }
     return buildNewsList(
       context,
-      Provider.of<NewsDataProvider>(context).newsModels,
+      Provider.of<NewsDataProvider>(context).newsModels!,
     );
   }
 
@@ -31,10 +31,10 @@ class NewsList extends StatelessWidget {
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
-    var size = listSize ?? listOfNews!.length;
+    var size = listSize ?? listOfNews.length;
 
     for (var i = 0; i < size; i++) {
-      final Item item = listOfNews![i];
+      final Item item = listOfNews[i];
       final tile = buildNewsTile(item, context);
       newsTiles.add(tile);
     }

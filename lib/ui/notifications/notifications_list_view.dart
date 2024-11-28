@@ -74,7 +74,7 @@ class _NotificationsListViewState extends State<NotificationsListView>
     }
     if (itemCount == 0) {
       itemBuilder = _buildMessage;
-      itemCount = Provider.of<MessagesDataProvider>(context).messages.length;
+      itemCount = Provider.of<MessagesDataProvider>(context).messages!.length;
     }
     return ListView.separated(
       physics: AlwaysScrollableScrollPhysics(),
@@ -133,8 +133,7 @@ class _NotificationsListViewState extends State<NotificationsListView>
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
         Provider.of<MessagesDataProvider>(context).messages[index];
-    FreeFoodDataProvider freefoodProvider =
-        Provider.of<FreeFoodDataProvider>(context);
+    FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
 
     String messageType = data.audience.topics?[0] ?? "DM";
       return ListView(

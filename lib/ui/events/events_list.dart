@@ -16,7 +16,7 @@ class EventsList extends StatelessWidget {
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : buildEventsList(
-            Provider.of<EventsDataProvider>(context).eventsModels, context);
+            Provider.of<EventsDataProvider>(context).eventsModels!, context);
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
