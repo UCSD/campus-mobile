@@ -131,8 +131,7 @@ class _NotificationsListViewState extends State<NotificationsListView>
   }
 
   Widget _buildMessage(BuildContext context, int index) {
-    MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages[index];
+    MessageElement data = Provider.of<MessagesDataProvider>(context).messages![index]!;
     FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
 
     String messageType = data.audience.topics?[0] ?? "DM";
