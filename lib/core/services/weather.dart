@@ -10,7 +10,7 @@ class WeatherService {
   String? _error;
 
   /// MODELS
-  WeatherModel _weatherModel = WeatherModel();
+  late WeatherModel _weatherModel;
 
   /// SERVICES
   final  _networkHelper = NetworkHelper();
@@ -19,10 +19,7 @@ class WeatherService {
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
-      /// fetch data
       String _response = await _networkHelper.fetchData(endpoint);
-
-      /// parse data
       _weatherModel = weatherModelFromJson(_response);
       return true;
     } catch (e) {
@@ -37,6 +34,5 @@ class WeatherService {
   get isLoading => _isLoading;
   get error => _error;
   get lastUpdated => _lastUpdated;
-  NetworkHelper get availabilityService => _networkHelper;
   WeatherModel get weatherModel => _weatherModel;
 }

@@ -3,24 +3,16 @@ import 'package:campus_mobile_experimental/core/services/news.dart';
 import 'package:flutter/material.dart';
 
 class NewsDataProvider extends ChangeNotifier {
-  NewsDataProvider() {
-    /// DEFAULT STATES
-    _isLoading = false;
-    /// INITIALIZE SERVICES
-    _newsService = NewsService();
-    _newsModels = NewsModel();
-  }
-
   /// STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
   /// MODELS
-  NewsModel? _newsModels;
+  NewsModel _newsModels = NewsModel();
 
   /// SERVICES
-  late NewsService _newsService;
+  final _newsService = NewsService();
 
   void fetchNews() async {
     _isLoading = true; _error = null;

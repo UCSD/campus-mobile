@@ -28,11 +28,11 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
 
   void _onReorder(int oldIndex, int newIndex) {
     final multiPager = RegExp(r' \((\d+)/(\d+)\)$');
-    var newOrder = _availabilityDataProvider.availabilityModels;
+    List<AvailabilityModel?> newOrder = _availabilityDataProvider.availabilityModels;
     List<AvailabilityModel?> extraPages = [];
     // -----Must remove pages after head of multi pagers and reinsert later to avoid reordering errors-----
     for (AvailabilityModel? item in newOrder) {
-      RegExpMatch? match = multiPager.firstMatch(item!.name!);
+      RegExpMatch? match = multiPager.firstMatch(item!.name);
       if (match != null) {
         if (match.group(1) != "1") {
           extraPages.add(item);
@@ -80,7 +80,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     final multiPager = RegExp(r' \(\d+/\d+\)$');
     for (AvailabilityModel? model in _availabilityDataProvider.availabilityModels) {
       if (model != null) {
-        var curName = model.name!;
+        var curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
         if (match != null) curName = curName.replaceRange(match.start, match.end, '');
         if (existingKeys.contains(curName)) continue;

@@ -32,7 +32,7 @@ List<SingleChildWidget> providers = [
   ...dependentServices,
   ...uiConsumableProviders,
 ];
-LocationDataProvider? locationProvider;
+
 final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 final FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
@@ -75,8 +75,7 @@ List<SingleChildWidget> independentServices = [
   StreamProvider<Coordinates>(
     initialData: Coordinates(),
     create: (_) {
-      locationProvider = LocationDataProvider();
-      return locationProvider!.locationStream;
+      return LocationDataProvider().locationStream;
     },
     lazy: false,
   ),
@@ -147,14 +146,14 @@ List<SingleChildWidget> dependentServices = [
         cardsDataProvider!.userDataProvider = userDataProvider;
         userDataProvider.cardsDataProvider = cardsDataProvider;
         cardsDataProvider
-          ..loadSavedData().then((value) {
+          ..loadSavedData().then((_) {
             // Update available cards
             cardsDataProvider.updateAvailableCards(
-                userDataProvider.authenticationModel!.ucsdaffiliation);
+                userDataProvider.authenticationModel.ucsdaffiliation);
 
             // Student card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel!.classifications?.student ??
+                (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
               cardsDataProvider.activateStudentCards();
             } else {
@@ -163,7 +162,7 @@ List<SingleChildWidget> dependentServices = [
 
             // Staff card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel!.classifications?.staff ??
+                (userDataProvider.userProfileModel.classifications?.staff ??
                     false)) {
               cardsDataProvider.activateStaffCards();
             } else {
@@ -178,7 +177,7 @@ List<SingleChildWidget> dependentServices = [
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider!.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
@@ -190,7 +189,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, studentIdDataProvider) {
     studentIdDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
       studentIdDataProvider.fetchData();
     }
     return studentIdDataProvider;
@@ -202,7 +201,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, employeeIdDataProvider) {
     employeeIdDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) {
       employeeIdDataProvider.fetchData();
     }
     return employeeIdDataProvider;
@@ -214,7 +213,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, scannerMessageDataProvider) {
     scannerMessageDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !scannerMessageDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !scannerMessageDataProvider.isLoading) {
       scannerMessageDataProvider.fetchData();
     }
     return scannerMessageDataProvider;
@@ -285,14 +284,12 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<UserDataProvider, ScannerDataProvider>(
     create: (_) {
       var _scannerDataProvider = ScannerDataProvider();
-      _scannerDataProvider.initState();
-      _scannerDataProvider.setDefaultStates();
       return _scannerDataProvider;
     },
     update: (_, _userDataProvider, scannerDataProvider) {
       scannerDataProvider!.userDataProvider = _userDataProvider;
       scannerDataProvider.initState();
-      scannerDataProvider.setDefaultStates();
+      scannerDataProvider.resetDefaultStates();
       return scannerDataProvider;
     },
     lazy: false,

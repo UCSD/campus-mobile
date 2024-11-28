@@ -29,12 +29,12 @@ class DiningDetailView extends StatelessWidget {
       BuildContext context, prefix0.DiningModel model) {
     return [
       Text(
-        model.name!,
+        model.name,
         textAlign: TextAlign.start,
         style: TextStyle(fontSize: 26),
       ),
       Text(
-        model.description!,
+        model.description,
         textAlign: TextAlign.start,
         style: TextStyle(fontSize: 15),
       ),
@@ -187,9 +187,9 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         TextSpan(
-          text: model.specialHours!.specialHoursEvent! + "\n"
+          text: model.specialHours!.specialHoursEvent + "\n"
         ),
-        TextSpan(text: model.specialHours!.specialHoursEventDetails! + "\n"),
+        TextSpan(text: model.specialHours!.specialHoursEventDetails + "\n"),
         TextSpan(text:specialHoursDuration)
       ],
     ),
@@ -197,7 +197,7 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
 }
 
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
-    var options = model.paymentOptions!.join(', ');
+    String options = model.paymentOptions.join(', ');
     return RichText(
       text: TextSpan(
         style: TextStyle(
@@ -218,9 +218,8 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
     List<ImageLoader> images = [];
     if (model.images != null && model.images!.length > 0) {
       for (prefix0.Image item in model.images!) {
-        images.add(ImageLoader(
-          url: item.small,
-        ));
+        if (item.small != null)
+          images.add(ImageLoader(url: item.small!));
       }
       return Center(
         child: Container(
@@ -249,50 +248,50 @@ class HoursOfDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theDay;
     String? theHours;
+    var theDay;
     switch (weekday) {
       case 1:
         theDay = 'Monday';
-        theHours = model!.regularHours!.mon == null
+        theHours = model!.regularHours.mon == null
             ? 'Closed'
-            : model!.regularHours!.mon;
+            : model!.regularHours.mon;
         break;
       case 2:
         theDay = 'Tuesday';
-        theHours = model!.regularHours!.tue == null
+        theHours = model!.regularHours.tue == null
             ? 'Closed'
-            : model!.regularHours!.tue;
+            : model!.regularHours.tue;
         break;
       case 3:
         theDay = 'Wednesday';
-        theHours = model!.regularHours!.wed == null
+        theHours = model!.regularHours.wed == null
             ? 'Closed'
-            : model!.regularHours!.wed;
+            : model!.regularHours.wed;
         break;
       case 4:
         theDay = 'Thursday';
-        theHours = model!.regularHours!.thu == null
+        theHours = model!.regularHours.thu == null
             ? 'Closed'
-            : model!.regularHours!.thu;
+            : model!.regularHours.thu;
         break;
       case 5:
         theDay = 'Friday';
-        theHours = model!.regularHours!.fri == null
+        theHours = model!.regularHours.fri == null
             ? 'Closed'
-            : model!.regularHours!.fri;
+            : model!.regularHours.fri;
         break;
       case 6:
         theDay = 'Saturday';
-        theHours = model!.regularHours!.sat == null
+        theHours = model!.regularHours.sat == null
             ? 'Closed'
-            : model!.regularHours!.sat;
+            : model!.regularHours.sat;
         break;
       case 7:
         theDay = 'Sunday';
-        theHours = model!.regularHours!.sun == null
+        theHours = model!.regularHours.sun == null
             ? 'Closed'
-            : model!.regularHours!.sun;
+            : model!.regularHours.sun;
         break;
     }
     /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
@@ -354,9 +353,9 @@ class HoursOfDay extends StatelessWidget {
       }
     } else {
       var times = hours.split('-');
-      var timeNow;
       var start = int.parse(times[0]);
       var end = int.parse(times[1]);
+      var timeNow;
       if (end < start) end += 2300; //If time goes into next day, prevent wrap
       if (DateTime.now().minute.toString().length == 1)
         timeNow = int.parse('${DateTime.now().hour}0${DateTime.now().minute}');

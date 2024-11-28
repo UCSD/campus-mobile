@@ -55,7 +55,7 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
       list.add(ListTile(
         key: Key(model.id.toString()),
         title: Text(
-          model.name!,
+          model.name,
         ),
         onTap: () async {
           setState(() {

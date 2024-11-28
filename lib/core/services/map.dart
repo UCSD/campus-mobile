@@ -25,17 +25,16 @@ class MapSearchService {
         /// parse data
         final data = mapSearchModelFromJson(_response!);
         _results = data;
-      } else {
-        _results = [];
-        return false;
+        return true;
       }
-      return true;
+      // else:
+      _results = [];
     } catch (e) {
       _error = e.toString();
-      return false;
     } finally {
       _isLoading = false;
     }
+    return false;
   }
 
   /// SIMPLE GETTERS

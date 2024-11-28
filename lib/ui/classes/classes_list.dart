@@ -17,15 +17,15 @@ class ClassList extends StatelessWidget {
   Widget buildSchedule(BuildContext context) {
     List<Widget> list = [];
     Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses!
-        .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms!);
+        .enrolledClasses
+        .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
     Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses!
+        .enrolledClasses
         .keys
         .forEach(
       (key) {
         if (Provider.of<ClassScheduleDataProvider>(context)
-            .enrolledClasses![key]!
+            .enrolledClasses[key]!
             .isNotEmpty) {
           list.add(SliverStickyHeader(
             header: buildWeekDayHeader(context, key),
@@ -34,16 +34,16 @@ class ClassList extends StatelessWidget {
                 if (key == 'MI') {
                   return buildMidterm(
                       Provider.of<ClassScheduleDataProvider>(context)
-                          .enrolledClasses![key]!
+                          .enrolledClasses[key]!
                           .elementAt(index));
                 }
                 return buildClass(
                     Provider.of<ClassScheduleDataProvider>(context)
-                        .enrolledClasses![key]!
+                        .enrolledClasses[key]!
                         .elementAt(index));
               },
                   childCount: Provider.of<ClassScheduleDataProvider>(context)
-                      .enrolledClasses![key]!
+                      .enrolledClasses[key]!
                       .length),
             ),
           ));
@@ -115,7 +115,7 @@ class ClassList extends StatelessWidget {
                     child: Row(children: [
                       Text(sectionData.meetingType! + ' '),
                       TimeRangeWidget(
-                        time: sectionData.time,
+                        time: sectionData.time!,
                       )
                     ]),
                   ),
@@ -178,7 +178,7 @@ class ClassList extends StatelessWidget {
                           formatDate(sectionData.date)! +
                           ' from '),
                       TimeRangeWidget(
-                        time: sectionData.time,
+                        time: sectionData.time!,
                       )
                     ]),
                   ),

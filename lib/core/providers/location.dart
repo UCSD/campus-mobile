@@ -36,7 +36,7 @@ class LocationDataProvider extends ChangeNotifier {
     }
   }
 
-  _enableListener() {
+  void _enableListener() {
     if (_permission) {
       Geolocator.getPositionStream(locationSettings: locationSettings).listen(
               (Position? position) {

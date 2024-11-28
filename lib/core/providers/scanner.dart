@@ -8,34 +8,29 @@ import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ScannerDataProvider extends ChangeNotifier {
-  ScannerDataProvider() {
-    /// DEFAULT STATES
-    isLoading = false;
-    /// INITIALIZE SERVICES
-    _barcodeService = BarcodeService();
-  }
-
   /// STATES
-  bool? _hasScanned;
-  bool? hasSubmitted;
-  bool? _didError;
-  bool? _isDuplicate;
-  bool? _successfulSubmission;
-  bool? _isValidBarcode;
-  late bool isLoading;
-  String? _message = '';
-  String? _licenseKey;
+  bool isLoading = false;
+  bool _hasScanned = false;
+  bool hasSubmitted = false;
+  bool _didError = false;
+  bool _isDuplicate = false;
+  bool _successfulSubmission = false;
+  bool _isValidBarcode = true;
+  String message = '';
   String? _barcode;
   late String errorText;
-  ScanditController? _controller;
+  late String _licenseKey;
   List<String?> scannedCodes = [];
   PermissionStatus? cameraPermissionsStatus;
+  late ScanditController _controller;
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
   /// SERVICES
-  late BarcodeService _barcodeService;
+  BarcodeService _barcodeService = BarcodeService();
+
+  ScannerDataProvider()  { initState(); notifyListeners(); }
 
   void initState() {
     if (Platform.isIOS) {
@@ -46,7 +41,7 @@ class ScannerDataProvider extends ChangeNotifier {
     errorText = "Something went wrong, please try again.";
   }
 
-  void setDefaultStates() {
+  void resetDefaultStates() {
     _hasScanned = false;
     hasSubmitted = false;
     _didError = false;
@@ -54,7 +49,7 @@ class ScannerDataProvider extends ChangeNotifier {
     isLoading = false;
     _isDuplicate = false;
     _isValidBarcode = true;
-    scannedCodes = [];
+    scannedCodes.clear();
     notifyListeners();
   }
 
@@ -74,7 +69,7 @@ class ScannerDataProvider extends ChangeNotifier {
   Map<String, dynamic> createUserData() {
     return {
       'barcode': _barcode,
-      'ucsdaffiliation': _userDataProvider.authenticationModel!.ucsdaffiliation
+      'ucsdaffiliation': _userDataProvider.authenticationModel.ucsdaffiliation
     };
   }
 
@@ -84,7 +79,7 @@ class ScannerDataProvider extends ChangeNotifier {
     scannedCodes.add(result.data);
     // currently scanning 3 consecutive times
     if (scannedCodes.length < 3) {
-      _controller!.resumeBarcodeScanning();
+      _controller.resumeBarcodeScanning();
     } else {
       String? firstScan = scannedCodes.first;
       // if all scans are not the same, need to go into error state
@@ -106,8 +101,7 @@ class ScannerDataProvider extends ChangeNotifier {
     _barcode = result.data;
 
     try {
-      var accessTokenExpiration =
-          _userDataProvider.authenticationModel?.expiration! as int;
+      int accessTokenExpiration = _userDataProvider.authenticationModel.expiration!;
       var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
       var timeDiff = accessTokenExpiration - nowTime;
       var tokenExpired = timeDiff <= 0 ? true : false;
@@ -125,7 +119,7 @@ class ScannerDataProvider extends ChangeNotifier {
           var results = await _barcodeService.uploadResults({
             "Content-Type": "application/json",
             'Authorization':
-                'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           }, {
             'barcode': _barcode
           });
@@ -177,8 +171,7 @@ class ScannerDataProvider extends ChangeNotifier {
   }
 
   /// SIMPLE SETTERS
-  set controller(ScanditController? value) => _controller = value;
-  set message(String? value) => _message = value;
+  set controller(ScanditController value) => _controller = value;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
   /// SIMPLE GETTERS
@@ -187,7 +180,6 @@ class ScannerDataProvider extends ChangeNotifier {
   get isDuplicate => _isDuplicate;
   get isValidBarcode => _isValidBarcode;
   get successfulSubmission => _successfulSubmission;
-  String? get licenseKey => _licenseKey;
+  String get licenseKey => _licenseKey;
   String? get barcode => _barcode;
-  String? get message => _message;
 }

@@ -20,18 +20,18 @@ class WebViewContainer extends StatefulWidget {
     required this.requireAuth,
     this.overFlowMenu,
     this.actionButtons,
-    this.hideMenu,
+    this.hideMenu = false,
   }) : super(key: key);
 
   /// required parameters
-  final String? titleText;
-  final String? initialUrl;
+  final String titleText;
+  final String initialUrl;
   final String cardId;
-  final bool? requireAuth;
+  final bool requireAuth;
 
   /// optional parameters
   final Map<String, Function>? overFlowMenu;
-  final bool? hideMenu;
+  final bool hideMenu;
   final List<Widget>? actionButtons;
 
   @override
@@ -40,17 +40,14 @@ class WebViewContainer extends StatefulWidget {
 
 class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepAliveClientMixin {
   /// STATES
-  bool? active;
-  Function? hide;
-  String? webCardUrl;
-  var _contentHeight = cardContentMinHeight;
+  bool active = false;
+  double _contentHeight = cardContentMinHeight;
+  late Function hide;
+  late String webCardUrl;
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
   WebViewController? _webViewController;
-
-  /// SIMPLE GETTERS
-  get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -62,20 +59,20 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    active = Provider.of<CardsDataProvider>(context).cardStates![widget.cardId];
+    active = Provider.of<CardsDataProvider>(context).cardStates[widget.cardId]!;
 
     // check if this webCard needs an auth token
-    if (widget.requireAuth!) {
+    if (widget.requireAuth) {
       _userDataProvider = Provider.of<UserDataProvider>(context);
-      webCardUrl = widget.initialUrl! +
-          "?expiration=${_userDataProvider.authenticationModel!.expiration}#${_userDataProvider.authenticationModel!.accessToken}";
+      webCardUrl = widget.initialUrl+
+          "?expiration=${_userDataProvider.authenticationModel.expiration}#${_userDataProvider.authenticationModel.accessToken}";
     } else {
       webCardUrl = widget.initialUrl;
     }
 
     checkWebURL();
 
-    if (active != null && active!) {
+    if (active) {
       return Card(
         margin: EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
@@ -88,21 +85,19 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
                   top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
-                widget.titleText!,
+                widget.titleText,
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 18.0,
                 ),
               ),
-              trailing: buildMenu()!,
+              trailing: buildMenu(),
             ),
             buildBody(context),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: widget.actionButtons != null
-                  ? Row(
-                      children: widget.actionButtons!,
-                    )
+                  ? Row(children: widget.actionButtons!)
                   : Container(),
             ),
           ],
@@ -114,7 +109,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
 
   // builds the actual webView widget
   Widget buildBody(context) {
-    print('webview_container:buildBody: ' + webCardUrl!);
+    print('webview_container:buildBody: ' + webCardUrl);
     return Container(
       height: _contentHeight,
       child: WebView(
@@ -135,8 +130,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
     );
   }
 
-  Widget? buildMenu() {
-    if (widget.hideMenu ?? false) return Container();
+  Widget buildMenu() {
+    if (widget.hideMenu) return Container();
     return ButtonBar(
       buttonPadding: EdgeInsets.all(0),
       mainAxisSize: MainAxisSize.min,
@@ -174,13 +169,13 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
     switch (selectedMenuItem) {
       case CardMenuOptionConstants.reloadCard:
         {
-          _webViewController?.loadUrl(webCardUrl!);
+          _webViewController?.loadUrl(webCardUrl);
           resetCardHeight(widget.cardId);
         }
         break;
       case CardMenuOptionConstants.hideCard:
         {
-          hide!();
+          hide();
           resetCardHeight(widget.cardId);
         }
         break;
@@ -261,7 +256,10 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
   void checkWebURL() async {
     String? currentUrl = await _webViewController?.currentUrl();
     if (_webViewController != null && webCardUrl != currentUrl) {
-      _webViewController?.loadUrl(webCardUrl!);
+      _webViewController?.loadUrl(webCardUrl);
     }
   }
+
+  /// SIMPLE GETTERS
+  get wantKeepAlive => true;
 }

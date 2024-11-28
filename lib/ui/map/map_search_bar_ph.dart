@@ -22,8 +22,7 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 9),
-                  child: Provider.of<MapsDataProvider>(context).isLoading!
-                      ? Padding(
+                  child: Provider.of<MapsDataProvider>(context).isLoading? Padding(
                           padding: const EdgeInsets.all(2.5),
                           child: Container(
                               height: 25,

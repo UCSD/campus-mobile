@@ -4,27 +4,18 @@ import 'package:campus_mobile_experimental/core/services/scanner_message.dart';
 import 'package:flutter/material.dart';
 
 class ScannerMessageDataProvider extends ChangeNotifier {
-  ScannerMessageDataProvider() {
-    /// DEFAULT STATES
-    _isLoading = false;
-    /// INITIALIZE SERVICES
-    _scannerMessageService = ScannerMessageService();
-    /// INITIALIZE MODELS
-    _scannerMessageModel = ScannerMessageModel();
-  }
-
   /// STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   String? _error;
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
-  /// SERVICES
-  ScannerMessageService? _scannerMessageService;
-
   /// MODELS
-  ScannerMessageModel? _scannerMessageModel;
+  ScannerMessageModel _scannerMessageModel = ScannerMessageModel();
+
+  /// SERVICES
+  final _scannerMessageService = ScannerMessageService();
 
   void fetchData() async {
     // forcing fetchData() to be executed async
@@ -37,13 +28,13 @@ class ScannerMessageDataProvider extends ChangeNotifier {
       /// Initialize header
       final Map<String, String> header = {
         'Authorization':
-            'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+            'Bearer ${_userDataProvider.authenticationModel.accessToken}'
       };
-      await _scannerMessageService!.fetchData(header);
-      _scannerMessageModel = _scannerMessageService!.scannerMessageModel;
+      await _scannerMessageService.fetchData(header);
+      _scannerMessageModel = _scannerMessageService.scannerMessageModel;
     } else {
       /// Error Handling
-      _error = _scannerMessageService!.error.toString();
+      _error = _scannerMessageService.error.toString();
     }
     _isLoading = false;
     notifyListeners();
@@ -55,6 +46,6 @@ class ScannerMessageDataProvider extends ChangeNotifier {
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;
-  ScannerMessageService? get scannerMessageService => _scannerMessageService;
-  ScannerMessageModel? get scannerMessageModel => _scannerMessageModel;
+  ScannerMessageService get scannerMessageService => _scannerMessageService;
+  ScannerMessageModel get scannerMessageModel => _scannerMessageModel;
 }

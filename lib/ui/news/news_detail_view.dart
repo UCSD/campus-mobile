@@ -29,14 +29,14 @@ class NewsDetailView extends StatelessWidget {
         ),
       ),
       Text(
-        data.title!,
+        data.title,
         style: TextStyle(
           fontSize: 26,
         ),
       ),
       SizedBox(height: 4),
       Text(
-        DateFormat.yMMMMd().format(data.date!),
+        DateFormat.yMMMMd().format(data.date),
         style: TextStyle(fontSize: 16),
       ),
       SizedBox(height: 20),
@@ -52,10 +52,11 @@ class NewsDetailView extends StatelessWidget {
   }
 }
 
-class ContinueReadingButton extends StatelessWidget {
-  final String? link;
+class ContinueReadingButton extends StatelessWidget
+{
+  final String link;
 
-  const ContinueReadingButton({Key? key, this.link}) : super(key: key);
+  const ContinueReadingButton({Key? key, required this.link}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -69,7 +70,7 @@ class ContinueReadingButton extends StatelessWidget {
           ),
           onPressed: () async {
             try {
-              await launch(link!, forceSafariVC: true);
+              await launch(link, forceSafariVC: true);
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('Could not open.'),

@@ -4,18 +4,18 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserProfileService {
+  UserProfileService();
+
   /// STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   String? _error;
 
   /// MODELS
-  UserProfileModel? _userProfileModel;
+  late UserProfileModel _userProfileModel;
 
   /// SERVICES
   final _networkHelper = NetworkHelper();
   final _endpoint = dotenv.get('USER_ENDPOINT');
-
-  UserProfileService();
 
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
     print("user headers:");
@@ -66,5 +66,5 @@ class UserProfileService {
   /// SIMPLE GETTERS
   get error => _error;
   get isLoading => _isLoading;
-  UserProfileModel? get userProfileModel => _userProfileModel;
+  UserProfileModel get userProfileModel => _userProfileModel;
 }

@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'neighborhood_lot_view.dart';
 
 class SpotTypesView extends StatefulWidget {
   @override
@@ -26,12 +27,11 @@ class _SpotTypesViewState extends State<SpotTypesView> {
     var selectedSpots = 0;
     List<Widget> list = [];
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
-      if (Provider.of<ParkingDataProvider>(context)
-              .spotTypesState![data.spotKey]! == true) {
+      if (Provider.of<ParkingDataProvider>(context).spotTypesState[data.spotKey]! == true) {
         selectedSpots++;
       }
-      Color iconColor = HexColor(data.color!);
-      Color textColor = HexColor(data.textColor!);
+      Color iconColor = HexColor(data.color);
+      Color textColor = HexColor(data.textColor);
 
       list.add(ListTile(
         key: Key(data.name.toString()),
@@ -44,17 +44,17 @@ class _SpotTypesViewState extends State<SpotTypesView> {
             ),
             child: Align(
                 alignment: Alignment.center,
-                child: data.text!.contains("&#x267f;")
+                child: data.text.contains("&#x267f;")
                     ? Icon(Icons.accessible,
-                        size: 25.0, color: colorFromHex(data.textColor!))
+                        size: 25.0, color: colorFromHex(data.textColor))
                     : Text(
-                        data.text!,
+                        data.text,
                         style: TextStyle(color: textColor),
                       ))),
-        title: Text(data.name!),
+        title: Text(data.name),
         trailing: Switch(
           value: Provider.of<ParkingDataProvider>(context)
-              .spotTypesState![data.spotKey]!,
+              .spotTypesState[data.spotKey]!,
           onChanged: (_) {
             spotTypesDataProvider.toggleSpotSelection(
                 data.spotKey, selectedSpots);
@@ -65,11 +65,5 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       ));
     }
     return list;
-  }
-
-  Color colorFromHex(String hexColor) {
-    final hexCode = hexColor.replaceAll('#', '');
-    if (hexColor.length == 6) hexColor = 'FF' + hexColor; // FF as the opacity value if you don't add it.
-    return Color(int.parse('FF$hexCode', radix: 16));
   }
 }

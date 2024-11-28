@@ -19,7 +19,7 @@ class Maps extends StatelessWidget {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       });
       return MoreResultsList();
-    } else if (Provider.of<MapsDataProvider>(context).noResults!) {
+    } else if (Provider.of<MapsDataProvider>(context).noResults) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()

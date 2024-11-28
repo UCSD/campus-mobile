@@ -9,33 +9,27 @@ import 'package:flutter/material.dart';
 enum Meal { breakfast, lunch, dinner }
 
 class DiningDataProvider extends ChangeNotifier {
-  DiningDataProvider() {
-    /// DEFAULT STATES
-    _isLoading = false;
-    /// INITIALIZE SERVICES
-    _diningService = DiningService();
-  }
-
   /// STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
   /// MODELS
+  Map<String, DiningModel> _diningModels = {};
+  Map<String, DiningMenuItemsModel> _diningMenuItemModels = {};
   Coordinates? _coordinates;
+
+  List<bool> filtersSelected = [false, false, false];
   Meal mealTime = Meal.breakfast;
-  Map<String?, DiningModel> _diningModels = Map<String, DiningModel>();
-  var _diningMenuItemModels = Map<String, DiningMenuItemsModel?>();
-  var filtersSelected = [false, false, false];
 
   /// SERVICES
-  late DiningService _diningService;
+  final _diningService = DiningService();
 
   void fetchDiningMenu(String menuId) async {
     _isLoading = true; _error = null;
     notifyListeners();
     if (await _diningService.fetchMenu(menuId)) {
-      _diningMenuItemModels[menuId] = _diningService.menuData;
+      _diningMenuItemModels[menuId] = _diningService.menuData!;
     } else {
       _error = _diningService.error;
     }
@@ -47,10 +41,9 @@ class DiningDataProvider extends ChangeNotifier {
     _isLoading = true; _error = null;
     notifyListeners();
 
-    /// creating  new map ensures we remove all unsupported locations
-    var mapOfDiningLocations = Map<String?, DiningModel>();
+    Map<String, DiningModel> mapOfDiningLocations = {};
     if (await _diningService.fetchData()) {
-      for (DiningModel model in _diningService.data!) {
+      for (DiningModel model in _diningService.data) {
         mapOfDiningLocations[model.name] = model;
       }
 
@@ -81,17 +74,17 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   void populateDistances() {
-    if (_coordinates != null) {
+    // TODO: fix the Coordinates system! Totally messed up design
+    if (_coordinates != null && _coordinates!.lat != null && _coordinates!.lon != null) {
       for (DiningModel model in _diningModels.values.toList()) {
-        if (model.coordinates != null &&
-            _coordinates!.lat != null &&
-            _coordinates!.lon != null) {
+        if (model.coordinates != null) {
           var distance = calculateDistance(
-              _coordinates!.lat ?? 0.0,
-              _coordinates!.lon ?? 0.0,
-              model.coordinates!.lat ?? 0.0,
-              model.coordinates!.lon ?? 0.0);
-          model.distance = distance as double?;
+              _coordinates!.lat!,
+              _coordinates!.lon!,
+              model.coordinates!.lat!,
+              model.coordinates!.lon!
+          );
+          model.distance = distance.toDouble();
         } else {
           model.distance = null;
         }
@@ -108,27 +101,31 @@ class DiningDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  /// Returns menu data for given id
+  /// Returns menu data for a given id
   /// Fetches menu if not already downloaded
   DiningMenuItemsModel? getMenuData(String? id) {
-    if (id != null) {
-      if (_diningMenuItemModels[id] != null) return _diningMenuItemModels[id];
+    if (id != null && _diningMenuItemModels.containsKey(id)) {
+      return _diningMenuItemModels[id];
+    } else if (id != null) {
       fetchDiningMenu(id);
     }
-    return DiningMenuItemsModel();
+    return null;
   }
 
   List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
     List<DiningMenuItem>? menuItems;
-    if (_diningMenuItemModels[id!] == null) return null;
-    menuItems = _diningMenuItemModels[id]!.menuItems;
+    if (id != null && _diningMenuItemModels[id] != null) {
+      menuItems = _diningMenuItemModels[id]!.menuItems;
+    }
     List<DiningMenuItem> filteredMenuItems = [];
-    for (var menuItem in menuItems!) {
-      var matched = 0;
-      for (var i = 0; i < filters.length; i++) {
-        if (menuItem.tags!.contains(filters[i])) matched++;
+    if (menuItems != null) {
+      for (var menuItem in menuItems) {
+        var matched = 0;
+        for (var i = 0; i < filters.length; i++) {
+          if (menuItem.tags.contains(filters[i])) matched++;
+        }
+        if (matched == filters.length) filteredMenuItems.add(menuItem);
       }
-      if (matched == filters.length) filteredMenuItems.add(menuItem);
     }
     return filteredMenuItems;
   }

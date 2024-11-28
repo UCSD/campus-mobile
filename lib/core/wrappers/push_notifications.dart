@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PushNotificationWrapper extends StatefulWidget {
-  PushNotificationWrapper({this.child});
-  final Widget? child;
+  PushNotificationWrapper({required this.child});
+  final Widget child;
 
   @override
   _PushNotificationWrapperState createState() => _PushNotificationWrapperState();
@@ -20,6 +20,6 @@ class _PushNotificationWrapperState extends State<PushNotificationWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child!;
+    return widget.child;
   }
 }

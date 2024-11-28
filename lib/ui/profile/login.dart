@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_userDataProvider.isLoading!) {
+    if (!_userDataProvider.isLoading) {
       if (_userDataProvider.isLoggedIn) {
         return buildLoggedInWidget(context);
       } else {
@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
   /// trailing characters and capitaliation, which can lead to usernames
   /// displaying very weirdly in our app (e.g., mixed capitalizatio and random
   /// trailing characters if input in that manner))
-  String parseUsername (String username) {
+  static String parseUsername (String username) {
     username = username.toLowerCase();
     RegExpMatch? match = RegExp(r'ucsd.edu').firstMatch(username);
     if (match != null) {
@@ -83,8 +83,8 @@ class _LoginState extends State<Login> {
         color: Colors.green,
       ),
       title: Text(
-        _userDataProvider.userProfileModel!.username != null
-            ? parseUsername(_userDataProvider.userProfileModel!.username!)
+        _userDataProvider.userProfileModel.username != null
+            ? parseUsername(_userDataProvider.userProfileModel.username!)
             : "",
         style: TextStyle(fontSize: 17),
       ),
@@ -180,7 +180,7 @@ class _LoginState extends State<Login> {
                           fontSize: 18,
                           color: Theme.of(context).textTheme.labelLarge!.color),
                     ),
-                    onPressed: _userDataProvider.isLoading!
+                    onPressed: _userDataProvider.isLoading
                         ? null
                         : () {
                             _userDataProvider

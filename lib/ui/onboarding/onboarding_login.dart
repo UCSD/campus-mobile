@@ -36,8 +36,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       backgroundColor: lightPrimaryColor, // ColorPrimary, //Colors.white,
-      body: _userDataProvider.isLoading!
-          ? Center(
+      body: _userDataProvider.isLoading? Center(
               child: CircularProgressIndicator(
                 valueColor: new AlwaysStoppedAnimation<Color>(lightAccentColor),
               ),
@@ -174,8 +173,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                             ),
                           ),
                         ),
-                        onPressed: _userDataProvider.isLoading!
-                            ? null
+                        onPressed: _userDataProvider.isLoading? null
                             : () {
                                 _userDataProvider
                                     .manualLogin(_emailTextFieldController.text,

@@ -9,10 +9,7 @@ import 'package:hive/hive.dart';
 
 class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
-    // TODO: use functional method here
-    for (String card in CardTitleConstants.titleMap.keys.toList()) {
-      _cardStates[card] = true;
-    }
+    CardTitleConstants.titleMap.keys.forEach((card) => _cardStates[card] = true);
 
     /// temporary fix that prevents the student cards from causing issues on launch
     _cardOrder.removeWhere((element) => _studentCards.contains(element));
@@ -48,14 +45,14 @@ class CardsDataProvider extends ChangeNotifier {
   ];
 
   // Native student cards
-  List<String> _studentCards = [
+  static const List<String> _studentCards = [
     'finals',
     'schedule',
     'student_id',
   ];
 
   // Native staff cards
-  List<String> _staffCards = [
+  static const List<String> _staffCards = [
     'MyUCSDChart',
     'staff_info',
     'employee_id',
@@ -63,7 +60,7 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// MODELS
   Map<String, CardsModel?> _webCards = {};
-  Map<String, CardsModel>? _availableCards;
+  late Map<String, CardsModel> _availableCards;
   late Box _cardOrderBox;
   late Box _cardStateBox;
 
@@ -80,63 +77,37 @@ class CardsDataProvider extends ChangeNotifier {
     if (await _cardsService.fetchCards(ucsdAffiliation)) {
       _availableCards = _cardsService.cardsModel;
       _lastUpdated = DateTime.now();
-      if (_availableCards!.isNotEmpty) {
-        // remove all inactive or non-existent cards from [_cardOrder]
-        var tempCardOrder = List.from(_cardOrder);
-        for (String card in tempCardOrder) {
-          // check to see if card no longer exists
-          if (_availableCards![card] == null) {
-            _cardOrder.remove(card);
-          }
-          // check to see if card is not active
-          else if (!(_availableCards![card]!.cardActive ?? false)) {
-            _cardOrder.remove(card);
-          }
-        }
-        // remove all inactive or non-existent cards from [_cardStates]
-        var tempCardStates = Map.from(_cardStates);
-        for (String card in tempCardStates.keys) {
-          // check to see if card no longer exists
-          if (_availableCards![card] == null) {
-            _cardStates.remove(card);
-          }
-          // check to see if card is not active
-          else if (!(_availableCards![card]!.cardActive ?? false)) {
-            _cardStates.remove(card);
-          }
-        }
 
-        // add active webCards
-        for (String card in _cardStates.keys) {
-          if (_availableCards![card]!.isWebCard!) {
-            _webCards[card] = _availableCards![card];
-          }
-        }
+      if (_availableCards.isNotEmpty) {
+        _cardOrder.clear();
+
         // add new cards to the top of the list
-        for (String card in _availableCards!.keys) {
-          if (_studentCards.contains(card)) continue;
-          if (_staffCards.contains(card)) continue;
-          if (!_cardOrder.contains(card) &&
-              (_availableCards![card]!.cardActive ?? false)) {
-            _cardOrder.insert(0, card);
-          }
-          // keep all new cards activated by default
-          if (!_cardStates.containsKey(card)) {
-            _cardStates[card] = true;
-          }
-        }
-        updateCardOrder(_cardOrder);
-        updateCardStates(
-            _cardStates.keys.where((card) => _cardStates[card]!).toList());
+        _availableCards
+            .forEach((card, model) {
+              if (_studentCards.contains(model) || _staffCards.contains(model))
+                return;
+
+              // add active webcards
+              if (model.isWebCard)
+                _webCards[card] = model;
+
+              if (!_cardOrder.contains(model) && (model.cardActive))
+                _cardOrder.insert(0, card);
+
+              // keep all new cards activated by default
+              _cardStates.putIfAbsent(card, () => true);
+            });
+
+        updateCardOrder();
+        updateCardStates();
       }
     } else {
       _error = _cardsService.error;
     }
-    _isLoading = false;
-    notifyListeners();
+    _isLoading = false; notifyListeners();
   }
 
-  Future changeInternetStatus(noInternet) async {
+  Future changeInternetStatus(bool noInternet) async {
     _noInternet = noInternet;
   }
 
@@ -158,24 +129,20 @@ class CardsDataProvider extends ChangeNotifier {
     });
   }
 
-  Future loadSavedData() async {
-    _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
-    _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
-    await _loadCardOrder();
-    await _loadCardStates();
+  Future<void> loadSavedData() async {
+    await Future.wait([_loadCardOrder(), _loadCardStates()]);
   }
 
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder(List<String> newOrder) async {
     if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
-    try {
-      await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
-    } catch (e) {
-      _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
-      await _cardOrderBox.put(DataPersistence.cardOrder, newOrder);
-    }
-    _cardOrder = newOrder;
+
+    // checks if box is open, creates one if not
+    _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
+
+    // no need to await - data is saved to disk in background
+    _cardOrderBox.put(DataPersistence.cardOrder, _cardOrder);
     _lastUpdated = DateTime.now();
     notifyListeners();
   }
@@ -185,10 +152,11 @@ class CardsDataProvider extends ChangeNotifier {
   Future _loadCardOrder() async {
     if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
-    if (_cardOrderBox.get(DataPersistence.cardOrder) == null) {
+
+    if (_cardOrderBox.get(DataPersistence.cardOrder) == null)
       await _cardOrderBox.put(DataPersistence.cardOrder, _cardOrder);
-    }
-    _cardOrder = _cardOrderBox.get(DataPersistence.cardOrder);
+    else
+      _cardOrder = _cardOrderBox.get(DataPersistence.cardOrder);
     notifyListeners();
   }
 
@@ -210,19 +178,19 @@ class CardsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Update the [_cardStates] stored in state
-  /// overwrite the [_cardStates] in persistent storage with the model passed in
-  Future updateCardStates(List<String> activeCards) async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
-    for (String activeCard in activeCards) {
-      _cardStates[activeCard] = true;
+  /// Update the [_cardStates] stored on disk
+  Future updateCardStates() async {
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
+      return;
     }
-    try {
-      await _cardStateBox.put(DataPersistence.cardStates, activeCards);
-    } catch (e) {
-      _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
-      _cardStateBox.put(DataPersistence.cardStates, activeCards);
-    }
+    var activeCards = _cardStates.keys.where((card) => _cardStates[card]!).toList();
+
+    // checks if box is open, creates one if not
+    _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
+
+    // no need to await - data is saved to disk in background
+    _cardStateBox.put(DataPersistence.cardStates, activeCards);
+
     _lastUpdated = DateTime.now();
     notifyListeners();
   }
@@ -241,8 +209,8 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
-    updateCardOrder(_cardOrder);
-    updateCardStates(_cardStates.keys.where((card) => _cardStates[card]!).toList());
+    updateCardOrder();
+    updateCardStates();
   }
 
   void showAllStudentCards() {
@@ -256,8 +224,8 @@ class CardsDataProvider extends ChangeNotifier {
       _cardStates[card] = true;
     }
 
-    updateCardOrder(_cardOrder);
-    updateCardStates(_cardStates.keys.where((card) => _cardStates[card]!).toList());
+    updateCardOrder();
+    updateCardStates();
   }
 
   void deactivateStudentCards() {
@@ -265,8 +233,8 @@ class CardsDataProvider extends ChangeNotifier {
       _cardOrder.remove(card);
       _cardStates[card] = false;
     }
-    updateCardOrder(_cardOrder);
-    updateCardStates(_cardStates.keys.where((card) => _cardStates[card]!).toList());
+    updateCardOrder();
+    updateCardStates();
   }
 
   void activateStaffCards() {
@@ -275,8 +243,8 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
-    updateCardOrder(_cardOrder);
-    updateCardStates(_cardStates.keys.where((card) => _cardStates[card]!).toList());
+    updateCardOrder();
+    updateCardStates();
   }
 
   void showAllStaffCards() {
@@ -289,8 +257,8 @@ class CardsDataProvider extends ChangeNotifier {
     for (String card in _staffCards) {
       _cardStates[card] = true;
     }
-    updateCardOrder(_cardOrder);
-    updateCardStates(_cardStates.keys.where((card) => _cardStates[card]!).toList());
+    updateCardOrder();
+    updateCardStates();
   }
 
   void deactivateStaffCards() {
@@ -298,21 +266,15 @@ class CardsDataProvider extends ChangeNotifier {
       _cardOrder.remove(card);
       _cardStates[card] = false;
     }
-    updateCardOrder(_cardOrder);
-    updateCardStates(_cardStates.keys.where((card) => _cardStates[card]!).toList());
-  }
-
-  void reorderCards(List<String> order) {
-    _cardOrder = order;
-    notifyListeners();
+    updateCardOrder();
+    updateCardStates();
   }
 
   void toggleCard(String card) {
-    if (_availableCards![card]!.isWebCard! && _cardStates[card]!) {
-        resetCardHeight(card);
-    }
+    if (_availableCards[card]!.isWebCard && _cardStates[card]!)
+      resetCardHeight(card);
     _cardStates[card] = !_cardStates[card]!;
-    updateCardStates(_cardStates.keys.where((card) => _cardStates[card]!).toList());
+    updateCardStates();
   }
 
   /// SIMPLE SETTERS
@@ -323,8 +285,8 @@ class CardsDataProvider extends ChangeNotifier {
   get noInternet => _noInternet;
   get error => _error;
   get lastUpdated => _lastUpdated;
-  Map<String, bool>? get cardStates => _cardStates;
-  List<String>? get cardOrder => _cardOrder;
-  Map<String, CardsModel?>? get webCards => _webCards;
+  Map<String, bool> get cardStates => _cardStates;
+  List<String> get cardOrder => _cardOrder;
+  Map<String, CardsModel?> get webCards => _webCards;
   Map<String, CardsModel> get availableCards => _availableCards!;
 }

@@ -14,9 +14,12 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  late ParkingDataProvider _parkingDataProvider;
+  /// STATES
   final _controller = new PageController();
-  var cardId = 'parking';
+  static const cardId = 'parking';
+
+  /// PROVIDERS
+  late ParkingDataProvider _parkingDataProvider;
 
   @override
   void didChangeDependencies() {
@@ -34,12 +37,12 @@ class _ParkingCardState extends State<ParkingCard> {
     };
     //super.build(context);
     return CardContainer(
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       isLoading: _parkingDataProvider.isLoading,
       reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(context),
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       actionButtons: buildActionButtons(),
@@ -50,7 +53,7 @@ class _ParkingCardState extends State<ParkingCard> {
     try {
       List<Widget> selectedLotsViews = [];
       for (ParkingModel model in _parkingDataProvider.parkingModels) {
-        if (_parkingDataProvider.parkingViewState![model.locationName] ==
+        if (_parkingDataProvider.parkingViewState[model.locationName] ==
             true) {
           selectedLotsViews.add(CircularParkingIndicators(model: model));
         }

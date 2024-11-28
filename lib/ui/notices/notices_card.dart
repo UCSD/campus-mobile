@@ -29,7 +29,7 @@ class NoticesCard extends StatelessWidget {
       button: true,
       child: GestureDetector(
           onTap: () {
-            openLink(notice.link!);
+            openLink(notice.link);
           },
           child: ImageLoader(
             url: notice.imageUrl,

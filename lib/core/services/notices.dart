@@ -39,6 +39,6 @@ class NoticesService {
   get isLoading => _isLoading;
   get error => _error;
   get lastUpdated => _lastUpdated;
-  NetworkHelper get availabilityService => _networkHelper;
   List<NoticesModel> get noticesModel => _noticesModel;
+  // NetworkHelper get availabilityService => _networkHelper;
 }

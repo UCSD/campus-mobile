@@ -5,6 +5,10 @@ import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DiningService {
+  DiningService() {
+    fetchData();
+  }
+
   /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
@@ -14,13 +18,11 @@ class DiningService {
   };
 
   /// MODELS
-  List<DiningModel>? _data;
+  List<DiningModel>? _data = [];
   DiningMenuItemsModel? _menuData;
 
   /// SERVICES
-  final _networkHelper = NetworkHelper();
-
-  DiningService() { fetchData(); }
+  static const _networkHelper = NetworkHelper();
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
@@ -56,8 +58,8 @@ class DiningService {
           dotenv.get('DINING_BASE_ENDPOINT') + '/menu/' + id, headers);
 
       /// parse data
-      final data = diningMenuItemsModelFromJson(_response);
-      _menuData = data;
+      _menuData = diningMenuItemsModelFromJson(_response);
+      _isLoading = false;
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
@@ -78,6 +80,6 @@ class DiningService {
   get isLoading => _isLoading;
   get error => _error;
   get lastUpdated => _lastUpdated;
-  List<DiningModel>? get data => _data;
+  List<DiningModel> get data => _data!;
   DiningMenuItemsModel? get menuData => _menuData;
 }

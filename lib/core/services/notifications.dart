@@ -10,7 +10,7 @@ class NotificationService {
   String? _error;
 
   /// MODELS
-  List<TopicsModel>? _topicsModel;
+  late List<TopicsModel> _topicsModel = [];
 
   /// SERVICES
   final _networkHelper = NetworkHelper();
@@ -73,5 +73,5 @@ class NotificationService {
   get error => _error;
   get isLoading => _isLoading;
   get lastUpdated => _lastUpdated;
-  List<TopicsModel>? get topicsModel => _topicsModel;
+  List<TopicsModel> get topicsModel => _topicsModel;
 }

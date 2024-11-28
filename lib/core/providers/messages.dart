@@ -11,11 +11,6 @@ var notificationScrollController = ScrollController();
 class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
     /// DEFAULT STATES
-    _isLoading = false;
-    _messages = [];
-    _messageService = MessageService();
-    _statusText = NotificationsConstants.statusFetching;
-    _hasMoreMessagesToLoad = false;
     notificationScrollController.addListener(() {
       var triggerFetchMoreSize =
           0.9 * notificationScrollController.position.maxScrollExtent;
@@ -27,26 +22,27 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   /// STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  int? _previousTimestamp;
-  String? _statusText;
-  bool? _hasMoreMessagesToLoad;
+  int _previousTimestamp = 0;
+  String _statusText = NotificationsConstants.statusFetching;
+  bool _hasMoreMessagesToLoad = false;
+  final notificationScrollController = ScrollController();
 
   /// MODELS
-  List<MessageElement?>? _messages;
-  UserDataProvider? _userDataProvider;
+  List<MessageElement> _messages = [];
+  UserDataProvider? userDataProvider;
 
   /// SERVICES
-  late MessageService _messageService;
+  final _messageService = MessageService();
 
   //Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
     _isLoading = true; _error = null; var returnVal;
     notifyListeners();
     if (clearMessages) _clearMessages();
-    if (_userDataProvider != null && _userDataProvider!.isLoggedIn) {
+    if (userDataProvider != null && userDataProvider!.isLoggedIn) {
       returnVal = await retrieveMoreMyMessages();
     } else {
       returnVal = await retrieveMoreTopicMessages();
@@ -64,21 +60,19 @@ class MessagesDataProvider extends ChangeNotifier {
   Future<bool> retrieveMoreMyMessages() async {
     _isLoading = true; _error = null;
     notifyListeners();
-    int? returnedTimestamp;
-    int? timestamp = _previousTimestamp;
+    int returnedTimestamp;
+    int timestamp = _previousTimestamp;
     Map<String, String> headers = {
       "accept": "application/json",
       "Authorization":
-          "Bearer " + _userDataProvider!.authenticationModel!.accessToken!,
+          "Bearer " + userDataProvider!.authenticationModel.accessToken!,
     };
 
     if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
-      List<MessageElement> temp = _messageService.messagingModels!.messages!;
+      List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp);
       makeOrderedMessagesList();
-      returnedTimestamp = _messageService.messagingModels!.next == null
-          ? 0
-          : _messageService.messagingModels!.next;
+      returnedTimestamp = _messageService.messagingModels.next ?? 0;
       // checks if we have no more messages to paginate through
       _hasMoreMessagesToLoad = !(_previousTimestamp == returnedTimestamp || returnedTimestamp == 0);
       _lastUpdated = DateTime.now();
@@ -93,14 +87,14 @@ class MessagesDataProvider extends ChangeNotifier {
   Future<bool> retrieveMoreTopicMessages() async {
     _isLoading = true; _error = null;
     notifyListeners();
-    var returnedTimestamp;
+    int returnedTimestamp;
 
     if (await _messageService.fetchTopicData(
-        _previousTimestamp, _userDataProvider!.subscribedTopics!)) {
-      List<MessageElement> temp = _messageService.messagingModels!.messages!;
+        _previousTimestamp, userDataProvider!.subscribedTopics!)) {
+      List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp);
       makeOrderedMessagesList();
-      returnedTimestamp = _messageService.messagingModels!.next ?? 0;
+      returnedTimestamp = _messageService.messagingModels.next ?? 0;
       // checks if we have no more messages to paginate through
       _hasMoreMessagesToLoad = !(_previousTimestamp == returnedTimestamp || returnedTimestamp == 0);
       _lastUpdated = DateTime.now();
@@ -117,23 +111,19 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   void makeOrderedMessagesList() {
-    Map<String?, MessageElement?> uniqueMessages = Map<String, MessageElement>();
-    uniqueMessages = Map.fromIterable(_messages!,
+    Map<String, MessageElement> uniqueMessages = Map<String, MessageElement>();
+    uniqueMessages = Map.fromIterable(_messages,
         key: (message) => message.messageId, value: (message) => message);
-    _messages!.clear();
-    uniqueMessages.forEach((k, v) => _messages!.add(v));
-    _messages!.sort((a, b) => b!.timestamp!.compareTo(a!.timestamp!));
+    _messages.clear();
+    uniqueMessages.forEach((k, v) => _messages.add(v));
+    _messages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
   }
 
-  updateMessages(List<MessageElement> newMessages) {
-    _messages!.addAll(newMessages);
-    _statusText = _messages!.isEmpty ? NotificationsConstants.statusNoMessages
+  void updateMessages(List<MessageElement> newMessages) {
+    _messages.addAll(newMessages);
+    _statusText = _messages.isEmpty ? NotificationsConstants.statusNoMessages
         : NotificationsConstants.statusNone;
   }
-
-  /// SIMPLE SETTERS
-  /// This setter is only used in provider to supply and updated UserDataProvider object
-  set userDataProvider(UserDataProvider? value) => _userDataProvider = value;
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
@@ -141,6 +131,6 @@ class MessagesDataProvider extends ChangeNotifier {
   get lastUpdated => _lastUpdated;
   get statusText => _statusText;
   get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
-  UserDataProvider? get userDataProvider => _userDataProvider;
   List<MessageElement?>? get messages => _messages ?? [];
+  ScrollController get scrollController => notificationScrollController;
 }

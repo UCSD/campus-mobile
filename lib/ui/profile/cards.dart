@@ -17,16 +17,16 @@ class _CardsViewState extends State<CardsView> {
   @override
   void initState() {
     super.initState();
-    Provider.of<CardsDataProvider>(context, listen: false).monitorInternet();
+    context.read<CardsDataProvider>().monitorInternet();
   }
 
   @override
   Widget build(BuildContext context) {
     _cardsDataProvider = Provider.of<CardsDataProvider>(context);
-    return ContainerView(child: buildCardsList(context));
+    return ContainerView(child: buildCardsList());
   }
 
-  Widget buildCardsList(BuildContext context) {
+  Widget buildCardsList() {
     var tempView = new ReorderableListView(
         header: Padding(
           padding: const EdgeInsets.only(top: 12),
@@ -36,11 +36,18 @@ class _CardsViewState extends State<CardsView> {
               style: const TextStyle(color: const Color(0xFF9A9999))
           ),
         ),
-        children: createList(context),
-        onReorder: _onReorder
+        children: createList(),
+        onReorder: (var oldIndex, var newIndex) {
+          if (newIndex > oldIndex)
+            newIndex -= 1;
+
+          var order = _cardsDataProvider.cardOrder;
+          order.insert(newIndex, order.removeAt(oldIndex));
+          setState(() { _cardsDataProvider.updateCardOrder(); });
+        }
     );
 
-    if (_cardsDataProvider.noInternet!) {
+    if (_cardsDataProvider.noInternet) {
       Future.delayed(
           Duration.zero,
           () => {
@@ -62,30 +69,9 @@ class _CardsViewState extends State<CardsView> {
     return tempView;
   }
 
-  void _onReorder(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) newIndex -= 1;
-    List<String> newOrder = _cardsDataProvider.cardOrder!;
-    List<String> toRemove = [];
-    if (_cardsDataProvider.cardOrder!.contains('NativeScanner')) {
-      toRemove.add('NativeScanner');
-    }
-
-    newOrder.removeWhere((element) => toRemove.contains(element));
-    var item = newOrder.removeAt(oldIndex);
-    newOrder.insert(newIndex, item);
-    List<String> orderList = [];
-    for (String item in newOrder) {
-      orderList.add(item);
-    }
-    orderList.addAll(toRemove.toList());
-    _cardsDataProvider.updateCardOrder(orderList);
-    setState(() {});
-  }
-
-  List<Widget> createList(BuildContext context) {
+  List<Widget> createList() {
     List<Widget> list = [];
-    for (String card in _cardsDataProvider.cardOrder!) {
-      if (card == 'NativeScanner') continue;
+    for (String card in _cardsDataProvider.cardOrder) {
       try {
         list.add(Card(
           key: Key(card),
@@ -95,9 +81,9 @@ class _CardsViewState extends State<CardsView> {
             padding: EdgeInsets.all(cardPaddingInner),
             child: ListTile(
               leading: Icon(Icons.reorder),
-              title: Text(_cardsDataProvider.availableCards[card]!.titleText!),
+              title: Text(_cardsDataProvider.availableCards[card]!.titleText),
               trailing: Switch(
-                value: _cardsDataProvider.cardStates![card]!,
+                value: _cardsDataProvider.cardStates[card]!,
                 onChanged: (_) {
                   _cardsDataProvider.toggleCard(card);
                 },

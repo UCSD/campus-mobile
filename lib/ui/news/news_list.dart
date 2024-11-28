@@ -9,23 +9,23 @@ import 'package:provider/provider.dart';
 
 class NewsList extends StatelessWidget {
   const NewsList({Key? key, this.listSize}) : super(key: key);
-  final listSize;
+  final int? listSize;
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<NewsDataProvider>(context).isLoading!) {
+    if (Provider.of<NewsDataProvider>(context).isLoading) {
       return Center(
           child: CircularProgressIndicator(
               color: Theme.of(context).colorScheme.secondary));
     }
     return buildNewsList(
       context,
-      Provider.of<NewsDataProvider>(context).newsModels!,
+      Provider.of<NewsDataProvider>(context).newsModels,
     );
   }
 
   Widget buildNewsList(BuildContext context, NewsModel data) {
-    final List<Item>? listOfNews = data.items;
+    final List<Item> listOfNews = data.items;
     final List<Widget> newsTiles = [];
 
     /// check to see if we want to display only a limited number of elements
@@ -65,7 +65,7 @@ class NewsList extends StatelessWidget {
         title: Padding(
           padding: const EdgeInsets.symmetric(vertical: 3.0),
           child: Text(
-            newsItem.title!,
+            newsItem.title,
             textAlign: TextAlign.start,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
@@ -89,7 +89,7 @@ class NewsList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  data.description!,
+                  data.description,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
@@ -98,7 +98,7 @@ class NewsList extends StatelessWidget {
                   height: 5,
                 ),
                 Text(
-                  DateFormat.yMMMMd().format(data.date!.toLocal()),
+                  DateFormat.yMMMMd().format(data.date.toLocal()),
                 ),
               ],
             ),

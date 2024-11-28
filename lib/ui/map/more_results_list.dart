@@ -38,7 +38,7 @@ class MoreResultsList extends StatelessWidget {
                         title: Text(
                           Provider.of<MapsDataProvider>(cntxt, listen: false)
                               .mapSearchModels[index]
-                              .title!,
+                              .title,
                         ),
                         trailing: Text(
                           Provider.of<MapsDataProvider>(cntxt, listen: false)

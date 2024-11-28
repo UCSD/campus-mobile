@@ -14,40 +14,40 @@ import 'package:path_provider/path_provider.dart';
 class SpeedTestProvider extends ChangeNotifier {
   /// STATES
   String? _error;
-  bool? _isLoading;
-  bool? _onSimulator;
+  bool _isLoading = false;
+  bool _speedTestDone = false;
   bool? isUCSDWiFi = false;
-  var _speedTestDone = false;
+  bool? _onSimulator;
   double? _speedDownload;
   double? _speedUpload;
-  var _percentDownloaded = 0.0;
-  var _percentUploaded = 0.0;
-  var _secondsElapsedDownload = 0;
-  var _secondsElapsedUpload = 0;
+  double _percentDownloaded = 0.0;
+  double _percentUploaded = 0.0;
+  int _secondsElapsedDownload = 0;
+  int _secondsElapsedUpload = 0;
   CancelToken? _cancelTokenDownload;
   CancelToken? _cancelTokenUpload;
   Map? wiFiLog;
-  Map<String, String>? offloadDataHeader;
   late Coordinates _coordinates;
-  final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-
-  /// SERVICES
-  late SpeedTestService _speedTestService;
-  final dio = new Dio();
-  final _timer = new Stopwatch();
-  final _networkHelper = new NetworkHelper();
-
-  /// PROVIDERS
-  late UserDataProvider _userDataProvider;
+  Map<String, String>? offloadDataHeader;
+  final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
 
   /// MODELS
   SpeedTestModel? _speedTestModel;
 
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+
+  /// SERVICES
+  late SpeedTestService _speedTestService;
+  final _networkHelper = new NetworkHelper();
+  final dio = new Dio();
+  final _timer = new Stopwatch();
+
   SpeedTestProvider() {
-    _isLoading = false;
+    // TODO: probably is a bug! Async functions should not be be run in the constructor
     init();
   }
 
@@ -142,7 +142,7 @@ class SpeedTestProvider extends ChangeNotifier {
 
   _progressCallbackDownload(int bytesDownloaded, int totalBytes) {
     _secondsElapsedDownload = _timer.elapsed.inSeconds;
-    var speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
+    double speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
     _speedDownload = _convertToMbps(speedInBytes);
     _percentDownloaded = bytesDownloaded / totalBytes;
     notifyListeners();
@@ -150,7 +150,7 @@ class SpeedTestProvider extends ChangeNotifier {
 
   _progressCallbackUpload(int bytesDownloaded, int totalBytes) {
     _secondsElapsedUpload = _timer.elapsed.inSeconds;
-    var speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
+    double speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
     _speedUpload = _convertToMbps(speedInBytes);
     _percentUploaded = bytesDownloaded / totalBytes;
     notifyListeners();
@@ -223,13 +223,13 @@ class SpeedTestProvider extends ChangeNotifier {
 
     offloadDataHeader = {
       'Authorization':
-          'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+          'Bearer ${_userDataProvider.authenticationModel.accessToken}'
     };
     if (_userDataProvider.isLoggedIn) {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
           'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
         };
       }
       // Send to offload API
@@ -245,7 +245,7 @@ class SpeedTestProvider extends ChangeNotifier {
           _userDataProvider.silentLogin();
           offloadDataHeader = {
             'Authorization':
-                'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           };
           _networkHelper.authorizedPost(
               mobileLoggerApiWifi, offloadDataHeader, json.encode(log));
@@ -271,15 +271,15 @@ class SpeedTestProvider extends ChangeNotifier {
 
     offloadDataHeader = {
       'Authorization':
-          'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+          'Bearer ${_userDataProvider.authenticationModel.accessToken}'
     };
     wiFiLog = {
-      "userId": (_userDataProvider.userProfileModel!.pid) == null
+      "userId": (_userDataProvider.userProfileModel.pid) == null
           ? ""
-          : _userDataProvider.userProfileModel!.pid,
-      "userLogin": (_userDataProvider.userProfileModel!.username) == null
+          : _userDataProvider.userProfileModel.pid,
+      "userLogin": (_userDataProvider.userProfileModel.username) == null
           ? ""
-          : _userDataProvider.userProfileModel!.username!,
+          : _userDataProvider.userProfileModel.username!,
       "Platform": _speedTestModel!.platform,
       "SSID": _speedTestModel!.ssid,
       "BSSID": _speedTestModel!.bssid,
@@ -302,7 +302,7 @@ class SpeedTestProvider extends ChangeNotifier {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
           'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
         };
       }
       // Send to offload API
@@ -314,7 +314,7 @@ class SpeedTestProvider extends ChangeNotifier {
           _userDataProvider.silentLogin();
           offloadDataHeader = {
             'Authorization':
-                'Bearer ${_userDataProvider.authenticationModel?.accessToken}'
+                'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           };
           _networkHelper.authorizedPost(mobileLoggerApiWifiReport,
               offloadDataHeader, json.encode(wiFiLog));

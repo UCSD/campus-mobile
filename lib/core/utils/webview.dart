@@ -7,7 +7,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 void reloadWebView(String url, WebViewController controller) => controller.loadUrl(url);
 
-openLink(String url) async {
+void openLink(String url) async {
   try {
     launch(url, forceSafariVC: true);
   } catch (e) {
@@ -15,8 +15,8 @@ openLink(String url) async {
   }
 }
 
-validateHeight(context, height) {
-  var maxHeight = MediaQuery.of(context).size.height;
+double validateHeight(context, height) {
+  double maxHeight = MediaQuery.of(context).size.height;
   if (height < cardContentMinHeight) {
     height = cardContentMinHeight;
   } else if (height > maxHeight) {

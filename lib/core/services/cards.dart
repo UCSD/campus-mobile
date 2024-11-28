@@ -14,7 +14,7 @@ class CardsService {
   };
 
   /// MODELS
-  Map<String, CardsModel>? _cardsModel;
+  late Map<String, CardsModel> _cardsModel;
 
   /// SERVICES
   final _networkHelper = NetworkHelper();
@@ -47,5 +47,5 @@ class CardsService {
   get error => _error;
   get isLoading => _isLoading;
   get lastUpdated => _lastUpdated;
-  Map<String, CardsModel>? get cardsModel => _cardsModel;
+  Map<String, CardsModel> get cardsModel => _cardsModel;
 }

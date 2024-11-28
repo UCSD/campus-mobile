@@ -15,21 +15,24 @@ import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../navigator/bottom.dart';
 
-var hideListView = false;
+// TODO: make this not global. Probably put into Widget as stateful variable...
+bool hideListView = false;
 
 class NotificationsListView extends StatefulWidget {
   @override
   State<NotificationsListView> createState() => _NotificationsListViewState();
 }
 
-class _NotificationsListViewState extends State<NotificationsListView> {
+class _NotificationsListViewState extends State<NotificationsListView>
+{
   @override
-  initState() {
+  void initState() {
     super.initState();
     hideListView = true;
     WidgetsBinding.instance
         .addPostFrameCallback((_) {
-      notificationScrollController.jumpTo(getNotificationsScrollOffset());
+      Provider.of<MessagesDataProvider>(context, listen: false)
+          .notificationScrollController.jumpTo(getNotificationsScrollOffset());
       setState(() {
         hideListView = false;
       });
@@ -53,11 +56,12 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   }
 
   Widget buildListView(BuildContext context) {
+    // TODO: fix this logic up
     Widget Function(BuildContext context, int index)? itemBuilder;
     var itemCount = 0;
     if (Provider.of<MessagesDataProvider>(context).messages!.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
-        if (Provider.of<MessagesDataProvider>(context).isLoading!) {
+        if (Provider.of<MessagesDataProvider>(context).isLoading) {
           // empty notifications view until they load in
         } else {
           itemBuilder = (BuildContext context, int index) => _buildNoMessagesText();
@@ -70,18 +74,18 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     }
     if (itemCount == 0) {
       itemBuilder = _buildMessage;
-      itemCount = Provider.of<MessagesDataProvider>(context).messages!.length;
+      itemCount = Provider.of<MessagesDataProvider>(context).messages.length;
     }
     return ListView.separated(
       physics: AlwaysScrollableScrollPhysics(),
       itemBuilder: itemBuilder!,
-      controller: notificationScrollController,
+      controller: Provider.of<MessagesDataProvider>(context, listen: false).notificationScrollController,
       itemCount: itemCount,
       separatorBuilder: (BuildContext context, int index) => Divider(),
     );
   }
 
-  Widget _buildErrorText() {
+  static Widget _buildErrorText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -90,7 +94,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     );
   }
 
-  Widget _buildNoMessagesText() {
+  static Widget _buildNoMessagesText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -128,22 +132,22 @@ class _NotificationsListViewState extends State<NotificationsListView> {
 
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages![index]!;
+        Provider.of<MessagesDataProvider>(context).messages[index];
     FreeFoodDataProvider freefoodProvider =
         Provider.of<FreeFoodDataProvider>(context);
 
-    var messageType = data.audience?.topics?.first ?? "DM";
-    return ListView(
+    String messageType = data.audience.topics?[0] ?? "DM";
+      return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
         ListTile(
-            leading: Icon(NotificationsSettingsView.chooseIcons(messageType!),
+            leading: Icon(NotificationsSettingsView.chooseIcons(messageType),
                 color: Theme.of(context).colorScheme.secondary, size: 30),
             title: Column(
               children: <Widget>[
                 Text(
-                  data.message!.title!,
+                  data.message.title,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Padding(padding: const EdgeInsets.all(3.5))
@@ -155,7 +159,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                 Align(
                   alignment: Alignment.topLeft,
                   child: Linkify(
-                    text: data.message!.message!,
+                    text: data.message.message,
                     onOpen: (link) async {
                       try {
                         await launch(link.url, forceSafariVC: true);
@@ -173,14 +177,14 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               ],
             ),
             trailing: Column(children: <Widget>[
-              Text(_readTimestamp(data.timestamp!),
+              Text(_readTimestamp(data.timestamp),
                   style: TextStyle(fontSize: 10, color: Colors.grey)),
             ])),
       ],
     );
   }
 
-  String _readTimestamp(int timestamp) {
+  static String _readTimestamp(int timestamp) {
     var now = new DateTime.now();
     var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
     var diff = now.difference(date);

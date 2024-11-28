@@ -40,12 +40,12 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
     ));
 
     int selectedLots = 0;
-    parkingDataProvider.parkingViewState!.forEach((key, value) {
+    parkingDataProvider.parkingViewState.forEach((key, value) {
       if (value == true) selectedLots++;
     });
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < structures.length; i++) {
-      var structureState = parkingDataProvider.parkingViewState![structures[i]]!;
+      var structureState = parkingDataProvider.parkingViewState[structures[i]]!;
       list.add(
         ListTile(
           title: Padding(

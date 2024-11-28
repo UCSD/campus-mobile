@@ -6,49 +6,40 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapsDataProvider extends ChangeNotifier {
-  MapsDataProvider() {
-    /// DEFAULT STATES
-    _isLoading = false; _noResults = false;
-    /// INITIALIZE SERVICES
-    _mapSearchService = MapSearchService();
-    _mapSearchModels = [];
-  }
-
   /// STATES
-  bool? _isLoading;
+  bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  bool? _noResults;
-  Coordinates? _coordinates;
-  List<String> _searchHistory = [];
-
+  bool _noResults = false;
 
   /// Default coordinates for Price Center
-  var _defaultLat = 32.87990969506536;
-  var _defaultLong = -117.2362059310055;
+  static const double _defaultLat = 32.87990969506536;
+  static const double _defaultLong = -117.2362059310055;
 
   /// MODELS
   List<MapSearchModel> _mapSearchModels = [];
 
-  /// SERVICES
-  late MapSearchService _mapSearchService;
-  var _searchBarController = TextEditingController();
-
-  /// PROVIDERS
+  Coordinates? _coordinates;
   Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
+  TextEditingController _searchBarController = TextEditingController();
   GoogleMapController? _mapController;
+  List<String> _searchHistory = [];
+
+  /// SERVICES
+  final _mapSearchService = MapSearchService();
 
   void addMarker(int listIndex) {
     final marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
-      position: LatLng(_mapSearchModels[listIndex].mkrLat!,
-          _mapSearchModels[listIndex].mkrLong!),
+      position: LatLng(_mapSearchModels[listIndex].mkrLat,
+          _mapSearchModels[listIndex].mkrLong),
       infoWindow: InfoWindow(
           title: _mapSearchModels[listIndex].title,
           snippet: _mapSearchModels[listIndex].description),
     );
     _markers.clear();
     _markers[marker.markerId] = marker;
+
     updateMapPosition();
     notifyListeners();
   }
@@ -112,15 +103,13 @@ class MapsDataProvider extends ChangeNotifier {
   }
 
   void populateDistances() {
-    var latitude = _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
-    var longitude = _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
     if (_coordinates != null) {
+      final double latitude = _coordinates!.lat ?? _defaultLat;
+      final double longitude = _coordinates!.lon ?? _defaultLong;
       for (MapSearchModel model in _mapSearchModels) {
-        if (model.mkrLat != null && model.mkrLong != null) {
-          var distance = calculateDistance(
-              latitude!, longitude!, model.mkrLat!, model.mkrLong!);
-          model.distance = distance as double?;
-        }
+        var distance = calculateDistance(
+            latitude, longitude, model.mkrLat, model.mkrLong);
+        model.distance = distance as double?;
       }
     }
   }
@@ -147,7 +136,7 @@ class MapsDataProvider extends ChangeNotifier {
     _mapController = value;
     notifyListeners();
   }
-  
+
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;

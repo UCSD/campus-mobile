@@ -4,18 +4,21 @@ import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AvailabilityService {
+  AvailabilityService();
+
   /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<AvailabilityModel>? _data;
+
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
 
+  /// MODELS
+  late List<AvailabilityModel> _data;
+
   /// SERVICES
   final _networkHelper = NetworkHelper();
-
-  AvailabilityService();
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;

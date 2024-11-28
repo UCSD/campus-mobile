@@ -10,22 +10,22 @@ List<NoticesModel> noticesModelFromJson(String str) => List<NoticesModel>.from(
 String noticesModelToJson(List<NoticesModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class NoticesModel {
-  String? title;
-  String? imageUrl;
-  String? link;
+class NoticesModel
+{
+  String title;
+  String imageUrl;
+  String link;
 
   NoticesModel({
-    this.title,
-    this.imageUrl,
-    this.link,
+    required this.title,
+    required this.imageUrl,
+    required this.link,
   });
 
-  factory NoticesModel.fromJson(Map<String, dynamic> json) => NoticesModel(
-        title: json[noticeTitleKey],
-        imageUrl: json[noticeBannerImageKey],
-        link: json[noticeBannerLinkKey],
-      );
+  NoticesModel.fromJson(Map<String, dynamic> json)
+      : title = json[noticeTitleKey],
+        imageUrl = json[noticeBannerImageKey],
+        link = json[noticeBannerLinkKey];
 
   Map<String, dynamic> toJson() => {
         noticeTitleKey: title,

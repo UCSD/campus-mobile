@@ -23,7 +23,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
 
   // builds the listview that will be put into ContainerView
   Widget lotsList(BuildContext context) {
-    var arguments = widget.args;
+    List<String> arguments = widget.args;
 
     // creates a list that will hold the list of building names
     List<Widget> list = [];
@@ -41,12 +41,12 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
     ));
 
     int selectedLots = 0;
-    parkingDataProvider.parkingViewState!.forEach((key, value) {
+    parkingDataProvider.parkingViewState.forEach((key, value) {
       if (value == true) selectedLots++;
     });
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < arguments.length; i++) {
-      var lotState = parkingDataProvider.parkingViewState![arguments[i]]!;
+      bool lotState = parkingDataProvider.parkingViewState[arguments[i]]!;
       list.add(
         ListTile(
           title: Padding(

@@ -12,8 +12,7 @@ class EventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
-        ? Center(
+    return Provider.of<EventsDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
         : buildEventTile(context);
@@ -48,7 +47,7 @@ class EventTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          data.title!,
+                          data.title,
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -105,11 +104,11 @@ class EventTile extends StatelessWidget {
 
   Widget eventsDateTime(EventModel data) {
     try {
-      // Separate dates from times
-      var startMonthDayYear = DateFormat.yMMMMd('en_US').format(data.startDate!.toLocal());
-      var endMonthDayYear = DateFormat.yMMMMd('en_US').format(data.endDate!.toLocal());
-      var startTime = DateFormat.jm().format(data.startDate!.toLocal());
-      var endTime = DateFormat.jm().format(data.endDate!.toLocal());
+      // Separate String dates from times
+      var startMonthDayYear = DateFormat.yMMMMd('en_US').format(data.startDate.toLocal());
+      var endMonthDayYear = DateFormat.yMMMMd('en_US').format(data.endDate.toLocal());
+      var startTime = DateFormat.jm().format(data.startDate.toLocal());
+      var endTime = DateFormat.jm().format(data.endDate.toLocal());
 
       // Mark any special types of events
       var sameDay = (startMonthDayYear == endMonthDayYear);
@@ -128,10 +127,8 @@ class EventTile extends StatelessWidget {
             endMonthDayYear.indexOf(',') + 2, endMonthDayYear.length);
         if (startYear == endYear) {
           // if the same year, check if the same month
-          var startMonth =
-              startMonthDayYear.substring(0, startMonthDayYear.indexOf(' '));
-          var endMonth =
-              endMonthDayYear.substring(0, endMonthDayYear.indexOf(' '));
+          var startMonth = startMonthDayYear.substring(0, startMonthDayYear.indexOf(' '));
+          var endMonth = endMonthDayYear.substring(0, endMonthDayYear.indexOf(' '));
           if (startMonth == endMonth) {
             // if different date in the same month and year
             var startDay = startMonthDayYear.substring(
