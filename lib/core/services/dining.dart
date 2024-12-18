@@ -5,20 +5,22 @@ import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DiningService {
-  DiningService() {
-    fetchData();
-  }
+  DiningService() { fetchData(); }
 
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<DiningModel>? _data = [];
-  DiningMenuItemsModel? _menuData;
-
-  static const _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
+
+  /// MODELS
+  List<DiningModel>? _data = [];
+  DiningMenuItemsModel? _menuData;
+
+  /// SERVICES
+  static const _networkHelper = NetworkHelper();
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
@@ -35,9 +37,7 @@ class DiningService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) {
-          return await fetchData();
-        }
+        if (await _networkHelper.getNewToken(headers)) return await fetchData();
       }
       _error = e.toString();
       return false;
@@ -61,9 +61,7 @@ class DiningService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) {
-          return await fetchMenu(id);
-        }
+        if (await _networkHelper.getNewToken(headers)) return await fetchMenu(id);
       }
       _error = e.toString();
       return false;
@@ -72,9 +70,10 @@ class DiningService {
     }
   }
 
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   List<DiningModel> get data => _data!;
   DiningMenuItemsModel? get menuData => _menuData;
 }

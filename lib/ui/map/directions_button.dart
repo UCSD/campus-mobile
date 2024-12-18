@@ -12,6 +12,7 @@ class DirectionsButton extends StatelessWidget {
   })  : _mapController = mapController,
         super(key: key);
 
+  /// SERVICES
   final GoogleMapController? _mapController;
 
   @override
@@ -54,22 +55,14 @@ class DirectionsButton extends StatelessWidget {
 
   Future<void> getDirections(BuildContext context) async {
     LatLng currentPin = Provider.of<MapsDataProvider>(context, listen: false)
-        .markers
-        .values
-        .toList()[0]
-        .position;
+        .markers.values.toList()[0].position;
     double lat = currentPin.latitude;
     double lon = currentPin.longitude;
+    var googleUrl = 'https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking';
+    var appleUrl = 'http://maps.apple.com/?daddr=$lat,$lon&dirflag=w';
 
-    String googleUrl =
-        'https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking';
-    String appleUrl = 'http://maps.apple.com/?daddr=$lat,$lon&dirflag=w';
-    if (await canLaunch(googleUrl)) {
-      await launch(googleUrl);
-    } else if (await canLaunch(appleUrl)) {
-      await launch(appleUrl);
-    } else {
-      throw 'Could not launch $googleUrl';
-    }
+    if (await canLaunch(googleUrl)) await launch(googleUrl);
+    if (await canLaunch(appleUrl)) await launch(appleUrl);
+    else throw 'Could not launch $googleUrl';
   }
 }

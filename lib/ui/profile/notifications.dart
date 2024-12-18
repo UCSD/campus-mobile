@@ -7,9 +7,7 @@ import 'package:provider/provider.dart';
 class NotificationsSettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ContainerView(
-      child: buildSettingsList(context, getTopics(context)),
-    );
+    return ContainerView(child: buildSettingsList(context, getTopics(context)));
   }
 
   Widget buildSettingsList(BuildContext context, List<String?>? topicsData) {
@@ -17,7 +15,8 @@ class NotificationsSettingsView extends StatelessWidget {
         ? ListView(children: createList(context, topicsData as List<String?>))
         : Center(
             child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary));
+                color: Theme.of(context).colorScheme.secondary)
+        );
   }
 
   List<Widget> createList(BuildContext context, List<String?> topicsAvailable) {
@@ -44,24 +43,22 @@ class NotificationsSettingsView extends StatelessWidget {
   }
 
   static IconData chooseIcons(String messageType) {
-    // TODO: change this to a switch expression after Dart 3 upgrade
-    switch (messageType)
-    {
+    /// TODO: change this to a switch expression after Dart 3 upgrade
+    switch (messageType) {
       case "studentAnnouncements":
+
       case "testStudentAnnouncements":
         return Icons.school_outlined;
-
       case "freeFood":
+
       case "testFreeFood":
         return Icons.restaurant_outlined;
-
       case "campusAnnouncements":
+
       case "testCampusAnnouncements":
         return Icons.campaign_outlined;
-
       case "DM":
         return Icons.info_outline;
-
       default:
         return Icons.info_outline;
     }
@@ -83,8 +80,5 @@ class NotificationsSettingsView extends StatelessWidget {
     }
   }
 
-  String? getTopicName(BuildContext context, String topicId) {
-    return Provider.of<PushNotificationDataProvider>(context)
-        .getTopicName(topicId);
-  }
+  String? getTopicName(BuildContext context, String topicId) => Provider.of<PushNotificationDataProvider>(context).getTopicName(topicId);
 }

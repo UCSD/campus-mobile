@@ -4,14 +4,16 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthenticationService {
   AuthenticationService();
+
+  /// STATES
   String? _error;
   AuthenticationModel? _data;
   DateTime? _lastUpdated;
-
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
 
-  final NetworkHelper _networkHelper = NetworkHelper();
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
 
   Future<bool> silentLogin(String base64EncodedWithEncryptedPassword) async {
     _error = null;
@@ -27,9 +29,7 @@ class AuthenticationService {
           dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
 
       /// check to see if response has an error
-      if (response['errorMessage'] != null) {
-        throw (response['errorMessage']);
-      }
+      if (response['errorMessage'] != null) throw (response['errorMessage']);
 
       /// parse data
       final authenticationModel = AuthenticationModel.fromJson(response);
@@ -37,7 +37,7 @@ class AuthenticationService {
       _lastUpdated = DateTime.now();
       return true;
     } catch (e) {
-      ///TODO: handle errors thrown by the network class for different types of error responses
+      /// TODO: handle errors thrown by the network class for different types of error responses
       _error = e.toString();
       return false;
     }
@@ -57,9 +57,7 @@ class AuthenticationService {
         dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
 
       /// check to see if response has an error
-      if (response['errorMessage'] != null) {
-        throw (response['errorMessage']);
-      }
+      if (response['errorMessage'] != null) throw (response['errorMessage']);
 
       /// parse data
       final authenticationModel = AuthenticationModel.fromJson(response);
@@ -67,14 +65,15 @@ class AuthenticationService {
       _lastUpdated = DateTime.now();
       return true;
     } catch (e) {
-      ///TODO: handle errors thrown by the network class for different types of error responses
+      /// TODO: handle errors thrown by the network class for different types of error responses
       _error = e.toString();
       return false;
     }
   }
 
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get lastUpdated => _lastUpdated;
+  get error => _error;
   AuthenticationModel? get data => _data;
-  String? get error => _error;
   NetworkHelper get availabilityService => _networkHelper;
 }

@@ -3,20 +3,19 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/scanner_message.dart';
 import 'package:flutter/material.dart';
 
-class ScannerMessageDataProvider extends ChangeNotifier
-{
-  ///STATES
+class ScannerMessageDataProvider extends ChangeNotifier {
+  /// STATES
   bool _isLoading = false;
   String? _error;
 
-  ///Additional Provider
+  /// MODELS
+  ScannerMessageModel _scannerMessageModel = ScannerMessageModel();
+
+  /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
-  ///SERVICES
-  ScannerMessageService _scannerMessageService = ScannerMessageService();
-
-  ///MODELS
-  ScannerMessageModel _scannerMessageModel = ScannerMessageModel();
+  /// SERVICES
+  final _scannerMessageService = ScannerMessageService();
 
   void fetchData() async {
     // forcing fetchData() to be executed async
@@ -41,11 +40,12 @@ class ScannerMessageDataProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  ScannerMessageService get scannerMessageService => _scannerMessageService;
-  ScannerMessageModel get scannerMessageModel => _scannerMessageModel;
-
+  /// SIMPLE SETTERS
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  ScannerMessageModel get scannerMessageModel => _scannerMessageModel;
+  ScannerMessageService get scannerMessageService => _scannerMessageService;
 }

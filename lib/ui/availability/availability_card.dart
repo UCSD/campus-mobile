@@ -17,8 +17,11 @@ class AvailabilityCard extends StatefulWidget {
 }
 
 class _AvailabilityCardState extends State<AvailabilityCard> {
-  PageController _controller = PageController();
+  /// PROVIDERS
   late AvailabilityDataProvider _availabilityDataProvider;
+
+  /// SERVICES
+  final _controller = PageController();
 
   @override
   void didChangeDependencies() {
@@ -44,15 +47,13 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
 
   Widget buildAvailabilityCard(List<AvailabilityModel?> data) {
     List<Widget> locationsList = [];
-    RegExp multiPager = RegExp(r' \(\d+/\d+\)$');
+    final multiPager = RegExp(r' \(\d+/\d+\)$');
     // loop through all the models, adding each one to locationsList
     for (AvailabilityModel? model in data) {
       if (model != null) {
         String curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
-        if (match != null) {
-          curName = curName.replaceRange(match.start, match.end, '');
-        }
+        if (match != null) curName = curName.replaceRange(match.start, match.end, '');
         if (_availabilityDataProvider.locationViewState[curName]!) {
           locationsList.add(AvailabilityDisplay(model: model));
         }

@@ -15,18 +15,17 @@ class TimeRangeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      getStartTime(context) + ' - ' + getStopTime(context),
+    return Text(getStartTime(context) + ' - ' + getStopTime(context),
     );
   }
 
   String getStartTime(BuildContext context) {
-    List<String> times = time.split("-");
+    var times = time.split("-");
     return stringToTimeOfDay(times[0]).format(context);
   }
 
   String getStopTime(BuildContext context) {
-    List<String> times = time.split("- ");
+    var times = time.split("- ");
     return stringToTimeOfDay(times[1]).format(context);
   }
 

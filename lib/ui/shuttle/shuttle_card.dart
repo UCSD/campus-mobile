@@ -17,9 +17,14 @@ class ShuttleCard extends StatefulWidget {
 }
 
 class _ShuttleCardState extends State<ShuttleCard> {
-  ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
-  PageController _controller = PageController();
+  /// STATES
   List<ArrivingShuttle>? arrivals;
+
+  /// PROVIDERS
+  ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
+
+  /// SERVICES
+  PageController _controller = PageController();
 
   @override
   void didChangeDependencies() {
@@ -56,15 +61,13 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.closestStop!,
-            arrivingShuttles:
-                arrivalsToRender[_shuttleCardDataProvider.closestStop!.id]));
+            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.closestStop!.id]));
       }
 
-      for (int i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
+      for (var i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
-            arrivingShuttles: arrivalsToRender[
-                _shuttleCardDataProvider.stopsToRender[i].id]));
+            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.stopsToRender[i].id]));
       }
 
       // Initialize first shuttle display with arrival information
@@ -120,9 +123,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
         'Manage Shuttle Stops',
       ),
       onPressed: () {
-        if (!_shuttleCardDataProvider.isLoading) {
+        if (!_shuttleCardDataProvider.isLoading)
           Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
-        }
       },
     ));
     return actionButtons;

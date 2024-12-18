@@ -3,20 +3,19 @@ import 'package:campus_mobile_experimental/core/services/weather.dart';
 import 'package:flutter/material.dart';
 
 class WeatherDataProvider extends ChangeNotifier {
-  ///STATES
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
+  /// MODELS
   late WeatherModel _weatherModel;
 
-  ///SERVICES
-  WeatherService _weatherService = WeatherService();
+  /// SERVICES
+  final _weatherService = WeatherService();
 
   void fetchWeather() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     try {
       if (await _weatherService.fetchData()) {
@@ -34,9 +33,9 @@ class WeatherDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   WeatherModel get weatherModel => _weatherModel;
 }

@@ -18,16 +18,14 @@ class DiningDataProvider extends ChangeNotifier {
   Map<String, DiningModel> _diningModels = {};
   Map<String, DiningMenuItemsModel> _diningMenuItemModels = {};
   Coordinates? _coordinates;
-
   List<bool> filtersSelected = [false, false, false];
   Meal mealTime = Meal.breakfast;
 
   /// SERVICES
-  DiningService _diningService = DiningService();
+  final _diningService = DiningService();
 
   void fetchDiningMenu(String menuId) async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     if (await _diningService.fetchMenu(menuId)) {
       _diningMenuItemModels[menuId] = _diningService.menuData!;
@@ -39,8 +37,7 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   void fetchDiningLocations() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
 
     Map<String, DiningModel> mapOfDiningLocations = {};
@@ -64,9 +61,7 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   List<DiningModel> reorderLocations() {
-    if (_coordinates == null) {
-      return _diningModels.values.toList();
-    }
+    if (_coordinates == null) return _diningModels.values.toList();
     List<DiningModel> orderedListOfLots = _diningModels.values.toList();
     orderedListOfLots.sort((DiningModel a, DiningModel b) {
       if (a.distance != null && b.distance != null) {
@@ -105,16 +100,6 @@ class DiningDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  /// This setter is only used in provider to supply an updated Coordinates object
-  set coordinates(Coordinates value) {
-    _coordinates = value;
-  }
-
-  /// SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
-
   /// Returns menu data for a given id
   /// Fetches menu if not already downloaded
   DiningMenuItemsModel? getMenuData(String? id) {
@@ -134,15 +119,11 @@ class DiningDataProvider extends ChangeNotifier {
     List<DiningMenuItem> filteredMenuItems = [];
     if (menuItems != null) {
       for (var menuItem in menuItems) {
-        int matched = 0;
-        for (int i = 0; i < filters.length; i++) {
-          if (menuItem.tags.contains(filters[i])) {
-            matched++;
-          }
+        var matched = 0;
+        for (var i = 0; i < filters.length; i++) {
+          if (menuItem.tags.contains(filters[i])) matched++;
         }
-        if (matched == filters.length) {
-          filteredMenuItems.add(menuItem);
-        }
+        if (matched == filters.length) filteredMenuItems.add(menuItem);
       }
     }
     return filteredMenuItems;
@@ -151,9 +132,16 @@ class DiningDataProvider extends ChangeNotifier {
   /// RETURNS A List<diningModels> sorted by distance
   List<DiningModel> get diningModels {
     /// check if we have a coordinates object
-    if (_coordinates != null) {
-      return reorderLocations();
-    }
+    if (_coordinates != null) return reorderLocations();
     return _diningModels.values.toList();
   }
+
+  /// SIMPLE SETTERS
+  /// This setter is only used in provider to supply an updated Coordinates object
+  set coordinates(Coordinates value) => _coordinates = value;
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
 }

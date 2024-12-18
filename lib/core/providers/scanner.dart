@@ -7,27 +7,30 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ScannerDataProvider extends ChangeNotifier
-{
+class ScannerDataProvider extends ChangeNotifier {
+  ScannerDataProvider()  { initState(); notifyListeners(); }
+
+  /// STATES
+  bool isLoading = false;
+  bool _didError = false;
   bool _hasScanned = false;
   bool hasSubmitted = false;
-  bool _didError = false;
-  String message = '';
-
-  late String _licenseKey;
-  BarcodeService _barcodeService = BarcodeService();
-  late UserDataProvider _userDataProvider;
-  String? _barcode;
-  bool isLoading = false;
   bool _isDuplicate = false;
   bool _successfulSubmission = false;
   bool _isValidBarcode = true;
-  late String errorText;
-  PermissionStatus? cameraPermissionsStatus;
-  late ScanditController _controller;
+  String message = '';
+  String? _barcode;
   List<String?> scannedCodes = [];
+  late String _licenseKey;
+  late String errorText;
+  late ScanditController _controller;
+  PermissionStatus? cameraPermissionsStatus;
 
-  ScannerDataProvider()  { initState(); notifyListeners(); }
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+
+  /// SERVICES
+  final _barcodeService = BarcodeService();
 
   void initState() {
     if (Platform.isIOS) {
@@ -40,12 +43,8 @@ class ScannerDataProvider extends ChangeNotifier
   }
 
   void resetDefaultStates() {
-    _hasScanned = false;
-    hasSubmitted = false;
-    _didError = false;
-    _successfulSubmission = false;
-    isLoading = false;
-    _isDuplicate = false;
+    _hasScanned = hasSubmitted = _didError = false;
+    _successfulSubmission = isLoading = _isDuplicate = false;
     _isValidBarcode = true;
     scannedCodes.clear();
     notifyListeners();
@@ -87,8 +86,7 @@ class ScannerDataProvider extends ChangeNotifier
         handleBarcodeResult(result);
       } else {
         // REJECT STATE
-        _hasScanned = true;
-        _didError = true;
+        _hasScanned = _didError = true;
         isLoading = false;
         notifyListeners();
       }
@@ -96,13 +94,11 @@ class ScannerDataProvider extends ChangeNotifier
   }
 
   Future<void> handleBarcodeResult(BarcodeResult result) async {
-    _hasScanned = true;
+    isLoading = _hasScanned = true;
     _barcode = result.data;
-    isLoading = true;
 
     try {
-      int accessTokenExpiration =
-          _userDataProvider.authenticationModel.expiration!;
+      int accessTokenExpiration = _userDataProvider.authenticationModel.expiration!;
       var nowTime = (DateTime.now().millisecondsSinceEpoch / 1000).round();
       var timeDiff = accessTokenExpiration - nowTime;
       var tokenExpired = timeDiff <= 0 ? true : false;
@@ -110,13 +106,10 @@ class ScannerDataProvider extends ChangeNotifier
       var validToken = false;
 
       if (isLoggedIn) {
-        if (tokenExpired) {
-          if (await _userDataProvider.silentLogin()) {
-            validToken = true;
-          }
-        } else {
+        if (tokenExpired)
+          if (await _userDataProvider.silentLogin()) validToken = true;
+        else
           validToken = true;
-        }
 
         if (validToken) {
           var results = await _barcodeService.uploadResults({
@@ -129,27 +122,23 @@ class ScannerDataProvider extends ChangeNotifier
 
           if (results) {
             _successfulSubmission = true;
-            _didError = false;
-            isLoading = false;
+            _didError = isLoading = false;
           } else {
-            _successfulSubmission = false;
+            _successfulSubmission = isLoading = false;
             _didError = true;
-            isLoading = false;
 
             if (_barcodeService.error!.contains(ErrorConstants.notAcceptable)) {
               errorText = ScannerConstants.notAcceptable;
               _isValidBarcode = false;
-            } else if (_barcodeService.error!
-                .contains(ErrorConstants.duplicateRecord)) {
-              RegExp bloodScreenTest = RegExp(r'^ZAP');
+            } else if (_barcodeService.error!.contains(ErrorConstants.duplicateRecord)) {
+              final bloodScreenTest = RegExp(r'^ZAP');
               bool isBloodScreen = bloodScreenTest.hasMatch(_barcode!);
 
               errorText = isBloodScreen
                   ? ScannerConstants.duplicateRecordBloodScreen
                   : ScannerConstants.duplicateRecord;
               _isDuplicate = true;
-            } else if (_barcodeService.error!
-                .contains(ErrorConstants.invalidMedia)) {
+            } else if (_barcodeService.error!.contains(ErrorConstants.invalidMedia)) {
               errorText = ScannerConstants.invalidMedia;
               _isValidBarcode = false;
             } else {
@@ -157,36 +146,34 @@ class ScannerDataProvider extends ChangeNotifier
             }
           }
         } else {
-          _successfulSubmission = false;
+          _successfulSubmission = isLoading = false;
           _didError = true;
-          isLoading = false;
           errorText = ScannerConstants.invalidToken;
         }
       } else {
-        _successfulSubmission = false;
+        _successfulSubmission = isLoading = false;
         _didError = true;
-        isLoading = false;
         errorText = ScannerConstants.loggedOut;
       }
     } catch (e) {
-      _successfulSubmission = false;
+      _successfulSubmission = isLoading = false;
       _didError = true;
-      isLoading = false;
       errorText = ScannerConstants.unknownError;
     } finally {
       notifyListeners();
     }
   }
 
-  /// Simple setters and getters
+  /// SIMPLE SETTERS
   set controller(ScanditController value) => _controller = value;
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
-  String? get barcode => _barcode;
-  bool get didError => _didError;
-  bool get hasScanned => _hasScanned;
-  String get licenseKey => _licenseKey;
-  bool get isDuplicate => _isDuplicate;
-  bool get isValidBarcode => _isValidBarcode;
-  bool get successfulSubmission => _successfulSubmission;
+  /// SIMPLE GETTERS
+  get didError => _didError;
+  get hasScanned => _hasScanned;
+  get isDuplicate => _isDuplicate;
+  get isValidBarcode => _isValidBarcode;
+  get successfulSubmission => _successfulSubmission;
+  get barcode => _barcode;
+  get licenseKey => _licenseKey;
 }

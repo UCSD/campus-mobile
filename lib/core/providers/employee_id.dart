@@ -3,25 +3,23 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/employee_id.dart';
 import 'package:flutter/material.dart';
 
-class EmployeeIdDataProvider extends ChangeNotifier
-{
-  ///STATES
+class EmployeeIdDataProvider extends ChangeNotifier {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
+  /// MODELS
   EmployeeIdModel? _employeeIdModel;
 
-  ///Additional Provider
+  /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
-  ///SERVICES
-  EmployeeIdService _employeeIdService = EmployeeIdService();
+  /// SERVICES
+  final _employeeIdService = EmployeeIdService();
 
   void fetchData() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
 
     final Map<String, String> header = {
@@ -43,12 +41,12 @@ class EmployeeIdDataProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
-  EmployeeIdModel? get employeeIdModel => _employeeIdModel;
-
-  ///Simple Setters
+  /// SIMPLE SETTERS
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
+  EmployeeIdModel? get employeeIdModel => _employeeIdModel;
 }

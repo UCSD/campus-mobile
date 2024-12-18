@@ -5,21 +5,17 @@ import 'package:campus_mobile_experimental/core/services/messages.dart';
 import 'package:flutter/material.dart';
 import '../../ui/navigator/bottom.dart';
 
-//MESSAGES API UNIX TIMESTAMPS IN MILLISECONDS NOT SECONDS
-
-ScrollController notificationScrollController = ScrollController();
+// MESSAGES API UNIX TIMESTAMPS IN MILLISECONDS NOT SECONDS
+var notificationScrollController = ScrollController();
 
 class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
     /// DEFAULT STATES
     notificationScrollController.addListener(() {
-      var triggerFetchMoreSize =
-          0.9 * notificationScrollController.position.maxScrollExtent;
+      var triggerFetchMoreSize = 0.9 * notificationScrollController.position.maxScrollExtent;
 
       if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
-        if (!_isLoading&& _hasMoreMessagesToLoad) {
-          fetchMessages(false);
-        }
+        if (!_isLoading&& _hasMoreMessagesToLoad) fetchMessages(false);
       }
       setNotificationsScrollOffset(notificationScrollController.offset);
     });
@@ -32,21 +28,20 @@ class MessagesDataProvider extends ChangeNotifier {
   int _previousTimestamp = 0;
   String _statusText = NotificationsConstants.statusFetching;
   bool _hasMoreMessagesToLoad = false;
-  final notificationScrollController = ScrollController();
 
   /// MODELS
   List<MessageElement> _messages = [];
   UserDataProvider? userDataProvider;
 
-  final MessageService _messageService = MessageService();
+  /// SERVICES
+  final _messageService = MessageService();
+  final notificationScrollController = ScrollController();
 
   //Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
     _isLoading = true; _error = null; var returnVal;
     notifyListeners();
-    if (clearMessages) {
-      _clearMessages();
-    }
+    if (clearMessages) _clearMessages();
     if (userDataProvider != null && userDataProvider!.isLoggedIn) {
       returnVal = await retrieveMoreMyMessages();
     } else {
@@ -65,7 +60,6 @@ class MessagesDataProvider extends ChangeNotifier {
   Future<bool> retrieveMoreMyMessages() async {
     _isLoading = true; _error = null;
     notifyListeners();
-
     int returnedTimestamp;
     int timestamp = _previousTimestamp;
     Map<String, String> headers = {
@@ -117,8 +111,7 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   void makeOrderedMessagesList() {
-    Map<String, MessageElement> uniqueMessages =
-        Map<String, MessageElement>();
+    Map<String, MessageElement> uniqueMessages = Map<String, MessageElement>();
     uniqueMessages = Map.fromIterable(_messages,
         key: (message) => message.messageId, value: (message) => message);
     _messages.clear();
@@ -128,20 +121,16 @@ class MessagesDataProvider extends ChangeNotifier {
 
   void updateMessages(List<MessageElement> newMessages) {
     _messages.addAll(newMessages);
-    if (_messages.length == 0) {
-      _statusText = NotificationsConstants.statusNoMessages;
-    } else {
-      _statusText = NotificationsConstants.statusNone;
-    }
+    _statusText = _messages.isEmpty ? NotificationsConstants.statusNoMessages
+        : NotificationsConstants.statusNone;
   }
 
   /// SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
-  String get statusText => _statusText;
-  bool get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
+  get statusText => _statusText;
+  get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
   ScrollController get scrollController => notificationScrollController;
-
   List<MessageElement> get messages => _messages;
 }

@@ -9,22 +9,19 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-const String cardId = 'finals';
+const cardId = 'finals';
 
 class FinalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {
-        if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
-            .isLoading) {
+        if (Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading) {
           return null;
         } else {
-          Provider.of<ClassScheduleDataProvider>(context, listen: false)
-              .fetchData();
+          Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
         }
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
@@ -95,8 +92,7 @@ class FinalsCard extends StatelessWidget {
         shrinkWrap: true,
       );
     } catch (e) {
-      FirebaseCrashlytics.instance.recordError(
-          e, StackTrace.fromString(e.toString()),
+      FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
           reason: "Finals Card: Failed to build card content.", fatal: false);
       return Container(
         width: double.infinity,

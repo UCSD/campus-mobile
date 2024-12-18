@@ -4,22 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class NeighborhoodLotsView extends StatefulWidget {
+  /// STATES
   final List<String> args;
   const NeighborhoodLotsView(this.args);
-
   _NeighborhoodLotsViewState createState() => _NeighborhoodLotsViewState();
 }
 
 class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
-  late ParkingDataProvider parkingDataProvider;
+  /// STATES
   bool showedScaffold = false;
+
+  /// PROVIDERS
+  late ParkingDataProvider parkingDataProvider;
 
   @override
   Widget build(BuildContext context) {
     parkingDataProvider = Provider.of<ParkingDataProvider>(context);
-    return ContainerView(
-      child: lotsList(context),
-    );
+    return ContainerView(child: lotsList(context));
   }
 
   // builds the listview that will be put into ContainerView
@@ -41,14 +42,12 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
       ),
     ));
 
-    int selectedLots = 0;
+    var selectedLots = 0;
     parkingDataProvider.parkingViewState.forEach((key, value) {
-      if (value == true) {
-        selectedLots++;
-      }
+      if (value == true) selectedLots++;
     });
     // loops through and adds buttons for the user to click on
-    for (int i = 0; i < arguments.length; i++) {
+    for (var i = 0; i < arguments.length; i++) {
       bool lotState = parkingDataProvider.parkingViewState[arguments[i]]!;
       list.add(
         ListTile(
@@ -92,14 +91,11 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
 
 Color colorFromHex(String hexColor) {
   final hexCode = hexColor.replaceAll('#', '');
-  if (hexColor.length == 6) {
-    hexColor = 'FF' + hexColor; // FF as the opacity value if you don't add it.
-  }
+  if (hexColor.length == 6) hexColor = 'FF' + hexColor; // FF as the opacity value if you don't add it.
   return Color(int.parse('FF$hexCode', radix: 16));
 }
 
 class ScreenArguments {
   final List<String> lotList;
-
   ScreenArguments(this.lotList);
 }

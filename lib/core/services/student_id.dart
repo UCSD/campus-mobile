@@ -6,18 +6,20 @@ import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class StudentIdService {
-  final String myStudentProfileApiUrl =
-      dotenv.get('MY_STUDENT_PROFILE_API_ENDPOINT');
-  final String myStudentContactApiUrl =
-      dotenv.get('MY_STUDENT_CONTACT_API_ENDPOINT');
-
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
+  final myStudentProfileApiUrl = dotenv.get('MY_STUDENT_PROFILE_API_ENDPOINT');
+  final myStudentContactApiUrl = dotenv.get('MY_STUDENT_CONTACT_API_ENDPOINT');
+
+  /// MODELS
   StudentIdNameModel _studentIdNameModel = StudentIdNameModel();
   StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
   StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel();
-  final NetworkHelper _networkHelper = NetworkHelper();
+
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
 
   //Removed term (not used)
   Future<bool> fetchStudentIdName(Map<String, String> headers) async {
@@ -38,7 +40,7 @@ class StudentIdService {
     }
   }
 
-  //Removed term (not used)
+  // Removed term (not used)
   Future<bool> fetchStudentIdPhoto(Map<String, String> headers) async {
     _error = null; _isLoading = true;
     try {
@@ -75,10 +77,11 @@ class StudentIdService {
     }
   }
 
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
+  get lastUpdated => _lastUpdated;
   StudentIdNameModel get studentIdNameModel => _studentIdNameModel;
   StudentIdPhotoModel get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
-  bool get isLoading => _isLoading;
-  DateTime? get lastUpdated => _lastUpdated;
 }

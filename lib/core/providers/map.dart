@@ -5,32 +5,29 @@ import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class MapsDataProvider extends ChangeNotifier
-{
-  ///STATES
+class MapsDataProvider extends ChangeNotifier {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
   bool _noResults = false;
-
-  ///Default coordinates for Price Center
+  // Default coordinates for Price Center
   static const double _defaultLat = 32.87990969506536;
   static const double _defaultLong = -117.2362059310055;
+  Coordinates? _coordinates;
+  List<String> _searchHistory = [];
+  Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
 
-  ///MODELS
+  /// MODELS
   List<MapSearchModel> _mapSearchModels = [];
 
-  Coordinates? _coordinates;
-  Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
+  /// SERVICES
+  final _mapSearchService = MapSearchService();
   TextEditingController _searchBarController = TextEditingController();
   GoogleMapController? _mapController;
-  List<String> _searchHistory = [];
-
-  ///SERVICES
-  MapSearchService _mapSearchService = MapSearchService();
 
   void addMarker(int listIndex) {
-    final Marker marker = Marker(
+    final marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
       position: LatLng(_mapSearchModels[listIndex].mkrLat,
           _mapSearchModels[listIndex].mkrLong),
@@ -75,11 +72,11 @@ class MapsDataProvider extends ChangeNotifier
   }
 
   void fetchLocations() async {
-    String query = searchBarController.text;
+    var query = searchBarController.text;
     markers.clear();
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
+
     if (await _mapSearchService.fetchLocations(query)) {
       _mapSearchModels = _mapSearchService.results;
       _noResults = false;
@@ -126,31 +123,29 @@ class MapsDataProvider extends ChangeNotifier
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
-  List<MapSearchModel> get mapSearchModels => _mapSearchModels;
-  List<String> get searchHistory => _searchHistory;
-  Map<MarkerId, Marker> get markers => _markers;
-  Coordinates? get coordinates => _coordinates;
-  TextEditingController get searchBarController => _searchBarController;
-  bool get noResults => _noResults;
-  GoogleMapController? get mapController => _mapController;
-
-  ///Setters
+  /// SIMPLE SETTERS
   set coordinates(Coordinates? value) {
     _coordinates = value;
     notifyListeners();
   }
-
   set searchBarController(TextEditingController value) {
     _searchBarController = value;
     notifyListeners();
   }
-
   set mapController(GoogleMapController? value) {
     _mapController = value;
     notifyListeners();
   }
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
+  get noResults => _noResults;
+  List<MapSearchModel> get mapSearchModels => _mapSearchModels;
+  List<String> get searchHistory => _searchHistory;
+  Coordinates? get coordinates => _coordinates;
+  TextEditingController get searchBarController => _searchBarController;
+  Map<MarkerId, Marker> get markers => _markers;
+  GoogleMapController? get mapController => _mapController;
 }

@@ -6,14 +6,12 @@ import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-const String cardId = 'news';
+const cardId = 'news';
 
 class NewsCard extends StatelessWidget {
   Widget buildNewsCard() {
     try {
-      return NewsList(
-        listSize: 3,
-      );
+      return NewsList(listSize: 3);
     } catch (e) {
       print(e);
       return Container(
@@ -34,9 +32,7 @@ class NewsCard extends StatelessWidget {
         // primary: Theme.of(context).buttonColor,
         foregroundColor: Theme.of(context).colorScheme.background,
       ),
-      child: Text(
-        'View All',
-      ),
+      child: Text('View All'),
       onPressed: () {
         Navigator.pushNamed(context, RoutePaths.NewsViewAll);
       },

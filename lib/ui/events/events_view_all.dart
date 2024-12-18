@@ -13,14 +13,13 @@ class EventsAll extends StatelessWidget {
     return Provider.of<EventsDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
-        : buildEventsList(
-            Provider.of<EventsDataProvider>(context).eventsModels, context);
+        : buildEventsList(Provider.of<EventsDataProvider>(context).eventsModels, context);
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
     final List<Widget> eventTiles = [];
 
-    for (int i = 0; i < listOfEvents.length; i++) {
+    for (var i = 0; i < listOfEvents.length; i++) {
       final EventModel item = listOfEvents[i];
       final tile = EventTile(data: item);
       eventTiles.add(tile);

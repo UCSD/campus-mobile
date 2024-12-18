@@ -12,6 +12,7 @@ class ManageShuttleView extends StatefulWidget {
 }
 
 class _ManageShuttleViewState extends State<ManageShuttleView> {
+  /// PROVIDERS
   late ShuttleDataProvider _shuttleDataProvider;
 
   @override
@@ -37,15 +38,14 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
+    if (newIndex > oldIndex) newIndex -= 1;
     List<ShuttleStopModel?> newOrder = _shuttleDataProvider.stopsToRender;
     List<ShuttleStopModel> toRemove = [];
 
     newOrder.removeWhere((element) => toRemove.contains(element));
     ShuttleStopModel? item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
+
     List<int?> orderedStopNames = [];
     for (ShuttleStopModel? item in newOrder) {
       orderedStopNames.add(item!.id);

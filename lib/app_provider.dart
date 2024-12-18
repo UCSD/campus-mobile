@@ -34,8 +34,7 @@ List<SingleChildWidget> providers = [
 ];
 
 final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-final FirebaseAnalyticsObserver observer =
-    FirebaseAnalyticsObserver(analytics: analytics);
+final FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
 List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
@@ -132,8 +131,7 @@ List<SingleChildWidget> dependentServices = [
       },
       lazy: false,
       update: (_, pushNotificationDataProvider, _userDataProvider) {
-        _userDataProvider!.pushNotificationDataProvider =
-            pushNotificationDataProvider;
+        _userDataProvider!.pushNotificationDataProvider = pushNotificationDataProvider;
         return _userDataProvider;
       }),
   ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(
