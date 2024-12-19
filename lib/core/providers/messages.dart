@@ -23,11 +23,11 @@ class MessagesDataProvider extends ChangeNotifier {
 
   /// STATES
   bool _isLoading = false;
-  DateTime? _lastUpdated;
-  String? _error;
-  int _previousTimestamp = 0;
-  String _statusText = NotificationsConstants.statusFetching;
   bool _hasMoreMessagesToLoad = false;
+  DateTime? _lastUpdated;
+  int _previousTimestamp = 0;
+  String? _error;
+  String _statusText = NotificationsConstants.statusFetching;
 
   /// MODELS
   List<MessageElement> _messages = [];
@@ -42,11 +42,7 @@ class MessagesDataProvider extends ChangeNotifier {
     _isLoading = true; _error = null; var returnVal;
     notifyListeners();
     if (clearMessages) _clearMessages();
-    if (userDataProvider != null && userDataProvider!.isLoggedIn) {
-      returnVal = await retrieveMoreMyMessages();
-    } else {
-      returnVal = await retrieveMoreTopicMessages();
-    }
+    returnVal = await retrieveMoreTopicMessages();
     _isLoading = false;
     return returnVal;
   }

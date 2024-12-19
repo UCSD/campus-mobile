@@ -8,10 +8,10 @@ class AvailabilityDataProvider extends ChangeNotifier {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  Map<String?, bool> _locationViewState = {};
+  Map<String?, bool> _locationViewState = <String?, bool>{};
 
   /// MODELS
-  Map<String, AvailabilityModel> _availabilityModels = {};
+  Map<String, AvailabilityModel> _availabilityModels = <String, AvailabilityModel>{};
 
   /// PROVIDERS
   late UserDataProvider userDataProvider;
@@ -24,7 +24,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
     notifyListeners();
 
     /// creating  new map ensures we remove all unsupported lots
-    Map<String, AvailabilityModel> newMapOfLots = {};
+    Map<String, AvailabilityModel> newMapOfLots = <String, AvailabilityModel>{};
 
     if (await _availabilityService.fetchData()) {
       /// setting the LocationViewState based on user data

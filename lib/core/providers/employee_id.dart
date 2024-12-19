@@ -28,14 +28,9 @@ class EmployeeIdDataProvider extends ChangeNotifier {
     };
 
     /// Verify that user is logged in
-    if (_userDataProvider.isLoggedIn
-        && await _employeeIdService.fetchEmployeeIdProfile(header))
-    {
-      // Fetch Profile
-      _employeeIdModel = _employeeIdService.employeeIdModel;
-    } else {
-      _error = _employeeIdService.error.toString();
-    }
+    if (_userDataProvider.isLoggedIn && await _employeeIdService.fetchEmployeeIdProfile(header))
+      _employeeIdModel = _employeeIdService.employeeIdModel; // Fetch Profile
+    else _error = _employeeIdService.error.toString();
 
     _isLoading = false;
     notifyListeners();

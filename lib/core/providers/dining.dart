@@ -15,8 +15,8 @@ class DiningDataProvider extends ChangeNotifier {
   String? _error;
 
   /// MODELS
-  Map<String, DiningModel> _diningModels = {};
-  Map<String, DiningMenuItemsModel> _diningMenuItemModels = {};
+  Map<String, DiningModel> _diningModels = <String, DiningModel>{};
+  Map<String, DiningMenuItemsModel> _diningMenuItemModels = <String, DiningMenuItemsModel>{};
   Coordinates? _coordinates;
   List<bool> filtersSelected = [false, false, false];
   Meal mealTime = Meal.breakfast;

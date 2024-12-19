@@ -24,7 +24,6 @@ class PushNotificationDataProvider extends ChangeNotifier {
   DateTime? _lastUpdated;
   String? _error;
   Map<String?, bool> _topicSubscriptionState = {};
-  Set<String> _receivedMessageIds = Set();
 
   /// MODELS
   late List<TopicsModel> _topicsModel;
@@ -155,8 +154,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// Deletes topics that are no longer supported
   /// Transfers over previous subscriptions
   Future fetchTopicsList() async {
-    Map<String?, bool> newTopics = {};
-
+    Map<String?, bool> newTopics = <String?, bool>{};
     if (await _notificationService.fetchTopics()) {
       for (TopicsModel model in _notificationService.topicsModel) {
         for (Topic topic in model.topics!) {
@@ -358,6 +356,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
     return topicsToReturn;
   }
+
+  /// SIMPLE SETTERS
+  Set<String> _receivedMessageIds = Set();
 
   /// SIMPLE GETTERS
   get error => _error;

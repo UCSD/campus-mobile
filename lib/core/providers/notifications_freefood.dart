@@ -8,33 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 class FreeFoodDataProvider extends ChangeNotifier {
-  FreeFoodDataProvider() {
-    ///DEFAULT STATES
-    _isLoading = false;
-
-    ///INITIALIZE SERVICES
-    _freeFoodService = FreeFoodService();
-    _freeFoodModel = FreeFoodModel();
-
-    /// INITIALIZE VALUES
-    initializeValues();
-  }
+  FreeFoodDataProvider() { initializeValues(); }
 
   /// STATES
   bool _isLoading = false;
   String? _curId; // confirmed optional
   DateTime? _lastUpdated;
   String? _error;
-  HashMap<String, int> _messageToCount = new HashMap<String, int>();
-  HashMap<String, int> _messageToMaxCount = new HashMap<String, int>();
-  List<String> _registeredEvents = [];
+  late List<String> _registeredEvents;
+  late HashMap<String, int> _messageToCount;
+  late HashMap<String, int> _messageToMaxCount;
 
   /// MODELS
-  FreeFoodModel? _freeFoodModel;
+  FreeFoodModel? _freeFoodModel = FreeFoodModel();
   late MessagesDataProvider _messageDataProvider;
 
   /// SERVICES
-  late FreeFoodService _freeFoodService = FreeFoodService();
+  final _freeFoodService = FreeFoodService();
 
   void initializeValues() {
     _messageToCount = new HashMap<String, int>();

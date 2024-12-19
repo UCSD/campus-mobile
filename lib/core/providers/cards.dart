@@ -23,7 +23,7 @@ class CardsDataProvider extends ChangeNotifier {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  Map<String, bool> _cardStates = {};
+  Map<String, bool> _cardStates = <String, bool>{};
   late Box _cardOrderBox;
   late Box _cardStateBox;
 
@@ -31,7 +31,7 @@ class CardsDataProvider extends ChangeNotifier {
   late Map<String, CardsModel> _availableCards;
 
   /// PROVIDERS
-  Map<String, CardsModel> _webCards = {};
+  Map<String, CardsModel> _webCards = <String, CardsModel>{};
   UserDataProvider? _userDataProvider;
 
   /// SERVICES
