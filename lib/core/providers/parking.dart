@@ -26,8 +26,8 @@ class ParkingDataProvider extends ChangeNotifier {
   late UserDataProvider _userDataProvider;
 
   /// SERVICES
-  final _parkingService = ParkingService();
-  final _spotTypesService = SpotTypesService();
+  var _parkingService = ParkingService();
+  var _spotTypesService = SpotTypesService();
 
   void fetchParkingData() async {
     _isLoading = true; _error = null;

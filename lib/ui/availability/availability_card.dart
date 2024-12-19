@@ -21,7 +21,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   late AvailabilityDataProvider _availabilityDataProvider;
 
   /// SERVICES
-  final _controller = PageController();
+  var _controller = PageController();
 
   @override
   void didChangeDependencies() {

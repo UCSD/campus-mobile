@@ -8,7 +8,7 @@ class InternetConnectivityProvider extends ChangeNotifier {
   bool _noInternet = false;
 
   /// SERVICES
-  final _connectivity = Connectivity();
+  var _connectivity = Connectivity();
 
   Future<void> initConnectivity() async {
     try {

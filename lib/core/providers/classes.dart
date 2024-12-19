@@ -46,7 +46,7 @@ class ClassScheduleDataProvider extends ChangeNotifier
   late UserDataProvider _userDataProvider;
 
   /// SERVICES
-  final _classScheduleService = ClassScheduleService();
+  var _classScheduleService = ClassScheduleService();
 
   void fetchData() async {
     if (!_isLoading) {
@@ -139,8 +139,7 @@ class ClassScheduleDataProvider extends ChangeNotifier
     /// add only enrolled classes because api returns wait-listed and dropped
     /// courses as well
     for (ClassData classData in _classScheduleModel.data!) {
-      if (classData.enrollmentStatus == 'EN')
-        enrolledCourses.add(classData);
+      if (classData.enrollmentStatus == 'EN') enrolledCourses.add(classData);
     }
 
     if (enrolledCourses.isEmpty) {

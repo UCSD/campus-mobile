@@ -12,7 +12,7 @@ class WeatherDataProvider extends ChangeNotifier {
   late WeatherModel _weatherModel;
 
   /// SERVICES
-  final _weatherService = WeatherService();
+  var _weatherService = WeatherService();
 
   void fetchWeather() async {
     _isLoading = true; _error = null;

@@ -13,16 +13,16 @@ class DiningDataProvider extends ChangeNotifier {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
+  Coordinates? _coordinates;
+  Meal mealTime = Meal.breakfast;
+  List<bool> filtersSelected = [false, false, false];
 
   /// MODELS
-  Map<String, DiningModel> _diningModels = <String, DiningModel>{};
-  Map<String, DiningMenuItemsModel> _diningMenuItemModels = <String, DiningMenuItemsModel>{};
-  Coordinates? _coordinates;
-  List<bool> filtersSelected = [false, false, false];
-  Meal mealTime = Meal.breakfast;
+  Map<String, DiningModel> _diningModels = {};
+  Map<String, DiningMenuItemsModel> _diningMenuItemModels = {};
 
   /// SERVICES
-  final _diningService = DiningService();
+  var _diningService = DiningService();
 
   void fetchDiningMenu(String menuId) async {
     _isLoading = true; _error = null;

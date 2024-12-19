@@ -12,7 +12,7 @@ class EventsDataProvider extends ChangeNotifier {
   List<EventModel> _eventsModels = [];
 
   /// SERVICES
-  final _eventsService = EventsService();
+  var _eventsService = EventsService();
 
   void fetchEvents() async {
     _isLoading = true; _error = null;

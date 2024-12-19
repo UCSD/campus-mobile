@@ -22,8 +22,8 @@ class MapsDataProvider extends ChangeNotifier {
   List<MapSearchModel> _mapSearchModels = [];
 
   /// SERVICES
-  final _mapSearchService = MapSearchService();
-  TextEditingController _searchBarController = TextEditingController();
+  var _mapSearchService = MapSearchService();
+  var _searchBarController = TextEditingController();
   GoogleMapController? _mapController;
 
   void addMarker(int listIndex) {

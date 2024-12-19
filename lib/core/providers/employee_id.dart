@@ -16,7 +16,7 @@ class EmployeeIdDataProvider extends ChangeNotifier {
   late UserDataProvider _userDataProvider;
 
   /// SERVICES
-  final _employeeIdService = EmployeeIdService();
+  var _employeeIdService = EmployeeIdService();
 
   void fetchData() async {
     _isLoading = true; _error = null;

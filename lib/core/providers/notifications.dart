@@ -30,7 +30,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   Map<String, dynamic> _deviceData = {};
 
   /// SERVICES
-  final _notificationService = NotificationService();
+  var _notificationService = NotificationService();
   var deviceInfoPlugin = DeviceInfoPlugin();
   var _fcm = FirebaseMessaging.instance;
 

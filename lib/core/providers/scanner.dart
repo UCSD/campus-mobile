@@ -23,14 +23,14 @@ class ScannerDataProvider extends ChangeNotifier {
   List<String?> scannedCodes = [];
   late String _licenseKey;
   late String errorText;
-  late ScanditController _controller;
   PermissionStatus? cameraPermissionsStatus;
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
   /// SERVICES
-  final _barcodeService = BarcodeService();
+  var _barcodeService = BarcodeService();
+  late ScanditController _controller;
 
   void initState() {
     if (Platform.isIOS) {

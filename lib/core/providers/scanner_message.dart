@@ -15,7 +15,7 @@ class ScannerMessageDataProvider extends ChangeNotifier {
   late UserDataProvider _userDataProvider;
 
   /// SERVICES
-  final _scannerMessageService = ScannerMessageService();
+  var _scannerMessageService = ScannerMessageService();
 
   void fetchData() async {
     // forcing fetchData() to be executed async

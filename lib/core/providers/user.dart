@@ -35,9 +35,9 @@ class UserDataProvider extends ChangeNotifier {
   late CardsDataProvider cardsDataProvider;
 
   /// SERVICES
-  final _authenticationService = AuthenticationService();
-  final _userProfileService = UserProfileService();
-  final storage = FlutterSecureStorage();
+  var _authenticationService = AuthenticationService();
+  var _userProfileService = UserProfileService();
+  var storage = FlutterSecureStorage();
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in

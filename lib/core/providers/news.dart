@@ -12,7 +12,7 @@ class NewsDataProvider extends ChangeNotifier {
   NewsModel _newsModels = NewsModel();
 
   /// SERVICES
-  final _newsService = NewsService();
+  var _newsService = NewsService();
 
   void fetchNews() async {
     _isLoading = true; _error = null;

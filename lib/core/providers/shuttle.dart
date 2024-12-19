@@ -23,7 +23,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   UserDataProvider? userDataProvider;
 
   /// SERVICES
-  final _shuttleService = ShuttleService();
+  var _shuttleService = ShuttleService();
 
   void fetchStops(bool reloading) async {
     _isLoading = true; _error = null;

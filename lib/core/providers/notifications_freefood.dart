@@ -24,7 +24,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   late MessagesDataProvider _messageDataProvider;
 
   /// SERVICES
-  final _freeFoodService = FreeFoodService();
+  late var _freeFoodService = FreeFoodService();
 
   void initializeValues() {
     _messageToCount = new HashMap<String, int>();
