@@ -4,12 +4,17 @@ import 'package:campus_mobile_experimental/core/models/weather.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WeatherService {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final NetworkHelper _networkHelper = NetworkHelper();
   final String endpoint = dotenv.get('WEATHER_ENDPOINT');
+
+  /// MODELS
   late WeatherModel _weatherModel;
+
+  /// SERVICE
+  final _networkHelper = NetworkHelper();
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
@@ -25,8 +30,9 @@ class WeatherService {
     }
   }
 
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   WeatherModel get weatherModel => _weatherModel;
 }

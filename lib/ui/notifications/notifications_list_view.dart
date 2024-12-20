@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
@@ -15,8 +14,8 @@ import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../navigator/bottom.dart';
 
-// TODO: make this not global. Probably put into Widget as stateful variable...
-bool hideListView = false;
+/// TODO: make this not global. Probably put into Widget as stateful variable...
+var hideListView = false;
 
 class NotificationsListView extends StatefulWidget {
   @override
@@ -56,16 +55,15 @@ class _NotificationsListViewState extends State<NotificationsListView>
   }
 
   Widget buildListView(BuildContext context) {
-    // TODO: fix this logic up
+    /// TODO: fix this logic up
     Widget Function(BuildContext context, int index)? itemBuilder;
-    int itemCount = 0;
+    var itemCount = 0;
     if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
         if (Provider.of<MessagesDataProvider>(context).isLoading) {
           // empty notifications view until they load in
         } else {
-          itemBuilder =
-              (BuildContext context, int index) => _buildNoMessagesText();
+          itemBuilder = (BuildContext context, int index) => _buildNoMessagesText();
           itemCount = 1;
         }
       } else {
@@ -132,10 +130,8 @@ class _NotificationsListViewState extends State<NotificationsListView>
   }
 
   Widget _buildMessage(BuildContext context, int index) {
-    MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages[index];
-    FreeFoodDataProvider freefoodProvider =
-        Provider.of<FreeFoodDataProvider>(context);
+    MessageElement data = Provider.of<MessagesDataProvider>(context).messages[index];
+    FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
 
     String messageType = data.audience.topics?[0] ?? "DM";
       return ListView(
@@ -194,31 +190,15 @@ class _NotificationsListViewState extends State<NotificationsListView>
     if (diff.inSeconds < 60) {
       time = 'JUST NOW';
     } else if (diff.inMinutes < 60) {
-      if (diff.inMinutes.floor() == 1) {
-        time = diff.inMinutes.toString() + ' MIN';
-      } else {
-        time = diff.inMinutes.toString() + ' MINS';
-      }
+      time = '${diff.inMinutes} ${diff.inMinutes == 1 ? 'MIN' : 'MINS'}';
     } else if (diff.inHours < 24) {
-      if (diff.inHours.floor() == 1) {
-        time = diff.inHours.toString() + ' HR';
-      } else {
-        time = diff.inHours.toString() + ' HRS';
-      }
-    } else if (diff.inDays > 0 && diff.inDays < 7) {
-      if (diff.inDays == 1) {
-        time = diff.inDays.toString() + ' D';
-      } else {
-        time = diff.inDays.toString() + ' D';
-      }
-    } else if (diff.inDays >= 7 && diff.inDays < 365) {
-      if (diff.inDays.floor() == 7) {
-        time = (diff.inDays / 7).floor().toString() + ' W';
-      } else {
-        time = (diff.inDays / 7).floor().toString() + ' W';
-      }
+      time = '${diff.inHours} ${diff.inHours == 1 ? 'HR' : 'HRS'}';
+    } else if (diff.inDays < 7) {
+      time = '${diff.inDays} D';
+    } else if (diff.inDays < 365) {
+      time = '${(diff.inDays / 7).floor()} W';
     } else {
-      time = ((diff.inDays / 7).floor() / 52).floor().toString() + ' Y';
+      time = '${(diff.inDays / 365).floor()} Y';
     }
     return time;
   }

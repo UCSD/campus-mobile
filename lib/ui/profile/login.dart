@@ -11,10 +11,15 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  /// STATES
+  var _passwordObscured = true;
+
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+
+  /// SERVICES
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
-  late UserDataProvider _userDataProvider;
-  bool _passwordObscured = true;
 
   @override
   void didChangeDependencies() {

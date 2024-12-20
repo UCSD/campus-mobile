@@ -16,6 +16,9 @@ class _BuildInfoState extends State<BuildInfo> {
     packageName: 'Unknown',
   );
 
+  /// STATES
+  final buildEnv = dotenv.get('BUILD_ENV');
+
   @override
   void initState() {
     super.initState();
@@ -23,13 +26,11 @@ class _BuildInfoState extends State<BuildInfo> {
   }
 
   Future<void> _initPackageInfo() async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
+    final info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;
     });
   }
-
-  final String buildEnv = dotenv.get('BUILD_ENV');
 
   @override
   Widget build(BuildContext context) {

@@ -4,20 +4,24 @@ import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EventsService {
+  EventsService() { fetchData(); }
+
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
+
+  /// MODELS
   late List<EventModel> _data;
 
-  final NetworkHelper _networkHelper = NetworkHelper();
-  EventsService() { fetchData(); }
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await _networkHelper.fetchData(dotenv.get('EVENTS_ENDPOINT'));
+      String _response = await _networkHelper.fetchData(dotenv.get('EVENTS_ENDPOINT'));
 
       /// parse data
       final data = eventModelFromJson(_response);
@@ -31,8 +35,9 @@ class EventsService {
     }
   }
 
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
+  get lastUpdated => _lastUpdated;
   List<EventModel>? get eventsModels => _data;
-  bool get isLoading => _isLoading;
-  DateTime? get lastUpdated => _lastUpdated;
 }

@@ -10,6 +10,7 @@ class NoticesCard extends StatelessWidget {
     required this.notice,
   }) : super(key: key);
 
+  /// MODELS
   final NoticesModel notice;
 
   @override

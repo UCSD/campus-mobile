@@ -2,18 +2,17 @@ import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/services/events.dart';
 import 'package:flutter/material.dart';
 
-class EventsDataProvider extends ChangeNotifier
-{
-  ///STATES
+class EventsDataProvider extends ChangeNotifier {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
+  /// MODELS
   List<EventModel> _eventsModels = [];
 
-  ///SERVICES
-  EventsService _eventsService = EventsService();
+  /// SERVICES
+  var _eventsService = EventsService();
 
   void fetchEvents() async {
     _isLoading = true; _error = null;
@@ -23,9 +22,7 @@ class EventsDataProvider extends ChangeNotifier
       _lastUpdated = DateTime.now();
 
       /// check to see if the events feed returns nothing back
-      if (_eventsModels.isEmpty) {
-        _error = 'No events found.';
-      }
+      if (_eventsModels.isEmpty) _error = 'No events found.';
     } else {
       _error = _eventsService.error;
     }
@@ -34,8 +31,8 @@ class EventsDataProvider extends ChangeNotifier
   }
 
   ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   List<EventModel> get eventsModels => _eventsModels;
 }

@@ -14,10 +14,9 @@ const cardPaddingInner = 8.0;
 const cardMinHeight = 60.0;
 const listTileInnerPadding = 8.0;
 
-//Card Heights
+// Card Heights
 const cardContentMinHeight = 80.0;
 const cardContentMaxHeight = 568.0;
-
 const webViewMinHeight = 20.0;
 
 /// App Theme
@@ -53,53 +52,50 @@ const MaterialColor ColorSecondary = MaterialColor(
   },
 );
 
+// Primary Colors
 const Color lightPrimaryColor = Color(0xFF182B49);
 const Color darkPrimaryColor = Color(0xFF333333);
 
-//Color for the top App Bar on light theme
+// Color for the top App Bar on light theme
 const AppBarTheme lightAppBarTheme = AppBarTheme(color: ColorPrimary);
 
-//Color for the top App Bar on dark theme
-const AppBarTheme darkAppBarTheme = AppBarTheme(
-  color: ColorPrimary,
-);
+// Color for the top App Bar on dark theme
+const AppBarTheme darkAppBarTheme = AppBarTheme(color: ColorPrimary);
 
-//Icon color for light theme
-const IconThemeData lightIconTheme = IconThemeData(
-  color: Color(0xFF0D47A1),
-);
+// Icon color for light theme
+const IconThemeData lightIconTheme = IconThemeData(color: Color(0xFF0D47A1));
 
-//Icon color for dark theme
+// Icon color for dark theme
 const IconThemeData darkIconTheme = IconThemeData(
   color: Color(0xFFFFFFFF),
 );
 
-//Colors for text on buttons using light theme
+// Colors for text on buttons using light theme
 const TextTheme lightThemeText = TextTheme(
   labelLarge: TextStyle(
     color: lightTextColor,
   ),
 );
 
-//Colors for text on buttons using dark theme
+// Colors for text on buttons using dark theme
 const TextTheme darkThemeText = TextTheme(
   labelLarge: TextStyle(color: darkTextColor),
 );
 
-//Button color for themes
+// Button color for themes
 const Color lightButtonColor = Color(0xFF034263);
 const Color lightButtonTextColor = Color(0xFF000000);
 const Color lightButtonBorderColor = Color(0xFFFFFFFF);
 const Color darkButtonColor = Color(0xFFFFFFFF);
 
-//Colors
+// Colors
 const Color lightTextColor = Color(0xFFFFFFFF);
 const Color darkTextColor = Color(0xFF006A96);
 
-//Text Field colors for themes
+// Text Field colors for themes
 const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
 
-//Accent colors for themes
+// Accent colors for themes
 const Color lightAccentColor = Color(0xFFFFFFFF);
 const Color darkAccentColor = Color(0xFF333333);
 

@@ -3,26 +3,29 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
 
 class FreeFoodService {
+  FreeFoodService();
+
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  FreeFoodModel? _data;
-  final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
-  FreeFoodService();
+
+  /// MODELS
+  FreeFoodModel? _data;
+
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
 
   Future<bool> fetchData(String id) async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
       var _response = await _networkHelper.authorizedFetch(
-          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') +
-              'events/' +
-              id +
-              '/rsvpCount',
-          headers);
+          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' +
+              id + '/rsvpCount', headers);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
@@ -78,19 +81,12 @@ class FreeFoodService {
 
       /// update count
       var _response = await _networkHelper.authorizedPut(_url, headers, body);
-
-      if (_response != null) {
-        return true;
-      } else {
-        throw (_response.toString());
-      }
+      return _response != null ? true : throw (_response.toString());
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) {
-          return await updateCount(id, body);
-        }
+        if (await _networkHelper.getNewToken(headers)) return await updateCount(id, body);
       }
       _error = e.toString();
       return false;
@@ -99,13 +95,10 @@ class FreeFoodService {
     }
   }
 
-  Future<bool> getNewToken() async {
-    return _networkHelper.getNewToken(headers);
-  }
-
-  // getters
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
+  get lastUpdated => _lastUpdated;
   FreeFoodModel? get freeFoodModel => _data;
-  bool get isLoading => _isLoading;
-  DateTime? get lastUpdated => _lastUpdated;
+  Future<bool> getNewToken() async => _networkHelper.getNewToken(headers);
 }

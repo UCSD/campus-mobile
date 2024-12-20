@@ -10,19 +10,18 @@ import 'package:uni_links2/uni_links.dart';
 import '../../core/utils/webview.dart';
 
 class Profile extends StatelessWidget {
+  /// deep links are received by this method
+  /// the specific host needs to be added in AndroidManifest.xml and Info.plist
+  /// currently, this method handles executing custom map query
   Future<Null> initUniLinks(BuildContext context) async {
-    // deep links are received by this method
-    // the specific host needs to be added in AndroidManifest.xml and Info.plist
-    // currently, this method handles executing custom map query
     late StreamSubscription _sub;
     _sub = linkStream.listen((String? link) async {
-      // handling for map query
+      // map query handler
       if (link!.contains("deeplinking.searchmap")) {
         var uri = Uri.dataFromString(link);
         var query = uri.queryParameters['query']!;
         // redirect query to maps tab and search with query
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
+        Provider.of<MapsDataProvider>(context, listen: false).searchBarController
             .text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)

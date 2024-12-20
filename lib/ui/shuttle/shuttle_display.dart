@@ -7,8 +7,11 @@ class ShuttleDisplay extends StatelessWidget {
   ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles})
       : super(key: key);
 
-  final ShuttleStopModel stop;
+  /// STATES
   final List<ArrivingShuttle>? arrivingShuttles;
+
+  /// MODELS
+  final ShuttleStopModel stop;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget buildTimetoArrivalText() {
-    int minutesToArrival = arrivingShuttles![0].secondsToArrival~/ 60;
+    var minutesToArrival = arrivingShuttles![0].secondsToArrival~/ 60;
     return Text(
       "Arriving in: $minutesToArrival minutes",
       style: TextStyle(color: Colors.grey, fontSize: 20),
@@ -105,17 +108,14 @@ class ShuttleDisplay extends StatelessWidget {
 
   Widget buildArrivalData() {
     List<Widget> arrivalsToRender = [];
-    for (int index = 1;
-        index < arrivingShuttles!.length && index <= 2;
-        index++) {
+    for (var index = 1; index < arrivingShuttles!.length && index <= 2; index++) {
       arrivalsToRender.add(buildArrivingShuttle(arrivingShuttles![index]));
     }
-
     return Column(children: arrivalsToRender);
   }
 
   Widget buildArrivingShuttle(ArrivingShuttle shuttle) {
-    int minutesToArrival = shuttle.secondsToArrival~/ 60;
+    var minutesToArrival = shuttle.secondsToArrival~/ 60;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -158,22 +158,19 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget whetherNextArrivals() {
-    if (arrivingShuttles!.length <= 1) {
-      return Text("");
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Next Arrivals",
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 20),
-            ),
+    if (arrivingShuttles!.length <= 1) return Text("");
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Text(
+            "Next Arrivals",
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: 20),
           ),
-        ],
-      );
-    }
+        ),
+      ],
+    );
   }
 }

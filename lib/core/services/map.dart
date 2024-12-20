@@ -4,18 +4,23 @@ import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MapSearchService {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
+
+  /// MODELS
   List<MapSearchModel> _results = [];
-  final NetworkHelper _networkHelper = NetworkHelper();
+
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
 
   Future<bool> fetchLocations(String location) async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String? _response = await _networkHelper
-          .fetchData(dotenv.get('MAP_BASE_ENDPOINT') + '?query=' + location + '&region=0');
+      String? _response = await _networkHelper.fetchData(
+          dotenv.get('MAP_BASE_ENDPOINT') + '?query=' + location + '&region=0');
       if (_response != 'null') {
         /// parse data
         final data = mapSearchModelFromJson(_response!);
@@ -32,8 +37,9 @@ class MapSearchService {
     return false;
   }
 
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   List<MapSearchModel> get results => _results;
 }

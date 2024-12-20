@@ -9,8 +9,22 @@ import 'package:wifi_connection/WifiInfo.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SpeedTestService {
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   SpeedTestService();
+
+  /// STATES
+  bool _isLoading = false;
+  String? _error;
+  final Map<String, String> headers = {
+    "accept": "application/json",
+  };
+
+  /// MODELS
+  SpeedTestModel? _speedTestModel;
+
+  /// SERVICES
+  var deviceInfo = DeviceInfoPlugin();
+  var _connectivity = Connectivity();
+  final _networkHelper = NetworkHelper();
 
   Future<bool> checkSimulation() async {
     try {
@@ -31,31 +45,19 @@ class SpeedTestService {
     return false;
   }
 
-  Connectivity _connectivity = Connectivity();
-  final NetworkHelper _networkHelper = NetworkHelper();
-  SpeedTestModel? _speedTestModel;
-  bool _isLoading = false;
-  String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
-
   Future<bool> fetchSignedUrls() async {
     _error = null; _isLoading = true;
     try {
       await _networkHelper.getNewToken(headers);
       // Get download & upload urls
       String? _downloadResponse = await _networkHelper.authorizedFetch(
-          dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'),
-          headers);
+          dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'), headers);
       String? _uploadResponse = await _networkHelper.authorizedFetch(
-          dotenv.get('SPEED_TEST_UPLOAD_ENDPOINT'),
-          headers);
+          dotenv.get('SPEED_TEST_UPLOAD_ENDPOINT'), headers);
 
       /// parse data
       await fetchNetworkDiagnostics().then((WifiInfo? data) {
-        _speedTestModel = speedTestModelFromJson(
-            data, _downloadResponse!, _uploadResponse!, data != null);
+        _speedTestModel = speedTestModelFromJson(data, _downloadResponse!, _uploadResponse!, data != null);
       });
       return true;
     } catch (exception) {
@@ -81,7 +83,8 @@ class SpeedTestService {
     return wiFiInfo;
   }
 
-  bool get isLoading => _isLoading;
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
   SpeedTestModel? get speedTestModel => _speedTestModel;
 }

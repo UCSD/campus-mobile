@@ -38,15 +38,18 @@ class WebViewContainer extends StatefulWidget {
   _WebViewContainerState createState() => _WebViewContainerState();
 }
 
-class _WebViewContainerState extends State<WebViewContainer>
-    with AutomaticKeepAliveClientMixin {
-  bool get wantKeepAlive => true;
-  late UserDataProvider _userDataProvider;
-  WebViewController? _webViewController;
-  double _contentHeight = cardContentMinHeight;
+class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepAliveClientMixin {
+  /// STATES
   bool active = false;
+  double _contentHeight = cardContentMinHeight;
   late Function hide;
   late String webCardUrl;
+
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+
+  /// SERVICES
+  WebViewController? _webViewController;
 
   @override
   void initState() {
@@ -130,9 +133,7 @@ class _WebViewContainerState extends State<WebViewContainer>
   }
 
   Widget buildMenu() {
-    if (widget.hideMenu) {
-      return Container();
-    }
+    if (widget.hideMenu) return Container();
     return ButtonBar(
       buttonPadding: EdgeInsets.all(0),
       mainAxisSize: MainAxisSize.min,
@@ -169,21 +170,15 @@ class _WebViewContainerState extends State<WebViewContainer>
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
       case CardMenuOptionConstants.reloadCard:
-        {
           _webViewController?.loadUrl(webCardUrl);
           resetCardHeight(widget.cardId);
-        }
         break;
       case CardMenuOptionConstants.hideCard:
-        {
           hide();
           resetCardHeight(widget.cardId);
-        }
         break;
       default:
-        {
-          // do nothing for now
-        }
+        // do nothing for now
     }
   }
 
@@ -203,8 +198,7 @@ class _WebViewContainerState extends State<WebViewContainer>
       name: 'SetHeight',
       onMessageReceived: (JavascriptMessage message) {
         setState(() {
-          _contentHeight =
-              validateHeight(context, double.tryParse(message.message));
+          _contentHeight = validateHeight(context, double.tryParse(message.message));
         });
       },
     );
@@ -223,7 +217,7 @@ class _WebViewContainerState extends State<WebViewContainer>
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
         Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
-        //Navigator.pushNamed(context, RoutePaths.Map);
+        // Navigator.pushNamed(context, RoutePaths.Map);
       },
     );
   }
@@ -260,4 +254,7 @@ class _WebViewContainerState extends State<WebViewContainer>
       _webViewController?.loadUrl(webCardUrl);
     }
   }
+
+  /// SIMPLE GETTERS
+  bool get wantKeepAlive => true;
 }

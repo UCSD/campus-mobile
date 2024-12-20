@@ -28,9 +28,7 @@ class DiningCard extends StatelessWidget {
   }
 
   Widget buildDiningCard(List<DiningModel> data) {
-    return DiningList(
-      listSize: 3,
-    );
+    return DiningList(listSize: 3);
   }
 
   Widget buildTitle(String title) {
@@ -47,9 +45,7 @@ class DiningCard extends StatelessWidget {
         // primary: Theme.of(context).buttonColor,
         foregroundColor: Theme.of(context).colorScheme.background,
       ),
-      child: Text(
-        'View All',
-      ),
+      child: Text('View All'),
       onPressed: () {
         Navigator.pushNamed(context, RoutePaths.DiningViewAll);
       },

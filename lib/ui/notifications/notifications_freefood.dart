@@ -20,14 +20,16 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
     this.messageId = messageId;
   }
 
-  late FreeFoodDataProvider _freeFoodDataProvider;
+  /// STATES
   String? messageId;
+  var _isLoading = false;
+  var _isGoing = false;
+  var _buttonColor = Colors.white;
+  var _borderColor = Color(0xFF034161);
+  var _textColor = Color(0xFF034161);
 
-  bool _isLoading = false;
-  bool _isGoing = false;
-  Color _buttonColor = Colors.white;
-  Color _borderColor = Color(0xFF034161);
-  Color _textColor = Color(0xFF034161);
+  /// PROVIDERS
+  late FreeFoodDataProvider _freeFoodDataProvider;
 
   @override
   void didChangeDependencies() {
@@ -49,9 +51,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
   @override
   Widget build(BuildContext context) {
     var isOverCount = _freeFoodDataProvider.isOverCount(messageId!);
-
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
-
     var currCount = _freeFoodDataProvider.count(messageId!);
     var countText = currCount == 1
         ? '$currCount student is going'
