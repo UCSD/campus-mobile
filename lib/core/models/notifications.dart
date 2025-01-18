@@ -72,6 +72,7 @@ class Audience {
 }
 
 class Message {
+
   String message;
   String title;
   Data data;
@@ -83,8 +84,9 @@ class Message {
   });
 
   Message.fromJson(Map<String, dynamic> json)
-      : message = json["message"],
-        title = json["title"],
+      // Defaulting to empty strings until we figure out what should or should not be null on the backend
+      : message = json["message"] ?? "",
+        title = json["title"] ?? "",
         data = Data.fromJson(json["data"]);
 
   Map<String, dynamic> toJson() => {

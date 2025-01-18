@@ -3,7 +3,6 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'onboarding_login.dart';
 
 class OnboardingAffiliations extends StatefulWidget {
@@ -12,10 +11,10 @@ class OnboardingAffiliations extends StatefulWidget {
 }
 
 class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
-  bool studentSelected = false;
-  bool staffSelected = false;
-  bool visitorSelected = false;
-  bool readyToProceed = false;
+  var studentSelected = false;
+  var staffSelected = false;
+  var visitorSelected = false;
+  var readyToProceed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +66,7 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                           this.setState(() {
                             studentSelected = !studentSelected;
                             readyToProceed = studentSelected;
-                            visitorSelected = false;
-                            staffSelected = false;
+                            visitorSelected = staffSelected = false;
                           });
                         },
                         child: Semantics(
@@ -103,8 +101,7 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                           this.setState(() {
                             staffSelected = !staffSelected;
                             readyToProceed = staffSelected;
-                            visitorSelected = false;
-                            studentSelected = false;
+                            visitorSelected = studentSelected = false;
                           });
                         },
                         child: Semantics(
@@ -126,8 +123,7 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                     height: 45,
                     child: TextButton(
                         style: TextButton.styleFrom(
-                          backgroundColor:
-                              visitorSelected ? darkButtonColor : ColorPrimary,
+                          backgroundColor: visitorSelected ? darkButtonColor : ColorPrimary,
                           shape: ContinuousRectangleBorder(
                               side: BorderSide(
                                   color: darkButtonColor,
@@ -138,8 +134,7 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
                           this.setState(() {
                             visitorSelected = !visitorSelected;
                             readyToProceed = visitorSelected;
-                            studentSelected = false;
-                            staffSelected = false;
+                            studentSelected = staffSelected = false;
                           });
                         },
                         child: Semantics(
@@ -215,17 +210,13 @@ class _OnboardingAffiliationsState extends State<OnboardingAffiliations> {
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          OnboardingLogin(),
+      pageBuilder: (context, animation, secondaryAnimation) => OnboardingLogin(),
       transitionDuration: Duration(milliseconds: 400),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);
         var end = Offset.zero;
         var curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         return SlideTransition(
           position: animation.drive(tween),
           child: child,

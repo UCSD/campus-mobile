@@ -3,7 +3,5 @@ import 'package:flutter/material.dart';
 
 class NotificationsTabView extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return NotificationsListView();
-  }
+  Widget build(BuildContext context) => NotificationsListView();
 }

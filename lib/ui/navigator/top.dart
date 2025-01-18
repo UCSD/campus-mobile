@@ -109,14 +109,13 @@ class CMAppBar extends StatelessWidget {
 }
 
 class CustomAppBar extends ChangeNotifier {
-  late CMAppBar appBar;
+  CustomAppBar() { makeAppBar(); }
+
+  /// STATES
   String? title;
   bool? doneButton;
   bool? notificationsFilterButton;
-
-  CustomAppBar() {
-    makeAppBar();
-  }
+  late CMAppBar appBar;
 
   makeAppBar() {
     appBar = CMAppBar(

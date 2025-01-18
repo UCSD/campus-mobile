@@ -2,18 +2,17 @@ import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/core/services/news.dart';
 import 'package:flutter/material.dart';
 
-class NewsDataProvider extends ChangeNotifier
-{
-  ///STATES
+class NewsDataProvider extends ChangeNotifier {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
 
-  ///MODELS
+  /// MODELS
   NewsModel _newsModels = NewsModel();
 
-  ///SERVICES
-  NewsService _newsService = NewsService();
+  /// SERVICES
+  var _newsService = NewsService();
 
   void fetchNews() async {
     _isLoading = true; _error = null;
@@ -22,16 +21,16 @@ class NewsDataProvider extends ChangeNotifier
       _newsModels = _newsService.newsModels;
       _lastUpdated = DateTime.now();
     } else {
-      ///TODO: determine what error to show to the user
+      /// TODO: determine what error to show to the user
       _error = _newsService.error;
     }
     _isLoading = false;
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   NewsModel get newsModels => _newsModels;
 }

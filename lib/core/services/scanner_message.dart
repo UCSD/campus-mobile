@@ -4,11 +4,16 @@ import 'package:campus_mobile_experimental/core/models/scanner_message.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ScannerMessageService {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final NetworkHelper _networkHelper = NetworkHelper();
+
+  /// MODELS
   ScannerMessageModel _scannerMessageModel = ScannerMessageModel();
+
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
 
   Future<bool> fetchData(Map<String, String> headers) async {
     _error = null; _isLoading = true;
@@ -28,8 +33,9 @@ class ScannerMessageService {
     }
   }
 
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
+  get lastUpdated => _lastUpdated;
   ScannerMessageModel get scannerMessageModel => _scannerMessageModel;
-  bool get isLoading => _isLoading;
-  DateTime? get lastUpdated => _lastUpdated;
 }

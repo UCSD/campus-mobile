@@ -17,13 +17,11 @@ class _ManageParkingViewState extends State<ManageParkingView> {
   Widget buildLocationsList(BuildContext context) {
     // creates a list that will hold the list of building names
     List<Widget> list = [];
-
     const List<String> parkingType = [
       "Neighborhoods",
       "Parking Structure",
       "Parking Lots"
     ];
-
     // List<String> parkingTypeViews = [
     //   "NeighborhoodsView",
     //   "ParkingStructureView",

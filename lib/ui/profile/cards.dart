@@ -12,6 +12,7 @@ class CardsView extends StatefulWidget {
 }
 
 class _CardsViewState extends State<CardsView> {
+  /// PROVIDERS
   late CardsDataProvider _cardsDataProvider;
 
   @override
@@ -38,9 +39,7 @@ class _CardsViewState extends State<CardsView> {
         ),
         children: createList(),
         onReorder: (int oldIndex, int newIndex) {
-          if (newIndex > oldIndex)
-            newIndex -= 1;
-
+          if (newIndex > oldIndex) newIndex -= 1;
           var order = _cardsDataProvider.cardOrder;
           order.insert(newIndex, order.removeAt(oldIndex));
           setState(() { _cardsDataProvider.updateCardOrder(); });
@@ -54,16 +53,19 @@ class _CardsViewState extends State<CardsView> {
                 showDialog(
                     context: context,
                     builder: (BuildContext ctx) => AlertDialog(
-                            title: const Text('No Internet'),
-                            content: const Text(
-                                'Cards requires an internet connection.'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Ok'),
-                                child: const Text('Ok'),
-                              ),
-                            ]))
-              });
+                        title: const Text('No Internet'),
+                        content: const Text(
+                            'Cards requires an internet connection.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'Ok'),
+                            child: const Text('Ok'),
+                          ),
+                        ]
+                    )
+                )
+          }
+      );
     }
 
     return tempView;

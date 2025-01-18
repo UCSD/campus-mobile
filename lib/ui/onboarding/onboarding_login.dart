@@ -13,14 +13,19 @@ class OnboardingLogin extends StatefulWidget {
 }
 
 class _OnboardingLoginState extends State<OnboardingLogin> {
+  /// STATES
+  bool _passwordObscured = true;
+
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+
+  /// SERVICES
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
-  late UserDataProvider _userDataProvider;
-  bool _passwordObscured = true;
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
+    /// TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _userDataProvider = Provider.of<UserDataProvider>(context);
   }
@@ -184,10 +189,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                                         context,
                                         RoutePaths.BottomNavigationBar,
                                         (_) => false);
-                                    final prefs =
-                                        await SharedPreferences.getInstance();
-                                    prefs.setBool(
-                                        'showOnboardingScreen', false);
+                                    final prefs = await SharedPreferences.getInstance();
+                                    prefs.setBool('showOnboardingScreen', false);
                                   } else {
                                     showAlertDialog(context);
                                   }

@@ -1,38 +1,36 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CardsService {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-
-  late Map<String, CardsModel> _cardsModel;
-
-  final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
   };
 
+  /// MODELS
+  late Map<String, CardsModel> _cardsModel;
+
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
+
   Future<bool> fetchCards(String? ucsdAffiliation) async {
     _error = null; _isLoading = true;
-
     if (ucsdAffiliation == null) ucsdAffiliation = "";
 
     /// API Manager Service
     try {
       String cardListEndpoint = dotenv.get('CARD_LIST_ENDPOINT') + ucsdAffiliation;
-      String _response =
-          await _networkHelper.authorizedFetch(cardListEndpoint, headers);
+      String _response = await _networkHelper.authorizedFetch(cardListEndpoint, headers);
       _cardsModel = cardsModelFromJson(_response);
       return true;
     } catch (e) {
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) {
-          return await fetchCards(ucsdAffiliation);
-        }
+        if (await _networkHelper.getNewToken(headers)) return await fetchCards(ucsdAffiliation);
       }
       _error = e.toString();
       return false;
@@ -41,8 +39,9 @@ class CardsService {
     }
   }
 
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
+  get lastUpdated => _lastUpdated;
   Map<String, CardsModel> get cardsModel => _cardsModel;
-  bool get isLoading => _isLoading;
-  DateTime? get lastUpdated => _lastUpdated;
 }

@@ -10,8 +10,7 @@ class OnboardingInitial extends StatefulWidget {
   _OnboardingInitialState createState() => _OnboardingInitialState();
 }
 
-class _OnboardingInitialState extends State<OnboardingInitial>
-    with TickerProviderStateMixin {
+class _OnboardingInitialState extends State<OnboardingInitial> with TickerProviderStateMixin {
   nextPage() async {
     await Future.delayed(Duration(seconds: 2));
     Navigator.of(context).push(_createRoute());
@@ -150,8 +149,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          OnboardingScreen(),
+      pageBuilder: (context, animation, secondaryAnimation) => OnboardingScreen(),
       transitionDuration: Duration(milliseconds: 200),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(

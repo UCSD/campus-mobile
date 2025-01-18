@@ -5,20 +5,25 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserProfileService {
   UserProfileService();
+
+  /// STATES
   bool _isLoading = false;
   String? _error;
+  final _endpoint = dotenv.get('USER_ENDPOINT');
+
+  /// MODELS
   late UserProfileModel _userProfileModel;
 
-  final NetworkHelper _networkHelper = NetworkHelper();
-  final String _endpoint = dotenv.get('USER_ENDPOINT');
+  /// SERVICES
+  final _networkHelper = NetworkHelper();
 
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
     print("user headers:");
     print(headers.toString());
     _error = null; _isLoading = true;
     try {
-      _userProfileModel = userProfileModelFromJson(await _networkHelper
-          .authorizedFetch(_endpoint + '/profile', headers));
+      _userProfileModel = userProfileModelFromJson(
+          await _networkHelper.authorizedFetch(_endpoint + '/profile', headers));
       return true;
     } catch (e) {
       _error = e.toString();
@@ -33,11 +38,7 @@ class UserProfileService {
     try {
       final response = await _networkHelper.authorizedPost(
           _endpoint + '/profile', headers, createAttributeValueJson(body));
-      if (response.toString() == 'Success') {
-        return true;
-      } else {
-        throw (response.toString());
-      }
+      return response.toString() == 'Success' ? true : throw response.toString();
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -46,10 +47,10 @@ class UserProfileService {
     return false;
   }
 
-  ///correctly format the profile to be uploaded
-  ///required json format:
-  ///[{'attribute': 'name of column to edit in db, 'value': 'value to put in db'}]
-  ///if attribute does not exists in db then it will be created
+  /// correctly format the profile to be uploaded
+  /// required json format:
+  /// [{'attribute': 'name of column to edit in db, 'value': 'value to put in db'}]
+  /// if attribute does not exists in db then it will be created
   List<Map<String, dynamic>> createAttributeValueJson(Map<String, dynamic> json) {
     List<Map<String, dynamic>> correctlyFormattedData = [];
     json.forEach((key, value) {
@@ -58,7 +59,8 @@ class UserProfileService {
     return correctlyFormattedData;
   }
 
-  String? get error => _error;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
   UserProfileModel get userProfileModel => _userProfileModel;
-  bool get isLoading => _isLoading;
 }

@@ -14,16 +14,29 @@ class CardsDataProvider extends ChangeNotifier {
     /// temporary fix that prevents the student cards from causing issues on launch
     _cardOrder.removeWhere((element) => _studentCards.contains(element));
     _cardStates.removeWhere((key, value) => _studentCards.contains(key));
-
     _cardOrder.removeWhere((element) => _staffCards.contains(element));
     _cardStates.removeWhere((key, value) => _staffCards.contains(key));
   }
 
-  ///STATES
+  /// STATES
   bool _noInternet = false;
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
+  Map<String, bool> _cardStates = {};
+  late Box _cardOrderBox;
+  late Box _cardStateBox;
+
+  /// MODELS
+  late Map<String, CardsModel> _availableCards;
+
+  /// PROVIDERS
+  Map<String, CardsModel> _webCards = {};
+  UserDataProvider? _userDataProvider;
+
+  /// SERVICES
+  final _cardsService = CardsService();
+  final _connectivity = Connectivity();
 
   // Default card order for native cards
   // Most of the time immediately overwritten by default card order coming from server
@@ -45,9 +58,6 @@ class CardsDataProvider extends ChangeNotifier {
     'speed_test',
   ];
 
-  Map<String, bool> _cardStates = {};
-  Map<String, CardsModel> _webCards = {};
-
   // Native student cards
   static const List<String> _studentCards = [
     'finals',
@@ -62,16 +72,6 @@ class CardsDataProvider extends ChangeNotifier {
     'employee_id',
   ];
 
-  late Map<String, CardsModel> _availableCards;
-  late Box _cardOrderBox;
-  late Box _cardStateBox;
-
-  UserDataProvider? _userDataProvider;
-
-  ///Services
-  final CardsService _cardsService = CardsService();
-  final Connectivity _connectivity = Connectivity();
-
   void updateAvailableCards(String? ucsdAffiliation) async
   {
     _isLoading = true; _error = null; notifyListeners();
@@ -84,21 +84,19 @@ class CardsDataProvider extends ChangeNotifier {
         _cardOrder.clear();
 
         // add new cards to the top of the list
-        _availableCards
-            .forEach((card, model) {
-              if (_studentCards.contains(model) || _staffCards.contains(model))
-                return;
+        _availableCards.forEach((card, model) {
+          if (_studentCards.contains(model) || _staffCards.contains(model))
+            return;
 
-              // add active webcards
-              if (model.isWebCard)
-                _webCards[card] = model;
+          // add active webcards
+          if (model.isWebCard) _webCards[card] = model;
 
-              if (!_cardOrder.contains(model) && model.cardActive)
-                _cardOrder.add(card);
+          if (!_cardOrder.contains(model) && model.cardActive)
+            _cardOrder.add(card);
 
-              // keep all new cards activated by default
-              _cardStates.putIfAbsent(card, () => true);
-            });
+          // keep all new cards activated by default
+          _cardStates.putIfAbsent(card, () => true);
+        });
 
         updateCardOrder();
         updateCardStates();
@@ -138,9 +136,8 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin)
       return;
-    }
 
     // checks if box is open, creates one if not
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
@@ -155,9 +152,9 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardOrder] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardOrder() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin)
       return;
-    }
+
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
 
     if (_cardOrderBox.get(DataPersistence.cardOrder) == null)
@@ -190,9 +187,9 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// Update the [_cardStates] stored on disk
   Future updateCardStates() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) {
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin)
       return;
-    }
+
     var activeCards = _cardStates.keys.where((card) => _cardStates[card]!).toList();
 
     // checks if box is open, creates one if not
@@ -212,7 +209,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void activateStudentCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
     // TODO: test w/o this
@@ -223,7 +220,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void showAllStudentCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
     // TODO: test w/o this
@@ -247,7 +244,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void activateStaffCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _staffCards.toList());
 
     // TODO: test w/o this
@@ -257,7 +254,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void showAllStaffCards() {
-    int index = _cardOrder.indexOf('MyStudentChart') + 1;
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _staffCards.toList());
 
     // TODO: test w/o this
@@ -286,16 +283,16 @@ class CardsDataProvider extends ChangeNotifier {
     updateCardStates();
   }
 
+  /// SIMPLE SETTERS
   set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 
-  ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  bool get noInternet => _noInternet;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
-
-  Map<String, bool> get cardStates => _cardStates;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get noInternet => _noInternet;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
   List<String> get cardOrder => _cardOrder;
+  Map<String, bool> get cardStates => _cardStates;
   Map<String, CardsModel?> get webCards => _webCards;
   Map<String, CardsModel> get availableCards => _availableCards;
 }

@@ -1,7 +1,5 @@
 // ignore_for_file: unused_import
-
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
@@ -180,8 +178,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  List<Widget> createList()
-  {
+  List<Widget> createList() {
     final orderedCards = getOrderedCardsList(context.watch<CardsDataProvider>().cardOrder);
     final noticesCards = getNoticesCardsList(context.watch<NoticesDataProvider>().noticesModel);
     return [...noticesCards, ...orderedCards];
@@ -215,7 +212,7 @@ class _HomeState extends State<Home> {
     final webCards = context.read<CardsDataProvider>().webCards;
 
     for (String cardName in order) {
-      // TODO: if-branches logic here theoretically could be simplified
+      /// TODO: if-branches logic here theoretically could be simplified
       if (!webCards.containsKey(cardName)) {
         final cardCtor = _cardCtors[cardName];
         if (cardCtor != null)

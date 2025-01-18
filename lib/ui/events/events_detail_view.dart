@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 class EventDetailView extends StatelessWidget {
   const EventDetailView({Key? key, required this.data}) : super(key: key);
 
+  /// MODELS
   final EventModel data;
 
   @override
@@ -17,9 +18,7 @@ class EventDetailView extends StatelessWidget {
     return Provider.of<EventsDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
-        : ContainerView(
-            child: buildDetailView(context),
-          );
+        : ContainerView(child: buildDetailView(context));
   }
 
   Widget buildDetailView(BuildContext context) {
