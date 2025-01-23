@@ -39,6 +39,7 @@ class CardsDataProvider extends ChangeNotifier {
   final _connectivity = Connectivity();
 
   // Default card order for native cards
+  // Most of the time immediately overwritten by default card order coming from server
   List<String> _cardOrder = [
     'NativeScanner',
     'MyStudentChart',
@@ -90,8 +91,8 @@ class CardsDataProvider extends ChangeNotifier {
           // add active webcards
           if (model.isWebCard) _webCards[card] = model;
 
-          if (!_cardOrder.contains(model) && (model.cardActive))
-            _cardOrder.insert(0, card);
+          if (!_cardOrder.contains(model) && model.cardActive)
+            _cardOrder.add(card);
 
           // keep all new cards activated by default
           _cardStates.putIfAbsent(card, () => true);
