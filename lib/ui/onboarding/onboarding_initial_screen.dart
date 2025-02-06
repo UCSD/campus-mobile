@@ -43,7 +43,7 @@ class _OnboardingInitialState extends State<OnboardingInitial> with TickerProvid
                             decoration: new BoxDecoration(
                                 image: DecorationImage(
                               image: AssetImage(
-                                  'assets/images/onboarding_background1.png'),
+                                  'assets/images/hero/hero-img_campus-life.png'),
                               fit: BoxFit.fill,
                             ))),
                       ),

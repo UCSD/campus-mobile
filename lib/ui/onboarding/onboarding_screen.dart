@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_affiliations.dart';
+import 'package:campus_mobile_experimental/ui/onboarding/onboarding_page.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,8 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderStateMixin {
   var currentIndex = 0;
+  var width = 0.0;
+  var height = 0.0;
 
   @override
   void didChangeDependencies() {
@@ -21,8 +24,8 @@ class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -39,9 +42,9 @@ class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderState
                     });
                   },
                   children: [
-                    buildPage1(width, height),
-                    buildPage2(width, height),
-                    buildPage3(width, height),
+                    buildPage1(),
+                    buildPage2(),
+                    buildPage3(),
                   ],
             )),
             buildDotIndicator(),
@@ -49,7 +52,7 @@ class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderState
               height: height * 0.066,
               color: Colors.white,
             ),
-            buildLoginButton(width, height),
+            buildLoginButton(),
           ]),
         ),
       ]),
@@ -65,7 +68,7 @@ class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderState
     );
   }
 
-  Widget buildLoginButton(double width, double height) {
+  Widget buildLoginButton() {
     return Container(
         color: ColorPrimary,
         height: height * 0.089,
@@ -118,179 +121,43 @@ class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderState
             ]));
   }
 
-  Widget buildPage1(double width, double height) {
-    return Stack(clipBehavior: Clip.none, children: <Widget>[
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-        FractionallySizedBox(
-          child: Container(
-              height: height * 0.42,
-              decoration: new BoxDecoration(
-                  image: DecorationImage(
-                image: AssetImage('assets/images/onboarding_background1.png'),
-                fit: BoxFit.fill,
-              ))),
-        ),
-        Container(
-          height: height * 0.056,
-          color: Colors.white,
-        ),
-        Expanded(
-            child: Container(
-          width: width * 0.9,
-          color: Colors.white,
-          child: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                Text(
-                  "Make the most out of your CAMPUS CONNECTIONS",
-                  style: TextStyle(
-                      color: ColorPrimary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25),
-                  textAlign: TextAlign.center,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: height * 0.01),
-                ),
-                Text(
-                  "Your trusted, on-the-go, location-based campus resource for all things Triton.",
-                  style: TextStyle(
-                      color: ColorPrimary.withOpacity(0.7), fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              ])),
-        ))
-      ]),
-      Container(
-        padding: EdgeInsets.only(left: width * 0.03, top: height * 0.1),
-        child: Container(
-            height: height * 0.4,
-            width: width * 0.48,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage('assets/images/onboarding_classes.png'),
-              fit: BoxFit.fill,
-            ))),
-      ),
-    ]);
+  Widget buildPage1() {
+    return OnboardingPage(
+        width: width,
+        height: height,
+        background: AssetImage('assets/images/hero/hero-img_campus-life.png'),
+        primary: AssetImage('assets/images/onboarding_classes.png'),
+        primaryPadding: (x: 0.03, y: 0.1),
+        primaryScale: (x: 0.48, y: 0.4),
+        heading: "Make the most out of your CAMPUS CONNECTIONS",
+        description: "Your trusted, on-the-go, location-based campus resource for all things Triton.",
+    );
   }
 
-  Widget buildPage2(double width, double height) {
-    return Stack(children: <Widget>[
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-        Container(
-            height: height * 0.42,
-            decoration: new BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage('assets/images/onboarding_background2.png'),
-              fit: BoxFit.fill,
-            ))),
-        Container(
-          height: height * 0.056,
-          color: Colors.white,
-        ),
-        Expanded(
-            child: Container(
-          width: width * 0.93,
-          color: Colors.white,
-          child: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                Text(
-                  "Made for students AND staff",
-                  style: TextStyle(
-                      color: ColorPrimary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24),
-                  textAlign: TextAlign.center,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: height * 0.01),
-                ),
-                Text(
-                  "Log in now to gain access to personalized information.",
-                  style: TextStyle(
-                      color: ColorPrimary.withOpacity(0.7), fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              ])),
-        ))
-      ]),
-      Column(children: <Widget>[
-        Container(
-          //alignment: Alignment.topRight,
-          padding: EdgeInsets.only(left: width * 0.026, top: height * 0.35),
-          child: Container(
-              height: height * 0.14,
-              width: width * 0.49,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                image:
-                    AssetImage('assets/images/onboarding_student_profile.png'),
-                fit: BoxFit.fill,
-              ))),
-        )
-      ]),
-    ]);
+  Widget buildPage2() {
+    return OnboardingPage(
+      width: width,
+      height: height,
+      background: AssetImage('assets/images/onboarding_background2.png'),
+      primary: AssetImage('assets/images/onboarding_student_profile.png'),
+      primaryPadding: (x: 0.026, y: 0.35),
+      primaryScale: (x: 0.49, y: 0.14),
+      heading: "Made for students AND staff",
+      description: "Log in now to gain access to personalized information.",
+    );
   }
 
-  Widget buildPage3(double width, double height) {
-    return Stack(children: <Widget>[
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-        Container(
-            height: height * .42,
-            decoration: new BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage('assets/images/onboarding_background3.png'),
-              fit: BoxFit.fill,
-            ))),
-        Container(
-          height: height * 0.056,
-          color: Colors.white,
-        ),
-        Expanded(
-            child: Container(
-          width: width * 0.9,
-          color: Colors.white,
-          child: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                Text(
-                  "Know what's going on",
-                  style: TextStyle(
-                      color: ColorPrimary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26),
-                  textAlign: TextAlign.center,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: height * 0.01),
-                ),
-                Text(
-                  "Connect to the latest university services, news, and information when you need it most.",
-                  style: TextStyle(
-                      color: ColorPrimary.withOpacity(0.7), fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              ])),
-        ))
-      ]),
-      Container(
-        //alignment: Alignment.topCenter,
-        padding: EdgeInsets.only(left: width * 0.03, top: height * 0.1),
-        child: Container(
-            height: height * 0.4,
-            width: width * 0.48,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage('assets/images/onboarding_news.png'),
-              fit: BoxFit.fill,
-            ))),
-      )
-    ]);
+  Widget buildPage3() {
+    return OnboardingPage(
+      width: width,
+      height: height,
+      background: AssetImage('assets/images/onboarding_background3.png'),
+      primary: AssetImage('assets/images/onboarding_news.png'),
+      primaryPadding: (x: 0.03, y: 0.1),
+      primaryScale: (x: 0.48, y: 0.4),
+      heading: "Know what's going on",
+      description: "Connect to the latest university services, news, and information when you need it most.",
+    );
   }
 
   Route _routeToLogin() {
