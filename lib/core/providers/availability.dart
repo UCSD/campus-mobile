@@ -106,9 +106,9 @@ class AvailabilityDataProvider extends ChangeNotifier {
   }
 
   /// SIMPLE GETTERS
-  get isLoading => _isLoading;
-  get error => _error;
-  get lastUpdated => _lastUpdated;
+  bool get isLoading => _isLoading;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
   Map<String?, bool> get locationViewState => _locationViewState;
   List<AvailabilityModel?> get availabilityModels =>
       makeOrderedList(userDataProvider.userProfileModel.selectedOccuspaceLocations);

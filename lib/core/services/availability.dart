@@ -17,16 +17,16 @@ class AvailabilityService {
   /// add any type of data manipulation here so it can be accessed via provider
 
   /// SERVICES
-  final _networkHelper = NetworkHelper();
+  static const _networkHelper = NetworkHelper();
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
-          dotenv.get('AVAILABILITY_API_ENDPOINT'), {
-        "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
-      }));
+      String _response = await _networkHelper.authorizedFetch(
+          dotenv.get('AVAILABILITY_API_ENDPOINT'),
+          { "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY') }
+      );
 
       /// parse data
       final data = availabilityStatusFromJson(_response);
@@ -41,8 +41,8 @@ class AvailabilityService {
   }
 
   /// SIMPLE GETTERS
-  get isLoading => _isLoading;
-  get error => _error;
-  get lastUpdated => _lastUpdated;
+  bool get isLoading => _isLoading;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
   List<AvailabilityModel> get data => _data;
 }
