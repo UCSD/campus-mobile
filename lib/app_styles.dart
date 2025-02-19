@@ -113,3 +113,6 @@ const Color c3 = Color.fromARGB(255, 0, 0, 255);
 // List Tile Theme Data
 const lightListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00629B));
 const darkListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
+
+// New Onboarding Screen Colors
+const lightOnboardingScreen = Color.fromARGB(255, 245, 240, 230);
