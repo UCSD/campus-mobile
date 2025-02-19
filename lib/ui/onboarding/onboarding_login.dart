@@ -33,6 +33,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /// TODO: Remove back button since this is going to be the very first screen in the future
       appBar: AppBar(
         backgroundColor:
             lightOnboardingScreen, // Sets the background color to red
@@ -62,11 +63,13 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             crossAxisAlignment:
                 CrossAxisAlignment.center, // Center items horizontally
             children: <Widget>[
+              // UCSD Logo
               Image.asset(
                 'assets/images/UCSanDiegoLogo__Blue.png',
                 fit: BoxFit.contain,
               ),
               SizedBox(height: 30.0),
+
               // Welcome Heading
               Text(
                 "WELCOME TO THE UC SAN DIEGO MOBILE APP",
@@ -77,20 +80,22 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   color: Color(0xFF182B49), // Subheading color
                 ),
               ),
-
               const SizedBox(height: 20),
+
               // Description Text
               Text(
                 "Your personalized gateway to campus life, events, news and more.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  /// TODO: Get desired fonts
                   fontFamily: 'Sans',
                   fontSize: 30,
                   color: Color(0xFF5D5E60), // Foreground body color
                 ),
               ),
               SizedBox(height: 30.0),
-              // Login Credentials
+
+              // UCSD Email Input
               Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
@@ -107,6 +112,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'UCSD Email',
+                        // I'm leaving this here in case we want a black border
                         // focusedBorder: OutlineInputBorder(
                         //   /*borderSide: BorderSide(
                         //     color: Colors.black,
@@ -127,6 +133,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     ),
                   )),
               SizedBox(height: 15),
+
+              // Password Input
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
@@ -178,7 +186,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               ),
               SizedBox(height: 20),
 
-              // Log In Section //
+              // SIGN IN and Forgot Password?
               Row(
                 children: [
                   const SizedBox(width: 10),
