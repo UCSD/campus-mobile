@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
-import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
+import 'package:campus_mobile_experimental/app_router.dart'
+    as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
@@ -21,8 +22,7 @@ var showOnboardingScreen = true;
 var isFirstRunFlag = false;
 var executedInitialDeeplinkQuery = false;
 
-void main() async
-{
+void main() async {
   /// Record zoned errors - https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +31,8 @@ void main() async
     final mapsImplementation = GoogleMapsFlutterPlatform.instance;
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
-      await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
+      await mapsImplementation
+          .initializeWithRenderer(AndroidMapRenderer.latest);
     }
 
     // dotenv loading
@@ -89,12 +90,10 @@ class CampusMobile extends StatelessWidget {
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
-      colorScheme:
-        ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
-          .copyWith(
-            background: lightButtonColor,
-            brightness: Brightness.light, // added
-          ),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
+        background: lightButtonColor,
+        brightness: Brightness.light, // added
+      ),
     );
 
     final ThemeData darkTheme = ThemeData(
@@ -105,12 +104,10 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
-      colorScheme:
-        ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
-          .copyWith(
-            background: darkButtonColor,
-            brightness: Brightness.dark, // added
-          ),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
+        background: darkButtonColor,
+        brightness: Brightness.dark, // added
+      ),
     );
 
     return MultiProvider(
@@ -125,9 +122,10 @@ class CampusMobile extends StatelessWidget {
           colorScheme:
               darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
-        initialRoute: showOnboardingScreen
-            ? RoutePaths.OnboardingInitial
-            : RoutePaths.BottomNavigationBar,
+        // TODO: remove this after done w/ testing
+        initialRoute: //showOnboardingScreen ?
+            RoutePaths.OnboardingInitial,
+        //: RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [
           observer,

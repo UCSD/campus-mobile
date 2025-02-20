@@ -68,47 +68,67 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 'assets/images/UCSanDiegoLogo__Blue.png',
                 fit: BoxFit.contain,
               ),
-              SizedBox(height: 30.0),
+              const SizedBox(height: 30.0),
 
               // Welcome Heading
-              Text(
-                "WELCOME TO THE UC SAN DIEGO MOBILE APP",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF182B49), // Subheading color
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 298.265),
+                child: const Text(
+                  "WELCOME TO THE UC SAN DIEGO MOBILE APP",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    letterSpacing: -0.2,
+                    height: 0.8333, // line height: 20px
+                    fontWeight: FontWeight.w900,
+                    color: const Color(0xFF182B49), // Subheading color
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 20.0),
 
               // Description Text
-              Text(
-                "Your personalized gateway to campus life, events, news and more.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  /// TODO: Get desired fonts
-                  fontFamily: 'Sans',
-                  fontSize: 30,
-                  color: Color(0xFF5D5E60), // Foreground body color
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 266.267),
+                child: const Text(
+                  "Your personalized gateway to campus life, events, news and more.",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    /// TODO: Get desired fonts
+                    fontFamily: 'Sans',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18,
+                    letterSpacing: 1.2,
+                    height: 1.278, // line height: 23px
+                    color: const Color(0xFF5D5E60), // Foreground body color
+                  ),
                 ),
               ),
-              SizedBox(height: 30.0),
+              const SizedBox(height: 30.0),
 
               // UCSD Email Input
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
+                    height: 44.0,
                     decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
+                        //borderRadius: BorderRadius.circular(8),
                         boxShadow: [
-                          BoxShadow(color: Colors.black26, blurRadius: 2),
+                          BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 5,
+                              spreadRadius: 2.0,
+                              offset: const Offset(2.0, 2.0)),
                         ]), //lightTextFieldBorderColor,
                     child: TextField(
                       style: TextStyle(
                           textBaseline: TextBaseline.alphabetic,
-                          color: Colors.black),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18.0,
+                          height: 1.277, // line height: 23px
+                          letterSpacing: 1.2),
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'UCSD Email',
@@ -132,23 +152,31 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       controller: _emailTextFieldController,
                     ),
                   )),
-              SizedBox(height: 15),
+              SizedBox(height: 18.5),
 
               // Password Input
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
+                  height: 44.0,
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
+                      //borderRadius: BorderRadius.circular(8),
                       boxShadow: [
-                        BoxShadow(color: Colors.black26, blurRadius: 2),
+                        BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 5,
+                            spreadRadius: 2.0,
+                            offset: const Offset(2.0, 2.0)),
                       ]),
                   child: TextField(
                     style: TextStyle(
-                      textBaseline: TextBaseline.alphabetic,
-                      color: Colors.black,
-                    ),
+                        textBaseline: TextBaseline.alphabetic,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18.0,
+                        height: 1.277,
+                        letterSpacing: 1.2),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Password',
@@ -184,54 +212,59 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 24),
 
               // SIGN IN and Forgot Password?
               Row(
                 children: [
                   const SizedBox(width: 10),
                   SizedBox(
+                      width: 94,
+                      height: 41,
                       child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFFFCD00), // Yellow Button
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Semantics(
-                      button: true,
-                      hint:
-                          'press to login with your information inputted in above textfields',
-                      child: Text(
-                        'SIGN IN',
-                        style: TextStyle(
-                          color: Colors.black, // Text color on button
-                          fontWeight: FontWeight.bold,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFFFCD00), // Yellow Button
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 0.0,
                         ),
-                      ),
-                    ),
-                    onPressed: _userDataProvider.isLoading
-                        ? null
-                        : () {
-                            _userDataProvider
-                                .manualLogin(_emailTextFieldController.text,
-                                    _passwordTextFieldController.text)
-                                .then((isLoggedIn) async {
-                              if (isLoggedIn) {
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    RoutePaths.BottomNavigationBar,
-                                    (_) => false);
-                                final prefs =
-                                    await SharedPreferences.getInstance();
-                                prefs.setBool('showOnboardingScreen', false);
-                              } else {
-                                showAlertDialog(context);
-                              }
-                            });
-                          },
-                  )),
-                  const SizedBox(width: 145),
+                        child: Semantics(
+                          button: true,
+                          hint:
+                              'press to login with your information inputted in above textfields',
+                          child: Text(
+                            'SIGN IN',
+                            style: TextStyle(
+                              color: Colors.black, // Text color on button
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        onPressed: _userDataProvider.isLoading
+                            ? null
+                            : () {
+                                _userDataProvider
+                                    .manualLogin(_emailTextFieldController.text,
+                                        _passwordTextFieldController.text)
+                                    .then((isLoggedIn) async {
+                                  if (isLoggedIn) {
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        RoutePaths.BottomNavigationBar,
+                                        (_) => false);
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.setBool(
+                                        'showOnboardingScreen', false);
+                                  } else {
+                                    showAlertDialog(context);
+                                  }
+                                });
+                              },
+                      )),
+                  const Spacer(),
+                  //const SizedBox(width: 145),
                   GestureDetector(
                     child: Semantics(
                       hint:
@@ -253,6 +286,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       }
                     },
                   ),
+                  SizedBox(width: 10.0)
                 ],
               ),
 
@@ -263,7 +297,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 "Not affiliated with UC San Diego?",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 15.5,
+                  height: 1.42, // line height: 20px
                   color: Color(0xFF5D5E60), // Foreground body color
                 ),
               ),
@@ -277,8 +312,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     "SKIP THIS STEP",
                     style: TextStyle(
                       color: Color(0xFF182B49), // Subheading color
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16.5,
+                      height: 1.195, // line height: 16.73px
                       decoration: TextDecoration.underline,
                     ),
                   ),
