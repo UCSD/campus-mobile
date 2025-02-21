@@ -14,12 +14,11 @@ class OnboardingLogin extends StatefulWidget {
 
 class _OnboardingLoginState extends State<OnboardingLogin> {
   /// STATES
-  bool _passwordObscured = true;
+  var _passwordObscured = true;
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
-  /// SERVICES
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
 
@@ -53,7 +52,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   }
 
   Widget buildLoginWidget() {
+    // TODO: we should look into replacing the Constrained Boxes with FractionallySizedBoxes
     return Center(
+      // TODO: this specifically could be replace w/ SizedBox.expand or Unconstrained Box (need to figure out which one)
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 365),
         child: SingleChildScrollView(
@@ -67,17 +68,19 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               Image.asset(
                 'assets/images/UCSanDiegoLogo__Blue.png',
                 fit: BoxFit.contain,
+                width: 321.12,
               ),
-              const SizedBox(height: 30.0),
+              const SizedBox(height: 45.0),
 
               // Welcome Heading
               ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 298.265),
+                constraints: BoxConstraints(maxWidth: 261.0),//298.265),
                 child: const Text(
                   "WELCOME TO THE UC SAN DIEGO MOBILE APP",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontFamily: "Refrigerator Deluxe",
+                    fontSize: 28.0,
                     letterSpacing: -0.2,
                     height: 0.8333, // line height: 20px
                     fontWeight: FontWeight.w900,
@@ -85,22 +88,21 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 12.5),
 
               // Description Text
               ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 266.267),
+                constraints: BoxConstraints(maxWidth: 280),//266.267),
                 child: const Text(
                   "Your personalized gateway to campus life, events, news and more.",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                    /// TODO: Get desired fonts
-                    fontFamily: 'Sans',
+                    fontFamily: 'Brix Sans',
                     fontWeight: FontWeight.w400,
-                    fontSize: 18,
-                    letterSpacing: 1.2,
-                    height: 1.278, // line height: 23px
-                    color: const Color(0xFF5D5E60), // Foreground body color
+                    fontSize: 20,
+                    letterSpacing: 2.2,
+                    height: 1.2778, // line height: ~26px
+                    color: const Color(0xFF182B49), // Foreground body color
                   ),
                 ),
               ),

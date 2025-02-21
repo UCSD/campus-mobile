@@ -62,3 +62,10 @@ flutter:
     - assets/images/hero/
     - assets/images/grit/
     - .env
+  fonts:
+    - family: Brix Sans
+      fonts:
+        - asset: fonts/BrixSansMedium.otf
+    - family: Refrigerator Deluxe
+      fonts:
+        - asset: fonts/RefrigeratorDeluxeBold.otf
