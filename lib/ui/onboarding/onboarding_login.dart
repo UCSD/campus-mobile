@@ -153,12 +153,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                                   if (isLoggedIn) {
                                     Navigator.pushNamedAndRemoveUntil(
                                         context,
-                                        RoutePaths.BottomNavigationBar,
+                                        RoutePaths.OnboardingInitial,
                                         (_) => false);
-                                    final prefs =
-                                        await SharedPreferences.getInstance();
-                                    prefs.setBool(
-                                        'showOnboardingScreen', false);
                                   } else {
                                     showAlertDialog(context);
                                   }
@@ -223,9 +219,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 ),
                 onTap: () async {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, RoutePaths.BottomNavigationBar, (_) => false);
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.setBool('showOnboardingScreen', false);
+                      context, RoutePaths.OnboardingInitial, (_) => false);
                 },
               )
             ],

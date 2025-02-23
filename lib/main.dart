@@ -124,7 +124,7 @@ class CampusMobile extends StatelessWidget {
         ),
         // TODO: remove this after done w/ testing
         initialRoute: //showOnboardingScreen ?
-            RoutePaths.OnboardingInitial,
+            RoutePaths.OnboardingLogin,
         //: RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [
