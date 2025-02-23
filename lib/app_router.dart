@@ -22,7 +22,7 @@ import 'package:campus_mobile_experimental/ui/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_affiliations.dart';
-import 'package:campus_mobile_experimental/ui/onboarding/onboarding_initial_screen.dart';
+import 'package:campus_mobile_experimental/ui/onboarding/onboarding_slides.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';

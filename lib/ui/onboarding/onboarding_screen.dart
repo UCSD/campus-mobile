@@ -1,11 +1,15 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_affiliations.dart';
-import 'package:campus_mobile_experimental/ui/onboarding/onboarding_page.dart';
+import 'package:campus_mobile_experimental/ui/onboarding/onboarding_slide_template.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../app_constants.dart';
 import 'onboarding_login.dart';
 
+///// FILE NOT NEEDED
+/// TODO: REMOVE THIS FILE FROM EXISTENCE
 class OnboardingScreen extends StatefulWidget {
   @override
   _OnboardingScreen createState() => _OnboardingScreen();
@@ -13,8 +17,7 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderStateMixin {
   var currentIndex = 0;
-  var width = 0.0;
-  var height = 0.0;
+  var width, height = 0.0;
 
   @override
   void didChangeDependencies() {
@@ -22,115 +25,54 @@ class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderState
     super.didChangeDependencies();
   }
 
+  // Dot Indicator
+  Widget buildDotIndicator() {
+    return DotsIndicator(
+      dotsCount: 5,
+      position: currentIndex,
+      decorator: DotsDecorator(
+          activeColor: const Color(0xFF182B49)),
+    );
+  }
+
+  // Onboarding pages (slides) generator
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
-      body: Stack(children: <Widget>[
-        Container(
-          child: Column(children: <Widget>[
-            Expanded(
-                child: PageView(
-                  pageSnapping: true,
-                  onPageChanged: (int page) {
-                    setState(() {
-                      currentIndex = page;
-                    });
-                  },
-                  children: [
-                    buildPage1(),
-                    buildPage2(),
-                    buildPage3(),
-                  ],
-            )),
-            buildDotIndicator(),
-            Container(
-              height: height * 0.066,
-              color: Colors.white,
-            ),
-            buildLoginButton(),
-          ]),
-        ),
+      backgroundColor: lightOnboardingScreen, // ColorPrimary, //Colors.white,
+      body: Stack(alignment: Alignment.topCenter, children: <Widget>[
+        buildDotIndicator(),
+        Column(children: <Widget>[
+          Expanded(
+              child: PageView(
+            pageSnapping: true,
+            onPageChanged: (int page) {
+              setState(() {
+                currentIndex = page;
+              });
+            },
+            children: [
+              buildPage1(),
+              buildPage2(),
+              buildPage3(),
+              buildPage4(),
+              buildPage5()
+            ],
+          )),
+          buildGoToTheAppButton(),
+        ]),
       ]),
     );
   }
 
-  Widget buildDotIndicator() {
-    return DotsIndicator(
-      dotsCount: 3,
-      position: currentIndex,
-      decorator: DotsDecorator(
-          activeColor: ColorPrimary, spacing: EdgeInsets.all(4.0)),
-    );
-  }
-
-  Widget buildLoginButton() {
-    return Container(
-        color: ColorPrimary,
-        height: height * 0.089,
-        child: Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Expanded(
-                  child: TextButton(
-                style: TextButton.styleFrom(
-                  foregroundColor: ColorPrimary,
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(_routeToAffiliations());
-                },
-                child: Semantics(
-                  button: true,
-                  hint:
-                      'press to start by choosing your affiliation to UC San Diego',
-                  child: Text(
-                    "Get Started",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        decoration: TextDecoration.underline),
-                  ),
-                ),
-              )),
-              Expanded(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: ColorPrimary,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(_routeToLogin());
-                  },
-                  child: Semantics(
-                    button: true,
-                    hint: 'press to login with your ucsd account',
-                    child: Text(
-                      "Log In",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          decoration: TextDecoration.underline),
-                    ),
-                  ),
-                ),
-              )
-            ]));
-  }
-
   Widget buildPage1() {
     return OnboardingPage(
-        width: width,
-        height: height,
-        background: AssetImage('assets/images/hero/hero-img_campus-life.png'),
-        primary: AssetImage('assets/images/onboarding_classes.png'),
-        primaryPadding: (x: 0.03, y: 0.1),
-        primaryScale: (x: 0.48, y: 0.4),
-        heading: "Make the most out of your CAMPUS CONNECTIONS",
-        description: "Your trusted, on-the-go, location-based campus resource for all things Triton.",
+      width: width,
+      height: height,
+      heroImage: AssetImage('assets/images/hero/hero-img-campus-life.png'),
+      heading: "ONE-STOP ACCESS TO CAMPUS LIFE.",
+      description:
+          "Keep up to date with amazing events and stay connected to campus news.",
     );
   }
 
@@ -138,12 +80,9 @@ class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderState
     return OnboardingPage(
       width: width,
       height: height,
-      background: AssetImage('assets/images/onboarding_background2.png'),
-      primary: AssetImage('assets/images/onboarding_student_profile.png'),
-      primaryPadding: (x: 0.026, y: 0.35),
-      primaryScale: (x: 0.49, y: 0.14),
-      heading: "Made for students AND staff",
-      description: "Log in now to gain access to personalized information.",
+      heroImage: AssetImage('assets/images/hero/hero-img-schedule.png'),
+      heading: "YOUR SCHEDULE ON THE GO",
+      description: "View your classes and finals schedule whenever you need.",
     );
   }
 
@@ -151,50 +90,59 @@ class _OnboardingScreen extends State<OnboardingScreen> with TickerProviderState
     return OnboardingPage(
       width: width,
       height: height,
-      background: AssetImage('assets/images/onboarding_background3.png'),
-      primary: AssetImage('assets/images/onboarding_news.png'),
-      primaryPadding: (x: 0.03, y: 0.1),
-      primaryScale: (x: 0.48, y: 0.4),
-      heading: "Know what's going on",
-      description: "Connect to the latest university services, news, and information when you need it most.",
+      heroImage:
+          AssetImage('assets/images/New_Hero_Images/hero-img-parking.png'),
+      heading: "PARKING MADE EASIER.",
+      description: "Keep an eye on parking lot capacity to plan your day.",
     );
   }
 
-  Route _routeToLogin() {
-    return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => OnboardingLogin(),
-      transitionDuration: const Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) =>
-        SlideTransition(
-          position: animation.drive(
-              Tween(
-                  begin: const Offset(0.0, 1.0),
-                  end: Offset.zero
-              ).chain(
-                  CurveTween(curve: Curves.ease)
-              )
-          ),
-          child: child,
-        ),
+  Widget buildPage4() {
+    return OnboardingPage(
+      width: width,
+      height: height,
+      heroImage: AssetImage('assets/images/hero/hero-img-campus-life.png'),
+      heading: "SPEND LESS TIME WAITING.",
+      description: "Easily see how busy campus locations are before you arrive.",
     );
   }
 
-  Route _routeToAffiliations() {
-    return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => OnboardingAffiliations(),
-      transitionDuration: const Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) =>
-        SlideTransition(
-          position: animation.drive(
-              Tween(
-                  begin: const Offset(0.0, 1.0),
-                  end: Offset.zero
-              ).chain(
-                  CurveTween(curve: Curves.ease)
-              )
-          ),
-          child: child,
-        ),
+  Widget buildPage5() {
+    return OnboardingPage(
+      width: width,
+      height: height,
+      heroImage: AssetImage('assets/images/hero/hero-img-campus-life.png'),
+      heading: "YOU'RE ALL SET.",
+      description:
+      "We recommend turning on push notifications to receive campus and safety alerts.",
     );
+  }
+
+  //////////////// Footer
+  Widget buildGoToTheAppButton() {
+    return
+              GestureDetector(
+                child: Semantics(
+                  hint:
+                      'press to skip the login process and use this app as a visitor',
+                  child: Text(
+                    "GO TO THE APP",
+                    style: TextStyle(
+                      color: Color(0xFF182B49), // Subheading color
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16.5,
+                      height: 1.195, // line height: 16.73px
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, RoutePaths.BottomNavigationBar, (_) => false);
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.setBool('showOnboardingScreen', false);
+                },
+              );
+
   }
 }
