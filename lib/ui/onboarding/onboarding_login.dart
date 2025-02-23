@@ -66,7 +66,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             children: <Widget>[
               // UCSD Logo
               Image.asset(
-                'assets/images/UCSanDiegoLogo__Blue.png',
+                'assets/images/UCSanDiegoLogo-Blue.png',
                 fit: BoxFit.contain,
                 width: 321.12,
               ),
