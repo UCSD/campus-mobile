@@ -109,111 +109,11 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               const SizedBox(height: 30.0),
 
               // UCSD Email Input
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Container(
-                    height: 44.0,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        //borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 5,
-                              spreadRadius: 2.0,
-                              offset: const Offset(2.0, 2.0)),
-                        ]), //lightTextFieldBorderColor,
-                    child: TextField(
-                      style: TextStyle(
-                          textBaseline: TextBaseline.alphabetic,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18.0,
-                          height: 1.277, // line height: 23px
-                          letterSpacing: 1.2),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'UCSD Email',
-                        // I'm leaving this here in case we want a black border
-                        // focusedBorder: OutlineInputBorder(
-                        //   /*borderSide: BorderSide(
-                        //     color: Colors.black,
-                        //   ),*/
-                        //   borderRadius: BorderRadius.all(Radius.circular(5)),
-                        // ),
-                        // enabledBorder: OutlineInputBorder(
-                        //   /*borderSide: BorderSide(
-                        //     color: Colors.black,
-                        //   ),*/
-                        //   borderRadius: BorderRadius.all(Radius.circular(5)),
-                        // ),
-                        contentPadding: EdgeInsets.only(left: 10),
-                        hintStyle: TextStyle(color: ColorPrimary),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailTextFieldController,
-                    ),
-                  )),
+              _buildEmailField(),
               SizedBox(height: 18.5),
 
               // Password Input
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Container(
-                  height: 44.0,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      //borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 5,
-                            spreadRadius: 2.0,
-                            offset: const Offset(2.0, 2.0)),
-                      ]),
-                  child: TextField(
-                    style: TextStyle(
-                        textBaseline: TextBaseline.alphabetic,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18.0,
-                        height: 1.277,
-                        letterSpacing: 1.2),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Password',
-                      suffixIcon: Semantics(
-                        hint:
-                            'press to toggle the visibility of your password field',
-                        child: IconButton(
-                          icon: Icon(
-                            // Based on passwordObscured state choose the icon
-                            _passwordObscured
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Theme.of(context).primaryColorDark,
-                          ),
-                          onPressed: () => _toggle(),
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.only(left: 10),
-                      hintStyle: TextStyle(color: ColorPrimary),
-                    ),
-                    obscureText: _passwordObscured,
-                    controller: _passwordTextFieldController,
-                  ),
-                ),
-              ),
+              _buildPasswordField(),
               SizedBox(height: 24),
 
               // SIGN IN and Forgot Password?
@@ -334,6 +234,101 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
       ),
     );
   }
+
+  Widget _buildInputField(
+    InputDecoration decoration,
+    TextEditingController controller,
+    { TextInputType? keyboardType, bool obscureText = false }
+  ) =>
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Container(
+        height: 44.0,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            //borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 5,
+                  spreadRadius: 2.0,
+                  offset: const Offset(2.0, 2.0)),
+            ]), //lightTextFieldBorderColor,
+        child: TextField(
+          style: TextStyle(
+              textBaseline: TextBaseline.alphabetic,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: 18.0,
+              height: 1.277, // line height: 23px
+              letterSpacing: 1.2),
+          decoration: decoration,
+          keyboardType: keyboardType,
+          controller: controller,
+          obscureText: obscureText,
+        ),
+      ));
+
+  Widget _buildEmailField() =>
+    _buildInputField(
+      InputDecoration(
+        border: InputBorder.none,
+        hintText: 'UCSD Email',
+        // I'm leaving this here in case we want a black border
+        // focusedBorder: OutlineInputBorder(
+        //   /*borderSide: BorderSide(
+        //     color: Colors.black,
+        //   ),*/
+        //   borderRadius: BorderRadius.all(Radius.circular(5)),
+        // ),
+        // enabledBorder: OutlineInputBorder(
+        //   /*borderSide: BorderSide(
+        //     color: Colors.black,
+        //   ),*/
+        //   borderRadius: BorderRadius.all(Radius.circular(5)),
+        // ),
+        contentPadding: EdgeInsets.only(left: 10),
+        hintStyle: TextStyle(color: ColorPrimary),
+      ),
+      _emailTextFieldController,
+      keyboardType: TextInputType.emailAddress
+    );
+
+  Widget _buildPasswordField() =>
+    _buildInputField(
+      InputDecoration(
+        border: InputBorder.none,
+        hintText: 'Password',
+        suffixIcon: Semantics(
+          hint:
+              'press to toggle the visibility of your password field',
+          child: IconButton(
+            icon: Icon(
+              // Based on passwordObscured state choose the icon
+              _passwordObscured
+                  ? Icons.visibility_off
+                  : Icons.visibility,
+              color: Theme.of(context).primaryColorDark,
+            ),
+            onPressed: () => _toggle(),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.white,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.white,
+          ),
+        ),
+        contentPadding: EdgeInsets.only(left: 10),
+        hintStyle: TextStyle(color: ColorPrimary),
+      ),
+      _passwordTextFieldController,
+      obscureText: _passwordObscured
+    );
 
   // Toggles the password show status
   void _toggle() {
