@@ -13,7 +13,6 @@ class OnboardingInitial extends StatefulWidget {
 class _OnboardingInitialState extends State<OnboardingInitial>
     with TickerProviderStateMixin {
   var currentIndex = 0;
-  var width, height = 0.0;
 
   @override
   void initState() {
