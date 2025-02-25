@@ -44,7 +44,7 @@ class Router {
       case RoutePaths.BottomNavigationBar:
         return MaterialPageRoute(builder: (_) => BottomTabBar());
       case RoutePaths.OnboardingInitial:
-        return MaterialPageRoute(builder: (_) => OnboardingInitial());
+        return MaterialPageRoute(builder: (_) => OnboardingSlides());
       case RoutePaths.OnboardingLogin:
         return MaterialPageRoute(builder: (_) => OnboardingLogin());
       case RoutePaths.Home:

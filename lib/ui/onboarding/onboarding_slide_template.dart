@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../app_styles.dart';
 
-class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({
+class OnboardingSlideTemplate extends StatelessWidget
+{
+  const OnboardingSlideTemplate({
     super.key,
     required this.width,
     required this.height,

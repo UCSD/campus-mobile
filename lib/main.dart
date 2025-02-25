@@ -83,7 +83,7 @@ Future<void> clearHiveStorage() async {
 class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = ThemeData(
+    final lightTheme = ThemeData(
       useMaterial3: false,
       primaryColor: lightPrimaryColor,
       textTheme: lightThemeText,
@@ -96,7 +96,7 @@ class CampusMobile extends StatelessWidget {
       ),
     );
 
-    final ThemeData darkTheme = ThemeData(
+    final darkTheme = ThemeData(
       useMaterial3: false,
       primaryColor: darkPrimaryColor,
       textTheme: darkThemeText,
@@ -115,8 +115,8 @@ class CampusMobile extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
-        theme: theme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(secondary: darkAccentColor),
+        theme: lightTheme.copyWith(
+          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
           colorScheme:

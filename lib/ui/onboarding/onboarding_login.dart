@@ -33,13 +33,13 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       /// TODO: Remove back button since this is going to be the very first screen in the future
-      appBar: AppBar(
-        backgroundColor:
-            lightOnboardingScreen, // Sets the background color to red
-        leading: BackButton(color: Colors.white),
-        elevation: 0.0,
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor:
+      //       lightOnboardingScreen, // Sets the background color to red
+      //   leading: BackButton(color: Colors.white),
+      //   elevation: 0.0,
+      //   systemOverlayStyle: SystemUiOverlayStyle.light,
+      // ),
       backgroundColor: lightOnboardingScreen, // ColorPrimary, //Colors.white,
       body: _userDataProvider.isLoading
           ? Center(
@@ -47,130 +47,162 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 valueColor: new AlwaysStoppedAnimation<Color>(lightAccentColor),
               ),
             )
-          : buildLoginWidget(),
+          : _buildLoginWidget(),
     );
   }
 
-  Widget buildLoginWidget() {
+  Widget _buildLoginWidget() {
     // TODO: we should look into replacing the Constrained Boxes with FractionallySizedBoxes
-    return Center(
-      // TODO: this specifically could be replace w/ SizedBox.expand or Unconstrained Box (need to figure out which one)
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 365),
-        child: SingleChildScrollView(
+    return SafeArea(
+      child: Center(
+      child: SizedBox.expand(
           child: Column(
             mainAxisAlignment:
-                MainAxisAlignment.start, // Align items at the top
+                MainAxisAlignment.center, // Align items at the top
             crossAxisAlignment:
                 CrossAxisAlignment.center, // Center items horizontally
             children: <Widget>[
+              const Spacer(flex: 3),
               // UCSD Logo
-              Image.asset(
-                'assets/images/UCSanDiegoLogo-Blue.png',
-                fit: BoxFit.contain,
-                width: 321.12,
+              Flexible(
+                flex: 0,
+                child: FractionallySizedBox(
+                  widthFactor: 0.78055556,//0.76986301,
+                  child: Image.asset(
+                    //fit: BoxFit.fill,
+                    'assets/images/UCSanDiegoLogo-Blue.png',
+                  ),
+                ),
               ),
-              const SizedBox(height: 45.0),
+              //const SizedBox(height: 44.0),
+              ConstrainedBox(constraints: const BoxConstraints(minHeight: 44.0)),
 
               // Welcome Heading
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 261.0),//298.265),
-                child: const Text(
-                  "WELCOME TO THE UC SAN DIEGO MOBILE APP",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: "Refrigerator Deluxe",
-                    fontSize: 28.0,
-                    letterSpacing: -0.2,
-                    height: 0.8333, // line height: 20px
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFF182B49), // Subheading color
+              // ConstrainedBox(
+              //   constraints: const BoxConstraints(maxWidth: 261.0),//298.265),
+              const Flexible(
+                flex: 0,
+                child: const FractionallySizedBox(
+                  widthFactor: 0.725,
+                  child: const Text(
+                    "WELCOME TO THE UC SAN\nDIEGO MOBILE APP",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontFamily: "Refrigerator Deluxe",
+                      fontSize: 27.5,
+                      letterSpacing: -0.2,
+                      height: 0.8333, // line height: 20px
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF182B49), // Subheading color
                   ),
+                )
                 ),
               ),
               const SizedBox(height: 12.5),
 
               // Description Text
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 280),//266.267),
-                child: const Text(
-                  "Your personalized gateway to campus life, events, news and more.",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: 'Brix Sans',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    letterSpacing: 2.2,
-                    height: 1.2778, // line height: ~26px
-                    color: const Color(0xFF182B49), // Foreground body color
+              // ConstrainedBox(
+              //   constraints: const BoxConstraints(maxWidth: 280),//266.267),
+              const Flexible(
+                flex: 0,
+                child: const FractionallySizedBox(
+                  widthFactor: 0.64722222,
+                  child: const Text(
+                    // TODO: the font here seems a bit light. Might need to swap that out later
+                    "Your personalized gateway to campus life, events, news and more.",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                      letterSpacing: 2.2,
+                      height: 1.2778, // line height: ~26px
+                      color: const Color(0xFF182B49), // Foreground body color
                   ),
                 ),
+              )
               ),
-              const SizedBox(height: 30.0),
+              ConstrainedBox(constraints: const BoxConstraints(minHeight: 35.0)),
+
+              // TODO: figure out if the two following SizedBoxes should be replaced with ConstrainedBoxes for better scaling
 
               // UCSD Email Input
               _buildEmailField(),
-              SizedBox(height: 18.5),
+              const SizedBox(height: 18.5),
 
               // Password Input
               _buildPasswordField(),
-              SizedBox(height: 24),
+              const SizedBox(height: 20.0),
 
               // SIGN IN and Forgot Password?
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(width: 10),
-                  SizedBox(
-                      width: 94,
-                      height: 41,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFFFCD00), // Yellow Button
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          elevation: 0.0,
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFCD00), // Yellow Button
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0.0,
+                      fixedSize: () {
+                        // calculate width using scaling ratio, then calculate height from width using aspect ratio
+                        final width = MediaQuery.sizeOf(context).width * 0.24111111;
+                        final height = width / 2.29268293;
+                        return Size(width, height);
+                      }(),
+                      //padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)
+                    ),
+                    child: Semantics(
+                      button: true,
+                      hint:
+                          'press to login with your information inputted in above textfields',
+                      child: Text(
+                        'SIGN IN',
+                        style: TextStyle(
+                          fontFamily: 'Brix Sans',
+                          fontSize: 14.0,
+                          height: 1.195,
+                          color: Colors.black, // Text color on button
+                          fontWeight: FontWeight.bold,
                         ),
-                        child: Semantics(
-                          button: true,
-                          hint:
-                              'press to login with your information inputted in above textfields',
-                          child: Text(
-                            'SIGN IN',
-                            style: TextStyle(
-                              color: Colors.black, // Text color on button
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        onPressed: _userDataProvider.isLoading
-                            ? null
-                            : () {
-                                _userDataProvider
-                                    .manualLogin(_emailTextFieldController.text,
-                                        _passwordTextFieldController.text)
-                                    .then((isLoggedIn) async {
-                                  if (isLoggedIn) {
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        RoutePaths.OnboardingInitial,
-                                        (_) => false);
-                                  } else {
-                                    showAlertDialog(context);
-                                  }
-                                });
-                              },
-                      )),
-                  const Spacer(),
-                  //const SizedBox(width: 145),
+                      ),
+                    ),
+                    onPressed: _userDataProvider.isLoading
+                        ? null
+                        : () {
+                            _userDataProvider
+                                .manualLogin(_emailTextFieldController.text,
+                                    _passwordTextFieldController.text)
+                                .then((isLoggedIn) async {
+                              if (isLoggedIn) {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    RoutePaths.OnboardingInitial,
+                                    (_) => false);
+                              } else {
+                                showAlertDialog(context);
+                              }
+                            });
+                          },
+                  ),
+                  // the spacer in between sign in and forgot password
+                  const Flexible(
+                    child: const FractionallySizedBox(
+                      widthFactor: 0.413,
+                    )
+                  ),
                   GestureDetector(
                     child: Semantics(
                       hint:
                           'press to be redirected to the UCSD Password reset page',
-                      child: Text(
+                      child: const Text(
                         'Forgot Password?',
-                        style:
-                            TextStyle(color: Color(0xFF00629B)), // Light Blue
+                        style: const TextStyle(
+                          color: const Color(0xFF00629B),
+                          height: 1.42857143,
+                          //fontFamily: "Source Sans Pro" // this doesn't seem to be doing anything, so disabling for now
+                        ), // Light Blue
                       ),
                     ),
                     onTap: () async {
@@ -184,32 +216,34 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       }
                     },
                   ),
-                  SizedBox(width: 10.0)
                 ],
               ),
 
               ///////////////////////// Footer ////////////////////////////
-              const SizedBox(height: 40),
+              //ConstrainedBox(constraints: const BoxConstraints(minHeight: 76.0)),
+              const Spacer(flex: 2),
+
               // Not affiliated text
-              Text(
+              const Text(
                 "Not affiliated with UC San Diego?",
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 15.5,
                   height: 1.42, // line height: 20px
-                  color: Color(0xFF5D5E60), // Foreground body color
+                  color: const Color(0xFF5D5E60), // Foreground body color
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12.0),
               // Skip This Step
               GestureDetector(
                 child: Semantics(
                   hint:
-                      'press to skip the login process and use this app as a visitor',
-                  child: Text(
+                    'press to skip the login process and use this app as a visitor',
+                  child: const Text(
                     "SKIP THIS STEP",
-                    style: TextStyle(
-                      color: Color(0xFF182B49), // Subheading color
+                    style: const TextStyle(
+                      color: const Color(0xFF182B49), // Subheading color
+                      fontFamily: 'Brix Sans',
                       fontWeight: FontWeight.w700,
                       fontSize: 16.5,
                       height: 1.195, // line height: 16.73px
@@ -221,14 +255,16 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   Navigator.pushNamedAndRemoveUntil(
                       context, RoutePaths.OnboardingInitial, (_) => false);
                 },
-              )
+              ),
+              const Spacer()
             ],
           ),
         ),
-      ),
+    )
     );
   }
 
+  // TODO: change the font for the password field (it's a lighter gray than what is currently there)
   Widget _buildInputField(
     InputDecoration decoration,
     TextEditingController controller,
@@ -237,35 +273,43 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Container(
-        height: 44.0,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            //borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 5,
-                  spreadRadius: 2.0,
-                  offset: const Offset(2.0, 2.0)),
-            ]), //lightTextFieldBorderColor,
-        child: TextField(
-          style: TextStyle(
-              textBaseline: TextBaseline.alphabetic,
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-              fontSize: 18.0,
-              height: 1.277, // line height: 23px
-              letterSpacing: 1.2),
-          decoration: decoration,
-          keyboardType: keyboardType,
-          controller: controller,
-          obscureText: obscureText,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          //borderRadius: BorderRadius.circular(8),
+          boxShadow: const [
+            const BoxShadow(
+              color: Colors.black26,
+              blurRadius: 5,
+              spreadRadius: 2.0,
+              offset: const Offset(2.0, 2.0)
+            ),
+          ]
+        ), //lightTextFieldBorderColor,
+        child: Flexible(
+          child: FractionallySizedBox(
+            widthFactor: 0.74444444,
+            child: TextField(
+              style: const TextStyle(
+                  fontFamily: 'Brix Sans',
+                  textBaseline: TextBaseline.alphabetic,
+                  color: const Color(0xFF737373), // TODO: figure out why color is being ignored
+                  fontWeight: FontWeight.w400,
+                  fontSize: 18.0,
+                  height: 1.277, // line height: 23px
+                  letterSpacing: 1.2),
+              decoration: decoration,
+              keyboardType: keyboardType,
+              controller: controller,
+              obscureText: obscureText,
+            )
+          )
         ),
-      ));
+      )
+    );
 
   Widget _buildEmailField() =>
     _buildInputField(
-      InputDecoration(
+      const InputDecoration(
         border: InputBorder.none,
         hintText: 'UCSD Email',
         // I'm leaving this here in case we want a black border
@@ -281,8 +325,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         //   ),*/
         //   borderRadius: BorderRadius.all(Radius.circular(5)),
         // ),
-        contentPadding: EdgeInsets.only(left: 10),
-        hintStyle: TextStyle(color: ColorPrimary),
+        isDense: true,
+        contentPadding: const EdgeInsets.only(left: 10, top: 7.0, bottom: 7.0),
+        hintStyle: const TextStyle(color: ColorPrimary),
       ),
       _emailTextFieldController,
       keyboardType: TextInputType.emailAddress
@@ -293,32 +338,22 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
       InputDecoration(
         border: InputBorder.none,
         hintText: 'Password',
+        suffixIconConstraints: const BoxConstraints(minWidth: 2, minHeight: 2),
         suffixIcon: Semantics(
-          hint:
-              'press to toggle the visibility of your password field',
+          hint: 'press to toggle the visibility of your password field',
           child: IconButton(
             icon: Icon(
-              // Based on passwordObscured state choose the icon
-              _passwordObscured
-                  ? Icons.visibility_off
-                  : Icons.visibility,
+              _passwordObscured ? Icons.visibility_off : Icons.visibility,
               color: Theme.of(context).primaryColorDark,
             ),
-            onPressed: () => _toggle(),
+            padding: const EdgeInsets.only(right: 10), // Remove padding
+            constraints: const BoxConstraints(), // Remove constraints
+            onPressed: () => _toggle(), // TODO: figure out if this is unnecessarily double nesting callbacks
           ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.white,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.white,
-          ),
-        ),
-        contentPadding: EdgeInsets.only(left: 10),
-        hintStyle: TextStyle(color: ColorPrimary),
+        isDense: true,
+        contentPadding: const EdgeInsets.only(left: 10, top: 7.0, bottom: 7.0),
+        hintStyle: const TextStyle(color: ColorPrimary),
       ),
       _passwordTextFieldController,
       obscureText: _passwordObscured
@@ -331,34 +366,30 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     });
   }
 
-  showAlertDialog(BuildContext context) {
+  void showAlertDialog(BuildContext context) {
     // set up the button
-    Widget okButton = TextButton(
+    final okButton = TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
         foregroundColor: Theme.of(context).colorScheme.background,
       ),
-      child: Text("OK"),
+      child: const Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
 
     // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text(LoginConstants.loginFailedTitle),
-      content: Text(LoginConstants.loginFailedDesc),
-      actions: [
-        okButton,
-      ],
+    final alert = AlertDialog(
+      title: const Text(LoginConstants.loginFailedTitle),
+      content: const Text(LoginConstants.loginFailedDesc),
+      actions: [ okButton ],
     );
 
     // show the dialog
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
+      builder: (BuildContext context) => alert,
     );
   }
 }

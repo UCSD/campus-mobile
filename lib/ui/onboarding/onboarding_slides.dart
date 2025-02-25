@@ -5,12 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../app_constants.dart';
 import 'onboarding_slide_template.dart';
 
-class OnboardingInitial extends StatefulWidget {
+class OnboardingSlides extends StatefulWidget {
   @override
-  _OnboardingInitialState createState() => _OnboardingInitialState();
+  _OnboardingSlidesState createState() => _OnboardingSlidesState();
 }
 
-class _OnboardingInitialState extends State<OnboardingInitial>
+class _OnboardingSlidesState extends State<OnboardingSlides>
     with TickerProviderStateMixin {
   var currentIndex = 0;
 
@@ -66,7 +66,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
   }
 
   Widget buildPage1() {
-    return OnboardingPage(
+    return OnboardingSlideTemplate(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       heroImage: AssetImage('assets/images/hero/hero-img-campus-life.png'),
@@ -77,7 +77,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
   }
 
   Widget buildPage2() {
-    return OnboardingPage(
+    return OnboardingSlideTemplate(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       heroImage: AssetImage('assets/images/hero/hero-img-schedule.png'),
@@ -87,7 +87,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
   }
 
   Widget buildPage3() {
-    return OnboardingPage(
+    return OnboardingSlideTemplate(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       heroImage:
@@ -98,7 +98,7 @@ class _OnboardingInitialState extends State<OnboardingInitial>
   }
 
   Widget buildPage4() {
-    return OnboardingPage(
+    return OnboardingSlideTemplate(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       heroImage: AssetImage('assets/images/hero/hero-img-busyness.png'),
@@ -108,25 +108,25 @@ class _OnboardingInitialState extends State<OnboardingInitial>
   }
 
   Widget buildPage5() {
-    return OnboardingPage(
+    return OnboardingSlideTemplate(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       heroImage: AssetImage('assets/images/hero/hero-img-notifications.png'),
       heading: "YOU'RE ALL SET.",
       description:
-      "We recommend turning on push notifications to receive campus and safety alerts.",
+        "We recommend turning on push notifications to receive campus and safety alerts.",
     );
   }
 
-  buildGoToTheAppButton() {
+  Widget buildGoToTheAppButton() {
     return GestureDetector(
       child: Semantics(
         hint:
-        'press to skip the login process and use this app as a visitor',
+          'press to skip the login process and use this app as a visitor',
         child: Text(
           "GO TO THE APP",
           style: TextStyle(
-            color: Color(0xFF182B49), // Subheading color
+            color: const Color(0xFF182B49), // Subheading color
             fontWeight: FontWeight.w700,
             fontSize: 16.5,
             height: 1.195, // line height: 16.73px
