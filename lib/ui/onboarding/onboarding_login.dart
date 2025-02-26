@@ -182,11 +182,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                         },
                 ),
                 // the spacer in between sign in and forgot password
-                // const Flexible(
-                //     child: const FractionallySizedBox(
-                //   widthFactor: 0.470,
-                // )),
-                const SizedBox(width: 115.0),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.202),
 
                 GestureDetector(
                   child: Semantics(
