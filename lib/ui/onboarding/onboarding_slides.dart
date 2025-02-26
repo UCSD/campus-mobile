@@ -13,6 +13,7 @@ class OnboardingSlides extends StatefulWidget {
 class _OnboardingSlidesState extends State<OnboardingSlides>
     with TickerProviderStateMixin {
   var currentIndex = 0;
+  var currentBackgroundPath = 'assets/images/onboarding-slide-one-background.png';
 
   @override
   void initState() {
@@ -36,18 +37,33 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: lightOnboardingScreen,
-        body: Stack(alignment: Alignment.topCenter, children: <Widget>[
-          Column(children: <Widget>[
-            const SizedBox(height: 110.0),
-            buildDotIndicator(),
-            Expanded(
-              child: PageView(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: lightOnboardingScreen,
+      body: Stack(
+        alignment: Alignment.topCenter,
+        children: <Widget>[
+          // Background Image based on currentIndex
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(currentBackgroundPath), // Dynamic background
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Column(
+            children: <Widget>[
+              const SizedBox(height: 110.0),
+              buildDotIndicator(),
+              Expanded(
+                child: PageView(
                   pageSnapping: true,
                   onPageChanged: (int page) {
                     setState(() {
                       currentIndex = page;
+                      currentBackgroundPath = getBackgroundImage();
                     });
                   },
                   children: [
@@ -55,15 +71,19 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
                     buildPage2(),
                     buildPage3(),
                     buildPage4(),
-                    buildPage5()
-                  ]
+                    buildPage5(),
+                  ],
+                ),
               ),
-            ),
-            buildGoToTheAppButton(),
-            const SizedBox(height: 80.0),
-          ])
-        ]));
+              buildGoToTheAppButton(),
+              const SizedBox(height: 80.0),
+            ],
+          ),
+        ],
+      ),
+    );
   }
+
 
   Widget buildPage1() {
     return OnboardingSlideTemplate(
@@ -90,8 +110,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
     return OnboardingSlideTemplate(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      heroImage:
-      AssetImage('assets/images/hero/hero-img-parking.png'),
+      heroImage: AssetImage('assets/images/hero/hero-img-parking.png'),
       heading: "PARKING MADE EASIER.",
       description: "Keep an eye on parking lot capacity to plan your day.",
     );
@@ -142,4 +161,23 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
       },
     );
   }
+
+  String getBackgroundImage() {
+    switch (currentIndex) {
+      case 0:
+        return 'assets/images/onboarding-slide-one-background.png';
+      case 1:
+        return 'assets/images/onboarding-slide-two-background.png';
+      case 2:
+        return 'assets/images/onboarding-slide-three-background.png';
+      case 3:
+        return 'assets/images/onboarding-slide-four-background.png';
+      case 4:
+        return 'assets/images/onboarding-slide-five-background.png';
+      default:
+        return 'assets/images/onboarding-slide-one-background.png';
+    }
+  }
 }
+
+
