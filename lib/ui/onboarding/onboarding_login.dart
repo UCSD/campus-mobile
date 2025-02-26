@@ -20,6 +20,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
 
+  late final _screenWidth = MediaQuery.sizeOf(context).width;
+  late final _screenHeight = MediaQuery.sizeOf(context).height;
+
   @override
   void didChangeDependencies() {
     /// TODO: implement didChangeDependencies
@@ -28,63 +31,58 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: lightOnboardingScreen, // ColorPrimary, //Colors.white,
+  Widget build(BuildContext context) =>
+    Scaffold(
+      backgroundColor: lightOnboardingScreen,
       body: _userDataProvider.isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(lightAccentColor),
+          ? const Center(
+              child: const CircularProgressIndicator(
+                valueColor: const AlwaysStoppedAnimation<Color>(darkAccentColor),
               ),
             )
-          : Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                      "assets/images/login-background.png"),
-                  fit:
-                      BoxFit.cover, // Ensure the image covers the entire screen
+          : SingleChildScrollView(
+                child: Container(
+                  height: _screenHeight,
+                  decoration: const BoxDecoration(
+                    image: const DecorationImage(
+                      image: const AssetImage("assets/images/login-background.png"),
+                      fit: BoxFit.cover, // Ensure the image covers the entire screen
+                    ),
+                  ),
+                  child: _buildLoginWidget(),
                 ),
-              ),
-              child: _buildLoginWidget(),
-            ),
+             // ),
+            )
     );
-  }
 
-  Widget _buildLoginWidget() {
-    // TODO: we should look into replacing the Constrained Boxes with FractionallySizedBoxes
-    return SafeArea(
-        child: Center(
-      child: SizedBox.expand(
+  Widget _buildLoginWidget() =>
+    SafeArea(
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center, // Align items at the top
-          crossAxisAlignment:
-              CrossAxisAlignment.center, // Center items horizontally
+          crossAxisAlignment: CrossAxisAlignment.center, // Center items horizontally
           children: <Widget>[
             const Spacer(flex: 3),
+
             // UCSD Logo
             Flexible(
               flex: 0,
               child: FractionallySizedBox(
                 widthFactor: 0.78055556, //0.76986301,
                 child: Image.asset(
-                  //fit: BoxFit.fill,
                   'assets/images/UCSanDiegoLogo-Blue.png',
                 ),
               ),
             ),
-            //const SizedBox(height: 44.0),
-            ConstrainedBox(constraints: const BoxConstraints(minHeight: 44.0)),
+            const SizedBox(height: 44.0),
 
             // Welcome Heading
-            // ConstrainedBox(
-            //   constraints: const BoxConstraints(maxWidth: 261.0),//298.265),
             const Flexible(
               flex: 0,
               child: const FractionallySizedBox(
                   widthFactor: 0.725,
                   child: const Text(
-                    "WELCOME TO THE UC SAN\nDIEGO MOBILE APP",
+                    "WELCOME TO THE UC SAN DIEGO MOBILE APP",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontFamily: "Refrigerator Deluxe",
@@ -98,29 +96,26 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             const SizedBox(height: 12.5),
 
             // Description Text
-            // ConstrainedBox(
-            //   constraints: const BoxConstraints(maxWidth: 280),//266.267),
             const Flexible(
-                flex: 0,
-                child: const FractionallySizedBox(
-                  widthFactor: 0.64722222,
-                  child: const Text(
-                    // TODO: the font here seems a bit light. Might need to swap that out later
-                    "Your personalized gateway to campus life, events, news and more.",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Brix Sans',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                      letterSpacing: 2.2,
-                      height: 1.2778, // line height: ~26px
-                      color: const Color(0xFF182B49), // Foreground body color
-                    ),
+              flex: 0,
+              child: const FractionallySizedBox(
+                widthFactor: 0.64722222,
+                child: const Text(
+                  // TODO: the font here seems a bit light. Might need to swap that out later
+                  "Your personalized gateway to campus life, events, news and more.",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'Brix Sans',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18,
+                    letterSpacing: 2.2,
+                    height: 1.2778, // line height: ~26px
+                    color: const Color(0xFF182B49), // Foreground body color
                   ),
-                )),
-            ConstrainedBox(constraints: const BoxConstraints(minHeight: 35.0)),
-
-            // TODO: figure out if the two following SizedBoxes should be replaced with ConstrainedBoxes for better scaling
+                ),
+              )
+            ),
+            const SizedBox(height: 35.0),
 
             // UCSD Email Input
             _buildEmailField(),
@@ -143,8 +138,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     elevation: 0.0,
                     fixedSize: () {
                       // calculate width using scaling ratio, then calculate height from width using aspect ratio
-                      final width =
-                          MediaQuery.sizeOf(context).width * 0.24111111;
+                      final width = _screenWidth * 0.24111111;
                       final height = width / 2.29268293;
                       return Size(width, height);
                     }(),
@@ -154,9 +148,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     button: true,
                     hint:
                         'press to login with your information inputted in above textfields',
-                    child: Text(
+                    child: const Text(
                       'SIGN IN',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Brix Sans',
                         fontSize: 15.0,
                         height: 1.195,
@@ -181,8 +175,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                           });
                         },
                 ),
+
                 // the spacer in between sign in and forgot password
-                SizedBox(width: MediaQuery.of(context).size.width * 0.202),
+                SizedBox(width: _screenWidth * 0.202),
 
                 GestureDetector(
                   child: Semantics(
@@ -212,7 +207,6 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             ),
 
             ///////////////////////// Footer ////////////////////////////
-            //ConstrainedBox(constraints: const BoxConstraints(minHeight: 76.0)),
             const Spacer(flex: 2),
             // Not affiliated text
             const Text(
@@ -247,49 +241,53 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     context, RoutePaths.OnboardingInitial, (_) => false);
               },
             ),
+
             const Spacer()
           ],
         ),
-      ),
-    ));
-  }
+      )
+    );
 
   // TODO: change the font for the password field (it's a lighter gray than what is currently there)
-  Widget _buildInputField(
+  static Widget _buildInputField(
           InputDecoration decoration, TextEditingController controller,
-          {TextInputType? keyboardType, bool obscureText = false}) =>
+          {TextInputType? keyboardType, bool obscureText = false}
+  ) =>
       Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Container(
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                //borderRadius: BorderRadius.circular(8),
-                boxShadow: const [
-                  const BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 5,
-                      spreadRadius: 2.0,
-                      offset: const Offset(2.0, 2.0)),
-                ]), //lightTextFieldBorderColor,
-            child: Flexible(
-                child: FractionallySizedBox(
-                    widthFactor: 0.74444444,
-                    child: TextField(
-                      style: const TextStyle(
-                          fontFamily: 'Brix Sans',
-                          textBaseline: TextBaseline.alphabetic,
-                          color: const Color(
-                              0xFF737373), // TODO: figure out why color is being ignored
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18.0,
-                          height: 1.277, // line height: 23px
-                          letterSpacing: 1.2),
-                      decoration: decoration,
-                      keyboardType: keyboardType,
-                      controller: controller,
-                      obscureText: obscureText,
-                    ))),
-          ));
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Container(
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              //borderRadius: BorderRadius.circular(8),
+              boxShadow: const [
+                const BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 5,
+                    spreadRadius: 2.0,
+                    offset: const Offset(2.0, 2.0)),
+              ]), //lightTextFieldBorderColor,
+          child: Flexible(
+            child: FractionallySizedBox(
+              widthFactor: 0.74444444,
+              child: TextField(
+                style: const TextStyle(
+                    fontFamily: 'Brix Sans',
+                    textBaseline: TextBaseline.alphabetic,
+                    color: const Color(
+                        0xFF737373), // TODO: figure out why color is being ignored
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18.0,
+                    height: 1.277, // line height: 23px
+                    letterSpacing: 1.2),
+                decoration: decoration,
+                keyboardType: keyboardType,
+                controller: controller,
+                obscureText: obscureText,
+              )
+            )
+          ),
+        )
+      );
 
   Widget _buildEmailField() => _buildInputField(
       const InputDecoration(
@@ -329,8 +327,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             ),
             padding: const EdgeInsets.only(right: 10), // Remove padding
             constraints: const BoxConstraints(), // Remove constraints
-            onPressed: () =>
-                _toggle(), // TODO: figure out if this is unnecessarily double nesting callbacks
+            onPressed: _toggle, // TODO: figure out if this is unnecessarily double nesting callbacks
           ),
         ),
         isDense: true,
