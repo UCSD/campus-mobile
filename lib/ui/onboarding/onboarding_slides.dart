@@ -14,6 +14,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
     with TickerProviderStateMixin {
   var currentIndex = 0;
   var currentBackgroundPath = 'assets/images/onboarding-slide-one-background.png';
+  final _pageController = PageController();
 
   @override
   void initState() {
@@ -46,12 +47,26 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
           Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(currentBackgroundPath), // Dynamic background
-                fit: BoxFit.cover,
-              ),
-            ),
+            // decoration: BoxDecoration(
+            //   image: DecorationImage(
+            //     image: AssetImage(currentBackgroundPath), // Dynamic background
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
+            child: PageView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _pageController,
+              itemBuilder: (context, index) {
+                return Image.asset(
+                  "assets/images/onboarding-slide-${index+1}-background.png",
+                  fit: BoxFit.fitWidth
+                );
+              },
+            )
+            // child: Image.asset(
+            //   "assets/images/onboarding-slide-${currentIndex+1}-background.png",
+            //   fit: BoxFit.cover
+            // ),
           ),
           Column(
             children: <Widget>[
@@ -60,10 +75,12 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
               Expanded(
                 child: PageView(
                   pageSnapping: true,
+                  //controller: _pageController,
                   onPageChanged: (int page) {
                     setState(() {
                       currentIndex = page;
                       currentBackgroundPath = getBackgroundImage();
+                      _pageController.jumpToPage(page);
                     });
                   },
                   children: [
