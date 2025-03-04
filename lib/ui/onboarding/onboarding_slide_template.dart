@@ -46,7 +46,7 @@ class OnboardingSlideTemplate extends StatelessWidget {
                       // Heading
                       Text(
                         heading,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: ColorPrimary,
                           fontWeight: FontWeight.bold,
                           fontSize: 25,

@@ -25,9 +25,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
   @override
   void didChangeDependencies() {
-    /// TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    _userDataProvider = Provider.of<UserDataProvider>(context);
+    _userDataProvider = context.watch();
   }
 
   @override
@@ -142,7 +141,6 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       final height = width / 2.29268293;
                       return Size(width, height);
                     }(),
-                    //padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)
                   ),
                   child: Semantics(
                     button: true,
@@ -250,31 +248,29 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
   // TODO: change the font for the password field (it's a lighter gray than what is currently there)
   static Widget _buildInputField(
-          InputDecoration decoration, TextEditingController controller,
-          {TextInputType? keyboardType, bool obscureText = false}
+    InputDecoration decoration, TextEditingController controller,
+    {TextInputType? keyboardType, bool obscureText = false}
   ) =>
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Container(
           decoration: const BoxDecoration(
               color: Colors.white,
-              //borderRadius: BorderRadius.circular(8),
               boxShadow: const [
                 const BoxShadow(
                     color: Colors.black26,
                     blurRadius: 5,
                     spreadRadius: 2.0,
                     offset: const Offset(2.0, 2.0)),
-              ]), //lightTextFieldBorderColor,
-          child: Flexible(
+              ]),
+          // child: Flexible(
             child: FractionallySizedBox(
               widthFactor: 0.74444444,
               child: TextField(
                 style: const TextStyle(
                     fontFamily: 'Brix Sans',
                     textBaseline: TextBaseline.alphabetic,
-                    color: const Color(
-                        0xFF737373), // TODO: figure out why color is being ignored
+                    color: const Color(0xFF737373), // TODO: figure out why color is being ignored
                     fontWeight: FontWeight.w400,
                     fontSize: 18.0,
                     height: 1.277, // line height: 23px
@@ -286,7 +282,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               )
             )
           ),
-        )
+        //)
       );
 
   Widget _buildEmailField() => _buildInputField(
@@ -327,7 +323,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             ),
             padding: const EdgeInsets.only(right: 10), // Remove padding
             constraints: const BoxConstraints(), // Remove constraints
-            onPressed: _toggle, // TODO: figure out if this is unnecessarily double nesting callbacks
+            onPressed: _toggle,
           ),
         ),
         isDense: true,

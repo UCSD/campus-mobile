@@ -57,6 +57,8 @@ Future<void> initializeHive() async {
 
 Future<void> initializeApp() async {
   final prefs = await SharedPreferences.getInstance();
+
+  // TODO: fix this. We don't need two different persistent flags...
   if (prefs.getBool('first_run') ?? true) {
     await clearSecuredStorage();
     await clearHiveStorage();
@@ -122,10 +124,9 @@ class CampusMobile extends StatelessWidget {
           colorScheme:
               darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
-        // TODO: remove this after done w/ testing
         initialRoute: //showOnboardingScreen ?
-            RoutePaths.OnboardingLogin,
-        //: RoutePaths.BottomNavigationBar,
+          RoutePaths.OnboardingLogin,
+          //: RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [
           observer,
