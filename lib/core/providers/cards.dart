@@ -41,21 +41,20 @@ class CardsDataProvider extends ChangeNotifier {
   // Default card order for native cards
   // Most of the time immediately overwritten by default card order coming from server
   List<String> _cardOrder = [
-    'NativeScanner',
+    'student_id',
+    'employee_id',
     'MyStudentChart',
     'MyUCSDChart',
     'finals',
     'schedule',
-    'student_id',
-    'employee_id',
     'availability',
     'dining',
     'events',
     'shuttle',
     'parking',
     'news',
-    'weather',
     'speed_test',
+    'NativeScanner',
   ];
 
   // Native student cards
