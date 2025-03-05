@@ -27,7 +27,6 @@ import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
-import 'package:campus_mobile_experimental/ui/weather/weather_card.dart';
 import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -194,7 +193,6 @@ class _HomeState extends State<Home> {
     'dining': DiningCard.new,
     'news': NewsCard.new,
     'events': EventsCard.new,
-    'weather': WeatherCard.new,
     'availability': AvailabilityCard.new,
     'schedule': ClassScheduleCard.new,
     'finals': FinalsCard.new,
