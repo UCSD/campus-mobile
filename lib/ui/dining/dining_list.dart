@@ -132,7 +132,7 @@ class DiningList extends StatelessWidget {
     return TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
+        foregroundColor: Theme.of(context).colorScheme.surface,
       ),
       onPressed: () {
         try {

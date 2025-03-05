@@ -55,22 +55,6 @@ class ShuttleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO: unused function. If needed, rewrite w/ proper nullability
-  // List<ShuttleStopModel?> makeOrderedList(List<int?>? order) {
-  //   if (order == null) {
-  //     return [];
-  //   }
-  //
-  //   ///create an empty list that will be returned
-  //   List<ShuttleStopModel?> orderedListOfStops = [];
-  //
-  //   /// remove lots as we add them to the ordered list
-  //   for (int? stopID in order) {
-  //     orderedListOfStops.add(fetchedStops![stopID]);
-  //   }
-  //   return orderedListOfStops;
-  // }
-
   void reorderStops(List<int?>? order) {
     /// update userProfileModel with selectedStops
     userDataProvider!.userProfileModel.selectedStops = order;

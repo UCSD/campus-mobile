@@ -42,27 +42,14 @@ class NotificationsSettingsView extends StatelessWidget {
     return list;
   }
 
-  static IconData chooseIcons(String messageType) {
-    /// TODO: change this to a switch expression after Dart 3 upgrade
+  static IconData chooseIcons(String messageType) =>
     switch (messageType) {
-      case "studentAnnouncements":
-
-      case "testStudentAnnouncements":
-        return Icons.school_outlined;
-      case "freeFood":
-
-      case "testFreeFood":
-        return Icons.restaurant_outlined;
-      case "campusAnnouncements":
-
-      case "testCampusAnnouncements":
-        return Icons.campaign_outlined;
-      case "DM":
-        return Icons.info_outline;
-      default:
-        return Icons.info_outline;
-    }
-  }
+      "studentAnnouncements" || "testStudentAnnouncements" => Icons.school_outlined,
+      "freeFood" || "testFreeFood" => Icons.restaurant_outlined,
+      "campusAnnouncements" || "testCampusAnnouncements" => Icons.notifications_outlined,
+      "DM" => Icons.info_outline,
+      _ => Icons.info_outline,
+    };
 
   List<String?> getTopics(BuildContext context) {
     UserDataProvider _userDataProvider = Provider.of<UserDataProvider>(context);

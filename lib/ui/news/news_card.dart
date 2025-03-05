@@ -30,7 +30,7 @@ class NewsCard extends StatelessWidget {
     actionButtons.add(TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
+        foregroundColor: Theme.of(context).colorScheme.surface,
       ),
       child: Text('View All'),
       onPressed: () {

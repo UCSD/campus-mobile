@@ -92,7 +92,7 @@ class CampusMobile extends StatelessWidget {
       colorScheme:
         ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
           .copyWith(
-            background: lightButtonColor,
+            surface: lightButtonColor,
             brightness: Brightness.light, // added
           ),
     );
@@ -108,7 +108,7 @@ class CampusMobile extends StatelessWidget {
       colorScheme:
         ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
           .copyWith(
-            background: darkButtonColor,
+            surface: darkButtonColor,
             brightness: Brightness.dark, // added
           ),
     );

@@ -134,9 +134,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
 
   Widget buildMenu() {
     if (widget.hideMenu) return Container();
-    return ButtonBar(
-      buttonPadding: EdgeInsets.all(0),
-      mainAxisSize: MainAxisSize.min,
+    return OverflowBar(
       children: [
         buildMenuOptions({
           CardMenuOptionConstants.reloadCard: _webViewController?.reload,

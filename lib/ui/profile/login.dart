@@ -96,7 +96,7 @@ class _LoginState extends State<Login> {
       trailing: OutlinedButton(
         style: OutlinedButton.styleFrom(
           // primary: Theme.of(context).buttonColor,
-          foregroundColor: Theme.of(context).colorScheme.background,
+          foregroundColor: Theme.of(context).colorScheme.surface,
         ),
         child: Text('Log out'),
         onPressed: () => executeLogout(),
@@ -128,15 +128,13 @@ class _LoginState extends State<Login> {
                 hintStyle: TextStyle(
                   color: Theme.of(context).colorScheme.secondary,
                 ),
-                border: OutlineInputBorder(),
-                focusedBorder: new OutlineInputBorder(
-                  borderSide: new BorderSide(
+                border: const OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
                       color: Theme.of(context).colorScheme.secondary),
                 ),
                 labelText: 'UCSD Email',
-                labelStyle: TextStyle(
-                  color: ucLabelColor,
-                ),
+                labelStyle: const TextStyle(color: ucLabelColor),
               ),
               keyboardType: TextInputType.emailAddress,
               controller: _emailTextFieldController,
@@ -153,19 +151,17 @@ class _LoginState extends State<Login> {
                     // Based on passwordObscured state choose the icon
                     _passwordObscured ? Icons.visibility_off : Icons.visibility,
                     /// TODO: Change color to improve its visibility in dark theme.
-                    color: Color(0xFF8B8B8B) // Theme.of(context).primaryColorDark,
+                    color: const Color(0xFF8B8B8B) // Theme.of(context).primaryColorDark,
                   ),
                   onPressed: () => _toggle(),
                 ),
-                border: OutlineInputBorder(),
-                focusedBorder: new OutlineInputBorder(
-                  borderSide: new BorderSide(
+                border: const OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
                       color: Theme.of(context).colorScheme.secondary),
                 ),
                 labelText: 'Password',
-                labelStyle: TextStyle(
-                  color: ucLabelColor,
-                ),
+                labelStyle: const TextStyle(color: ucLabelColor),
               ),
               obscureText: _passwordObscured,
               controller: _passwordTextFieldController,
@@ -177,7 +173,7 @@ class _LoginState extends State<Login> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       // primary: Theme.of(context).buttonColor,
-                      backgroundColor: Theme.of(context).colorScheme.background,
+                      backgroundColor: Theme.of(context).colorScheme.surface,
                     ),
                     child: Text(
                       'Sign In',
@@ -240,7 +236,7 @@ class _LoginState extends State<Login> {
     Widget okButton = TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
+        foregroundColor: Theme.of(context).colorScheme.surface,
       ),
       child: Text("OK"),
       onPressed: () {

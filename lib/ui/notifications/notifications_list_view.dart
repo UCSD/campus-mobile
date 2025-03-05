@@ -76,31 +76,29 @@ class _NotificationsListViewState extends State<NotificationsListView>
       itemCount = Provider.of<MessagesDataProvider>(context).messages.length;
     }
     return ListView.separated(
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       itemBuilder: itemBuilder!,
       controller: Provider.of<MessagesDataProvider>(context, listen: false).notificationScrollController,
       itemCount: itemCount,
-      separatorBuilder: (BuildContext context, int index) => Divider(),
+      separatorBuilder: (_, __) => const Divider(),
     );
   }
 
   static Widget _buildErrorText() {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(NotificationsConstants.statusFetchProblem),
+      children: const <Widget>[
+        const Text(NotificationsConstants.statusFetchProblem),
       ],
     );
   }
 
   static Widget _buildNoMessagesText() {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Flexible(
-          child: Text(
-            NotificationsConstants.statusNoMessages,
-          ),
+      children: const <Widget>[
+        const Flexible(
+          child: const Text(NotificationsConstants.statusNoMessages),
         ),
       ],
     );
@@ -182,9 +180,9 @@ class _NotificationsListViewState extends State<NotificationsListView>
   }
 
   static String _readTimestamp(int timestamp) {
-    var now = new DateTime.now();
-    var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
-    var diff = now.difference(date);
+    final now = new DateTime.now();
+    final date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
+    final diff = now.difference(date);
     var time = '';
 
     if (diff.inSeconds < 60) {

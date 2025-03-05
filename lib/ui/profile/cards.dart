@@ -89,7 +89,7 @@ class _CardsViewState extends State<CardsView> {
                 onChanged: (_) {
                   _cardsDataProvider.toggleCard(card);
                 },
-                activeColor: Theme.of(context).colorScheme.background,
+                activeColor: Theme.of(context).colorScheme.surface,
               ),
             ),
           ),

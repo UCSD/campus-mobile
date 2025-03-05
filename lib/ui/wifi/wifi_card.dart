@@ -255,7 +255,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                                   style: TextButton.styleFrom(
                                     // primary: Theme.of(context).buttonColor,
                                     foregroundColor:
-                                        Theme.of(context).colorScheme.background,
+                                        Theme.of(context).colorScheme.surface,
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
@@ -344,7 +344,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                                     style: TextButton.styleFrom(
                                       // primary: Theme.of(context).buttonColor
                                       foregroundColor:
-                                          Theme.of(context).colorScheme.background,
+                                          Theme.of(context).colorScheme.surface,
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
@@ -451,7 +451,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                                     style: TextButton.styleFrom(
                                       // primary: Theme.of(context).buttonColor,
                                       foregroundColor:
-                                          Theme.of(context).colorScheme.background,
+                                          Theme.of(context).colorScheme.surface,
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();

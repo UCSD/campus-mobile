@@ -25,7 +25,6 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
   @override
   void didChangeDependencies() {
-    /// TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _userDataProvider = Provider.of<UserDataProvider>(context);
   }
@@ -261,7 +260,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     Widget okButton = TextButton(
       style: TextButton.styleFrom(
         // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
+        foregroundColor: Theme.of(context).colorScheme.surface,
       ),
       child: Text("OK"),
       onPressed: () {

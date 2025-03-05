@@ -38,19 +38,19 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (active) {
       return Card(
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         semanticContainer: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
-              contentPadding: EdgeInsets.only(
+              contentPadding: const EdgeInsets.only(
                   top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
-              visualDensity: VisualDensity(horizontal: 0, vertical: 0),
+              visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
                 titleText,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 18.0,
                 ),
@@ -75,43 +75,32 @@ class CardContainer extends StatelessWidget {
   Widget buildBody(context) {
     if (errorText != null) {
       print(errorText);
-      if (titleText == 'News') {
-        return Text('No articles found.');
-      } else if (titleText == 'Events') {
-        return Text('No events found.');
-      } else if (titleText == 'Student ID') {
-        return Padding(
+      return switch (titleText) {
+        'News' => const Text('No articles found.'),
+        'Events' => const Text('No events found.'),
+        'Student ID' => const Padding(
           padding: const EdgeInsets.only(top: 32.0, bottom: 48.0),
-          child: Text('An error occurred, please try again.'),
-        );
-      } else if (titleText == 'Finals') {
-        var customErrorText = '';
-        if (errorText!.contains('Exception')) {
-          customErrorText =
-              'Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu';
-        } else {
-          customErrorText = 'No finals found.';
-        }
-        return Padding(
+          child: const Text('An error occurred, please try again.')
+        ),
+        'Finals' => Padding(
           padding: const EdgeInsets.only(bottom: 42.0),
-          child: Text(customErrorText),
-        );
-      } else if (titleText == 'Classes') {
-        var customErrorText = '';
-        if (errorText!.contains('Exception')) {
-          customErrorText =
-              'Your classes could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu';
-        } else {
-          customErrorText = 'No classes found.';
-        }
-        return Text(customErrorText);
-      } else {
-        return Text('An error occurred, please try again.');
-      }
-    } else if (isLoading) {
+          child: Text(errorText!.contains('Exception')
+            ? 'Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu'
+            : 'No finals found.'
+          )
+        ),
+        'Classes' => Text(errorText!.contains('Exception')
+          ? 'Your classes could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu'
+          : 'No classes found.'
+        ),
+        _ => Text('An error occurred, please try again.')
+      };
+    }
+    
+    if (isLoading) {
       return Container(
         width: double.infinity,
-        constraints: BoxConstraints(minHeight: cardContentMinHeight),
+        constraints: const BoxConstraints(minHeight: cardContentMinHeight),
         child: Center(
           child: Container(
               height: 32,
@@ -121,45 +110,39 @@ class CardContainer extends StatelessWidget {
               )),
         ),
       );
-    } else if (titleText == "Busyness") {
-      // web cards are still sized with static values
-      return Container(
+    }
+    
+    return switch (titleText) {
+      "Busyness" => Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 265),
         child: child(),
-      );
-    } else if (titleText == "Shuttle") {
-      // web cards are still sized with static values
-      return Container(
+      ),
+      "Shuttle" => Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
-      );
-    } else if (titleText == "Parking") {
-      double _maxHeight = 320;
-      if (MediaQuery.of(context).size.width > 600) {
-        _maxHeight = 800;
-      }
-      return Container(
+      ),
+      "Parking" => Container(
         width: double.infinity,
-        constraints: BoxConstraints(minHeight: 320, maxHeight: _maxHeight),
+        constraints: BoxConstraints(
+          minHeight: 320,
+          maxHeight: MediaQuery.of(context).size.width > 600 ? 800 : 320,
+        ),
         child: child(),
-      );
-    } else {
-      return Container(
+      ),
+      _ => Container(
         width: double.infinity,
         child: child(),
-      );
-    }
+      ),
+    };
   }
 
   Widget buildMenu() {
     if (hideMenu)
       return Container();
 
-    return ButtonBar(
-      buttonPadding: const EdgeInsets.all(0),
-      mainAxisSize: MainAxisSize.min,
+    return OverflowBar(
       children: [
         buildMenuOptions({
           CardMenuOptionConstants.reloadCard: reload,
