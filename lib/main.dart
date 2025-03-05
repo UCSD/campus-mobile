@@ -124,9 +124,9 @@ class CampusMobile extends StatelessWidget {
           colorScheme:
               darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
-        initialRoute: //showOnboardingScreen ?
-          RoutePaths.OnboardingLogin,
-          //: RoutePaths.BottomNavigationBar,
+        initialRoute: showOnboardingScreen ?
+          RoutePaths.OnboardingLogin
+          : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [
           observer,
