@@ -32,8 +32,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
   @override
   Widget build(BuildContext context) =>
-    SafeArea(
-      child: Scaffold(
+    // SafeArea(
+    //   child:
+      Scaffold(
         backgroundColor: lightOnboardingScreen,
         body: _userDataProvider.isLoading
           ? const Center(
@@ -53,10 +54,11 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   child: _buildLoginWidget(),
                 ),
             )
-      )
+      //)
     );
 
   Widget _buildLoginWidget() =>
+  SafeArea(child:
     Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center, // Align items at the top
@@ -231,11 +233,11 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   context, RoutePaths.OnboardingInitial, (_) => false);
             },
           ),
-          
+
           const SizedBox(height: 16.0),
           const Spacer()
         ],
-      ),
+      ),)
     );
 
   // TODO: change the font for the password field (it's a lighter gray than what is currently there)
