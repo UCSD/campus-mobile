@@ -32,9 +32,17 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
   @override
   Widget build(BuildContext context) =>
-    // SafeArea(
-    //   child:
-      Scaffold(
+    // This improves colors and styling of the status bar text only on Android
+    // There is a hack in Info.plist to implement a similar effect on iOS
+    AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.black,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
         backgroundColor: lightOnboardingScreen,
         body: _userDataProvider.isLoading
           ? const Center(
@@ -51,31 +59,30 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       fit: BoxFit.cover, // Ensure the image covers the entire screen
                     ),
                   ),
-                  child: _buildLoginWidget(),
+                  child: SafeArea(child:_buildLoginWidget()),
                 ),
             )
-      //)
+      )
     );
 
   Widget _buildLoginWidget() =>
-  SafeArea(child:
     Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center, // Align items at the top
         crossAxisAlignment: CrossAxisAlignment.center, // Center items horizontally
         children: <Widget>[
           const Spacer(flex: 3),
+
           // UCSD Logo
           Flexible(
             flex: 0,
             child: FractionallySizedBox(
-              widthFactor: 0.78055556, //0.76986301,
-              child: Image.asset(
-                'assets/images/UCSanDiegoLogo-Blue.png',
-              ),
+              widthFactor: 0.78055556,
+              child: Image.asset('assets/images/UCSanDiegoLogo-Blue.png'),
             ),
           ),
           const SizedBox(height: 44.0),
+
           // Welcome Heading
           const Flexible(
             flex: 0,
@@ -94,6 +101,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 )),
           ),
           const SizedBox(height: 12.5),
+
           // Description Text
           const Flexible(
             flex: 0,
@@ -115,12 +123,15 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             )
           ),
           const SizedBox(height: 35.0),
+          
           // UCSD Email Input
           _buildEmailField(),
           const SizedBox(height: 18.5),
+
           // Password Input
           _buildPasswordField(),
           const SizedBox(height: 20.0),
+
           // SIGN IN and Forgot Password?
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -170,8 +181,10 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                         });
                       },
               ),
+
               // the spacer in between sign in and forgot password
               SizedBox(width: _screenWidth * 0.202),
+
               GestureDetector(
                 child: Semantics(
                   hint:
@@ -198,8 +211,10 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               ),
             ],
           ),
+
           ///////////////////////// Footer ////////////////////////////
           const Spacer(flex: 2),
+
           // Not affiliated text
           const Text(
             "Not affiliated with UC San Diego?",
@@ -211,6 +226,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             ),
           ),
           const SizedBox(height: 12.0),
+
           // Skip This Step
           GestureDetector(
             child: Semantics(
@@ -234,10 +250,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             },
           ),
 
-          const SizedBox(height: 16.0),
           const Spacer()
         ],
-      ),)
+      ),
     );
 
   // TODO: change the font for the password field (it's a lighter gray than what is currently there)
