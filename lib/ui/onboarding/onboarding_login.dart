@@ -39,7 +39,6 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.black,
         statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.dark,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
@@ -264,34 +263,33 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Container(
           decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: const [
-                const BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 5,
-                    spreadRadius: 2.0,
-                    offset: const Offset(2.0, 2.0)),
-              ]),
-          // child: Flexible(
-            child: FractionallySizedBox(
-              widthFactor: 0.74444444,
-              child: TextField(
-                style: const TextStyle(
-                    fontFamily: 'Brix Sans',
-                    textBaseline: TextBaseline.alphabetic,
-                    color: const Color(0xFF737373), // TODO: figure out why color is being ignored
-                    fontWeight: FontWeight.w400,
-                    fontSize: 18.0,
-                    height: 1.277, // line height: 23px
-                    letterSpacing: 1.2),
-                decoration: decoration,
-                keyboardType: keyboardType,
-                controller: controller,
-                obscureText: obscureText,
-              )
-            )
+            color: Colors.white,
+            boxShadow: const [
+              const BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 5,
+                  spreadRadius: 2.0,
+                  offset: const Offset(2.0, 2.0)),
+            ]
           ),
-        //)
+          child: FractionallySizedBox(
+            widthFactor: 0.74444444,
+            child: TextField(
+              style: const TextStyle(
+                  fontFamily: 'Brix Sans',
+                  textBaseline: TextBaseline.alphabetic,
+                  color: const Color(0xFF737373), // TODO: figure out why color is being ignored
+                  fontWeight: FontWeight.w400,
+                  fontSize: 18.0,
+                  height: 1.277, // line height: 23px
+                  letterSpacing: 1.2),
+              decoration: decoration,
+              keyboardType: keyboardType,
+              controller: controller,
+              obscureText: obscureText,
+            )
+          )
+        ),
       );
 
   Widget _buildEmailField() => _buildInputField(
