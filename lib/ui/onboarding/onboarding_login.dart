@@ -32,13 +32,13 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
   @override
   Widget build(BuildContext context) =>
-    // This improves colors and styling of the status bar text only on Android
-    // There is a hack in Info.plist to implement a similar effect on iOS
+    // This improves colors and styling of the status bar text
     AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.black,
         statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light, // for iOS
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
