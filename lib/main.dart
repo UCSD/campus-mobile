@@ -74,6 +74,7 @@ Future<void> clearSecuredStorage() async {
   await storage.deleteAll();
 }
 
+// TODO: refactor this to load multiple futures in one statement
 Future<void> clearHiveStorage() async {
   await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
@@ -128,9 +129,7 @@ class CampusMobile extends StatelessWidget {
           RoutePaths.OnboardingLogin,
           //: RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
-        navigatorObservers: [
-          observer,
-        ],
+        navigatorObservers: [ observer ],
       ),
     );
   }

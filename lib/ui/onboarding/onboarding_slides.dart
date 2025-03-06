@@ -15,6 +15,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
   var currentIndex = 0;
   final _foregroundPageController = PageController();
   final _backgroundPageController = PageController();
+  late final _screenWidth = MediaQuery.sizeOf(context).width;
+  late final _screenHeight = MediaQuery.sizeOf(context).height;
 
   @override
   void initState() {
@@ -45,17 +47,17 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
             controller: _backgroundPageController,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 5,
-            itemBuilder: (context, index) {
-              return Image.asset(
+            itemBuilder: (_, index) =>
+              Image.asset(
                 "assets/images/onboarding-slide-${index + 1}-background.png",
                 fit: BoxFit.fitWidth,
-              );
-            },
+              )
           ),
           Column(
             children: <Widget>[
               const SizedBox(height: 110.0),
               buildDotIndicator(),
+              
               Expanded(
                 child: PageView(
                   controller: _foregroundPageController,
@@ -73,6 +75,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
                   ],
                 ),
               ),
+
               buildGoToTheAppButton(),
               const SizedBox(height: 80.0),
             ],
@@ -83,8 +86,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
 
   Widget buildPage1() =>
     OnboardingSlideTemplate(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: _screenWidth,
+      height: _screenHeight,
       heroImage: const AssetImage('assets/images/hero/hero-img-campus-life.png'),
       heading: "ONE-STOP ACCESS TO CAMPUS LIFE.",
       description:
@@ -93,8 +96,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
 
   Widget buildPage2() =>
     OnboardingSlideTemplate(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: _screenWidth,
+      height: _screenHeight,
       heroImage: const AssetImage('assets/images/hero/hero-img-schedule.png'),
       heading: "YOUR SCHEDULE ON THE GO",
       description: "View your classes and finals schedule whenever you need.",
@@ -102,8 +105,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
 
   Widget buildPage3() =>
     OnboardingSlideTemplate(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: _screenWidth,
+      height: _screenHeight,
       heroImage: const AssetImage('assets/images/hero/hero-img-parking.png'),
       heading: "PARKING MADE EASIER.",
       description: "Keep an eye on parking lot capacity to plan your day.",
@@ -111,8 +114,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
 
   Widget buildPage4() =>
     OnboardingSlideTemplate(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: _screenWidth,
+      height: _screenHeight,
       heroImage: const AssetImage('assets/images/hero/hero-img-busyness.png'),
       heading: "SPEND LESS TIME WAITING.",
       description: "Easily see how busy campus locations are before you arrive.",
@@ -120,8 +123,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
 
   Widget buildPage5() =>
     OnboardingSlideTemplate(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: _screenWidth,
+      height: _screenHeight,
       heroImage: const AssetImage('assets/images/hero/hero-img-notifications.png'),
       heading: "YOU'RE ALL SET.",
       description:
