@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
-import 'package:campus_mobile_experimental/app_router.dart'
-    as campusMobileRouter;
+import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
@@ -125,9 +124,9 @@ class CampusMobile extends StatelessWidget {
           colorScheme:
               darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
-        initialRoute: showOnboardingScreen ?
-          RoutePaths.OnboardingLogin
-          : RoutePaths.BottomNavigationBar,
+        initialRoute: //showOnboardingScreen ?
+          RoutePaths.OnboardingLogin,
+          //: RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [ observer ],
       ),

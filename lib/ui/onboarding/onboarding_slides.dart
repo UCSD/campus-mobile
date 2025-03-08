@@ -89,9 +89,9 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
       width: _screenWidth,
       height: _screenHeight,
       heroImage: const AssetImage('assets/images/hero/hero-img-campus-life.png'),
-      heading: "ONE-STOP ACCESS TO CAMPUS LIFE.",
+      heading: "ONE-STOP ACCESS\nTO CAMPUS LIFE.",
       description:
-      "Keep up to date with amazing events and stay connected to campus news.",
+      "Keep up to date with amazing events and stay\nconnected to campus news.",
     );
 
   Widget buildPage2() =>
@@ -99,8 +99,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
       width: _screenWidth,
       height: _screenHeight,
       heroImage: const AssetImage('assets/images/hero/hero-img-schedule.png'),
-      heading: "YOUR SCHEDULE ON THE GO",
-      description: "View your classes and finals schedule whenever you need.",
+      heading: "YOUR SCHEDULE\nON THE GO",
+      description: "View your classes and finals schedule\nwhenever you need.",
     );
 
   Widget buildPage3() =>
@@ -108,8 +108,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
       width: _screenWidth,
       height: _screenHeight,
       heroImage: const AssetImage('assets/images/hero/hero-img-parking.png'),
-      heading: "PARKING MADE EASIER.",
-      description: "Keep an eye on parking lot capacity to plan your day.",
+      heading: "PARKING\nMADE EASIER.",
+      description: "Keep an eye on parking lot capacity to plan\nyour day.",
     );
 
   Widget buildPage4() =>
@@ -117,8 +117,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
       width: _screenWidth,
       height: _screenHeight,
       heroImage: const AssetImage('assets/images/hero/hero-img-busyness.png'),
-      heading: "SPEND LESS TIME WAITING.",
-      description: "Easily see how busy campus locations are before you arrive.",
+      heading: "SPEND LESS\nTIME WAITING.",
+      description: "Easily see how busy campus locations are\nbefore you arrive.",
     );
 
   Widget buildPage5() =>
@@ -128,7 +128,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
       heroImage: const AssetImage('assets/images/hero/hero-img-notifications.png'),
       heading: "YOU'RE ALL SET.",
       description:
-      "We recommend turning on push notifications to receive campus and safety alerts.",
+      "We recommend turning on push notifications\nto receive campus and safety alerts.",
     );
 
   Widget buildGoToTheAppButton() =>
