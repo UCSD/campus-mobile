@@ -99,25 +99,30 @@ class ErrorConstants {
   static const locationFailed = "Location was not available";
 }
 
-class ScannerConstants {
-  static const duplicateRecord =
-      'Submission failed due to barcode already scanned. Please discard this test tube and get another one.\nCode #1035';
-  static const duplicateRecordBloodScreen =
-      'Submission failed because this barcode has already been scanned. Please discard this kit.\nCode #1035';
-  static const invalidMedia =
-      'Barcode is not valid. Please scan another barcode.\nCode #1036';
-  static const barcodeError =
-      'An error occurred. Please try again.\nCode #1037';
-  static const invalidToken =
-      'An error occurred. Please try again.\nCode #1038';
-  static const loggedOut = 'An error occurred. Please try again.\nCode #1039';
-  static const unknownError =
-      'An error occurred. Please try again.\nCode #1040';
-  static const notAcceptable =
-      'Do not test within 30 days after receiving a positive test for COVID-19. Place all materials in the recycle and trash receptacles.\nCode #1041';
-  static const scannerReauthFailure =
-      'Your session has expired. Please login to submit a scan.';
-  static const noRecentScan = 'No scan submitted';
+enum ScannerError implements Exception {
+  duplicateRecord(
+      'Submission failed due to barcode already scanned. Please discard this test tube and get another one.\nCode #1035'),
+  duplicateRecordBloodScreen(
+      'Submission failed because this barcode has already been scanned. Please discard this kit.\nCode #1035'),
+  invalidMedia(
+      'Barcode is not valid. Please scan another barcode.\nCode #1036'),
+  barcodeError(
+      'An error occurred. Please try again.\nCode #1037'),
+  invalidToken(
+      'An error occurred. Please try again.\nCode #1038'),
+  loggedOut(
+      'An error occurred. Please try again.\nCode #1039'),
+  unknownError(
+      'An error occurred. Please try again.\nCode #1040'),
+  notAcceptable(
+      'Do not test within 30 days after receiving a positive test for COVID-19. Place all materials in the recycle and trash receptacles.\nCode #1041'),
+  scannerReauthFailure(
+      'Your session has expired. Please login to submit a scan.'),
+  noRecentScan(
+      'No scan submitted');
+
+  final String msg;
+  const ScannerError(this.msg);
 }
 
 class LoginConstants {

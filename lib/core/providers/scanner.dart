@@ -7,11 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_scandit_plugin/flutter_scandit_plugin.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ScannerException implements Exception{
-  final String message;
-  ScannerException(this.message);
-}
-
 class ScannerDataProvider extends ChangeNotifier {
   ScannerDataProvider()  { initState(); notifyListeners(); }
 
@@ -110,11 +105,11 @@ class ScannerDataProvider extends ChangeNotifier {
       final isLoggedIn = _userDataProvider.isLoggedIn;
 
       if (!isLoggedIn)
-        throw ScannerException(ScannerConstants.loggedOut);
+        throw ScannerError.loggedOut;
 
       // verify token is valid
       if (tokenExpired && !(await _userDataProvider.silentLogin()))
-        throw ScannerException(ScannerConstants.invalidToken);
+        throw ScannerError.invalidToken;
 
       final results = await _barcodeService.uploadResults({
         "Content-Type": "application/json",
@@ -129,28 +124,28 @@ class ScannerDataProvider extends ChangeNotifier {
         _didError = false;
       }
       else if (_barcodeService.error!.contains(ErrorConstants.notAcceptable))
-        throw ScannerException(ScannerConstants.notAcceptable);
+        throw ScannerError.notAcceptable;
       else if (_isDuplicate = _barcodeService.error!.contains(ErrorConstants.duplicateRecord))
         // test if blood screen
-        throw ScannerException(RegExp(r'^ZAP').hasMatch(_barcode!)
-          ? ScannerConstants.duplicateRecordBloodScreen
-          : ScannerConstants.duplicateRecord);
+        throw RegExp(r'^ZAP').hasMatch(_barcode!)
+          ? ScannerError.duplicateRecordBloodScreen
+          : ScannerError.duplicateRecord;
       else if (_barcodeService.error!.contains(ErrorConstants.invalidMedia)) {
         _isValidBarcode = false;
-        throw ScannerException(ScannerConstants.invalidMedia);
+        throw ScannerError.invalidMedia;
       }
       else
-        throw ScannerException(ScannerConstants.barcodeError);
+        throw ScannerError.barcodeError;
     }
-    on ScannerException catch (e) {
+    on ScannerError catch (e) {
       _successfulSubmission = false;
       _didError = true;
-      errorText = e.message;
+      errorText = e.msg;
     } catch (e) {
       // for errors not our own
       _successfulSubmission = false;
       _didError = true;
-      errorText = ScannerConstants.unknownError;
+      errorText = ScannerError.unknownError.msg;
     } finally {
       isLoading = false;
       notifyListeners();
