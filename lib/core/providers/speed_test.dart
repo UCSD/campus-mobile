@@ -46,10 +46,10 @@ class SpeedTestProvider extends ChangeNotifier {
 
   /// SERVICES
   late SpeedTestService _speedTestService;
-  final _networkHelper = new NetworkHelper();
-  final dio = new Dio();
+  static const _networkHelper = NetworkHelper();
+  static final dio = Dio();
   final _timer = new Stopwatch();
-  final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
+  static late final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
 
   Future<void> init() async {
     _isLoading = true;
@@ -329,7 +329,7 @@ class SpeedTestProvider extends ChangeNotifier {
   set coordinates(Coordinates value) => _coordinates = value;
   set userDataProvider(UserDataProvider userDataProvider) => _userDataProvider = userDataProvider;
   set speed(double? lastSpeed) => _speedDownload = lastSpeed;
-  double _convertToMbps(double speed) => speed / 125000;
+  static double _convertToMbps(double speed) => speed / 125000;
 
   /// SIMPLE GETTERS
   bool get isLoading => _isLoading;
