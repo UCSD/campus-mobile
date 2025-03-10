@@ -13,13 +13,13 @@ import 'package:path_provider/path_provider.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
   SpeedTestProvider() {
-    /// TODO: probably is a bug! Async functions should not be be run in the constructor
+    /// TODO: probably a bug! Async functions should not be be run in the constructor
     init();
   }
 
   /// STATES
-  bool _isLoading = false;
-  bool _speedTestDone = false;
+  var _isLoading = false;
+  var _speedTestDone = false;
   bool? _onSimulator;
   bool? isUCSDWiFi = false;
   double _percentDownloaded = 0.0;
@@ -79,37 +79,29 @@ class SpeedTestProvider extends ChangeNotifier {
   Future<void> speedTest() async {
     init();
     resetSpeedTest();
-    downloadSpeedTest().then((value) {
-      _timer.reset();
-      uploadSpeedTest().then((value) {
-        if (_percentUploaded == 1.0 && _percentDownloaded == 1.0) {
-          _speedTestDone = true;
-          notifyListeners();
-        }
-      });
-    });
+    await downloadSpeedTest();
+    _timer.reset;
+    await uploadSpeedTest();
+    if (_percentUploaded == 1.0 && _percentDownloaded == 1.0) {
+      _speedTestDone = true;
+      notifyListeners();
+    }
   }
 
-  Future uploadSpeedTest() async {
-    var path = (await getApplicationDocumentsDirectory()).path;
-    var temp = File(path + "/temp.html");
-
-    // if not on UCSD wifi OR the file above does not exist,
-    // we should not upload the speed test results
-    // instead, stop the timer and exit the function
-    if (isUCSDWiFi != true || !temp.existsSync()) {
-      _timer.stop();
-      notifyListeners();
-      return;
-    }
-
-    var tempDownload = temp.readAsBytesSync();
-    var formData = new FormData.fromMap(
-        {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
-    notifyListeners();
-
+  Future<void> uploadSpeedTest() async {
     try {
-      _cancelTokenUpload = new CancelToken();
+      final path = (await getApplicationDocumentsDirectory()).path;
+      final temp = File(path + "/temp.html");
+
+      // if the file above does not exist, cancel the upload speed test
+      if (/*isUCSDWiFi != true || */!temp.existsSync())
+        return;
+
+      final tempDownload = temp.readAsBytesSync();
+      final formData = FormData.fromMap(
+          {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
+      notifyListeners();
+      _cancelTokenUpload = CancelToken();
       _timer.start();
       await dio.put(_speedTestModel!.uploadUrl!,
           data: formData,
@@ -141,7 +133,7 @@ class SpeedTestProvider extends ChangeNotifier {
     }
   }
 
-  _progressCallbackDownload(int bytesDownloaded, int totalBytes) {
+  void _progressCallbackDownload(int bytesDownloaded, int totalBytes) {
     _secondsElapsedDownload = _timer.elapsed.inSeconds;
     double speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
     _speedDownload = _convertToMbps(speedInBytes);
@@ -149,7 +141,7 @@ class SpeedTestProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  _progressCallbackUpload(int bytesDownloaded, int totalBytes) {
+  void _progressCallbackUpload(int bytesDownloaded, int totalBytes) {
     _secondsElapsedUpload = _timer.elapsed.inSeconds;
     double speedInBytes = (bytesDownloaded / _timer.elapsed.inSeconds);
     _speedUpload = _convertToMbps(speedInBytes);
@@ -340,11 +332,11 @@ class SpeedTestProvider extends ChangeNotifier {
   double _convertToMbps(double speed) => speed / 125000;
 
   /// SIMPLE GETTERS
-  get isLoading => _isLoading;
-  get isUCSDNetwork => isUCSDWiFi;
-  get onSimulator => _onSimulator;
-  get speedTestDone => _speedTestDone;
-  get error => _error;
+  bool get isLoading => _isLoading;
+  bool? get isUCSDNetwork => isUCSDWiFi;
+  bool? get onSimulator => _onSimulator;
+  bool get speedTestDone => _speedTestDone;
+  String? get error => _error;
   int get timeElapsedDownload => _secondsElapsedDownload;
   int get timeElapsedUpload => _secondsElapsedUpload;
   double get percentDownloaded => _percentDownloaded;
