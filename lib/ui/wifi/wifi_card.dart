@@ -70,12 +70,12 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
   }
 
   Widget buildCardContent(BuildContext context) {
-    if (!_speedTestProvider.isUCSDWiFi!) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: unavailableState(),
-      );
-    }
+    // if (!_speedTestProvider.isUCSDWiFi!) {
+    //   return Padding(
+    //     padding: const EdgeInsets.all(8.0),
+    //     child: unavailableState(),
+    //   );
+    // }
 
     if (timedOut) {
       return Padding(
@@ -88,11 +88,13 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       try {
         if (_speedTestProvider.onSimulator!) {
           cardState = TestStatus.simulated;
-        } else if (!_speedTestProvider.isUCSDWiFi!) {
-          setState(() {
-            cardState = TestStatus.unavailable;
-          });
-        } else if (_speedTestProvider.timeElapsedDownload +
+        }
+        // else if (!_speedTestProvider.isUCSDWiFi!) {
+        //   setState(() {
+        //     cardState = TestStatus.unavailable;
+        //   });
+        // }
+        else if (_speedTestProvider.timeElapsedDownload +
                 _speedTestProvider.timeElapsedUpload >
             SPEED_TEST_TIMEOUT_CONST) {
           setState(() {
@@ -127,11 +129,11 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           padding: const EdgeInsets.all(8.0),
           child: finishedState(),
         );
-      case TestStatus.unavailable:
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: unavailableState(),
-        );
+      // case TestStatus.unavailable:
+      //   return Padding(
+      //     padding: const EdgeInsets.all(8.0),
+      //     child: unavailableState(),
+      //   );
       case TestStatus.simulated:
         return Padding(
             padding: const EdgeInsets.all(8.0), child: simulatedState());
@@ -485,52 +487,55 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Column unavailableState() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "Connect to a UCSD Network",
-            style: TextStyle(
-              fontSize: 25,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        MaterialButton(
-            padding: EdgeInsets.all(4.0),
-            elevation: 0.0,
-            onPressed: () => tryAgain(),
-            minWidth: 350,
-            height: 40,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              side: BorderSide(color: Colors.black),
-            ),
-            color: darkAppBarTheme.backgroundColor,
-            child: Text(
-              "Try Again",
-              style: TextStyle(color: Colors.white),
-            )),
-      ],
-    );
-  }
+  // Commenting this out for now...
+  // Column unavailableState() {
+  //   return Column(
+  //     children: [
+  //       Padding(
+  //         padding: const EdgeInsets.all(8.0),
+  //         child: Text(
+  //           "Connect to a UCSD Network",
+  //           style: TextStyle(
+  //             fontSize: 25,
+  //           ),
+  //           textAlign: TextAlign.center,
+  //         ),
+  //       ),
+  //       MaterialButton(
+  //           padding: EdgeInsets.all(4.0),
+  //           elevation: 0.0,
+  //           onPressed: () => tryAgain(),
+  //           minWidth: 350,
+  //           height: 40,
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(5.0),
+  //             side: BorderSide(color: Colors.black),
+  //           ),
+  //           color: darkAppBarTheme.backgroundColor,
+  //           child: Text(
+  //             "Try Again",
+  //             style: TextStyle(color: Colors.white),
+  //           )),
+  //     ],
+  //   );
+  // }
 
   void tryAgain() async {
     // re check everything
     await Provider.of<SpeedTestProvider>(context, listen: false).init();
 
+    setState(() => cardState = TestStatus.initial);
+
     // reset states if needed
-    if (_speedTestProvider.isUCSDWiFi!) {
-      setState(() {
-        cardState = TestStatus.initial;
-      });
-    } else {
-      setState(() {
-        cardState = TestStatus.unavailable;
-      });
-    }
+    // if (_speedTestProvider.isUCSDWiFi!) {
+      // setState(() {
+      //   cardState = TestStatus.initial;
+      // });
+    // } else {
+    //   setState(() {
+    //     cardState = TestStatus.unavailable;
+    //   });
+    // }
   }
 
   Column simulatedState() {
@@ -616,4 +621,4 @@ class SizeConfig {
   }
 }
 
-enum TestStatus { initial, running, finished, unavailable, simulated }
+enum TestStatus { initial, running, finished, /*unavailable, */simulated }
