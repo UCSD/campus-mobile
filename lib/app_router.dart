@@ -21,10 +21,8 @@ import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
-import 'package:campus_mobile_experimental/ui/onboarding/onboarding_affiliations.dart';
-import 'package:campus_mobile_experimental/ui/onboarding/onboarding_initial_screen.dart';
+import 'package:campus_mobile_experimental/ui/onboarding/onboarding_slides.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_login.dart';
-import 'package:campus_mobile_experimental/ui/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/neighborhood_lot_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/neighborhoods_view.dart';
@@ -46,11 +44,7 @@ class Router {
       case RoutePaths.BottomNavigationBar:
         return MaterialPageRoute(builder: (_) => BottomTabBar());
       case RoutePaths.OnboardingInitial:
-        return MaterialPageRoute(builder: (_) => OnboardingInitial());
-      case RoutePaths.Onboarding:
-        return MaterialPageRoute(builder: (_) => OnboardingScreen());
-      case RoutePaths.OnboardingAffiliations:
-        return MaterialPageRoute(builder: (_) => OnboardingAffiliations());
+        return MaterialPageRoute(builder: (_) => OnboardingSlides());
       case RoutePaths.OnboardingLogin:
         return MaterialPageRoute(builder: (_) => OnboardingLogin());
       case RoutePaths.Home:

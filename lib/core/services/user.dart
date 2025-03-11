@@ -9,7 +9,7 @@ class UserProfileService {
   /// STATES
   bool _isLoading = false;
   String? _error;
-  final _endpoint = dotenv.get('USER_ENDPOINT');
+  late final _endpoint = dotenv.get('USER_ENDPOINT');
 
   /// MODELS
   late UserProfileModel _userProfileModel;
