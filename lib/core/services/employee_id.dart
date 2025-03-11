@@ -12,14 +12,11 @@ class EmployeeIdService {
   /// MODELS
   EmployeeIdModel _employeeIdModel = EmployeeIdModel();
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchEmployeeIdProfile(Map<String, String> headers) async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
+      String _response = await NetworkHelper.authorizedFetch(
           dotenv.get('MY_EMPLOYEE_PROFILE_API_ENDPOINT'), headers);
 
       _employeeIdModel = employeeIdModelFromJson(_response);

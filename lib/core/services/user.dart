@@ -14,16 +14,13 @@ class UserProfileService {
   /// MODELS
   late UserProfileModel _userProfileModel;
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
     print("user headers:");
     print(headers.toString());
     _error = null; _isLoading = true;
     try {
       _userProfileModel = userProfileModelFromJson(
-          await _networkHelper.authorizedFetch(_endpoint + '/profile', headers));
+          await NetworkHelper.authorizedFetch(_endpoint + '/profile', headers));
       return true;
     } catch (e) {
       _error = e.toString();
@@ -36,7 +33,7 @@ class UserProfileService {
   Future<bool> uploadUserProfile(Map<String, String> headers, Map<String, dynamic> body) async {
     _error = null; _isLoading = true;
     try {
-      final response = await _networkHelper.authorizedPost(
+      final response = await NetworkHelper.authorizedPost(
           _endpoint + '/profile', headers, createAttributeValueJson(body));
       return response.toString() == 'Success' ? true : throw response.toString();
     } catch (e) {

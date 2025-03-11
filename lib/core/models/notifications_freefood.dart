@@ -7,11 +7,11 @@ String freeFoodModelToJson(FreeFoodModel data) => json.encode(data.toJson());
 
 class FreeFoodModel {
   int? statusCode;
-  Body? body;
+  Body body;
 
   FreeFoodModel({
     this.statusCode,
-    this.body,
+    required this.body,
   });
 
   factory FreeFoodModel.fromJson(Map<String, dynamic> json) => FreeFoodModel(
@@ -21,7 +21,7 @@ class FreeFoodModel {
 
   Map<String, dynamic> toJson() => {
         "statusCode": statusCode,
-        "body": body!.toJson(),
+        "body": body.toJson(),
       };
 }
 
@@ -32,8 +32,8 @@ class Body {
   Body({required this.count, required this.maxCount});
 
   Body.fromJson(Map<String, dynamic> json)
-      : count = json["count"],
-        maxCount = json["maxCount"];
+      : count = json["count"] ?? 0,
+        maxCount = json["maxCount"] ?? 0;
 
   Map<String, dynamic> toJson() => {
         "count": count,

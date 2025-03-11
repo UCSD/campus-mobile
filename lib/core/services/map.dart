@@ -12,14 +12,11 @@ class MapSearchService {
   /// MODELS
   List<MapSearchModel> _results = [];
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchLocations(String location) async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String? _response = await _networkHelper.fetchData(
+      String? _response = await NetworkHelper.fetchData(
           dotenv.get('MAP_BASE_ENDPOINT') + '?query=' + location + '&region=0');
       if (_response != 'null') {
         /// parse data
