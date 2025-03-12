@@ -218,7 +218,7 @@ def install_flutter():
 		flutter_dir = os.path.expanduser('~/development/flutter')
 		if not os.path.exists(flutter_dir):
 			os.makedirs(flutter_dir, exist_ok=True)
-			subprocess.run(['git', 'clone', 'https://github.com/flutter/flutter.git', '-b', '3.7.3', flutter_dir], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+			subprocess.run(['git', 'clone', 'https://github.com/flutter/flutter.git', '-b', '3.24.5', flutter_dir], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 		add_flutter_to_path(flutter_dir)
 
 	# Trigger the installation of additional required Flutter components
@@ -234,11 +234,11 @@ def add_flutter_to_path(flutter_dir):
 def check_and_switch_flutter_version(flutter_bin_path):
 	# Check the current Flutter version
 	flutter_version_output = subprocess.run(['flutter', '--version'], capture_output=True, text=True).stdout
-	if "Flutter 3.7.3" not in flutter_version_output:
-		print("Switching to Flutter version 3.7.3...")
+	if "Flutter 3.24.5" not in flutter_version_output:
+		print("Switching to Flutter version 3.24.5...")
 		os.chdir(os.path.dirname(flutter_bin_path))
 		subprocess.run(['git', 'fetch'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-		subprocess.run(['git', 'checkout', '3.7.3'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+		subprocess.run(['git', 'checkout', '3.24.5'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
 
 ##############################################################################################################
@@ -387,10 +387,10 @@ def configure_campus_mobile():
 	installer_path = os.path.join(downloads_path, 'campus-mobile-installer')
 	ios_path = os.path.join(project_path, 'ios', 'Runner')
 	android_path = os.path.join(project_path, 'android', 'app')
-	zip_files = ['campus-mobile-7.27-qa.env.zip', 'campus-mobile-push-qa.zip']
+	zip_files = ['campus-mobile-7.30-qa.env.zip', 'campus-mobile-push-qa.zip']
 
 	expected_files = {
-		'campus-mobile-7.27-qa.env.zip': os.path.join(installer_path, '.env'),
+		'campus-mobile-7.30-qa.env.zip': os.path.join(installer_path, '.env'),
 		'campus-mobile-push-qa.zip': [
 			os.path.join(installer_path, 'ios', 'Runner', 'GoogleService-Info.plist'),
 			os.path.join(installer_path, 'android', 'app', 'google-services.json')
@@ -422,7 +422,7 @@ def configure_campus_mobile():
 		if not all_files_present:
 			print("\n  *** USER ACTION REQUIRED ***")
 			print("  1. Navigate to LastPass -> All Items -> Search for 'Shared-Campus Mobile Config' -> View")
-			print("  2. Save the files 'campus-mobile-7.27-qa.env.zip' and 'campus-mobile-push-qa.zip' directly to your '~/Downloads' folder.")
+			print("  2. Save the files 'campus-mobile-7.30-qa.env.zip' and 'campus-mobile-push-qa.zip' directly to your '~/Downloads' folder.")
 			try:
 				input("\nPress any key to continue (or Control-C to exit).")
 			except KeyboardInterrupt:
