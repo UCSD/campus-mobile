@@ -41,6 +41,7 @@ class MapSearchModel {
     this.access,
     required this.url,
     required this.mkrMarkerid,
+    this.distance
   });
 
   MapSearchModel.fromJson(Map<String, dynamic> json)
@@ -55,7 +56,8 @@ class MapSearchModel {
         mkrLat = json["mkrLat"].toDouble(),
         access = json["access"],
         url = json["url"],
-        mkrMarkerid = json["mkrMarkerid"];
+        mkrMarkerid = json["mkrMarkerid"],
+        distance = json["distance"];
 
   Map<String, dynamic> toJson() => {
         "title": title,
@@ -70,5 +72,6 @@ class MapSearchModel {
         "access": access,
         "url": url,
         "mkrMarkerid": mkrMarkerid,
+        "distance": distance
       };
 }
