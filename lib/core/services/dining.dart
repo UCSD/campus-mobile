@@ -19,14 +19,11 @@ class DiningService {
   List<DiningModel>? _data = [];
   DiningMenuItemsModel? _menuData;
 
-  /// SERVICES
-  static const _networkHelper = NetworkHelper();
-
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
+      String _response = await NetworkHelper.authorizedFetch(
           dotenv.get('DINING_BASE_ENDPOINT') + '/locations', headers);
 
       /// parse data
@@ -37,7 +34,7 @@ class DiningService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) return await fetchData();
+        if (await NetworkHelper.getNewToken(headers)) return await fetchData();
       }
       _error = e.toString();
       return false;
@@ -50,7 +47,7 @@ class DiningService {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
+      String _response = await NetworkHelper.authorizedFetch(
           dotenv.get('DINING_BASE_ENDPOINT') + '/menu/' + id, headers);
 
       /// parse data
@@ -61,7 +58,7 @@ class DiningService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) return await fetchMenu(id);
+        if (await NetworkHelper.getNewToken(headers)) return await fetchMenu(id);
       }
       _error = e.toString();
       return false;

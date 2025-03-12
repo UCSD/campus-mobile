@@ -21,15 +21,12 @@ class ShuttleService {
   /// MODELS
   List<ShuttleStopModel> _data = [];
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.authorizedFetch(dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
+          await (NetworkHelper.authorizedFetch(dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
 
       /// parse data
       var data = shuttleStopModelFromJson(_response);
@@ -47,7 +44,7 @@ class ShuttleService {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
+      String _response = await (NetworkHelper.authorizedFetch(
           dotenv.get('SHUTTLE_API_ENDPOINT') + "/$stopId/arrivals", headers));
 
       /// parse data

@@ -24,7 +24,6 @@ class SpeedTestService {
   /// SERVICES
   var deviceInfo = DeviceInfoPlugin();
   var _connectivity = Connectivity();
-  final _networkHelper = NetworkHelper();
 
   Future<bool> checkSimulation() async {
     try {
@@ -48,11 +47,11 @@ class SpeedTestService {
   Future<bool> fetchSignedUrls() async {
     _error = null; _isLoading = true;
     try {
-      await _networkHelper.getNewToken(headers);
+      await NetworkHelper.getNewToken(headers);
       // Get download & upload urls
-      String? _downloadResponse = await _networkHelper.authorizedFetch(
+      String? _downloadResponse = await NetworkHelper.authorizedFetch(
           dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'), headers);
-      String? _uploadResponse = await _networkHelper.authorizedFetch(
+      String? _uploadResponse = await NetworkHelper.authorizedFetch(
           dotenv.get('SPEED_TEST_UPLOAD_ENDPOINT'), headers);
 
       /// parse data

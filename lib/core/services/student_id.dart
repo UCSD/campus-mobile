@@ -18,15 +18,12 @@ class StudentIdService {
   StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
   StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel();
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   //Removed term (not used)
   Future<bool> fetchStudentIdName(Map<String, String> headers) async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
+      String _response = await NetworkHelper.authorizedFetch(
           myStudentContactApiUrl + '/display_name', headers);
 
       /// parse data
@@ -45,7 +42,7 @@ class StudentIdService {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
+      String _response = await NetworkHelper.authorizedFetch(
           myStudentContactApiUrl + '/photo', headers);
 
       /// parse data
@@ -64,7 +61,7 @@ class StudentIdService {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
+      String _response = await NetworkHelper.authorizedFetch(
           myStudentProfileApiUrl + '/profile', headers);
 
       _studentIdProfileModel = studentIdProfileModelFromJson(_response);

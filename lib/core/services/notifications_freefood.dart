@@ -14,16 +14,13 @@ class FreeFoodService {
   };
 
   /// MODELS
-  FreeFoodModel? _data;
-
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
+  late FreeFoodModel _data;
 
   Future<bool> fetchData(String id) async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      var _response = await _networkHelper.authorizedFetch(
+      var _response = await NetworkHelper.authorizedFetch(
           dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' +
               id + '/rsvpCount', headers);
 
@@ -35,7 +32,7 @@ class FreeFoodService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) {
+        if (await NetworkHelper.getNewToken(headers)) {
           return await fetchData(id);
         }
       }
@@ -53,7 +50,7 @@ class FreeFoodService {
           'events/' + id + '/rsvpLimit';
 
       /// fetch data
-      var _response = await _networkHelper.authorizedFetch(_url, headers);
+      var _response = await NetworkHelper.authorizedFetch(_url, headers);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
@@ -63,7 +60,7 @@ class FreeFoodService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) {
+        if (await NetworkHelper.getNewToken(headers)) {
           return await fetchMaxCount(id);
         }
       }
@@ -80,13 +77,13 @@ class FreeFoodService {
       String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id;
 
       /// update count
-      var _response = await _networkHelper.authorizedPut(_url, headers, body);
+      var _response = await NetworkHelper.authorizedPut(_url, headers, body);
       return _response != null ? true : throw (_response.toString());
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) return await updateCount(id, body);
+        if (await NetworkHelper.getNewToken(headers)) return await updateCount(id, body);
       }
       _error = e.toString();
       return false;
@@ -99,6 +96,6 @@ class FreeFoodService {
   get error => _error;
   get isLoading => _isLoading;
   get lastUpdated => _lastUpdated;
-  FreeFoodModel? get freeFoodModel => _data;
-  Future<bool> getNewToken() async => _networkHelper.getNewToken(headers);
+  FreeFoodModel get freeFoodModel => _data;
+  Future<bool> getNewToken() async => NetworkHelper.getNewToken(headers);
 }
