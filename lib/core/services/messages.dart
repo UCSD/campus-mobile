@@ -10,15 +10,12 @@ class MessageService {
   String? _error;
   late Messages _data;
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchMyMessagesData(int timestamp, Map<String, String> authHeaders) async {
     _error = null; _isLoading = true;
 
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
+      String _response = await NetworkHelper.authorizedFetch(
           dotenv.get('MY_MESSAGES_API_ENDPOINT') + timestamp.toString(), authHeaders);
 
       /// parse data
@@ -39,7 +36,7 @@ class MessageService {
     var timestampEndpoint = '&start=' + timestamp.toString();
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(
+      String _response = await NetworkHelper.fetchData(
           dotenv.get('TOPICS_API_ENDPOINT') + topicsEndpoint + timestampEndpoint);
 
       /// parse data

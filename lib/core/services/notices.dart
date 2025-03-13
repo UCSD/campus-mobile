@@ -12,14 +12,11 @@ class NoticesService {
   /// MODELS
   List<NoticesModel> _noticesModel = [];
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(dotenv.get('NOTICES_ENDPOINT'));
+      String _response = await NetworkHelper.fetchData(dotenv.get('NOTICES_ENDPOINT'));
 
       /// parse data
       _noticesModel = noticesModelFromJson(_response);

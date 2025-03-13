@@ -14,14 +14,11 @@ class EventsService {
   /// MODELS
   late List<EventModel> _data;
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await _networkHelper.fetchData(dotenv.get('EVENTS_ENDPOINT'));
+      String _response = await NetworkHelper.fetchData(dotenv.get('EVENTS_ENDPOINT'));
 
       /// parse data
       final data = eventModelFromJson(_response);

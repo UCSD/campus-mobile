@@ -17,14 +17,11 @@ class ParkingService {
   /// MODELS
   List<ParkingModel>? _data;
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchParkingLotData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
+      String _response = await (NetworkHelper.authorizedFetch(
           dotenv.get('PARKING_SERVICE_API_ENDPOINT') + "/status", headers));
 
       /// parse data
@@ -34,7 +31,7 @@ class ParkingService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) return await fetchParkingLotData();
+        if (await NetworkHelper.getNewToken(headers)) return await fetchParkingLotData();
       }
       _error = e.toString();
       return false;
