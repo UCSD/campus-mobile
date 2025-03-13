@@ -20,7 +20,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   late HashMap<String, int> _messageToMaxCount;
 
   /// MODELS
-  FreeFoodModel? _freeFoodModel = FreeFoodModel();
+  late FreeFoodModel _freeFoodModel;
   late MessagesDataProvider _messageDataProvider;
 
   /// SERVICES
@@ -72,9 +72,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
     notifyListeners();
 
     if (await _freeFoodService.fetchData(id)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel!;
+      _freeFoodModel = _freeFoodService.freeFoodModel;
       _lastUpdated = DateTime.now();
-      _messageToCount[id] = _freeFoodModel!.body!.count;
+      _messageToCount[id] = _freeFoodModel.body.count;
     } else {
       _error = _freeFoodService.error;
       if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) {
@@ -93,7 +93,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     if (await _freeFoodService.fetchMaxCount(id)) {
       _freeFoodModel = _freeFoodService.freeFoodModel;
       _lastUpdated = DateTime.now();
-      _messageToMaxCount[id] = _freeFoodModel!.body!.maxCount;
+      _messageToMaxCount[id] = _freeFoodModel.body.maxCount;
     } else {
       _error = _freeFoodService.error;
       if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken))
@@ -124,7 +124,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
     await updateRegisteredEvents(_registeredEvents);
 
     if (await _freeFoodService.updateCount(id, body)) {
-      _freeFoodModel = _freeFoodService.freeFoodModel!;
+      _freeFoodModel = _freeFoodService.freeFoodModel;
       _lastUpdated = DateTime.now();
     } else {
       _error = _freeFoodService.error;

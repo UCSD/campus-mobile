@@ -12,15 +12,12 @@ class ScannerMessageService {
   /// MODELS
   ScannerMessageModel _scannerMessageModel = ScannerMessageModel();
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchData(Map<String, String> headers) async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response =
-          await _networkHelper.authorizedFetch(dotenv.get('SCANNER_MESSAGE_ENDPOINT'), headers);
+          await NetworkHelper.authorizedFetch(dotenv.get('SCANNER_MESSAGE_ENDPOINT'), headers);
 
       /// parse data
       _scannerMessageModel = scannerMessageModelFromJson(_response);

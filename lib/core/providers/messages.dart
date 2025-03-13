@@ -39,12 +39,16 @@ class MessagesDataProvider extends ChangeNotifier {
 
   //Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
-    _isLoading = true; _error = null; var returnVal;
+    _isLoading = true; _error = null;
     notifyListeners();
-    if (clearMessages) _clearMessages();
-    returnVal = await retrieveMoreTopicMessages();
-    _isLoading = false;
-    return returnVal;
+    try {
+      if (clearMessages) _clearMessages();
+      return userDataProvider != null && userDataProvider!.isLoggedIn
+        ? await retrieveMoreMyMessages()
+        : await retrieveMoreTopicMessages();
+    } finally {
+      _isLoading = false;
+    }
   }
 
   void _clearMessages() {

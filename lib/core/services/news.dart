@@ -17,21 +17,18 @@ class NewsService {
   /// MODELS
   NewsModel _newsModels = NewsModel();
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(dotenv.get('NEWS_ENDPOINT'), headers));
+      String _response = await (NetworkHelper.authorizedFetch(dotenv.get('NEWS_ENDPOINT'), headers));
 
       /// parse data
       _newsModels = newsModelFromJson(_response);
       return true;
     } catch (e) {
       if (e.toString().contains("401")) {
-        if (await _networkHelper.getNewToken(headers)) {
+        if (await NetworkHelper.getNewToken(headers)) {
           return await fetchData();
         }
       }

@@ -12,13 +12,10 @@ class NotificationService {
   /// MODELS
   late List<TopicsModel> _topicsModel = [];
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> fetchTopics() async {
     _error = null; _isLoading = true;
     try {
-      String? response = await _networkHelper.fetchData(
+      String? response = await NetworkHelper.fetchData(
           dotenv.get('NOTIFICATIONS_TOPICS_ENDPOINT')
       );
       if (response != null) {
@@ -38,7 +35,7 @@ class NotificationService {
 
   Future<bool> postPushToken(Map<String, String> headers, body) async {
     try {
-      String? response = await _networkHelper.authorizedPost(
+      String? response = await NetworkHelper.authorizedPost(
           dotenv.get('NOTIFICATIONS_ENDPOINT') + '/register', headers, body);
       if (response == 'Success') {
         return true;
@@ -55,7 +52,7 @@ class NotificationService {
   Future<bool> deletePushToken(Map<String, String> headers, String token) async {
     token = Uri.encodeComponent(token);
     try {
-      String? response = await _networkHelper.authorizedDelete(
+      String? response = await NetworkHelper.authorizedDelete(
           dotenv.get('NOTIFICATIONS_ENDPOINT') + '/token/' + token, headers);
       if (response == 'Success') {
         return true;
