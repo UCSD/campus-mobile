@@ -97,7 +97,7 @@ class NativeScannerCard extends StatelessWidget
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
       String? myRecentScanTime = Provider.of<ScannerMessageDataProvider>(context, listen: false)
               .scannerMessageModel.collectionTime;
-      if (myRecentScanTime == "") myRecentScanTime = ScannerConstants.noRecentScan;
+      if (myRecentScanTime == "") myRecentScanTime = ScannerError.noRecentScan.msg;
       return (Padding(
         padding: EdgeInsets.only(top: 8.0, right: 8.0),
         child: Text.rich(

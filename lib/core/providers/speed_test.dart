@@ -46,8 +46,8 @@ class SpeedTestProvider extends ChangeNotifier {
 
   /// SERVICES
   late SpeedTestService _speedTestService;
-  static const _networkHelper = NetworkHelper();
-  static final dio = Dio();
+  final dio = new Dio();
+
   final _timer = new Stopwatch();
   static late final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
 
@@ -223,7 +223,7 @@ class SpeedTestProvider extends ChangeNotifier {
       }
       // Send to offload API
       try {
-        _networkHelper
+        NetworkHelper
             .authorizedPost(
                 mobileLoggerApiWifi, offloadDataHeader, json.encode(log))
             .then((value) {
@@ -236,19 +236,19 @@ class SpeedTestProvider extends ChangeNotifier {
             'Authorization':
                 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           };
-          _networkHelper.authorizedPost(
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifi, offloadDataHeader, json.encode(log));
         }
       }
     } else {
       try {
-        _networkHelper.getNewToken(headers).then((value) {
-          _networkHelper.authorizedPost(
+        NetworkHelper.getNewToken(headers).then((value) {
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifi, headers, json.encode(log));
         });
       } catch (exception) {
-        _networkHelper.getNewToken(headers).then((value) {
-          _networkHelper.authorizedPost(
+        NetworkHelper.getNewToken(headers).then((value) {
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifi, headers, json.encode(log));
         });
       }
@@ -296,7 +296,7 @@ class SpeedTestProvider extends ChangeNotifier {
       }
       // Send to offload API
       try {
-        _networkHelper.authorizedPost(
+        NetworkHelper.authorizedPost(
             mobileLoggerApiWifiReport, offloadDataHeader, json.encode(wiFiLog));
       } catch (exception) {
         if (exception.toString().contains(ErrorConstants.invalidBearerToken)) {
@@ -305,19 +305,19 @@ class SpeedTestProvider extends ChangeNotifier {
             'Authorization':
                 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           };
-          _networkHelper.authorizedPost(mobileLoggerApiWifiReport,
+          NetworkHelper.authorizedPost(mobileLoggerApiWifiReport,
               offloadDataHeader, json.encode(wiFiLog));
         }
       }
     } else {
       try {
-        _networkHelper.getNewToken(headers).then((value) {
-          _networkHelper.authorizedPost(
+        NetworkHelper.getNewToken(headers).then((value) {
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
         });
       } catch (exception) {
-        _networkHelper.getNewToken(headers).then((value) {
-          _networkHelper.authorizedPost(
+        NetworkHelper.getNewToken(headers).then((value) {
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
         });
       }

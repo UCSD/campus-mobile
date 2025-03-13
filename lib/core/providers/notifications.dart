@@ -26,9 +26,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
   Map<String?, bool> _topicSubscriptionState = {};
 
   /// MODELS
-  late List<TopicsModel> _topicsModel;
+  var _topicsModel = <TopicsModel>[];
   Map<String, dynamic> _deviceData = {};
-
+ 
   /// SERVICES
   var _notificationService = NotificationService();
   var deviceInfoPlugin = DeviceInfoPlugin();

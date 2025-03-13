@@ -8,13 +8,10 @@ class BarcodeService {
   bool? _isLoading;
   String? _error;
 
-  /// SERVICES
-  final _networkHelper = NetworkHelper();
-
   Future<bool> uploadResults(Map<String, String> headers, Map<String, dynamic> body) async {
     _error = null; _isLoading = true;
     try {
-      final response = await _networkHelper.authorizedPost(
+      final response = await NetworkHelper.authorizedPost(
           dotenv.get('BARCODE_SERVICE_ENDPOINT'),
           headers, body
       );
