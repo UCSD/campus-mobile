@@ -62,7 +62,7 @@ class SpeedTestProvider extends ChangeNotifier {
     } else {
       _onSimulator = false;
     }
-    // _isLoading = true;
+    _isLoading = true;
     await _speedTestService.fetchSignedUrls();
     _isLoading = false;
     notifyListeners();
@@ -94,7 +94,7 @@ class SpeedTestProvider extends ChangeNotifier {
       final temp = File(path + "/temp.html");
 
       // if the file above does not exist, cancel the upload speed test
-      if (/*isUCSDWiFi != true || */!temp.existsSync())
+      if (isUCSDWiFi != true || !temp.existsSync())
         return;
 
       final tempDownload = temp.readAsBytesSync();
