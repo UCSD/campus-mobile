@@ -40,7 +40,7 @@ class MapSearchModel {
     required this.mkrLat,
     this.access,
     required this.url,
-    required this.mkrMarkerid,
+    required this.mkrMarkerid
   });
 
   MapSearchModel.fromJson(Map<String, dynamic> json)
@@ -69,6 +69,6 @@ class MapSearchModel {
         "mkrLat": mkrLat,
         "access": access,
         "url": url,
-        "mkrMarkerid": mkrMarkerid,
+        "mkrMarkerid": mkrMarkerid
       };
 }
