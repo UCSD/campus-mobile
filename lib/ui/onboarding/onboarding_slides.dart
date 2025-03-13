@@ -31,7 +31,10 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
     DotsIndicator(
       dotsCount: 5,
       position: currentIndex,
-      decorator: const DotsDecorator(activeColor: const Color(0xFF182B49)),
+      decorator: const DotsDecorator(
+          activeColor: const Color(0xFF00619B),
+          activeSize: const Size(16.0, 16.0) // Bigger active dot
+      ),
     );
 
   @override
@@ -49,7 +52,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
             itemCount: 5,
             itemBuilder: (_, index) =>
               Image.asset(
-                "assets/images/onboarding-slide-${index + 1}-background.png",
+                "assets/images/onboarding/slide-${index + 1}-background.jpg",
                 fit: BoxFit.fitWidth,
               )
           ),
@@ -88,7 +91,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
     OnboardingSlideTemplate(
       width: _screenWidth,
       height: _screenHeight,
-      heroImage: const AssetImage('assets/images/hero/hero-img-campus-life.png'),
+      heroImage: const AssetImage('assets/images/onboarding/hero-1-campus-life.png'),
       heading: "ONE-STOP ACCESS TO CAMPUS LIFE.",
       description:
       "Keep up to date with amazing events and stay connected to campus news.",
@@ -98,7 +101,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
     OnboardingSlideTemplate(
       width: _screenWidth,
       height: _screenHeight,
-      heroImage: const AssetImage('assets/images/hero/hero-img-schedule.png'),
+      heroImage: const AssetImage('assets/images/onboarding/hero-2-schedule.png'),
       heading: "YOUR SCHEDULE ON THE GO",
       description: "View your classes and finals schedule whenever you need.",
     );
@@ -107,7 +110,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
     OnboardingSlideTemplate(
       width: _screenWidth,
       height: _screenHeight,
-      heroImage: const AssetImage('assets/images/hero/hero-img-parking.png'),
+      heroImage: const AssetImage('assets/images/onboarding/hero-3-parking.png'),
       heading: "PARKING MADE EASIER.",
       description: "Keep an eye on parking lot capacity to plan your day.",
     );
@@ -116,7 +119,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
     OnboardingSlideTemplate(
       width: _screenWidth,
       height: _screenHeight,
-      heroImage: const AssetImage('assets/images/hero/hero-img-busyness.png'),
+      heroImage: const AssetImage('assets/images/onboarding/hero-4-busyness.png'),
       heading: "SPEND LESS TIME WAITING.",
       description: "Easily see how busy campus locations are before you arrive.",
     );
@@ -125,7 +128,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
     OnboardingSlideTemplate(
       width: _screenWidth,
       height: _screenHeight,
-      heroImage: const AssetImage('assets/images/hero/hero-img-notifications.png'),
+      heroImage: const AssetImage('assets/images/onboarding/hero-5-notifications.png'),
       heading: "YOU'RE ALL SET.",
       description:
       "We recommend turning on push notifications to receive campus and safety alerts.",
