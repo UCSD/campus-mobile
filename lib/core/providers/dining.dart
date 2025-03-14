@@ -24,9 +24,10 @@ class DiningDataProvider extends ChangeNotifier {
   /// SERVICES
   var _diningService = DiningService();
 
+  // TODO: this should probably not be called during build()...
   void fetchDiningMenu(String menuId) async {
     _isLoading = true; _error = null;
-    notifyListeners();
+    notifyListeners(); // TODO: exception thrown here because it is called during build()
     if (await _diningService.fetchMenu(menuId)) {
       _diningMenuItemModels[menuId] = _diningService.menuData!;
     } else {

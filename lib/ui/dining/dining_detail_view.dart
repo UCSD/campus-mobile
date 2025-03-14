@@ -214,6 +214,7 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
     );
   }
 
+  // TODO: exceptions being thrown when images not found (401 error). Need better error handling logic
   Widget buildPictures(prefix0.DiningModel model) {
     List<ImageLoader> images = [];
     if (model.images != null && model.images!.length > 0) {
