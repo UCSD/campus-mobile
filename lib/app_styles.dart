@@ -17,6 +17,17 @@ const appBarTitleStyle = TextStyle(
   fontWeight: FontWeight.w900,
   color: Colors.white,
 );
+const cardTitleStyleLight = TextStyle(
+    fontFamily: 'Refrigerator Deluxe',
+    fontSize: 28,
+    fontWeight: FontWeight.w900,
+    color: lightPrimaryColor);
+const cardTitleStyleDark = TextStyle(
+  fontFamily: 'Refrigerator Deluxe',
+  fontSize: 28,
+  fontWeight: FontWeight.w900,
+  color: Colors.white,
+);
 
 // Theme agnostic styles
 const agnosticDisabled = Color(0xFF8A8A8A);
