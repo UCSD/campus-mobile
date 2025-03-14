@@ -89,27 +89,33 @@ class CampusMobile extends StatelessWidget {
     final lightTheme = ThemeData(
       useMaterial3: false,
       primaryColor: lightPrimaryColor,
-      textTheme: lightThemeText,
+      textTheme: lightThemeText.copyWith(
+        titleLarge:
+            cardTitleStyleLight,
+      ),
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
         background: lightButtonColor,
-        brightness: Brightness.light, // added
+        brightness: Brightness.light,
       ),
     );
 
     final darkTheme = ThemeData(
       useMaterial3: false,
       primaryColor: darkPrimaryColor,
-      textTheme: darkThemeText,
+      textTheme: darkThemeText.copyWith(
+        titleLarge:
+            cardTitleStyleDark,
+      ),
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
         background: darkButtonColor,
-        brightness: Brightness.dark, // added
+        brightness: Brightness.dark,
       ),
     );
 
@@ -119,17 +125,18 @@ class CampusMobile extends StatelessWidget {
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
         theme: lightTheme.copyWith(
-          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
+          colorScheme:
+              lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
           colorScheme:
               darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
-        initialRoute: showOnboardingScreen ?
-          RoutePaths.OnboardingLogin
-          : RoutePaths.BottomNavigationBar,
+        initialRoute: showOnboardingScreen
+            ? RoutePaths.OnboardingLogin
+            : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
-        navigatorObservers: [ observer ],
+        navigatorObservers: [observer],
       ),
     );
   }
