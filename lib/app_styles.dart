@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 
 /// App Styles
-const headerStyle = TextStyle(fontSize: 35, fontWeight: FontWeight.w900);
-const subHeaderStyle = TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500);
+const headerStyle = TextStyle(
+  fontFamily: 'Refrigerator Deluxe',
+  fontSize: 35,
+  fontWeight: FontWeight.w900,
+);
+const subHeaderStyle = TextStyle(
+  fontFamily: 'Brix Sans',
+  fontSize: 16.0,
+  fontWeight: FontWeight.w500,
+);
 
 // Theme agnostic styles
 const agnosticDisabled = Color(0xFF8A8A8A);
 
 /// App Layout
 // Card Layout
-const cardMargin = 6.0;
+const cardMargin = 8.0;
 const cardPaddingInner = 8.0;
 const cardMinHeight = 60.0;
 const listTileInnerPadding = 8.0;
@@ -111,8 +119,10 @@ const Color c2 = Color.fromARGB(255, 0, 255, 0);
 const Color c3 = Color.fromARGB(255, 0, 0, 255);
 
 // List Tile Theme Data
-const lightListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00629B));
-const darkListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
+const lightListTileTheme =
+    ListTileThemeData(selectedColor: const Color(0xFF00629B));
+const darkListTileTheme =
+    ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
 
 // New Onboarding Screen Colors
 const lightOnboardingScreen = Color.fromARGB(255, 245, 240, 228);
