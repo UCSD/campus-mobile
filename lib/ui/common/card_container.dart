@@ -16,8 +16,8 @@ class CardContainer extends StatelessWidget {
     this.actionButtons,
     this.footer,
     this.hideMenu = false,
-  }) : active = active ?? false,
-       super(key: key);
+  })  : active = active ?? false,
+        super(key: key);
 
   /// required parameters
   final String titleText;
@@ -41,19 +41,19 @@ class CardContainer extends StatelessWidget {
         margin: EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         semanticContainer: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
-              contentPadding: EdgeInsets.only(
-                  top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
+              contentPadding:
+                  EdgeInsets.only(top: 0.0, right: 8.0, bottom: 0.0, left: 8.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
                 titleText,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 18.0,
-                ),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               trailing: buildMenu(),
             ),
@@ -154,8 +154,7 @@ class CardContainer extends StatelessWidget {
   }
 
   Widget buildMenu() {
-    if (hideMenu)
-      return Container();
+    if (hideMenu) return Container();
 
     return ButtonBar(
       buttonPadding: const EdgeInsets.all(0),
@@ -199,7 +198,7 @@ class CardContainer extends StatelessWidget {
         hide();
         break;
       default:
-        // do nothing for now
+      // do nothing for now
     }
   }
 }

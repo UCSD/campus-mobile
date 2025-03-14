@@ -18,7 +18,14 @@ class NoticesCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.only(
           top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
-      child: buildBannerView(notice),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: ClipRRect(
+        borderRadius:
+            BorderRadius.circular(12.0),
+        child: buildBannerView(notice),
+      ),
     );
   }
 
