@@ -38,7 +38,7 @@ class ImageLoader extends StatelessWidget {
         );
       },
       errorBuilder: (context, object, stacktrace) {
-        print("Unable to fetch DiningImage. Stack trace: ${object.toString()}");
+        print("Unable to fetch DiningImage. Error: ${object.toString()}");
         return Container(
           width: 0,
           height: 0,
