@@ -43,6 +43,10 @@ class CardContainer extends StatelessWidget {
         semanticContainer: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(
+            color: Color(0xFF747678), // Border color
+            width: 0.5, // Border width
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
