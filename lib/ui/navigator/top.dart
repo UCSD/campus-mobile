@@ -32,7 +32,10 @@ class CMAppBar extends StatelessWidget {
                       fit: BoxFit.contain,
                       height: 28,
                     )
-                  : Text(title!),
+                  : Text(
+                      title!,
+                      style: appBarTitleStyle,
+                    ),
               actions: <Widget>[
                 Padding(
                     padding: EdgeInsets.only(right: 20.0),
@@ -75,7 +78,10 @@ class CMAppBar extends StatelessWidget {
                       fit: BoxFit.contain,
                       height: 28,
                     )
-                  : Text(title!),
+                  : Text(
+                      title!,
+                      style: appBarTitleStyle,
+                    ),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.filter_list_outlined),
@@ -100,7 +106,8 @@ class CMAppBar extends StatelessWidget {
                   fit: BoxFit.contain,
                   height: 28,
                 )
-              : Text(title!),
+              : Text(title!,
+                      style: appBarTitleStyle,),
           systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       );
@@ -109,7 +116,9 @@ class CMAppBar extends StatelessWidget {
 }
 
 class CustomAppBar extends ChangeNotifier {
-  CustomAppBar() { makeAppBar(); }
+  CustomAppBar() {
+    makeAppBar();
+  }
 
   /// STATES
   String? title;

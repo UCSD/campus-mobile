@@ -11,6 +11,12 @@ const subHeaderStyle = TextStyle(
   fontSize: 16.0,
   fontWeight: FontWeight.w500,
 );
+const appBarTitleStyle = TextStyle(
+  fontFamily: 'Refrigerator Deluxe',
+  fontSize: 28,
+  fontWeight: FontWeight.w900,
+  color: Colors.white,
+);
 
 // Theme agnostic styles
 const agnosticDisabled = Color(0xFF8A8A8A);
