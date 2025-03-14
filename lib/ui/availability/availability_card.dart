@@ -84,8 +84,10 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     }
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Flexible(
+          fit: FlexFit.loose,
           child: PageView(
             controller: _controller,
             children: locationsList,
