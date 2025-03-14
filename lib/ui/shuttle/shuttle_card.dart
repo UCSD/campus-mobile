@@ -50,24 +50,20 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
   Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
       Map<int, List<ArrivingShuttle>> arrivalsToRender) {
-    print("Stops - ${stopsToRender.length}");
-    print("Arrivals - ${arrivalsToRender.length}");
-
     List<Widget> renderList = [];
     try {
       if (_shuttleCardDataProvider.closestStop != null) {
-        print("CLOSEST STOP");
-        print(_shuttleCardDataProvider.closestStop!.name);
-
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.closestStop!,
-            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.closestStop!.id]));
+            arrivingShuttles:
+                arrivalsToRender[_shuttleCardDataProvider.closestStop!.id]));
       }
 
       for (var i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
-            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.stopsToRender[i].id]));
+            arrivingShuttles: arrivalsToRender[
+                _shuttleCardDataProvider.stopsToRender[i].id]));
       }
 
       // Initialize first shuttle display with arrival information
