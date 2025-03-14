@@ -15,28 +15,35 @@ class ImageLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return url.isEmpty
-        ? Container(
-            width: 0,
-            height: 0,
-          )
-        : Image.network(
-            url,
-            width: fullSize ? null : width,
-            height: fullSize ? null : height,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.secondary,
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
-                ),
-              );
-            },
-          );
+    if (url.isEmpty)
+      return Container(
+        width: 0,
+        height: 0,
+      );
+    
+    return Image.network(
+      url,
+      width: fullSize ? null : width,
+      height: fullSize ? null : height,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Center(
+          child: CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.secondary,
+            value: loadingProgress.expectedTotalBytes != null
+                ? loadingProgress.cumulativeBytesLoaded /
+                    loadingProgress.expectedTotalBytes!
+                : null,
+          ),
+        );
+      },
+      errorBuilder: (context, object, stacktrace) {
+        print("Unable to fetch DiningImage. Stack trace: ${object.toString()}");
+        return Container(
+          width: 0,
+          height: 0,
+        );
+      },
+    );
   }
 }

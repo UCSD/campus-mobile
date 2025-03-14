@@ -28,7 +28,7 @@ class DiningModel
   String? persistentMenu;
   SpecialHour? specialHours;
 
-  List<Image>? images;
+  List<DiningImage>? images;
   Coordinates? coordinates;
   String? url;
   String? menuWebsite;
@@ -64,7 +64,7 @@ class DiningModel
         paymentOptions = List<String>.from(json["paymentOptions"].map((x) => x)),
         images = json["images"] == null
             ? null
-            : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+            : List<DiningImage>.from(json["images"].map((x) => DiningImage.fromJson(x))),
         coordinates = json["coords"] == null
             ? null
             : Coordinates.fromJson(json["coords"]),
@@ -97,7 +97,7 @@ class DiningModel
       };
 }
 
-class Image
+class DiningImage
 {
   // links to different sizes of the image
   // TODO: BUG ON SERVER?? There have been images with no images observed in the wild...
@@ -107,13 +107,13 @@ class Image
   // TODO: no caption is valid JSON response. Should this be empty str rather than null?
   String? caption;
 
-  Image({
+  DiningImage({
     this.small,
     this.large,
     this.caption,
   });
 
-  Image.fromJson(Map<String, dynamic> json)
+  DiningImage.fromJson(Map<String, dynamic> json)
       : small = json["small"],
         large = json["large"],
         caption = json["caption"];

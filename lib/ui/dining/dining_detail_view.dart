@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/models/dining.dart' as prefix0;
+import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
@@ -8,15 +8,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DiningDetailView extends StatelessWidget {
   const DiningDetailView({Key? key, required this.data}) : super(key: key);
-  final prefix0.DiningModel data;
+  final DiningModel data;
   @override
   Widget build(BuildContext context) {
     return ContainerView(
       child: ListView.separated(
         itemCount: buildDetailView(context, data).length,
-        separatorBuilder: (context, index) {
-          return SizedBox(height: 8);
-        },
+        separatorBuilder: (_, __) => const SizedBox(height: 8),
         padding: const EdgeInsets.all(8),
         itemBuilder: (context, index) {
           return buildDetailView(context, data)[index];
@@ -26,7 +24,7 @@ class DiningDetailView extends StatelessWidget {
   }
 
   List<Widget> buildDetailView(
-      BuildContext context, prefix0.DiningModel model) {
+      BuildContext context, DiningModel model) {
     return [
       Text(
         model.name,
@@ -52,7 +50,9 @@ class DiningDetailView extends StatelessWidget {
   }
 
   Widget buildDirectionsButton(
-      BuildContext context, prefix0.DiningModel model) {
+      BuildContext context,
+      DiningModel model
+  ) {
     if (model.coordinates != null &&
         model.coordinates!.lat != null &&
         model.coordinates!.lon != null) {
@@ -98,7 +98,7 @@ class DiningDetailView extends StatelessWidget {
     }
   }
 
-  Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
+  Widget buildWebsiteButton(BuildContext context, DiningModel model) {
     if (model.url != null && model.url != '') {
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -121,7 +121,7 @@ class DiningDetailView extends StatelessWidget {
       return Container();
   }
 
-  Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
+  Widget buildMenu(BuildContext context, DiningModel model) {
     if (model.menuWebsite != null && model.menuWebsite!.isNotEmpty) {
       return ElevatedButton(
         child: Text('View Menu',
@@ -146,7 +146,7 @@ class DiningDetailView extends StatelessWidget {
       );
   }
 
-  Widget buildHours(BuildContext context, prefix0.DiningModel model) {
+  Widget buildHours(BuildContext context, DiningModel model) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         "Hours:",
@@ -170,33 +170,34 @@ class DiningDetailView extends StatelessWidget {
       Divider(height: 10),
     ]);
   }
-Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
-    var specialHoursDuration = "";
-  if(model.specialHours?.specialHoursValidFrom != null && model.specialHours?.specialHoursValidTo != null){
-    specialHoursDuration = model.specialHours!.specialHoursValidFrom ! + " to " +
-        model.specialHours!.specialHoursValidTo ! + "\n";
+  
+  Widget buildSpecialHours(BuildContext context, DiningModel model){
+      var specialHoursDuration = "";
+    if(model.specialHours?.specialHoursValidFrom != null && model.specialHours?.specialHoursValidTo != null){
+      specialHoursDuration = model.specialHours!.specialHoursValidFrom ! + " to " +
+          model.specialHours!.specialHoursValidTo ! + "\n";
+    }
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+            color: Theme.of(context).textTheme.bodyMedium!.color),
+        children: [
+          TextSpan(
+            text: "Special Hours: \n",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          TextSpan(
+            text: model.specialHours!.specialHoursEvent + "\n"
+          ),
+          TextSpan(text: model.specialHours!.specialHoursEventDetails + "\n"),
+          TextSpan(text:specialHoursDuration)
+        ],
+      ),
+    );
   }
-  return RichText(
-    text: TextSpan(
-      style: TextStyle(
-          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-          color: Theme.of(context).textTheme.bodyMedium!.color),
-      children: [
-        TextSpan(
-          text: "Special Hours: \n",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        TextSpan(
-          text: model.specialHours!.specialHoursEvent + "\n"
-        ),
-        TextSpan(text: model.specialHours!.specialHoursEventDetails + "\n"),
-        TextSpan(text:specialHoursDuration)
-      ],
-    ),
-  );
-}
 
-  Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
+  Widget buildPaymentOptions(BuildContext context, DiningModel model) {
     String options = model.paymentOptions.join(', ');
     return RichText(
       text: TextSpan(
@@ -214,11 +215,10 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
     );
   }
 
-  // TODO: exceptions being thrown when images not found (401 error). Need better error handling logic
-  Widget buildPictures(prefix0.DiningModel model) {
+  Widget buildPictures(DiningModel model) {
     List<ImageLoader> images = [];
     if (model.images != null && model.images!.length > 0) {
-      for (prefix0.Image item in model.images!) {
+      for (DiningImage item in model.images!) {
         if (item.small != null)
           images.add(ImageLoader(url: item.small!));
       }
@@ -244,7 +244,7 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
 
 class HoursOfDay extends StatelessWidget {
   final int? weekday;
-  final prefix0.DiningModel? model;
+  final DiningModel? model;
 
   const HoursOfDay({Key? key, this.weekday, this.model}) : super(key: key);
 
@@ -334,7 +334,7 @@ class HoursOfDay extends StatelessWidget {
     );
   }
 
-  Widget buildGreenDot(String hours) {
+  static Widget buildGreenDot(String hours) {
     MaterialColor color;
     if (RegExp(r"\b[0-9]{2}").allMatches(hours).length != 2) {
       //If the hours are a special string (not a time)
@@ -354,19 +354,15 @@ class HoursOfDay extends StatelessWidget {
           return Container();
       }
     } else {
-      var times = hours.split('-');
-      var start = int.parse(times[0]);
+      final times = hours.split('-');
+      final start = int.parse(times[0]);
       var end = int.parse(times[1]);
-      var timeNow;
       if (end < start) end += 2300; // If time goes into next day, prevent wrap
-      if (DateTime.now().minute.toString().length == 1)
-        timeNow = int.parse('${DateTime.now().hour}0${DateTime.now().minute}');
-      else
-        timeNow = int.parse('${DateTime.now().hour}${DateTime.now().minute}');
-      if (timeNow >= start && timeNow < end)
-        color = Colors.green;
-      else
-        color = Colors.red;
+
+      final timeNow = DateTime.now().minute.toString().length == 1
+          ? int.parse('${DateTime.now().hour}0${DateTime.now().minute}')
+          : int.parse('${DateTime.now().hour}${DateTime.now().minute}');
+      color = timeNow >= start && timeNow < end ? Colors.green : Colors.red;
     }
     return Container(
       width: 10,
