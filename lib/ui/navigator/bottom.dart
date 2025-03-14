@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/wrappers/push_notifications.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
@@ -12,13 +13,15 @@ import 'package:provider/provider.dart';
 //---saved scroll offsets for Home Screen---
 var _homeScrollOffset = 0.0;
 double getHomeScrollOffset() => _homeScrollOffset;
-void setHomeScrollOffset(double currentScrollOffset) => _homeScrollOffset = currentScrollOffset;
-void resetHomeScrollOffset () => _homeScrollOffset = 0.0;
+void setHomeScrollOffset(double currentScrollOffset) =>
+    _homeScrollOffset = currentScrollOffset;
+void resetHomeScrollOffset() => _homeScrollOffset = 0.0;
 //---saved scroll offsets for Notification Screen---
 var _notificationsScrollOffset = 0.0;
 double getNotificationsScrollOffset() => _notificationsScrollOffset;
-void setNotificationsScrollOffset(double currentScrollOffset) => _notificationsScrollOffset = currentScrollOffset;
-void resetNotificationsScrollOffset () => _notificationsScrollOffset = 0.0;
+void setNotificationsScrollOffset(double currentScrollOffset) =>
+    _notificationsScrollOffset = currentScrollOffset;
+void resetNotificationsScrollOffset() => _notificationsScrollOffset = 0.0;
 
 class BottomTabBar extends StatefulWidget {
   @override
@@ -37,6 +40,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
   Widget build(BuildContext context) {
     var provider = Provider.of<BottomNavigationBarProvider>(context);
     return Scaffold(
+      drawerScrimColor: Colors.transparent,
+      backgroundColor: provider.currentIndex == NavigatorConstants.HomeTab
+          ? lightPrimaryColor
+          : Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(42),
           child: Provider.of<CustomAppBar>(context).appBar),
