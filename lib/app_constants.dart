@@ -17,7 +17,8 @@ class RoutePaths {
   static const String EventDetailView = 'events/event_detail_view';
   static const String LinksViewAll = 'links/links_list';
   static const String ClassScheduleViewAll = 'class/classList';
-  static const String ManageAvailabilityView = 'availability/manage_locations_view';
+  static const String ManageAvailabilityView =
+      'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
   static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
   static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
@@ -58,9 +59,9 @@ class RouteTitles {
     'parking/parking_lots_view': 'Manage Lots',
     'parking/parking_structure_view': 'Manage Lots',
     'parking/spot_types_view': 'Manage Spots',
-    'dining/dining_list_view': 'Dining',
-    'dining/dining_detail_view': 'Dining',
-    'dining/dining_nutrition_view': 'Dining',
+    'dining/dining_list_view': 'DINING',
+    'dining/dining_detail_view': 'DINING',
+    'dining/dining_nutrition_view': 'DINING',
     'availability/detailed_view': 'Busyness'
   };
 }
@@ -106,20 +107,15 @@ enum ScannerError implements Exception {
       'Submission failed because this barcode has already been scanned. Please discard this kit.\nCode #1035'),
   invalidMedia(
       'Barcode is not valid. Please scan another barcode.\nCode #1036'),
-  barcodeError(
-      'An error occurred. Please try again.\nCode #1037'),
-  invalidToken(
-      'An error occurred. Please try again.\nCode #1038'),
-  loggedOut(
-      'An error occurred. Please try again.\nCode #1039'),
-  unknownError(
-      'An error occurred. Please try again.\nCode #1040'),
+  barcodeError('An error occurred. Please try again.\nCode #1037'),
+  invalidToken('An error occurred. Please try again.\nCode #1038'),
+  loggedOut('An error occurred. Please try again.\nCode #1039'),
+  unknownError('An error occurred. Please try again.\nCode #1040'),
   notAcceptable(
       'Do not test within 30 days after receiving a positive test for COVID-19. Place all materials in the recycle and trash receptacles.\nCode #1041'),
   scannerReauthFailure(
       'Your session has expired. Please login to submit a scan.'),
-  noRecentScan(
-      'No scan submitted');
+  noRecentScan('No scan submitted');
 
   final String msg;
   const ScannerError(this.msg);
@@ -176,7 +172,7 @@ class CardTitleConstants {
     'finals': 'Finals',
     'schedule': 'Classes',
     'shuttle': "Shuttle",
-    'dining': 'Dining',
+    'dining': 'DINING',
     'availability': 'Busyness',
     'events': 'Events',
     'news': 'News',
