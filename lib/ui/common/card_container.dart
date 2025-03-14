@@ -75,16 +75,16 @@ class CardContainer extends StatelessWidget {
   Widget buildBody(context) {
     if (errorText != null) {
       print(errorText);
-      if (titleText == 'News') {
+      if (titleText == 'NEWS') {
         return Text('No articles found.');
-      } else if (titleText == 'Events') {
+      } else if (titleText == 'EVENTS') {
         return Text('No events found.');
-      } else if (titleText == 'Student ID') {
+      } else if (titleText == 'STUDENT ID') {
         return Padding(
           padding: const EdgeInsets.only(top: 32.0, bottom: 48.0),
           child: Text('An error occurred, please try again.'),
         );
-      } else if (titleText == 'Finals') {
+      } else if (titleText == 'FINALS') {
         var customErrorText = '';
         if (errorText!.contains('Exception')) {
           customErrorText =
@@ -96,7 +96,7 @@ class CardContainer extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 42.0),
           child: Text(customErrorText),
         );
-      } else if (titleText == 'Classes') {
+      } else if (titleText == 'CLASSES') {
         var customErrorText = '';
         if (errorText!.contains('Exception')) {
           customErrorText =
@@ -121,21 +121,21 @@ class CardContainer extends StatelessWidget {
               )),
         ),
       );
-    } else if (titleText == "Busyness") {
+    } else if (titleText == "BUSYNESS") {
       // web cards are still sized with static values
       return Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 265),
         child: child(),
       );
-    } else if (titleText == "Shuttle") {
+    } else if (titleText == "SHUTTLE") {
       // web cards are still sized with static values
       return Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 340),
         child: child(),
       );
-    } else if (titleText == "Parking") {
+    } else if (titleText == "PARKING") {
       double _maxHeight = 320;
       if (MediaQuery.of(context).size.width > 600) {
         _maxHeight = 800;
