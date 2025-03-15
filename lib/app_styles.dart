@@ -95,6 +95,10 @@ const IconThemeData darkIconTheme = IconThemeData(
   color: Color(0xFFFFFFFF),
 );
 
+// Unselected / inactive colors
+const Color unselectedIconLightColor = Color(0xFF6A6B6D);
+const Color unselectedIconDarkColor = Color(0xFF6A6B6D);
+
 // Colors for text on buttons using light theme
 const TextTheme lightThemeText = TextTheme(
   labelLarge: TextStyle(

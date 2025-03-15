@@ -35,10 +35,11 @@ class _BottomTabBarState extends State<BottomTabBar> {
     NotificationsListView(),
     Profile(),
   ];
-
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<BottomNavigationBarProvider>(context);
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       drawerScrimColor: Colors.transparent,
       backgroundColor: provider.currentIndex == NavigatorConstants.HomeTab
@@ -52,9 +53,6 @@ class _BottomTabBarState extends State<BottomTabBar> {
         type: BottomNavigationBarType.fixed,
         currentIndex: provider.currentIndex,
         onTap: (index) {
-          if (provider.currentIndex == NavigatorConstants.HomeTab) {
-            /// TODO: Remove this if statement if not needed.
-          }
           provider.currentIndex = index;
           switch (index) {
             case NavigatorConstants.HomeTab:
@@ -82,28 +80,52 @@ class _BottomTabBarState extends State<BottomTabBar> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
+            icon:
+                _buildIcon(Icons.home, provider.currentIndex == 0, isDarkMode),
             label: 'HOME',
           ),
           BottomNavigationBarItem(
-            icon: new Icon(Icons.map),
+            icon: _buildIcon(Icons.map, provider.currentIndex == 1, isDarkMode),
             label: 'MAP',
           ),
           BottomNavigationBarItem(
-            icon: new Icon(Icons.notifications),
+            icon: _buildIcon(
+                Icons.notifications, provider.currentIndex == 2, isDarkMode),
             label: 'NOTIFICATIONS',
           ),
           BottomNavigationBarItem(
-            icon: new Icon(Icons.person),
+            icon: _buildIcon(
+                Icons.person, provider.currentIndex == 3, isDarkMode),
             label: 'PROFILE',
           ),
         ],
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        unselectedFontSize: 0.0,
-        selectedFontSize: 0.0,
-        selectedItemColor: IconTheme.of(context).color,
-        unselectedItemColor: Colors.grey.shade500,
+        unselectedItemColor:
+            isDarkMode ? unselectedIconDarkColor : unselectedIconLightColor,
+        selectedItemColor: Colors.white,
+        elevation: 4,
+      ),
+    );
+  }
+
+// Build icon with conditional styling
+  Widget _buildIcon(IconData icon, bool isSelected, bool isDarkMode) {
+    return Container(
+      padding: EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 2),
+      decoration: BoxDecoration(
+        color:
+            isSelected ? lightListTileTheme.selectedColor : Colors.transparent,
+        borderRadius: BorderRadius.circular(32),
+      ),
+      child: Icon(
+        icon,
+        size: 32,
+        color: isSelected
+            ? Colors.white
+            : isDarkMode
+                ? unselectedIconDarkColor
+                : unselectedIconLightColor,
       ),
     );
   }
