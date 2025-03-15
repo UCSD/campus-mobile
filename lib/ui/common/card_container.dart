@@ -184,10 +184,16 @@ class CardContainer extends StatelessWidget {
       );
       menu.add(item as DropdownMenuItem<String>);
     });
+
     return DropdownButton(
       items: menu,
+      iconSize: 36,
+      iconEnabledColor: Color(0xFF747678),
       underline: Container(),
-      icon: Icon(Icons.more_vert),
+      icon: Transform.translate(
+        offset: Offset(6, -3),
+        child: Icon(Icons.more_vert),
+      ),
       onChanged: (String? selectedMenuItem) =>
           onMenuItemPressed(selectedMenuItem),
     );
