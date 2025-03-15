@@ -13,7 +13,7 @@ const subHeaderStyle = TextStyle(
 );
 const appBarTitleStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
-  fontSize: 28,
+  fontSize: 30,
   fontWeight: FontWeight.w900,
   color: Colors.white,
 );

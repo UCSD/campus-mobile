@@ -100,8 +100,8 @@ class CampusMobile extends StatelessWidget {
         brightness: Brightness.light,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        unselectedItemColor:
-            unselectedIconLightColor,
+        unselectedItemColor: unselectedIconLightColor,
+        selectedItemColor: Colors.white,
       ),
     );
 
@@ -120,8 +120,8 @@ class CampusMobile extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        unselectedItemColor:
-            unselectedIconDarkColor,
+        unselectedItemColor: unselectedIconDarkColor,
+        selectedItemColor: Colors.white,
       ),
     );
 
@@ -138,6 +138,7 @@ class CampusMobile extends StatelessWidget {
           colorScheme:
               darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
+        themeMode: ThemeMode.system,
         initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingLogin
             : RoutePaths.BottomNavigationBar,

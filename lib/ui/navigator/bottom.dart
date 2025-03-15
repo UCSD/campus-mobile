@@ -10,13 +10,14 @@ import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-//---saved scroll offsets for Home Screen---
+// ---saved scroll offsets for Home Screen---
 var _homeScrollOffset = 0.0;
 double getHomeScrollOffset() => _homeScrollOffset;
 void setHomeScrollOffset(double currentScrollOffset) =>
     _homeScrollOffset = currentScrollOffset;
 void resetHomeScrollOffset() => _homeScrollOffset = 0.0;
-//---saved scroll offsets for Notification Screen---
+
+// ---saved scroll offsets for Notification Screen---
 var _notificationsScrollOffset = 0.0;
 double getNotificationsScrollOffset() => _notificationsScrollOffset;
 void setNotificationsScrollOffset(double currentScrollOffset) =>
@@ -35,16 +36,17 @@ class _BottomTabBarState extends State<BottomTabBar> {
     NotificationsListView(),
     Profile(),
   ];
+
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<BottomNavigationBarProvider>(context);
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
 
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      backgroundColor: provider.currentIndex == NavigatorConstants.HomeTab
+      backgroundColor: provider.currentIndex == 0
           ? lightPrimaryColor
-          : Theme.of(context).scaffoldBackgroundColor,
+          : theme.scaffoldBackgroundColor,
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(42),
           child: Provider.of<CustomAppBar>(context).appBar),
@@ -80,52 +82,47 @@ class _BottomTabBarState extends State<BottomTabBar> {
         },
         items: [
           BottomNavigationBarItem(
-            icon:
-                _buildIcon(Icons.home, provider.currentIndex == 0, isDarkMode),
+            icon: _buildIcon(Icons.home, provider.currentIndex == 0, theme),
             label: 'HOME',
           ),
           BottomNavigationBarItem(
-            icon: _buildIcon(Icons.map, provider.currentIndex == 1, isDarkMode),
+            icon: _buildIcon(Icons.map, provider.currentIndex == 1, theme),
             label: 'MAP',
           ),
           BottomNavigationBarItem(
             icon: _buildIcon(
-                Icons.notifications, provider.currentIndex == 2, isDarkMode),
+                Icons.notifications, provider.currentIndex == 2, theme),
             label: 'NOTIFICATIONS',
           ),
           BottomNavigationBarItem(
-            icon: _buildIcon(
-                Icons.person, provider.currentIndex == 3, isDarkMode),
+            icon: _buildIcon(Icons.person, provider.currentIndex == 3, theme),
             label: 'PROFILE',
           ),
         ],
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        unselectedItemColor:
-            isDarkMode ? unselectedIconDarkColor : unselectedIconLightColor,
-        selectedItemColor: Colors.white,
+        unselectedItemColor: theme.bottomNavigationBarTheme.unselectedItemColor,
+        selectedItemColor: theme.bottomNavigationBarTheme.selectedItemColor,
         elevation: 4,
       ),
     );
   }
 
-// Build icon with conditional styling
-  Widget _buildIcon(IconData icon, bool isSelected, bool isDarkMode) {
+// Build bottom navigator icons
+  Widget _buildIcon(IconData icon, bool isSelected, ThemeData theme) {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 2),
       decoration: BoxDecoration(
         color:
-            isSelected ? lightListTileTheme.selectedColor : Colors.transparent,
+            isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
         borderRadius: BorderRadius.circular(32),
       ),
       child: Icon(
         icon,
         size: 32,
         color: isSelected
-            ? Colors.white
-            : isDarkMode
-                ? unselectedIconDarkColor
-                : unselectedIconLightColor,
+            ? theme.bottomNavigationBarTheme.selectedItemColor
+            : theme.bottomNavigationBarTheme.unselectedItemColor,
       ),
     );
   }
