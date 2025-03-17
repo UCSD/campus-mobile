@@ -44,8 +44,8 @@ class CardContainer extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(
-            color: Color(0xFF747678), // Border color
-            width: 0.5, // Border width
+            color: Color(0xFF747678),
+            width: 0.5,
           ),
         ),
         child: Column(

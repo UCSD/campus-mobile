@@ -79,6 +79,13 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
         margin: EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         semanticContainer: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(
+            color: Color(0xFF747678),
+            width: 0.5,
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -88,10 +95,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
                 widget.titleText,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 18.0,
-                ),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               trailing: buildMenu(),
             ),
@@ -112,22 +116,28 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
   // builds the actual webview widget
   Widget buildBody(context) {
     print('webview_container:buildBody: ' + webCardUrl);
-    return Container(
-      height: _contentHeight,
-      child: WebView(
-        javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: webCardUrl,
-        onWebViewCreated: (controller) {
-          _webViewController = controller;
-        },
-        navigationDelegate: null,
-        javascriptChannels: <JavascriptChannel>[
-          _linksChannel(context),
-          _heightChannel(context),
-          _mapChannel(context),
-          _refreshTokenChannel(context),
-          _permanentRedirect(context)
-        ].toSet(),
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(12.0),
+        bottomRight: Radius.circular(12.0),
+      ),
+      child: Container(
+        height: _contentHeight,
+        child: WebView(
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: webCardUrl,
+          onWebViewCreated: (controller) {
+            _webViewController = controller;
+          },
+          navigationDelegate: null,
+          javascriptChannels: <JavascriptChannel>[
+            _linksChannel(context),
+            _heightChannel(context),
+            _mapChannel(context),
+            _refreshTokenChannel(context),
+            _permanentRedirect(context)
+          ].toSet(),
+        ),
       ),
     );
   }
@@ -160,8 +170,13 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
     });
     return DropdownButton(
       items: menu,
+      iconSize: 36,
+      iconEnabledColor: Color(0xFF747678),
       underline: Container(),
-      icon: Icon(Icons.more_vert),
+      icon: Transform.translate(
+        offset: Offset(6, -3),
+        child: Icon(Icons.more_vert),
+      ),
       onChanged: (String? selectedMenuItem) =>
           onMenuItemPressed(selectedMenuItem),
     );
