@@ -25,8 +25,6 @@ class ArrivingShuttle {
   int secondsToArrival;
 
   factory ArrivingShuttle.fromJson(Map<String, dynamic> json) {
-    print('Arrivals resp--------------------------------:');
-    print(json);
     return ArrivingShuttle(
       routeId: json["routeId"],
       routeName: json["routeName"],
