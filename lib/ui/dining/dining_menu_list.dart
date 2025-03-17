@@ -26,7 +26,8 @@ class _DiningMenuListState extends State<DiningMenuList>
 
   Widget buildDiningMenuList() {
     final diningDataProvider = context.read<DiningDataProvider>();
-    final menu = diningDataProvider.getMenuData(widget.model.id);
+    final menuID = widget.model.id!;
+    final menu = diningDataProvider.getMenuData(menuID);
     List<String> filters = [];
 
     if (diningDataProvider.filtersSelected[0])
@@ -44,7 +45,7 @@ class _DiningMenuListState extends State<DiningMenuList>
       Meal.dinner => 'Dinner'
     });
 
-    if (menu == null || menu.menuItems == null)
+    if (menu == null || menu.menuItems == null || diningDataProvider.isMenuEmpty(menuID))
       return Center(
         child: Text(widget.model.url != null && widget.model.url!.isNotEmpty
           ? 'Menu not directly available. Try checking their website.'
@@ -52,7 +53,7 @@ class _DiningMenuListState extends State<DiningMenuList>
         ),
       );
     
-    final menuList = diningDataProvider.getMenuItems(widget.model.id, filters)!;
+    final menuList = diningDataProvider.getMenuItems(menuID, filters)!;
     final list = <Widget>[];
 
     if (menuList.isEmpty) {

@@ -101,6 +101,13 @@ class DiningDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
+  // Checks if the menu has any items, since sometimes menues are empty due to a backend issue
+  bool isMenuEmpty(String id)
+  {
+    print("Menu w/ id $id is empty");
+    return _diningMenuItemModels[id]?.menuItems?.isEmpty ?? true;
+  }
+
   /// Returns menu data for a given id
   /// Fetches menu if not already downloaded
   DiningMenuItemsModel? getMenuData(String? id) {
