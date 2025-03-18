@@ -2,8 +2,8 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SearchBar extends StatelessWidget {
-  const SearchBar({
+class MapSearchBar extends StatelessWidget {
+  const MapSearchBar({
     Key? key,
   }) : super(key: key);
 

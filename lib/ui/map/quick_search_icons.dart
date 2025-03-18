@@ -73,12 +73,10 @@ class QuickSearchIcons extends StatelessWidget {
 }
 
 class LabeledIconButton extends StatelessWidget {
-  /// STATES
-  final text;
   final IconData? icon;
+  final String? text;
   final Function? onPressed;
   LabeledIconButton({this.icon, this.text, this.onPressed});
-
   @override
   Widget build(BuildContext context) {
     return Column(

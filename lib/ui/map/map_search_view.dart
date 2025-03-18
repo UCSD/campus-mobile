@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/map/quick_search_icons.dart';
 import 'package:campus_mobile_experimental/ui/map/search_bar.dart';
 import 'package:campus_mobile_experimental/ui/map/search_history_list.dart';
-import 'package:flutter/material.dart' hide SearchBar;
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MapSearchView extends StatelessWidget {
@@ -14,7 +14,7 @@ class MapSearchView extends StatelessWidget {
         children: <Widget>[
           Hero(
             tag: 'search_bar',
-            child: SearchBar(),
+            child: MapSearchBar(),
           ),
           QuickSearchIcons(),
           Provider.of<MapsDataProvider>(context).searchHistory.isEmpty
