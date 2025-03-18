@@ -74,10 +74,10 @@ class QuickSearchIcons extends StatelessWidget {
 
 class LabeledIconButton extends StatelessWidget {
   /// STATES
-  final text;
+  final String text;
   final IconData? icon;
   final Function? onPressed;
-  LabeledIconButton({this.icon, this.text, this.onPressed});
+  LabeledIconButton({this.icon, required this.text, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +96,7 @@ class LabeledIconButton extends StatelessWidget {
           shape: CircleBorder(),
         ),
         SizedBox(height: 6),
-        Text(text!),
+        Text(text),
       ],
     );
   }
