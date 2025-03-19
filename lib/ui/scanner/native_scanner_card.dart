@@ -1,10 +1,10 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,12 @@ class NativeScannerCard extends StatelessWidget {
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: null,
       child: () => buildCardContent(context),
-      actionButtons: [buildActionButton(context)],
+      actionButtons: [
+        ActionButton(
+          buttonText: getActionButtonText(context),
+          onPressed: () => getActionButtonNavigateRoute(context),
+        ),
+      ],
     );
   }
 
@@ -63,31 +68,6 @@ class NativeScannerCard extends StatelessWidget {
     );
   }
 
-  Widget buildActionButton(BuildContext context) {
-    return TextButton(
-      style: ButtonStyle(
-        backgroundColor:
-            MaterialStatePropertyAll<Color>(const Color(0xFFFFCD00)),
-        shape: MaterialStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-        ),
-        alignment: Alignment.bottomCenter,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-        child: Text(
-          getActionButtonText(context),
-          style: buttonTextStyle,
-        ),
-      ),
-      onPressed: () {
-        getActionButtonNavigateRoute(context);
-      },
-    );
-  }
-
   String getCardContentText(BuildContext context) {
     return Provider.of<UserDataProvider>(context, listen: false).isLoggedIn
         ? ButtonText.ScanNowFull
@@ -112,7 +92,7 @@ class NativeScannerCard extends StatelessWidget {
         padding: EdgeInsets.only(top: 8.0, right: 8.0),
         child: Text.rich(
           TextSpan(
-            style: TextStyle(fontSize: 18),
+            style: Theme.of(context).textTheme.bodyMedium,
             children: [
               TextSpan(
                 text: "Last test kit scan: ",
