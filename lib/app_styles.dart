@@ -11,6 +11,19 @@ const subHeaderStyle = TextStyle(
   fontSize: 16.0,
   fontWeight: FontWeight.w500,
 );
+const bodyMediumLight = TextStyle(
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  fontWeight: FontWeight.w500,
+  color: Color(0xFF6A6B6D)
+);
+const bodyMediumDark = TextStyle(
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  fontWeight: FontWeight.w500,
+  color: Color(0xFFA1A2A4)
+  
+);
 const appBarTitleStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
   fontSize: 30,
