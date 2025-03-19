@@ -1,10 +1,34 @@
 import 'package:flutter/material.dart';
 
 /* START Global Themes Configured in main.dart */
+// Primary Colors
+const Color lightPrimaryColor = Color(0xFF182B49);
+const Color darkPrimaryColor = Color(0xFF333333);
+
+const Color secondaryColorLight = Color(0xFF182B49);
+const Color secondaryColorDark = Color(0xFF5496BC);
+
+const Color linkTextColorLight = Color(0xFF00629B);
+const Color linkTextColorDark = Color(0xFF5496BC);
+
+const Color descriptiveTextColorLight = Color(0xFF6A6B6D);
+const Color descriptiveTextColorDark = Color(0xFFA1A2A4);
+const Color listTileDividerColorLight = Color(0xFF647185);
+const Color listTileDividerColorDark = Color(0xFF647185);
+
 
 /* END Global Themes Configured in main.dart */
 
 /* START Other Styles */
+final descriptiveTextSmallLight = TextStyle(
+  fontSize: 16.0,
+  color: descriptiveTextColorLight,
+);
+
+final descriptiveTextSmallDark = TextStyle(
+  fontSize: 16.0,
+  color: descriptiveTextColorDark,
+);
 
 /* END Other Styles */
 
@@ -20,6 +44,18 @@ const subHeaderStyle = TextStyle(
   fontSize: 16.0,
   fontWeight: FontWeight.w500,
 );
+
+final textButtonSmallLight = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    color: linkTextColorLight,
+    decoration: TextDecoration.underline);
+
+final textButtonSmallDark = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    color: linkTextColorDark,
+    decoration: TextDecoration.underline);
 
 const titleSmallLight = TextStyle(
     fontFamily: 'Refrigerator Deluxe',
@@ -117,7 +153,6 @@ const agnosticDisabled = Color(0xFF8A8A8A);
 const cardMargin = 8.0;
 const cardPaddingInner = 8.0;
 const cardMinHeight = 60.0;
-const listTileInnerPadding = 8.0;
 
 // Card Heights
 const cardContentMinHeight = 80.0;
@@ -156,13 +191,6 @@ const MaterialColor ColorSecondary = MaterialColor(
     900: Color(0xFF006A96),
   },
 );
-
-// Primary Colors
-const Color lightPrimaryColor = Color(0xFF182B49);
-const Color darkPrimaryColor = Color(0xFF333333);
-
-const Color secondaryColorLight = Color(0xFF182B49);
-const Color secondaryColorDark = Color(0xFF5496BC);
 
 // Color for the top App Bar on light theme
 const AppBarTheme lightAppBarTheme = AppBarTheme(color: ColorPrimary);
