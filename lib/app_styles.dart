@@ -28,6 +28,28 @@ const cardTitleStyleDark = TextStyle(
   fontWeight: FontWeight.w900,
   color: Colors.white,
 );
+const TextStyle buttonTextStyle = TextStyle(
+  color: Color(0xFF182B49),
+  fontFamily: 'Brix Sans',
+  fontSize: 20,
+  fontWeight: FontWeight.w700,
+  letterSpacing: 0,
+);
+
+// New custom styles for heading2
+const TextStyle heading2StyleLight = TextStyle(
+  fontFamily: 'Brix Sans',
+  fontSize: 24.0,
+  fontWeight: FontWeight.w500,
+  color: lightPrimaryColor,
+);
+
+const TextStyle heading2StyleDark = TextStyle(
+  fontFamily: 'Brix Sans',
+  fontSize: 24.0,
+  fontWeight: FontWeight.w500,
+  color: Colors.white,
+);
 
 // Theme agnostic styles
 const agnosticDisabled = Color(0xFF8A8A8A);

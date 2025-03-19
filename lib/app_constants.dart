@@ -80,10 +80,10 @@ class ParkingDefaults {
 }
 
 class ButtonText {
-  static const ScanNowFull = 'Scan Your COVID-19 Kit.';
-  static const ScanNow = 'Scan Now';
-  static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';
-  static const SignIn = 'Sign In';
+  static const ScanNowFull = 'SCAN YOUR COVID-19 KIT.';
+  static const ScanNow = 'SCAN NOW';
+  static const SignInFull = 'SCAN YOUR COVID-19 KIT.';
+  static const SignIn = 'SIGN IN';
 }
 
 class ErrorConstants {

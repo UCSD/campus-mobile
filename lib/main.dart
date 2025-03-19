@@ -91,6 +91,8 @@ class CampusMobile extends StatelessWidget {
       primaryColor: lightPrimaryColor,
       textTheme: lightThemeText.copyWith(
         titleLarge: cardTitleStyleLight,
+        bodyLarge: heading2StyleLight,
+        labelLarge: buttonTextStyle,
       ),
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
@@ -110,6 +112,8 @@ class CampusMobile extends StatelessWidget {
       primaryColor: darkPrimaryColor,
       textTheme: darkThemeText.copyWith(
         titleLarge: cardTitleStyleDark,
+        bodyLarge: heading2StyleDark,
+        labelLarge: buttonTextStyle,
       ),
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,
