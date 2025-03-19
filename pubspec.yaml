@@ -9,7 +9,7 @@ dependencies:
   connectivity_plus: 6.1.0
   dio: 4.0.6
   encrypt: 5.0.1
-  dots_indicator: 3.0.0
+  dots_indicator: 4.0.1
   firebase_analytics: 11.3.3
   firebase_core: 3.6.0
   firebase_crashlytics: 4.1.3

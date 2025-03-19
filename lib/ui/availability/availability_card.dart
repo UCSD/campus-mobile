@@ -1,11 +1,12 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_display.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
-import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,8 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   late AvailabilityDataProvider _availabilityDataProvider;
 
   /// SERVICES
-  var _controller = PageController();
+  final _controller = PageController();
+  int _currentPage = 0;
 
   @override
   void didChangeDependencies() {
@@ -53,7 +55,8 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       if (model != null) {
         String curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
-        if (match != null) curName = curName.replaceRange(match.start, match.end, '');
+        if (match != null)
+          curName = curName.replaceRange(match.start, match.end, '');
         if (_availabilityDataProvider.locationViewState[curName]!) {
           locationsList.add(AvailabilityDisplay(model: model));
         }
@@ -90,18 +93,27 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
           fit: FlexFit.loose,
           child: PageView(
             controller: _controller,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
+            },
             children: locationsList,
           ),
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DotsIndicator(
-            controller: _controller,
-            itemCount: locationsList.length,
-            onPageSelected: (int index) {
-              _controller.animateToPage(index,
-                  duration: Duration(seconds: 1), curve: Curves.ease);
-            },
+            position: _currentPage.toDouble(),
+            dotsCount: locationsList.length,
+            decorator: DotsDecorator(
+              color: dotsUnselectedColor,
+              activeColor: Theme.of(context).brightness == Brightness.dark
+                  ? dotsSelectedColorDark
+                  : dotsSelectedColorLight,
+              activeSize: const Size(22.0, 22.0),
+              size: const Size(10.0, 10.0),
+            ),
           ),
         )
       ],
