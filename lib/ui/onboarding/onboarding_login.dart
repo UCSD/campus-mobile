@@ -193,6 +193,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       style: const TextStyle(
                         color: const Color(0xFF00629B),
                         height: 1.42857143,
+                        decoration: TextDecoration.underline,
                         //fontFamily: "Source Sans Pro" // this doesn't seem to be doing anything, so disabling for now
                       ), // Light Blue
                     ),
