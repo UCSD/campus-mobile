@@ -1,53 +1,161 @@
 import 'package:flutter/material.dart';
 
+/* Campus Mobile Style Guide (WIP)
+
+// Apply Global Text Theme:
+style: Theme.of(context).textTheme.bodyMedium
+
+// Apply Global Text Theme with Style Override:
+style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+  color: lightPrimaryColor,
+)
+
+// Apply Custom Text Theme:
+style: Theme.of(context).brightness == Brightness.dark
+            ? textButtonSmallDark
+            : textButtonSmallLight
+*/
+
+/* START Global Themes Configured in main.dart */
+// Primary Colors
+const Color lightPrimaryColor = Color(0xFF182B49);
+const Color darkPrimaryColor = Color(0xFF333333);
+
+const Color secondaryColorLight = Color(0xFF182B49);
+const Color secondaryColorDark = Color(0xFF5496BC);
+
+const Color linkTextColorLight = Color(0xFF00629B);
+const Color linkTextColorDark = Color(0xFF5496BC);
+
+const Color descriptiveTextColorLight = Color(0xFF6A6B6D);
+const Color descriptiveTextColorDark = Color(0xFFA1A2A4);
+const Color listTileDividerColorLight = Color(0xFF647185);
+const Color listTileDividerColorDark = Color(0xFF647185);
+
+
+/* END Global Themes Configured in main.dart */
+
+/* START Other Styles */
+final descriptiveTextSmallLight = TextStyle(
+  fontSize: 16.0,
+  color: descriptiveTextColorLight,
+);
+
+final descriptiveTextSmallDark = TextStyle(
+  fontSize: 16.0,
+  color: descriptiveTextColorDark,
+);
+
+/* END Other Styles */
+
 /// App Styles
 const headerStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
   fontSize: 35,
   fontWeight: FontWeight.w900,
 );
+
 const subHeaderStyle = TextStyle(
   fontFamily: 'Brix Sans',
   fontSize: 16.0,
   fontWeight: FontWeight.w500,
 );
+
+final textButtonSmallLight = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    color: linkTextColorLight,
+    decoration: TextDecoration.underline);
+
+final textButtonSmallDark = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    color: linkTextColorDark,
+    decoration: TextDecoration.underline);
+
+const titleSmallLight = TextStyle(
+    fontFamily: 'Refrigerator Deluxe',
+    fontSize: 18.0,
+    letterSpacing: 0.8,
+    fontWeight: FontWeight.w900,
+    color: lightPrimaryColor);
+
+const titleSmallDark = TextStyle(
+    fontFamily: 'Refrigerator Deluxe',
+    fontSize: 18.0,
+    letterSpacing: 0.8,
+    fontWeight: FontWeight.w900,
+    color: Color(0xFFF5F0E6));
+
+const titleMediumLight = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    fontWeight: FontWeight.w700,
+    color: lightPrimaryColor);
+
+const titleMediumDark = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    fontWeight: FontWeight.w700,
+    color: Colors.white);
+
 const bodyMediumLight = TextStyle(
-  fontFamily: 'Brix Sans',
-  fontSize: 22.0,
-  fontWeight: FontWeight.w500,
-  color: Color(0xFF6A6B6D)
-);
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    fontWeight: FontWeight.w500,
+    color: Color(0xFF6A6B6D));
+
 const bodyMediumDark = TextStyle(
-  fontFamily: 'Brix Sans',
-  fontSize: 22.0,
-  fontWeight: FontWeight.w500,
-  color: Color(0xFFA1A2A4)
-  
-);
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    fontWeight: FontWeight.w500,
+    color: Color(0xFFA1A2A4));
+
 const appBarTitleStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
   fontSize: 30,
   fontWeight: FontWeight.w900,
   color: Colors.white,
 );
+
 const cardTitleStyleLight = TextStyle(
     fontFamily: 'Refrigerator Deluxe',
     fontSize: 28,
     fontWeight: FontWeight.w900,
     color: lightPrimaryColor);
+
 const cardTitleStyleDark = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
   fontSize: 28,
   fontWeight: FontWeight.w900,
   color: Colors.white,
 );
-const TextStyle buttonTextStyle = TextStyle(
-  color: Color(0xFF182B49),
+const TextStyle labelLargeStyleLight = TextStyle(
+  color: secondaryColorLight,
   fontFamily: 'Brix Sans',
-  fontSize: 20,
+  fontSize: 18,
   fontWeight: FontWeight.w700,
   letterSpacing: 0,
 );
+
+const TextStyle labelLargeStyleDark = TextStyle(
+  color: secondaryColorDark,
+  fontFamily: 'Brix Sans',
+  fontSize: 18,
+  fontWeight: FontWeight.w700,
+  letterSpacing: 0,
+);
+
+const textSmallMoreInfoLight = TextStyle(
+    fontSize: 15.0,
+    fontWeight: FontWeight.w700,
+    color: lightPrimaryColor);
+
+const textSmallMoreInfoDark = TextStyle(
+    fontSize: 15.0,
+    fontWeight: FontWeight.w700,
+    color: Color(0xFFF5F0E6));
+
 
 // New custom styles for heading2
 const TextStyle heading2StyleLight = TextStyle(
@@ -72,7 +180,6 @@ const agnosticDisabled = Color(0xFF8A8A8A);
 const cardMargin = 8.0;
 const cardPaddingInner = 8.0;
 const cardMinHeight = 60.0;
-const listTileInnerPadding = 8.0;
 
 // Card Heights
 const cardContentMinHeight = 80.0;
@@ -112,10 +219,6 @@ const MaterialColor ColorSecondary = MaterialColor(
   },
 );
 
-// Primary Colors
-const Color lightPrimaryColor = Color(0xFF182B49);
-const Color darkPrimaryColor = Color(0xFF333333);
-
 // Color for the top App Bar on light theme
 const AppBarTheme lightAppBarTheme = AppBarTheme(color: ColorPrimary);
 
@@ -136,14 +239,12 @@ const Color unselectedIconDarkColor = Color(0xFF6A6B6D);
 
 // Colors for text on buttons using light theme
 const TextTheme lightThemeText = TextTheme(
-  labelLarge: TextStyle(
-    color: lightTextColor,
-  ),
+  labelLarge: TextStyle(color: lightTextColor, fontSize: 20),
 );
 
 // Colors for text on buttons using dark theme
 const TextTheme darkThemeText = TextTheme(
-  labelLarge: TextStyle(color: darkTextColor),
+  labelLarge: TextStyle(color: darkTextColor, fontSize: 20),
 );
 
 // Button color for themes
@@ -155,6 +256,12 @@ const Color darkButtonColor = Color(0xFFFFFFFF);
 // Colors
 const Color lightTextColor = Color(0xFFFFFFFF);
 const Color darkTextColor = Color(0xFF006A96);
+const Color actionButtonBackgroundColor = Color(0xFFFFCD00);
+const Color dotsUnselectedColor = Color(0xFF747678);
+const Color dotsSelectedColorLight = Color(0xFF00629B);
+const Color dotsSelectedColorDark = Color(0xFF5496BC);
+const Color linkColorLight = Color(0xFF00629B);
+const Color linkColorDark = Color(0xFF5496BC);
 
 // Text Field colors for themes
 const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);

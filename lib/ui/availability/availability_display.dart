@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:flutter/material.dart';
@@ -16,26 +17,23 @@ class AvailabilityDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        buildLocationTitle(),
+        buildLocationTitle(context),
         buildAvailabilityBars(context),
       ],
     );
   }
 
-  Widget buildLocationTitle() {
+  Widget buildLocationTitle(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
       margin: EdgeInsets.only(
-        left: TITLE_SIDE_PADDINGS,
-        right: TITLE_SIDE_PADDINGS,
-        bottom: TITLE_BOTTOM_PADDING,
+        bottom: 8,
       ),
       child: Text(
-        model.name,
-        style: TextStyle(
-          fontSize: LOCATION_FONT_SIZE,
-          fontWeight: FontWeight.bold,
-        ),
+        model.name.toUpperCase(),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.normal,
+            ),
       ),
     );
   }
@@ -47,9 +45,11 @@ class AvailabilityDisplay extends StatelessWidget {
       for (SubLocations subLocation in model.subLocations) {
         locations.add(
           SizedBox(
-            height: 75,
+            height: 79,
             child: Center(
               child: ListTile(
+                horizontalTitleGap: 0,
+                contentPadding: EdgeInsets.all(0),
                 onTap: () => subLocation.floors.length > 0
                     ? Navigator.pushNamed(
                         context, RoutePaths.AvailabilityDetailedView,
@@ -57,16 +57,20 @@ class AvailabilityDisplay extends StatelessWidget {
                     : print('_handleIconClick: no subLocations'),
                 visualDensity: VisualDensity.compact,
                 trailing: subLocation.floors.length > 0
-                    ? Icon(Icons.arrow_forward_ios_rounded)
+                    ? Icon(Icons.arrow_forward_ios_rounded,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? linkColorLight
+                            : linkColorDark)
                     : null,
-                title: Text(
-                  subLocation.name,
-                  style: TextStyle(
-                    fontSize: LOCATION_FONT_SIZE,
-                  ),
-                ),
+                title: Text(subLocation.name,
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? textButtonSmallDark
+                        : textButtonSmallLight),
                 subtitle: Column(
                   children: <Widget>[
+                    SizedBox(
+                      height: 3,
+                    ),
                     Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -74,13 +78,18 @@ class AvailabilityDisplay extends StatelessWidget {
                                   .toInt()
                                   .toString() +
                               '% Busy',
-                          // style: TextStyle(color: Colors.black),
+                          style: Theme.of(context).brightness == Brightness.dark
+                              ? textSmallMoreInfoDark
+                              : textSmallMoreInfoLight,
                         )),
+                    SizedBox(
+                      height: 3,
+                    ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
-                        height: PROGRESS_BAR_HEIGHT,
-                        width: PROGRESS_BAR_WIDTH,
+                        height: 12,
+                        width: 325,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(BORDER_RADIUS),
                           child: LinearProgressIndicator(
@@ -117,7 +126,13 @@ class AvailabilityDisplay extends StatelessWidget {
         ),
       );
     }
-    locations = ListTile.divideTiles(tiles: locations, context: context).toList();
+    locations = ListTile.divideTiles(
+            tiles: locations,
+            context: context,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? listTileDividerColorDark
+                : listTileDividerColorLight)
+        .toList();
 
     return Flexible(
       child: Scrollbar(
@@ -133,10 +148,10 @@ class AvailabilityDisplay extends StatelessWidget {
 
   setIndicatorColor(num percentage) {
     if (percentage >= .75)
-      return Colors.red;
+      return Color(0xFFBD1900);
     else if (percentage >= .25)
-      return Colors.yellow;
+      return Color(0xFFFC8900);
     else
-      return Colors.green;
+      return Color(0xFF109B00);
   }
 }

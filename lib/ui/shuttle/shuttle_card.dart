@@ -1,13 +1,16 @@
+import 'package:dots_indicator/dots_indicator.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
+import 'package:campus_mobile_experimental/ui/common/action_link.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
-import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_display.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 const String cardId = 'shuttle';
 
@@ -24,7 +27,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
   ShuttleDataProvider _shuttleCardDataProvider = ShuttleDataProvider();
 
   /// SERVICES
-  PageController _controller = PageController();
+  final _controller = PageController();
+  int _currentPage = 0;
 
   @override
   void didChangeDependencies() {
@@ -44,7 +48,12 @@ class _ShuttleCardState extends State<ShuttleCard> {
       errorText: _shuttleCardDataProvider.error,
       child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender,
           _shuttleCardDataProvider.arrivalsToRender),
-      actionButtons: buildActionButtons(),
+      actionButtons: [
+        ActionLink(
+            buttonText: 'MANAGE SHUTTLE STOPS',
+            onPressed: () =>
+                Navigator.pushNamed(context, RoutePaths.ManageShuttleView)),
+      ],
     );
   }
 
@@ -81,18 +90,24 @@ class _ShuttleCardState extends State<ShuttleCard> {
             child: PageView(
               controller: _controller,
               children: renderList,
-              onPageChanged: (index) async {
-                // print(index);
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                });
               },
             ),
           ),
           DotsIndicator(
-            controller: _controller,
-            itemCount: renderList.length,
-            onPageSelected: (int index) {
-              _controller.animateToPage(index,
-                  duration: Duration(seconds: 1), curve: Curves.ease);
-            },
+            position: _currentPage.toDouble(),
+            dotsCount: renderList.length,
+            decorator: DotsDecorator(
+              color: dotsUnselectedColor,
+              activeColor: Theme.of(context).brightness == Brightness.dark
+                  ? dotsSelectedColorDark
+                  : dotsSelectedColorLight,
+              activeSize: const Size(22.0, 22.0),
+              size: const Size(10.0, 10.0),
+            ),
           )
         ],
       );

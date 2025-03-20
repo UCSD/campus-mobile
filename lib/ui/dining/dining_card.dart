@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_list.dart';
 import 'package:flutter/material.dart';
@@ -23,33 +24,21 @@ class DiningCard extends StatelessWidget {
       errorText: Provider.of<DiningDataProvider>(context).error,
       child: () => buildDiningCard(
           Provider.of<DiningDataProvider>(context).diningModels),
-      actionButtons: buildActionButtons(context),
+      actionButtons: [
+        ActionButton(
+            buttonText: 'VIEW ALL DINING OPTIONS',
+            onPressed: () =>
+                Navigator.pushNamed(context, RoutePaths.DiningViewAll))
+      ],
     );
   }
 
   Widget buildDiningCard(List<DiningModel> data) {
-    return DiningList(listSize: 3);
-  }
-
-  Widget buildTitle(String title) {
-    return Text(
-      title,
-      textAlign: TextAlign.start,
-    );
-  }
-
-  List<Widget> buildActionButtons(BuildContext context) {
-    List<Widget> actionButtons = [];
-    actionButtons.add(TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Expanded(
+        child: DiningList(listSize: 3),
       ),
-      child: Text('View All'),
-      onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.DiningViewAll);
-      },
-    ));
-    return actionButtons;
+    );
   }
 }

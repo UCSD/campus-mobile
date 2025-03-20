@@ -28,14 +28,15 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
   }
 
   // Dot Indicator
-  Widget buildDotIndicator() => DotsIndicator(
-        dotsCount: 5,
-        position: currentIndex,
-        decorator: const DotsDecorator(
-            activeColor: const Color(0xFF00619B),
-            activeSize: const Size(16.0, 16.0) // Bigger active dot
-            ),
-      );
+  Widget buildDotIndicator() =>
+    DotsIndicator(
+      dotsCount: 5,
+      position: currentIndex.toDouble(),
+      decorator: const DotsDecorator(
+          activeColor: const Color(0xFF00619B),
+          activeSize: const Size(16.0, 16.0) // Bigger active dot
+      ),
+    );
 
   @override
   Widget build(BuildContext context) => Scaffold(

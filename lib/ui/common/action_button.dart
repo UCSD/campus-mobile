@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatelessWidget {
@@ -14,8 +15,8 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll<Color>(
-            const Color(0xFFFFCD00)), // Fixed background color
+        backgroundColor:
+            MaterialStatePropertyAll<Color>(actionButtonBackgroundColor),
         shape: MaterialStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -24,9 +25,15 @@ class ActionButton extends StatelessWidget {
         alignment: Alignment.bottomCenter,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-            vertical: 12, horizontal: 24), // Fixed padding
-        child: Text(buttonText, style: Theme.of(context).textTheme.labelLarge),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+        child: Text(buttonText,
+            style: TextStyle(
+              color: lightPrimaryColor,
+              fontFamily: 'Brix Sans',
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0,
+            )),
       ),
       onPressed: onPressed,
     );
