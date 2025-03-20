@@ -1,5 +1,21 @@
 import 'package:flutter/material.dart';
 
+/* Campus Mobile Style Guide (WIP)
+
+// Apply Global Text Theme:
+style: Theme.of(context).textTheme.bodyMedium
+
+// Apply Global Text Theme with Style Override:
+style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+  color: lightPrimaryColor,
+)
+
+// Apply Custom Text Theme:
+style: Theme.of(context).brightness == Brightness.dark
+            ? textButtonSmallDark
+            : textButtonSmallLight
+*/
+
 /* START Global Themes Configured in main.dart */
 // Primary Colors
 const Color lightPrimaryColor = Color(0xFF182B49);
@@ -130,6 +146,17 @@ const TextStyle labelLargeStyleDark = TextStyle(
   letterSpacing: 0,
 );
 
+const textSmallMoreInfoLight = TextStyle(
+    fontSize: 15.0,
+    fontWeight: FontWeight.w700,
+    color: lightPrimaryColor);
+
+const textSmallMoreInfoDark = TextStyle(
+    fontSize: 15.0,
+    fontWeight: FontWeight.w700,
+    color: Color(0xFFF5F0E6));
+
+
 // New custom styles for heading2
 const TextStyle heading2StyleLight = TextStyle(
   fontFamily: 'Brix Sans',
@@ -233,6 +260,8 @@ const Color actionButtonBackgroundColor = Color(0xFFFFCD00);
 const Color dotsUnselectedColor = Color(0xFF747678);
 const Color dotsSelectedColorLight = Color(0xFF00629B);
 const Color dotsSelectedColorDark = Color(0xFF5496BC);
+const Color linkColorLight = Color(0xFF00629B);
+const Color linkColorDark = Color(0xFF5496BC);
 
 // Text Field colors for themes
 const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
