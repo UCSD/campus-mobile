@@ -24,7 +24,7 @@ class EventsList extends StatelessWidget {
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
-    var size = listSize ?? 3;
+    var size = listSize ?? 6;
 
     /// check to see if we have at least 3 events
     if (size > listOfEvents.length) size = listOfEvents.length;

@@ -11,7 +11,7 @@ const cardId = 'events';
 
 //edit these files
 class EventsCard extends StatelessWidget {
-  Widget buildEventsCard(List<EventModel>? data) => EventsList(listSize: 3);
+  Widget buildEventsCard(List<EventModel>? data) => EventsList(listSize: 6);
 
   List<Widget> buildActionButtons(
       BuildContext context, List<EventModel>? data) {
