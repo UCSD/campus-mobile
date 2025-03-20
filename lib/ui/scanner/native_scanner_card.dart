@@ -41,7 +41,9 @@ class NativeScannerCard extends StatelessWidget {
       children: <Widget>[
         Container(
           child: Image.asset(
-            'assets/images/QRScanIcon.png',
+            Theme.of(context).brightness == Brightness.dark
+                ? 'assets/images/QRScanIcon-dark.png'
+                : 'assets/images/QRScanIcon.png',
             fit: BoxFit.contain,
             height: 24,
           ),
