@@ -38,34 +38,32 @@ class OnboardingSlideTemplate extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            width: width * 0.9,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  // Heading
-                  Text(
-                    heading,
-                    style: const TextStyle(
-                      fontFamily: 'Refrigerator Deluxe',
-                      color: ColorPrimary,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 45,
-                    ),
-                    textAlign: TextAlign.center,
+            width: width * 0.8,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // Heading
+                Text(
+                  heading,
+                  style: const TextStyle(
+                    fontFamily: 'Refrigerator Deluxe',
+                    color: ColorPrimary,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 45,
                   ),
-                  SizedBox(height: height * 0.025),
-                  // Description
-                  Text(
-                    description,
-                    style: TextStyle(
-                      color: ColorPrimary.withOpacity(0.7),
-                      fontSize: 20,
-                    ),
-                    textAlign: TextAlign.left,
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: height * 0.025),
+                // Description
+                Text(
+                  description,
+                  style: TextStyle(
+                    color: const Color(0xFF182B49),
+                    fontSize: 15,
                   ),
-                ],
-              ),
+                  textAlign: TextAlign.left,
+                ),
+              ],
             ),
           ),
         ),
