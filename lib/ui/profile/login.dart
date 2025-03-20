@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
   /// trailing characters and capitaliation, which can lead to usernames
   /// displaying very weirdly in our app (e.g., mixed capitalizatio and random
   /// trailing characters if input in that manner))
-  static String parseUsername (String username) {
+  static String parseUsername(String username) {
     username = username.toLowerCase();
     RegExpMatch? match = RegExp(r'ucsd.edu').firstMatch(username);
     if (match != null) {
@@ -111,78 +111,90 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildLoginWidget() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Single Sign-On',
-              style: TextStyle(fontSize: 17),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'UCSD Email',
-                hintStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                border: OutlineInputBorder(),
-                focusedBorder: new OutlineInputBorder(
-                  borderSide: new BorderSide(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
-                labelText: 'UCSD Email',
-                labelStyle: TextStyle(
-                  color: ucLabelColor,
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Single Sign-On',
+            style: TextStyle(fontSize: 17),
+          ),
+          SizedBox(height: 10),
+          TextField(
+            style: TextStyle(
+                fontFamily: 'BrixSans',
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF737373)),
+            decoration: InputDecoration(
+              hintText: 'UCSD Email',
+              hintStyle: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
               ),
-              keyboardType: TextInputType.emailAddress,
-              controller: _emailTextFieldController,
+              border: OutlineInputBorder(),
+              focusedBorder: new OutlineInputBorder(
+                borderSide: new BorderSide(
+                    color: Theme.of(context).colorScheme.secondary),
+              ),
+              labelText: 'UCSD Email',
+              labelStyle: TextStyle(
+                color: ucLabelColor,
+              ),
             ),
-            SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
+            keyboardType: TextInputType.emailAddress,
+            controller: _emailTextFieldController,
+          ),
+          SizedBox(height: 10),
+          TextField(
+            style: TextStyle(
+                fontFamily: 'BrixSans',
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF737373)),
+            decoration: InputDecoration(
+              hintText: 'Password',
+              hintStyle: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
                     // Based on passwordObscured state choose the icon
                     _passwordObscured ? Icons.visibility_off : Icons.visibility,
+
                     /// TODO: Change color to improve its visibility in dark theme.
-                    color: Color(0xFF8B8B8B) // Theme.of(context).primaryColorDark,
-                  ),
-                  onPressed: () => _toggle(),
-                ),
-                border: OutlineInputBorder(),
-                focusedBorder: new OutlineInputBorder(
-                  borderSide: new BorderSide(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
-                labelText: 'Password',
-                labelStyle: TextStyle(
-                  color: ucLabelColor,
-                ),
+                    color:
+                        Color(0xFF8B8B8B) // Theme.of(context).primaryColorDark,
+                    ),
+                onPressed: () => _toggle(),
               ),
-              obscureText: _passwordObscured,
-              controller: _passwordTextFieldController,
+              border: OutlineInputBorder(),
+              focusedBorder: new OutlineInputBorder(
+                borderSide: new BorderSide(
+                    color: Theme.of(context).colorScheme.secondary),
+              ),
+              labelText: 'Password',
+              labelStyle: TextStyle(
+                color: ucLabelColor,
+              ),
             ),
-            SizedBox(height: 10),
-            Row(
-              children: <Widget>[
-                Expanded(
+            obscureText: _passwordObscured,
+            controller: _passwordTextFieldController,
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: SizedBox(
+                  height: 41,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      // primary: Theme.of(context).buttonColor,
-                      backgroundColor: Theme.of(context).colorScheme.background,
+                      backgroundColor: actionButtonBackgroundColor,
                     ),
                     child: Text(
                       'Sign In',
                       style: TextStyle(
-                          fontSize: 18,
+                          fontFamily: 'BrixSans',
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
                           color: Theme.of(context).textTheme.labelLarge!.color),
                     ),
                     onPressed: _userDataProvider.isLoading
@@ -199,31 +211,34 @@ class _LoginState extends State<Login> {
                           },
                   ),
                 ),
-              ],
-            ),
-            Center(
+              ),
+              SizedBox(width: 120),
+              Expanded(
                 child: GestureDetector(
-              child: Container(
-                height: 35,
-                child: Center(
                   child: Text(
-                    'Need help logging in?',
-                    style: TextStyle(fontSize: 16),
+                    'Forgot password?',
+                    style: TextStyle(
+                        fontFamily: 'BrixSans',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 17,
+                        decoration: TextDecoration.underline,
+                        color: Theme.of(context).textTheme.labelLarge!.color),
+                    textAlign: TextAlign.right,
                   ),
+                  onTap: () async {
+                    try {
+                      String link =
+                          'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                      await launch(link, forceSafariVC: true);
+                    } catch (e) {
+                      // an error occurred, do nothing
+                    }
+                  },
                 ),
               ),
-              onTap: () async {
-                try {
-                  String link =
-                      'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                  await launch(link, forceSafariVC: true);
-                } catch (e) {
-                  // an error occurred, do nothing
-                }
-              },
-            )),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
