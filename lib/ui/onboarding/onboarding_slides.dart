@@ -106,7 +106,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
         height: _screenHeight,
         heroImage:
             const AssetImage('assets/images/onboarding/hero-3-parking.png'),
-        heading: "PARKING\nMADE EASIER.                ",
+        heading: "PARKING\nMADE EASIER.            ",
         description: "Keep an eye on parking lot capacity to plan your day.",
       );
 
@@ -115,7 +115,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
         height: _screenHeight,
         heroImage:
             const AssetImage('assets/images/onboarding/hero-4-busyness.png'),
-        heading: "SPEND LESS\nTIME WAITING.                ",
+        heading: "SPEND LESS\nTIME WAITING.             ",
         description:
             "Easily see how busy campus locations are before you arrive.",
       );
