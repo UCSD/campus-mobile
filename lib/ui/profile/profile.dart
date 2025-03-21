@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/ui/common/build_info.dart';
@@ -21,7 +22,8 @@ class Profile extends StatelessWidget {
         var uri = Uri.dataFromString(link);
         var query = uri.queryParameters['query']!;
         // redirect query to maps tab and search with query
-        Provider.of<MapsDataProvider>(context, listen: false).searchBarController
+        Provider.of<MapsDataProvider>(context, listen: false)
+            .searchBarController
             .text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
@@ -36,42 +38,80 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     initUniLinks(context);
     return Container(
-      child: ListView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Login(),
-          // Card(
-          //   child: ListTile(
-          //     leading: Icon(Icons.notifications),
-          //     title: Text('Notifications'),
-          //     onTap: () {
-          //       handleNotificationsTap(context);
-          //     },
-          //   ),
-          // ),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.menu),
-              title: Text('Card Settings'),
-              onTap: () {
-                Navigator.pushNamed(context, RoutePaths.CardsView);
-              },
+          Expanded(
+            child: ListView(
+              children: <Widget>[
+                Login(),
+                Divider(
+                  color:
+                      listTileDividerColorLight, // Set the color of the divider
+                  thickness: 0.5, // Set the thickness of the divider
+                ),
+                ListTile(
+                  title: Text(
+                    'SETTINGS AND SUPPORT',
+                    style: titleMediumLight,
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.drag_handle, color: lightPrimaryColor),
+                  title: Text(
+                    'Card Settings',
+                    style: TextStyle(
+                        fontFamily: 'BrixSans',
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.underline,
+                        color: linkColorLight),
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(context, RoutePaths.CardsView);
+                  },
+                ),
+                ListTile(
+                  leading: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: lightPrimaryColor,
+                        width: 2.0, // Set the border width
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                          4.0), // Adjust the padding as needed
+                      child:
+                          Icon(Icons.question_mark, color: lightPrimaryColor),
+                    ),
+                  ),
+                  title: Text(
+                    'Get Mobile App Support',
+                    style: TextStyle(
+                        fontFamily: 'BrixSans',
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.underline,
+                        color: linkColorLight),
+                  ),
+                  onTap: handleFeedbackTap,
+                ),
+                ListTile(
+                  leading: Icon(Icons.lock, color: lightPrimaryColor),
+                  title: Text(
+                    'View Privacy Policy',
+                    style: TextStyle(
+                        fontFamily: 'BrixSans',
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.underline,
+                        color: linkColorLight),
+                  ),
+                  onTap: handlePrivacyTap,
+                ),
+              ],
             ),
           ),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.feedback),
-              title: Text('Mobile App Support'),
-              onTap: handleFeedbackTap,
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.lock),
-              title: Text('Privacy Policy'),
-              onTap: handlePrivacyTap,
-            ),
-          ),
-          BuildInfo(),
+          BuildInfo(), // This will be at the bottom
         ],
       ),
     );

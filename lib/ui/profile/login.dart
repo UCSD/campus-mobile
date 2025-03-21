@@ -117,13 +117,13 @@ class _LoginState extends State<Login> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Single Sign-On',
-            style: TextStyle(fontSize: 17),
+            'SINGLE SIGN-ON',
+            style: titleMediumLight,
           ),
           SizedBox(height: 10),
           TextField(
             style: TextStyle(
-                fontFamily: 'BrixSans',
+                fontFamily: 'Brix Sans',
                 fontWeight: FontWeight.w400,
                 color: const Color(0xFF737373)),
             decoration: InputDecoration(
@@ -147,7 +147,7 @@ class _LoginState extends State<Login> {
           SizedBox(height: 10),
           TextField(
             style: TextStyle(
-                fontFamily: 'BrixSans',
+                fontFamily: 'Brix Sans',
                 fontWeight: FontWeight.w400,
                 color: const Color(0xFF737373)),
             decoration: InputDecoration(
@@ -192,7 +192,7 @@ class _LoginState extends State<Login> {
                     child: Text(
                       'Sign In',
                       style: TextStyle(
-                          fontFamily: 'BrixSans',
+                          fontFamily: 'Brix Sans',
                           fontSize: 17,
                           fontWeight: FontWeight.w700,
                           color: Theme.of(context).textTheme.labelLarge!.color),
@@ -212,13 +212,13 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              SizedBox(width: 120),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.1),
               Expanded(
                 child: GestureDetector(
                   child: Text(
                     'Forgot password?',
                     style: TextStyle(
-                        fontFamily: 'BrixSans',
+                        fontFamily: 'Brix Sans',
                         fontWeight: FontWeight.w400,
                         fontSize: 17,
                         decoration: TextDecoration.underline,
