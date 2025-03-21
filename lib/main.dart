@@ -95,7 +95,9 @@ class CampusMobile extends StatelessWidget {
         titleSmall: titleSmallLight,
         bodyLarge: heading2StyleLight,
         bodyMedium: bodyMediumLight,
+        bodySmall: descriptiveTextSmallLight,
         labelLarge: labelLargeStyleLight,
+        headlineMedium: headlineMediumLight,
       ),
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
@@ -119,7 +121,9 @@ class CampusMobile extends StatelessWidget {
         titleSmall: titleSmallDark,
         bodyLarge: heading2StyleDark,
         bodyMedium: bodyMediumDark,
+        bodySmall: descriptiveTextSmallDark,
         labelLarge: labelLargeStyleDark,
+        headlineMedium: headlineMediumDark,
       ),
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,
@@ -152,6 +156,7 @@ class CampusMobile extends StatelessWidget {
         initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingLogin
             : RoutePaths.BottomNavigationBar,
+            // : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
       ),

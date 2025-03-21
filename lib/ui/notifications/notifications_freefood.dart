@@ -58,12 +58,12 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
         : '$currCount students are going';
 
     return Container(
-        margin: EdgeInsets.only(top: 10.0),
+        margin: EdgeInsets.only(top: 8.0),
         child: Row(
           children: <Widget>[
             Container(
-              height: 25,
-              width: 150,
+              height: 30,
+              width: 170,
               child: AnimatedCrossFade(
                 duration: Duration(milliseconds: 300),
                 crossFadeState: isOverCount
@@ -77,9 +77,9 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                         margin: EdgeInsets.only(top: 2.0),
                         child: Row(
                           children: <Widget>[
-                            Icon(Icons.report, color: Colors.grey, size: 10),
+                            Icon(Icons.report, color: Colors.grey, size: 15),
                             Text("There may not be enough food",
-                                style: TextStyle(fontSize: 9))
+                                style: TextStyle(fontSize: 12))
                           ],
                         )),
                   ],
@@ -88,7 +88,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                 secondChild: Align(
                   alignment: Alignment.topLeft,
                   child: Text(countText,
-                      style: TextStyle(fontSize: 10, color: Colors.green)),
+                      style: TextStyle(fontSize: 12, color: Colors.green)),
                 ),
               ),
             ),
@@ -145,7 +145,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                                 },
                               ))),
                       Text("I'm Going!",
-                          style: TextStyle(color: _textColor, fontSize: 10)),
+                          style: TextStyle(color: _textColor, fontSize: 12)),
                     ],
                   )),
                 )));
