@@ -51,7 +51,18 @@ class _BottomTabBarState extends State<BottomTabBar> {
           preferredSize: Size.fromHeight(42),
           child: Provider.of<CustomAppBar>(context).appBar),
       body: PushNotificationWrapper(child: currentTab[provider.currentIndex]),
-      bottomNavigationBar: SizedBox(
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: theme.bottomNavigationBarTheme.backgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              spreadRadius: 2,
+              offset: Offset(0, -2),
+            ),
+          ],
+        ),
         height: 73,
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -122,9 +133,8 @@ class _BottomTabBarState extends State<BottomTabBar> {
       margin: EdgeInsets.only(top: 4),
       padding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
       decoration: BoxDecoration(
-        color: isSelected
-            ? theme.listTileTheme.selectedColor
-            : Colors.transparent,
+        color:
+            isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
         borderRadius: BorderRadius.circular(34),
       ),
       child: Icon(
