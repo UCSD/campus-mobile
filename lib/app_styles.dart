@@ -262,6 +262,8 @@ const Color dotsSelectedColorLight = Color(0xFF00629B);
 const Color dotsSelectedColorDark = Color(0xFF5496BC);
 const Color linkColorLight = Color(0xFF00629B);
 const Color linkColorDark = Color(0xFF5496BC);
+const Color bottomTabBarColorLight = Color(0xFFFBF9F5);
+const Color bottomTabBarColorDark = Color(0xFF404142);
 
 // Text Field colors for themes
 const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);

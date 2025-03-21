@@ -105,9 +105,9 @@ class CampusMobile extends StatelessWidget {
         brightness: Brightness.light,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        unselectedItemColor: unselectedIconLightColor,
-        selectedItemColor: Colors.white,
-      ),
+          unselectedItemColor: unselectedIconLightColor,
+          selectedItemColor: Colors.white,
+          backgroundColor: bottomTabBarColorLight),
     );
 
     final darkTheme = ThemeData(
@@ -130,9 +130,9 @@ class CampusMobile extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        unselectedItemColor: unselectedIconDarkColor,
-        selectedItemColor: Colors.white,
-      ),
+          unselectedItemColor: unselectedIconDarkColor,
+          selectedItemColor: Colors.white,
+          backgroundColor: bottomTabBarColorDark),
     );
 
     return MultiProvider(
