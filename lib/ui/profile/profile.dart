@@ -52,7 +52,7 @@ class Profile extends StatelessWidget {
                 ),
                 ListTile(
                   title: Text(
-                    'SETTINGS AND SUPPORT',
+                    'SETTINGS & SUPPORT',
                     style: titleMediumLight,
                   ),
                 ),

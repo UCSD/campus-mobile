@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -251,25 +252,84 @@ class _LoginState extends State<Login> {
   }
 
   showAlertDialog(BuildContext context) {
-    // set up the button
-    Widget okButton = TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
-      ),
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text(LoginConstants.loginFailedTitle),
-      content: Text(LoginConstants.loginFailedDesc),
-      actions: [
-        okButton,
-      ],
+      titlePadding: EdgeInsets.fromLTRB(5, 5, 0, 0),
+      contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 20),
+      backgroundColor: Color(0xFFE6EFF5),
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Color(0xFF00629B)),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Icon(Icons.info_outline),
+            flex: 1,
+          ),
+          Expanded(
+            child: Text(
+              LoginConstants.loginFailedTitle,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  color: linkTextColorLight,
+                  fontFamily: 'Brix Sans',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18.0),
+            ),
+            flex: 6,
+          ),
+          Expanded(
+            child: IconButton(
+              icon: Icon(Icons.close),
+              alignment: Alignment.topRight,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            flex: 2,
+          ),
+        ],
+      ),
+      content: Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height *
+              0.6, // Set max height to 60% of screen height
+        ),
+        child: SingleChildScrollView(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      LoginConstants.loginFailedDesc,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: linkTextColorLight,
+                          fontFamily: 'Source Sans Pro',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12.0),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
 
     // show the dialog
