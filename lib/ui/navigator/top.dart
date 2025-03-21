@@ -20,26 +20,29 @@ class CMAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (doneButton == true) {
       return PreferredSize(
-          preferredSize: Size.fromHeight(42),
+          preferredSize: Size.fromHeight(50),
           child: AppBar(
               elevation: 0,
               backgroundColor: ColorPrimary,
               foregroundColor: lightTextColor,
               primary: true,
               centerTitle: true,
-              title: title == null
-                  ? Image.asset(
-                      'assets/images/UCSanDiegoLogo-nav.png',
-                      fit: BoxFit.contain,
-                      height: 28,
-                    )
-                  : Text(
-                      title!,
-                      style: appBarTitleStyle,
-                    ),
+              title: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: title == null
+                    ? Image.asset(
+                        'assets/images/UCSanDiegoLogo-nav.png',
+                        fit: BoxFit.contain,
+                        height: 28,
+                      )
+                    : Text(
+                        title!,
+                        style: appBarTitleStyle,
+                      ),
+              ),
               actions: <Widget>[
                 Padding(
-                    padding: EdgeInsets.only(right: 20.0),
+                    padding: EdgeInsets.only(bottom: 8, right: 20),
                     child: TextButton(
                       style: TextButton.styleFrom(
                         foregroundColor: darkButtonColor,
@@ -67,52 +70,61 @@ class CMAppBar extends StatelessWidget {
               systemOverlayStyle: SystemUiOverlayStyle.light));
     } else if (notificationsFilterButton == true) {
       return PreferredSize(
-          preferredSize: Size.fromHeight(42),
+          preferredSize: Size.fromHeight(50),
           child: AppBar(
               elevation: 0,
               backgroundColor: ColorPrimary,
               foregroundColor: lightTextColor,
               primary: true,
               centerTitle: true,
-              title: title == null
-                  ? Image.asset(
-                      'assets/images/UCSanDiegoLogo-nav.png',
-                      fit: BoxFit.contain,
-                      height: 28,
-                    )
-                  : Text(
-                      title!,
-                      style: appBarTitleStyle,
-                    ),
+              title: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: title == null
+                    ? Image.asset(
+                        'assets/images/UCSanDiegoLogo-nav.png',
+                        fit: BoxFit.contain,
+                        height: 28,
+                      )
+                    : Text(
+                        title!,
+                        style: appBarTitleStyle,
+                      ),
+              ),
               actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.filter_list_outlined),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                        context, RoutePaths.NotificationsFilter);
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: IconButton(
+                    icon: Icon(Icons.filter_list_outlined),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, RoutePaths.NotificationsFilter);
+                    },
+                  ),
                 )
               ],
               systemOverlayStyle: SystemUiOverlayStyle.light));
     } else {
       return PreferredSize(
-        preferredSize: Size.fromHeight(42),
+        preferredSize: Size.fromHeight(50),
         child: AppBar(
           elevation: 0,
           backgroundColor: ColorPrimary,
           foregroundColor: lightTextColor,
           primary: true,
           centerTitle: true,
-          title: title == null
-              ? Image.asset(
-                  'assets/images/UCSanDiegoLogo-nav.png',
-                  fit: BoxFit.contain,
-                  height: 28,
-                )
-              : Text(
-                  title!,
-                  style: appBarTitleStyle,
-                ),
+          title: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: title == null
+                ? Image.asset(
+                    'assets/images/UCSanDiegoLogo-nav.png',
+                    fit: BoxFit.contain,
+                    height: 28,
+                  )
+                : Text(
+                    title!,
+                    style: appBarTitleStyle,
+                  ),
+          ),
           systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       );
