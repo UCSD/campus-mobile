@@ -33,13 +33,14 @@ class CardContainer extends StatelessWidget {
   final bool hideMenu;
   final List<Widget>? actionButtons;
   final Widget? footer;
-
   @override
   Widget build(BuildContext context) {
     if (active) {
       return Card(
         margin: EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+        elevation: 4,
+        shadowColor: Colors.black,
         semanticContainer: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -63,7 +64,8 @@ class CardContainer extends StatelessWidget {
             ),
             buildBody(context),
             Padding(
-              padding: const EdgeInsets.only(top: 16, right: 0, bottom: 16, left: 8),
+              padding:
+                  const EdgeInsets.only(top: 16, right: 0, bottom: 16, left: 8),
               child: actionButtons != null
                   ? Row(children: actionButtons!)
                   : Container(),

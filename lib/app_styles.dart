@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 /* Campus Mobile Style Guide (WIP)
 
+
 // Apply Global Text Theme:
-style: Theme.of(context).textTheme.bodyMedium
+style: Theme.of(context).textTheme.bodySmall
 
 // Apply Global Text Theme with Style Override:
 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -12,14 +13,15 @@ style: Theme.of(context).textTheme.bodyMedium?.copyWith(
 
 // Apply Custom Text Theme:
 style: Theme.of(context).brightness == Brightness.dark
-            ? textButtonSmallDark
-            : textButtonSmallLight
+            ? notificationsTitleDark
+            : notificationsTitleLight
 */
 
 /* START Global Themes Configured in main.dart */
 // Primary Colors
 const Color lightPrimaryColor = Color(0xFF182B49);
 const Color darkPrimaryColor = Color(0xFF333333);
+const Color darkPrimaryColor2 = Color(0xFFF5F0E6);
 
 const Color secondaryColorLight = Color(0xFF182B49);
 const Color secondaryColorDark = Color(0xFF5496BC);
@@ -45,9 +47,6 @@ final descriptiveTextSmallDark = TextStyle(
   color: descriptiveTextColorDark,
 );
 
-/* END Other Styles */
-
-/// App Styles
 const headerStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
   fontSize: 35,
@@ -98,6 +97,22 @@ const titleMediumDark = TextStyle(
     fontWeight: FontWeight.w700,
     color: Colors.white);
 
+const headlineMediumLight = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 20.0,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+    decoration: TextDecoration.underline,
+    color: linkColorLight);
+
+const headlineMediumDark = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 20.0,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+    decoration: TextDecoration.underline,
+    color: linkColorDark);
+
 const bodyMediumLight = TextStyle(
     fontFamily: 'Brix Sans',
     fontSize: 22.0,
@@ -145,11 +160,23 @@ const TextStyle labelLargeStyleDark = TextStyle(
   letterSpacing: 0,
 );
 
+const TextStyle notificationsTitleLight = TextStyle(
+  color: linkTextColorLight,
+  fontFamily: 'Brix Sans',
+  fontSize: 18,
+);
+
+const TextStyle notificationsTitleDark = TextStyle(
+  color: secondaryColorDark,
+  fontFamily: 'Brix Sans',
+  fontSize: 18,
+);
+
 const textSmallMoreInfoLight = TextStyle(
     fontSize: 15.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
 
 const textSmallMoreInfoDark = TextStyle(
-    fontSize: 15.0, fontWeight: FontWeight.w700, color: Color(0xFFF5F0E6));
+    fontSize: 15.0, fontWeight: FontWeight.w700, color: darkPrimaryColor2);
 
 // New custom styles for heading2
 const TextStyle heading2StyleLight = TextStyle(
@@ -232,12 +259,10 @@ const AppBarTheme lightAppBarTheme = AppBarTheme(color: ColorPrimary);
 const AppBarTheme darkAppBarTheme = AppBarTheme(color: ColorPrimary);
 
 // Icon color for light theme
-const IconThemeData lightIconTheme = IconThemeData(color: Color(0xFF0D47A1));
+const IconThemeData lightIconTheme = IconThemeData(color: lightPrimaryColor);
 
 // Icon color for dark theme
-const IconThemeData darkIconTheme = IconThemeData(
-  color: Color(0xFFFFFFFF),
-);
+const IconThemeData darkIconTheme = IconThemeData(color: darkPrimaryColor2);
 
 // Unselected / inactive colors
 const Color unselectedIconLightColor = Color(0xFF6A6B6D);
@@ -268,6 +293,8 @@ const Color dotsSelectedColorLight = Color(0xFF00629B);
 const Color dotsSelectedColorDark = Color(0xFF5496BC);
 const Color linkColorLight = Color(0xFF00629B);
 const Color linkColorDark = Color(0xFF5496BC);
+const Color bottomTabBarColorLight = Color(0xFFFBF9F5);
+const Color bottomTabBarColorDark = Color(0xFF404142);
 
 // Text Field colors for themes
 const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
