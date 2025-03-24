@@ -34,6 +34,12 @@ const Color descriptiveTextColorDark = Color(0xFFA1A2A4);
 const Color listTileDividerColorLight = Color(0xFF647185);
 const Color listTileDividerColorDark = Color(0xFF647185);
 
+// System Colors
+const Color enabledColorLight = Color(0xFF109B00);
+const Color enabledColorDark = Color(0xFF40AF33);
+const Color disabledColorLight = Color(0xFF747678);
+const Color disabledColorDark = Color(0xFF747678);
+
 /* END Global Themes Configured in main.dart */
 
 /* START Other Styles */
@@ -117,13 +123,13 @@ const bodyMediumLight = TextStyle(
     fontFamily: 'Brix Sans',
     fontSize: 22.0,
     fontWeight: FontWeight.w500,
-    color: Color(0xFF6A6B6D));
+    color: descriptiveTextColorLight);
 
 const bodyMediumDark = TextStyle(
     fontFamily: 'Brix Sans',
     fontSize: 22.0,
     fontWeight: FontWeight.w500,
-    color: Color(0xFFA1A2A4));
+    color: descriptiveTextColorDark);
 
 const appBarTitleStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
@@ -159,6 +165,22 @@ const TextStyle labelLargeStyleDark = TextStyle(
   fontWeight: FontWeight.w700,
   letterSpacing: 0,
 );
+
+/////////////////////////////////////////////
+const labelMediumStyleLight = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    fontWeight: FontWeight.w400,
+    height: 1.0,
+    color: descriptiveTextColorLight);
+
+const labelMediumStyleDark = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    fontWeight: FontWeight.w400,
+    height: 1.0,
+    color: descriptiveTextColorDark);
+/////////////////////////////////////////////
 
 const TextStyle notificationsTitleLight = TextStyle(
   color: linkTextColorLight,
