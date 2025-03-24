@@ -32,7 +32,6 @@ const Color descriptiveTextColorDark = Color(0xFFA1A2A4);
 const Color listTileDividerColorLight = Color(0xFF647185);
 const Color listTileDividerColorDark = Color(0xFF647185);
 
-
 /* END Global Themes Configured in main.dart */
 
 /* START Other Styles */
@@ -147,15 +146,10 @@ const TextStyle labelLargeStyleDark = TextStyle(
 );
 
 const textSmallMoreInfoLight = TextStyle(
-    fontSize: 15.0,
-    fontWeight: FontWeight.w700,
-    color: lightPrimaryColor);
+    fontSize: 15.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
 
 const textSmallMoreInfoDark = TextStyle(
-    fontSize: 15.0,
-    fontWeight: FontWeight.w700,
-    color: Color(0xFFF5F0E6));
-
+    fontSize: 15.0, fontWeight: FontWeight.w700, color: Color(0xFFF5F0E6));
 
 // New custom styles for heading2
 const TextStyle heading2StyleLight = TextStyle(
@@ -171,6 +165,18 @@ const TextStyle heading2StyleDark = TextStyle(
   fontWeight: FontWeight.w500,
   color: Colors.white,
 );
+
+const TextStyle linkTextDark = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontWeight: FontWeight.w400,
+    decoration: TextDecoration.underline,
+    color: linkColorDark);
+
+const TextStyle linkTextLight = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontWeight: FontWeight.w400,
+    decoration: TextDecoration.underline,
+    color: linkColorLight);
 
 // Theme agnostic styles
 const agnosticDisabled = Color(0xFF8A8A8A);
