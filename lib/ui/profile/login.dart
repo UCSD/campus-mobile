@@ -112,7 +112,7 @@ class _LoginState extends State<Login> {
 
   Widget buildLoginWidget() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
