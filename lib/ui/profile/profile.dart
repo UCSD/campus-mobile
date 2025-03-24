@@ -46,26 +46,30 @@ class Profile extends StatelessWidget {
               children: <Widget>[
                 Login(),
                 Divider(
-                  color:
-                      listTileDividerColorLight, // Set the color of the divider
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? listTileDividerColorDark
+                      : listTileDividerColorLight, // Set the color of the divider
                   thickness: 0.5, // Set the thickness of the divider
                 ),
                 ListTile(
                   title: Text(
                     'SETTINGS & SUPPORT',
-                    style: titleMediumLight,
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? titleMediumDark
+                        : titleMediumLight,
                   ),
                 ),
                 ListTile(
                   leading: Icon(Icons.drag_handle,
-                      color: lightPrimaryColor, size: 30.0),
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? darkPrimaryColor
+                          : lightPrimaryColor,
+                      size: 30.0),
                   title: Text(
                     'Card Settings',
-                    style: TextStyle(
-                        fontFamily: 'BrixSans',
-                        fontWeight: FontWeight.w400,
-                        decoration: TextDecoration.underline,
-                        color: linkColorLight),
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? linkTextDark
+                        : linkTextLight,
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, RoutePaths.CardsView);
@@ -76,37 +80,42 @@ class Profile extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: lightPrimaryColor,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? darkPrimaryColor
+                            : lightPrimaryColor,
                         width: 3.0, // Set the border width
                       ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(
                           1.0), // Adjust the padding as needed
-                      child:
-                          Icon(Icons.question_mark, color: lightPrimaryColor),
+                      child: Icon(
+                        Icons.question_mark,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? darkPrimaryColor
+                            : lightPrimaryColor,
+                      ),
                     ),
                   ),
                   title: Text(
                     'Get Mobile App Support',
-                    style: TextStyle(
-                        fontFamily: 'BrixSans',
-                        fontWeight: FontWeight.w400,
-                        decoration: TextDecoration.underline,
-                        color: linkColorLight),
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? linkTextDark
+                        : linkTextLight,
                   ),
                   onTap: handleFeedbackTap,
                 ),
                 ListTile(
-                  leading:
-                      Icon(Icons.lock, color: lightPrimaryColor, size: 30.0),
+                  leading: Icon(Icons.lock,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? darkPrimaryColor
+                          : lightPrimaryColor,
+                      size: 30.0),
                   title: Text(
                     'View Privacy Policy',
-                    style: TextStyle(
-                        fontFamily: 'BrixSans',
-                        fontWeight: FontWeight.w400,
-                        decoration: TextDecoration.underline,
-                        color: linkColorLight),
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? linkTextDark
+                        : linkTextLight,
                   ),
                   onTap: handlePrivacyTap,
                 ),

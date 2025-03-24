@@ -46,22 +46,19 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'You are logged in as: ',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              buildUserProfileTile(context),
-            ]),
-      ),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'LOGGED IN AS:',
+              style: Theme.of(context).brightness == Brightness.dark
+                  ? titleMediumDark
+                  : titleMediumLight,
+            ),
+            buildUserProfileTile(context),
+          ]),
     );
   }
 
@@ -92,14 +89,16 @@ class _LoginState extends State<Login> {
         _userDataProvider.userProfileModel.username != null
             ? parseUsername(_userDataProvider.userProfileModel.username!)
             : "",
-        style: TextStyle(fontSize: 17),
+        style: bodyMediumLight,
       ),
-      trailing: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          // primary: Theme.of(context).buttonColor,
+      trailing: TextButton(
+        style: TextButton.styleFrom(
           foregroundColor: Theme.of(context).colorScheme.background,
         ),
-        child: Text('Log out'),
+        child: Text(
+          'LOG OUT',
+          style: TextStyle(decoration: TextDecoration.underline),
+        ),
         onPressed: () => executeLogout(),
       ),
     );

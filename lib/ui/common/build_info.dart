@@ -42,7 +42,9 @@ class _BuildInfoState extends State<BuildInfo> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Divider(
-              color: listTileDividerColorLight, // Set the color of the divider
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? listTileDividerColorDark
+                  : listTileDividerColorLight, // Set the color of the divider
               thickness: 0.5, // Set the thickness of the divider
             ),
             Text(
@@ -53,11 +55,9 @@ class _BuildInfoState extends State<BuildInfo> {
                   _packageInfo.buildNumber +
                   ')' +
                   (buildEnv == 'PROD' ? '' : buildEnv),
-              style: TextStyle(
-                  color: dotsUnselectedColor,
-                  fontFamily: 'Brix Sans',
-                  fontWeight: FontWeight.w400,
-                  fontSize: titleSmallLight.fontSize),
+              style: Theme.of(context).brightness == Brightness.dark
+                  ? descriptiveTextSmallDark
+                  : descriptiveTextSmallLight,
               textAlign: TextAlign.center,
             ),
           ],
