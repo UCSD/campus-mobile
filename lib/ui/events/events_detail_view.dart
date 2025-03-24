@@ -1,11 +1,13 @@
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/common/event_time.dart';
 import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../app_styles.dart';
+import '../common/event_time.dart';
 
 class EventDetailView extends StatelessWidget {
   const EventDetailView({Key? key, required this.data}) : super(key: key);
@@ -41,49 +43,63 @@ class EventDetailView extends StatelessWidget {
         Container(
           child: Center(
             child: Container(
-              width: width * 0.8,
+              width: width * 0.9,
               child: Column(
                 children: [
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 30,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  Text(
-                    data.title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
-                  ),
+                  // THIS ICON IS NOT USED
+                  // Icon(
+                  //   Icons.keyboard_arrow_down,
+                  //   size: 30,
+                  //   color: Theme.of(context).primaryColor,
+                  // ),
+                  // IT WORKED AS A PADDING OF SIZE 30
+                  // INCLUDED A SizedBox OF HEIGHT 30 INSTEAD
+                  SizedBox(height: 30),
+                  // Event Title
                   Padding(
-                    padding: EdgeInsets.only(top: 10.0),
+                    padding: const EdgeInsets.only(left: 65.0), // Adjust the left padding as needed
+                    child: Text(
+                      data.title,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
+                  SizedBox(height: 10),
+                  // Event Location
                   data.location != null && data.location!.isNotEmpty
                       ? LinkifyWithCatch(
-                          text: "Where: " + data.location!,
+                          text: data.location!,
                           looseUrl: true,
                           style: TextStyle(
                               fontSize: 16,
                               height: 1.3,
                               color: Theme.of(context).primaryColor),
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                         )
                       : Container(),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                  ),
+                  SizedBox(height: 10),
+                  // Event Time and Date
                   Center(child: EventTime(data: data)),
+                  // Horizontal Division
+                  Divider(
+                    color: listTileDividerColorDark,
+                    thickness: 0.6
+                  ),
+                  // Event Description
                   data.description != null && data.description!.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(
+                      ? Text(
                             data.description!,
-                            style: TextStyle(fontSize: 16, height: 1.3),
-                          ),
-                        )
+                            style: TextStyle(
+                                fontSize: 16, height: 1.4,
+                                fontWeight: FontWeight.w400
+                            ),
+                          )
                       : Container(),
+                  // "GO TO EVENT PAGE" Button
                   data.link != null && data.link!.isNotEmpty
                       ? LearnMoreButton(link: data.link!)
                       : Container(),
@@ -102,17 +118,30 @@ class LearnMoreButton extends StatelessWidget {
   final String link;
   @override
   Widget build(BuildContext context) {
+    final textStyle = TextStyle(
+      fontSize: 18,
+      color: lightPrimaryColor,
+    );
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            foregroundColor: Theme.of(context).primaryColor,
-            backgroundColor: Theme.of(context).colorScheme.background,
+              backgroundColor: actionButtonBackgroundColor,
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
           ),
-          child: Text(
-            'Learn More',
-            style: TextStyle(
-                fontSize: 16, color: Theme.of(context).textTheme.labelLarge!.color),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('GO TO EVENT PAGE', style: textStyle),
+              SizedBox(width: 4),
+              Icon(
+                Icons.open_in_new, size: textStyle.fontSize,
+                color: textStyle.color
+              )
+            ],
           ),
           onPressed: () async {
             try {
