@@ -193,6 +193,18 @@ const TextStyle heading2StyleDark = TextStyle(
   color: Colors.white,
 );
 
+const TextStyle linkTextDark = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontWeight: FontWeight.w400,
+    decoration: TextDecoration.underline,
+    color: linkColorDark);
+
+const TextStyle linkTextLight = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontWeight: FontWeight.w400,
+    decoration: TextDecoration.underline,
+    color: linkColorLight);
+
 // Theme agnostic styles
 const agnosticDisabled = Color(0xFF8A8A8A);
 
