@@ -118,7 +118,7 @@ class _LoginState extends State<Login> {
         children: <Widget>[
           Text(
             'SINGLE SIGN-ON',
-            style: titleMediumLight,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(height: 10),
           TextField(
@@ -157,13 +157,12 @@ class _LoginState extends State<Login> {
               ),
               suffixIcon: IconButton(
                 icon: Icon(
-                    // Based on passwordObscured state choose the icon
-                    _passwordObscured ? Icons.visibility_off : Icons.visibility,
+                  // Based on passwordObscured state choose the icon
+                  _passwordObscured ? Icons.visibility_off : Icons.visibility,
 
-                    /// TODO: Change color to improve its visibility in dark theme.
-                    color:
-                        Color(0xFF8B8B8B) // Theme.of(context).primaryColorDark,
-                    ),
+                  /// TODO: Change color to improve its visibility in dark theme.
+                  color: Theme.of(context).iconTheme.color,
+                ),
                 onPressed: () => _toggle(),
               ),
               border: OutlineInputBorder(),
