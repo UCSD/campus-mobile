@@ -61,10 +61,7 @@ class Profile extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.drag_handle,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? darkPrimaryColor
-                          : lightPrimaryColor,
-                      size: 30.0),
+                      color: Theme.of(context).iconTheme.color, size: 30.0),
                   title: Text(
                     'Card Settings',
                     style: Theme.of(context).brightness == Brightness.dark
@@ -91,9 +88,7 @@ class Profile extends StatelessWidget {
                           1.0), // Adjust the padding as needed
                       child: Icon(
                         Icons.question_mark,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? darkPrimaryColor
-                            : lightPrimaryColor,
+                        color: Theme.of(context).iconTheme.color,
                       ),
                     ),
                   ),
@@ -107,10 +102,7 @@ class Profile extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.lock,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? darkPrimaryColor
-                          : lightPrimaryColor,
-                      size: 30.0),
+                      color: Theme.of(context).iconTheme.color, size: 30.0),
                   title: Text(
                     'View Privacy Policy',
                     style: Theme.of(context).brightness == Brightness.dark
