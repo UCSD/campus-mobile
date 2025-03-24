@@ -3,11 +3,10 @@ import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../app_styles.dart';
-import '../common/event_time.dart';
 
 class EventDetailView extends StatelessWidget {
   const EventDetailView({Key? key, required this.data}) : super(key: key);
@@ -25,78 +24,79 @@ class EventDetailView extends StatelessWidget {
   }
 
   Widget buildDetailView(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return ListView(
-      ////////////////////////////////////////////////////////////
       children: [
         // Event Image
         EventImage(imageUrl: data.imageHQ),
         // Event Content
         Container(
-          child: Center(
-            child: Container(
-              width: width * 0.9,
-              child: Column(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Event Start Date
+              StartDateContainer(date: DateFormat("MMM d y").format(data.startDate.toLocal())),
+              // Event Title
+              Expanded(child: EventTitle(title: data.title)),
+            ],
+          ),
+        ),
+        Container(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Row(
                 children: [
-                  // THIS ICON IS NOT USED
-                  // Icon(
-                  //   Icons.keyboard_arrow_down,
-                  //   size: 30,
-                  //   color: Theme.of(context).primaryColor,
-                  // ),
-                  // IT WORKED AS A PADDING OF SIZE 30
-                  // INCLUDED A SizedBox OF HEIGHT 30 INSTEAD
-                  SizedBox(height: 30),
-                  // Event Title
-                  Padding(
-                    padding: const EdgeInsets.only(left: 65.0), // Adjust the left padding as needed
-                    child: Text(
-                      data.title,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  // Event Location
-                  data.location != null && data.location!.isNotEmpty
+                // Event Location
+                Icon(Icons.location_on_sharp, size: 36, color: Theme.of(context).primaryColor),
+                SizedBox(width: 5),
+                Expanded(
+                  child: data.location != null && data.location!.isNotEmpty
                       ? LinkifyWithCatch(
                           text: data.location!,
                           looseUrl: true,
                           style: TextStyle(
-                              fontSize: 16,
-                              height: 1.3,
+                              fontSize: 13,
                               color: Theme.of(context).primaryColor),
-                          textAlign: TextAlign.left,
                         )
                       : Container(),
-                  SizedBox(height: 10),
-                  // Event Time and Date
-                  Center(child: EventTime(data: data)),
-                  ///////////////// Horizontal Division ///////////////////
-                  Divider(color: listTileDividerColorDark, thickness: 0.6),
-                  // Event Description
-                  data.description != null && data.description!.isNotEmpty
-                      ? Text(
-                            data.description!,
-                            style: TextStyle(
-                                fontSize: 16, height: 1.4,
-                                fontWeight: FontWeight.w400
-                            ),
-                          )
-                      : Container(),
-                  // "GO TO EVENT PAGE" Button
-                  data.link != null && data.link!.isNotEmpty
-                      ? GoToEventPageButton(link: data.link!)
-                      : Container(),
-                ],
-              ),
-            ),
-          ),
+                ),
+                SizedBox(width: 5),
+                // Event Time
+                Text(
+                  DateFormat.jm().format(data.startDate.toLocal())
+                      + ' - ' + DateFormat.jm().format(data.endDate.toLocal()),
+                  style: TextStyle(
+                    fontSize: 16,
+                      color: Theme.of(context).primaryColor
+                  ),
+                ),
+                  SizedBox(width: 16),
+                ]
+            )
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              ///////////////// Horizontal Division ///////////////////
+              Divider(color: listTileDividerColorDark, thickness: 0.6),
+              // Event Description
+              data.description != null && data.description!.isNotEmpty
+                  ? Text(
+                data.description!,
+                style: TextStyle(
+                    fontSize: 16,
+                    height: 1.4,
+                    fontWeight: FontWeight.w400),
+                ) : Container(),
+            ],
+          )
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
+          // "GO TO EVENT PAGE" Button
+          child: data.link != null && data.link!.isNotEmpty
+              ? GoToEventPageButton(link: data.link!)
+              : Container(),
         )
       ],
     );
@@ -107,7 +107,6 @@ class EventDetailView extends StatelessWidget {
 class EventImage extends StatelessWidget {
   final String imageUrl;
   const EventImage({Key? key, required this.imageUrl}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -116,7 +115,8 @@ class EventImage extends StatelessWidget {
         image: DecorationImage(
           fit: BoxFit.fill,
           image: (imageUrl.isEmpty)
-              ? AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
+              ? AssetImage('assets/images/UCSDMobile_banner.png')
+                  as ImageProvider
               : NetworkImage(imageUrl),
         ),
       ),
@@ -128,20 +128,38 @@ class EventImage extends StatelessWidget {
 class StartDateContainer extends StatelessWidget {
   final String date;
   const StartDateContainer({Key? key, required this.date}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(8),
-      ),
+      padding: EdgeInsets.only(left: 4.0, right: 4.0, top: 5.0),
       child: Column(
         children: [
-          Text(date.split(' ')[0], style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          Text(date.split(' ')[1], style: TextStyle(fontSize: 12)),
+          Text(date.split(' ')[0].toUpperCase(), style: TextStyle(fontSize: 16)), // Month
+          Text(date.split(' ')[1], style: TextStyle(fontSize: 18)), // Day
+          Text(date.split(' ')[2], style: TextStyle(fontSize: 16)), // Year
         ],
+      ),
+    );
+  }
+}
+
+// CREATE EVENT TITLE
+class EventTitle extends StatelessWidget {
+  final String title;
+  const EventTitle({Key? key, required this.title}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 12.0, top: 5.0), // Keep padding
+      child: Center( // Centers the Text
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w500,
+            color: lightPrimaryColor,
+          ),
+        ),
       ),
     );
   }
@@ -162,9 +180,9 @@ class GoToEventPageButton extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Text('GO TO EVENT PAGE', style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
+            Text('GO TO EVENT PAGE',
+                style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
             SizedBox(width: 4),
             Icon(Icons.open_in_new, size: 18, color: lightPrimaryColor),
           ],
@@ -173,7 +191,8 @@ class GoToEventPageButton extends StatelessWidget {
           try {
             await launch(link, forceSafariVC: true);
           } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.')));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Could not open.')));
           }
         },
       ),
