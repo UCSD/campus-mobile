@@ -264,24 +264,36 @@ class _LoginState extends State<Login> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Icon(Icons.info_outline),
+            child: Icon(Icons.info_outline,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? linkTextColorDark
+                    : linkTextColorLight),
             flex: 1,
           ),
           Expanded(
             child: Text(
               LoginConstants.loginFailedTitle,
               textAlign: TextAlign.left,
-              style: TextStyle(
-                  color: linkTextColorLight,
-                  fontFamily: 'Brix Sans',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18.0),
+              style: Theme.of(context).brightness == Brightness.dark
+                  ? TextStyle(
+                      color: linkTextColorDark,
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0)
+                  : TextStyle(
+                      color: linkTextColorLight,
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0),
             ),
-            flex: 6,
+            flex: 7,
           ),
           Expanded(
             child: IconButton(
-              icon: Icon(Icons.close),
+              icon: Icon(Icons.close,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? linkTextColorDark
+                      : linkTextColorLight),
               alignment: Alignment.topRight,
               onPressed: () {
                 Navigator.of(context).pop();
