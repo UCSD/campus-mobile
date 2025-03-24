@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/ui/common/build_info.dart';
@@ -21,7 +22,8 @@ class Profile extends StatelessWidget {
         var uri = Uri.dataFromString(link);
         var query = uri.queryParameters['query']!;
         // redirect query to maps tab and search with query
-        Provider.of<MapsDataProvider>(context, listen: false).searchBarController
+        Provider.of<MapsDataProvider>(context, listen: false)
+            .searchBarController
             .text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
@@ -36,42 +38,83 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     initUniLinks(context);
     return Container(
-      child: ListView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Login(),
-          // Card(
-          //   child: ListTile(
-          //     leading: Icon(Icons.notifications),
-          //     title: Text('Notifications'),
-          //     onTap: () {
-          //       handleNotificationsTap(context);
-          //     },
-          //   ),
-          // ),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.menu),
-              title: Text('Card Settings'),
-              onTap: () {
-                Navigator.pushNamed(context, RoutePaths.CardsView);
-              },
+          Expanded(
+            child: ListView(
+              children: <Widget>[
+                Login(),
+                Divider(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? listTileDividerColorDark
+                      : listTileDividerColorLight, // Set the color of the divider
+                  thickness: 0.5, // Set the thickness of the divider
+                ),
+                ListTile(
+                  title: Text(
+                    'SETTINGS & SUPPORT',
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? titleMediumDark
+                        : titleMediumLight,
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.drag_handle,
+                      color: Theme.of(context).iconTheme.color, size: 30.0),
+                  title: Text(
+                    'Card Settings',
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? linkTextDark
+                        : linkTextLight,
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(context, RoutePaths.CardsView);
+                  },
+                ),
+                ListTile(
+                  leading: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? darkPrimaryColor
+                            : lightPrimaryColor,
+                        width: 3.0, // Set the border width
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                          1.0), // Adjust the padding as needed
+                      child: Icon(
+                        Icons.question_mark,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                    ),
+                  ),
+                  title: Text(
+                    'Get Mobile App Support',
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? linkTextDark
+                        : linkTextLight,
+                  ),
+                  onTap: handleFeedbackTap,
+                ),
+                ListTile(
+                  leading: Icon(Icons.lock,
+                      color: Theme.of(context).iconTheme.color, size: 30.0),
+                  title: Text(
+                    'View Privacy Policy',
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? linkTextDark
+                        : linkTextLight,
+                  ),
+                  onTap: handlePrivacyTap,
+                ),
+              ],
             ),
           ),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.feedback),
-              title: Text('Mobile App Support'),
-              onTap: handleFeedbackTap,
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.lock),
-              title: Text('Privacy Policy'),
-              onTap: handlePrivacyTap,
-            ),
-          ),
-          BuildInfo(),
+          BuildInfo(), // This will be at the bottom
         ],
       ),
     );

@@ -36,19 +36,33 @@ class _BuildInfoState extends State<BuildInfo> {
   Widget build(BuildContext context) {
     try {
       return Container(
-          padding: EdgeInsets.only(top: 16, bottom: 16),
-          width: double.infinity,
-          child: Text(
-            _packageInfo.appName +
-                ' ' +
-                _packageInfo.version +
-                ' (' +
-                _packageInfo.buildNumber +
-                ')' +
-                (buildEnv == 'PROD' ? '' : buildEnv),
-            style: TextStyle(color: agnosticDisabled),
-            textAlign: TextAlign.center,
-          ));
+        padding: EdgeInsets.only(top: 16, bottom: 16),
+        width: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Divider(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? listTileDividerColorDark
+                  : listTileDividerColorLight, // Set the color of the divider
+              thickness: 0.5, // Set the thickness of the divider
+            ),
+            Text(
+              _packageInfo.appName +
+                  ' ' +
+                  _packageInfo.version +
+                  ' (' +
+                  _packageInfo.buildNumber +
+                  ')' +
+                  (buildEnv == 'PROD' ? '' : buildEnv),
+              style: Theme.of(context).brightness == Brightness.dark
+                  ? descriptiveTextSmallDark
+                  : descriptiveTextSmallLight,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
     } catch (err) {
       print(err);
       return Container();
