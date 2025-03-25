@@ -23,6 +23,7 @@ class EventDetailView extends StatelessWidget {
         : ContainerView(child: buildDetailView(context));
   }
 
+  /// TODO: What color to use for dark theme?
   Widget buildDetailView(BuildContext context) {
     return ListView(
       children: [
@@ -42,11 +43,15 @@ class EventDetailView extends StatelessWidget {
           ),
         ),
         Container(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 17.0),
             child: Row(
                 children: [
                 // Event Location
-                Icon(Icons.location_on_sharp, size: 36, color: Theme.of(context).primaryColor),
+                Icon(Icons.location_on_sharp, size: 36,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? lightPrimaryColor
+                      : Colors.white,
+                ),
                 SizedBox(width: 5),
                 Expanded(
                   child: data.location != null && data.location!.isNotEmpty
@@ -54,8 +59,12 @@ class EventDetailView extends StatelessWidget {
                           text: data.location!,
                           looseUrl: true,
                           style: TextStyle(
-                              fontSize: 13,
-                              color: Theme.of(context).primaryColor),
+                              fontSize: 14,
+                              color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : Colors.white,
+                            fontWeight: FontWeight.w400,
+                          ),
                         )
                       : Container(),
                 ),
@@ -66,7 +75,10 @@ class EventDetailView extends StatelessWidget {
                       + ' - ' + DateFormat.jm().format(data.endDate.toLocal()),
                   style: TextStyle(
                     fontSize: 16,
-                      color: Theme.of(context).primaryColor
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? lightPrimaryColor
+                        : Colors.white,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                   SizedBox(width: 16),
@@ -131,12 +143,39 @@ class StartDateContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 4.0, right: 4.0, top: 5.0),
+      padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 4.0),
       child: Column(
         children: [
-          Text(date.split(' ')[0].toUpperCase(), style: TextStyle(fontSize: 16)), // Month
-          Text(date.split(' ')[1], style: TextStyle(fontSize: 18)), // Day
-          Text(date.split(' ')[2], style: TextStyle(fontSize: 16)), // Year
+          // Month
+          Text(
+              date.split(' ')[0].toUpperCase(),
+              style: TextStyle(fontSize: 18,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : Colors.white,
+                fontWeight: FontWeight.w400,
+              )
+          ),
+          // Day
+          Text(
+              date.split(' ')[1].toUpperCase(),
+              style: TextStyle(fontSize: 20,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : Colors.white,
+                fontWeight: FontWeight.w500,
+              )
+          ),
+          // Year
+          Text(
+              date.split(' ')[2].toUpperCase(),
+              style: TextStyle(fontSize: 18,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : Colors.white,
+                fontWeight: FontWeight.w400,
+              )
+          ),
         ],
       ),
     );
@@ -157,7 +196,9 @@ class EventTitle extends StatelessWidget {
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w500,
-            color: lightPrimaryColor,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : Colors.white,
           ),
         ),
       ),
