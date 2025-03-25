@@ -133,7 +133,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
     AlertDialog alert = AlertDialog(
       titlePadding: EdgeInsets.fromLTRB(5, 5, 0, 0),
       contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 20),
-      backgroundColor: Color(0xFFE6EFF5),
+      backgroundColor: systemErrorBackground,
       shape: RoundedRectangleBorder(
         side: BorderSide(color: Color(0xFF00629B)),
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -142,10 +142,10 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Icon(Icons.info_outline,
+            child: Icon(Icons.block,
                 color: Theme.of(context).brightness == Brightness.dark
-                    ? linkTextColorDark
-                    : linkTextColorLight),
+                    ? systemErrorTextColorDark
+                    : systemErrorTextColorLight),
             flex: 1,
           ),
           Expanded(
@@ -154,12 +154,12 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
               textAlign: TextAlign.left,
               style: Theme.of(context).brightness == Brightness.dark
                   ? TextStyle(
-                      color: linkTextColorDark,
+                      color: systemErrorTextColorDark,
                       fontFamily: 'Brix Sans',
                       fontWeight: FontWeight.w700,
                       fontSize: 18.0)
                   : TextStyle(
-                      color: linkTextColorLight,
+                      color: systemErrorTextColorLight,
                       fontFamily: 'Brix Sans',
                       fontWeight: FontWeight.w700,
                       fontSize: 18.0),
@@ -170,8 +170,8 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
             child: IconButton(
               icon: Icon(Icons.close,
                   color: Theme.of(context).brightness == Brightness.dark
-                      ? linkTextColorDark
-                      : linkTextColorLight),
+                      ? systemErrorTextColorDark
+                      : systemErrorTextColorLight),
               alignment: Alignment.topRight,
               onPressed: () {
                 Navigator.of(context).pop();
@@ -202,11 +202,17 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
                     Text(
                       LoginConstants.shuttleMaxDesc,
                       textAlign: TextAlign.left,
-                      style: TextStyle(
-                          color: linkTextColorLight,
-                          fontFamily: 'Source Sans Pro',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12.0),
+                      style: Theme.of(context).brightness == Brightness.dark
+                          ? TextStyle(
+                              color: systemErrorTextColorDark,
+                              fontFamily: 'Brix Sans',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14.0)
+                          : TextStyle(
+                              color: systemErrorTextColorLight,
+                              fontFamily: 'Brix Sans',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14.0),
                     ),
                   ],
                 ),

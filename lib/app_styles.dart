@@ -34,6 +34,10 @@ const Color descriptiveTextColorDark = Color(0xFFA1A2A4);
 const Color listTileDividerColorLight = Color(0xFF647185);
 const Color listTileDividerColorDark = Color(0xFF647185);
 
+const Color systemErrorTextColorLight = Color(0xFFAC1700);
+const Color systemErrorTextColorDark = Color(0xFFAC1700);
+const Color systemErrorBackground = Color(0xFFF8E8E6);
+
 /* END Global Themes Configured in main.dart */
 
 /* START Other Styles */
