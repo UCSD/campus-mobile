@@ -3,7 +3,6 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_menu_list.dart';
-import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -173,21 +172,31 @@ class DiningDetailView extends StatelessWidget {
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.titleMedium,
       ),
+      SizedBox(height: 10),
       HoursOfDay(model: model, weekday: 1),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 2),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 3),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 4),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 5),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 6),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 7),
-      Divider(height: 10),
+      SizedBox(height: 20),
     ]);
+  }
+
+  Widget buildDivider(BuildContext context) {
+    return Divider(
+      height: 10,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? listTileDividerColorDark
+          : listTileDividerColorLight,
+    );
   }
 
   Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model) {
@@ -314,16 +323,30 @@ class HoursOfDay extends StatelessWidget {
     /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
     correct it to look right.*/
     if (theHours == 'Closed-Closed') theHours = 'Closed';
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('$theDay: ', style: Theme.of(context).textTheme.bodySmall),
-        Flex(
-          direction: Axis.horizontal,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
+            Flexible(
+              flex: 3,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+                children: [
+                  weekday == DateTime.now().weekday
+                      ? buildGreenDot(theHours!)
+                      : Container(width: 10),
+                  SizedBox(width: 5),
+                  Text('$theDay: ',
+                      style: Theme.of(context).textTheme.bodySmall),
+                ],
+              ),
+            ),
+            Flexible(
+              flex: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
                   RegExp(r"\b[0-9]{2}").allMatches(theHours!).length != 2
                       ? Text(theHours,
                           style: Theme.of(context).textTheme.bodySmall)
@@ -337,15 +360,11 @@ class HoursOfDay extends StatelessWidget {
                                   //Add space around hyphen
                                   RegExp(r"-"),
                                   (match) => " ${match.group(0)} ")),
-                  SizedBox(width: 4),
-                  weekday == DateTime.now().weekday
-                      ? buildGreenDot(theHours)
-                      : Container(width: 10),
                 ],
               ),
             ),
           ],
-        )
+        ),
       ],
     );
   }
