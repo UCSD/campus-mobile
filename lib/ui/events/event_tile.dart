@@ -7,101 +7,108 @@ import '../common/event_time.dart';
 
 class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
-  /// STATES
-  final double tileWidth = 190;
 
-  /// MODELS
   final EventModel data;
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading? Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary))
-        : buildEventTile(context);
+    // Show loading indicator while data is loading
+    if (Provider.of<EventsDataProvider>(context).isLoading) {
+      return Center(
+        child: CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      );
+    }
+
+    return _buildEventTile(context);
   }
 
-  Widget buildEventTile(BuildContext context) {
+  Widget _buildEventTile(BuildContext context) {
     return Container(
-      width: tileWidth,
+      width: 190,
       height: 300,
-      margin: EdgeInsets.zero,
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, RoutePaths.EventDetailView,
-              arguments: data);
+          Navigator.pushNamed(
+            context,
+            RoutePaths.EventDetailView,
+            arguments: data,
+          );
         },
         child: Column(
           children: [
-            eventImageLoader(data.imageThumb),
-            SizedBox(
-              height: 145,
-              width: tileWidth,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.3),
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                ),
-                child: Card(
-                  margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          data.title,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 5),
-                        ),
-                        EventTileDateTime(data: data),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ], // children
+            _eventImageLoader(data.imageThumb),
+            _eventDetailsCard(context),
+          ],
         ),
       ),
     );
   }
 
-  Widget eventImageLoader(String? url) {
-    return url!.isEmpty
-        ? Container(
-            child: Image(
-            image: AssetImage('assets/images/UCSDMobile_sharp.png'),
-            height: 150,
-            width: tileWidth,
-            fit: BoxFit.fill,
-          ))
+  Widget _eventImageLoader(String? url) {
+    // Load either network image or a default image if URL is empty
+    return url?.isEmpty ?? true
+        ? Image.asset(
+      'assets/images/UCSDMobile_sharp.png',
+      height: 150,
+      width: 190,
+      fit: BoxFit.fill,
+    )
         : Image.network(
-            url,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.secondary,
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
+      url!,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Center(
+          child: CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.secondary,
+            value: loadingProgress.expectedTotalBytes != null
+                ? loadingProgress.cumulativeBytesLoaded /
+                loadingProgress.expectedTotalBytes!
+                : null,
+          ),
+        );
+      },
+      height: 150,
+      width: 190,
+      fit: BoxFit.fill,
+    );
+  }
+
+  Widget _eventDetailsCard(BuildContext context) {
+    return SizedBox(
+      height: 145,
+      width: 190,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(width: 0.3),
+          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+        ),
+        child: Card(
+          margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  data.title,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              );
-            },
-            fit: BoxFit.fill,
-            height: 150,
-            width: tileWidth,
-          );
+                Padding(padding: EdgeInsets.only(bottom: 5)),
+                EventTileDateTime(data: data),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
