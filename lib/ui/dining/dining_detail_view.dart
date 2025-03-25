@@ -99,6 +99,9 @@ class DiningDetailView extends StatelessWidget {
             // an error occurred, do nothing
           }
         },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.all(0.0),
+        ),
       );
     } else {
       return Center(child: Text('Directions not available.'));
