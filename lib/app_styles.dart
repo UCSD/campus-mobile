@@ -227,6 +227,8 @@ const TextStyle linkTextLight = TextStyle(
     decoration: TextDecoration.underline,
     color: linkColorLight);
 
+const Color toggleActiveColor = Color(0xFF109B00);
+
 // Theme agnostic styles
 const agnosticDisabled = Color(0xFF8A8A8A);
 
