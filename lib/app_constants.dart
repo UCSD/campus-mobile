@@ -128,6 +128,10 @@ class LoginConstants {
   static const loginFailedTitle = 'Sorry, unable to sign you in.';
   static const loginFailedDesc =
       'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO (AD or Active Directory) if you are a Faculty/Staff.';
+
+  static const shuttleMaxTitle = 'Maximum shuttle stops reached';
+  static const shuttleMaxDesc =
+      'The maximum number of shuttle stops allowed is five. Please remove some stops to add more.';
 }
 
 class Plugins {

@@ -31,6 +31,12 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
       return (Center(child: Text("No saved stops.")));
     } else {
       return ReorderableListView(
+        header: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Text("Hold and drag to reorder",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall),
+        ),
         children: createList(context),
         onReorder: _onReorder,
       );
@@ -57,19 +63,23 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
     List<Widget> list = [];
     for (ShuttleStopModel? model in _shuttleDataProvider.stopsToRender) {
       if (model != null) {
-        list.add(ListTile(
-            key: Key(model.id.toString()),
-            title: Text(
-              model.name,
-            ),
-            leading: Icon(
-              Icons.reorder,
-            ),
-            trailing: IconButton(
-                icon: Icon(Icons.delete_forever),
-                onPressed: () async {
-                  await _shuttleDataProvider.removeStop(model.id);
-                })));
+        list.add(Card(
+          key: Key(model.id.toString()),
+          elevation: 2.0,
+          margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
+          child: ListTile(
+              title: Text(model.name,
+                  style: Theme.of(context).textTheme.bodyMedium),
+              leading: Icon(Icons.drag_handle,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? linkTextColorDark
+                      : linkTextColorLight),
+              trailing: IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () async {
+                    await _shuttleDataProvider.removeStop(model.id);
+                  })),
+        ));
       }
     }
     return list;
@@ -90,17 +100,122 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
             if (_shuttleDataProvider.stopsToRender.length < 5) {
               Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
             } else {
-              Get.snackbar(
-                'Error:',
-                'Please remove a stop to add more.',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                colorText: Colors.white,
-              );
+              showAlertDialog(context);
             }
           },
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      titlePadding: EdgeInsets.fromLTRB(5, 5, 0, 0),
+      contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 20),
+      backgroundColor: Color(0xFFE6EFF5),
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Color(0xFF00629B)),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Icon(Icons.info_outline,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? linkTextColorDark
+                    : linkTextColorLight),
+            flex: 1,
+          ),
+          Expanded(
+            child: Text(
+              LoginConstants.shuttleMaxTitle,
+              textAlign: TextAlign.left,
+              style: Theme.of(context).brightness == Brightness.dark
+                  ? TextStyle(
+                      color: linkTextColorDark,
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0)
+                  : TextStyle(
+                      color: linkTextColorLight,
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0),
+            ),
+            flex: 6,
+          ),
+          Expanded(
+            child: IconButton(
+              icon: Icon(Icons.close,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? linkTextColorDark
+                      : linkTextColorLight),
+              alignment: Alignment.topRight,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            flex: 2,
+          ),
+        ],
+      ),
+      content: Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height *
+              0.6, // Set max height to 60% of screen height
+        ),
+        child: SingleChildScrollView(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      LoginConstants.shuttleMaxDesc,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: linkTextColorLight,
+                          fontFamily: 'Source Sans Pro',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12.0),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            Positioned(
+              bottom: 5.0, // Move up by 50px
+              left: 0,
+              right: 0,
+              child: alert,
+            ),
+          ],
+        );
+      },
     );
   }
 }
