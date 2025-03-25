@@ -28,23 +28,22 @@ class _CardsViewState extends State<CardsView> {
   }
 
   Widget buildCardsList() {
-    var tempView = new ReorderableListView(
+    var tempView = ReorderableListView(
         header: Padding(
-          padding: const EdgeInsets.only(top: 12),
-          child: const Text(
-              "Hold and Drag to Reorder",
+          padding: const EdgeInsets.only(top: 10),
+          child: Text("Hold and drag to reorder",
               textAlign: TextAlign.center,
-              style: const TextStyle(color: const Color(0xFF9A9999))
-          ),
+              style: Theme.of(context).textTheme.bodySmall),
         ),
         children: createList(),
         onReorder: (int oldIndex, int newIndex) {
           if (newIndex > oldIndex) newIndex -= 1;
           var order = _cardsDataProvider.cardOrder;
           order.insert(newIndex, order.removeAt(oldIndex));
-          setState(() { _cardsDataProvider.updateCardOrder(); });
-        }
-    );
+          setState(() {
+            _cardsDataProvider.updateCardOrder();
+          });
+        });
 
     if (_cardsDataProvider.noInternet) {
       Future.delayed(
@@ -53,19 +52,16 @@ class _CardsViewState extends State<CardsView> {
                 showDialog(
                     context: context,
                     builder: (BuildContext ctx) => AlertDialog(
-                        title: const Text('No Internet'),
-                        content: const Text(
-                            'Cards requires an internet connection.'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'Ok'),
-                            child: const Text('Ok'),
-                          ),
-                        ]
-                    )
-                )
-          }
-      );
+                            title: const Text('No Internet'),
+                            content: const Text(
+                                'Cards requires an internet connection.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Ok'),
+                                child: const Text('Ok'),
+                              ),
+                            ]))
+              });
     }
 
     return tempView;
@@ -75,25 +71,38 @@ class _CardsViewState extends State<CardsView> {
     List<Widget> list = [];
     for (String card in _cardsDataProvider.cardOrder) {
       try {
-        list.add(Card(
-          key: Key(card),
-          elevation: 2.0,
-          margin: EdgeInsets.all(cardMargin),
-          child: Padding(
-            padding: EdgeInsets.all(cardPaddingInner),
+        list.add(
+          Card(
+            key: Key(card),
+            elevation: 2.0,
+            margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
             child: ListTile(
-              leading: Icon(Icons.reorder),
-              title: Text(_cardsDataProvider.availableCards[card]!.titleText),
-              trailing: Switch(
-                value: _cardsDataProvider.cardStates[card]!,
-                onChanged: (_) {
-                  _cardsDataProvider.toggleCard(card);
-                },
-                activeColor: Theme.of(context).colorScheme.background,
+              leading: Icon(Icons.drag_handle,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? linkTextColorDark
+                      : linkTextColorLight),
+              title: Text(_cardsDataProvider.availableCards[card]!.titleText,
+                  style: Theme.of(context).textTheme.bodyMedium),
+              trailing: Transform.scale(
+                scale: 0.9, // Adjust the scale as needed
+                child: Switch.adaptive(
+                  value: _cardsDataProvider.cardStates[card]!,
+                  onChanged: (_) {
+                    _cardsDataProvider.toggleCard(card);
+                  },
+                  activeColor:
+                      toggleActiveColor, // Ensure this is a solid color
+                  thumbColor: WidgetStateProperty.resolveWith((states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return Colors.white;
+                    }
+                    return null;
+                  }),
+                ),
               ),
             ),
           ),
-        ));
+        );
       } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
         FirebaseCrashlytics.instance.recordError(
