@@ -2,7 +2,9 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../app_styles.dart';
 import '../common/event_time.dart';
 
 class EventTile extends StatelessWidget {
@@ -20,7 +22,6 @@ class EventTile extends StatelessWidget {
         ),
       );
     }
-
     return _buildEventTile(context);
   }
 
@@ -38,7 +39,6 @@ class EventTile extends StatelessWidget {
         },
         child: Column(
           children: [
-            _eventImageLoader(data.imageThumb),
             _eventDetailsCard(context),
           ],
         ),
@@ -46,68 +46,254 @@ class EventTile extends StatelessWidget {
     );
   }
 
-  Widget _eventImageLoader(String? url) {
-    // Load either network image or a default image if URL is empty
-    return url?.isEmpty ?? true
-        ? Image.asset(
-      'assets/images/UCSDMobile_sharp.png',
-      height: 150,
-      width: 190,
-      fit: BoxFit.fill,
-    )
-        : Image.network(
-      url!,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Center(
-          child: CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary,
-            value: loadingProgress.expectedTotalBytes != null
-                ? loadingProgress.cumulativeBytesLoaded /
-                loadingProgress.expectedTotalBytes!
-                : null,
-          ),
-        );
-      },
-      height: 150,
-      width: 190,
-      fit: BoxFit.fill,
-    );
-  }
-
   Widget _eventDetailsCard(BuildContext context) {
     return SizedBox(
-      height: 145,
+      height: 270,
       width: 190,
+      // Black Outline
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(width: 0.3),
           borderRadius: BorderRadius.all(Radius.circular(5.0)),
         ),
         child: Card(
+          // Black Outline Style
           margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5),
+          elevation: 4.0,
+            // Tile Contents
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  data.title,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                // Tile Image
+                _eventImageLoader(data.imageThumb),
+                // Date & Time
+                Row(
+                  children: [
+                    // Date (Top Left)
+                    StartEndDateContainer(
+                      date: (data.startDate.day == data.endDate.day)
+                          ? DateFormat("MMM d y").format(data.startDate.toLocal())
+                          : DateFormat("MMM d y").format(data.startDate.toLocal()) + ' - ' + DateFormat("MMM d y").format(data.endDate.toLocal()),
+                    ),
+                    // Time (Top Right)
+                    TileTime(time: DateFormat.jm().format(data.startDate.toLocal()) +
+                        ' - ' + DateFormat.jm().format(data.endDate.toLocal())
+                    )
+                  ]
                 ),
-                Padding(padding: EdgeInsets.only(bottom: 5)),
-                EventTileDateTime(data: data),
+                // Tile Title
+                TileTitle(title: data.title),
               ],
             ),
           ),
         ),
+    );
+  }
+}
+
+Widget _eventImageLoader(String? url) {
+  return url?.isEmpty ?? true
+      ? Image.asset(
+      'assets/images/UCSDMobile_sharp.png',
+      height: 150,
+      width: 190,
+      fit: BoxFit.fill)
+      : Image.network(
+    url!,
+    loadingBuilder: (context, child, loadingProgress) {
+      if (loadingProgress == null) return child;
+      return Center(
+        child: CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.secondary,
+          value: loadingProgress.expectedTotalBytes != null
+              ? loadingProgress.cumulativeBytesLoaded /
+              loadingProgress.expectedTotalBytes!
+              : null,
+        ),
+      );
+    },
+    height: 150,
+    width: 190,
+    fit: BoxFit.fill,
+  );
+}
+
+class TileTitle extends StatelessWidget {
+  final String title;
+  const TileTitle({Key? key, required this.title}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
+      child: Center( // Centers the Text
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.light
+                ? linkTextColorLight
+                : Colors.white,
+            fontSize: 16,
+            height: 1.4,
+            fontWeight: FontWeight.w600,
+            decoration: TextDecoration.underline,  // Underlines the text
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TileTime extends StatelessWidget {
+  final String time;
+  const TileTime({Key? key, required this.time}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(right: 8, left: 8),
+      child: Text(
+        time,
+        textAlign: TextAlign.right,
+        style: TextStyle(
+          fontSize: 14,
+          color: Theme.of(context).brightness == Brightness.light
+              ? lightPrimaryColor
+              : Colors.white,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    );
+  }
+}
+
+class StartEndDateContainer extends StatelessWidget {
+  final String date;
+  const StartEndDateContainer ({Key? key, required this.date}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 5.0),
+      child: Row(
+        children: [ // Mar 24 2025 - May 2 2025
+                    //  0   1   2  3  4  5  6
+          if (date.contains(' - '))
+            ...[
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Column(
+                      children: [
+                        // Start Date Month
+                        Text(
+                          date.split(' ')[0].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        // Start Date Day
+                        Text(
+                          date.split(' ')[1].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Padding( // "-"
+                padding: EdgeInsets.symmetric(horizontal: 4.0),
+                child: Text(
+                  date.split(' ')[3].toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? lightPrimaryColor
+                        : Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 8), // Adjust padding as needed
+                    child: Column(
+                      children: [
+                        // End Date Day
+                        Text(
+                          date.split(' ')[4].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        // End Date Year
+                        Text(
+                          date.split(' ')[5].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ]
+          // If it's a single date, display it normally
+          else
+            ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the padding as needed
+                child: Column(
+                  children: [
+                    // Month
+                    Text(
+                      date.split(' ')[0].toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? lightPrimaryColor
+                            : Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    // Day
+                    Text(
+                      date.split(' ')[1].toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? lightPrimaryColor
+                            : Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+        ],
       ),
     );
   }
