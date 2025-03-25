@@ -6,8 +6,8 @@ import 'package:campus_mobile_experimental/ui/events/event_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class EventsList extends StatelessWidget {
-  const EventsList({Key? key, this.listSize}) : super(key: key);
+class EventsCardList extends StatelessWidget {
+  const EventsCardList({Key? key, this.listSize}) : super(key: key);
   final listSize;
 
   @override
@@ -15,10 +15,10 @@ class EventsList extends StatelessWidget {
     return Provider.of<EventsDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
-        : buildEventsList(Provider.of<EventsDataProvider>(context).eventsModels, context);
+        : buildEventsCardList(Provider.of<EventsDataProvider>(context).eventsModels, context);
   }
 
-  Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
+  Widget buildEventsCardList(List<EventModel> listOfEvents, BuildContext context) {
     final List<Widget> eventTiles = [];
 
     /// check to see if we want to display only a limited number of elements

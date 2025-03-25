@@ -3,8 +3,6 @@ import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-
 import '../common/event_time.dart';
 
 class EventTile extends StatelessWidget {
@@ -26,7 +24,7 @@ class EventTile extends StatelessWidget {
   Widget buildEventTile(BuildContext context) {
     return Container(
       width: tileWidth,
-      height: 260,
+      height: 300,
       margin: EdgeInsets.zero,
       child: InkWell(
         onTap: () {
@@ -106,5 +104,4 @@ class EventTile extends StatelessWidget {
             width: tileWidth,
           );
   }
-
 }

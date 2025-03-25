@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
-import 'package:campus_mobile_experimental/ui/events/events_list.dart';
+import 'package:campus_mobile_experimental/ui/events/events_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +11,25 @@ const cardId = 'events';
 
 //edit these files
 class EventsCard extends StatelessWidget {
-  Widget buildEventsCard(List<EventModel>? data) => EventsList(listSize: 6);
+  @override
+  Widget build(BuildContext context) {
+    return CardContainer(
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard(cardId),
+      reload: () =>
+          Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
+      isLoading: Provider.of<EventsDataProvider>(context).isLoading,
+      titleText: CardTitleConstants.titleMap[cardId]!,
+      errorText: Provider.of<EventsDataProvider>(context).error,
+      child: () => buildEventsCardList(
+          Provider.of<EventsDataProvider>(context).eventsModels),
+      actionButtons: buildActionButtons(
+          context, Provider.of<EventsDataProvider>(context).eventsModels),
+    );
+  }
+
+  Widget buildEventsCardList(List<EventModel>? data) => EventsCardList(listSize: 6);
 
   List<Widget> buildActionButtons(
       BuildContext context, List<EventModel>? data) {
@@ -29,23 +47,5 @@ class EventsCard extends StatelessWidget {
       },
     ));
     return actionButtons;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
-      reload: () =>
-          Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
-      isLoading: Provider.of<EventsDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
-      errorText: Provider.of<EventsDataProvider>(context).error,
-      child: () => buildEventsCard(
-          Provider.of<EventsDataProvider>(context).eventsModels),
-      actionButtons: buildActionButtons(
-          context, Provider.of<EventsDataProvider>(context).eventsModels),
-    );
   }
 }
