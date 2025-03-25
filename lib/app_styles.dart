@@ -34,11 +34,9 @@ const Color descriptiveTextColorDark = Color(0xFFA1A2A4);
 const Color listTileDividerColorLight = Color(0xFF647185);
 const Color listTileDividerColorDark = Color(0xFF647185);
 
-// System Colors
-const Color enabledColorLight = Color(0xFF109B00);
-const Color enabledColorDark = Color(0xFF40AF33);
-const Color disabledColorLight = Color(0xFF747678);
-const Color disabledColorDark = Color(0xFF747678);
+const Color systemErrorTextColorLight = Color(0xFFAC1700);
+const Color systemErrorTextColorDark = Color(0xFFAC1700);
+const Color systemErrorBackground = Color(0xFFF8E8E6);
 
 /* END Global Themes Configured in main.dart */
 
@@ -166,7 +164,6 @@ const TextStyle labelLargeStyleDark = TextStyle(
   letterSpacing: 0,
 );
 
-/////////////////////////////////////////////
 const labelMediumStyleLight = TextStyle(
     fontFamily: 'Brix Sans',
     fontSize: 22.0,
@@ -180,7 +177,6 @@ const labelMediumStyleDark = TextStyle(
     fontWeight: FontWeight.w400,
     height: 1.0,
     color: descriptiveTextColorDark);
-/////////////////////////////////////////////
 
 const TextStyle notificationsTitleLight = TextStyle(
   color: linkTextColorLight,
@@ -232,7 +228,6 @@ const Color toggleActiveColor = Color(0xFF109B00);
 // Theme agnostic styles
 const agnosticDisabled = Color(0xFF8A8A8A);
 
-/// App Layout
 // Card Layout
 const cardMargin = 8.0;
 const cardPaddingInner = 8.0;
