@@ -121,13 +121,13 @@ const bodyMediumLight = TextStyle(
     fontFamily: 'Brix Sans',
     fontSize: 22.0,
     fontWeight: FontWeight.w500,
-    color: Color(0xFF6A6B6D));
+    color: descriptiveTextColorLight);
 
 const bodyMediumDark = TextStyle(
     fontFamily: 'Brix Sans',
     fontSize: 22.0,
     fontWeight: FontWeight.w500,
-    color: Color(0xFFA1A2A4));
+    color: descriptiveTextColorDark);
 
 const appBarTitleStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
@@ -163,6 +163,20 @@ const TextStyle labelLargeStyleDark = TextStyle(
   fontWeight: FontWeight.w700,
   letterSpacing: 0,
 );
+
+const labelMediumStyleLight = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    fontWeight: FontWeight.w400,
+    height: 1.0,
+    color: descriptiveTextColorLight);
+
+const labelMediumStyleDark = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 22.0,
+    fontWeight: FontWeight.w400,
+    height: 1.0,
+    color: descriptiveTextColorDark);
 
 const TextStyle notificationsTitleLight = TextStyle(
   color: linkTextColorLight,
@@ -214,7 +228,6 @@ const Color toggleActiveColor = Color(0xFF109B00);
 // Theme agnostic styles
 const agnosticDisabled = Color(0xFF8A8A8A);
 
-/// App Layout
 // Card Layout
 const cardMargin = 8.0;
 const cardPaddingInner = 8.0;
