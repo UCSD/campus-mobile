@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -86,16 +87,14 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
   }
 
   Widget buildAddStopsButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 20.0, bottom: 40.0),
+    return Positioned(
+      bottom: 50.0,
+      left: 0,
+      right: 0,
       child: Align(
-        alignment: Alignment.bottomRight,
-        child: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          backgroundColor: ColorPrimary,
+        alignment: Alignment.bottomCenter,
+        child: ActionButton(
+          buttonText: 'ADD MORE STOPS',
           onPressed: () {
             if (_shuttleDataProvider.stopsToRender.length < 5) {
               Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
@@ -106,6 +105,27 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
         ),
       ),
     );
+
+    // return Padding(
+    //   padding: const EdgeInsets.only(right: 20.0, bottom: 40.0),
+    //   child: Align(
+    //     alignment: Alignment.bottomRight,
+    //     child: FloatingActionButton(
+    //       child: Icon(
+    //         Icons.add,
+    //         color: Colors.white,
+    //       ),
+    //       backgroundColor: ColorPrimary,
+    //       onPressed: () {
+    //         if (_shuttleDataProvider.stopsToRender.length < 5) {
+    //           Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
+    //         } else {
+    //           showAlertDialog(context);
+    //         }
+    //       },
+    //     ),
+    //   ),
+    // );
   }
 
   showAlertDialog(BuildContext context) {
