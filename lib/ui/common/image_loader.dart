@@ -6,12 +6,11 @@ class ImageLoader extends StatelessWidget {
   final double height;
   final bool fullSize;
 
-  ImageLoader({
-    required this.url,
-    this.width = 100.0,
-    this.height = 100.0,
-    this.fullSize = false
-  });
+  ImageLoader(
+      {required this.url,
+      this.width = 100.0,
+      this.height = 100.0,
+      this.fullSize = false});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +34,13 @@ class ImageLoader extends StatelessWidget {
                           loadingProgress.expectedTotalBytes!
                       : null,
                 ),
+              );
+            },
+            errorBuilder:
+                (BuildContext context, Object error, StackTrace? stackTrace) {
+              return Container(
+                width: 0,
+                height: 0,
               );
             },
           );
