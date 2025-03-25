@@ -6,25 +6,27 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ShuttleService {
   ShuttleService();
+
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<ShuttleStopModel> _data = [];
-  List<ShuttleStopModel> get data => _data;
-  /// add state related things for view model here
-  /// add any type of data manipulation here so it can be accessed via provider
-  final NetworkHelper _networkHelper = NetworkHelper();
   final Map<String, String> headers = {
     "accept": "application/json",
     "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
   };
+  /// add state related things for view model here
+  /// add any type of data manipulation here so it can be accessed via provider
+
+  /// MODELS
+  List<ShuttleStopModel> _data = [];
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response =
-          await (_networkHelper.authorizedFetch(dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
+          await (NetworkHelper.authorizedFetch(dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
 
       /// parse data
       var data = shuttleStopModelFromJson(_response);
@@ -42,7 +44,7 @@ class ShuttleService {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await (_networkHelper.authorizedFetch(
+      String _response = await (NetworkHelper.authorizedFetch(
           dotenv.get('SHUTTLE_API_ENDPOINT') + "/$stopId/arrivals", headers));
 
       /// parse data
@@ -56,7 +58,9 @@ class ShuttleService {
     }
   }
 
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
+  List<ShuttleStopModel> get data => _data;
 }

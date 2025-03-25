@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart'
@@ -19,12 +18,11 @@ import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-bool showOnboardingScreen = true;
-bool isFirstRunFlag = false;
-bool executedInitialDeeplinkQuery = false;
+var showOnboardingScreen = true;
+var isFirstRunFlag = false;
+var executedInitialDeeplinkQuery = false;
 
-void main() async
-{
+void main() async {
   /// Record zoned errors - https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +31,8 @@ void main() async
     final mapsImplementation = GoogleMapsFlutterPlatform.instance;
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
-      await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
+      await mapsImplementation
+          .initializeWithRenderer(AndroidMapRenderer.latest);
     }
 
     // dotenv loading
@@ -58,6 +57,8 @@ Future<void> initializeHive() async {
 
 Future<void> initializeApp() async {
   final prefs = await SharedPreferences.getInstance();
+
+  // TODO: fix this. We don't need two different persistent flags...
   if (prefs.getBool('first_run') ?? true) {
     await clearSecuredStorage();
     await clearHiveStorage();
@@ -73,6 +74,7 @@ Future<void> clearSecuredStorage() async {
   await storage.deleteAll();
 }
 
+// TODO: refactor this to load multiple futures in one statement
 Future<void> clearHiveStorage() async {
   await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
@@ -84,22 +86,20 @@ Future<void> clearHiveStorage() async {
 class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = ThemeData(
+    final lightTheme = ThemeData(
       useMaterial3: false,
       primaryColor: lightPrimaryColor,
       textTheme: lightThemeText,
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
-      colorScheme:
-        ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
-          .copyWith(
-            background: lightButtonColor,
-            brightness: Brightness.light, // added
-          ),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
+        background: lightButtonColor,
+        brightness: Brightness.light, // added
+      ),
     );
 
-    final ThemeData darkTheme = ThemeData(
+    final darkTheme = ThemeData(
       useMaterial3: false,
       primaryColor: darkPrimaryColor,
       textTheme: darkThemeText,
@@ -107,12 +107,10 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
-      colorScheme:
-        ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
-          .copyWith(
-            background: darkButtonColor,
-            brightness: Brightness.dark, // added
-          ),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
+        background: darkButtonColor,
+        brightness: Brightness.dark, // added
+      ),
     );
 
     return MultiProvider(
@@ -120,20 +118,18 @@ class CampusMobile extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
-        theme: theme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(secondary: darkAccentColor),
+        theme: lightTheme.copyWith(
+          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
           colorScheme:
               darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
-        initialRoute: showOnboardingScreen
-            ? RoutePaths.OnboardingInitial
-            : RoutePaths.BottomNavigationBar,
+        initialRoute: showOnboardingScreen ?
+          RoutePaths.OnboardingLogin
+          : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
-        navigatorObservers: [
-          observer,
-        ],
+        navigatorObservers: [ observer ],
       ),
     );
   }

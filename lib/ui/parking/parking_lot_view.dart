@@ -9,14 +9,12 @@ class ParkingLotsView extends StatefulWidget {
 
 class _ParkingLotViewState extends State<ParkingLotsView> {
   late ParkingDataProvider parkingDataProvider;
-  bool showedScaffold = false;
+  var showedScaffold = false;
 
   @override
   Widget build(BuildContext context) {
     parkingDataProvider = Provider.of<ParkingDataProvider>(context);
-    return ContainerView(
-      child: parkingLotsList(context),
-    );
+    return ContainerView(child: parkingLotsList(context));
   }
 
   // builds the listview that will be put into ContainerView
@@ -37,11 +35,9 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
       ),
     ));
 
-    int selectedLots = 0;
+    var selectedLots = 0;
     parkingDataProvider.parkingViewState.forEach((key, value) {
-      if (value == true) {
-        selectedLots++;
-      }
+      if (value == true) selectedLots++;
     });
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < lots.length; i++) {
@@ -59,8 +55,7 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
                   fontSize: 20),
             ),
           ),
-          trailing:
-              Icon(lotViewState ? Icons.cancel_rounded : Icons.add_rounded),
+          trailing: Icon(lotViewState ? Icons.cancel_rounded : Icons.add_rounded),
           onTap: () {
             if (selectedLots == 10 && !lotViewState && showedScaffold != true) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(

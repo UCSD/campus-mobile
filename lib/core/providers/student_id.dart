@@ -6,27 +6,26 @@ import 'package:campus_mobile_experimental/core/services/student_id.dart';
 import 'package:flutter/material.dart';
 
 class StudentIdDataProvider extends ChangeNotifier {
-  ///DEFAULT STATES
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
   int? _selectedCourse;
 
-  ///MODELS
+  /// MODELS
   StudentIdNameModel _studentIdNameModel = StudentIdNameModel();
   StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
   StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel();
 
-  ///Additional Provider
+  /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
-  ///SERVICES
-  final StudentIdService _studentIdService = StudentIdService();
+  /// SERVICES
+  final _studentIdService = StudentIdService();
 
-  //Fetch Information From Models
+  // Fetch Information From Models
   void fetchData() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
 
     /// Verify that user is logged in
@@ -45,7 +44,6 @@ class StudentIdDataProvider extends ChangeNotifier {
         _error = _studentIdService.error;
         _isLoading = false;
         notifyListeners();
-
         /// Short Circuit
         return;
       }
@@ -58,7 +56,6 @@ class StudentIdDataProvider extends ChangeNotifier {
         _error = _studentIdService.error;
         _isLoading = false;
         notifyListeners();
-
         /// Short Circuit
         return;
       }
@@ -71,7 +68,6 @@ class StudentIdDataProvider extends ChangeNotifier {
         _error = _studentIdService.error;
         _isLoading = false;
         notifyListeners();
-
         /// Short Circuit
         return;
       }
@@ -79,7 +75,6 @@ class StudentIdDataProvider extends ChangeNotifier {
       _error = 'User not logged in';
       _isLoading = false;
       notifyListeners();
-
       /// Short Circuit
       return;
     }
@@ -88,15 +83,15 @@ class StudentIdDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE SETTERS
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
+  get lastUpdated => _lastUpdated;
+  get selectedCourse => _selectedCourse;
   StudentIdNameModel get studentIdNameModel => _studentIdNameModel;
   StudentIdPhotoModel get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
-  int? get selectedCourse => _selectedCourse;
-
-  ///Simple Setters
-  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 }

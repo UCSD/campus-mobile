@@ -15,10 +15,12 @@ class ScanditScanner extends StatefulWidget {
 }
 
 class _ScanditScannerState extends State<ScanditScanner> {
+  /// STATES
+  var hasUpdatedLatestScan = false;
+
+  /// PROVIDERS
   late ScannerDataProvider _scannerDataProvider;
   late UserDataProvider _userDataProvider;
-  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
-  bool hasUpdatedLatestScan = false;
 
   @override
   Widget build(BuildContext context) {
@@ -169,10 +171,8 @@ class _ScanditScannerState extends State<ScanditScanner> {
   Widget renderSuccessScreen(BuildContext context) {
     final dateFormat = new DateFormat('dd-MM-yyyy hh:mm:ss a');
     final String scanTime = dateFormat.format(new DateTime.now());
-
-    RegExp bloodScreenTest = RegExp(r'^ZAP');
-    bool isBloodScreen =
-        bloodScreenTest.hasMatch(_scannerDataProvider.barcode!);
+    final bloodScreenTest = RegExp(r'^ZAP');
+    var isBloodScreen = bloodScreenTest.hasMatch(_scannerDataProvider.barcode!);
 
     updateLatestScan(context);
     return Column(
@@ -185,8 +185,7 @@ class _ScanditScannerState extends State<ScanditScanner> {
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text("Scan Submitted",
-                    style:
-                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
               ),
               Text("Scan sent at: " + scanTime,
                   style: TextStyle(color: Theme.of(context).iconTheme.color)),
@@ -247,25 +246,23 @@ class _ScanditScannerState extends State<ScanditScanner> {
   }
 
   Text buildChartText(BuildContext context) {
-    if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
+    if (_userDataProvider.userProfileModel.classifications?.student ?? false)
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyStudentChart.");
-    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
-        false) {
+    if (_userDataProvider.userProfileModel.classifications?.staff ?? false)
       return Text(String.fromCharCode(0x2022) +
           " You can view your results by logging in to MyUCSDChart.");
-    }
-
-    return Text(String.fromCharCode(0x2022) +
-        " You can view your results by logging in to MyChart.");
+    return Text(String.fromCharCode(0x2022) + " You can view your results by logging in to MyChart.");
   }
 
   void updateLatestScan(BuildContext context) {
     if (_scannerDataProvider.successfulSubmission&& !hasUpdatedLatestScan) {
       // to fetch the most recent scan and display timestamp to user to confirm success
-      Provider.of<ScannerMessageDataProvider>(context, listen: false)
-          .fetchData();
+      Provider.of<ScannerMessageDataProvider>(context, listen: false).fetchData();
       hasUpdatedLatestScan = true;
     }
   }
+
+  /// SIMPLE SETTER
+  set userDataProvider(UserDataProvider value) => _userDataProvider = value;
 }

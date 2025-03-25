@@ -14,9 +14,14 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
+  /// STATES
+  static const cardId = 'parking';
+
+  /// PROVIDERS
   late ParkingDataProvider _parkingDataProvider;
+
+  /// SERVICES
   final _controller = new PageController();
-  static const String cardId = 'parking';
 
   @override
   void didChangeDependencies() {

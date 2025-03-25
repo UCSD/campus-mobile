@@ -24,10 +24,14 @@ class AvailabilityStatus {
   factory AvailabilityStatus.fromJson(Map<String, dynamic> json) =>
       AvailabilityStatus(
         status: json["status"]!,
-        // TODO: rewrite this to be shorter! Hint: use functional style iterators...
+        // TODO: rewrite this to be shorter! Functional style iterators?...
         data: ((){
           List<AvailabilityModel> returnList = List<AvailabilityModel>.from(
               json["data"]!.map((x) => AvailabilityModel.fromJson(x)));
+
+          // TODO: remove this line after the missing Markets data is fixed on the backend
+          returnList.removeWhere((model) => model.name == "Markets");
+
           for (int index = 0; index < returnList.length; index++) {
             if (returnList[index].subLocations.length > 3) {
               String baseName = returnList[index].name;

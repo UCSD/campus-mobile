@@ -13,30 +13,26 @@ class SpotTypesView extends StatefulWidget {
 }
 
 class _SpotTypesViewState extends State<SpotTypesView> {
+  /// PROVIDERS
   late ParkingDataProvider spotTypesDataProvider;
+
   @override
   Widget build(BuildContext context) {
     spotTypesDataProvider = Provider.of<ParkingDataProvider>(context);
-    return ContainerView(
-      child: createListWidget(context),
-    );
+    return ContainerView(child: createListWidget(context));
   }
 
-  Widget createListWidget(BuildContext context) {
-    return ListView(children: createList(context));
-  }
+  Widget createListWidget(BuildContext context) => ListView(children: createList(context));
 
   List<Widget> createList(BuildContext context) {
-    int selectedSpots = 0;
+    var selectedSpots = 0;
     List<Widget> list = [];
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
-      if (Provider.of<ParkingDataProvider>(context)
-              .spotTypesState[data.spotKey]! ==
-          true) {
+      if (Provider.of<ParkingDataProvider>(context).spotTypesState[data.spotKey]! == true) {
         selectedSpots++;
       }
-      Color iconColor = HexColor(data.color);
-      Color textColor = HexColor(data.textColor);
+      var iconColor = HexColor(data.color);
+      var textColor = HexColor(data.textColor);
 
       list.add(ListTile(
         key: Key(data.name.toString()),
@@ -58,11 +54,9 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                       ))),
         title: Text(data.name),
         trailing: Switch(
-          value: Provider.of<ParkingDataProvider>(context)
-              .spotTypesState[data.spotKey]!,
+          value: Provider.of<ParkingDataProvider>(context).spotTypesState[data.spotKey]!,
           onChanged: (_) {
-            spotTypesDataProvider.toggleSpotSelection(
-                data.spotKey, selectedSpots);
+            spotTypesDataProvider.toggleSpotSelection(data.spotKey, selectedSpots);
           },
           // activeColor: Theme.of(context).buttonColor,
           activeColor: Theme.of(context).colorScheme.background,

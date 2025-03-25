@@ -16,22 +16,23 @@ class WiFiCard extends StatefulWidget {
 }
 
 class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin {
-  bool get wantKeepAlive => true;
+  /// STATES
   String cardId = "speed_test";
-  TestStatus? cardState;
-  int? lastSpeed;
-  late bool goodSpeed;
+  bool _buttonEnabled = true;
   bool timedOut = false;
+  late bool goodSpeed;
+  int? lastSpeed;
+  Timer? buttonTimer;
+  TestStatus? cardState;
+  static const int SPEED_TEST_TIMEOUT_CONST = 30;
+
+  /// PROVIDERS
   SpeedTestProvider _speedTestProvider = SpeedTestProvider();
   UserDataProvider? _userDataProvider;
-  bool _buttonEnabled = true;
-  Timer? buttonTimer;
-  static const int SPEED_TEST_TIMEOUT_CONST = 30;
 
   @override
   void initState() {
     cardState = TestStatus.initial;
-
     super.initState();
   }
 
@@ -83,7 +84,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       );
     }
     _speedTestProvider.addListener(() {
-      //TODO: Add print statements to verify not reloading
+      /// TODO: Add print statements to verify not reloading
       try {
         if (_speedTestProvider.onSimulator!) {
           cardState = TestStatus.simulated;
@@ -110,7 +111,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       } catch (e) {}
     });
     switch (cardState) {
-      //TODO: Add check to verify not over-checking states
+      /// TODO: Add check to verify not over-checking states
       case TestStatus.initial:
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -169,8 +170,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
               ),
               direction: Axis.horizontal,
               value: (_speedTestProvider.percentDownloaded +
-                      _speedTestProvider.percentUploaded) /
-                  2,
+                      _speedTestProvider.percentUploaded) / 2,
               valueColor: AlwaysStoppedAnimation(lightPrimaryColor)),
         ),
       ],
@@ -283,10 +283,8 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
 
   Column timedOutState() {
     _speedTestProvider.sendNetworkDiagnostics(lastSpeed);
-    bool showDownload = false;
-    if (lastSpeed != null && lastSpeed! > 0) {
-      showDownload = true;
-    }
+    var showDownload = false;
+    if (lastSpeed != null && lastSpeed! > 0) showDownload = true;
     return Column(
       children: [
         RichText(
@@ -385,17 +383,10 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     String downloadSpeed = lastSpeed != null
         ? lastSpeed!.toStringAsPrecision(3)
         : _speedTestProvider.speed!.toStringAsPrecision(3) + " Mbps";
-    String uploadSpeed =
-        _speedTestProvider.uploadSpeed!.toStringAsPrecision(3) + " Mbps";
+    String uploadSpeed = _speedTestProvider.uploadSpeed!.toStringAsPrecision(3) + " Mbps";
 
-    if (downloadSpeed.contains("Infinity")) {
-      downloadSpeed = "N/A";
-    }
-
-    if (uploadSpeed.contains("Infinity")) {
-      uploadSpeed = "N/A";
-    }
-
+    if (downloadSpeed.contains("Infinity")) downloadSpeed = "N/A";
+    if (uploadSpeed.contains("Infinity")) uploadSpeed = "N/A";
     if (timedOut) {
       goodSpeed = false;
       if (_speedTestProvider.percentDownloaded == 1.0) {
@@ -576,9 +567,12 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       cardState = TestStatus.finished;
     });
   }
+
+  /// SIMPLE GETTERS
+  bool get wantKeepAlive => true;
 }
 
-//Image Scaling
+// Image Scaling
 class ScalingUtility {
   late MediaQueryData _queryData;
   static late double horizontalSafeBlock;
@@ -590,11 +584,9 @@ class ScalingUtility {
 
     /// Calculate blocks accounting for notches and home bar
     horizontalSafeBlock = (_queryData.size.width -
-            (_queryData.padding.left + _queryData.padding.right)) /
-        100;
+            (_queryData.padding.left + _queryData.padding.right)) / 100;
     verticalSafeBlock = (_queryData.size.height -
-            (_queryData.padding.top + _queryData.padding.bottom)) /
-        100;
+            (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 
@@ -617,10 +609,8 @@ class SizeConfig {
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
-    _safeAreaHorizontal =
-        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
-    _safeAreaVertical =
-        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
+    _safeAreaHorizontal = _mediaQueryData.padding.left + _mediaQueryData.padding.right;
+    _safeAreaVertical = _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }

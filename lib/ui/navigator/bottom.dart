@@ -12,35 +12,14 @@ import 'package:provider/provider.dart';
 
 //---saved scroll offsets for Home Screen---
 var _homeScrollOffset = 0.0;
-
-double getHomeScrollOffset() {
-  return _homeScrollOffset;
-}
-
-void setHomeScrollOffset(double currentScrollOffset) {
-  _homeScrollOffset = currentScrollOffset;
-}
-
-void resetHomeScrollOffset () {
-  _homeScrollOffset = 0.0;
-}
-//-------------------------------------------------
-
+double getHomeScrollOffset() => _homeScrollOffset;
+void setHomeScrollOffset(double currentScrollOffset) => _homeScrollOffset = currentScrollOffset;
+void resetHomeScrollOffset () => _homeScrollOffset = 0.0;
 //---saved scroll offsets for Notification Screen---
 var _notificationsScrollOffset = 0.0;
-
-double getNotificationsScrollOffset() {
-  return _notificationsScrollOffset;
-}
-
-void setNotificationsScrollOffset(double currentScrollOffset) {
-  _notificationsScrollOffset = currentScrollOffset;
-}
-
-void resetNotificationsScrollOffset () {
-  _notificationsScrollOffset = 0.0;
-}
-//-------------------------------------------------
+double getNotificationsScrollOffset() => _notificationsScrollOffset;
+void setNotificationsScrollOffset(double currentScrollOffset) => _notificationsScrollOffset = currentScrollOffset;
+void resetNotificationsScrollOffset () => _notificationsScrollOffset = 0.0;
 
 class BottomTabBar extends StatefulWidget {
   @override
@@ -69,7 +48,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
         currentIndex: provider.currentIndex,
         onTap: (index) {
           if (provider.currentIndex == NavigatorConstants.HomeTab) {
-
+            /// TODO: Remove this if statement if not needed.
           }
           provider.currentIndex = index;
           switch (index) {

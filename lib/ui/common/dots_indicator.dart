@@ -1,5 +1,4 @@
 /// code from: https://gist.github.com/collinjackson/4fddbfa2830ea3ac033e34622f278824
-
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -22,7 +21,6 @@ class DotsIndicator extends AnimatedWidget {
   final ValueChanged<int> onPageSelected;
 
   /// The color of the dots.
-  ///
   /// Defaults to `Colors.grey`.
   final Color color;
 

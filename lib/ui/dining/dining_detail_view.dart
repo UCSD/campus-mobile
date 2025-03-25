@@ -249,7 +249,7 @@ class HoursOfDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? theDay;
+    var theDay;
     String? theHours;
     switch (weekday) {
       case 1:
@@ -353,11 +353,11 @@ class HoursOfDay extends StatelessWidget {
           return Container();
       }
     } else {
-      List<String> times = hours.split('-');
-      int start = int.parse(times[0]);
-      int end = int.parse(times[1]);
-      if (end < start) end += 2300; //If time goes into next day, prevent wrap
-      int timeNow;
+      var times = hours.split('-');
+      var start = int.parse(times[0]);
+      var end = int.parse(times[1]);
+      var timeNow;
+      if (end < start) end += 2300; // If time goes into next day, prevent wrap
       if (DateTime.now().minute.toString().length == 1)
         timeNow = int.parse('${DateTime.now().hour}0${DateTime.now().minute}');
       else

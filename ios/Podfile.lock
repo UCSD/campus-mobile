@@ -1,4 +1,5 @@
 PODS:
+<<<<<<< HEAD
   - arcgis_maps (200.6.0.4426):
     - arcgis_maps_ffi
     - Flutter
@@ -6,6 +7,10 @@ PODS:
   - arcgis_maps_ffi (200.6.0.4426)
   - connectivity_plus (0.0.1):
     - Flutter
+=======
+  - connectivity_plus (0.0.1):
+    - Flutter
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
     - FlutterMacOS
   - device_info_plus (0.0.1):
     - Flutter
@@ -188,13 +193,17 @@ PODS:
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
+<<<<<<< HEAD
   - Runtimecore (200.6.0.4426)
+=======
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   - ScanditBarcodeCapture (6.6.4):
     - ScanditCaptureCore (= 6.6.4)
   - ScanditCaptureCore (6.6.4)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+<<<<<<< HEAD
   - sqlite3 (3.48.0):
     - sqlite3/common (= 3.48.0)
   - sqlite3/common (3.48.0)
@@ -214,6 +223,8 @@ PODS:
     - sqlite3/fts5
     - sqlite3/perf-threadsafe
     - sqlite3/rtree
+=======
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   - uni_links2 (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
@@ -224,8 +235,11 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+<<<<<<< HEAD
   - arcgis_maps (from `.symlinks/plugins/arcgis_maps/ios`)
   - arcgis_maps_ffi (from `../arcgis_maps_core/ios/arcgis_maps_ffi.podspec`)
+=======
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/darwin`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -239,6 +253,7 @@ DEPENDENCIES:
   - flutter_web_auth_2 (from `.symlinks/plugins/flutter_web_auth_2/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
+<<<<<<< HEAD
   - haptic_feedback (from `.symlinks/plugins/haptic_feedback/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -247,6 +262,12 @@ DEPENDENCIES:
   - Runtimecore (from `../arcgis_maps_core/ios/Runtimecore.podspec`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/darwin`)
+=======
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   - uni_links2 (from `.symlinks/plugins/uni_links2/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
@@ -277,10 +298,13 @@ SPEC REPOS:
     - sqlite3
 
 EXTERNAL SOURCES:
+<<<<<<< HEAD
   arcgis_maps:
     :path: ".symlinks/plugins/arcgis_maps/ios"
   arcgis_maps_ffi:
     :podspec: "../arcgis_maps_core/ios/arcgis_maps_ffi.podspec"
+=======
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/darwin"
   device_info_plus:
@@ -307,22 +331,30 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   google_maps_flutter_ios:
     :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
+<<<<<<< HEAD
   haptic_feedback:
     :path: ".symlinks/plugins/haptic_feedback/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
+=======
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
+<<<<<<< HEAD
   Runtimecore:
     :podspec: "../arcgis_maps_core/ios/Runtimecore.podspec"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqlite3_flutter_libs:
     :path: ".symlinks/plugins/sqlite3_flutter_libs/darwin"
+=======
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   uni_links2:
     :path: ".symlinks/plugins/uni_links2/ios"
   url_launcher_ios:
@@ -333,10 +365,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/wifi_connection/ios"
 
 SPEC CHECKSUMS:
+<<<<<<< HEAD
   arcgis_maps: 66ecf6a20da7becd06a702a3e5dcc0a1fc98c3e6
   arcgis_maps_ffi: 005fc8a1ad94411a16cbe5517eb570e8fb7a8764
   connectivity_plus: 4c41c08fc6d7c91f63bc7aec70ffe3730b04f563
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
+=======
+  connectivity_plus: 4c41c08fc6d7c91f63bc7aec70ffe3730b04f563
+  device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   Firebase: 98e6bf5278170668a7983e12971a66b2cd57fc8c
   firebase_analytics: fbc57838bdb94eef1e0ff504f127d974ff2981ad
   firebase_core: 2bedc3136ec7c7b8561c6123ed0239387b53f2af
@@ -355,7 +392,10 @@ SPEC CHECKSUMS:
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
   flutter_scandit_plugin: a2a6a2f124c184cff00dbdf40c34ea0033b1e707
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
+<<<<<<< HEAD
   flutter_web_auth_2: 051cf9f5dc366f31b5dcc4e2952c2b954767be8a
+=======
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   geolocator_apple: 9bcea1918ff7f0062d98345d238ae12718acfbc1
   Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
   google_maps_flutter_ios: e31555a04d1986ab130f2b9f24b6cdc861acc6d3
@@ -371,12 +411,18 @@ SPEC CHECKSUMS:
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
+<<<<<<< HEAD
   Runtimecore: a0117e443c3ffc8679069b4fa871bcc06dfb0de7
   ScanditBarcodeCapture: 8de10f1d79cb4c669b75c61ddaed60c7c7daa7f4
   ScanditCaptureCore: 7118e29ef970e70ca1ea6512fa8414e5a3761497
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqlite3: 3da10a59910c809fb584a93aa46a3f05b785e12e
   sqlite3_flutter_libs: 5f386339eccc9516a12ab10e4aa925cbef5f2dcf
+=======
+  ScanditBarcodeCapture: 8de10f1d79cb4c669b75c61ddaed60c7c7daa7f4
+  ScanditCaptureCore: 7118e29ef970e70ca1ea6512fa8414e5a3761497
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+>>>>>>> 400dd4905af4109882fbcfacbcaec4a1b91b4b92
   uni_links2: fbc37081577fc19c6e0f7e6cdbd3baa150023635
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b

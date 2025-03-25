@@ -17,18 +17,17 @@ class EmployeeIdCard extends StatefulWidget {
 }
 
 class _EmployeeIdCardState extends State<EmployeeIdCard> {
-  String cardId = "employee_id";
+  /// STATES
+  var cardId = "employee_id";
+  var isValidId = false;
   final placeholderPhotoUrl = dotenv.get('PLACEHOLDER_PERSON_PHOTO');
-  bool isValidId = false;
 
   @override
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
 
-    EmployeeIdModel? employeeModel =
-        Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
-    isValidId = employeeModel != null &&
-        (employeeModel.barcode != null) &&
+    EmployeeIdModel? employeeModel = Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
+    isValidId = employeeModel != null && (employeeModel.barcode != null) &&
         (employeeModel.employeePreferredDisplayName != null &&
             employeeModel.employeeId != null);
 
@@ -371,11 +370,9 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
         });
   }
 
-  Column checkForRotation(
-      Column image, BuildContext context, String? cardNumber, bool rotated) {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+  Column checkForRotation(Column image, BuildContext context, String? cardNumber, bool rotated) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape)
       return returnBarcodeContainer(cardNumber, rotated, context);
-    }
     return image;
   }
 
@@ -390,8 +387,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   /// Determine barcode to display
-  returnBarcodeContainer(
-      String? cardNumber, bool rotated, BuildContext context) {
+  returnBarcodeContainer(String? cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
 
     /// Initialize sizing
@@ -486,8 +482,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     return ScalingUtility.horizontalSafeBlock * 4;
   }
 
-  returnBarcodeContainerTablet(
-      String? cardNumber, bool rotated, BuildContext context) {
+  returnBarcodeContainerTablet(String? cardNumber, bool rotated, BuildContext context) {
     var barcodeWithText;
     SizeConfig().init(context);
     if (rotated) {
@@ -590,11 +585,9 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     double base = ScalingUtility.horizontalSafeBlock * 3.5;
 
     /// If threshold is passed, shrink text
-    if (input.length >= 21) {
-      return (base - (0.175 * (input.length - 18)));
-    }
+    if (input.length >= 21) return (base - (0.175 * (input.length - 18)));
 
-    //// The name should be large than subheadings
+    /// The name should be large than subheadings
     if (textField == "name") {
       base = ScalingUtility.horizontalSafeBlock * 5;
       return base;
@@ -621,26 +614,20 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   /// Determine the padding for a border around barcode
-  EdgeInsets addBorder(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark
+  EdgeInsets addBorder(ThemeData currentTheme) => currentTheme.brightness == Brightness.dark
         ? EdgeInsets.all(5)
         : EdgeInsets.all(0);
-  }
 
   /// Determine the padding for the text to realign
-  double realignText(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark ? 7 : 0;
-  }
+  double realignText(ThemeData currentTheme) => currentTheme.brightness == Brightness.dark ? 7 : 0;
 
   /// Determine the  color of hint above the barcode
-  Color decideColor(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark
+  Color decideColor(ThemeData currentTheme) => currentTheme.brightness == Brightness.dark
         ? Colors.white
         : Colors.black45;
-  }
 }
 
-//Image Scaling
+// Image Scaling
 class ScalingUtility {
   late MediaQueryData _queryData;
   static late double horizontalSafeBlock;
@@ -652,11 +639,9 @@ class ScalingUtility {
 
     /// Calculate blocks accounting for notches and home bar
     horizontalSafeBlock = (_queryData.size.width -
-            (_queryData.padding.left + _queryData.padding.right)) /
-        100;
+            (_queryData.padding.left + _queryData.padding.right)) / 100;
     verticalSafeBlock = (_queryData.size.height -
-            (_queryData.padding.top + _queryData.padding.bottom)) /
-        100;
+            (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 
@@ -666,7 +651,6 @@ class SizeConfig {
   static late double screenHeight;
   static double? blockSizeHorizontal;
   static double? blockSizeVertical;
-
   static late double _safeAreaHorizontal;
   static late double _safeAreaVertical;
   static late double safeBlockHorizontal;
@@ -679,10 +663,8 @@ class SizeConfig {
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
-    _safeAreaHorizontal =
-        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
-    _safeAreaVertical =
-        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
+    _safeAreaHorizontal = _mediaQueryData.padding.left + _mediaQueryData.padding.right;
+    _safeAreaVertical = _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }

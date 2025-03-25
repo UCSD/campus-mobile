@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/providers/cards.dart';
 
-const String cardId = 'NativeScanner';
+const cardId = 'NativeScanner';
 
 class NativeScannerCard extends StatelessWidget
 {
@@ -95,12 +95,9 @@ class NativeScannerCard extends StatelessWidget
 
   Widget getMessageWidget(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-      String? myRecentScanTime =
-          Provider.of<ScannerMessageDataProvider>(context, listen: false)
+      String? myRecentScanTime = Provider.of<ScannerMessageDataProvider>(context, listen: false)
               .scannerMessageModel.collectionTime;
-      if (myRecentScanTime == "") {
-        myRecentScanTime = ScannerConstants.noRecentScan;
-      }
+      if (myRecentScanTime == "") myRecentScanTime = ScannerError.noRecentScan.msg;
       return (Padding(
         padding: EdgeInsets.only(top: 8.0, right: 8.0),
         child: Text.rich(
@@ -110,8 +107,7 @@ class NativeScannerCard extends StatelessWidget
                 text: "Last test kit scan: ",
               ),
               TextSpan(
-                  text: Provider.of<ScannerMessageDataProvider>(context,
-                          listen: false)
+                  text: Provider.of<ScannerMessageDataProvider>(context, listen: false)
                       .scannerMessageModel.collectionTime,
                   style: TextStyle(fontWeight: FontWeight.w600)),
             ],
@@ -125,12 +121,8 @@ class NativeScannerCard extends StatelessWidget
 
   void getActionButtonNavigateRoute(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-      Provider.of<ScannerDataProvider>(context, listen: false)
-          .resetDefaultStates();
-      Navigator.pushNamed(
-        context,
-        RoutePaths.ScanditScanner,
-      );
+      Provider.of<ScannerDataProvider>(context, listen: false).resetDefaultStates();
+      Navigator.pushNamed(context, RoutePaths.ScanditScanner);
     } else {
       Provider.of<BottomNavigationBarProvider>(context, listen: false)
           .currentIndex = NavigatorConstants.ProfileTab;

@@ -8,28 +8,29 @@ class MapSearchService {
   DateTime? _lastUpdated;
   String? _error;
   List<MapSearchModel> _results = [];
-  final NetworkHelper _networkHelper = NetworkHelper();
 
   Future<bool> fetchLocations(String location) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
-      String? _response = await _networkHelper
-          .fetchData(dotenv.get('MAP_BASE_ENDPOINT') + '?query=' + location + '&region=0');
+      String? _response = await NetworkHelper.fetchData(
+          dotenv.get('MAP_BASE_ENDPOINT') + '?query=' + location + '&region=0');
       if (_response != 'null') {
         /// parse data
         final data = mapSearchModelFromJson(_response!);
         _results = data;
-        return true;
+      } else {
+        _results = [];
+        return false;
       }
-      // else:
-      _results = [];
+      return true;
     } catch (e) {
       _error = e.toString();
+      return false;
     } finally {
       _isLoading = false;
     }
-    return false;
   }
 
   bool get isLoading => _isLoading;

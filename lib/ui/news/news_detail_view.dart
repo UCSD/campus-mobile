@@ -51,11 +51,11 @@ class NewsDetailView extends StatelessWidget {
   }
 }
 
-class ContinueReadingButton extends StatelessWidget
-{
+class ContinueReadingButton extends StatelessWidget {
+  /// STATES
   final String link;
-
   const ContinueReadingButton({Key? key, required this.link}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(

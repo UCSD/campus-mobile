@@ -21,7 +21,6 @@ import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/providers/weather.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +33,7 @@ List<SingleChildWidget> providers = [
 ];
 
 final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-final FirebaseAnalyticsObserver observer =
-    FirebaseAnalyticsObserver(analytics: analytics);
+final FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
 List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
@@ -56,13 +54,6 @@ List<SingleChildWidget> independentServices = [
       EventsDataProvider _eventsDataProvider = EventsDataProvider();
       _eventsDataProvider.fetchEvents();
       return _eventsDataProvider;
-    },
-  ),
-  ChangeNotifierProvider<WeatherDataProvider>(
-    create: (_) {
-      WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
-      _weatherDataProvider.fetchWeather();
-      return _weatherDataProvider;
     },
   ),
   ChangeNotifierProvider<NewsDataProvider>(
@@ -132,8 +123,7 @@ List<SingleChildWidget> dependentServices = [
       },
       lazy: false,
       update: (_, pushNotificationDataProvider, _userDataProvider) {
-        _userDataProvider!.pushNotificationDataProvider =
-            pushNotificationDataProvider;
+        _userDataProvider!.pushNotificationDataProvider = pushNotificationDataProvider;
         return _userDataProvider;
       }),
   ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(

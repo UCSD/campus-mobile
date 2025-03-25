@@ -7,15 +7,12 @@ import 'package:provider/provider.dart';
 class UpcomingCoursesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<SectionData> data =
-        Provider.of<ClassScheduleDataProvider>(context).upcomingCourses;
-    int? selectedCourseIndex =
-        Provider.of<ClassScheduleDataProvider>(context).selectedCourse;
+    List<SectionData> data = Provider.of<ClassScheduleDataProvider>(context).upcomingCourses;
+    int? selectedCourseIndex = Provider.of<ClassScheduleDataProvider>(context).selectedCourse;
     return buildListOfCourses(data, selectedCourseIndex, context);
   }
 
-  Widget buildListOfCourses(
-      List<SectionData> data, int? selectedCourse, BuildContext context) {
+  Widget buildListOfCourses(List<SectionData> data, int? selectedCourse, BuildContext context) {
     List<Widget> listOfCourses = List.generate(data.length, (int index) {
       return buildTile(index, selectedCourse, data[index], context);
     });
@@ -28,8 +25,7 @@ class UpcomingCoursesList extends StatelessWidget {
         ));
   }
 
-  Widget buildTile(
-      int index, int? selectedCourse, SectionData data, BuildContext context) {
+  Widget buildTile(int index, int? selectedCourse, SectionData data, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 4.0, right: 8.0),
       child: Container(
@@ -50,14 +46,12 @@ class UpcomingCoursesList extends StatelessWidget {
   }
 
   BoxDecoration createBorder() {
-    return BoxDecoration(
-      border: Border.all(width: 1, color: Color(0xFF333333)),
+    return BoxDecoration(border: Border.all(width: 1, color: Color(0xFF333333)),
     );
   }
 
   Widget buildClassTimeText(SectionData sectionData, BuildContext context) {
-    return Text(
-      sectionData.days! + ' @ ' + getStartTime(sectionData.time!, context)
+    return Text(sectionData.days! + ' @ ' + getStartTime(sectionData.time!, context)
     );
   }
 

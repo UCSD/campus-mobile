@@ -12,46 +12,43 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path_provider/path_provider.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
-  bool? _onSimulator;
-  bool _isLoading = false;
-  late Coordinates _coordinates;
-  String? _error;
-  NetworkHelper _networkHelper = new NetworkHelper();
-  Dio dio = new Dio();
-  Stopwatch _timer = new Stopwatch();
-  double? _speedDownload;
-  double? _speedUpload;
-  double _percentDownloaded = 0.0;
-  double _percentUploaded = 0.0;
-  CancelToken? _cancelTokenDownload;
-  CancelToken? _cancelTokenUpload;
-  bool _speedTestDone = false;
-  int _secondsElapsedDownload = 0;
-  int _secondsElapsedUpload = 0;
-  late SpeedTestService _speedTestService;
-  SpeedTestModel? _speedTestModel;
-  bool? isUCSDWiFi = false;
-  Map? wiFiLog;
-  late UserDataProvider _userDataProvider;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
-  Map<String, String>? offloadDataHeader;
-  final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
-
   SpeedTestProvider() {
-    // TODO: probably is a bug! Async functions should not be be run in the constructor
+    /// TODO: probably is a bug! Async functions should not be be run in the constructor
     init();
   }
 
-  ///This setter is only used in provider to supply an updated Coordinates object
-  set coordinates(Coordinates value) {
-    _coordinates = value;
-  }
+  /// STATES
+  bool _isLoading = false;
+  bool _speedTestDone = false;
+  bool? _onSimulator;
+  bool? isUCSDWiFi = false;
+  double _percentDownloaded = 0.0;
+  double _percentUploaded = 0.0;
+  double? _speedDownload;
+  double? _speedUpload;
+  int _secondsElapsedDownload = 0;
+  int _secondsElapsedUpload = 0;
+  String? _error;
+  CancelToken? _cancelTokenDownload;
+  CancelToken? _cancelTokenUpload;
+  Map? wiFiLog;
+  Map<String, String>? offloadDataHeader;
+  late Coordinates _coordinates;
+  final Map<String, String> headers = {
+    "accept": "application/json",
+  };
 
-  set userDataProvider(UserDataProvider userDataProvider) {
-    _userDataProvider = userDataProvider;
-  }
+  /// MODELS
+  SpeedTestModel? _speedTestModel;
+
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+
+  /// SERVICES
+  late SpeedTestService _speedTestService;
+  final dio = new Dio();
+  final _timer = new Stopwatch();
+  final mobileLoggerApi = dotenv.get('MOBILE_APP_LOGGER');
 
   Future<void> init() async {
     _isLoading = true;
@@ -93,8 +90,8 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   Future uploadSpeedTest() async {
-    String path = (await getApplicationDocumentsDirectory()).path;
-    File temp = File(path + "/temp.html");
+    var path = (await getApplicationDocumentsDirectory()).path;
+    var temp = File(path + "/temp.html");
 
     // if not on UCSD wifi OR the file above does not exist,
     // we should not upload the speed test results
@@ -106,10 +103,10 @@ class SpeedTestProvider extends ChangeNotifier {
     }
 
     var tempDownload = temp.readAsBytesSync();
-
-    FormData formData = new FormData.fromMap(
+    var formData = new FormData.fromMap(
         {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
     notifyListeners();
+
     try {
       _cancelTokenUpload = new CancelToken();
       _timer.start();
@@ -126,9 +123,8 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   Future downloadSpeedTest() async {
-    String path = (await getApplicationDocumentsDirectory()).path;
-    //create file
-    File tempDownload = File(path + "/temp.html");
+    var path = (await getApplicationDocumentsDirectory()).path;
+    var tempDownload = File(path + "/temp.html");
     notifyListeners();
     try {
       _cancelTokenDownload = new CancelToken();
@@ -160,19 +156,12 @@ class SpeedTestProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  double _convertToMbps(double speed) {
-    return speed / 125000;
-  }
-
   void resetSpeedTest() {
     _speedTestDone = false;
-    _secondsElapsedUpload = 0;
-    _secondsElapsedDownload = 0;
+    _secondsElapsedUpload = _secondsElapsedDownload = 0;
     _timer.reset();
-    _percentDownloaded = 0.0;
-    _percentUploaded = 0.0;
-    _speedDownload = 0.00;
-    _speedUpload = 0.0;
+    _percentDownloaded = _percentUploaded = 0.0;
+    _speedDownload = _speedUpload = 0.0;
     notifyListeners();
   }
 
@@ -197,8 +186,7 @@ class SpeedTestProvider extends ChangeNotifier {
   }
 
   Future<bool> sendNetworkDiagnostics(int? lastSpeed) async {
-    bool sentSuccessfully = false;
-
+    var sentSuccessfully = false;
     wiFiLog = {
       "Platform": _speedTestModel!.platform,
       "SSID": _speedTestModel!.ssid,
@@ -228,11 +216,11 @@ class SpeedTestProvider extends ChangeNotifier {
 
   Future<void> sendLogs(Map? log) async {
     final mobileLoggerApiWifi = mobileLoggerApi + "?type=WIFI";
-
     offloadDataHeader = {
       'Authorization':
           'Bearer ${_userDataProvider.authenticationModel.accessToken}'
     };
+
     if (_userDataProvider.isLoggedIn) {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
@@ -242,7 +230,7 @@ class SpeedTestProvider extends ChangeNotifier {
       }
       // Send to offload API
       try {
-        _networkHelper
+        NetworkHelper
             .authorizedPost(
                 mobileLoggerApiWifi, offloadDataHeader, json.encode(log))
             .then((value) {
@@ -255,19 +243,19 @@ class SpeedTestProvider extends ChangeNotifier {
             'Authorization':
                 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           };
-          _networkHelper.authorizedPost(
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifi, offloadDataHeader, json.encode(log));
         }
       }
     } else {
       try {
-        _networkHelper.getNewToken(headers).then((value) {
-          _networkHelper.authorizedPost(
+        NetworkHelper.getNewToken(headers).then((value) {
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifi, headers, json.encode(log));
         });
       } catch (exception) {
-        _networkHelper.getNewToken(headers).then((value) {
-          _networkHelper.authorizedPost(
+        NetworkHelper.getNewToken(headers).then((value) {
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifi, headers, json.encode(log));
         });
       }
@@ -276,7 +264,6 @@ class SpeedTestProvider extends ChangeNotifier {
 
   Future<void> reportIssue() async {
     final mobileLoggerApiWifiReport = mobileLoggerApi + "?type=WIFIREPORT";
-
     offloadDataHeader = {
       'Authorization':
           'Bearer ${_userDataProvider.authenticationModel.accessToken}'
@@ -306,6 +293,7 @@ class SpeedTestProvider extends ChangeNotifier {
       "DownloadSpeed": wiFiLog!['DownloadSpeed'],
       "UploadSpeed": _speedUpload!.toStringAsPrecision(3),
     };
+
     if (_userDataProvider.isLoggedIn) {
       if (offloadDataHeader == null) {
         offloadDataHeader = {
@@ -315,7 +303,7 @@ class SpeedTestProvider extends ChangeNotifier {
       }
       // Send to offload API
       try {
-        _networkHelper.authorizedPost(
+        NetworkHelper.authorizedPost(
             mobileLoggerApiWifiReport, offloadDataHeader, json.encode(wiFiLog));
       } catch (exception) {
         if (exception.toString().contains(ErrorConstants.invalidBearerToken)) {
@@ -324,36 +312,43 @@ class SpeedTestProvider extends ChangeNotifier {
             'Authorization':
                 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
           };
-          _networkHelper.authorizedPost(mobileLoggerApiWifiReport,
+          NetworkHelper.authorizedPost(mobileLoggerApiWifiReport,
               offloadDataHeader, json.encode(wiFiLog));
         }
       }
     } else {
       try {
-        _networkHelper.getNewToken(headers).then((value) {
-          _networkHelper.authorizedPost(
+        NetworkHelper.getNewToken(headers).then((value) {
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
         });
       } catch (exception) {
-        _networkHelper.getNewToken(headers).then((value) {
-          _networkHelper.authorizedPost(
+        NetworkHelper.getNewToken(headers).then((value) {
+          NetworkHelper.authorizedPost(
               mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
         });
       }
     }
   }
 
-  bool? get isLoading => _isLoading;
-  String? get error => _error;
-  double? get speed => _speedDownload;
+  /// SIMPLE SETTERS
+  /// This setter is only used in provider to supply an updated Coordinates object
+  set coordinates(Coordinates value) => _coordinates = value;
+  set userDataProvider(UserDataProvider userDataProvider) => _userDataProvider = userDataProvider;
   set speed(double? lastSpeed) => _speedDownload = lastSpeed;
-  double? get uploadSpeed => _speedUpload;
-  Stopwatch get timer => _timer;
-  double get percentDownloaded => _percentDownloaded;
-  double get percentUploaded => _percentUploaded;
-  bool get speedTestDone => _speedTestDone;
+  double _convertToMbps(double speed) => speed / 125000;
+
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get isUCSDNetwork => isUCSDWiFi;
+  get onSimulator => _onSimulator;
+  get speedTestDone => _speedTestDone;
+  get error => _error;
   int get timeElapsedDownload => _secondsElapsedDownload;
   int get timeElapsedUpload => _secondsElapsedUpload;
-  bool? get isUCSDNetwork => isUCSDWiFi;
-  bool? get onSimulator => _onSimulator;
+  double get percentDownloaded => _percentDownloaded;
+  double get percentUploaded => _percentUploaded;
+  double? get speed => _speedDownload;
+  double? get uploadSpeed => _speedUpload;
+  Stopwatch get timer => _timer;
 }

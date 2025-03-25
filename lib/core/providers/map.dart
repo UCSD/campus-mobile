@@ -5,17 +5,25 @@ import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class MapsDataProvider extends ChangeNotifier
-{
+class MapsDataProvider extends ChangeNotifier {
+  MapsDataProvider() {
+    ///DEFAULT STATES
+    _isLoading = false;
+    _noResults = false;
+    ///INITIALIZE SERVICES
+    _mapSearchService = MapSearchService();
+    _mapSearchModels = [];
+  }
+
   ///STATES
-  bool _isLoading = false;
+  bool? _isLoading;
   DateTime? _lastUpdated;
   String? _error;
-  bool _noResults = false;
+  bool? _noResults;
 
   ///Default coordinates for Price Center
-  static const double _defaultLat = 32.87990969506536;
-  static const double _defaultLong = -117.2362059310055;
+  double? _defaultLat = 32.87990969506536;
+  double? _defaultLong = -117.2362059310055;
 
   ///MODELS
   List<MapSearchModel> _mapSearchModels = [];
@@ -27,13 +35,13 @@ class MapsDataProvider extends ChangeNotifier
   List<String> _searchHistory = [];
 
   ///SERVICES
-  MapSearchService _mapSearchService = MapSearchService();
+  late MapSearchService _mapSearchService;
 
   void addMarker(int listIndex) {
     final Marker marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
-      position: LatLng(_mapSearchModels[listIndex].mkrLat,
-          _mapSearchModels[listIndex].mkrLong),
+      position: LatLng(_mapSearchModels[listIndex].mkrLat!,
+          _mapSearchModels[listIndex].mkrLong!),
       infoWindow: InfoWindow(
           title: _mapSearchModels[listIndex].title,
           snippet: _mapSearchModels[listIndex].description),
@@ -105,14 +113,17 @@ class MapsDataProvider extends ChangeNotifier
   }
 
   void populateDistances() {
+    double? latitude =
+        _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
+    double? longitude =
+        _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
     if (_coordinates != null) {
-      final double latitude = _coordinates!.lat ?? _defaultLat;
-      final double longitude = _coordinates!.lon ?? _defaultLong;
-
       for (MapSearchModel model in _mapSearchModels) {
-        var distance = calculateDistance(
-            latitude, longitude, model.mkrLat, model.mkrLong);
-        model.distance = distance as double?;
+        if (model.mkrLat != null && model.mkrLong != null) {
+          var distance = calculateDistance(
+              latitude!, longitude!, model.mkrLat!, model.mkrLong!);
+          model.distance = distance as double?;
+        }
       }
     }
   }
@@ -127,7 +138,7 @@ class MapsDataProvider extends ChangeNotifier
   }
 
   ///SIMPLE GETTERS
-  bool get isLoading => _isLoading;
+  bool? get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
   List<MapSearchModel> get mapSearchModels => _mapSearchModels;
@@ -135,7 +146,7 @@ class MapsDataProvider extends ChangeNotifier
   Map<MarkerId, Marker> get markers => _markers;
   Coordinates? get coordinates => _coordinates;
   TextEditingController get searchBarController => _searchBarController;
-  bool get noResults => _noResults;
+  bool? get noResults => _noResults;
   GoogleMapController? get mapController => _mapController;
 
   ///Setters

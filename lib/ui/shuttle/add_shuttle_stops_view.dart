@@ -10,8 +10,11 @@ class AddShuttleStopsView extends StatefulWidget {
 }
 
 class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
+  /// STATES
+  var isAddingStop = false;
+
+  /// PROVIDERS
   late ShuttleDataProvider _shuttleDataProvider;
-  bool isAddingStop = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +44,7 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
     }
   }
 
-  Widget buildAllLocationsList(BuildContext context) {
-    return ListView(
-      children: createList(context),
-    );
-  }
+  Widget buildAllLocationsList(BuildContext context) => ListView(children: createList(context));
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];
