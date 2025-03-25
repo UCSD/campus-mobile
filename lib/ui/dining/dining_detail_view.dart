@@ -337,8 +337,15 @@ class HoursOfDay extends StatelessWidget {
                       ? buildGreenDot(theHours!)
                       : Container(width: 10),
                   SizedBox(width: 5),
-                  Text('$theDay: ',
-                      style: Theme.of(context).textTheme.bodySmall),
+                  Text(
+                    '$theDay: ',
+                    style: weekday == DateTime.now().weekday
+                        ? Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(fontWeight: FontWeight.bold)
+                        : Theme.of(context).textTheme.bodySmall,
+                  ),
                 ],
               ),
             ),
@@ -348,8 +355,15 @@ class HoursOfDay extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   RegExp(r"\b[0-9]{2}").allMatches(theHours!).length != 2
-                      ? Text(theHours,
-                          style: Theme.of(context).textTheme.bodySmall)
+                      ? Text(
+                          theHours,
+                          style: weekday == DateTime.now().weekday
+                              ? Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(fontWeight: FontWeight.bold)
+                              : Theme.of(context).textTheme.bodySmall,
+                        )
                       : TimeRangeWidget(
                           time: theHours
                               .replaceAllMapped(
@@ -359,7 +373,8 @@ class HoursOfDay extends StatelessWidget {
                               .replaceAllMapped(
                                   //Add space around hyphen
                                   RegExp(r"-"),
-                                  (match) => " ${match.group(0)} ")),
+                                  (match) => " ${match.group(0)} "),
+                        ),
                 ],
               ),
             ),
