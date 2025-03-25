@@ -5,7 +5,7 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NotificationsSettingsView extends StatelessWidget {
+class NotificationsFilterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerView(child: buildSettingsList(context, getTopics(context)));
@@ -53,14 +53,23 @@ class NotificationsSettingsView extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelMedium,
               ),
             ),
-            trailing: Switch(
-              value: Provider.of<PushNotificationDataProvider>(context)
-                  .topicSubscriptionState[topic]!,
-              onChanged: (_) {
-                Provider.of<UserDataProvider>(context, listen: false)
-                    .toggleNotifications(topic);
-              },
-              activeColor: Theme.of(context).colorScheme.surface,
+            trailing: Transform.scale(
+              scale: 0.9,
+              child: Switch.adaptive(
+                value: Provider.of<PushNotificationDataProvider>(context)
+                    .topicSubscriptionState[topic]!,
+                onChanged: (_) {
+                  Provider.of<UserDataProvider>(context, listen: false)
+                      .toggleNotifications(topic);
+                },
+                thumbColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return Colors.white;
+                  }
+                  return null;
+                }),
+                activeColor: toggleActiveColor,
+              ),
             ),
           ),
         ),
