@@ -128,6 +128,10 @@ class LoginConstants {
   static const loginFailedTitle = 'Sorry, unable to sign you in.';
   static const loginFailedDesc =
       'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO (AD or Active Directory) if you are a Faculty/Staff.';
+
+  static const shuttleMaxTitle = 'Maximum shuttle stops reached';
+  static const shuttleMaxDesc =
+      'The maximum number of shuttle stops allowed is five. Please remove some stops to add more.';
 }
 
 class Plugins {
@@ -143,8 +147,8 @@ class NavigatorConstants {
 
 class NotificationsConstants {
   static const statusNoMessages = 'You have no notifications.\n' +
-      'You may be opted out of all topics.\n\n' +
-      'Notifications to specific topics can be turned on in User Profile.';
+      'It looks like you\'ve unsubscribed from all topics.\n\n' +
+      'You can re-subscribe to specific topics via the Notifications Filter.';
   static const statusFetchProblem =
       'There was a problem fetching your messages.\n\n' +
           'Please try again soon.';
