@@ -148,6 +148,7 @@ const cardTitleStyleDark = TextStyle(
   fontWeight: FontWeight.w900,
   color: Colors.white,
 );
+
 const TextStyle labelLargeStyleLight = TextStyle(
   color: secondaryColorLight,
   fontFamily: 'Brix Sans',

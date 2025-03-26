@@ -9,6 +9,44 @@ class EventTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     try {
+      // Extract only the times (String)
+      var startTime = DateFormat.jm().format(data.startDate.toLocal());
+      var endTime = DateFormat.jm().format(data.endDate.toLocal());
+
+      return Text(startTime + ' - ' + endTime); // ex: "8:00 AM - 12:00 PM"
+    } catch (e) {
+      print(e);
+      return Container();
+    }
+  }
+}
+
+class EventDate extends StatelessWidget {
+  final EventModel data;
+  const EventDate({Key? key, required this.data}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    try {
+      // Extract only the dates (String)
+      var startMonthDay = DateFormat.MMMd().format(data.startDate.toLocal());
+      var endMonthDay = DateFormat.MMMd().format(data.endDate.toLocal());
+
+      return Text(startMonthDay + ' - ' + endMonthDay); // ex: "Jan. 1 - Jan. 2"
+    } catch (e) {
+      print(e);
+      return Container();
+    }
+  }
+}
+
+class EventDateTime extends StatelessWidget {
+  final EventModel data;
+  const EventDateTime({Key? key, required this.data}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    try {
       // Separate dates from times (String)
       var startMonthDay = DateFormat.MMMd().format(data.startDate.toLocal());
       var endMonthDay = DateFormat.MMMd().format(data.endDate.toLocal());
