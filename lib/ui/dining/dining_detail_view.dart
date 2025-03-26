@@ -42,7 +42,8 @@ class DiningDetailView extends StatelessWidget {
       buildHours(context, model),
       if (model.specialHours != null) buildSpecialHours(context, model),
       buildPaymentOptions(context, model),
-      buildPictures(model),
+      //buildPictures(model),
+      SizedBox(height: 10),
       Text(
         'Location',
         style: Theme.of(context).textTheme.titleMedium,
@@ -55,7 +56,9 @@ class DiningDetailView extends StatelessWidget {
           buildMenuButton(context, model),
         ],
       ),
-      buildMenu(context, model),
+      // TODO: removed the menu on March 25, 2025
+      //SizedBox(height: 20),
+      //buildMenu(context, model),
     ];
   }
 
@@ -104,7 +107,8 @@ class DiningDetailView extends StatelessWidget {
         ),
       );
     } else {
-      return Center(child: Text('Directions not available.'));
+      return Text('Directions not available.',
+          style: Theme.of(context).textTheme.bodySmall);
     }
   }
 
@@ -211,33 +215,45 @@ class DiningDetailView extends StatelessWidget {
           model.specialHours!.specialHoursValidTo! +
           "\n";
     }
-    return RichText(
-      text: TextSpan(
-        style: Theme.of(context).textTheme.bodySmall,
-        children: [
-          TextSpan(
-            text: "Special Hours\n",
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          TextSpan(text: model.specialHours!.specialHoursEvent + "\n"),
-          TextSpan(text: model.specialHours!.specialHoursEventDetails + "\n"),
-          TextSpan(text: specialHoursDuration)
-        ],
-      ),
+    return Container(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          "Special Hours",
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        SizedBox(height: 10),
+        Text(
+          model.specialHours!.specialHoursEvent,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        Text(
+          model.specialHours!.specialHoursEventDetails,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        Text(
+          specialHoursDuration,
+          style: Theme.of(context).textTheme.bodySmall,
+        )
+      ]),
     );
   }
 
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions.join(', ');
-    return RichText(
-      text: TextSpan(
-        style: Theme.of(context).textTheme.bodySmall,
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextSpan(
-            text: "Payment Options\n",
+          Text(
+            "Payment Options",
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          TextSpan(text: options),
+          SizedBox(height: 10),
+          Text(
+            options,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ],
       ),
     );
