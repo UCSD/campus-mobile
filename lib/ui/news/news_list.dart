@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -16,8 +17,10 @@ class NewsList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Provider.of<NewsDataProvider>(context).isLoading) {
       return Center(
-          child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.secondary));
+        child: CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      );
     }
     return buildNewsList(
       context,
@@ -29,11 +32,9 @@ class NewsList extends StatelessWidget {
     final List<Item> listOfNews = data.items;
     final List<Widget> newsTiles = [];
 
-    /// check to see if we want to display only a limited number of elements
-    /// if no constraint is given on the size of the list then all elements
-    /// are rendered
+    /// Check to see if we want to display only a limited number of elements.
+    /// If no constraint is given on the size of the list, then all elements are rendered.
     var size = listSize ?? listOfNews.length;
-
     for (var i = 0; i < size; i++) {
       final Item item = listOfNews[i];
       final tile = buildNewsTile(item, context);
@@ -41,50 +42,120 @@ class NewsList extends StatelessWidget {
     }
 
     return listSize != null
-        ? ListView(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            children: ListTile.divideTiles(tiles: newsTiles, context: context)
-                .toList(),
-          )
+        ? Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ListView(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        children: ListTile.divideTiles(
+          tiles: newsTiles,
+          context: context,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? listTileDividerColorDark
+              : listTileDividerColorLight,
+        ).toList(),
+      ),
+    )
         : ContainerView(
-            child: ListView(
-              children: ListTile.divideTiles(tiles: newsTiles, context: context)
-                  .toList(),
-            ),
-          );
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: ListView(
+          children: ListTile.divideTiles(
+            tiles: newsTiles,
+            context: context,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? listTileDividerColorDark
+                : listTileDividerColorLight,
+          ).toList(),
+        ),
+      ),
+    );
   }
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
-    try {
-      return ListTile(
-        isThreeLine: true,
-        onTap: () {
-          Navigator.pushNamed(context, RoutePaths.NewsDetailView,
-              arguments: newsItem);
-        },
-        title: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3.0),
-          child: Text(
-            newsItem.title,
-            textAlign: TextAlign.start,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            style: TextStyle(fontSize: 18.0),
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          RoutePaths.NewsDetailView,
+          arguments: newsItem,
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(8.0),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 120,
+                margin: EdgeInsets.only(right: 8.0),
+                child: ImageLoader(
+                  url: newsItem.image,
+                  fullSize: true,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: DateFormat.yMMMMd().format(newsItem.date.toLocal()),
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              height: 1.42,
+                              color: Theme.of(context).textTheme.bodyMedium!.color,
+                            ),
+                          ),
+                          TextSpan(text: ' - '),
+                          TextSpan(
+                            text: newsItem.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .copyWith(height: 1.42, fontSize: 12.0),
+
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      newsItem.description,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(height: 1.42, fontSize: 12.0),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        subtitle: subtitle(newsItem),
-      );
-    } catch (err) {
-      return Container();
-    }
+      ),
+    );
   }
 
-  Widget subtitle(Item data) {
+  Widget subtitle(BuildContext context, Item data) {
     return Container(
-      height: 64,
+      height: 84,
       child: Row(
         children: <Widget>[
+          ImageLoader(
+            url: data.image,
+            fullSize: true,
+          ),
+          SizedBox(width: 4),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,20 +165,18 @@ class NewsList extends StatelessWidget {
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(height: 1.42, fontSize: 12.0),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
+                SizedBox(height: 8),
                 Text(
                   DateFormat.yMMMMd().format(data.date.toLocal()),
+                  style: TextStyle(fontSize: 12.0)
                 ),
               ],
             ),
-          ),
-          SizedBox(width: 4),
-          ImageLoader(
-            url: data.image,
-            fullSize: true,
           ),
         ],
       ),
