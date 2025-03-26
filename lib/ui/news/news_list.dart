@@ -41,7 +41,6 @@ class NewsList extends StatelessWidget {
       newsTiles.add(tile);
     }
 
-    // Wrap the ListView in Padding to add horizontal margins.
     return listSize != null
         ? Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -74,87 +73,80 @@ class NewsList extends StatelessWidget {
   }
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
-    try {
-      return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            RoutePaths.NewsDetailView,
-            arguments: newsItem,
-          );
-        },
-        child: Container(
-          padding: EdgeInsets.all(8.0),
-          child: IntrinsicHeight( // Ensures both sides have the same height
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start, // Align items at the top
-              children: [
-                // Image on the left
-                Container(
-                  width: 120, // Fixed width for the image
-                  margin: EdgeInsets.only(right: 8.0),
-                  child: ImageLoader(
-                    url: newsItem.image,
-                    fullSize: true,
-                    fit: BoxFit.cover, // Ensures the image fills the container
-                  ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          RoutePaths.NewsDetailView,
+          arguments: newsItem,
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(8.0),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 120,
+                margin: EdgeInsets.only(right: 8.0),
+                child: ImageLoader(
+                  url: newsItem.image,
+                  fullSize: true,
+                  fit: BoxFit.cover,
                 ),
-                // Text content on the right
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Date and Title in one line
-                      RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontSize: 14.0, // Reduced font size
-                            fontWeight: FontWeight.bold,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: DateFormat.yMMMMd().format(newsItem.date.toLocal()),
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              height: 1.42,
+                              color: Theme.of(context).textTheme.bodyMedium!.color,
+                            ),
                           ),
-                          children: [
-                            TextSpan(
-                              text: DateFormat.yMMMMd()
-                                  .format(newsItem.date.toLocal()),
-                              style: TextStyle(
-                                color: Theme.of(context).textTheme.bodyMedium!.color,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextSpan(text: ' - '),
-                            TextSpan(text: newsItem.title, style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyLarge!.color,),
-                            ),
-                          ],
-                        ),
+                          TextSpan(text: ' - '),
+                          TextSpan(
+                            text: newsItem.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .copyWith(height: 1.42, fontSize: 12.0),
+
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 8),
-                      // Subtitle below
-                      Text(
-                        newsItem.description,
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontSize: 14.0, // Reduced font size
-                          fontWeight: FontWeight.normal,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      newsItem.description,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(height: 1.42, fontSize: 12.0),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
-    } catch (err) {
-      return Container();
-    }
+      ),
+    );
   }
 
-  Widget subtitle(Item data) {
+  Widget subtitle(BuildContext context, Item data) {
     return Container(
       height: 84,
       child: Row(
@@ -173,10 +165,16 @@ class NewsList extends StatelessWidget {
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
-                  style: TextStyle(fontSize: 14.0),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(height: 1.42, fontSize: 12.0),
                 ),
                 SizedBox(height: 8),
-                Text(DateFormat.yMMMMd().format(data.date.toLocal())),
+                Text(
+                  DateFormat.yMMMMd().format(data.date.toLocal()),
+                  style: TextStyle(fontSize: 12.0)
+                ),
               ],
             ),
           ),
