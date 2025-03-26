@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -51,16 +53,17 @@ class _CardsViewState extends State<CardsView> {
           () => {
                 showDialog(
                     context: context,
-                    builder: (BuildContext ctx) => AlertDialog(
-                            title: const Text('No Internet'),
-                            content: const Text(
-                                'Cards requires an internet connection.'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Ok'),
-                                child: const Text('Ok'),
-                              ),
-                            ]))
+                    builder: (context) {
+                      return AlertDialogWidget(
+                        type: MessageTypeConstants.ERROR,
+                        icon: Icons.block_flipped,
+                        title: 'No Internet',
+                        description: 'Cards requires an internet connection.',
+                        onClose: () {
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    }),
               });
     }
 
