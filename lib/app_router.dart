@@ -21,6 +21,7 @@ import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_filter.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_slides.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
@@ -30,7 +31,6 @@ import 'package:campus_mobile_experimental/ui/parking/parking_lot_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/parking_structure_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/cards.dart';
-import 'package:campus_mobile_experimental/ui/profile/notifications.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
@@ -149,7 +149,7 @@ class Router {
       case RoutePaths.NotificationsFilter:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return NotificationsSettingsView();
+          return NotificationsFilterView();
         });
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) {

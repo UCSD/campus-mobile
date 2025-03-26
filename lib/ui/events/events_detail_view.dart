@@ -33,7 +33,6 @@ class EventDetailView extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(16.0),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Event Start Date
               StartDateContainer(date: DateFormat("MMM d y").format(data.startDate.toLocal())),
@@ -142,9 +141,9 @@ class StartDateContainer extends StatelessWidget {
   const StartDateContainer({Key? key, required this.date}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 4.0),
-      child: Column(
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Month
           Text(
@@ -177,8 +176,7 @@ class StartDateContainer extends StatelessWidget {
               )
           ),
         ],
-      ),
-    );
+      );
   }
 }
 
@@ -186,22 +184,27 @@ class StartDateContainer extends StatelessWidget {
 class EventTitle extends StatelessWidget {
   final String title;
   const EventTitle({Key? key, required this.title}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 12.0, top: 5.0), // Keep padding
-      child: Center( // Centers the Text
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w500,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 12.0),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : Colors.white,
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -210,33 +213,40 @@ class EventTitle extends StatelessWidget {
 class GoToEventPageButton extends StatelessWidget {
   const GoToEventPageButton({Key? key, required this.link}) : super(key: key);
   final String link;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: actionButtonBackgroundColor,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: actionButtonBackgroundColor,
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          onPressed: () async {
+            try {
+              await launch(link, forceSafariVC: true);
+            } catch (e) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('Could not open.')));
+            }
+          },
+          child: FittedBox(
+            child: Row(
+              children: [
+                Text('GO TO EVENT PAGE',
+                    style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
+                SizedBox(width: 4),
+                Icon(Icons.open_in_new, size: 18, color: lightPrimaryColor),
+              ],
+            ),
+          ),
         ),
-        child: Row(
-          children: [
-            Text('GO TO EVENT PAGE',
-                style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
-            SizedBox(width: 4),
-            Icon(Icons.open_in_new, size: 18, color: lightPrimaryColor),
-          ],
-        ),
-        onPressed: () async {
-          try {
-            await launch(link, forceSafariVC: true);
-          } catch (e) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Could not open.')));
-          }
-        },
       ),
     );
   }
 }
+

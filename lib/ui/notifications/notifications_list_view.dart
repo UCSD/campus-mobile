@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_freefood.dart';
-import 'package:campus_mobile_experimental/ui/profile/notifications.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
@@ -161,7 +161,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(NotificationsSettingsView.chooseIcons(messageType),
+              Icon(NotificationsFilterView.chooseIcons(messageType),
                   color: Theme.of(context).iconTheme.color, size: 30),
             ],
           ),

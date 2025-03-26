@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,12 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
 
   Widget buildLocationsList(BuildContext context) {
     return ReorderableListView(
+      header: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Text("Hold and drag to reorder",
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall),
+      ),
       children: createList(context),
       onReorder: _onReorder,
     );
@@ -28,7 +35,8 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
 
   void _onReorder(int oldIndex, int newIndex) {
     final multiPager = RegExp(r' \((\d+)/(\d+)\)$');
-    List<AvailabilityModel?> newOrder = _availabilityDataProvider.availabilityModels;
+    List<AvailabilityModel?> newOrder =
+        _availabilityDataProvider.availabilityModels;
     List<AvailabilityModel?> extraPages = [];
 
     // -----Must remove pages after head of multi pagers and reinsert later to avoid reordering errors-----
@@ -63,7 +71,8 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
           var maxPageIndex = int.parse(match.group(2)!);
           while (curPageIndex <= maxPageIndex) {
             index++;
-            orderedLocationNames.insert(index, baseName + " ($curPageIndex/$maxPageIndex)");
+            orderedLocationNames.insert(
+                index, baseName + " ($curPageIndex/$maxPageIndex)");
             curPageIndex++;
           }
         } else {
@@ -79,29 +88,48 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     List<Widget> list = [];
     Set<String> existingKeys = {};
     final multiPager = RegExp(r' \(\d+/\d+\)$');
-    for (AvailabilityModel? model in _availabilityDataProvider.availabilityModels) {
+    for (AvailabilityModel? model
+        in _availabilityDataProvider.availabilityModels) {
       if (model != null) {
         var curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
-        if (match != null) curName = curName.replaceRange(match.start, match.end, '');
+        if (match != null)
+          curName = curName.replaceRange(match.start, match.end, '');
         if (existingKeys.contains(curName)) continue;
         existingKeys.add(curName);
-        list.add(ListTile(
+        list.add(Card(
           key: Key(curName),
-          title: Text(
-            curName,
-          ),
-          leading: Icon(
-            Icons.reorder,
-          ),
-          trailing: Switch(
-            value: Provider.of<AvailabilityDataProvider>(context)
-                .locationViewState[curName]!,
-            // activeColor: Theme.of(context).buttonColor,
-            activeColor: Theme.of(context).colorScheme.background,
-            onChanged: (_) {
-              _availabilityDataProvider.toggleLocation(curName);
-            },
+          elevation: 2.0,
+          margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
+          child: ListTile(
+            title: Text(
+              curName,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            leading: Icon(
+              Icons.drag_handle,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? linkTextColorDark
+                  : linkTextColorLight,
+            ),
+            trailing: Transform.scale(
+              scale: 0.9, // Adjust the scale as needed
+              child: Switch.adaptive(
+                value: Provider.of<AvailabilityDataProvider>(context)
+                    .locationViewState[curName]!,
+                // activeColor: Theme.of(context).buttonColor,
+                activeColor: toggleActiveColor,
+                thumbColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return Colors.white;
+                  }
+                  return null;
+                }),
+                onChanged: (_) {
+                  _availabilityDataProvider.toggleLocation(curName);
+                },
+              ),
+            ),
           ),
         ));
       }
