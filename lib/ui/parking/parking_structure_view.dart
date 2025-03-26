@@ -1,4 +1,6 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +21,8 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
 
   // builds the listview that will be put into ContainerView
   Widget structureList(BuildContext context) {
-    List<String> structures = Provider.of<ParkingDataProvider>(context).getStructures();
+    List<String> structures =
+        Provider.of<ParkingDataProvider>(context).getStructures();
 
     // creates a list that will hold the list of building names
     List<Widget> list = [];
@@ -42,7 +45,8 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
     });
     // loops through and adds buttons for the user to click on
     for (var i = 0; i < structures.length; i++) {
-      bool structureState = parkingDataProvider.parkingViewState[structures[i]]!;
+      bool structureState =
+          parkingDataProvider.parkingViewState[structures[i]]!;
       list.add(
         ListTile(
           title: Padding(
@@ -59,15 +63,27 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
           trailing:
               Icon(structureState ? Icons.cancel_rounded : Icons.add_rounded),
           onTap: () {
-            if (selectedLots == 10 && !structureState && showedScaffold != true) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                    'You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
-                duration: Duration(seconds: 5),
-              ));
-              showedScaffold = !showedScaffold;
+            if (selectedLots == 10 &&
+                !structureState &&
+                showedScaffold != true) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialogWidget(
+                    type: MessageTypeConstants.ERROR,
+                    icon: Icons.block_flipped,
+                    title: 'Maximum parking lots reached',
+                    description:
+                        'The maximum number of parking lots allowed is ten. Please remove some lots to add more.',
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+                },
+              );
+            } else {
+              parkingDataProvider.toggleLot(structures[i], selectedLots);
             }
-            parkingDataProvider.toggleLot(structures[i], selectedLots);
           },
         ),
       );
