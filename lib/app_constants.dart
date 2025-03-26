@@ -134,6 +134,12 @@ class LoginConstants {
       'The maximum number of shuttle stops allowed is five. Please remove some stops to add more.';
 }
 
+class ParkingConstants {
+  static const spotMaxTitle = 'Maximum parking spots reached';
+  static const spotMaxDesc =
+      'The maximum number of parking spots allowed is three. Please remove some spots to add more.';
+}
+
 class Plugins {
   static const FrontCamera = 'FRONT CAMERA';
 }
