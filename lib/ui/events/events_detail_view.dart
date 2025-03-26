@@ -189,8 +189,7 @@ class EventTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 12.0, top: 5.0), // Keep padding
-      child: Center( // Centers the Text
+      padding: EdgeInsets.only(left: 12.0, top: 5.0),
         child: Text(
           title,
           style: TextStyle(
@@ -201,7 +200,6 @@ class EventTitle extends StatelessWidget {
                 : Colors.white,
           ),
         ),
-      ),
     );
   }
 }
