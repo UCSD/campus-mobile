@@ -4,10 +4,10 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/last_updated_widget.dart';
-import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../app_styles.dart';
 
 const cardId = 'finals';
 
@@ -61,28 +61,48 @@ class FinalsCard extends StatelessWidget {
   Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
       DateTime lastUpdated, String? nextDayWithClasses, BuildContext context) {
     try {
+      var finalsCount = 0, i = 1;
+      // Iterate through the map and count the number Finals
+      finalsData.forEach((key, value) {
+        finalsCount += value.length;
+      });
+
       List<Widget> listToReturn = [];
       finalsData.forEach((key, value) {
         for (SectionData data in value) {
           listToReturn.add(ListTile(
+            // Friday
             title: buildWeekdayText(abbrevToFullWeekday(data.days)),
             subtitle: Column(
-              children: [
-                buildClassTitle(data.subjectCode! + ' ' + data.courseCode!),
-                buildTimeRow(data.time),
-                buildClassTitle(data.courseTitle!),
-                buildLocationRow(data.building! + ' ' + data.room!),
-              ],
               crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 7),
+                // CSE 127  19:00 - 21:59
+                Row(
+                  children: [
+                    buildClassCode(data.subjectCode! + ' ' + data.courseCode!),
+                    SizedBox(width: 10), // 10 logical pixels
+                    buildTimeRow(context, data.time),
+                  ],
+                ),
+                SizedBox(height: 2),
+                // Intro to Computer Security
+                buildClassTitle(data.courseTitle!),
+                SizedBox(height: 2),
+                // WLH 2005
+                buildLocationRow(data.building! + ' ' + data.room!),
+                ///////////////// Horizontal Division ///////////////////
+                if(i < finalsCount)
+                  Divider(color: listTileDividerColorLight, thickness: 0.7),
+              ],
             ),
           ));
+          i++;
         }
       });
-      listToReturn =
-          ListTile.divideTiles(tiles: listToReturn, context: context).toList();
       listToReturn.add(
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+          padding: const EdgeInsets.only(left: 16.0, top: 22.0),
           child: LastUpdatedWidget(time: lastUpdated),
         ),
       );
@@ -98,7 +118,7 @@ class FinalsCard extends StatelessWidget {
         width: double.infinity,
         child: Center(
           child: Padding(
-            padding: EdgeInsets.only(top: 32, bottom: 48),
+            padding: EdgeInsets.only(left: 12,top: 32, bottom: 48),
             child: Container(
               child: Text(
                   "Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
@@ -109,41 +129,58 @@ class FinalsCard extends StatelessWidget {
     }
   }
 
-  Widget buildClassTitle(String title) {
-    return Text(title);
-  }
-
+  // Subheading i.e. "Monday"
   Widget buildWeekdayText(String nextDayWithClasses) {
     return Text(
       nextDayWithClasses,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      style: TextStyle(
+        fontSize: 24.0,
+        fontWeight: FontWeight.w500,
+      ),
     );
   }
 
+  // Heading 3 i.e. "CSE 140"
   Widget buildClassCode(String className) {
     return Text(
       className,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      style: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 0.8,
+          color: lightPrimaryColor
+      )
     );
   }
 
-  Widget buildTimeRow(String? time) {
-    return Row(
-      children: <Widget>[
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TimeRangeWidget(
-                time: time!,
-              ),
-            ],
-          ),
-        ),
-      ],
+  // Small body text i.e. 15:00 - 17:59 (24hr format)
+  Widget buildTimeRow(BuildContext context, String? time) {
+    return Text(
+      time ?? 'TBA', // TBA if time is null or empty
+      style: TextStyle(
+        fontSize: 16,
+        color: Theme.of(context).brightness == Brightness.light
+            ? descriptiveTextColorLight
+            : descriptiveTextColorDark,
+        fontWeight: FontWeight.w400,
+      ),
     );
   }
 
+
+  // Medium Body text i.e. "Intro to Computer Security"
+  Widget buildClassTitle(String title) {
+    return Text(
+        title,
+      style: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.w400,
+          color: descriptiveTextColorLight
+      )
+    );
+  }
+
+  // Medium Body Text i.e. "WLH 2005"
   Widget buildLocationRow(String location) {
     return Row(
       children: <Widget>[
@@ -151,7 +188,13 @@ class FinalsCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(location),
+              Text(location,
+                  style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w400,
+                      color: descriptiveTextColorLight
+                  )
+              ),
             ],
           ),
         ),

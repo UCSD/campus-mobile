@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../app_styles.dart';
 
 class LastUpdatedWidget extends StatelessWidget {
-  const LastUpdatedWidget({
-    Key? key,
-    required this.time,
-  }) : super(key: key);
+  const LastUpdatedWidget({Key? key, required this.time}) : super(key: key);
 
   /// STATES
   final DateTime time;
@@ -15,8 +13,12 @@ class LastUpdatedWidget extends StatelessWidget {
       child: Text(
         'Last updated: ' + determineText(time),
         style: TextStyle(
-            color: Colors.grey, fontStyle: FontStyle.italic, fontSize: 16),
-      ),
+            fontSize: 16.0,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.w400,
+            color: descriptiveTextColorLight
+        )
+      )
     );
   }
 
