@@ -79,7 +79,8 @@ class ContinueReadingButton extends StatelessWidget {
           child: Text(
             'Continue Reading',
             style: TextStyle(
-                fontSize: 18, color: Theme.of(context).textTheme.labelLarge!.color),
+              fontSize: 18, color: Colors.white,),
+            // color: Theme.of(context).textTheme.labelLarge!.color),
           ),
         ),
       ),
