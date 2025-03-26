@@ -5,11 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../app_styles.dart';
-import '../common/event_time.dart';
 
 class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
 
+  /// LAYOUT CONSTANTS
+  static const double tileWidth = 190;
+  static const cornerRadius = Radius.circular(5.0);
+  static const sideBorder = BorderSide(width: 0.3);
+
+  /// MODELS
   final EventModel data;
 
   @override
@@ -27,10 +32,10 @@ class EventTile extends StatelessWidget {
 
   Widget _buildEventTile(BuildContext context) {
     return Container(
-      width: 190,
-      height: 300,
+      width: tileWidth,
+      //height: 300,
       child: InkWell(
-        onTap: () {
+        onTap: (){
           Navigator.pushNamed(
             context,
             RoutePaths.EventDetailView,
@@ -48,13 +53,13 @@ class EventTile extends StatelessWidget {
 
   Widget _eventDetailsCard(BuildContext context) {
     return SizedBox(
-      height: 270,
+      height: 300,
       width: 190,
       // Black Outline
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(width: 0.3),
-          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+          borderRadius: BorderRadius.all(cornerRadius),
         ),
         child: Card(
           // Black Outline Style
@@ -69,20 +74,24 @@ class EventTile extends StatelessWidget {
                 // Date & Time
                 Row(
                   children: [
+                    const SizedBox(width: 2),
                     // Date (Top Left)
                     StartEndDateContainer(
                       date: (data.startDate.day == data.endDate.day)
                           ? DateFormat("MMM d y").format(data.startDate.toLocal())
                           : DateFormat("MMM d y").format(data.startDate.toLocal()) + ' - ' + DateFormat("MMM d y").format(data.endDate.toLocal()),
                     ),
+                    const Spacer(),
                     // Time (Top Right)
                     TileTime(time: DateFormat.jm().format(data.startDate.toLocal()) +
                         ' - ' + DateFormat.jm().format(data.endDate.toLocal())
-                    )
+                    ),
+                    const SizedBox(width: 2),
                   ]
                 ),
                 // Tile Title
                 TileTitle(title: data.title),
+                const Spacer()
               ],
             ),
           ),
@@ -93,29 +102,41 @@ class EventTile extends StatelessWidget {
 
 Widget _eventImageLoader(String? url) {
   return url?.isEmpty ?? true
-      ? Image.asset(
-      'assets/images/UCSDMobile_sharp.png',
-      height: 150,
-      width: 190,
-      fit: BoxFit.fill)
-      : Image.network(
-    url!,
-    loadingBuilder: (context, child, loadingProgress) {
-      if (loadingProgress == null) return child;
-      return Center(
-        child: CircularProgressIndicator(
-          color: Theme.of(context).colorScheme.secondary,
-          value: loadingProgress.expectedTotalBytes != null
-              ? loadingProgress.cumulativeBytesLoaded /
-              loadingProgress.expectedTotalBytes!
-              : null,
-        ),
-      );
-    },
-    height: 150,
-    width: 190,
-    fit: BoxFit.fill,
-  );
+      ? ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: EventTile.cornerRadius,
+            topRight: EventTile.cornerRadius,
+          ),
+          child: Image.asset(
+            'assets/images/UCSDMobile_sharp.png',
+            height: 150,
+            width: EventTile.tileWidth,
+            fit: BoxFit.fitHeight
+          ))
+        : ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: EventTile.cornerRadius,
+              topRight: EventTile.cornerRadius,
+            ),
+            child: Image.network(
+              url!,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.secondary,
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+              height: 150,
+              width: EventTile.tileWidth,
+              fit: BoxFit.fitHeight,
+            )
+          );    
 }
 
 class TileTitle extends StatelessWidget {
@@ -151,19 +172,44 @@ class TileTime extends StatelessWidget {
   const TileTime({Key? key, required this.time}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final splitTimes = time.split(' - ');
+
+    // Extract start and end times from the time string
+    final startTime = splitTimes[0];
+    final endTime = splitTimes[1];
+
+    final style = TextStyle(
+      fontSize: 14,
+      color: Theme.of(context).brightness == Brightness.light
+          ? lightPrimaryColor
+          : Colors.white,
+      fontWeight: FontWeight.w400,
+    );
+
     return Padding(
-      padding: EdgeInsets.only(right: 8, left: 8),
-      child: Text(
-        time,
-        textAlign: TextAlign.right,
-        style: TextStyle(
-          fontSize: 14,
-          color: Theme.of(context).brightness == Brightness.light
-              ? lightPrimaryColor
-              : Colors.white,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
+      padding: const EdgeInsets.only(right: 8, left: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (startTime != endTime)
+            Row(
+              children: [
+                // Start Time
+                Text(
+                  startTime,
+                  textAlign: TextAlign.right,
+                  style: style,
+                ),
+                Text(" - ", style: style), // Separator
+              ],
+            ),
+          Text(
+            endTime, // End Time
+            textAlign: TextAlign.right,
+            style: style,
+          ),
+        ],
+      )
     );
   }
 }

@@ -15,11 +15,11 @@ class EventsCardList extends StatelessWidget {
     return Provider.of<EventsDataProvider>(context).isLoading? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.secondary))
-        : buildEventsCardList(Provider.of<EventsDataProvider>(context).eventsModels, context);
+        : buildEventsList(Provider.of<EventsDataProvider>(context).eventsModels, context);
   }
 
-  Widget buildEventsCardList(List<EventModel> listOfEvents, BuildContext context) {
-    final List<Widget> eventTiles = [];
+  Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
+    final List<Widget> eventTiles = [const SizedBox(width: 7.5)]; // start off with left spacer
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
@@ -30,16 +30,13 @@ class EventsCardList extends StatelessWidget {
     if (size > listOfEvents.length) size = listOfEvents.length;
 
     for (var i = 0; i < size; i++) {
-      final EventModel item = listOfEvents[i];
-      final tile = EventTile(data: item);
-      final spacer = SizedBox(width: 5);
-      eventTiles.add(tile);
-      eventTiles.add(spacer);
+      eventTiles.add(EventTile(data: listOfEvents[i])); // get event model and then create a tile from it
+      eventTiles.add(const SizedBox(width: 9)); // spacer between tiles
     }
 
     if (listSize != null) {
       return SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,8 +46,8 @@ class EventsCardList extends StatelessWidget {
     } else {
       return ContainerView(
         child: listOfEvents.isEmpty
-            ? Center(child: Text('No events found.'))
-            : EventsAll(),
+            ? const Center(child: const Text('No events found.'))
+            : const EventsAll(),
       );
     }
   }
