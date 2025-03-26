@@ -157,6 +157,13 @@ class NotificationsConstants {
   static const statusNoMoreMessages = 'No more messages.';
 }
 
+class MessageTypeConstants {
+  static const SUCCESS = 1;
+  static const INFO = 2;
+  static const WARNING = 3;
+  static const ERROR = 4;
+}
+
 class DataPersistence {
   static const cardStates = 'cardStates';
   static const cardOrder = 'cardOrder';
