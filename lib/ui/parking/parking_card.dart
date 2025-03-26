@@ -98,7 +98,7 @@ class _ParkingCardState extends State<ParkingCard> {
             ),
           ),
           DotsIndicator(
-            position: _currentPage.toDouble(),
+            position: _currentPage,
             dotsCount: selectedLotsViews.length,
             decorator: DotsDecorator(
               color: dotsUnselectedColor,
