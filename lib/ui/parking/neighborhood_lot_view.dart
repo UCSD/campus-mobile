@@ -1,101 +1,101 @@
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class NeighborhoodLotsView extends StatefulWidget {
-  /// STATES
   final List<String> args;
   const NeighborhoodLotsView(this.args);
+
+  @override
   _NeighborhoodLotsViewState createState() => _NeighborhoodLotsViewState();
 }
 
 class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
-  /// STATES
   bool showedScaffold = false;
-
-  /// PROVIDERS
   late ParkingDataProvider parkingDataProvider;
 
   @override
   Widget build(BuildContext context) {
     parkingDataProvider = Provider.of<ParkingDataProvider>(context);
-    return ContainerView(child: lotsList(context));
+    return ContainerView(child: buildLotsList(context));
   }
 
-  // builds the listview that will be put into ContainerView
-  Widget lotsList(BuildContext context) {
+  Widget buildLotsList(BuildContext context) {
     List<String> arguments = widget.args;
 
-    // creates a list that will hold the list of building names
     List<Widget> list = [];
-    list.add(ListTile(
-      title: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-        child: Text(
-          "Parking Lots:",
-          style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 20,
-              fontWeight: FontWeight.bold),
+    list.add(
+      ListTile(
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          child: Text(
+            "Parking Lots",
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: lightPrimaryColor),
+          ),
         ),
       ),
-    ));
+    );
 
     var selectedLots = 0;
     parkingDataProvider.parkingViewState.forEach((key, value) {
       if (value == true) selectedLots++;
     });
-    // loops through and adds buttons for the user to click on
-    for (var i = 0; i < arguments.length; i++) {
-      bool lotState = parkingDataProvider.parkingViewState[arguments[i]]!;
+
+    for (var lotName in arguments) {
+      bool lotState = parkingDataProvider.parkingViewState[lotName]!;
       list.add(
         ListTile(
           title: Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
             child: Text(
-              arguments[i],
-              style: TextStyle(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .secondary, // lotState ? colorFromHex('#006A96') : Theme.of(context).colorScheme.secondary,
-                  fontSize: 20),
+              lotName,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
-          trailing: Icon(lotState ? Icons.cancel_rounded : Icons.add_rounded),
-          onTap: () {
-            if (selectedLots == 10 && !lotState && showedScaffold != true) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                    'You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
-                duration: Duration(seconds: 5),
-              ));
-              showedScaffold = !showedScaffold;
-            }
-            parkingDataProvider.toggleLot(arguments[i], selectedLots);
-          },
+          trailing: Transform.scale(
+            scale: 0.9,
+            child: CupertinoSwitch(
+              value: lotState,
+              activeColor: toggleActiveColor,
+              trackColor: Colors.grey.shade400,
+              onChanged: (bool newValue) {
+                if (selectedLots == 10 && !lotState && !showedScaffold) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.'),
+                    duration: Duration(seconds: 5),
+                  ));
+
+                  showedScaffold = true;
+                } else {
+                  parkingDataProvider.toggleLot(lotName, selectedLots);
+                }
+              },
+            ),
+          ),
         ),
       );
     }
 
-    // adds SizedBox to have a grey underline for the last item in the list
-    list.add(SizedBox());
-
-    return ListView(
-      physics: BouncingScrollPhysics(),
-      shrinkWrap: true,
-      children: ListTile.divideTiles(tiles: list, context: context).toList(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ListView(
+        physics: BouncingScrollPhysics(),
+        shrinkWrap: true,
+        children: ListTile.divideTiles(
+          tiles: list,
+          context: context,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? listTileDividerColorDark
+              : listTileDividerColorLight,
+        ).toList(),
+      ),
     );
   }
-}
-
-Color colorFromHex(String hexColor) {
-  final hexCode = hexColor.replaceAll('#', '');
-  if (hexColor.length == 6) hexColor = 'FF' + hexColor; // FF as the opacity value if you don't add it.
-  return Color(int.parse('FF$hexCode', radix: 16));
-}
-
-class ScreenArguments {
-  final List<String> lotList;
-  ScreenArguments(this.lotList);
 }
