@@ -5,7 +5,7 @@ import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
-
+import 'package:campus_mobile_experimental/app_styles.dart';
 class ClassList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -77,14 +77,15 @@ class ClassList extends StatelessWidget {
   Widget buildWeekDayHeader(BuildContext context, String weekday) {
     weekday = abbrevToFullWeekday(weekday);
     return Container(
-      color: Theme.of(context).secondaryHeaderColor,
+      color: Theme.of(context).brightness == Brightness.light
+          ? lightPrimaryColor
+          : descriptiveTextColorLight,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Text(
           weekday,
-          style: TextStyle(
-            fontSize: 20.0,
-            color: Colors.white,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Colors.white,
           ),
         ),
       ),
