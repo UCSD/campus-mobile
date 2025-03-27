@@ -30,7 +30,7 @@ class ClassScheduleCard extends StatelessWidget {
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
-      child: () => buildClassScheduleCard(
+      child: () => buildClassScheduleCard(context,
         Provider.of<ClassScheduleDataProvider>(context).upcomingCourses,
         Provider.of<ClassScheduleDataProvider>(context).selectedCourse,
         Provider.of<ClassScheduleDataProvider>(context).lastUpdated,
@@ -47,7 +47,7 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildClassScheduleCard(List<SectionData> courseData, int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
+  Widget buildClassScheduleCard(BuildContext context, List<SectionData> courseData, int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
     try {
       final section = courseData[selectedCourse];
       return Padding(
@@ -67,25 +67,27 @@ class ClassScheduleCard extends StatelessWidget {
                         'Next Class',
                         style: TextStyle(
                           fontSize: 22.0,
-                          color: lightPrimaryColor,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : darkPrimaryColor2,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       SizedBox(height: 8),
                       // CSE 141L
-                      buildClassCode('${section.subjectCode} ${section.courseCode}'),
+                      buildClassCode(context, '${section.subjectCode} ${section.courseCode}'),
                       SizedBox(height: 3),
                       // Laboratory
-                      buildClassType(section.meetingType!),
+                      buildClassType(context, section.meetingType!),
                       SizedBox(height: 3),
                       // Start and Finish Time:
-                      buildTimeRow(section.days!, section.time),
+                      buildTimeRow(context, section.days!, section.time),
                       SizedBox(height: 8),
                       // Classroom Location:
-                      buildLocationRow('${section.building} ${section.room}'),
+                      buildLocationRow(context, '${section.building} ${section.room}'),
                       SizedBox(height: 8),
                       // Evaluation Option:
-                      buildGradeEvaluationRow(section.gradeOption),
+                      buildGradeEvaluationRow(context, section.gradeOption),
                       // "Last updated: A few seconds ago
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0, top: 24.0),
@@ -139,28 +141,32 @@ class ClassScheduleCard extends StatelessWidget {
 
 
   // Heading 3 i.e. "CSE 141L"
-  Widget buildClassCode(String className) {
+  Widget buildClassCode(BuildContext context, String className) {
     return Text(
         className,
         style: TextStyle(
             fontSize: 17.0,
             fontFamily: 'Refrigerator Deluxe',
-            fontWeight: FontWeight.w900,
             letterSpacing: 1.2,
-            color: lightPrimaryColor
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : darkPrimaryColor2,
+            fontWeight: FontWeight.w900
         )
     );
   }
 
   // Small body text i.e. "Laboratory"
-  Widget buildClassType(String classType) {
+  Widget buildClassType(BuildContext context, String classType) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
       child:
           Text(classType,
               style: TextStyle(
                 fontSize: 17,
-                color: descriptiveTextColorLight,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? descriptiveTextColorLight
+                    : descriptiveTextColorDark,
                 fontWeight: FontWeight.w400,
               ),
           ),
@@ -168,14 +174,16 @@ class ClassScheduleCard extends StatelessWidget {
   }
 
   // Start and Finish Time:
-  Widget buildTimeRow(String? day, String? time) {
+  Widget buildTimeRow(BuildContext context, String? day, String? time) {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
           Icon(
             Icons.access_time,
-            color: lightPrimaryColor,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : darkPrimaryColor2,
             size: 34,
           ),
           SizedBox(width: 10),
@@ -186,7 +194,9 @@ class ClassScheduleCard extends StatelessWidget {
                 'Start and Finish Time:',
                 style: TextStyle(
                   fontSize: 17,
-                  color: descriptiveTextColorLight,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -195,8 +205,10 @@ class ClassScheduleCard extends StatelessWidget {
                   (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
                   style: TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: lightPrimaryColor
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? lightPrimaryColor
+                          : darkPrimaryColor2,
+                      fontWeight: FontWeight.w700
                   )
               )
             ],
@@ -206,15 +218,17 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildLocationRow(String location) {
+  Widget buildLocationRow(BuildContext context, String location) {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
           Icon(
             Icons.location_city,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : darkPrimaryColor2,
             size: 34,
-            color: lightPrimaryColor,
           ),
           SizedBox(width: 10),
           Column(
@@ -224,7 +238,9 @@ class ClassScheduleCard extends StatelessWidget {
                 'Classroom Location:',
                 style: TextStyle(
                   fontSize: 17,
-                  color: descriptiveTextColorLight,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -233,8 +249,10 @@ class ClassScheduleCard extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 15,
                     letterSpacing: 0.8,
-                    fontWeight: FontWeight.w700,
-                    color: lightPrimaryColor
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? lightPrimaryColor
+                        : darkPrimaryColor2,
+                    fontWeight: FontWeight.w700
                 ),
               ),
             ],
@@ -244,15 +262,17 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildGradeEvaluationRow(String gradeEvaluation) {
+  Widget buildGradeEvaluationRow(BuildContext context, String gradeEvaluation) {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
           Icon(
             Icons.check_box_outlined,
-            size: 34,
-            color: lightPrimaryColor,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : darkPrimaryColor2,
+            size: 34
           ),
           SizedBox(width: 10),
           Column(
@@ -262,7 +282,9 @@ class ClassScheduleCard extends StatelessWidget {
                 'Evaluation Option:',
                 style: TextStyle(
                   fontSize: 17,
-                  color: descriptiveTextColorLight,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -270,8 +292,10 @@ class ClassScheduleCard extends StatelessWidget {
               Text(gradeEvaluation,
                 style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: lightPrimaryColor
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? lightPrimaryColor
+                        : darkPrimaryColor2,
+                    fontWeight: FontWeight.w700
                 ),
               ),
             ],
