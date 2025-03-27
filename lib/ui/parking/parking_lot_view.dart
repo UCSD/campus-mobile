@@ -1,9 +1,12 @@
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ParkingLotsView extends StatefulWidget {
+  @override
   _ParkingLotViewState createState() => _ParkingLotViewState();
 }
 
@@ -17,67 +20,75 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
     return ContainerView(child: parkingLotsList(context));
   }
 
-  // builds the listview that will be put into ContainerView
   Widget parkingLotsList(BuildContext context) {
     List<String> lots = Provider.of<ParkingDataProvider>(context).getLots();
-    // creates a list that will hold the list of building names
-    List<Widget> list = [];
-    list.add(ListTile(
-      title: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-        child: Text(
-          "Parking Lots:",
-          style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 20,
-              fontWeight: FontWeight.bold),
+
+    List<Widget> listTiles = [];
+    listTiles.add(
+      ListTile(
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          child: Text(
+            "Parking Lots",
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: lightPrimaryColor),
+          ),
         ),
       ),
-    ));
+    );
 
     var selectedLots = 0;
     parkingDataProvider.parkingViewState.forEach((key, value) {
       if (value == true) selectedLots++;
     });
-    // loops through and adds buttons for the user to click on
-    for (var i = 0; i < lots.length; i++) {
-      bool lotViewState = parkingDataProvider.parkingViewState[lots[i]]!;
-      list.add(
+
+    for (var lotName in lots) {
+      bool lotViewState = parkingDataProvider.parkingViewState[lotName]!;
+      listTiles.add(
         ListTile(
           title: Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
             child: Text(
-              lots[i],
-              style: TextStyle(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .secondary, // lotViewState ? ColorPrimary : Colors.black,
-                  fontSize: 20),
+              lotName,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
-          trailing: Icon(lotViewState ? Icons.cancel_rounded : Icons.add_rounded),
-          onTap: () {
-            if (selectedLots == 10 && !lotViewState && showedScaffold != true) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                    'You have reached the maximum number of lots (10) that can be selected. You need to deselect some lots before you can add any more.'),
-                duration: Duration(seconds: 5),
-              ));
-              showedScaffold = !showedScaffold;
-            }
-            parkingDataProvider.toggleLot(lots[i], selectedLots);
-          },
+          trailing: Transform.scale(
+            scale: 0.9,
+            child: CupertinoSwitch(
+              value: lotViewState,
+              activeColor: toggleActiveColor,
+              trackColor: Colors.grey.shade400,
+              onChanged: (bool newValue) {
+                if (selectedLots == 10 && !lotViewState && !showedScaffold) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.'),
+                    duration: Duration(seconds: 5),
+                  ));
+                  showedScaffold = true;
+                } else {
+                  parkingDataProvider.toggleLot(lotName, selectedLots);
+                }
+              },
+            ),
+          ),
         ),
       );
     }
 
-    // adds SizedBox to have a grey underline for the last item in the list
-    list.add(SizedBox());
-
     return ListView(
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,
-      children: ListTile.divideTiles(tiles: list, context: context).toList(),
+      children: ListTile.divideTiles(
+        tiles: listTiles,
+        context: context,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? listTileDividerColorDark
+            : listTileDividerColorLight,
+      ).toList(),
     );
   }
 }
