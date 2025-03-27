@@ -6,31 +6,15 @@ import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/classes/upcoming_classes.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/common/last_updated_widget.dart';
-import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../common/action_button.dart';
+
 const cardId = 'schedule';
 
 class ClassScheduleCard extends StatelessWidget {
-  List<Widget> buildActionButtons(BuildContext context) {
-    List<Widget> actionButtons = [];
-    actionButtons.add(TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
-      ),
-      child: Text(
-        'View All',
-      ),
-      onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.ClassScheduleViewAll);
-      },
-    ));
-    return actionButtons;
-  }
-
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -39,12 +23,10 @@ class ClassScheduleCard extends StatelessWidget {
           .toggleCard(cardId),
       reload: () {
         if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
-            .isLoading) {
-          return null;
-        } else {
+            .isLoading) return null;
+        else
           Provider.of<ClassScheduleDataProvider>(context, listen: false)
               .fetchData();
-        }
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
@@ -55,50 +37,76 @@ class ClassScheduleCard extends StatelessWidget {
         Provider.of<ClassScheduleDataProvider>(context).lastUpdated,
         Provider.of<ClassScheduleDataProvider>(context).nextDayWithClass,
       ),
-      actionButtons: buildActionButtons(context),
+      actionButtons: [
+        ActionButton(
+          buttonText: 'VIEW ALL CLASSES',
+          onPressed: () {
+            Navigator.pushNamed(context, RoutePaths.ClassScheduleViewAll);
+          },
+        ),
+      ],
     );
   }
 
-  Widget buildClassScheduleCard(List<SectionData> courseData,
-      int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
+  Widget buildClassScheduleCard(List<SectionData> courseData, int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
     try {
+      final section = courseData[selectedCourse];
       return Padding(
         padding: const EdgeInsets.only(left: 4.0, top: 4.0),
         child: Row(
-          children: <Widget>[
+          children: [
             Flexible(
               flex: 5,
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: IntrinsicHeight(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      buildWeekdayText(nextDayWithClasses),
-                      buildClassTitle(courseData[selectedCourse].subjectCode! +
-                          ' ' +
-                          courseData[selectedCourse].courseCode!),
-                      buildClassType(courseData[selectedCourse].meetingType!),
-                      buildTimeRow(courseData[selectedCourse].time),
-                      buildLocationRow(courseData[selectedCourse].building! +
-                          ' ' +
-                          courseData[selectedCourse].room!),
-                      buildGradeEvaluationRow(
-                          courseData[selectedCourse].gradeOption),
-                      Flexible(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 4.0, top: 24.0),
-                          child: LastUpdatedWidget(time: lastUpdated),
+                      Text(
+                        'Next Class',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          color: lightPrimaryColor,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
+                      SizedBox(height: 8),
+                      // CSE 141L
+                      buildClassCode('${section.subjectCode} ${section.courseCode}'),
+                      SizedBox(height: 3),
+                      // Laboratory
+                      buildClassType(section.meetingType!),
+                      SizedBox(height: 3),
+                      // Start and Finish Time:
+                      buildTimeRow(section.days!, section.time),
+                      SizedBox(height: 3),
+                      // Classroom Location:
+                      buildLocationRow('${section.building} ${section.room}'),
+                      SizedBox(height: 3),
+                      // Evaluation Option:
+                      buildGradeEvaluationRow(section.gradeOption),
+                      // "Last updated: A few seconds ago
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0, top: 24.0),
+                        child: LastUpdatedWidget(time: lastUpdated),
+                      ),
                     ],
-                    crossAxisAlignment: CrossAxisAlignment.start,
                   ),
                 ),
               ),
             ),
+            // Vertical Divider
+            SizedBox(
+              height: 260,
+              child: VerticalDivider(
+                color: Colors.grey,
+                thickness: 0.7,
+              ),
+            ),
+            // Right hand side of the card //
             Flexible(
-              flex: 2,
+              flex: 4, // Adjusts width of Right Hand Side
               child: UpcomingCoursesList(),
             ),
           ],
@@ -106,71 +114,83 @@ class ClassScheduleCard extends StatelessWidget {
       );
     } catch (e) {
       FirebaseCrashlytics.instance.recordError(
-          e, StackTrace.fromString(e.toString()),
-          reason: "Classes Card: Failed to build card content.", fatal: false);
-      return Container(
-        width: double.infinity,
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: 32, bottom: 48),
-            child: Container(
-              child: Text(
-                  "Your classes could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
-            ),
+        e, StackTrace.fromString(e.toString()),
+        reason: "Classes Card: Failed to build card content.", fatal: false,
+      );
+
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.only(top: 32, bottom: 48, left: 12),
+          child: Text(
+            "Your classes could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu",
+            textAlign: TextAlign.center,
           ),
         ),
       );
     }
   }
 
-  Widget buildWeekdayText(String nextDayWithClasses) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4.0),
-      child: Text(
-        nextDayWithClasses,
-        style: TextStyle(color: Colors.grey, fontSize: 16),
-      ),
-    );
-  }
 
-  Widget buildClassTitle(String className) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Text(
+  // Heading 3 i.e. "CSE 141L"
+  Widget buildClassCode(String className) {
+    return Text(
         className,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
+        style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 0.8,
+            color: lightPrimaryColor
+        )
     );
   }
 
+  // Small body text i.e. "Laboratory"
   Widget buildClassType(String classType) {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
       child:
-          Text(classType, style: TextStyle(color: Colors.grey, fontSize: 16)),
+          Text(classType,
+              style: TextStyle(
+                fontSize: 16,
+                color: descriptiveTextColorLight,
+                fontWeight: FontWeight.w400,
+              ),
+          ),
     );
   }
 
-  Widget buildTimeRow(String? time) {
+  // Start and Finish Time:
+  Widget buildTimeRow(String? day, String? time) {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
           Icon(
             Icons.access_time,
-            color: ColorPrimary,
-            size: 40,
+            color: lightPrimaryColor,
+            size: 34,
           ),
+          SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Start and Finish Time',
-                style: TextStyle(color: Colors.grey),
+                'Start and Finish Time:',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: descriptiveTextColorLight,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-              TimeRangeWidget(
-                time: time!,
-              ),
+              SizedBox(height: 3),
+              Text(
+                  (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w700,
+                      color: lightPrimaryColor
+                  )
+              )
             ],
           ),
         ],
@@ -185,16 +205,29 @@ class ClassScheduleCard extends StatelessWidget {
         children: <Widget>[
           Icon(
             Icons.location_city,
-            size: 40,
+            size: 34,
+            color: lightPrimaryColor,
           ),
+          SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Class Room Location',
-                style: TextStyle(color: Colors.grey),
+                'Classroom Location:',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: descriptiveTextColorLight,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-              Text(location),
+              SizedBox(height: 3),
+              Text(location,
+                style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w700,
+                    color: lightPrimaryColor
+                ),
+              ),
             ],
           ),
         ],
@@ -208,18 +241,30 @@ class ClassScheduleCard extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Icon(
-            Icons.check_box,
-            size: 40,
-            color: Colors.green,
+            Icons.check_box_outlined,
+            size: 34,
+            color: lightPrimaryColor,
           ),
+          SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Evaluation Option',
-                style: TextStyle(color: Colors.grey),
+                'Evaluation Option:',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: descriptiveTextColorLight,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-              Text(gradeEvaluation),
+              SizedBox(height: 3),
+              Text(gradeEvaluation,
+                style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w700,
+                    color: lightPrimaryColor
+                ),
+              ),
             ],
           ),
         ],
