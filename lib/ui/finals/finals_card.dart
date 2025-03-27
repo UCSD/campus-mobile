@@ -148,7 +148,7 @@ class FinalsCard extends StatelessWidget {
           fontSize: 18.0,
           fontFamily: 'Refrigerator Deluxe',
           fontWeight: FontWeight.w900,
-          letterSpacing: 0.8,
+          letterSpacing: 1.1,
           color: lightPrimaryColor
       )
     );
