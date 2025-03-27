@@ -5,12 +5,14 @@ class ImageLoader extends StatelessWidget {
   final double width;
   final double height;
   final bool fullSize;
+  final BoxFit fit;
 
   ImageLoader({
     required this.url,
     this.width = 100.0,
     this.height = 100.0,
-    this.fullSize = false
+    this.fullSize = false,
+    this.fit = BoxFit.scaleDown,
   });
 
   @override
@@ -24,6 +26,7 @@ class ImageLoader extends StatelessWidget {
             url,
             width: fullSize ? null : width,
             height: fullSize ? null : height,
+            fit: fit,
             loadingBuilder: (BuildContext context, Widget child,
                 ImageChunkEvent? loadingProgress) {
               if (loadingProgress == null) return child;
@@ -35,6 +38,13 @@ class ImageLoader extends StatelessWidget {
                           loadingProgress.expectedTotalBytes!
                       : null,
                 ),
+              );
+            },
+            errorBuilder:
+                (BuildContext context, Object error, StackTrace? stackTrace) {
+              return Container(
+                width: 0,
+                height: 0,
               );
             },
           );
