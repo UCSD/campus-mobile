@@ -34,7 +34,7 @@ class UpcomingCoursesList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(right: 8),
+          padding: const EdgeInsets.only(right: 8, bottom: 4),
           child: Text(
             'Today\'s Schedule',
             style: TextStyle(
@@ -54,47 +54,43 @@ class UpcomingCoursesList extends StatelessWidget {
   }
 
   Widget buildTile(int index, int? selectedCourse, SectionData data, BuildContext context) {
-    // Builds each class as a tile in today's schedule
+    bool isSelected = index == selectedCourse;
     return ListTile(
-          dense: true,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0),
-          onTap: () =>
-              Provider.of<ClassScheduleDataProvider>(context, listen: false)
-                  .selectCourse(index),
-          // "CSE 141L"
-          title: buildClassCode(data),
-          // "WE @ 10:00"
-          subtitle: buildClassTimeText(data),
-          // Logic to change the color of the selected tile
-          selected: index == selectedCourse,
-          selectedColor: toggleActiveColor,
-          enabled: true,
+      dense: true,
+      contentPadding: EdgeInsets.symmetric(horizontal: 0),
+      onTap: () => Provider.of<ClassScheduleDataProvider>(context, listen: false)
+          .selectCourse(index),
+        title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Heading 3 "CSE 141L"
+          Text(
+            '${data.subjectCode} ${data.courseCode}',
+            style: TextStyle(
+              fontSize: 17.0,
+              fontFamily: 'Refrigerator Deluxe',
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.2,
+              color: isSelected ? toggleActiveColor : lightPrimaryColor,
+            ),
+          ),
+          SizedBox(height: 5),
+          // Small Body "WE @ 10:00"
+          Text(
+            '${data.days} @ ${getStartTime(data.time!)}',
+            style: TextStyle(
+              fontSize: 16,
+              color: isSelected ? toggleActiveColor : descriptiveTextColorLight,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+      selected: isSelected,
+      selectedColor: toggleActiveColor,
+      enabled: true,
     );
   }
-
-  // Heading 3 "CSE 141L"
-  Widget buildClassCode(SectionData sectionData) {
-    return Text(
-        sectionData.subjectCode! + ' ' + sectionData.courseCode!,
-      style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.w900,
-          letterSpacing: 0.8,
-          color: lightPrimaryColor
-      )
-    );
-  }
-
-  // Small Body "WE @ 10:00"
-  Widget buildClassTimeText(SectionData sectionData)
-  => Text(
-      sectionData.days! + ' @ ' + getStartTime(sectionData.time!),
-    style: TextStyle(
-      fontSize: 16,
-      color: descriptiveTextColorLight,
-      fontWeight: FontWeight.w400,
-    )
-  );
 
   String getStartTime(String time) {
     List<String> times = time.split("-");

@@ -9,7 +9,6 @@ import 'package:campus_mobile_experimental/ui/common/last_updated_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../common/action_button.dart';
 
 const cardId = 'schedule';
@@ -52,7 +51,7 @@ class ClassScheduleCard extends StatelessWidget {
     try {
       final section = courseData[selectedCourse];
       return Padding(
-        padding: const EdgeInsets.only(left: 4.0, top: 4.0),
+        padding: const EdgeInsets.only(left: 2.0, top: 4.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -67,7 +66,7 @@ class ClassScheduleCard extends StatelessWidget {
                       Text(
                         'Next Class',
                         style: TextStyle(
-                          fontSize: 24.0,
+                          fontSize: 22.0,
                           color: lightPrimaryColor,
                           fontWeight: FontWeight.w500,
                         ),
@@ -144,9 +143,10 @@ class ClassScheduleCard extends StatelessWidget {
     return Text(
         className,
         style: TextStyle(
-            fontSize: 18.0,
+            fontSize: 17.0,
+            fontFamily: 'Refrigerator Deluxe',
             fontWeight: FontWeight.w900,
-            letterSpacing: 0.8,
+            letterSpacing: 1.2,
             color: lightPrimaryColor
         )
     );
@@ -155,11 +155,11 @@ class ClassScheduleCard extends StatelessWidget {
   // Small body text i.e. "Laboratory"
   Widget buildClassType(String classType) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
+      padding: const EdgeInsets.only(bottom: 6.0),
       child:
           Text(classType,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 17,
                 color: descriptiveTextColorLight,
                 fontWeight: FontWeight.w400,
               ),
@@ -185,7 +185,7 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                 'Start and Finish Time:',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 17,
                   color: descriptiveTextColorLight,
                   fontWeight: FontWeight.w400,
                 ),
@@ -194,7 +194,7 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                   (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
                   style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: lightPrimaryColor
                   )
@@ -223,7 +223,7 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                 'Classroom Location:',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 17,
                   color: descriptiveTextColorLight,
                   fontWeight: FontWeight.w400,
                 ),
@@ -232,6 +232,7 @@ class ClassScheduleCard extends StatelessWidget {
               Text(location,
                 style: TextStyle(
                     fontSize: 16.0,
+                    letterSpacing: 0.8,
                     fontWeight: FontWeight.w700,
                     color: lightPrimaryColor
                 ),
@@ -260,7 +261,7 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                 'Evaluation Option:',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 17,
                   color: descriptiveTextColorLight,
                   fontWeight: FontWeight.w400,
                 ),
@@ -268,7 +269,7 @@ class ClassScheduleCard extends StatelessWidget {
               SizedBox(height: 3),
               Text(gradeEvaluation,
                 style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: lightPrimaryColor
                 ),
