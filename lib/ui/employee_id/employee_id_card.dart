@@ -129,7 +129,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                         style: TextStyle(
                           fontFamily: 'Brix Sans',
                           fontWeight: FontWeight.w400,
-                          fontSize: ScalingUtility.horizontalSafeBlock * 3.5,
+                          fontSize: ScalingUtility.horizontalSafeBlock * 4.0,
                         ),
                       ),
                       SizedBox(height: cardMargin),
@@ -321,7 +321,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 5),
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
             child: Text(
               "tap for easier scanning",
               textAlign: TextAlign.center,
@@ -460,7 +460,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
 
     /// The name should be large than subheadings
     if (textField == "name") {
-      base = ScalingUtility.horizontalSafeBlock * 5;
+      base = ScalingUtility.horizontalSafeBlock * 6;
       return base;
     }
 
