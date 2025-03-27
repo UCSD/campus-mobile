@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,18 +28,13 @@ class NewsCard extends StatelessWidget {
 
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
-    actionButtons.add(TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
-      ),
-      child: Text('View All'),
-      onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.NewsViewAll);
-      },
-    ));
+    actionButtons.add(ActionButton(
+        buttonText: 'VIEW MORE NEWS STORIES',
+        onPressed: () =>
+            Navigator.pushNamed(context, RoutePaths.NewsViewAll)));
     return actionButtons;
   }
+
 
   @override
   Widget build(BuildContext context) {
