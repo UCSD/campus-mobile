@@ -5,38 +5,41 @@ class ImageLoader extends StatelessWidget {
   final double width;
   final double height;
   final bool fullSize;
+  final BoxFit fit;
 
   ImageLoader({
     required this.url,
     this.width = 100.0,
     this.height = 100.0,
-    this.fullSize = false
+    this.fullSize = false,
+    this.fit = BoxFit.cover,
   });
 
   @override
   Widget build(BuildContext context) {
     return url.isEmpty
         ? Container(
-            width: 0,
-            height: 0,
-          )
+      width: 0,
+      height: 0,
+    )
         : Image.network(
-            url,
-            width: fullSize ? null : width,
-            height: fullSize ? null : height,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.secondary,
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
-                ),
-              );
-            },
-          );
+      url,
+      width: fullSize ? null : width,
+      height: fullSize ? null : height,
+      fit: fit,
+      loadingBuilder: (BuildContext context, Widget child,
+          ImageChunkEvent? loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Center(
+          child: CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.secondary,
+            value: loadingProgress.expectedTotalBytes != null
+                ? loadingProgress.cumulativeBytesLoaded /
+                loadingProgress.expectedTotalBytes!
+                : null,
+          ),
+        );
+      },
+    );
   }
 }
