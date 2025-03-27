@@ -72,7 +72,7 @@ class FinalsCard extends StatelessWidget {
         for (SectionData data in value) {
           listToReturn.add(ListTile(
             // Friday
-            title: buildWeekdayText(abbrevToFullWeekday(data.days)),
+            title: buildWeekdayText(context, abbrevToFullWeekday(data.days)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -80,17 +80,17 @@ class FinalsCard extends StatelessWidget {
                 // CSE 127  19:00 - 21:59
                 Row(
                   children: [
-                    buildClassCode(data.subjectCode! + ' ' + data.courseCode!),
+                    buildClassCode(context, data.subjectCode! + ' ' + data.courseCode!),
                     SizedBox(width: 10), // 10 logical pixels
                     buildTimeRow(context, data.time),
                   ],
                 ),
                 SizedBox(height: 2),
                 // Intro to Computer Security
-                buildClassTitle(data.courseTitle!),
+                buildClassTitle(context, data.courseTitle!),
                 SizedBox(height: 2),
                 // WLH 2005
-                buildLocationRow(data.building! + ' ' + data.room!),
+                buildLocationRow(context, data.building! + ' ' + data.room!),
                 ///////////////// Horizontal Division ///////////////////
                 if(i < finalsCount)
                   Divider(color: listTileDividerColorLight, thickness: 0.7),
@@ -130,18 +130,21 @@ class FinalsCard extends StatelessWidget {
   }
 
   // Subheading i.e. "Monday"
-  Widget buildWeekdayText(String nextDayWithClasses) {
+  Widget buildWeekdayText(BuildContext context, String nextDayWithClasses) {
     return Text(
       nextDayWithClasses,
       style: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.w500,
+        color: Theme.of(context).brightness == Brightness.light
+            ? lightPrimaryColor
+            : darkPrimaryColor2,
       ),
     );
   }
 
   // Heading 3 i.e. "CSE 140"
-  Widget buildClassCode(String className) {
+  Widget buildClassCode(BuildContext context, String className) {
     return Text(
       className,
       style: TextStyle(
@@ -149,7 +152,9 @@ class FinalsCard extends StatelessWidget {
           fontFamily: 'Refrigerator Deluxe',
           fontWeight: FontWeight.w900,
           letterSpacing: 1.1,
-          color: lightPrimaryColor
+        color: Theme.of(context).brightness == Brightness.light
+            ? lightPrimaryColor
+            : darkPrimaryColor2,
       )
     );
   }
@@ -170,19 +175,21 @@ class FinalsCard extends StatelessWidget {
 
 
   // Medium Body text i.e. "Intro to Computer Security"
-  Widget buildClassTitle(String title) {
+  Widget buildClassTitle(BuildContext context, String title) {
     return Text(
         title,
       style: TextStyle(
           fontSize: 18.0,
-          fontWeight: FontWeight.w400,
-          color: descriptiveTextColorLight
+          color: Theme.of(context).brightness == Brightness.light
+              ? descriptiveTextColorLight
+              : descriptiveTextColorDark,
+          fontWeight: FontWeight.w400
       )
     );
   }
 
   // Medium Body Text i.e. "WLH 2005"
-  Widget buildLocationRow(String location) {
+  Widget buildLocationRow(BuildContext context, String location) {
     return Row(
       children: <Widget>[
         Flexible(
@@ -192,8 +199,10 @@ class FinalsCard extends StatelessWidget {
               Text(location,
                   style: TextStyle(
                       fontSize: 18.0,
-                      fontWeight: FontWeight.w400,
-                      color: descriptiveTextColorLight
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? descriptiveTextColorLight
+                          : descriptiveTextColorDark,
+                      fontWeight: FontWeight.w400
                   )
               ),
             ],
