@@ -11,8 +11,7 @@ import 'package:provider/provider.dart';
 const cardId = 'events';
 
 //edit these files
-class EventsCard extends StatelessWidget
-{
+class EventsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -28,15 +27,13 @@ class EventsCard extends StatelessWidget
           Provider.of<EventsDataProvider>(context).eventsModels),
       actionButtons: [
         ActionButton(
-          buttonText: "VIEW ALL EVENTS",
-          onPressed: () => Navigator.pushNamed(
-            context, RoutePaths.EventsViewAll,
-            arguments: Provider.of<EventsDataProvider>(context).eventsModels
-          )
-        )
+            buttonText: "VIEW ALL EVENTS",
+            onPressed: () =>
+                Navigator.pushNamed(context, RoutePaths.EventsViewAll))
       ],
     );
   }
 
-  Widget buildEventsCardList(List<EventModel>? data) => EventsCardList(listSize: 6);
+  Widget buildEventsCardList(List<EventModel>? data) =>
+      EventsCardList(listSize: 6);
 }
