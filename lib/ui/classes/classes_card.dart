@@ -100,7 +100,7 @@ class ClassScheduleCard extends StatelessWidget {
             SizedBox(
               height: 276,
               child: VerticalDivider(
-                color: Colors.grey,
+                color: listTileDividerColorDark,
                 thickness: 0.7,
               ),
             ),
