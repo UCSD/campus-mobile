@@ -12,34 +12,41 @@ class ImageLoader extends StatelessWidget {
     this.width = 100.0,
     this.height = 100.0,
     this.fullSize = false,
-    this.fit = BoxFit.cover,
+    this.fit = BoxFit.scaleDown,
   });
 
   @override
   Widget build(BuildContext context) {
     return url.isEmpty
         ? Container(
-      width: 0,
-      height: 0,
-    )
+            width: 0,
+            height: 0,
+          )
         : Image.network(
-      url,
-      width: fullSize ? null : width,
-      height: fullSize ? null : height,
-      fit: fit,
-      loadingBuilder: (BuildContext context, Widget child,
-          ImageChunkEvent? loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Center(
-          child: CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary,
-            value: loadingProgress.expectedTotalBytes != null
-                ? loadingProgress.cumulativeBytesLoaded /
-                loadingProgress.expectedTotalBytes!
-                : null,
-          ),
-        );
-      },
-    );
+            url,
+            width: fullSize ? null : width,
+            height: fullSize ? null : height,
+            fit: fit,
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              );
+            },
+            errorBuilder:
+                (BuildContext context, Object error, StackTrace? stackTrace) {
+              return Container(
+                width: 0,
+                height: 0,
+              );
+            },
+          );
   }
 }
