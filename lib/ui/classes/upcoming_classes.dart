@@ -18,16 +18,18 @@ class UpcomingCoursesList extends StatelessWidget {
     List<Widget> listOfCourses = List.generate(
       data.length * 2 - 1, // Adjust length to account for dividers
           (int index) {
-        if ((data.length * 2 - 1).isEven) {
+        if (index.isEven) { // Show a tile at even indexes
           int itemIndex = index ~/ 2; // Convert index back to original data index
           return buildTile(itemIndex, selectedCourse, data[itemIndex], context);
         } else {
           ///////////////// Horizontal Division ///////////////////
-          return Divider(color: listTileDividerColorDark, thickness: 0.6);
+          return Divider(color: listTileDividerColorDark,
+              thickness: 0.7,
+              endIndent: 16, // right padding
+          );
         }
       },
     );
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -45,7 +47,6 @@ class UpcomingCoursesList extends StatelessWidget {
         ListView(
           children: listOfCourses,
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
         ),
       ],
     );
@@ -56,6 +57,7 @@ class UpcomingCoursesList extends StatelessWidget {
     // Builds each class as a tile in today's schedule
     return ListTile(
           dense: true,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0),
           onTap: () =>
               Provider.of<ClassScheduleDataProvider>(context, listen: false)
                   .selectCourse(index),

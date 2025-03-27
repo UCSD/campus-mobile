@@ -54,6 +54,7 @@ class ClassScheduleCard extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(left: 4.0, top: 4.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
               flex: 5,
@@ -104,11 +105,18 @@ class ClassScheduleCard extends StatelessWidget {
                 thickness: 0.7,
               ),
             ),
-            // Right hand side of the card //
+            // Right-hand side of the card //
             Flexible(
               flex: 4, // Adjusts width of Right Hand Side
-              child: UpcomingCoursesList(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start, // Aligns content to the top
+                crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
+                children: [
+                  UpcomingCoursesList(),
+                ],
+              ),
             ),
+
           ],
         ),
       );
