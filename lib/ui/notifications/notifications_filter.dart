@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,20 +15,20 @@ class NotificationsFilterView extends StatelessWidget {
   Widget buildSettingsList(BuildContext context, List<String?>? topicsData) {
     return (topicsData ?? []).isNotEmpty
         ? Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: ListView(
-              children: ListTile.divideTiles(
-                context: context,
-                tiles: createList(context, topicsData as List<String?>),
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? listTileDividerColorDark
-                    : listTileDividerColorLight,
-              ).toList(),
-            ),
-          )
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: ListView(
+        children: ListTile.divideTiles(
+          context: context,
+          tiles: createList(context, topicsData as List<String?>),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? listTileDividerColorDark
+              : listTileDividerColorLight,
+        ).toList(),
+      ),
+    )
         : Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary));
+        child: CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.secondary));
   }
 
   List<Widget> createList(BuildContext context, List<String?> topicsAvailable) {
@@ -55,20 +56,15 @@ class NotificationsFilterView extends StatelessWidget {
             ),
             trailing: Transform.scale(
               scale: 0.9,
-              child: Switch.adaptive(
+              child: CupertinoSwitch(
                 value: Provider.of<PushNotificationDataProvider>(context)
                     .topicSubscriptionState[topic]!,
                 onChanged: (_) {
                   Provider.of<UserDataProvider>(context, listen: false)
                       .toggleNotifications(topic);
                 },
-                thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.white;
-                  }
-                  return null;
-                }),
                 activeColor: toggleActiveColor,
+                trackColor: dotsUnselectedColor,
               ),
             ),
           ),
@@ -99,7 +95,7 @@ class NotificationsFilterView extends StatelessWidget {
   List<String?> getTopics(BuildContext context) {
     UserDataProvider _userDataProvider = Provider.of<UserDataProvider>(context);
     PushNotificationDataProvider _pushNotificationDataProvider =
-        Provider.of<PushNotificationDataProvider>(context);
+    Provider.of<PushNotificationDataProvider>(context);
     if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
       return _pushNotificationDataProvider.publicTopics() +
           _pushNotificationDataProvider.studentTopics();

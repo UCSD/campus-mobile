@@ -31,14 +31,14 @@ class CMAppBar extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: title == null
                     ? Image.asset(
-                        'assets/images/UCSanDiegoLogo-nav.png',
-                        fit: BoxFit.contain,
-                        height: 28,
-                      )
+                  'assets/images/UCSanDiegoLogo-nav.png',
+                  fit: BoxFit.contain,
+                  height: 28,
+                )
                     : Text(
-                        title!,
-                        style: appBarTitleStyle,
-                      ),
+                  title!,
+                  style: appBarTitleStyle,
+                ),
               ),
               actions: <Widget>[
                 Padding(
@@ -53,13 +53,13 @@ class CMAppBar extends StatelessWidget {
                       onPressed: () {
                         // Set tab bar index to the Home tab
                         Provider.of<BottomNavigationBarProvider>(context,
-                                listen: false)
+                            listen: false)
                             .currentIndex = NavigatorConstants.HomeTab;
 
                         // Navigate to Home tab
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             RoutePaths.BottomNavigationBar,
-                            (Route<dynamic> route) => false);
+                                (Route<dynamic> route) => false);
 
                         // change the appBar title to the ucsd logo
                         Provider.of<CustomAppBar>(context, listen: false)
@@ -81,14 +81,14 @@ class CMAppBar extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: title == null
                     ? Image.asset(
-                        'assets/images/UCSanDiegoLogo-nav.png',
-                        fit: BoxFit.contain,
-                        height: 28,
-                      )
+                  'assets/images/UCSanDiegoLogo-nav.png',
+                  fit: BoxFit.contain,
+                  height: 28,
+                )
                     : Text(
-                        title!,
-                        style: appBarTitleStyle,
-                      ),
+                  title!,
+                  style: appBarTitleStyle,
+                ),
               ),
               actions: <Widget>[
                 Padding(
@@ -116,14 +116,14 @@ class CMAppBar extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: title == null
                 ? Image.asset(
-                    'assets/images/UCSanDiegoLogo-nav.png',
-                    fit: BoxFit.contain,
-                    height: 28,
-                  )
+              'assets/images/UCSanDiegoLogo-nav.png',
+              fit: BoxFit.contain,
+              height: 28,
+            )
                 : Text(
-                    title!,
-                    style: appBarTitleStyle,
-                  ),
+              title!,
+              style: appBarTitleStyle,
+            ),
           ),
           systemOverlayStyle: SystemUiOverlayStyle.light,
         ),

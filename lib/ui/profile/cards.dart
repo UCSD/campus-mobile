@@ -5,9 +5,11 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 class CardsView extends StatefulWidget {
+  @override
   _CardsViewState createState() => _CardsViewState();
 }
 
@@ -29,39 +31,44 @@ class _CardsViewState extends State<CardsView> {
 
   Widget buildCardsList() {
     var tempView = ReorderableListView(
-        header: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Text("Hold and drag to reorder",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+      header: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Text(
+          "Hold and drag to reorder",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        children: createList(),
-        onReorder: (int oldIndex, int newIndex) {
-          if (newIndex > oldIndex) newIndex -= 1;
-          var order = _cardsDataProvider.cardOrder;
-          order.insert(newIndex, order.removeAt(oldIndex));
-          setState(() {
-            _cardsDataProvider.updateCardOrder();
-          });
+      ),
+      children: createList(),
+      onReorder: (int oldIndex, int newIndex) {
+        if (newIndex > oldIndex) newIndex -= 1;
+        var order = _cardsDataProvider.cardOrder;
+        order.insert(newIndex, order.removeAt(oldIndex));
+        setState(() {
+          _cardsDataProvider.updateCardOrder();
         });
+      },
+    );
 
     if (_cardsDataProvider.noInternet) {
       Future.delayed(
-          Duration.zero,
-          () => {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext ctx) => AlertDialog(
-                            title: const Text('No Internet'),
-                            content: const Text(
-                                'Cards requires an internet connection.'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Ok'),
-                                child: const Text('Ok'),
-                              ),
-                            ]))
-              });
+        Duration.zero,
+            () => {
+          showDialog(
+            context: context,
+            builder: (BuildContext ctx) => AlertDialog(
+              title: const Text('No Internet'),
+              content: const Text('Cards requires an internet connection.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'Ok'),
+                  child: const Text('Ok'),
+                ),
+              ],
+            ),
+          )
+        },
+      );
     }
 
     return tempView;
@@ -77,27 +84,26 @@ class _CardsViewState extends State<CardsView> {
             elevation: 2.0,
             margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
             child: ListTile(
-              leading: Icon(Icons.drag_handle,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? linkTextColorDark
-                      : linkTextColorLight),
-              title: Text(_cardsDataProvider.availableCards[card]!.titleText,
-                  style: Theme.of(context).textTheme.bodyMedium),
+              leading: Icon(
+                Icons.drag_handle,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? linkTextColorDark
+                    : linkTextColorLight,
+              ),
+              title: Text(
+                _cardsDataProvider.availableCards[card]!.titleText,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               trailing: Transform.scale(
                 scale: 0.9, // Adjust the scale as needed
-                child: Switch.adaptive(
+                child: CupertinoSwitch(
                   value: _cardsDataProvider.cardStates[card]!,
                   onChanged: (_) {
                     _cardsDataProvider.toggleCard(card);
                   },
-                  activeColor:
-                      toggleActiveColor, // Ensure this is a solid color
-                  thumbColor: WidgetStateProperty.resolveWith((states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return Colors.white;
-                    }
-                    return null;
-                  }),
+                  activeColor: toggleActiveColor,
+                  // Updated: Use dotsUnselectedColor from app_styles.dart for trackColor
+                  trackColor: dotsUnselectedColor,
                 ),
               ),
             ),
@@ -106,13 +112,14 @@ class _CardsViewState extends State<CardsView> {
       } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
         FirebaseCrashlytics.instance.recordError(
-            e, StackTrace.fromString(e.toString()),
-            reason: "Profile/Cards: Failed to load Cards page", fatal: false);
-
+          e,
+          StackTrace.fromString(e.toString()),
+          reason: "Profile/Cards: Failed to load Cards page",
+          fatal: false,
+        );
         _cardsDataProvider.changeInternetStatus(true);
       }
     }
-
     return list;
   }
 }

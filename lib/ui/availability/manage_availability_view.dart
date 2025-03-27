@@ -2,10 +2,12 @@ import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ManageAvailabilityView extends StatefulWidget {
+  @override
   _ManageAvailabilityViewState createState() => _ManageAvailabilityViewState();
 }
 
@@ -24,9 +26,11 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     return ReorderableListView(
       header: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Text("Hold and drag to reorder",
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall),
+        child: Text(
+          "Hold and drag to reorder",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ),
       children: createList(context),
       onReorder: _onReorder,
@@ -34,12 +38,10 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    final multiPager = RegExp(r' \((\d+)/(\d+)\)$');
-    List<AvailabilityModel?> newOrder =
-        _availabilityDataProvider.availabilityModels;
+    final multiPager = RegExp(r' \(\d+/\d+\)$');
+    List<AvailabilityModel?> newOrder = _availabilityDataProvider.availabilityModels;
     List<AvailabilityModel?> extraPages = [];
 
-    // -----Must remove pages after head of multi pagers and reinsert later to avoid reordering errors-----
     for (AvailabilityModel? item in newOrder) {
       RegExpMatch? match = multiPager.firstMatch(item!.name);
       if (match != null) {
@@ -51,7 +53,6 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     for (AvailabilityModel? item in extraPages) {
       newOrder.remove(item);
     }
-    // ----------------------------------------------------------------------------------------------------
     List<AvailabilityModel> toRemove = [];
     newOrder.removeWhere((element) => toRemove.contains(element));
     AvailabilityModel? item = newOrder.removeAt(oldIndex);
@@ -88,8 +89,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     List<Widget> list = [];
     Set<String> existingKeys = {};
     final multiPager = RegExp(r' \(\d+/\d+\)$');
-    for (AvailabilityModel? model
-        in _availabilityDataProvider.availabilityModels) {
+    for (AvailabilityModel? model in _availabilityDataProvider.availabilityModels) {
       if (model != null) {
         var curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
@@ -97,41 +97,37 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
           curName = curName.replaceRange(match.start, match.end, '');
         if (existingKeys.contains(curName)) continue;
         existingKeys.add(curName);
-        list.add(Card(
-          key: Key(curName),
-          elevation: 2.0,
-          margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
-          child: ListTile(
-            title: Text(
-              curName,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            leading: Icon(
-              Icons.drag_handle,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? linkTextColorDark
-                  : linkTextColorLight,
-            ),
-            trailing: Transform.scale(
-              scale: 0.9, // Adjust the scale as needed
-              child: Switch.adaptive(
-                value: Provider.of<AvailabilityDataProvider>(context)
-                    .locationViewState[curName]!,
-                // activeColor: Theme.of(context).buttonColor,
-                activeColor: toggleActiveColor,
-                thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.white;
-                  }
-                  return null;
-                }),
-                onChanged: (_) {
-                  _availabilityDataProvider.toggleLocation(curName);
-                },
+        list.add(
+          Card(
+            key: Key(curName),
+            elevation: 2.0,
+            margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
+            child: ListTile(
+              title: Text(
+                curName,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              leading: Icon(
+                Icons.drag_handle,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? linkTextColorDark
+                    : linkTextColorLight,
+              ),
+              trailing: Transform.scale(
+                scale: 0.9,
+                child: CupertinoSwitch(
+                  value: Provider.of<AvailabilityDataProvider>(context)
+                      .locationViewState[curName]!,
+                  activeColor: toggleActiveColor,
+                  trackColor: dotsUnselectedColor,
+                  onChanged: (_) {
+                    _availabilityDataProvider.toggleLocation(curName);
+                  },
+                ),
               ),
             ),
           ),
-        ));
+        );
       }
     }
     return list;
