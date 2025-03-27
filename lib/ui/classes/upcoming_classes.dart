@@ -9,11 +9,11 @@ class UpcomingCoursesList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<SectionData> data = Provider.of<ClassScheduleDataProvider>(context).upcomingCourses;
     int? selectedCourseIndex = Provider.of<ClassScheduleDataProvider>(context).selectedCourse;
-    return buildListOfCourses(data, selectedCourseIndex, context);
+    return buildListOfCourses(context, data, selectedCourseIndex);
   }
 
   // Right Hand Side of Classes Card //
-  Widget buildListOfCourses(List<SectionData> data, int? selectedCourse, BuildContext context) {
+  Widget buildListOfCourses(BuildContext context, List<SectionData> data, int? selectedCourse) {
     // Builds Today's Schedule using buildTile
     List<Widget> listOfCourses = List.generate(
       data.length * 2 - 1, // Adjust length to account for dividers
@@ -39,7 +39,9 @@ class UpcomingCoursesList extends StatelessWidget {
             'Today\'s Schedule',
             style: TextStyle(
               fontSize: 22.0,
-              color: lightPrimaryColor,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : darkPrimaryColor2,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -63,7 +65,7 @@ class UpcomingCoursesList extends StatelessWidget {
         title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Heading 3 "CSE 141L"
+          // Heading 3 i.e. "CSE 141L"
           Text(
             '${data.subjectCode} ${data.courseCode}',
             style: TextStyle(
@@ -71,16 +73,20 @@ class UpcomingCoursesList extends StatelessWidget {
               fontFamily: 'Refrigerator Deluxe',
               fontWeight: FontWeight.w900,
               letterSpacing: 1.2,
-              color: isSelected ? toggleActiveColor : lightPrimaryColor,
+              color: isSelected ? toggleActiveColor
+                  : Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor : darkPrimaryColor2,
             ),
           ),
           SizedBox(height: 5),
-          // Small Body "WE @ 10:00"
+          // Small Body i.e. "WE @ 10:00"
           Text(
             '${data.days} @ ${getStartTime(data.time!)}',
             style: TextStyle(
               fontSize: 16,
-              color: isSelected ? toggleActiveColor : descriptiveTextColorLight,
+              color: isSelected ? toggleActiveColor
+                  : Theme.of(context).brightness == Brightness.light
+                  ? descriptiveTextColorLight : descriptiveTextColorDark,
               fontWeight: FontWeight.w400,
             ),
           ),
