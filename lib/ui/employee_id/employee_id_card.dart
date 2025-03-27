@@ -102,9 +102,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                 Flexible(
                   flex: 4,
                   child: Image.network(
-                    employeeIdModel!.photo.contains("htps")
-                        ? employeeIdModel.photo
-                        : placeholderPhotoUrl,
+                    placeholderPhotoUrl,
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -115,7 +113,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        employeeIdModel.employeePreferredDisplayName,
+                        employeeIdModel!.employeePreferredDisplayName,
                         style: TextStyle(
                           fontFamily: 'Brix Sans',
                           fontWeight: FontWeight.w400,
