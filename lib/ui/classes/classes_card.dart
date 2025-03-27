@@ -80,10 +80,10 @@ class ClassScheduleCard extends StatelessWidget {
                       SizedBox(height: 3),
                       // Start and Finish Time:
                       buildTimeRow(section.days!, section.time),
-                      SizedBox(height: 3),
+                      SizedBox(height: 8),
                       // Classroom Location:
                       buildLocationRow('${section.building} ${section.room}'),
-                      SizedBox(height: 3),
+                      SizedBox(height: 8),
                       // Evaluation Option:
                       buildGradeEvaluationRow(section.gradeOption),
                       // "Last updated: A few seconds ago
@@ -98,7 +98,7 @@ class ClassScheduleCard extends StatelessWidget {
             ),
             // Vertical Divider
             SizedBox(
-              height: 260,
+              height: 276,
               child: VerticalDivider(
                 color: Colors.grey,
                 thickness: 0.7,
@@ -190,11 +190,11 @@ class ClassScheduleCard extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              SizedBox(height: 3),
+              SizedBox(height: 5),
               Text(
                   (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: lightPrimaryColor
                   )
@@ -228,10 +228,10 @@ class ClassScheduleCard extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              SizedBox(height: 3),
+              SizedBox(height: 5),
               Text(location,
                 style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 15,
                     letterSpacing: 0.8,
                     fontWeight: FontWeight.w700,
                     color: lightPrimaryColor
@@ -266,7 +266,7 @@ class ClassScheduleCard extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              SizedBox(height: 3),
+              SizedBox(height: 5),
               Text(gradeEvaluation,
                 style: TextStyle(
                     fontSize: 16,
