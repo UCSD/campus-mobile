@@ -71,6 +71,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
                         'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.'),
                     duration: Duration(seconds: 5),
                   ));
+
                   showedScaffold = true;
                 } else {
                   parkingDataProvider.toggleLot(lotName, selectedLots);

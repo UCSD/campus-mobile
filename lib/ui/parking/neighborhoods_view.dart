@@ -20,7 +20,7 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
 
   Widget buildNeighborhoodsList(BuildContext context) {
     Map<String, List<String>> neighborhoods =
-    Provider.of<ParkingDataProvider>(context).getParkingMap();
+        Provider.of<ParkingDataProvider>(context).getParkingMap();
 
     List<Widget> listTiles = [];
 

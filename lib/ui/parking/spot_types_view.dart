@@ -22,17 +22,17 @@ class _SpotTypesViewState extends State<SpotTypesView> {
   }
 
   Widget createListWidget(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    child: ListView(
-      children: ListTile.divideTiles(
-        tiles: createList(context),
-        context: context,
-        color: Theme.of(context).brightness == Brightness.dark
-            ? listTileDividerColorDark
-            : listTileDividerColorLight,
-      ).toList(),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: ListView(
+          children: ListTile.divideTiles(
+            tiles: createList(context),
+            context: context,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? listTileDividerColorDark
+                : listTileDividerColorLight,
+          ).toList(),
+        ),
+      );
 
   List<Widget> createList(BuildContext context) {
     var selectedSpots = 0;
@@ -40,7 +40,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
 
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
       if (Provider.of<ParkingDataProvider>(context)
-          .spotTypesState[data.spotKey]! ==
+              .spotTypesState[data.spotKey]! ==
           true) {
         selectedSpots++;
       }

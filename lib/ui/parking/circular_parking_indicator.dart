@@ -69,120 +69,121 @@ class CircularParkingIndicators extends StatelessWidget {
 
     return locationData != null
         ? Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Center(
-                  child: SizedBox(
-                    height: 90,
-                    width: 90,
-                    child: CircularPercentIndicator(
-                      radius: 45,
-                      animation: true,
-                      animationDuration: 1000,
-                      lineWidth: 9,
-                      percent: (open / total).isNaN ? 0.0 : open / total,
-                      center: Text(
-                        (open / total).isNaN
-                            ? "N/A"
-                            : ((open / total) * 100).round().toString() + "%",
-                        style: Theme.of(context).textTheme.titleMedium,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Center(
+                        child: SizedBox(
+                          height: 90,
+                          width: 90,
+                          child: CircularPercentIndicator(
+                            radius: 45,
+                            animation: true,
+                            animationDuration: 1000,
+                            lineWidth: 9,
+                            percent: (open / total).isNaN ? 0.0 : open / total,
+                            center: Text(
+                              (open / total).isNaN
+                                  ? "N/A"
+                                  : ((open / total) * 100).round().toString() +
+                                      "%",
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            circularStrokeCap: CircularStrokeCap.round,
+                            backgroundColor: colorFromHex('#EDECEC'),
+                            progressColor: getColor(open / total),
+                          ),
+                        ),
                       ),
-                      circularStrokeCap: CircularStrokeCap.round,
-                      backgroundColor: colorFromHex('#EDECEC'),
-                      progressColor: getColor(open / total),
-                    ),
+                    ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: spotType != null
+                      ? CircleAvatar(
+                          backgroundColor: colorFromHex(spotType.color),
+                          child: spotType.text.contains("&#x267f;")
+                              ? Icon(
+                                  Icons.accessible,
+                                  size: 25.0,
+                                  color: colorFromHex(spotType.textColor),
+                                )
+                              : Text(
+                                  spotType.text,
+                                  style: TextStyle(
+                                    color: colorFromHex(spotType.textColor),
+                                    fontFamily: 'Brix Sans',
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                        )
+                      : Container(),
+                )
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: spotType != null
-                ? CircleAvatar(
-              backgroundColor: colorFromHex(spotType.color),
-              child: spotType.text.contains("&#x267f;")
-                  ? Icon(
-                Icons.accessible,
-                size: 25.0,
-                color: colorFromHex(spotType.textColor),
-              )
-                  : Text(
-                spotType.text,
-                style: TextStyle(
-                  color: colorFromHex(spotType.textColor),
-                  fontFamily: 'Brix Sans',
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            )
-                : Container(),
           )
-        ],
-      ),
-    )
         : Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Center(
-                  child: SizedBox(
-                    height: 90,
-                    width: 90,
-                    child: CircularPercentIndicator(
-                      radius: 45,
-                      animation: false,
-                      lineWidth: 9,
-                      percent: 0.0,
-                      center: Text(
-                        "N/A",
-                        style: Theme.of(context).textTheme.titleMedium,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Center(
+                        child: SizedBox(
+                          height: 90,
+                          width: 90,
+                          child: CircularPercentIndicator(
+                            radius: 45,
+                            animation: false,
+                            lineWidth: 9,
+                            percent: 0.0,
+                            center: Text(
+                              "N/A",
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            backgroundColor: colorFromHex('#EDECEC'),
+                          ),
+                        ),
                       ),
-                      backgroundColor: colorFromHex('#EDECEC'),
-                    ),
+                    ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: spotType != null
+                      ? CircleAvatar(
+                          backgroundColor: colorFromHex(spotType.color),
+                          child: spotType.text.contains("&#x267f;")
+                              ? Icon(
+                                  Icons.accessible,
+                                  size: 25.0,
+                                  color: colorFromHex(spotType.textColor),
+                                )
+                              : Text(
+                                  spotType.text,
+                                  style: TextStyle(
+                                    color: colorFromHex(spotType.textColor),
+                                    fontFamily: 'Brix Sans',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 28,
+                                  ),
+                                ),
+                        )
+                      : Container(),
+                )
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: spotType != null
-                ? CircleAvatar(
-              backgroundColor: colorFromHex(spotType.color),
-              child: spotType.text.contains("&#x267f;")
-                  ? Icon(
-                Icons.accessible,
-                size: 25.0,
-                color: colorFromHex(spotType.textColor),
-              )
-                  : Text(
-                spotType.text,
-                style: TextStyle(
-                  color: colorFromHex(spotType.textColor),
-                  fontFamily: 'Brix Sans',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 28,
-                ),
-              ),
-            )
-                : Container(),
-          )
-        ],
-      ),
-    );
+          );
   }
 
   static Color getColor(double value) {
@@ -195,8 +196,8 @@ class CircularParkingIndicators extends StatelessWidget {
     return Text(
       model.locationName.toUpperCase(),
       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.normal,
-      ),
+            fontWeight: FontWeight.normal,
+          ),
     );
   }
 
