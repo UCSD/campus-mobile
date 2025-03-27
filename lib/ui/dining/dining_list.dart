@@ -61,6 +61,10 @@ class DiningList extends StatelessWidget {
           );
   }
 
+  Widget textClosed(BuildContext context) {
+    return Text('Closed', style: Theme.of(context).textTheme.bodySmall);
+  }
+
   Widget getHoursForToday(RegularHours hours, BuildContext context) {
     int weekday = DateTime.now().weekday;
     String? dayHours;
@@ -70,50 +74,50 @@ class DiningList extends StatelessWidget {
         if (hours.mon != null)
           dayHours = hours.mon;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 2:
         if (hours.tue != null)
           dayHours = hours.tue;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 3:
         if (hours.wed != null)
           dayHours = hours.wed;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 4:
         if (hours.thu != null)
           dayHours = hours.thu;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 5:
         if (hours.fri != null)
           dayHours = hours.fri;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 6:
         if (hours.sat != null)
           dayHours = hours.sat;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 7:
         if (hours.sun != null)
           dayHours = hours.sun;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       default:
-        return Text('Closed');
+        return textClosed(context);
     }
     if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
       if (dayHours == 'Closed-Closed')
-        return Text('Closed');
+        return textClosed(context);
       else {
         print('test');
         return Text(dayHours);
@@ -134,8 +138,7 @@ class DiningList extends StatelessWidget {
 
   Widget buildDiningTile(DiningModel data, BuildContext context) {
     return ListTile(
-      horizontalTitleGap: 0,
-      contentPadding: EdgeInsets.all(0),
+      contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 0),
       onTap: () {
         if (data.id != null)
           Provider.of<DiningDataProvider>(context, listen: false)
