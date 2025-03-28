@@ -20,6 +20,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   /// STATES
   var cardId = "employee_id";
   var isValidId = false;
+  // TODO: if a bug happens, this might be it. Typically this dotenv variable would be a late...
   final placeholderPhotoUrl = dotenv.get('PLACEHOLDER_PERSON_PHOTO');
 
   @override
