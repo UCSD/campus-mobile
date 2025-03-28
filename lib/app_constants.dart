@@ -134,6 +134,12 @@ class LoginConstants {
       'The maximum number of shuttle stops allowed is five. Please remove some stops to add more.';
 }
 
+class ParkingConstants {
+  static const spotMaxTitle = 'Maximum parking spots reached';
+  static const spotMaxDesc =
+      'The maximum number of parking spots allowed is three. Please remove some spots to add more.';
+}
+
 class Plugins {
   static const FrontCamera = 'FRONT CAMERA';
 }
@@ -155,6 +161,13 @@ class NotificationsConstants {
   static const statusFetching = 'Loading your notifications, please wait.';
   static const statusNone = '';
   static const statusNoMoreMessages = 'No more messages.';
+}
+
+class MessageTypeConstants {
+  static const SUCCESS = 1;
+  static const INFO = 2;
+  static const WARNING = 3;
+  static const ERROR = 4;
 }
 
 class DataPersistence {
