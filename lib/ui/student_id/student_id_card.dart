@@ -249,14 +249,25 @@ class _StudentIdCardState extends State<StudentIdCard> {
       // Normal orientation
       return Column(
         children: <Widget>[
-          Text(
-            "(tap for easier scanning)",
+          InkWell(
+          child: Text(
+            "tap for easier scanning",
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
               fontSize: ScalingUtility.horizontalSafeBlock * 2.5,
-              color: decideColor(Theme.of(context)),
+              color: Color(0xFF5496BC),
             ),
+          ),
+          onTap: (){
+            createAlertDialog(
+              context,
+              returnBarcodeContainer(cardNumber, true, context),
+              cardNumber,
+              true,
+            );
+          },
           ),
           SizedBox(height: 8.0),
           // Wrap barcode in FittedBox so it can shrink if needed
