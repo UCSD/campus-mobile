@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -204,7 +205,21 @@ class _LoginState extends State<Login> {
                                     _passwordTextFieldController.text)
                                 .then((isLoggedIn) {
                               if (!isLoggedIn) {
-                                showAlertDialog(context);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialogWidget(
+                                      type: MessageTypeConstants.ERROR,
+                                      icon: Icons.block_flipped,
+                                      title: LoginConstants.loginFailedTitle,
+                                      description:
+                                          LoginConstants.loginFailedDesc,
+                                      onClose: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                );
                               }
                             });
                           },
