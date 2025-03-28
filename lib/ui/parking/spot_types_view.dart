@@ -6,6 +6,8 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../app_constants.dart';
+import '../common/alert_dialog_widget.dart';
 
 class SpotTypesView extends StatefulWidget {
   @override
@@ -35,15 +37,17 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       );
 
   List<Widget> createList(BuildContext context) {
-    var selectedSpots = 0;
+    var selectedSpots = Provider.of<ParkingDataProvider>(context)
+        .spotTypesState
+        .values
+        .where((selected) => selected == true)
+        .length;
+
     List<Widget> list = [];
 
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
-      if (Provider.of<ParkingDataProvider>(context)
-              .spotTypesState[data.spotKey]! ==
-          true) {
-        selectedSpots++;
-      }
+      var isSelected = Provider.of<ParkingDataProvider>(context)
+          .spotTypesState[data.spotKey]!;
 
       var iconColor = HexColor(data.color);
       var textColor = HexColor(data.textColor);
@@ -72,11 +76,26 @@ class _SpotTypesViewState extends State<SpotTypesView> {
           trailing: Transform.scale(
             scale: 0.9,
             child: CupertinoSwitch(
-              value: Provider.of<ParkingDataProvider>(context)
-                  .spotTypesState[data.spotKey]!,
-              onChanged: (_) {
-                spotTypesDataProvider.toggleSpotSelection(
-                    data.spotKey, selectedSpots);
+              value: isSelected,
+              onChanged: (bool value) {
+                if (!isSelected && selectedSpots >= 3) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialogWidget(
+                        type: MessageTypeConstants.ERROR,
+                        icon: Icons.block_flipped,
+                        title: ParkingConstants.spotMaxTitle,
+                        description: ParkingConstants.spotMaxDesc,
+                        onClose: () {
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  );
+                  return;
+                }
+                spotTypesDataProvider.toggleSpotSelection(data.spotKey, selectedSpots);
               },
               activeColor: toggleActiveColor,
               trackColor: Colors.grey.shade400,
