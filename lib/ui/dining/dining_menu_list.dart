@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,15 +17,25 @@ class DiningMenuList extends StatefulWidget {
 class _DiningMenuListState extends State<DiningMenuList> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Provider.of<DiningDataProvider>(context).isLoading? CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.secondary)
-          : buildDiningMenuList(context),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Menu',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        SizedBox(height: 10),
+        Provider.of<DiningDataProvider>(context).isLoading
+            ? CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary)
+            : buildDiningMenuList(context),
+      ],
     );
   }
 
   Widget buildDiningMenuList(BuildContext context) {
-    DiningMenuItemsModel? menu = Provider.of<DiningDataProvider>(context, listen: false)
+    DiningMenuItemsModel? menu =
+        Provider.of<DiningDataProvider>(context, listen: false)
             .getMenuData(widget.model.id);
     List<String> filters = [];
     if (Provider.of<DiningDataProvider>(context, listen: false)
@@ -95,6 +106,7 @@ class _DiningMenuListState extends State<DiningMenuList> {
             buildMealButtons(context),
             SizedBox(height: 10),
             Center(child: Text('No items match your filter.')),
+            SizedBox(height: 30),
           ],
         );
       }
@@ -127,29 +139,128 @@ class _DiningMenuListState extends State<DiningMenuList> {
   }
 
   Widget buildFilterButtons(BuildContext context) {
-    return Center(
-      child: ToggleButtons(
-        isSelected: Provider.of<DiningDataProvider>(context).filtersSelected,
-        textStyle: TextStyle(fontSize: 18),
-        selectedColor: Theme.of(context).textTheme.labelLarge!.color,
-        // fillColor: Theme.of(context).buttonColor,
-        fillColor: Theme.of(context).colorScheme.background,
-        borderRadius: BorderRadius.circular(10),
-        constraints: BoxConstraints.expand(
-            width: (MediaQuery.of(context).size.width - 40) * .33, height: 38),
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text('Vegetarian'),
-          Text('Vegan'),
-          Text('Gluten-free'),
+          Row(
+            children: <Widget>[
+              Checkbox(
+                semanticLabel: 'Vegetarian',
+                value:
+                    Provider.of<DiningDataProvider>(context).filtersSelected[0],
+                onChanged: (bool? value) {
+                  setState(() {
+                    Provider.of<DiningDataProvider>(context, listen: false)
+                        .filtersSelected[0] = value!;
+                  });
+                },
+                checkColor: Colors.black, // Black mark
+                fillColor: WidgetStateProperty.resolveWith<Color>(
+                  (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return Colors.white; // White background when selected
+                    }
+                    return Colors.white; // Default background
+                  },
+                ),
+                side: WidgetStateBorderSide.resolveWith(
+                  (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? unselectedIconDarkColor
+                              : unselectedIconLightColor); // Black border when selected
+                    }
+                    return BorderSide(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? unselectedIconDarkColor
+                            : unselectedIconLightColor); // Default border
+                  },
+                ),
+              ),
+              Text('Vegetarian', style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Checkbox(
+                semanticLabel: 'Vegan',
+                value:
+                    Provider.of<DiningDataProvider>(context).filtersSelected[1],
+                onChanged: (bool? value) {
+                  setState(() {
+                    Provider.of<DiningDataProvider>(context, listen: false)
+                        .filtersSelected[1] = value!;
+                  });
+                },
+                checkColor: Colors.black, // Black mark
+                fillColor: WidgetStateProperty.resolveWith<Color>(
+                  (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return Colors.white; // White background when selected
+                    }
+                    return Colors.white; // Default background
+                  },
+                ),
+                side: WidgetStateBorderSide.resolveWith(
+                  (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? unselectedIconDarkColor
+                              : unselectedIconLightColor); // Black border when selected
+                    }
+                    return BorderSide(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? unselectedIconDarkColor
+                            : unselectedIconLightColor); // Default border
+                  },
+                ),
+              ),
+              Text('Vegan', style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Checkbox(
+                semanticLabel: 'Gluten-free',
+                value:
+                    Provider.of<DiningDataProvider>(context).filtersSelected[2],
+                onChanged: (bool? value) {
+                  setState(() {
+                    Provider.of<DiningDataProvider>(context, listen: false)
+                        .filtersSelected[2] = value!;
+                  });
+                },
+                checkColor: Colors.black, // Black mark
+                fillColor: WidgetStateProperty.resolveWith<Color>(
+                  (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return Colors.white; // White background when selected
+                    }
+                    return Colors.white; // Default background
+                  },
+                ),
+                side: WidgetStateBorderSide.resolveWith(
+                  (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? unselectedIconDarkColor
+                              : unselectedIconLightColor); // Black border when selected
+                    }
+                    return BorderSide(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? unselectedIconDarkColor
+                            : unselectedIconLightColor); // Default border
+                  },
+                ),
+              ),
+              Text('Gluten-free', style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
         ],
-        onPressed: (int index) {
-          setState(() {
-            Provider.of<DiningDataProvider>(context, listen: false)
-                    .filtersSelected[index] =
-                !Provider.of<DiningDataProvider>(context, listen: false)
-                    .filtersSelected[index];
-          });
-        },
       ),
     );
   }

@@ -185,7 +185,7 @@ class CardTitleConstants {
     'MyUCSDChart': 'MyUCSDChart',
     'student_id': 'STUDENT ID',
     'speed_test': "TEST WIFI SPEED",
-    'employee_id': 'EMPLOYEE ID',
+    'employee_id': 'STAFF ID',
     'finals': 'FINALS',
     'schedule': 'CLASSES',
     'shuttle': 'SHUTTLE',
