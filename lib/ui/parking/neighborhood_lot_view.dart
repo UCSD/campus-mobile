@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_constants.dart';
+import '../common/alert_dialog_widget.dart';
+
 class NeighborhoodLotsView extends StatefulWidget {
   final List<String> args;
   const NeighborhoodLotsView(this.args);
@@ -66,12 +69,20 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
               trackColor: Colors.grey.shade400,
               onChanged: (bool newValue) {
                 if (selectedLots == 10 && !lotState && !showedScaffold) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.'),
-                    duration: Duration(seconds: 5),
-                  ));
-
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialogWidget(
+                        type: MessageTypeConstants.ERROR,
+                        icon: Icons.block_flipped,
+                        title: ParkingConstants.lotMaxTitle,
+                        description: ParkingConstants.lotMaxDesc,
+                        onClose: () {
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  );
                   showedScaffold = true;
                 } else {
                   parkingDataProvider.toggleLot(lotName, selectedLots);
