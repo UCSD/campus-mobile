@@ -139,7 +139,8 @@ class ParkingConstants {
   static const spotMaxDesc =
       'The maximum number of parking spots allowed is three. Please remove some spots to add more.';
   static const lotMaxTitle = 'Maximum parking lots reached';
-  static const lotMaxDesc = 'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.';
+  static const lotMaxDesc =
+      'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.';
 }
 
 class Plugins {
