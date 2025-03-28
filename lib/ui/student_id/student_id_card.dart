@@ -96,7 +96,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   ) {
     try {
       return Padding(
-        padding: const EdgeInsets.only(bottom: 16.0, left: 3.5),
+        padding: const EdgeInsets.only(bottom: 0.0, left: 3.5),
         // Use a single Row; place the left image and the right text in flexible layouts
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +108,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
               child: Image.network(
                 photoModel.photoUrl,
                 fit: BoxFit.contain,
-                height: ScalingUtility.verticalSafeBlock * 25,
+                height: ScalingUtility.verticalSafeBlock * 21,
               ),
             ),
             SizedBox(width: cardMargin * 1.5),
