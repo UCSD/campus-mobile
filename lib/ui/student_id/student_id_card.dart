@@ -96,7 +96,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   ) {
     try {
       return Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
+        padding: const EdgeInsets.only(bottom: 16.0, left: 3.5),
         // Use a single Row; place the left image and the right text in flexible layouts
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,11 +126,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   SizedBox(
                     width: 201,
                     child: Divider(
-                      color: Color(0xFF959DAB),
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? listTileDividerColorDark
+                          : listTileDividerColorLight,
                       thickness: 1,
                       height: 10,
                       ),
-                    ),
+                  ),
 
                   _buildMajorName(profileModel),
                   SizedBox(height: ScalingUtility.verticalSafeBlock * 0.5),
@@ -141,8 +143,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
                         EdgeInsets.all(ScalingUtility.verticalSafeBlock * 0.9),
                   ),
 
-                  _buildBarcode(profileModel),
-                  _buildBarcodeNumber(profileModel),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _buildBarcode(profileModel),
+                      _buildBarcodeNumber(profileModel),
+                    ],
+                  )
+                  
                 ],
               ),
             ),
@@ -257,7 +265,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
               fontWeight: FontWeight.bold,
               decoration: TextDecoration.underline,
               fontSize: ScalingUtility.horizontalSafeBlock * 2.5,
-              color: Color(0xFF5496BC),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? linkColorDark
+                  : linkColorLight,
             ),
           ),
           onTap: (){
@@ -296,105 +306,105 @@ class _StudentIdCardState extends State<StudentIdCard> {
     return ScalingUtility.horizontalSafeBlock * 4;
   }
 
-  Column returnBarcodeContainerTablet(
-    String cardNumber,
-    bool rotated,
-    BuildContext context,
-  ) {
-    final barcodeWithText;
-    SizeConfig().init(context);
+  // Column returnBarcodeContainerTablet(
+  //   String cardNumber,
+  //   bool rotated,
+  //   BuildContext context,
+  // ) {
+  //   final barcodeWithText;
+  //   SizeConfig().init(context);
 
-    if (rotated) {
-      barcodeWithText = BarcodeWidget(
-        barcode: Barcode.codabar(),
-        data: cardNumber,
-        width: SizeConfig.safeBlockVertical * 60,
-        height: 80,
-        style: TextStyle(
-          letterSpacing: SizeConfig.safeBlockVertical * 3,
-          fontSize: 0,
-          color: Colors.white,
-        ),
-      );
-    } else {
-      barcodeWithText = BarcodeWidget(
-        barcode: Barcode.codabar(),
-        data: cardNumber,
-        width: ScalingUtility.horizontalSafeBlock * 50,
-        height: ScalingUtility.verticalSafeBlock * 4.45,
-        style: TextStyle(
-          letterSpacing: SizeConfig.safeBlockHorizontal * 1.5,
-          fontSize: 0,
-          color: Colors.white,
-        ),
-      );
-    }
+  //   if (rotated) {
+  //     barcodeWithText = BarcodeWidget(
+  //       barcode: Barcode.codabar(),
+  //       data: cardNumber,
+  //       width: SizeConfig.safeBlockVertical * 60,
+  //       height: 80,
+  //       style: TextStyle(
+  //         letterSpacing: SizeConfig.safeBlockVertical * 3,
+  //         fontSize: 0,
+  //         color: Colors.white,
+  //       ),
+  //     );
+  //   } else {
+  //     barcodeWithText = BarcodeWidget(
+  //       barcode: Barcode.codabar(),
+  //       data: cardNumber,
+  //       width: ScalingUtility.horizontalSafeBlock * 50,
+  //       height: ScalingUtility.verticalSafeBlock * 4.45,
+  //       style: TextStyle(
+  //         letterSpacing: SizeConfig.safeBlockHorizontal * 1.5,
+  //         fontSize: 0,
+  //         color: Colors.white,
+  //       ),
+  //     );
+  //   }
 
-    if (rotated) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(25),
-          ),
-          RotatedBox(
-            quarterTurns: 1,
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 7.5),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      child: barcodeWithText,
-                      color: Colors.white,
-                    ),
-                    Text(
-                      cardNumber,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: getRotatedPopUpFontSize(),
-                        letterSpacing: letterSpacing(),
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "(tap for easier scanning)",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 10.0,
-              color: decideColor(Theme.of(context)),
-            ),
-          ),
-          Container(
-            padding: addBorder(Theme.of(context)),
-            color: Colors.white,
-            child: barcodeWithText,
-          ),
-          Text(
-            cardNumber,
-            style: TextStyle(
-              fontSize: ScalingUtility.horizontalSafeBlock * 1.25,
-              letterSpacing: ScalingUtility.horizontalSafeBlock * 0.5,
-            ),
-          ),
-        ],
-      );
-    }
-  }
+  //   if (rotated) {
+  //     return Column(
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: <Widget>[
+  //         Padding(
+  //           padding: EdgeInsets.all(25),
+  //         ),
+  //         RotatedBox(
+  //           quarterTurns: 1,
+  //           child: Row(
+  //             children: <Widget>[
+  //               Padding(
+  //                 padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 7.5),
+  //               ),
+  //               Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: <Widget>[
+  //                   Container(
+  //                     child: barcodeWithText,
+  //                     color: Colors.white,
+  //                   ),
+  //                   Text(
+  //                     cardNumber,
+  //                     style: TextStyle(
+  //                       color: Colors.black,
+  //                       fontSize: getRotatedPopUpFontSize(),
+  //                       letterSpacing: letterSpacing(),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  //   } else {
+  //     return Column(
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: <Widget>[
+  //         Text(
+  //           "tap for easier scanning",
+  //           textAlign: TextAlign.left,
+  //           style: TextStyle(
+  //             fontWeight: FontWeight.bold,
+  //             fontSize: 10.0,
+  //             color: decideColor(Theme.of(context)),
+  //           ),
+  //         ),
+  //         Container(
+  //           padding: addBorder(Theme.of(context)),
+  //           color: Colors.white,
+  //           child: barcodeWithText,
+  //         ),
+  //         Text(
+  //           cardNumber,
+  //           style: TextStyle(
+  //             fontSize: ScalingUtility.horizontalSafeBlock * 1.25,
+  //             letterSpacing: ScalingUtility.horizontalSafeBlock * 0.5,
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  //   }
+  // }
 
   double letterSpacing() => MediaQuery.of(context).orientation ==
           Orientation.landscape
@@ -443,12 +453,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
   double realignText(ThemeData currentTheme) =>
       currentTheme.brightness == Brightness.dark ? 7 : 0;
 
-  /// Determine the color of hint above the barcode
-  Color decideColor(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black45;
-  }
+  // /// Determine the color of hint above the barcode
+  // Color decideColor(ThemeData currentTheme) {
+  //   return currentTheme.brightness == Brightness.dark
+  //       ? Colors.white
+  //       : Colors.black45;
+  // }
 
   Container _buildName(StudentIdNameModel nameModel) => Container(
         padding: EdgeInsets.only(
@@ -506,7 +516,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
         ),
       );
 
-  Widget _buildBarcode(StudentIdProfileModel profileModel) => TextButton(
+  Widget _buildBarcode(StudentIdProfileModel profileModel) =>
+    TextButton(
         style: TextButton.styleFrom(
           padding: EdgeInsets.all(0),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -540,7 +551,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   Widget _buildBarcodeNumber(StudentIdProfileModel profileModel) {
     return Padding(
       padding: const EdgeInsets.only(top: 6.0),
-      child: Center(
+      //child: Center(
         child: Text(
           profileModel.barcode.toString(),
           style: TextStyle(
@@ -548,7 +559,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
             letterSpacing: ScalingUtility.horizontalSafeBlock * 1.5,
           ),
         ),
-      ),
+      //),
     );
   }
 }
