@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -59,16 +58,6 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Widget buildTitle() {
-    return Text(
-      "Wifi Card",
-      textAlign: TextAlign.left,
-      style: TextStyle(
-        fontSize: ScalingUtility.horizontalSafeBlock * 2,
-      ),
-    );
-  }
-
   Widget buildCardContent(BuildContext context) {
     if (!_speedTestProvider.isUCSDWiFi!) {
       return Padding(
@@ -83,17 +72,17 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
         child: finishedState(),
       );
     }
+
     _speedTestProvider.addListener(() {
-      /// TODO: Add print statements to verify not reloading
       try {
         if (_speedTestProvider.onSimulator!) {
-          cardState = TestStatus.simulated;
-        } else if (!_speedTestProvider.isUCSDWiFi!) {
           setState(() {
-            cardState = TestStatus.unavailable;
+            cardState = TestStatus.simulated;
           });
+        } else if (!_speedTestProvider.isUCSDWiFi!) {
+          setState(() => cardState = TestStatus.unavailable);
         } else if (_speedTestProvider.timeElapsedDownload +
-                _speedTestProvider.timeElapsedUpload >
+            _speedTestProvider.timeElapsedUpload >
             SPEED_TEST_TIMEOUT_CONST) {
           setState(() {
             goodSpeed = false;
@@ -108,36 +97,21 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             cardState = TestStatus.finished;
           });
         }
-      } catch (e) {}
+      } catch (_) {}
     });
-    switch (cardState) {
-      /// TODO: Add check to verify not over-checking states
-      case TestStatus.initial:
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: initialState(context),
-        );
-      case TestStatus.running:
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: speedTest(),
-        );
-      case TestStatus.finished:
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: finishedState(),
-        );
-      case TestStatus.unavailable:
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: unavailableState(),
-        );
-      case TestStatus.simulated:
-        return Padding(
-            padding: const EdgeInsets.all(8.0), child: simulatedState());
-      default:
-        return initialState(context);
-    }
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child:
+        switch (cardState) {
+          TestStatus.initial => initialState(context),
+          TestStatus.running => speedTest(),
+          TestStatus.finished => finishedState(),
+          TestStatus.unavailable => unavailableState(),
+          TestStatus.simulated => simulatedState(),
+          _ => initialState(context)
+        },
+    );
   }
 
   Column speedTest() {
@@ -182,31 +156,29 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        RichText(
-            text: TextSpan(children: [
-          TextSpan(
-              text: "Test WiFi Speed ",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 36,
-              )),
-          WidgetSpan(
-            child: Icon(
-              Icons.wifi,
-              size: 36,
+        Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.wifi_sharp,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : darkPrimaryColor2,
+            size: 38,
+          ),
+          SizedBox(width: 10),
+          Text(
+            "Help identify campus WiFi issues.",
+            style: TextStyle(
+              fontSize: 22,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? descriptiveTextColorLight
+                  : descriptiveTextColorDark,
+              fontWeight: FontWeight.w400,
             ),
           ),
-          TextSpan(
-              text: "\n",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 36,
-              )),
-          TextSpan(
-            text: "Help identify campus WiFi issues. \nRun a speed test now.",
-            style: TextStyle(fontSize: 15, color: Colors.grey),
-          ),
-        ])),
+        ]
+        ),
         MaterialButton(
             padding: EdgeInsets.all(4.0),
             elevation: 0.0,
@@ -235,6 +207,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
               "Test WiFi Speed",
               style: TextStyle(color: Colors.white),
             )),
+
         MaterialButton(
             padding: EdgeInsets.all(12.0),
             disabledColor: Colors.grey,
