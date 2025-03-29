@@ -183,14 +183,13 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                   context: context,
                   builder: (context) {
                   return AlertDialogWidget(
-                  type: MessageTypeConstants.ERROR,
-                  icon: Icons.block_flipped,
-                  title: 'Could not report issue.',
-                  description:
-                  "Please run speed test to report issue.",
-                  onClose: () {
-                    Navigator.of(context).pop();
-                  });
+                    type: MessageTypeConstants.ERROR,
+                    icon: Icons.block_flipped,
+                    title: WifiConstants.wifiIssueFailedTitle,
+                    description: WifiConstants.wifiIssueFailedDesc,
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    });
                 });
                 } : () {},
             )
@@ -257,90 +256,103 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
         downloadSpeed = "N/A (Timed Out)";
       }
     }
-
+    // Card contents for Download Speed and Upload Speed
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RichText(
-            text: TextSpan(children: [
-          TextSpan(
-            text:
-                '\n Download speed was: $downloadSpeed \n Upload speed was: $uploadSpeed\n',
-            style: TextStyle(fontSize: 15, color: Colors.grey),
-          )
-        ])),
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: MaterialButton(
-              elevation: 0.0,
-              onPressed: () {
-                setState(() {
-                  timedOut = false;
-                  cardState = TestStatus.initial;
-                  _speedTestProvider.resetSpeedTest();
-                });
-              },
-              minWidth: 350,
-              height: 40,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: Colors.black),
+        // DOWNLOAD SPEED
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                'Download speed:',
+              style: TextStyle(
+                fontSize: 23,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? descriptiveTextColorLight
+                    : descriptiveTextColorDark,
+                fontWeight: FontWeight.w400,
               ),
-              color: darkAppBarTheme.backgroundColor,
-              child: Text(
-                "Rerun Test",
-                style: TextStyle(color: Colors.white),
-              )),
+            ),
+            SizedBox(width: 20),
+            Text(
+                downloadSpeed,
+              style: TextStyle(
+                fontSize: 23.0,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : darkPrimaryColor2,
+              ),
+            )
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: MaterialButton(
-              disabledColor: Colors.grey,
-              onPressed: _buttonEnabled
-                  ? () {
-                      _speedTestProvider.reportIssue();
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Container(
-                                child: Text(
-                                    "Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services."),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                    child: Text("Dismiss"),
-                                    style: TextButton.styleFrom(
-                                      // primary: Theme.of(context).buttonColor,
-                                      foregroundColor:
-                                          Theme.of(context).colorScheme.background,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      _buttonEnabled = false;
-                                      buttonTimer =
-                                          new Timer(Duration(minutes: 2), () {
-                                        _buttonEnabled = true;
-                                        setState(() {});
-                                      });
-                                      setState(() {});
-                                    })
-                              ],
-                            );
-                          });
-                    }
-                  : null,
-              minWidth: 350,
-              height: 40,
-              elevation: 0.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: Colors.black),
+        SizedBox(height: 20),
+        // UPLOAD SPEED
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                'Upload speed:',
+              style: TextStyle(
+                fontSize: 23,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? descriptiveTextColorLight
+                    : descriptiveTextColorDark,
+                fontWeight: FontWeight.w400,
               ),
-              color: Colors.grey.shade100,
-              child: Text(
-                "Report Issue",
-                style: TextStyle(color: Colors.black),
-              )),
+            ),
+            SizedBox(width: 20),
+            Text(
+              downloadSpeed,
+              style: TextStyle(
+                fontSize: 23.0,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : darkPrimaryColor2,
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: 50),
+        // TEST SPEED and REPORT ISSUE buttons
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // TEST SPEED
+            ActionButton(
+                buttonText: 'TEST SPEED',
+                onPressed: () {
+                  setState(() {
+                    timedOut = false;
+                    cardState = TestStatus.initial;
+                    _speedTestProvider.resetSpeedTest();
+                  });
+                }
+            ),
+            SizedBox(width: 10),
+            // REPORT ISSUE
+            ActionLink(
+              buttonText: 'REPORT ISSUE',
+              onPressed: _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED?
+                  ? () {
+                _speedTestProvider.reportIssue();
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialogWidget(
+                          type: MessageTypeConstants.SUCCESS,
+                          icon: Icons.check_circle_outline_sharp,
+                          title: WifiConstants.wifiIssueSuccessTitle,
+                          description: WifiConstants.wifiIssueSuccessDesc,
+                          onClose: () {
+                            Navigator.of(context).pop();
+                          });
+                    });
+              } : () {},
+            )
+          ],
         ),
       ],
     );
@@ -360,21 +372,11 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             textAlign: TextAlign.center,
           ),
         ),
-        MaterialButton(
-            padding: EdgeInsets.all(4.0),
-            elevation: 0.0,
-            onPressed: () => tryAgain(),
-            minWidth: 350,
-            height: 40,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              side: BorderSide(color: Colors.black),
-            ),
-            color: darkAppBarTheme.backgroundColor,
-            child: Text(
-              "Try Again",
-              style: TextStyle(color: Colors.white),
-            )),
+        SizedBox(height: 50),
+        ActionButton(
+            buttonText: 'TRY AGAIN',
+            onPressed: () => tryAgain()
+        ),
       ],
     );
   }
