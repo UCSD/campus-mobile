@@ -7,6 +7,9 @@ import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:provider/provider.dart';
+import '../common/action_button.dart';
+import '../common/action_link.dart';
+import '../common/alert_dialog_widget.dart';
 
 class WiFiCard extends StatefulWidget {
   @override
@@ -119,6 +122,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        // Wifi icon + Description
         Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -130,89 +134,68 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                 size: 38,
               ),
               SizedBox(width: 10),
-              Text(
-                "Help identify campus WiFi issues.",
-                style: TextStyle(
-                  fontSize: 22,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
-                  fontWeight: FontWeight.w400,
+              Padding(
+                  padding: EdgeInsets.only(top: 10),
+                child: Text(
+                  "Help identify campus WiFi issues.",
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
+              )
             ]
         ),
-        MaterialButton(
-            padding: EdgeInsets.all(4.0),
-            elevation: 0.0,
-            onPressed: () {
-              if (_speedTestProvider.onSimulator!) {
-                setState(() {
-                  cardState = TestStatus.simulated;
-                });
-              } else {
-                setState(() {
-                  cardState = TestStatus.running;
-                });
-                _speedTestProvider
-                    .speedTest()
-                    .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
-              }
-            },
-            minWidth: 350,
-            height: 40,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              side: BorderSide(color: Colors.black),
+        SizedBox(height: 50),
+        // TEST SPEED and REPORT ISSUE buttons
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // TEST SPEED
+            ActionButton(
+                buttonText: 'TEST SPEED',
+                onPressed: () {
+                  if (_speedTestProvider.onSimulator!) {
+                    setState(() {
+                      cardState = TestStatus.simulated;
+                    });
+                  } else {
+                    setState(() {
+                      cardState = TestStatus.running;
+                    });
+                    _speedTestProvider
+                        .speedTest()
+                        .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
+                  }
+                }
             ),
-            color: darkAppBarTheme.backgroundColor,
-            child: Text(
-              "Test WiFi Speed",
-              style: TextStyle(color: Colors.white),
-            )),
-
-        MaterialButton(
-            padding: EdgeInsets.all(12.0),
-            disabledColor: Colors.grey,
-            onPressed: _buttonEnabled
-                ? () {
-              _speedTestProvider.reportIssue();
-              showDialog(
+            SizedBox(width: 10),
+            // REPORT ISSUE
+            ActionLink(
+                buttonText: 'REPORT ISSUE',
+                onPressed: _buttonEnabled
+                    ? () {
+                  _speedTestProvider.reportIssue();
+                  showDialog(
                   context: context,
                   builder: (context) {
-                    return AlertDialog(
-                      content: Container(
-                        child: Text(
-                            "Please run speed test to report issue."),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                            child: Text("Dismiss"),
-                            style: TextButton.styleFrom(
-                              // primary: Theme.of(context).buttonColor,
-                              foregroundColor:
-                              Theme.of(context).colorScheme.background,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            })
-                      ],
-                    );
+                  return AlertDialogWidget(
+                  type: MessageTypeConstants.ERROR,
+                  icon: Icons.block_flipped,
+                  title: 'Could not report issue.',
+                  description:
+                  "Please run speed test to report issue.",
+                  onClose: () {
+                    Navigator.of(context).pop();
                   });
-            }
-                : null,
-            minWidth: 350,
-            height: 40,
-            elevation: 0.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              side: BorderSide(color: Colors.black),
-            ),
-            color: Colors.grey.shade100,
-            child: Text(
-              "Report Issue",
-              style: TextStyle(color: Colors.black),
-            )),
+                });
+                } : () {},
+            )
+          ],
+        ),
       ],
     );
   }
