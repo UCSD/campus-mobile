@@ -118,7 +118,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  // INITIAL STATE
+  //////////// INITIAL STATE (Before Testing for the first time) ////////////
   Column initialState(BuildContext context) {
     if (buttonTimer != null) _buttonEnabled = true;
     return Column(
@@ -201,7 +201,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  // SPEED TEST STATE (During testing)
+  //////////// SPEED TEST STATE (During testing) ////////////
   Column speedTest() {
     return Column(
       children: [
@@ -239,7 +239,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  // FINISHED STATE (After test ran)
+  //////////// FINISHED STATE (After Testing) ////////////
   Column finishedState() {
     _speedTestProvider.sendNetworkDiagnostics(lastSpeed);
     String downloadSpeed = lastSpeed != null
@@ -288,7 +288,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                       downloadSpeed,
                       style: TextStyle(
                         fontSize: 24.0,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w700,
                         color: Theme.of(context).brightness == Brightness.light
                             ? lightPrimaryColor
                             : darkPrimaryColor2,
@@ -318,14 +318,13 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                   ),
                 ),
               ),
-              // SizedBox(width: 20),
               Expanded(
                   flex: 4,
                   child: Text(
                     downloadSpeed,
                     style: TextStyle(
                       fontSize: 24.0,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w700,
                       color: Theme.of(context).brightness == Brightness.light
                           ? lightPrimaryColor
                           : darkPrimaryColor2,
@@ -388,7 +387,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  // UNAVAILABLE STATE (Not in a UCSD Network)
+  //////////// UNAVAILABLE STATE (Not in a UCSD Network) ////////////
   Column unavailableState() {
     return Column(
       children: [
@@ -427,7 +426,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
   }
 
 ////////////////////////////////////////////////////////////////////////////
-  // SIMULATED STATE
+  ////////////// SIMULATED STATE ////////////
   Column simulatedState() {
     return Column(
       children: [
