@@ -16,6 +16,7 @@ class WiFiCard extends StatefulWidget {
   _WiFiCardState createState() => _WiFiCardState();
 }
 
+enum TestStatus {initial, running, finished, unavailable, simulated}
 class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin {
   /// STATES
   String cardId = "speed_test";
@@ -28,7 +29,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
   static const int SPEED_TEST_TIMEOUT_CONST = 30;
 
   /// PROVIDERS
-  SpeedTestProvider _speedTestProvider = SpeedTestProvider();
+  var _speedTestProvider = SpeedTestProvider();
 
   @override
   void initState() {
@@ -64,13 +65,13 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
   Widget buildCardContent(BuildContext context) {
     if (!_speedTestProvider.isUCSDWiFi!) {
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
         child: unavailableState(),
       );
     }
     if (timedOut) {
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
         child: finishedState(),
       );
     }
@@ -102,8 +103,9 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       } catch (_) {}
     });
 
+    // STATE MACHINE
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child:
         switch (cardState) {
           TestStatus.initial => initialState(context),
@@ -111,7 +113,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           TestStatus.finished => finishedState(),
           TestStatus.unavailable => unavailableState(),
           TestStatus.simulated => simulatedState(),
-          _ => initialState(context)
+          _ => initialState(context) // Default State (Initial)
         },
     );
   }
@@ -204,7 +206,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     return Column(
       children: [
         Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
             child: RichText(
                 text: TextSpan(children: [
               TextSpan(
@@ -261,74 +263,102 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // DOWNLOAD SPEED
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                'Download speed:',
-              style: TextStyle(
-                fontSize: 23,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? descriptiveTextColorLight
-                    : descriptiveTextColorDark,
-                fontWeight: FontWeight.w400,
-              ),
+        Padding(
+          padding: EdgeInsets.only(left: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'Download speed:',
+                    style: TextStyle(
+                      fontSize: 26,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? descriptiveTextColorLight
+                          : descriptiveTextColorDark,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                // Download Speed in Mbps
+                Expanded(
+                  flex: 4,
+                    child: Text(
+                      downloadSpeed,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? lightPrimaryColor
+                            : darkPrimaryColor2,
+                      ),
+                    )
+                )
+              ],
             ),
-            SizedBox(width: 20),
-            Text(
-                downloadSpeed,
-              style: TextStyle(
-                fontSize: 23.0,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? lightPrimaryColor
-                    : darkPrimaryColor2,
-              ),
-            )
-          ],
         ),
         SizedBox(height: 20),
         // UPLOAD SPEED
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                'Upload speed:',
-              style: TextStyle(
-                fontSize: 23,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? descriptiveTextColorLight
-                    : descriptiveTextColorDark,
-                fontWeight: FontWeight.w400,
+        Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 3,
+                child: Text(
+                  'Upload speed:',
+                  style: TextStyle(
+                    fontSize: 26,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-            ),
-            SizedBox(width: 20),
-            Text(
-              downloadSpeed,
-              style: TextStyle(
-                fontSize: 23.0,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? lightPrimaryColor
-                    : darkPrimaryColor2,
-              ),
-            )
-          ],
+              // SizedBox(width: 20),
+              Expanded(
+                  flex: 4,
+                  child: Text(
+                    downloadSpeed,
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? lightPrimaryColor
+                          : darkPrimaryColor2,
+                    ),
+                  )
+              )
+            ],
+          ),
         ),
-        SizedBox(height: 50),
+        SizedBox(height: 20),
         // TEST SPEED and REPORT ISSUE buttons
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TEST SPEED
+            // TODO: This brings you back to the initial state, but that requires two "TEST SPEED" Button clicks.
+            // TODO: For the UI people, do you want 1 click? or 2 clicks but the first one indicating to "Reset"
             ActionButton(
                 buttonText: 'TEST SPEED',
                 onPressed: () {
-                  setState(() {
-                    timedOut = false;
-                    cardState = TestStatus.initial;
-                    _speedTestProvider.resetSpeedTest();
-                  });
+                    setState(() {
+                      timedOut = false;
+                      cardState = TestStatus.running;
+                      _speedTestProvider.resetSpeedTest();
+                    });
+                    _speedTestProvider
+                        .speedTest()
+                        .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
+                  // setState(() {
+                  //   timedOut = false;
+                  //   cardState = TestStatus.initial;
+                  //   _speedTestProvider.resetSpeedTest();
+                  // });
                 }
             ),
             SizedBox(width: 10),
@@ -363,7 +393,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
           child: Text(
             "Connect to a UCSD Network",
             style: TextStyle(
@@ -402,7 +432,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(left: 8, right: 8, top: 8),
           child: Text(
             "Sorry",
             style: TextStyle(
@@ -412,7 +442,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
           child: Text(
             "This feature is only available on physical devices.",
             style: TextStyle(fontSize: 13),
@@ -448,9 +478,9 @@ class ScalingUtility {
 
     /// Calculate blocks accounting for notches and home bar
     horizontalSafeBlock = (_queryData.size.width -
-            (_queryData.padding.left + _queryData.padding.right)) / 100;
+        (_queryData.padding.left + _queryData.padding.right)) / 100;
     verticalSafeBlock = (_queryData.size.height -
-            (_queryData.padding.top + _queryData.padding.bottom)) / 100;
+        (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 
@@ -480,5 +510,3 @@ class SizeConfig {
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }
 }
-
-enum TestStatus { initial, running, finished, unavailable, simulated }
