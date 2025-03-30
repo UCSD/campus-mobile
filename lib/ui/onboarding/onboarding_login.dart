@@ -21,6 +21,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
 
+  // These variables must be late initialized because we need to access the context
   late final _screenWidth = MediaQuery.sizeOf(context).width;
   late final _screenHeight = MediaQuery.sizeOf(context).height;
 

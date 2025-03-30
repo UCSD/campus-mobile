@@ -4,62 +4,62 @@ PODS:
     - FlutterMacOS
   - device_info_plus (0.0.1):
     - Flutter
-  - Firebase/Analytics (11.2.0):
+  - Firebase/Analytics (11.8.0):
     - Firebase/Core
-  - Firebase/Core (11.2.0):
+  - Firebase/Core (11.8.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 11.2.0)
-  - Firebase/CoreOnly (11.2.0):
-    - FirebaseCore (= 11.2.0)
-  - Firebase/Crashlytics (11.2.0):
+    - FirebaseAnalytics (~> 11.8.0)
+  - Firebase/CoreOnly (11.8.0):
+    - FirebaseCore (~> 11.8.0)
+  - Firebase/Crashlytics (11.8.0):
     - Firebase/CoreOnly
-    - FirebaseCrashlytics (~> 11.2.0)
-  - Firebase/Messaging (11.2.0):
+    - FirebaseCrashlytics (~> 11.8.0)
+  - Firebase/Messaging (11.8.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 11.2.0)
-  - firebase_analytics (11.3.3):
-    - Firebase/Analytics (= 11.2.0)
+    - FirebaseMessaging (~> 11.8.0)
+  - firebase_analytics (11.4.4):
+    - Firebase/Analytics (= 11.8.0)
     - firebase_core
     - Flutter
-  - firebase_core (3.6.0):
-    - Firebase/CoreOnly (= 11.2.0)
+  - firebase_core (3.12.1):
+    - Firebase/CoreOnly (= 11.8.0)
     - Flutter
-  - firebase_crashlytics (4.1.3):
-    - Firebase/Crashlytics (= 11.2.0)
+  - firebase_crashlytics (4.3.4):
+    - Firebase/Crashlytics (= 11.8.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (15.1.3):
-    - Firebase/Messaging (= 11.2.0)
+  - firebase_messaging (15.2.4):
+    - Firebase/Messaging (= 11.8.0)
     - firebase_core
     - Flutter
-  - FirebaseAnalytics (11.2.0):
-    - FirebaseAnalytics/AdIdSupport (= 11.2.0)
-    - FirebaseCore (~> 11.0)
+  - FirebaseAnalytics (11.8.0):
+    - FirebaseAnalytics/AdIdSupport (= 11.8.0)
+    - FirebaseCore (~> 11.8.0)
     - FirebaseInstallations (~> 11.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
     - nanopb (~> 3.30910.0)
-  - FirebaseAnalytics/AdIdSupport (11.2.0):
-    - FirebaseCore (~> 11.0)
+  - FirebaseAnalytics/AdIdSupport (11.8.0):
+    - FirebaseCore (~> 11.8.0)
     - FirebaseInstallations (~> 11.0)
-    - GoogleAppMeasurement (= 11.2.0)
+    - GoogleAppMeasurement (= 11.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
     - nanopb (~> 3.30910.0)
-  - FirebaseCore (11.2.0):
-    - FirebaseCoreInternal (~> 11.0)
+  - FirebaseCore (11.8.1):
+    - FirebaseCoreInternal (~> 11.8.0)
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/Logger (~> 8.0)
-  - FirebaseCoreExtension (11.3.0):
-    - FirebaseCore (~> 11.0)
-  - FirebaseCoreInternal (11.3.0):
+  - FirebaseCoreExtension (11.8.0):
+    - FirebaseCore (~> 11.8.0)
+  - FirebaseCoreInternal (11.8.0):
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
-  - FirebaseCrashlytics (11.2.0):
-    - FirebaseCore (~> 11.0)
+  - FirebaseCrashlytics (11.8.0):
+    - FirebaseCore (~> 11.8.0)
     - FirebaseInstallations (~> 11.0)
     - FirebaseRemoteConfigInterop (~> 11.0)
     - FirebaseSessions (~> 11.0)
@@ -67,13 +67,13 @@ PODS:
     - GoogleUtilities/Environment (~> 8.0)
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
-  - FirebaseInstallations (11.3.0):
-    - FirebaseCore (~> 11.0)
+  - FirebaseInstallations (11.8.0):
+    - FirebaseCore (~> 11.8.0)
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - PromisesObjC (~> 2.4)
-  - FirebaseMessaging (11.2.0):
-    - FirebaseCore (~> 11.0)
+  - FirebaseMessaging (11.8.0):
+    - FirebaseCore (~> 11.8.0)
     - FirebaseInstallations (~> 11.0)
     - GoogleDataTransport (~> 10.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
@@ -81,10 +81,10 @@ PODS:
     - GoogleUtilities/Reachability (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - nanopb (~> 3.30910.0)
-  - FirebaseRemoteConfigInterop (11.3.0)
-  - FirebaseSessions (11.3.0):
-    - FirebaseCore (~> 11.0)
-    - FirebaseCoreExtension (~> 11.0)
+  - FirebaseRemoteConfigInterop (11.10.0)
+  - FirebaseSessions (11.8.0):
+    - FirebaseCore (~> 11.8.0)
+    - FirebaseCoreExtension (~> 11.8.0)
     - FirebaseInstallations (~> 11.0)
     - GoogleDataTransport (~> 10.0)
     - GoogleUtilities/Environment (~> 8.0)
@@ -107,21 +107,21 @@ PODS:
     - Flutter
     - Google-Maps-iOS-Utils (< 7.0, >= 5.0)
     - GoogleMaps (< 10.0, >= 8.4)
-  - GoogleAppMeasurement (11.2.0):
-    - GoogleAppMeasurement/AdIdSupport (= 11.2.0)
+  - GoogleAppMeasurement (11.8.0):
+    - GoogleAppMeasurement/AdIdSupport (= 11.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
     - nanopb (~> 3.30910.0)
-  - GoogleAppMeasurement/AdIdSupport (11.2.0):
-    - GoogleAppMeasurement/WithoutAdIdSupport (= 11.2.0)
+  - GoogleAppMeasurement/AdIdSupport (11.8.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 11.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
     - nanopb (~> 3.30910.0)
-  - GoogleAppMeasurement/WithoutAdIdSupport (11.2.0):
+  - GoogleAppMeasurement/WithoutAdIdSupport (11.8.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
@@ -187,7 +187,7 @@ PODS:
     - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
-  - webview_flutter (0.0.1):
+  - webview_flutter_wkwebview (0.0.1):
     - Flutter
   - wifi_connection (0.0.2):
     - Flutter
@@ -211,7 +211,7 @@ DEPENDENCIES:
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - uni_links2 (from `.symlinks/plugins/uni_links2/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
   - wifi_connection (from `.symlinks/plugins/wifi_connection/ios`)
 
 SPEC REPOS:
@@ -274,52 +274,52 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/uni_links2/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
-  webview_flutter:
-    :path: ".symlinks/plugins/webview_flutter/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
   wifi_connection:
     :path: ".symlinks/plugins/wifi_connection/ios"
 
 SPEC CHECKSUMS:
-  connectivity_plus: 4c41c08fc6d7c91f63bc7aec70ffe3730b04f563
-  device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
-  Firebase: 98e6bf5278170668a7983e12971a66b2cd57fc8c
-  firebase_analytics: fbc57838bdb94eef1e0ff504f127d974ff2981ad
-  firebase_core: 2bedc3136ec7c7b8561c6123ed0239387b53f2af
-  firebase_crashlytics: 37d104d457b51760b48504a93a12b3bf70995d77
-  firebase_messaging: 15d114e1a41fc31e4fbabcd48d765a19eec94a38
-  FirebaseAnalytics: c36efd5710c60c17558650fa58c2066eca7e9265
-  FirebaseCore: a282032ae9295c795714ded2ec9c522fc237f8da
-  FirebaseCoreExtension: 30bb063476ef66cd46925243d64ad8b2c8ac3264
-  FirebaseCoreInternal: ac26d09a70c730e497936430af4e60fb0c68ec4e
-  FirebaseCrashlytics: cfc69af5b53565dc6a5e563788809b5778ac4eac
-  FirebaseInstallations: 58cf94dabf1e2bb2fa87725a9be5c2249171cda0
-  FirebaseMessaging: c9ec7b90c399c7a6100297e9d16f8a27fc7f7152
-  FirebaseRemoteConfigInterop: c3a5c31b3c22079f41ba1dc645df889d9ce38cb9
-  FirebaseSessions: 655ff17f3cc1a635cbdc2d69b953878001f9e25b
+  connectivity_plus: b21496ab28d1324eb59885d888a4d83b98531f01
+  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
+  Firebase: d80354ed7f6df5f9aca55e9eb47cc4b634735eaf
+  firebase_analytics: 4e93dbe66872104d28ae9750fec1800e1fd66858
+  firebase_core: 8d552814f6c01ccde5d88939fced4ec26f2f5510
+  firebase_crashlytics: 05519be6b623981a77fe54fb52e6061956cb6047
+  firebase_messaging: 8b96a4f09841c15a16b96973ef5c3dcfc1a064e4
+  FirebaseAnalytics: 4fd42def128146e24e480e89f310e3d8534ea42b
+  FirebaseCore: 99fe0c4b44a39f37d99e6404e02009d2db5d718d
+  FirebaseCoreExtension: 3d3f2017a00d06e09ab4ebe065391b0bb642565e
+  FirebaseCoreInternal: df24ce5af28864660ecbd13596fc8dd3a8c34629
+  FirebaseCrashlytics: a1102c035f18d5dd94a5969ee439c526d0c9e313
+  FirebaseInstallations: 6c963bd2a86aca0481eef4f48f5a4df783ae5917
+  FirebaseMessaging: 487b634ccdf6f7b7ff180fdcb2a9935490f764e8
+  FirebaseRemoteConfigInterop: 7c9a9c65eff32cbb0f7bf8d18140612ad57dfcc6
+  FirebaseSessions: c4d40a97f88f9eaff2834d61b4fea0a522d62123
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
-  flutter_scandit_plugin: a2a6a2f124c184cff00dbdf40c34ea0033b1e707
-  flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
-  geolocator_apple: 9bcea1918ff7f0062d98345d238ae12718acfbc1
+  flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
+  flutter_scandit_plugin: 7ae738d4fff8f91d2913c4e3ce2fb9979e38d020
+  flutter_secure_storage: 50035aef357c5a8bdd67fd6bc81370d46efc4d16
+  geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
   Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
-  google_maps_flutter_ios: e31555a04d1986ab130f2b9f24b6cdc861acc6d3
-  GoogleAppMeasurement: 76d4f8b36b03bd8381fa9a7fe2cc7f99c0a2e93a
+  google_maps_flutter_ios: 0291eb2aa252298a769b04d075e4a9d747ff7264
+  GoogleAppMeasurement: fc0817122bd4d4189164f85374e06773b9561896
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
+  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   ScanditBarcodeCapture: 8de10f1d79cb4c669b75c61ddaed60c7c7daa7f4
   ScanditCaptureCore: 7118e29ef970e70ca1ea6512fa8414e5a3761497
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  uni_links2: fbc37081577fc19c6e0f7e6cdbd3baa150023635
-  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
-  webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
-  wifi_connection: cbd6d42bbd0cb9302ea325efe5bd3945576266cc
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  uni_links2: ff6af2a14cb008bfd02cd5d5d7d5a9d1300dbf37
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
+  webview_flutter_wkwebview: 6e6160e04b1e85872253adc5322afe416d9cdddc
+  wifi_connection: a73e16eb2fe4e40ca32a6d69c8609130603bb62d
 
 PODFILE CHECKSUM: 827adde94bb2d2b49683ba3a158b0f4fa51d1aa5
 
