@@ -84,36 +84,25 @@ class NativeScannerCard extends StatelessWidget {
 
   Widget getMessageWidget(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-      String? myRecentScanTime =
-          Provider.of<ScannerMessageDataProvider>(context, listen: false)
-              .scannerMessageModel
-              .collectionTime;
-      if (myRecentScanTime == "")
-        myRecentScanTime = ScannerError.noRecentScan.msg;
-      return (Padding(
-        padding: EdgeInsets.only(top: 8.0, right: 8.0),
+      String myRecentScanTime = context.read<ScannerMessageDataProvider>()
+        .scannerMessageModel.collectionTime ?? "";
+      myRecentScanTime = myRecentScanTime.isEmpty
+        ? ScannerError.noRecentScan.msg
+        : DateFormat('MMMM d, yyyy').format(
+            DateFormat('yyyy-MM-dd hh:mm a').parse(myRecentScanTime)
+          );
+      return Padding(
+        padding: const EdgeInsets.only(top: 8.0, right: 8.0),
         child: Text.rich(
           TextSpan(
             style: Theme.of(context).textTheme.bodyMedium,
             children: [
-              TextSpan(
-                text: "Last test kit scan: ",
-              ),
-              TextSpan(
-                text: DateFormat('MMMM d, yyyy').format(
-                  DateFormat('yyyy-MM-dd hh:mm a').parse(
-                    Provider.of<ScannerMessageDataProvider>(context,
-                                listen: false)
-                            .scannerMessageModel
-                            .collectionTime ??
-                        '',
-                  ),
-                ),
-              )
+              const TextSpan(text: "Last test kit scan: "),
+              TextSpan(text: myRecentScanTime)
             ],
           ),
         ),
-      ));
+      );
     } else {
       return Container(width: 0, height: 0);
     }
