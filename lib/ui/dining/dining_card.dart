@@ -34,8 +34,8 @@ class DiningCard extends StatelessWidget {
   }
 
   Widget buildDiningCard(List<DiningModel> data) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
       child: DiningList(listSize: 3),
     );
   }
