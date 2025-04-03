@@ -108,7 +108,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
               label: 'NOTIFICATIONS',
             ),
             BottomNavigationBarItem(
-              icon: _buildIcon(Icons.person, provider.currentIndex == 3, theme),
+              icon: _buildIcon(Icons.person, provider.currentIndex == 3, theme, size: 38),
               label: 'PROFILE',
             ),
           ],
@@ -127,10 +127,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
   }
 
 // Build bottom navigator icons
-  Widget _buildIcon(IconData icon, bool isSelected, ThemeData theme) {
+  Widget _buildIcon(IconData icon, bool isSelected, ThemeData theme, {double size = 34}) {
     return Container(
       height: 34,
-      margin: EdgeInsets.only(top: 4),
+      margin: EdgeInsets.only(top: size == 34 ? 4 : 2),
       padding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
       decoration: BoxDecoration(
         color:
@@ -139,7 +139,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
       ),
       child: Icon(
         icon,
-        size: 34,
+        size: size,
         color: isSelected
             ? theme.bottomNavigationBarTheme.selectedItemColor
             : theme.bottomNavigationBarTheme.unselectedItemColor,
