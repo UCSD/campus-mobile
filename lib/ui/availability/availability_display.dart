@@ -89,7 +89,6 @@ class AvailabilityDisplay extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
                         height: 12,
-                        width: 325,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(BORDER_RADIUS),
                           child: LinearProgressIndicator(
