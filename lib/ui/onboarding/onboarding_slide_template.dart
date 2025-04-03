@@ -49,7 +49,7 @@ class OnboardingSlideTemplate extends StatelessWidget {
                     fontFamily: 'Refrigerator Deluxe',
                     color: ColorPrimary,
                     fontWeight: FontWeight.w800,
-                    fontSize: 45,
+                    fontSize: 50,
                   ),
                   textAlign: TextAlign.left,
                 ),
@@ -59,7 +59,7 @@ class OnboardingSlideTemplate extends StatelessWidget {
                   description,
                   style: TextStyle(
                     color: const Color(0xFF182B49),
-                    fontSize: 15,
+                    fontSize: 18,
                   ),
                   textAlign: TextAlign.left,
                 ),
