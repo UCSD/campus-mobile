@@ -49,6 +49,9 @@ class CardContainer extends StatelessWidget {
             width: 0.5,
           ),
         ),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? darkPrimaryBgColor
+            : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[

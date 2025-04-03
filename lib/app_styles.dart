@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /* Campus Mobile Style Guide (WIP)
 
-
 // Apply Global Text Theme:
 style: Theme.of(context).textTheme.bodySmall
 
@@ -22,6 +21,7 @@ style: Theme.of(context).brightness == Brightness.dark
 const Color lightPrimaryColor = Color(0xFF182B49);
 const Color darkPrimaryColor = Color(0xFF333333);
 const Color darkPrimaryColor2 = Color(0xFFF5F0E6);
+const Color darkPrimaryBgColor = Color(0xff1D1D1D);
 
 const Color secondaryColorLight = Color(0xFF182B49);
 const Color secondaryColorDark = Color(0xFF5496BC);
@@ -146,7 +146,7 @@ const cardTitleStyleDark = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
   fontSize: 28,
   fontWeight: FontWeight.w900,
-  color: Colors.white,
+  color: darkPrimaryColor2,
 );
 
 const TextStyle labelLargeStyleLight = TextStyle(
