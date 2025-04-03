@@ -33,10 +33,9 @@ class _ParkingLotViewState extends State<ParkingLotsView> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             "Parking Lots",
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: lightPrimaryColor),
+            style: Theme.of(context).brightness == Brightness.dark
+                ? textSubheaderDark
+                : textSubheaderLight,
           ),
         ),
       ),

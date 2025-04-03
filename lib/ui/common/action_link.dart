@@ -12,24 +12,21 @@ class ActionLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 16),
-      child: TextButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStatePropertyAll<Color>(Colors.transparent),
-          alignment: Alignment.bottomCenter,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-          child: Text(
-            buttonText,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
-          ),
-        ),
-        onPressed: onPressed,
+    return TextButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStatePropertyAll<Color>(Colors.transparent),
+        alignment: Alignment.bottomCenter,
       ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+        child: Text(
+          buttonText,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                decoration: TextDecoration.underline,
+              ),
+        ),
+      ),
+      onPressed: onPressed,
     );
   }
 }

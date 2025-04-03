@@ -191,6 +191,20 @@ const TextStyle notificationsTitleDark = TextStyle(
   fontSize: 18,
 );
 
+const TextStyle textSubheaderLight = TextStyle(
+  color: lightPrimaryColor,
+  fontFamily: 'Brix Sans',
+  fontSize: 22,
+  height: 1.22,
+);
+
+const TextStyle textSubheaderDark = TextStyle(
+  color: darkPrimaryColor2,
+  fontFamily: 'Brix Sans',
+  fontSize: 22,
+  height: 1.22,
+);
+
 const textSmallMoreInfoLight = TextStyle(
     fontSize: 15.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
 

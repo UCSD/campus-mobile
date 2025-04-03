@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-import 'neighborhood_lot_view.dart';
-
 class CircularParkingIndicators extends StatelessWidget {
   const CircularParkingIndicators({
     Key? key,
@@ -233,21 +231,24 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Widget buildHistoricInfo(BuildContext context) {
     if (model.locationProvider == "Historic") {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            color: Colors.black,
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 1.0),
-          ),
-          Text(
-            "No Live Data. Estimated availability shown.",
-            style: Theme.of(context).textTheme.bodyMedium,
-          )
-        ],
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              color: Colors.black,
+            ),
+            SizedBox(
+              width: 4,
+            ),
+            Text("No Live Data. Estimated availability shown.",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 16,
+                    ))
+          ],
+        ),
       );
     } else {
       return Text("");
