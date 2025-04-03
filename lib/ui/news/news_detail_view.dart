@@ -18,7 +18,7 @@ class NewsDetailView extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.33,
             decoration: BoxDecoration(
               image: DecorationImage(
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
                 image: data.image.isEmpty
                     ? const AssetImage('assets/images/UCSDMobile_banner.png')
                 as ImageProvider

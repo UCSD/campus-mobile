@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 class NewsList extends StatelessWidget {
   const NewsList({Key? key, this.listSize}) : super(key: key);
+
   /// STATES
   final listSize;
 
@@ -43,33 +44,33 @@ class NewsList extends StatelessWidget {
 
     return listSize != null
         ? Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: ListView(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        children: ListTile.divideTiles(
-          tiles: newsTiles,
-          context: context,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? listTileDividerColorDark
-              : listTileDividerColorLight,
-        ).toList(),
-      ),
-    )
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: ListView(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: ListTile.divideTiles(
+                tiles: newsTiles,
+                context: context,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? listTileDividerColorDark
+                    : listTileDividerColorLight,
+              ).toList(),
+            ),
+          )
         : ContainerView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ListView(
-          children: ListTile.divideTiles(
-            tiles: newsTiles,
-            context: context,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? listTileDividerColorDark
-                : listTileDividerColorLight,
-          ).toList(),
-        ),
-      ),
-    );
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: ListView(
+                children: ListTile.divideTiles(
+                  tiles: newsTiles,
+                  context: context,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? listTileDividerColorDark
+                      : listTileDividerColorLight,
+                ).toList(),
+              ),
+            ),
+          );
   }
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
@@ -88,7 +89,7 @@ class NewsList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 120,
+                width: 140,
                 margin: EdgeInsets.only(right: 8.0),
                 child: ImageLoader(
                   url: newsItem.image,
@@ -105,22 +106,23 @@ class NewsList extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: DateFormat.yMMMMd().format(newsItem.date.toLocal()),
+                            text: DateFormat.yMMMMd()
+                                    .format(newsItem.date.toLocal()) +
+                                ' - ',
                             style: TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              // fontWeight: FontWeight.bold,
                               height: 1.42,
-                              color: Theme.of(context).textTheme.bodyMedium!.color,
+                              color:
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                           ),
-                          TextSpan(text: ' - '),
                           TextSpan(
                             text: newsItem.title,
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineMedium!
-                                .copyWith(height: 1.42, fontSize: 12.0),
-
+                                .copyWith(height: 1.42, fontSize: 16.0),
                           ),
                         ],
                       ),
@@ -134,7 +136,7 @@ class NewsList extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
-                          .copyWith(height: 1.42, fontSize: 12.0),
+                          .copyWith(height: 1.42, fontSize: 16.0),
                     ),
                   ],
                 ),
@@ -142,43 +144,6 @@ class NewsList extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget subtitle(BuildContext context, Item data) {
-    return Container(
-      height: 84,
-      child: Row(
-        children: <Widget>[
-          ImageLoader(
-            url: data.image,
-            fullSize: true,
-          ),
-          SizedBox(width: 4),
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  data.description,
-                  textAlign: TextAlign.start,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(height: 1.42, fontSize: 12.0),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  DateFormat.yMMMMd().format(data.date.toLocal()),
-                  style: TextStyle(fontSize: 12.0)
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
