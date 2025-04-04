@@ -27,7 +27,6 @@ import 'package:campus_mobile_experimental/ui/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/neighborhood_lot_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/neighborhoods_view.dart';
-import 'package:campus_mobile_experimental/ui/parking/parking_lot_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/parking_structure_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/cards.dart';
@@ -155,11 +154,6 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ClassList();
-        });
-      case RoutePaths.ParkingLotsView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
-          return ParkingLotsView();
         });
       case RoutePaths.ParkingStructureView:
         return MaterialPageRoute(builder: (_) {

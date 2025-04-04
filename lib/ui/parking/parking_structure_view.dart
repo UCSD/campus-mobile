@@ -32,7 +32,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
       ListTile(
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-          child: Text("Parking Structure",
+          child: Text("Parking Structures",
               style: Theme.of(context).brightness == Brightness.dark
                   ? textSubheaderDark
                   : textSubheaderLight),
