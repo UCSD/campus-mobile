@@ -8,7 +8,6 @@ import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 class EmployeeIdCard extends StatefulWidget {
@@ -20,8 +19,6 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   /// STATES
   var cardId = "employee_id";
   var isValidId = false;
-  // TODO: if a bug happens, this might be it. Typically this dotenv variable would be a late...
-  final placeholderPhotoUrl = dotenv.get('PLACEHOLDER_PERSON_PHOTO');
 
   @override
   Widget build(BuildContext context) {
@@ -56,17 +53,14 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
       width: double.infinity,
       child: Center(
         child: Padding(
-          padding: EdgeInsets.only(
-            top: 16.0,
-            bottom: 32.0,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
                 child: Text.rich(
-                  TextSpan(text: "Unable to display STAFF ID.\n", children: [
+                  TextSpan(text: "Unable to display STAFF ID.\n\n", children: [
                     TextSpan(text: "If the problem persists, contact the "),
                     TextSpan(
                         text: "ITS Service Desk",
@@ -102,8 +96,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
               children: <Widget>[
                 Flexible(
                   flex: 4,
-                  child: Image.network(
-                    placeholderPhotoUrl,
+                  child: Image.asset(
+                    'assets/images/staff_id_placeholder.png',
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -116,6 +110,9 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                       Text(
                         employeeIdModel!.employeePreferredDisplayName,
                         style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? darkPrimaryColor2
+                              : lightPrimaryColor,
                           fontFamily: 'Brix Sans',
                           fontWeight: FontWeight.w400,
                           fontSize: getFontSize(
@@ -133,18 +130,6 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                           fontSize: ScalingUtility.horizontalSafeBlock * 4.0,
                         ),
                       ),
-                      SizedBox(height: cardMargin),
-                      Text(
-                        "ID " + employeeIdModel.employeeId,
-                        style: TextStyle(
-                          fontFamily: 'Brix Sans',
-                          fontWeight: FontWeight.w400,
-                          fontSize: getFontSize(
-                              "Employee ID " + employeeIdModel.employeeId, ""),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
                       Divider(
                         color: listTileDividerColorLight,
                         thickness: 1,
@@ -155,6 +140,18 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: getFontSize(employeeIdModel.department, ""),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: cardMargin),
+                      Text(
+                        "ID " + employeeIdModel.employeeId,
+                        style: TextStyle(
+                          fontFamily: 'Brix Sans',
+                          fontWeight: FontWeight.w400,
+                          fontSize: getFontSize(
+                              "Employee ID " + employeeIdModel.employeeId, ""),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
