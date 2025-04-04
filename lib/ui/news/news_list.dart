@@ -107,8 +107,7 @@ class NewsList extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: DateFormat.yMMMMd()
-                                    .format(newsItem.date.toLocal()) +
-                                ' - ',
+                                .format(newsItem.date.toLocal()),
                             style: TextStyle(
                               fontSize: 16.0,
                               // fontWeight: FontWeight.bold,
@@ -116,6 +115,16 @@ class NewsList extends StatelessWidget {
                               color:
                                   Theme.of(context).textTheme.bodyMedium!.color,
                             ),
+                          ),
+                          TextSpan(
+                            text: ' - ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .copyWith(
+                                    height: 1.42,
+                                    fontSize: 16.0,
+                                    decoration: TextDecoration.none),
                           ),
                           TextSpan(
                             text: newsItem.title,

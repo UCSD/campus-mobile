@@ -117,6 +117,20 @@ const headlineMediumDark = TextStyle(
     decoration: TextDecoration.underline,
     color: linkColorDark);
 
+const headlineMediumLight2 = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 20.0,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+    color: lightPrimaryColor);
+
+const headlineMediumDark2 = TextStyle(
+    fontFamily: 'Brix Sans',
+    fontSize: 20.0,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+    color: darkPrimaryColor2);
+
 const bodyMediumLight = TextStyle(
     fontFamily: 'Brix Sans',
     fontSize: 22.0,

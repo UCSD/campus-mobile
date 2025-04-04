@@ -171,10 +171,9 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(data.message.title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium
-                        ?.copyWith(decoration: TextDecoration.none)),
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? headlineMediumDark2
+                        : headlineMediumLight2),
               ),
             ],
           ),
