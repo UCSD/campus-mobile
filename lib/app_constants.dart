@@ -68,13 +68,9 @@ class RouteTitles {
 
 class ParkingDefaults {
   static const defaultLots = [
+    "Athena",
     "Gilman",
-    "406",
-    "784",
-    "P782",
-    "P386 (Gliderport)",
-    "P704",
-    "P705"
+    "Hopkins",
   ];
   static const defaultSpots = ["S", "B", "A"];
 }
