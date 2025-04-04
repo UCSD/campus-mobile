@@ -139,6 +139,15 @@ class ParkingConstants {
       'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.';
 }
 
+class WifiConstants {
+  // Initial State
+  static const wifiIssueFailedTitle = 'Could not report issue';
+  static const wifiIssueFailedDesc = 'Please run speed test to report issue.';
+  // Finished State
+  static const wifiIssueSuccessTitle = 'Issue Reported';
+  static const wifiIssueSuccessDesc = 'Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services.';
+}
+
 class Plugins {
   static const FrontCamera = 'FRONT CAMERA';
 }
