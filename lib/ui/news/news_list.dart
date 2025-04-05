@@ -103,6 +103,7 @@ class NewsList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RichText(
+                      textScaler: MediaQuery.textScalerOf(context),
                       text: TextSpan(
                         children: [
                           TextSpan(
