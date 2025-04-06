@@ -174,7 +174,6 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                   }
                 }
             ),
-            SizedBox(width: 10),
             // REPORT ISSUE
             ActionLink(
                 buttonText: 'REPORT ISSUE',

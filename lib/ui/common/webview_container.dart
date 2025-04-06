@@ -85,10 +85,13 @@ class _WebViewContainerState extends State<WebViewContainer>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(
-            color: Color(0xFF747678),
+            color: dotsUnselectedColor,
             width: 0.5,
           ),
         ),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? darkPrimaryBgColor
+            : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -167,6 +170,7 @@ class _WebViewContainerState extends State<WebViewContainer>
         child: Text(
           menuOption,
           textAlign: TextAlign.center,
+          style: TextStyle(color: dotsUnselectedColor),
         ),
       );
       menu.add(item as DropdownMenuItem<String>);
@@ -174,11 +178,11 @@ class _WebViewContainerState extends State<WebViewContainer>
     return DropdownButton(
       items: menu,
       iconSize: 36,
-      iconEnabledColor: Color(0xFF747678),
+      iconEnabledColor: dotsUnselectedColor,
       underline: Container(),
       icon: Transform.translate(
         offset: Offset(6, -3),
-        child: Icon(Icons.more_vert),
+        child: Icon(Icons.more_vert, color: dotsUnselectedColor),
       ),
       onChanged: (String? selectedMenuItem) =>
           onMenuItemPressed(selectedMenuItem),
