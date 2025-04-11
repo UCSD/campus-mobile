@@ -89,28 +89,56 @@ class CampusMobile extends StatelessWidget {
     final lightTheme = ThemeData(
       useMaterial3: false,
       primaryColor: lightPrimaryColor,
-      textTheme: lightThemeText,
+      textTheme: lightThemeText.copyWith(
+        titleLarge: cardTitleStyleLight,
+        titleMedium: titleMediumLight,
+        titleSmall: titleSmallLight,
+        bodyLarge: heading2StyleLight,
+        bodyMedium: bodyMediumLight,
+        bodySmall: descriptiveTextSmallLight,
+        labelLarge: labelLargeStyleLight,
+        labelMedium: labelMediumStyleLight,
+        headlineMedium: headlineMediumLight,
+      ),
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
         background: lightButtonColor,
-        brightness: Brightness.light, // added
+        brightness: Brightness.light,
       ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          unselectedItemColor: unselectedIconLightColor,
+          selectedItemColor: Colors.white,
+          backgroundColor: bottomTabBarColorLight),
     );
 
     final darkTheme = ThemeData(
       useMaterial3: false,
       primaryColor: darkPrimaryColor,
-      textTheme: darkThemeText,
+      textTheme: darkThemeText.copyWith(
+        titleLarge: cardTitleStyleDark,
+        titleMedium: titleMediumDark,
+        titleSmall: titleSmallDark,
+        bodyLarge: heading2StyleDark,
+        bodyMedium: bodyMediumDark,
+        bodySmall: descriptiveTextSmallDark,
+        labelLarge: labelLargeStyleDark,
+        labelMedium: labelMediumStyleDark,
+        headlineMedium: headlineMediumDark,
+      ),
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
         background: darkButtonColor,
-        brightness: Brightness.dark, // added
+        brightness: Brightness.dark,
       ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          unselectedItemColor: unselectedIconDarkColor,
+          selectedItemColor: Colors.white,
+          backgroundColor: bottomTabBarColorDark),
     );
 
     return MultiProvider(
@@ -119,17 +147,20 @@ class CampusMobile extends StatelessWidget {
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
         theme: lightTheme.copyWith(
-          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
+          colorScheme:
+              lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
           colorScheme:
               darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
-        initialRoute: showOnboardingScreen ?
-          RoutePaths.OnboardingLogin
-          : RoutePaths.BottomNavigationBar,
+        themeMode: ThemeMode.system,
+        initialRoute: showOnboardingScreen
+            ? RoutePaths.OnboardingLogin
+            : RoutePaths.BottomNavigationBar,
+            // : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
-        navigatorObservers: [ observer ],
+        navigatorObservers: [observer],
       ),
     );
   }

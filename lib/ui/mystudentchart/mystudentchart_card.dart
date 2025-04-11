@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,64 +20,48 @@ class MyStudentChartCard extends StatelessWidget {
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: null,
       child: () => buildCardContent(context),
-      actionButtons: buildActionButtons(context),
+      actionButtons: [
+        ActionButton(
+          buttonText: 'LOG IN TO MyStudentChart',
+          onPressed: () {
+            try {
+              launch(
+                  'https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN',
+                  forceSafariVC: true);
+            } catch (e) {
+              // an error occurred, do nothing
+            }
+          },
+        ),
+      ],
     );
   }
 
   Widget buildCardContent(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        openMyStudentChart();
-      },
-      behavior: HitTestBehavior.translucent,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
         children: <Widget>[
           Container(
             child: Image.asset(
               'assets/images/MyChartLogo.png',
               fit: BoxFit.contain,
-              height: 56,
+              height: 32,
             ),
             padding: EdgeInsets.only(
-              left: 10,
-              right: 10,
+              left: 16,
+              right: 8,
             ),
           ),
           Flexible(
             child: Text(
               'Your secure online health connection.',
               textAlign: TextAlign.left,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           )
         ],
       ),
     );
-  }
-
-  List<Widget> buildActionButtons(BuildContext context) {
-    List<Widget> actionButtons = [];
-    actionButtons.add(TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
-      ),
-      child: Text(
-        'Log in to MyStudentChart',
-      ),
-      onPressed: () {
-        openMyStudentChart();
-      },
-    ));
-    return actionButtons;
-  }
-
-  void openMyStudentChart() {
-    try {
-      launch('https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN',
-          forceSafariVC: true
-      );
-    } catch (e) {
-      // an error occurred, do nothing
-    }
   }
 }

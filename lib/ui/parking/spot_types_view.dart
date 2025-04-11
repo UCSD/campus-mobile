@@ -2,10 +2,12 @@ import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'neighborhood_lot_view.dart';
+import '../../app_constants.dart';
+import '../common/alert_dialog_widget.dart';
 
 class SpotTypesView extends StatefulWidget {
   @override
@@ -13,7 +15,6 @@ class SpotTypesView extends StatefulWidget {
 }
 
 class _SpotTypesViewState extends State<SpotTypesView> {
-  /// PROVIDERS
   late ParkingDataProvider spotTypesDataProvider;
 
   @override
@@ -22,46 +23,86 @@ class _SpotTypesViewState extends State<SpotTypesView> {
     return ContainerView(child: createListWidget(context));
   }
 
-  Widget createListWidget(BuildContext context) => ListView(children: createList(context));
+  Widget createListWidget(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: ListView(
+          children: ListTile.divideTiles(
+            tiles: createList(context),
+            context: context,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? listTileDividerColorDark
+                : listTileDividerColorLight,
+          ).toList(),
+        ),
+      );
 
   List<Widget> createList(BuildContext context) {
-    var selectedSpots = 0;
+    var selectedSpots = Provider.of<ParkingDataProvider>(context)
+        .spotTypesState
+        .values
+        .where((selected) => selected == true)
+        .length;
+
     List<Widget> list = [];
+
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
-      if (Provider.of<ParkingDataProvider>(context).spotTypesState[data.spotKey]! == true) {
-        selectedSpots++;
-      }
+      var isSelected = Provider.of<ParkingDataProvider>(context)
+          .spotTypesState[data.spotKey]!;
+
       var iconColor = HexColor(data.color);
       var textColor = HexColor(data.textColor);
 
-      list.add(ListTile(
-        key: Key(data.name.toString()),
-        leading: Container(
+      list.add(
+        ListTile(
+          key: Key(data.name.toString()),
+          leading: Container(
             width: 35,
             height: 35,
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: iconColor,
             ),
             child: Align(
-                alignment: Alignment.center,
-                child: data.text.contains("&#x267f;")
-                    ? Icon(Icons.accessible,
-                        size: 25.0, color: colorFromHex(data.textColor))
-                    : Text(
-                        data.text,
-                        style: TextStyle(color: textColor),
-                      ))),
-        title: Text(data.name),
-        trailing: Switch(
-          value: Provider.of<ParkingDataProvider>(context).spotTypesState[data.spotKey]!,
-          onChanged: (_) {
-            spotTypesDataProvider.toggleSpotSelection(data.spotKey, selectedSpots);
-          },
-          // activeColor: Theme.of(context).buttonColor,
-          activeColor: Theme.of(context).colorScheme.background,
+              alignment: Alignment.center,
+              child: data.text.contains("&#x267f;")
+                  ? Icon(Icons.accessible, size: 25.0, color: textColor)
+                  : Text(data.text, style: TextStyle(color: textColor)),
+            ),
+          ),
+          title: Text(
+            data.name,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          trailing: Transform.scale(
+            scale: 0.9,
+            child: CupertinoSwitch(
+              value: isSelected,
+              onChanged: (bool value) {
+                if (!isSelected && selectedSpots >= 3) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialogWidget(
+                        type: MessageTypeConstants.ERROR,
+                        icon: Icons.block_flipped,
+                        title: ParkingConstants.spotMaxTitle,
+                        description: ParkingConstants.spotMaxDesc,
+                        onClose: () {
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  );
+                  return;
+                }
+                spotTypesDataProvider.toggleSpotSelection(data.spotKey, selectedSpots);
+              },
+              activeColor: toggleActiveColor,
+              trackColor: Colors.grey.shade400,
+            ),
+          ),
         ),
-      ));
+      );
     }
     return list;
   }

@@ -17,7 +17,8 @@ class RoutePaths {
   static const String EventDetailView = 'events/event_detail_view';
   static const String LinksViewAll = 'links/links_list';
   static const String ClassScheduleViewAll = 'class/classList';
-  static const String ManageAvailabilityView = 'availability/manage_locations_view';
+  static const String ManageAvailabilityView =
+      'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
   static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
   static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
@@ -37,52 +38,48 @@ class RoutePaths {
 
 class RouteTitles {
   static const titleMap = {
-    'Maps': 'Maps',
-    'MapSearch': 'Maps',
-    'MapLocationList': 'Maps',
-    'Notifications': 'Notifications',
-    'Profile': 'Profile',
-    'profile/cards_view': 'Cards',
-    'notifications/filter': "Filter",
-    'news/newslist': 'News',
-    'news/news_detail_view': 'News',
-    'events/eventslist': 'Events',
-    'events/event_detail_view': 'Events',
-    'class/classList': 'Class Schedule',
-    'availability/manage_locations_view': 'Manage Locations',
-    'shuttle/manage_shuttle_view': 'Manage Shuttle Stops',
-    'shuttle/add_shuttle_stops_view': 'Add Shuttle Stops',
-    'parking/manage_parking_view': 'Manage Lots',
-    'parking/neighborhoods_lot_view': 'Manage Lots',
-    'parking/neighborhoods_view': 'Manage Lots',
-    'parking/parking_lots_view': 'Manage Lots',
-    'parking/parking_structure_view': 'Manage Lots',
-    'parking/spot_types_view': 'Manage Spots',
-    'dining/dining_list_view': 'Dining',
-    'dining/dining_detail_view': 'Dining',
-    'dining/dining_nutrition_view': 'Dining',
-    'availability/detailed_view': 'Busyness'
+    'Maps': 'MAP',
+    'MapSearch': 'MAP',
+    'MapLocationList': 'MAP',
+    'Notifications': 'NOTIFICATIONS',
+    'Profile': 'PROFILE',
+    'profile/cards_view': 'CARDS',
+    'notifications/filter': "NOTIFICATIONS FILTER",
+    'news/newslist': 'NEWS',
+    'news/news_detail_view': 'NEWS',
+    'events/eventslist': 'EVENTS',
+    'events/event_detail_view': 'EVENTS',
+    'class/classList': 'CLASS SCHEDULE',
+    'availability/manage_locations_view': 'MANAGE LOCATIONS',
+    'shuttle/manage_shuttle_view': 'MANAGE SHUTTLE STOPS',
+    'shuttle/add_shuttle_stops_view': 'ADD SHUTTLE STOPS',
+    'parking/manage_parking_view': 'MANAGE LOTS',
+    'parking/neighborhoods_lot_view': 'MANAGE LOTS',
+    'parking/neighborhoods_view': 'MANAGE LOTS',
+    'parking/parking_lots_view': 'MANAGE LOTS',
+    'parking/parking_structure_view': 'MANAGE LOTS',
+    'parking/spot_types_view': 'MANAGE SPOTS',
+    'dining/dining_list_view': 'DINING',
+    'dining/dining_detail_view': 'DINING',
+    'dining/dining_nutrition_view': 'DINING',
+    'availability/detailed_view': 'BUSYNESS'
   };
 }
 
 class ParkingDefaults {
   static const defaultLots = [
+    "Athena",
     "Gilman",
-    "406",
-    "784",
-    "P782",
-    "P386 (Gliderport)",
-    "P704",
-    "P705"
+    "Hopkins",
   ];
   static const defaultSpots = ["S", "B", "A"];
 }
 
 class ButtonText {
-  static const ScanNowFull = 'Scan Your COVID-19 Kit.';
-  static const ScanNow = 'Scan Now';
-  static const SignInFull = 'Sign In to Scan Your COVID-19 Test Kit.';
-  static const SignIn = 'Sign In';
+  static const ScanNowFull = 'SCAN YOUR COVID-19 KIT.';
+  static const ScanNow = 'SCAN NOW';
+  static const SignInFull = 'SCAN YOUR COVID-19 KIT.';
+  static const SignIn = 'SIGN IN';
 }
 
 class ErrorConstants {
@@ -106,20 +103,15 @@ enum ScannerError implements Exception {
       'Submission failed because this barcode has already been scanned. Please discard this kit.\nCode #1035'),
   invalidMedia(
       'Barcode is not valid. Please scan another barcode.\nCode #1036'),
-  barcodeError(
-      'An error occurred. Please try again.\nCode #1037'),
-  invalidToken(
-      'An error occurred. Please try again.\nCode #1038'),
-  loggedOut(
-      'An error occurred. Please try again.\nCode #1039'),
-  unknownError(
-      'An error occurred. Please try again.\nCode #1040'),
+  barcodeError('An error occurred. Please try again.\nCode #1037'),
+  invalidToken('An error occurred. Please try again.\nCode #1038'),
+  loggedOut('An error occurred. Please try again.\nCode #1039'),
+  unknownError('An error occurred. Please try again.\nCode #1040'),
   notAcceptable(
       'Do not test within 30 days after receiving a positive test for COVID-19. Place all materials in the recycle and trash receptacles.\nCode #1041'),
   scannerReauthFailure(
       'Your session has expired. Please login to submit a scan.'),
-  noRecentScan(
-      'No scan submitted');
+  noRecentScan('No scan submitted');
 
   final String msg;
   const ScannerError(this.msg);
@@ -132,6 +124,28 @@ class LoginConstants {
   static const loginFailedTitle = 'Sorry, unable to sign you in.';
   static const loginFailedDesc =
       'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO (AD or Active Directory) if you are a Faculty/Staff.';
+
+  static const shuttleMaxTitle = 'Maximum shuttle stops reached';
+  static const shuttleMaxDesc =
+      'The maximum number of shuttle stops allowed is five. Please remove some stops to add more.';
+}
+
+class ParkingConstants {
+  static const spotMaxTitle = 'Maximum parking spots reached';
+  static const spotMaxDesc =
+      'The maximum number of parking spots allowed is three. Please remove some spots to add more.';
+  static const lotMaxTitle = 'Maximum parking lots reached';
+  static const lotMaxDesc =
+      'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.';
+}
+
+class WifiConstants {
+  // Initial State
+  static const wifiIssueFailedTitle = 'Could not report issue';
+  static const wifiIssueFailedDesc = 'Please run speed test to report issue.';
+  // Finished State
+  static const wifiIssueSuccessTitle = 'Issue Reported';
+  static const wifiIssueSuccessDesc = 'Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services.';
 }
 
 class Plugins {
@@ -147,14 +161,21 @@ class NavigatorConstants {
 
 class NotificationsConstants {
   static const statusNoMessages = 'You have no notifications.\n' +
-      'You may be opted out of all topics.\n\n' +
-      'Notifications to specific topics can be turned on in User Profile.';
+      'It looks like you\'ve unsubscribed from all topics.\n\n' +
+      'You can re-subscribe to specific topics via the Notifications Filter.';
   static const statusFetchProblem =
       'There was a problem fetching your messages.\n\n' +
           'Please try again soon.';
   static const statusFetching = 'Loading your notifications, please wait.';
   static const statusNone = '';
   static const statusNoMoreMessages = 'No more messages.';
+}
+
+class MessageTypeConstants {
+  static const SUCCESS = 1;
+  static const INFO = 2;
+  static const WARNING = 3;
+  static const ERROR = 4;
 }
 
 class DataPersistence {
@@ -167,20 +188,20 @@ class DataPersistence {
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-    'NativeScanner': 'Scanner',
+    'NativeScanner': 'SCANNER',
     'MyStudentChart': 'MyStudentChart',
     'MyUCSDChart': 'MyUCSDChart',
-    'student_id': 'Student ID',
-    'speed_test': "Speed Test",
-    'employee_id': 'Employee ID',
-    'finals': 'Finals',
-    'schedule': 'Classes',
-    'shuttle': "Shuttle",
-    'dining': 'Dining',
-    'availability': 'Busyness',
-    'events': 'Events',
-    'news': 'News',
-    'parking': 'Parking',
+    'student_id': 'STUDENT ID',
+    'speed_test': "TEST WIFI SPEED",
+    'employee_id': 'STAFF ID',
+    'finals': 'FINALS',
+    'schedule': 'CLASSES',
+    'shuttle': 'SHUTTLE',
+    'dining': 'DINING',
+    'availability': 'BUSYNESS',
+    'events': 'EVENTS',
+    'news': 'NEWS',
+    'parking': 'PARKING',
   };
 }
 

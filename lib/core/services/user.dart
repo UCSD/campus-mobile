@@ -15,8 +15,6 @@ class UserProfileService {
   late UserProfileModel _userProfileModel;
 
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
-    print("user headers:");
-    print(headers.toString());
     _error = null; _isLoading = true;
     try {
       _userProfileModel = userProfileModelFromJson(

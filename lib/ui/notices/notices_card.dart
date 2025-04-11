@@ -1,8 +1,8 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
-import '../../core/utils/webview.dart';
 
 class NoticesCard extends StatelessWidget {
   const NoticesCard({
@@ -18,7 +18,15 @@ class NoticesCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.only(
           top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
-      child: buildBannerView(notice),
+      elevation: 4,
+      shadowColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0),
+        child: buildBannerView(notice),
+      ),
     );
   }
 

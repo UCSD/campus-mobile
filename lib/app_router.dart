@@ -11,7 +11,7 @@ import 'package:campus_mobile_experimental/ui/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/dining/nutrition_facts_view.dart';
 import 'package:campus_mobile_experimental/ui/events/events_detail_view.dart';
-import 'package:campus_mobile_experimental/ui/events/events_list.dart';
+import 'package:campus_mobile_experimental/ui/events/events_card_list.dart';
 import 'package:campus_mobile_experimental/ui/events/events_view_all.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
@@ -21,16 +21,15 @@ import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_filter.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_slides.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/neighborhood_lot_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/neighborhoods_view.dart';
-import 'package:campus_mobile_experimental/ui/parking/parking_lot_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/parking_structure_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/cards.dart';
-import 'package:campus_mobile_experimental/ui/profile/notifications.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
@@ -68,7 +67,7 @@ class Router {
       case RoutePaths.EventsViewAll:
         return MaterialPageRoute(builder: (context) {
           Provider.of<CustomAppBar>(context).changeTitle(settings.name);
-          return EventsList();
+          return EventsCardList();
         });
       case RoutePaths.NewsDetailView:
         Item newsItem = settings.arguments as Item;
@@ -149,17 +148,12 @@ class Router {
       case RoutePaths.NotificationsFilter:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return NotificationsSettingsView();
+          return NotificationsFilterView();
         });
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ClassList();
-        });
-      case RoutePaths.ParkingLotsView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
-          return ParkingLotsView();
         });
       case RoutePaths.ParkingStructureView:
         return MaterialPageRoute(builder: (_) {

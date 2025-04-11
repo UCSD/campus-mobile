@@ -9,7 +9,7 @@ dependencies:
   connectivity_plus: 6.1.0
   dio: 4.0.6
   encrypt: 5.0.1
-  dots_indicator: 3.0.0
+  dots_indicator: 4.0.1
   firebase_analytics: 11.3.3
   firebase_core: 3.6.0
   firebase_crashlytics: 4.1.3
@@ -64,9 +64,46 @@ flutter:
     - assets/images/onboarding/
     - .env
   fonts:
-    - family: Brix Sans
-      fonts:
-        - asset: fonts/BrixSansMedium.otf
     - family: Refrigerator Deluxe
       fonts:
-        - asset: fonts/RefrigeratorDeluxeBold.otf
+        - asset: assets/fonts/Refrigerator Deluxe.otf
+        - asset: assets/fonts/Refrigerator Deluxe Bold.otf
+          weight: 900
+        - asset: assets/fonts/Refrigerator Deluxe Extrabold.otf
+          weight: 800
+        - asset: assets/fonts/Refrigerator Deluxe Heavy.otf
+          weight: 700
+        - asset: assets/fonts/Refrigerator Deluxe Light.otf
+          weight: 300
+    - family: Brix Sans
+      fonts:
+        - asset: assets/fonts/HVD Fonts - BrixSansBlack.otf
+          weight: 900
+        - asset: assets/fonts/HVD Fonts - BrixSansBlack-Italic.otf
+          weight: 900
+          style: italic
+        - asset: assets/fonts/HVD Fonts - BrixSansBold.otf
+          weight: 700
+        - asset: assets/fonts/HVD Fonts - BrixSansBold-Italic.otf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/HVD Fonts - BrixSansExtraLight.otf
+          weight: 200
+        - asset: assets/fonts/HVD Fonts - BrixSansExtraLight-Italic.otf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/HVD Fonts - BrixSansLight.otf
+          weight: 300
+        - asset: assets/fonts/HVD Fonts - BrixSansLight-Italic.otf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/HVD Fonts - BrixSansMedium.otf
+          weight: 500
+        - asset: assets/fonts/HVD Fonts - BrixSansMedium-Italic.otf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/HVD Fonts - BrixSansRegular.otf
+          weight: 400
+        - asset: assets/fonts/HVD Fonts - BrixSansRegular-Italic.otf
+          weight: 400
+          style: italic

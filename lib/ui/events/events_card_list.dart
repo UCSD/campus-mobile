@@ -6,8 +6,8 @@ import 'package:campus_mobile_experimental/ui/events/event_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class EventsList extends StatelessWidget {
-  const EventsList({Key? key, this.listSize}) : super(key: key);
+class EventsCardList extends StatelessWidget {
+  const EventsCardList({Key? key, this.listSize}) : super(key: key);
   final listSize;
 
   @override
@@ -19,27 +19,24 @@ class EventsList extends StatelessWidget {
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
-    final List<Widget> eventTiles = [];
+    final List<Widget> eventTiles = [const SizedBox(width: 7.5)]; // start off with left spacer
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
-    var size = listSize ?? 3;
+    var size = listSize ?? 6;
 
     /// check to see if we have at least 3 events
     if (size > listOfEvents.length) size = listOfEvents.length;
 
     for (var i = 0; i < size; i++) {
-      final EventModel item = listOfEvents[i];
-      final tile = EventTile(data: item);
-      final spacer = SizedBox(width: 5);
-      eventTiles.add(tile);
-      eventTiles.add(spacer);
+      eventTiles.add(EventTile(data: listOfEvents[i])); // get event model and then create a tile from it
+      eventTiles.add(const SizedBox(width: 9)); // spacer between tiles
     }
 
     if (listSize != null) {
       return SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,14 +46,9 @@ class EventsList extends StatelessWidget {
     } else {
       return ContainerView(
         child: listOfEvents.isEmpty
-            ? Center(child: Text('No events found.'))
-            : EventsAll(),
+            ? const Center(child: const Text('No events found.'))
+            : const EventsAll(),
       );
     }
-
-    // ListView(
-    //   children:
-    //   ListTile.divideTiles(tiles: eventTiles, context: context)
-    //       .toList(),
   }
 }
