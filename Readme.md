@@ -28,16 +28,16 @@ Whenever you want to update your repo with the latest upstream changes, you'll n
 git fetch upstream
 ```
 
-Now you are ready to checkout your local `campus-activation-redesign` branch and merge in any changes from the upstream repo's `campus-activation-redesign` branch:
+Now you are ready to checkout your local `experimental` branch and merge in any changes from the upstream repo's `experimental` branch:
 ```shell
 # Checkout your master branch and merge upstream
-git checkout campus-activation-redesign
-git merge upstream/campus-activation-redesign
+git checkout experimental
+git merge upstream/experimental
 ```
 
-Your local `campus-activation-redesign` branch is now up-to-date with any changes upstream.
+Your local `experimental` branch is now up-to-date with any changes upstream.
 
-### Doing Your Work (Campus Activation Redesign)
+### Doing Your Work
 
 ```shell
 # Add 'upstream' repo to list of remotes
@@ -50,16 +50,16 @@ git fetch upstream
 ```
 
 #### Create a Feature Branch
-When you begin working on a new feature or bugfix, it is important that you create a new branch. Not only is it proper git workflow, but it also keeps your changes organized and separated from the `campus-activation-redesign` branch so that you can easily submit and manage multiple pull requests for every task you complete.
+When you begin working on a new feature or bugfix, it is important that you create a new branch. Not only is it proper git workflow, but it also keeps your changes organized and separated from the `experimental` branch so that you can easily submit and manage multiple pull requests for every task you complete.
 
 To create a new branch and start working on it:
 
 ```shell
-# Checkout the campus-activation-redesign branch
-git checkout campus-activation-redesign
+# Checkout the experimental branch
+git checkout experimental
 
 # Create and checkout a branch named newfeature
-git checkout -b campus-activation-redesign
+git checkout -b experimental
 ```
 
 You are now ready to begin developing your new feature. Commit your code often, using present-tense and concise verbiage explaining the work completed.
@@ -86,24 +86,24 @@ git push -u upstream newfeature
 #### Update your feature branch
 From the time you created your new feature branch `newfeature`, to submitting a pull request, it is likely that your branch 
 
-Branch `upstream/campus-activation-redesign` is updated often. Prior to submitting a pull request, update your `newfeature` branch from `upstream/campus-activation-redesign` so that merging it will be a simple process which won't require any conflict resolution work.
+Branch `upstream/experimental` is updated often. Prior to submitting a pull request, update your `newfeature` branch from `upstream/experimental` so that merging it will be a simple process which won't require any conflict resolution work.
 ```shell
-# Fetch upstream campus-activation-redesign and merge with your local campus-activation-redesign branch
+# Fetch upstream experimental and merge with your local experimental branch
 git fetch upstream
-git checkout campus-activation-redesign
-git merge upstream/campus-activation-redesign
+git checkout experimental
+git merge upstream/experimental
 
-# If there were any new commits, merge them to your `newfeature` branch from the `campus-activation-redesign` branch
+# If there were any new commits, merge them to your `newfeature` branch from the `experimental` branch
 git checkout newfeature
-git merge campus-activation-redesign
+git merge experimental
 git push upstream newfeature
 ```
 
 
 #### Submitting
-Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch 'newfeature' and click the 'New pull request' button.
+Once you've committed and pushed your feature branch `newfeature` to GitHub, navigate to to your new feature branch on UCSD's Campus Mobile GitHub and click the 'New pull request' button.
 
-If you need to make future updates to your pull request, push the new commit or commits to your feature branch `newfeature` on GitHub. Your pull request will automatically track the changes on your feature branch.
+If you need to make future updates to your pull request, push the new commit or commits to your feature branch `newfeature` on GitHub. Your pull request will automatically track the changes on your feature branch and generate new builds for iOS and Android.
 
 ## Platform
 The goal of this platform is to provide responsive and intuitive mobile interactions for a personalized campus experience.
