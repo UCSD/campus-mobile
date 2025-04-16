@@ -16,10 +16,9 @@ class EmployeeIdCard extends StatefulWidget {
 }
 
 class _EmployeeIdCardState extends State<EmployeeIdCard> {
-  String cardId = "employee_id";
-  String placeholderPhotoUrl =
-      "https://mobile.ucsd.edu/replatform/v1/qa/webview/resources/img/placeholderPerson.png";
-  bool isValidId = false;
+  /// STATES
+  var cardId = "employee_id";
+  var isValidId = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +32,13 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
             employeeModel.employeeId != null);
 
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<EmployeeIdDataProvider>(context, listen: false)
           .fetchData(),
       isLoading: Provider.of<EmployeeIdDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<EmployeeIdDataProvider>(context).error,
       child: () => isValidId
           ? buildCardContent(
@@ -54,17 +53,14 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
       width: double.infinity,
       child: Center(
         child: Padding(
-          padding: EdgeInsets.only(
-            top: 16.0,
-            bottom: 32.0,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
                 child: Text.rich(
-                  TextSpan(text: "Unable to display Employee ID.\n", children: [
+                  TextSpan(text: "Unable to display STAFF ID.\n\n", children: [
                     TextSpan(text: "If the problem persists, contact the "),
                     TextSpan(
                         text: "ITS Service Desk",
@@ -90,251 +86,118 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   Widget buildCardContent(
       EmployeeIdModel? employeeIdModel, BuildContext context) {
     try {
-      if (MediaQuery.of(context).size.width < 600) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: (Row(children: <Widget>[
-            Column(
+      return Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: cardMargin),
+            child: Flex(
+              direction: Axis.horizontal,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: cardMargin * 1.5, right: cardMargin * 1.5)),
-                    Column(
-                      children: <Widget>[
-                        Image.network(
-                          employeeIdModel!.photo.contains("https")
-                              ? employeeIdModel.photo
-                              : placeholderPhotoUrl,
-                          fit: BoxFit.contain,
-                          height: ScalingUtility.verticalSafeBlock * 14,
-                        ),
-                        SizedBox(
-                          height: ScalingUtility.verticalSafeBlock * 1.5,
-                        )
-                      ],
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: cardMargin * 1.5, right: cardMargin * 1.5)),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: new EdgeInsets.only(
-                                right: ScalingUtility.horizontalSafeBlock *
-                                    cardMargin),
-                            child: FittedBox(
-                              child: Text(
-                                employeeIdModel.employeePreferredDisplayName,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: getFontSize(
-                                        employeeIdModel
-                                            .employeePreferredDisplayName,
-                                        "name")),
-                                textAlign: TextAlign.left,
-                                softWrap: true,
-                                maxLines: 1,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                              height: ScalingUtility.verticalSafeBlock * .5),
-                          Container(
-                            padding: new EdgeInsets.only(
-                                right: ScalingUtility.horizontalSafeBlock *
-                                    cardMargin),
-                            child: Text(
-                              employeeIdModel.department,
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: getFontSize(
-                                      employeeIdModel.department, "")),
-                              textAlign: TextAlign.left,
-                              softWrap: false,
-                              maxLines: 1,
-                            ),
-                          ),
-                          SizedBox(
-                              height: ScalingUtility.verticalSafeBlock * .5),
-                          Container(
-                            padding: new EdgeInsets.only(
-                                right: ScalingUtility.horizontalSafeBlock *
-                                    cardMargin),
-                            child: Text(
-                              "Employee ID " + employeeIdModel.employeeId,
-                              style: TextStyle(
-                                  fontSize: getFontSize(
-                                      "Employee ID " +
-                                          employeeIdModel.employeeId,
-                                      "")),
-                              textAlign: TextAlign.left,
-                              softWrap: false,
-                              maxLines: 1,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(
-                                ScalingUtility.verticalSafeBlock * .9),
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.all(0),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            child: returnBarcodeContainer(
-                                employeeIdModel.barcode, false, context),
-                            onPressed: () {
-                              createAlertDialog(
-                                  context,
-                                  returnBarcodeContainer(
-                                      employeeIdModel.barcode, true, context),
-                                  employeeIdModel.barcode,
-                                  true);
-                            },
-                          ),
-                        ]),
-                  ],
+                Flexible(
+                  flex: 4,
+                  child: Image.asset(
+                    'assets/images/staff_id_placeholder.png',
+                    fit: BoxFit.fill,
+                  ),
                 ),
-                Row(children: <Widget>[
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 0),
-                      child: Text(
+                SizedBox(width: cardMargin * 1.5),
+                Flexible(
+                  flex: 6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        employeeIdModel!.employeePreferredDisplayName,
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? darkPrimaryColor2
+                              : lightPrimaryColor,
+                          fontFamily: 'Brix Sans',
+                          fontWeight: FontWeight.w400,
+                          fontSize: getFontSize(
+                              employeeIdModel.employeePreferredDisplayName,
+                              "name"),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
                         employeeIdModel.classificationType,
                         style: TextStyle(
-                            fontSize: ScalingUtility.horizontalSafeBlock * 3.5),
+                          fontFamily: 'Brix Sans',
+                          fontWeight: FontWeight.w400,
+                          fontSize: ScalingUtility.horizontalSafeBlock * 4.0,
+                        ),
                       ),
-                    ),
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left:
-                                (ScalingUtility.horizontalSafeBlock * 11.225) +
-                                    realignText(Theme.of(context))),
+                      Divider(
+                        color: listTileDividerColorLight,
+                        thickness: 1,
+                        height: 16,
+                      ),
+                      Text(
+                        employeeIdModel.department,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: getFontSize(employeeIdModel.department, ""),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: cardMargin),
+                      Text(
+                        "ID " + employeeIdModel.employeeId,
+                        style: TextStyle(
+                          fontFamily: 'Brix Sans',
+                          fontWeight: FontWeight.w400,
+                          fontSize: getFontSize(
+                              "Employee ID " + employeeIdModel.employeeId, ""),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: returnBarcodeContainer(
+                            employeeIdModel.barcode, false, context),
+                        onPressed: () {
+                          createAlertDialog(
+                            context,
+                            returnBarcodeContainer(
+                                employeeIdModel.barcode, true, context),
+                            employeeIdModel.barcode,
+                            true,
+                          );
+                        },
+                      ),
+                      Center(
                         child: Text(
                           employeeIdModel.barcode.toString(),
                           style: TextStyle(
-                              fontSize: ScalingUtility.horizontalSafeBlock * 3,
-                              letterSpacing:
-                                  ScalingUtility.horizontalSafeBlock * 1.5),
+                            fontSize: ScalingUtility.horizontalSafeBlock * 3,
+                            letterSpacing:
+                                ScalingUtility.horizontalSafeBlock * 1.5,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ]),
-              ],
-            ),
-          ])),
-        );
-      } else {
-        return (Row(children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: cardMargin * 1.5),
-          ),
-          Container(
-            child: Column(
-              children: <Widget>[
-                Image.network(
-                  employeeIdModel!.photo.contains("https")
-                      ? employeeIdModel.photo
-                      : placeholderPhotoUrl,
-                  fit: BoxFit.contain,
-                  height: 125,
                 ),
-                SizedBox(height: 10),
-                Text(employeeIdModel.classificationType),
               ],
             ),
-            padding: EdgeInsets.only(
-              left: cardMargin,
-              right: 20,
-            ),
           ),
-          Expanded(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    padding: new EdgeInsets.only(right: cardMargin),
-                    child: Text(
-                      employeeIdModel.employeePreferredDisplayName,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: tabletFontSize(
-                              employeeIdModel.employeePreferredDisplayName,
-                              "name")),
-                      textAlign: TextAlign.left,
-                      softWrap: false,
-                      maxLines: 1,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Container(
-                    padding: new EdgeInsets.only(right: cardMargin),
-                    child: Text(
-                      employeeIdModel.department,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize:
-                              tabletFontSize(employeeIdModel.department, "")),
-                      textAlign: TextAlign.left,
-                      softWrap: false,
-                      maxLines: 1,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Container(
-                    padding: new EdgeInsets.only(right: cardMargin),
-                    child: Text(
-                      "Employee ID " + employeeIdModel.employeeId,
-                      style: TextStyle(
-                          fontSize: tabletFontSize(
-                              "Employee ID " + employeeIdModel.employeeId, "")),
-                      textAlign: TextAlign.left,
-                      softWrap: false,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 15),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.all(0),
-                    ),
-                    child: returnBarcodeContainerTablet(
-                        employeeIdModel.barcode, false, context),
-                    onPressed: () {
-                      createAlertDialog(
-                          context,
-                          returnBarcodeContainer(
-                              employeeIdModel.barcode, true, context),
-                          employeeIdModel.barcode,
-                          true);
-                    },
-                  ),
-                ]),
-          ),
-        ]));
-      }
+        ],
+      );
     } catch (e) {
       print(e);
       return Container(
         width: double.infinity,
         child: Center(
           child: Padding(
-            padding: EdgeInsets.only(
-              top: 16.0,
-              bottom: 32.0,
-            ),
+            padding: EdgeInsets.symmetric(vertical: 16.0),
             child: Text('An error occurred, please try again.'),
           ),
         ),
@@ -351,7 +214,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
           return AlertDialog(
             backgroundColor: Colors.white,
             title: Text(
-              "Employee ID",
+              "STAFF ID",
               style: TextStyle(color: Colors.black),
             ),
             content: Container(
@@ -373,15 +236,14 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
 
   Column checkForRotation(
       Column image, BuildContext context, String? cardNumber, bool rotated) {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape)
       return returnBarcodeContainer(cardNumber, rotated, context);
-    }
     return image;
   }
 
   Widget buildTitle() {
     return Text(
-      "Employee ID",
+      "STAFF ID",
       textAlign: TextAlign.left,
       style: TextStyle(
         fontSize: ScalingUtility.horizontalSafeBlock * 2,
@@ -453,22 +315,24 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
             ),
           ]);
     } else {
-      return Column(children: <Widget>[
-        Text(
-          "(tap for easier scanning)",
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: ScalingUtility.horizontalSafeBlock * 2.5,
-            color: decideColor(Theme.of(context)),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
+            child: Text(
+              "tap for easier scanning",
+              textAlign: TextAlign.center,
+              style: linkTextLight.copyWith(fontSize: 14.0),
+            ),
           ),
-        ),
-        Container(
-          padding: addBorder(Theme.of(context)),
-          color: Colors.white,
-          child: barcodeWithText,
-        ),
-      ]);
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            color: Colors.white,
+            child: barcodeWithText,
+          ),
+        ],
+      );
     }
   }
 
@@ -590,13 +454,11 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     double base = ScalingUtility.horizontalSafeBlock * 3.5;
 
     /// If threshold is passed, shrink text
-    if (input.length >= 21) {
-      return (base - (0.175 * (input.length - 18)));
-    }
+    if (input.length >= 21) return (base - (0.175 * (input.length - 18)));
 
-    //// The name should be large than subheadings
+    /// The name should be large than subheadings
     if (textField == "name") {
-      base = ScalingUtility.horizontalSafeBlock * 5;
+      base = ScalingUtility.horizontalSafeBlock * 6;
       return base;
     }
 
@@ -621,26 +483,23 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   /// Determine the padding for a border around barcode
-  EdgeInsets addBorder(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark
-        ? EdgeInsets.all(5)
-        : EdgeInsets.all(0);
-  }
+  EdgeInsets addBorder(ThemeData currentTheme) =>
+      currentTheme.brightness == Brightness.dark
+          ? EdgeInsets.all(5)
+          : EdgeInsets.all(0);
 
   /// Determine the padding for the text to realign
-  double realignText(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark ? 7 : 0;
-  }
+  double realignText(ThemeData currentTheme) =>
+      currentTheme.brightness == Brightness.dark ? 7 : 0;
 
   /// Determine the  color of hint above the barcode
-  Color decideColor(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black45;
-  }
+  Color decideColor(ThemeData currentTheme) =>
+      currentTheme.brightness == Brightness.dark
+          ? Colors.white
+          : Colors.black45;
 }
 
-//Image Scaling
+// Image Scaling
 class ScalingUtility {
   late MediaQueryData _queryData;
   static late double horizontalSafeBlock;
@@ -666,7 +525,6 @@ class SizeConfig {
   static late double screenHeight;
   static double? blockSizeHorizontal;
   static double? blockSizeVertical;
-
   static late double _safeAreaHorizontal;
   static late double _safeAreaVertical;
   static late double safeBlockHorizontal;

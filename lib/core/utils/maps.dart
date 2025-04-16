@@ -14,6 +14,4 @@ double getHaversineDistance(lat1, lon1, lat2, lon2) {
   return d;
 }
 
-double deg2rad(deg) {
-  return deg * (Math.pi / 180);
-}
+double deg2rad(deg) => deg * (Math.pi / 180);

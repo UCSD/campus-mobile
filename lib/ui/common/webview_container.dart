@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewContainer extends StatefulWidget {
@@ -19,18 +20,18 @@ class WebViewContainer extends StatefulWidget {
     required this.requireAuth,
     this.overFlowMenu,
     this.actionButtons,
-    this.hideMenu,
+    this.hideMenu = false,
   }) : super(key: key);
 
   /// required parameters
-  final String? titleText;
-  final String? initialUrl;
+  final String titleText;
+  final String initialUrl;
   final String cardId;
-  final bool? requireAuth;
+  final bool requireAuth;
 
   /// optional parameters
   final Map<String, Function>? overFlowMenu;
-  final bool? hideMenu;
+  final bool hideMenu;
   final List<Widget>? actionButtons;
 
   @override
@@ -39,13 +40,17 @@ class WebViewContainer extends StatefulWidget {
 
 class _WebViewContainerState extends State<WebViewContainer>
     with AutomaticKeepAliveClientMixin {
-  bool get wantKeepAlive => true;
-  late UserDataProvider _userDataProvider;
-  WebViewController? _webViewController;
+  /// STATES
+  bool active = false;
   double _contentHeight = cardContentMinHeight;
-  bool? active;
-  Function? hide;
-  String? webCardUrl;
+  late Function hide;
+  late String webCardUrl;
+
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+
+  /// SERVICES
+  WebViewController? _webViewController;
 
   @override
   void initState() {
@@ -57,24 +62,36 @@ class _WebViewContainerState extends State<WebViewContainer>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    active = Provider.of<CardsDataProvider>(context).cardStates![widget.cardId];
+    active = Provider.of<CardsDataProvider>(context).cardStates[widget.cardId]!;
 
     // check if this webCard needs an auth token
-    if (widget.requireAuth!) {
+    if (widget.requireAuth) {
       _userDataProvider = Provider.of<UserDataProvider>(context);
-      webCardUrl = widget.initialUrl! +
-          "?expiration=${_userDataProvider.authenticationModel!.expiration}#${_userDataProvider.authenticationModel!.accessToken}";
+      webCardUrl = widget.initialUrl +
+          "?expiration=${_userDataProvider.authenticationModel.expiration}#${_userDataProvider.authenticationModel.accessToken}";
     } else {
       webCardUrl = widget.initialUrl;
     }
 
     checkWebURL();
 
-    if (active != null && active!) {
+    if (active) {
       return Card(
         margin: EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+        elevation: 4,
+        shadowColor: Colors.black,
         semanticContainer: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(
+            color: dotsUnselectedColor,
+            width: 0.5,
+          ),
+        ),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? darkPrimaryBgColor
+            : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -83,21 +100,16 @@ class _WebViewContainerState extends State<WebViewContainer>
                   top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
-                widget.titleText!,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 18.0,
-                ),
+                widget.titleText,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              trailing: buildMenu()!,
+              trailing: buildMenu(),
             ),
             buildBody(context),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: widget.actionButtons != null
-                  ? Row(
-                      children: widget.actionButtons!,
-                    )
+                  ? Row(children: widget.actionButtons!)
                   : Container(),
             ),
           ],
@@ -109,31 +121,35 @@ class _WebViewContainerState extends State<WebViewContainer>
 
   // builds the actual webview widget
   Widget buildBody(context) {
-    print('webview_container:buildBody: ' + webCardUrl!);
-    return Container(
-      height: _contentHeight,
-      child: WebView(
-        javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: webCardUrl,
-        onWebViewCreated: (controller) {
-          _webViewController = controller;
-        },
-        navigationDelegate: null,
-        javascriptChannels: <JavascriptChannel>[
-          _linksChannel(context),
-          _heightChannel(context),
-          _mapChannel(context),
-          _refreshTokenChannel(context),
-          _permanentRedirect(context)
-        ].toSet(),
+    print('webview_container:buildBody: ' + webCardUrl);
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(12.0),
+        bottomRight: Radius.circular(12.0),
+      ),
+      child: Container(
+        height: _contentHeight,
+        child: WebView(
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: webCardUrl,
+          onWebViewCreated: (controller) {
+            _webViewController = controller;
+          },
+          navigationDelegate: null,
+          javascriptChannels: <JavascriptChannel>[
+            _linksChannel(context),
+            _heightChannel(context),
+            _mapChannel(context),
+            _refreshTokenChannel(context),
+            _permanentRedirect(context)
+          ].toSet(),
+        ),
       ),
     );
   }
 
-  Widget? buildMenu() {
-    if (widget.hideMenu ?? false) {
-      return Container();
-    }
+  Widget buildMenu() {
+    if (widget.hideMenu) return Container();
     return ButtonBar(
       buttonPadding: EdgeInsets.all(0),
       mainAxisSize: MainAxisSize.min,
@@ -154,14 +170,20 @@ class _WebViewContainerState extends State<WebViewContainer>
         child: Text(
           menuOption,
           textAlign: TextAlign.center,
+          style: TextStyle(color: dotsUnselectedColor),
         ),
       );
       menu.add(item as DropdownMenuItem<String>);
     });
     return DropdownButton(
       items: menu,
+      iconSize: 36,
+      iconEnabledColor: dotsUnselectedColor,
       underline: Container(),
-      icon: Icon(Icons.more_vert),
+      icon: Transform.translate(
+        offset: Offset(6, -3),
+        child: Icon(Icons.more_vert, color: dotsUnselectedColor),
+      ),
       onChanged: (String? selectedMenuItem) =>
           onMenuItemPressed(selectedMenuItem),
     );
@@ -170,19 +192,15 @@ class _WebViewContainerState extends State<WebViewContainer>
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
       case CardMenuOptionConstants.reloadCard:
-        {
-          _webViewController?.loadUrl(webCardUrl!);
-        }
+        _webViewController?.loadUrl(webCardUrl);
+        resetCardHeight(widget.cardId);
         break;
       case CardMenuOptionConstants.hideCard:
-        {
-          hide!();
-        }
+        hide();
+        resetCardHeight(widget.cardId);
         break;
       default:
-        {
-          // do nothing for now
-        }
+      // do nothing for now
     }
   }
 
@@ -222,7 +240,7 @@ class _WebViewContainerState extends State<WebViewContainer>
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
         Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
-        //Navigator.pushNamed(context, RoutePaths.Map);
+        // Navigator.pushNamed(context, RoutePaths.Map);
       },
     );
   }
@@ -256,7 +274,10 @@ class _WebViewContainerState extends State<WebViewContainer>
   void checkWebURL() async {
     String? currentUrl = await _webViewController?.currentUrl();
     if (_webViewController != null && webCardUrl != currentUrl) {
-      _webViewController?.loadUrl(webCardUrl!);
+      _webViewController?.loadUrl(webCardUrl);
     }
   }
+
+  /// SIMPLE GETTERS
+  bool get wantKeepAlive => true;
 }

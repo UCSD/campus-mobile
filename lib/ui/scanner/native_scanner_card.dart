@@ -1,81 +1,72 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner.dart';
 import 'package:campus_mobile_experimental/core/providers/scanner_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
-const String cardId = 'NativeScanner';
+const cardId = 'NativeScanner';
 
 class NativeScannerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: true,
-      hide: () => null,
+      active: context.watch<CardsDataProvider>().cardStates[cardId],
+      hide: () => context.read<CardsDataProvider>().toggleCard(cardId),
       reload: () =>
           Provider.of<ScannerMessageDataProvider>(context, listen: false)
               .fetchData(),
       isLoading: Provider.of<ScannerMessageDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: null,
       child: () => buildCardContent(context),
-      actionButtons: [buildActionButton(context)],
-      hideMenu: false,
+      actionButtons: [
+        ActionButton(
+          buttonText: getActionButtonText(context),
+          onPressed: () => getActionButtonNavigateRoute(context),
+        ),
+      ],
     );
   }
 
   Widget buildCardContent(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        getActionButtonNavigateRoute(context);
-      },
-      behavior: HitTestBehavior.translucent,
-      child: Row(
-        children: <Widget>[
-          Container(
-            child: Image.asset(
-              'assets/images/QRScanIcon.png',
-              fit: BoxFit.contain,
-              height: 56,
-            ),
-            padding: EdgeInsets.only(
-              left: 10,
-              right: 10,
-            ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          child: Image.asset(
+            Theme.of(context).brightness == Brightness.dark
+                ? 'assets/images/QRScanIcon-dark.png'
+                : 'assets/images/QRScanIcon.png',
+            fit: BoxFit.contain,
+            height: 24,
           ),
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  getCardContentText(context),
-                  textAlign: TextAlign.left,
-                ),
-                getMessageWidget(context),
-              ],
-            ),
+          padding: EdgeInsets.only(
+            left: 8,
+            right: 8,
+            top: 4,
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildActionButton(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
-      ),
-      child: Text(
-        getActionButtonText(context),
-      ),
-      onPressed: () {
-        getActionButtonNavigateRoute(context);
-      },
+        ),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                getCardContentText(context),
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.left,
+              ),
+              getMessageWidget(context),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -93,44 +84,35 @@ class NativeScannerCard extends StatelessWidget {
 
   Widget getMessageWidget(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-      String? myRecentScanTime =
-          Provider.of<ScannerMessageDataProvider>(context, listen: false)
-              .scannerMessageModel!
-              .collectionTime;
-      if (myRecentScanTime == "") {
-        myRecentScanTime = ScannerConstants.noRecentScan;
-      }
-      return (Padding(
-        padding: EdgeInsets.only(top: 8.0, right: 8.0),
+      String myRecentScanTime = context.read<ScannerMessageDataProvider>()
+        .scannerMessageModel.collectionTime ?? "";
+      myRecentScanTime = myRecentScanTime.isEmpty
+        ? ScannerError.noRecentScan.msg
+        : DateFormat('MMMM d, yyyy').format(
+            DateFormat('yyyy-MM-dd hh:mm a').parse(myRecentScanTime)
+          );
+      return Padding(
+        padding: const EdgeInsets.only(top: 8.0, right: 8.0),
         child: Text.rich(
           TextSpan(
+            style: Theme.of(context).textTheme.bodyMedium,
             children: [
-              TextSpan(
-                text: "Last test kit scan: ",
-              ),
-              TextSpan(
-                  text: Provider.of<ScannerMessageDataProvider>(context,
-                          listen: false)
-                      .scannerMessageModel!
-                      .collectionTime,
-                  style: TextStyle(fontWeight: FontWeight.w600)),
+              const TextSpan(text: "Last test kit scan: "),
+              TextSpan(text: myRecentScanTime)
             ],
           ),
         ),
-      ));
+      );
     } else {
       return Container(width: 0, height: 0);
     }
   }
 
-  getActionButtonNavigateRoute(BuildContext context) {
+  void getActionButtonNavigateRoute(BuildContext context) {
     if (Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
       Provider.of<ScannerDataProvider>(context, listen: false)
-          .setDefaultStates();
-      Navigator.pushNamed(
-        context,
-        RoutePaths.ScanditScanner,
-      );
+          .resetDefaultStates();
+      Navigator.pushNamed(context, RoutePaths.ScanditScanner);
     } else {
       Provider.of<BottomNavigationBarProvider>(context, listen: false)
           .currentIndex = NavigatorConstants.ProfileTab;

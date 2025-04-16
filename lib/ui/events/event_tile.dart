@@ -2,195 +2,345 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../app_styles.dart';
 
 class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
+
+  /// LAYOUT CONSTANTS
+  static const double tileWidth = 190;
+  static const cornerRadius = Radius.circular(5.0);
+  static const sideBorder = BorderSide(width: 0.3);
+
+  /// MODELS
   final EventModel data;
-  final double tileWidth = 190;
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading!
-        ? Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary))
-        : buildEventTile(context);
+    // Show loading indicator while data is loading
+    if (Provider.of<EventsDataProvider>(context).isLoading) {
+      return Center(
+        child: CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      );
+    }
+    return _buildEventTile(context);
   }
 
-  Widget buildEventTile(BuildContext context) {
+  Widget _buildEventTile(BuildContext context) {
     return Container(
       width: tileWidth,
-      height: 300,
-      margin: EdgeInsets.zero,
+      //height: 300,
       child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, RoutePaths.EventDetailView,
-              arguments: data);
+        onTap: (){
+          Navigator.pushNamed(
+            context,
+            RoutePaths.EventDetailView,
+            arguments: data,
+          );
         },
         child: Column(
           children: [
-            eventImageLoader(data.imageThumb),
-            SizedBox(
-              height: 145,
-              width: tileWidth,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.3),
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                ),
-                child: Card(
-                  margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          data.title!,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 5),
-                        ),
-                        eventsDateTime(data),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ], // children
+            _eventDetailsCard(context),
+          ],
         ),
       ),
     );
   }
 
-  Widget eventImageLoader(String? url) {
-    return url!.isEmpty
-        ? Container(
-            child: Image(
-            image: AssetImage('assets/images/UCSDMobile_sharp.png'),
-            height: 150,
-            width: tileWidth,
-            fit: BoxFit.fill,
-          ))
-        : Image.network(
-            url,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.secondary,
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
+  Widget _eventDetailsCard(BuildContext context) {
+    return SizedBox(
+      height: 300,
+      width: 190,
+      // Black Outline
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(width: 0.3),
+          borderRadius: BorderRadius.all(cornerRadius),
+        ),
+        child: Card(
+          // Black Outline Style
+          margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+          elevation: 4.0,
+            // Tile Contents
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Tile Image
+                _eventImageLoader(data.imageThumb),
+                // Date & Time
+                Row(
+                  children: [
+                    const SizedBox(width: 2),
+                    // Date (Top Left)
+                    StartEndDateContainer(
+                      date: (data.startDate.day == data.endDate.day)
+                          ? DateFormat("MMM d y").format(data.startDate.toLocal())
+                          : DateFormat("MMM d y").format(data.startDate.toLocal()) + ' - ' + DateFormat("MMM d y").format(data.endDate.toLocal()),
+                    ),
+                    const Spacer(),
+                    // Time (Top Right)
+                    TileTime(time: DateFormat.jm().format(data.startDate.toLocal()) +
+                        ' - ' + DateFormat.jm().format(data.endDate.toLocal())
+                    ),
+                    const SizedBox(width: 2),
+                  ]
                 ),
-              );
-            },
-            fit: BoxFit.fill,
-            height: 150,
-            width: tileWidth,
-          );
-  }
-
-  Widget eventsDateTime(EventModel data) {
-    try {
-      // Separate dates from times
-      String startMonthDayYear =
-          DateFormat.yMMMMd('en_US').format(data.startDate!.toLocal());
-      String endMonthDayYear =
-          DateFormat.yMMMMd('en_US').format(data.endDate!.toLocal());
-      String startTime = DateFormat.jm().format(data.startDate!.toLocal());
-      String endTime = DateFormat.jm().format(data.endDate!.toLocal());
-
-      // Mark any special types of events
-      bool sameDay = (startMonthDayYear == endMonthDayYear);
-      bool unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
-      Widget date;
-      Widget time;
-      if (sameDay) {
-        date = Text(
-          startMonthDayYear,
-          style: TextStyle(fontSize: 12),
-        ); // Ex. June 11, 2021
-      } else {
-        // if not the same date, check if the same year
-        String startYear = startMonthDayYear.substring(
-            startMonthDayYear.indexOf(',') + 2, startMonthDayYear.length);
-        String endYear = endMonthDayYear.substring(
-            endMonthDayYear.indexOf(',') + 2, endMonthDayYear.length);
-        if (startYear == endYear) {
-          // if the same year, check if the same month
-          String startMonth =
-              startMonthDayYear.substring(0, startMonthDayYear.indexOf(' '));
-          String endMonth =
-              endMonthDayYear.substring(0, endMonthDayYear.indexOf(' '));
-          if (startMonth == endMonth) {
-            // if different date in the same month and year
-            String startDay = startMonthDayYear.substring(
-                startMonthDayYear.indexOf(' ') + 1,
-                startMonthDayYear.indexOf(','));
-            String endDay = endMonthDayYear.substring(
-                endMonthDayYear.indexOf(' ') + 1, endMonthDayYear.indexOf(','));
-            date = Text(
-              startMonth + ' ' + startDay + ' - ' + endDay + ', ' + startYear,
-              style: TextStyle(fontSize: 12),
-            ); // Ex. September 11 - 26, 2021
-          } else {
-            // if different month in the same year
-            String startMonthDay =
-                startMonthDayYear.substring(0, startMonthDayYear.indexOf(','));
-            String endMonthDay =
-                endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
-            date = Text(
-              startMonthDay + ' - ' + endMonthDay + ', ' + startYear,
-              style: TextStyle(fontSize: 12),
-            ); // Ex. September 11 - October 26, 2021
-          }
-        } else {
-          date = Text(
-            startMonthDayYear + ' - ' + endMonthDayYear,
-            style: TextStyle(fontSize: 12),
-          ); // Ex. June 11, 2021 - May 12, 2023
-        }
-      }
-
-      if (unspecifiedTime) {
-        time = Text(
-          '',
-          style: TextStyle(fontSize: 12),
-        );
-      } else {
-        time = Text(
-          startTime + ' - ' + endTime,
-          style: TextStyle(fontSize: 12),
-        );
-      }
-
-      return Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          date,
-          Padding(
-            padding: EdgeInsets.only(bottom: 5),
+                // Tile Title
+                TileTitle(title: data.title),
+                const Spacer()
+              ],
+            ),
           ),
-          time
+        ),
+    );
+  }
+}
+
+Widget _eventImageLoader(String? url) {
+  return url?.isEmpty ?? true
+      ? ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: EventTile.cornerRadius,
+            topRight: EventTile.cornerRadius,
+          ),
+          child: Image.asset(
+            'assets/images/UCSDMobile_sharp.png',
+            height: 150,
+            width: EventTile.tileWidth,
+            fit: BoxFit.fitHeight
+          ))
+        : ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: EventTile.cornerRadius,
+              topRight: EventTile.cornerRadius,
+            ),
+            child: Image.network(
+              url!,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.secondary,
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+              height: 150,
+              width: EventTile.tileWidth,
+              fit: BoxFit.fitHeight,
+            )
+          );    
+}
+
+class TileTitle extends StatelessWidget {
+  final String title;
+  const TileTitle({Key? key, required this.title}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
+      child: Center( // Centers the Text
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.light
+                ? linkTextColorLight
+                : Colors.white,
+            fontSize: 16,
+            height: 1.4,
+            fontWeight: FontWeight.w600,
+            decoration: TextDecoration.underline,  // Underlines the text
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TileTime extends StatelessWidget {
+  final String time;
+  const TileTime({Key? key, required this.time}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final splitTimes = time.split(' - ');
+
+    // Extract start and end times from the time string
+    final startTime = splitTimes[0];
+    final endTime = splitTimes[1];
+
+    final style = TextStyle(
+      fontSize: 14,
+      color: Theme.of(context).brightness == Brightness.light
+          ? lightPrimaryColor
+          : Colors.white,
+      fontWeight: FontWeight.w400,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8, left: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (startTime != endTime)
+            Row(
+              children: [
+                // Start Time
+                Text(
+                  startTime,
+                  textAlign: TextAlign.right,
+                  style: style,
+                ),
+                Text(" - ", style: style), // Separator
+              ],
+            ),
+          Text(
+            endTime, // End Time
+            textAlign: TextAlign.right,
+            style: style,
+          ),
         ],
-      );
-    } catch (e) {
-      print(e);
-      return Container();
-    }
+      )
+    );
+  }
+}
+
+class StartEndDateContainer extends StatelessWidget {
+  final String date;
+  const StartEndDateContainer ({Key? key, required this.date}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 5.0),
+      child: Row(
+        children: [ // Mar 24 2025 - May 2 2025
+                    //  0   1   2  3  4  5  6
+          if (date.contains(' - '))
+            ...[
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Column(
+                      children: [
+                        // Start Date Month
+                        Text(
+                          date.split(' ')[0].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        // Start Date Day
+                        Text(
+                          date.split(' ')[1].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Padding( // "-"
+                padding: EdgeInsets.symmetric(horizontal: 4.0),
+                child: Text(
+                  date.split(' ')[3].toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? lightPrimaryColor
+                        : Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 8), // Adjust padding as needed
+                    child: Column(
+                      children: [
+                        // End Date Day
+                        Text(
+                          date.split(' ')[4].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        // End Date Year
+                        Text(
+                          date.split(' ')[5].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ]
+          // If it's a single date, display it normally
+          else
+            ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the padding as needed
+                child: Column(
+                  children: [
+                    // Month
+                    Text(
+                      date.split(' ')[0].toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? lightPrimaryColor
+                            : Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    // Day
+                    Text(
+                      date.split(' ')[1].toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? lightPrimaryColor
+                            : Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+        ],
+      ),
+    );
   }
 }

@@ -1,7 +1,9 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,10 +13,15 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  /// STATES
+  var _passwordObscured = true;
+
+  /// PROVIDERS
+  late UserDataProvider _userDataProvider;
+
+  /// SERVICES
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
-  late UserDataProvider _userDataProvider;
-  bool _passwordObscured = true;
 
   @override
   void didChangeDependencies() {
@@ -24,7 +31,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_userDataProvider.isLoading!) {
+    if (!_userDataProvider.isLoading) {
       if (_userDataProvider.isLoggedIn) {
         return buildLoggedInWidget(context);
       } else {
@@ -40,23 +47,37 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'You are logged in as: ',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              buildUserProfileTile(context),
-            ]),
-      ),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'LOGGED IN AS:',
+              style: Theme.of(context).brightness == Brightness.dark
+                  ? titleMediumDark
+                  : titleMediumLight,
+            ),
+            buildUserProfileTile(context),
+          ]),
     );
+  }
+
+  /// Parses username by removing trailing spaces and characters + making all
+  /// letters lowercase
+  /// (necessary due to the way SSO is currently set up since it only check if
+  /// the first characters of the input are a valid username, irrespective of
+  /// trailing characters and capitaliation, which can lead to usernames
+  /// displaying very weirdly in our app (e.g., mixed capitalizatio and random
+  /// trailing characters if input in that manner))
+  static String parseUsername(String username) {
+    username = username.toLowerCase();
+    RegExpMatch? match = RegExp(r'ucsd.edu').firstMatch(username);
+    if (match != null) {
+      return username.substring(0, match.end);
+    } else {
+      return username;
+    }
   }
 
   Widget buildUserProfileTile(BuildContext context) {
@@ -66,17 +87,19 @@ class _LoginState extends State<Login> {
         color: Colors.green,
       ),
       title: Text(
-        _userDataProvider.userProfileModel!.username != null
-            ? _userDataProvider.userProfileModel!.username!
+        _userDataProvider.userProfileModel.username != null
+            ? parseUsername(_userDataProvider.userProfileModel.username!)
             : "",
-        style: TextStyle(fontSize: 17),
+        style: bodyMediumLight,
       ),
-      trailing: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          // primary: Theme.of(context).buttonColor,
-          foregroundColor: Theme.of(context).backgroundColor,
+      trailing: TextButton(
+        style: TextButton.styleFrom(
+          foregroundColor: Theme.of(context).colorScheme.background,
         ),
-        child: Text('Log out'),
+        child: Text(
+          'LOG OUT',
+          style: TextStyle(decoration: TextDecoration.underline),
+        ),
         onPressed: () => executeLogout(),
       ),
     );
@@ -89,80 +112,92 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildLoginWidget() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Single Sign-On',
-              style: TextStyle(fontSize: 17),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'UCSD Email',
-                hintStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                border: OutlineInputBorder(),
-                focusedBorder: new OutlineInputBorder(
-                  borderSide: new BorderSide(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
-                labelText: 'UCSD Email',
-                labelStyle: TextStyle(
-                  color: ucLabelColor,
-                ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'SINGLE SIGN-ON',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          SizedBox(height: 10),
+          TextField(
+            style: TextStyle(
+                fontFamily: 'Brix Sans',
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF737373)),
+            decoration: InputDecoration(
+              hintText: 'UCSD Email',
+              hintStyle: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
               ),
-              keyboardType: TextInputType.emailAddress,
-              controller: _emailTextFieldController,
-            ),
-            SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    // Based on passwordObscured state choose the icon
-                    _passwordObscured ? Icons.visibility_off : Icons.visibility,
-                    color: Theme.of(context).primaryColorDark,
-                  ),
-                  onPressed: () => _toggle(),
-                ),
-                border: OutlineInputBorder(),
-                focusedBorder: new OutlineInputBorder(
-                  borderSide: new BorderSide(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
-                labelText: 'Password',
-                labelStyle: TextStyle(
-                  color: ucLabelColor,
-                ),
+              border: OutlineInputBorder(),
+              focusedBorder: new OutlineInputBorder(
+                borderSide: new BorderSide(
+                    color: Theme.of(context).colorScheme.secondary),
               ),
-              obscureText: _passwordObscured,
-              controller: _passwordTextFieldController,
+              labelText: 'UCSD Email',
+              labelStyle: TextStyle(
+                color: ucLabelColor,
+              ),
             ),
-            SizedBox(height: 10),
-            Row(
-              children: <Widget>[
-                Expanded(
+            keyboardType: TextInputType.emailAddress,
+            controller: _emailTextFieldController,
+          ),
+          SizedBox(height: 10),
+          TextField(
+            style: TextStyle(
+                fontFamily: 'Brix Sans',
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF737373)),
+            decoration: InputDecoration(
+              hintText: 'Password',
+              hintStyle: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  // Based on passwordObscured state choose the icon
+                  _passwordObscured ? Icons.visibility_off : Icons.visibility,
+
+                  /// TODO: Change color to improve its visibility in dark theme.
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                onPressed: () => _toggle(),
+              ),
+              border: OutlineInputBorder(),
+              focusedBorder: new OutlineInputBorder(
+                borderSide: new BorderSide(
+                    color: Theme.of(context).colorScheme.secondary),
+              ),
+              labelText: 'Password',
+              labelStyle: TextStyle(
+                color: ucLabelColor,
+              ),
+            ),
+            obscureText: _passwordObscured,
+            controller: _passwordTextFieldController,
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: SizedBox(
+                  height: 41,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      // primary: Theme.of(context).buttonColor,
-                      backgroundColor: Theme.of(context).backgroundColor,
+                      backgroundColor: actionButtonBackgroundColor,
                     ),
                     child: Text(
                       'Sign In',
                       style: TextStyle(
-                          fontSize: 18,
+                          fontFamily: 'Brix Sans',
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
                           color: Theme.of(context).textTheme.labelLarge!.color),
                     ),
-                    onPressed: _userDataProvider.isLoading!
+                    onPressed: _userDataProvider.isLoading
                         ? null
                         : () {
                             _userDataProvider
@@ -170,37 +205,54 @@ class _LoginState extends State<Login> {
                                     _passwordTextFieldController.text)
                                 .then((isLoggedIn) {
                               if (!isLoggedIn) {
-                                showAlertDialog(context);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialogWidget(
+                                      type: MessageTypeConstants.ERROR,
+                                      icon: Icons.block_flipped,
+                                      title: LoginConstants.loginFailedTitle,
+                                      description:
+                                          LoginConstants.loginFailedDesc,
+                                      onClose: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                );
                               }
                             });
                           },
                   ),
                 ),
-              ],
-            ),
-            Center(
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+              Expanded(
                 child: GestureDetector(
-              child: Container(
-                height: 35,
-                child: Center(
                   child: Text(
-                    'Need help logging in?',
-                    style: TextStyle(fontSize: 16),
+                    'Forgot password?',
+                    style: TextStyle(
+                        fontFamily: 'Brix Sans',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 17,
+                        decoration: TextDecoration.underline,
+                        color: Theme.of(context).textTheme.labelLarge!.color),
+                    textAlign: TextAlign.right,
                   ),
+                  onTap: () async {
+                    try {
+                      String link =
+                          'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                      await launch(link, forceSafariVC: true);
+                    } catch (e) {
+                      // an error occurred, do nothing
+                    }
+                  },
                 ),
               ),
-              onTap: () async {
-                try {
-                  String link =
-                      'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                  await launch(link, forceSafariVC: true);
-                } catch (e) {
-                  // an error occurred, do nothing
-                }
-              },
-            )),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -213,25 +265,96 @@ class _LoginState extends State<Login> {
   }
 
   showAlertDialog(BuildContext context) {
-    // set up the button
-    Widget okButton = TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
-      ),
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text(LoginConstants.loginFailedTitle),
-      content: Text(LoginConstants.loginFailedDesc),
-      actions: [
-        okButton,
-      ],
+      titlePadding: EdgeInsets.fromLTRB(5, 5, 0, 0),
+      contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 20),
+      backgroundColor: Color(0xFFE6EFF5),
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Color(0xFF00629B)),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Icon(Icons.info_outline,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? linkTextColorDark
+                    : linkTextColorLight),
+            flex: 1,
+          ),
+          Expanded(
+            child: Text(
+              LoginConstants.loginFailedTitle,
+              textAlign: TextAlign.left,
+              style: Theme.of(context).brightness == Brightness.dark
+                  ? TextStyle(
+                      color: linkTextColorDark,
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0)
+                  : TextStyle(
+                      color: linkTextColorLight,
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0),
+            ),
+            flex: 7,
+          ),
+          Expanded(
+            child: IconButton(
+              icon: Icon(Icons.close,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? linkTextColorDark
+                      : linkTextColorLight),
+              alignment: Alignment.topRight,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            flex: 2,
+          ),
+        ],
+      ),
+      content: Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height *
+              0.6, // Set max height to 60% of screen height
+        ),
+        child: SingleChildScrollView(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      LoginConstants.loginFailedDesc,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: linkTextColorLight,
+                          fontFamily: 'Source Sans Pro',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12.0),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
 
     // show the dialog

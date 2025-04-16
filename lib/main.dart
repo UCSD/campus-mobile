@@ -8,57 +8,58 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//* import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
-import 'package:just_audio_background/just_audio_background.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
+//* import 'package:just_audio_background/just_audio_background.dart';
+//* import 'package:geolocator/geolocator.dart';
+//* import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-late bool showOnboardingScreen;
+var showOnboardingScreen = true;
+var isFirstRunFlag = false;
+var executedInitialDeeplinkQuery = false;
 
-bool isFirstRunFlag = false;
-bool executedInitialDeeplinkQuery = false;
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+//* WAM OLD CODE
+//* final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//* FlutterLocalNotificationsPlugin();
 
 void main() async {
-  await JustAudioBackground.init(
+  /* OLD WAM CODE
+   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
   );
-
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  AndroidMapRenderer mapRenderer = AndroidMapRenderer.platformDefault;
-  final GoogleMapsFlutterPlatform mapsImplementation =
-      GoogleMapsFlutterPlatform.instance;
-  if (mapsImplementation is GoogleMapsFlutterAndroid) {
-    WidgetsFlutterBinding.ensureInitialized();
-    mapRenderer = await mapsImplementation
-        .initializeWithRenderer(AndroidMapRenderer.latest);
-  }
-
-  // dotenv loading
-  await dotenv.load(isOptional: true);
-
-  // Initialize notification plugin
-  var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-  var initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+   */
 
   /// Record zoned errors - https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
   runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+
+    final mapsImplementation = GoogleMapsFlutterPlatform.instance;
+    if (mapsImplementation is GoogleMapsFlutterAndroid) {
+      WidgetsFlutterBinding.ensureInitialized();
+      await mapsImplementation
+          .initializeWithRenderer(AndroidMapRenderer.latest);
+    }
+
+    // dotenv loading
+    await dotenv.load(isOptional: true);
+
+  /* OLD WAM CODE
+  // Initialize notification plugin
+  // var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+  // var initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+  // await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+  */
+
     /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
@@ -67,23 +68,27 @@ void main() async {
     await initializeHive();
     await initializeApp();
     runApp(CampusMobile());
-  }, FirebaseCrashlytics.instance.recordError);
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
+/* OLD WAM CODE
 Future onSelectNotification(String? payload) async {
   if (payload == 'whats_around_me') {
     Get.toNamed('/whats_around_me');
   }
 }
+*/
 
-initializeHive() async {
+Future<void> initializeHive() async {
   await Hive.initFlutter('.');
   Hive.registerAdapter(AuthenticationModelAdapter());
   Hive.registerAdapter(UserProfileModelAdapter());
 }
 
-initializeApp() async {
+Future<void> initializeApp() async {
   final prefs = await SharedPreferences.getInstance();
+
+  // TODO: fix this. We don't need two different persistent flags...
   if (prefs.getBool('first_run') ?? true) {
     await clearSecuredStorage();
     await clearHiveStorage();
@@ -92,11 +97,13 @@ initializeApp() async {
   }
 
   showOnboardingScreen = prefs.getBool('showOnboardingScreen') ?? true;
-  await _checkLocationPermission();
-  await showWhatsAroundMeNotification(); // Show notification on app startup
+  //* WAM OLD CODE
+  //* await _checkLocationPermission();
+  //* await showWhatsAroundMeNotification(); // Show notification on app startup
 }
 
-Future<void> showWhatsAroundMeNotification() async {
+//* WAM OLD CODE
+/* Future<void> showWhatsAroundMeNotification() async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
   AndroidNotificationDetails(
     'your channel id',
@@ -155,13 +162,15 @@ Future<void> _checkLocationPermission() async {
       desiredAccuracy: LocationAccuracy.high);
   print(position);
 }
+*/
 
-clearSecuredStorage() async {
+Future<void> clearSecuredStorage() async {
   FlutterSecureStorage storage = FlutterSecureStorage();
   await storage.deleteAll();
 }
 
-clearHiveStorage() async {
+// TODO: refactor this to load multiple futures in one statement
+Future<void> clearHiveStorage() async {
   await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.AuthenticationModel))
@@ -172,25 +181,59 @@ clearHiveStorage() async {
 class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = ThemeData(
-      primarySwatch: ColorPrimary,
+    final lightTheme = ThemeData(
+      useMaterial3: false,
       primaryColor: lightPrimaryColor,
-      brightness: Brightness.light,
-      backgroundColor: lightButtonColor, // updated
-      textTheme: lightThemeText,
+      textTheme: lightThemeText.copyWith(
+        titleLarge: cardTitleStyleLight,
+        titleMedium: titleMediumLight,
+        titleSmall: titleSmallLight,
+        bodyLarge: heading2StyleLight,
+        bodyMedium: bodyMediumLight,
+        bodySmall: descriptiveTextSmallLight,
+        labelLarge: labelLargeStyleLight,
+        labelMedium: labelMediumStyleLight,
+        headlineMedium: headlineMediumLight,
+      ),
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
+      listTileTheme: lightListTileTheme,
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
+        background: lightButtonColor,
+        brightness: Brightness.light,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          unselectedItemColor: unselectedIconLightColor,
+          selectedItemColor: Colors.white,
+          backgroundColor: bottomTabBarColorLight),
     );
 
-    final ThemeData darkTheme = ThemeData(
-      primarySwatch: ColorPrimary,
+    final darkTheme = ThemeData(
+      useMaterial3: false,
       primaryColor: darkPrimaryColor,
-      brightness: Brightness.dark,
-      backgroundColor: darkButtonColor, // updated
-      textTheme: darkThemeText,
+      textTheme: darkThemeText.copyWith(
+        titleLarge: cardTitleStyleDark,
+        titleMedium: titleMediumDark,
+        titleSmall: titleSmallDark,
+        bodyLarge: heading2StyleDark,
+        bodyMedium: bodyMediumDark,
+        bodySmall: descriptiveTextSmallDark,
+        labelLarge: labelLargeStyleDark,
+        labelMedium: labelMediumStyleDark,
+        headlineMedium: headlineMediumDark,
+      ),
       iconTheme: darkIconTheme,
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
+      listTileTheme: darkListTileTheme,
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
+        background: darkButtonColor,
+        brightness: Brightness.dark,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          unselectedItemColor: unselectedIconDarkColor,
+          selectedItemColor: Colors.white,
+          backgroundColor: bottomTabBarColorDark),
     );
 
     return MultiProvider(
@@ -198,20 +241,21 @@ class CampusMobile extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
-        theme: theme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(secondary: darkAccentColor),
+        theme: lightTheme.copyWith(
+          colorScheme:
+              lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
           colorScheme:
-          darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+              darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
+        themeMode: ThemeMode.system,
         initialRoute: showOnboardingScreen
-            ? RoutePaths.OnboardingInitial
+            ? RoutePaths.OnboardingLogin
             : RoutePaths.BottomNavigationBar,
+            // : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
-        navigatorObservers: [
-          observer,
-        ],
+        navigatorObservers: [observer],
       ),
     );
   }

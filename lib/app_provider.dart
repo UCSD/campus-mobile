@@ -21,13 +21,10 @@ import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/providers/weather.dart';
-import 'package:campus_mobile_experimental/core/providers/triton_media.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page_provider.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_provider.dart';
+//* import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page_provider.dart';
+//* import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -36,10 +33,9 @@ List<SingleChildWidget> providers = [
   ...dependentServices,
   ...uiConsumableProviders,
 ];
-LocationDataProvider? locationProvider;
-final FirebaseAnalytics analytics = FirebaseAnalytics();
-final FirebaseAnalyticsObserver observer =
-    FirebaseAnalyticsObserver(analytics: analytics);
+
+final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+final FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
 List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
@@ -62,6 +58,7 @@ List<SingleChildWidget> independentServices = [
       return _eventsDataProvider;
     },
   ),
+  /* OLD WAM CODE
   // This is the provider for What's Around Me LIST Builder
   ChangeNotifierProvider(
       create: (_) => PlacesByCategoryProvider()
@@ -84,6 +81,8 @@ List<SingleChildWidget> independentServices = [
       return _weatherDataProvider;
     },
   ),
+   */
+
   ChangeNotifierProvider<NewsDataProvider>(
     create: (_) {
       NewsDataProvider _newsDataProvider = NewsDataProvider();
@@ -94,8 +93,7 @@ List<SingleChildWidget> independentServices = [
   StreamProvider<Coordinates>(
     initialData: Coordinates(),
     create: (_) {
-      locationProvider = LocationDataProvider();
-      return locationProvider!.locationStream;
+      return LocationDataProvider().locationStream;
     },
     lazy: false,
   ),
@@ -152,8 +150,7 @@ List<SingleChildWidget> dependentServices = [
       },
       lazy: false,
       update: (_, pushNotificationDataProvider, _userDataProvider) {
-        _userDataProvider!.pushNotificationDataProvider =
-            pushNotificationDataProvider;
+        _userDataProvider!.pushNotificationDataProvider = pushNotificationDataProvider;
         return _userDataProvider;
       }),
   ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(
@@ -166,14 +163,14 @@ List<SingleChildWidget> dependentServices = [
         cardsDataProvider!.userDataProvider = userDataProvider;
         userDataProvider.cardsDataProvider = cardsDataProvider;
         cardsDataProvider
-          ..loadSavedData().then((value) {
+          ..loadSavedData().then((_) {
             // Update available cards
             cardsDataProvider.updateAvailableCards(
-                userDataProvider.authenticationModel!.ucsdaffiliation);
+                userDataProvider.authenticationModel.ucsdaffiliation);
 
             // Student card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel!.classifications?.student ??
+                (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
               cardsDataProvider.activateStudentCards();
             } else {
@@ -182,7 +179,7 @@ List<SingleChildWidget> dependentServices = [
 
             // Staff card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel!.classifications?.staff ??
+                (userDataProvider.userProfileModel.classifications?.staff ??
                     false)) {
               cardsDataProvider.activateStaffCards();
             } else {
@@ -197,7 +194,7 @@ List<SingleChildWidget> dependentServices = [
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider!.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
       classScheduleDataProvider.fetchData();
     }
     return classScheduleDataProvider;
@@ -209,7 +206,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, studentIdDataProvider) {
     studentIdDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
       studentIdDataProvider.fetchData();
     }
     return studentIdDataProvider;
@@ -221,7 +218,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, employeeIdDataProvider) {
     employeeIdDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) {
       employeeIdDataProvider.fetchData();
     }
     return employeeIdDataProvider;
@@ -233,7 +230,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, scannerMessageDataProvider) {
     scannerMessageDataProvider!.userDataProvider = userDataProvider;
     //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !scannerMessageDataProvider.isLoading!) {
+    if (userDataProvider.isLoggedIn && !scannerMessageDataProvider.isLoading) {
       scannerMessageDataProvider.fetchData();
     }
     return scannerMessageDataProvider;
@@ -304,14 +301,12 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProxyProvider<UserDataProvider, ScannerDataProvider>(
     create: (_) {
       var _scannerDataProvider = ScannerDataProvider();
-      _scannerDataProvider.initState();
-      _scannerDataProvider.setDefaultStates();
       return _scannerDataProvider;
     },
     update: (_, _userDataProvider, scannerDataProvider) {
       scannerDataProvider!.userDataProvider = _userDataProvider;
       scannerDataProvider.initState();
-      scannerDataProvider.setDefaultStates();
+      scannerDataProvider.resetDefaultStates();
       return scannerDataProvider;
     },
     lazy: false,

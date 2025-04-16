@@ -1,8 +1,8 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class NoticesCard extends StatelessWidget {
   const NoticesCard({
@@ -10,6 +10,7 @@ class NoticesCard extends StatelessWidget {
     required this.notice,
   }) : super(key: key);
 
+  /// MODELS
   final NoticesModel notice;
 
   @override
@@ -17,7 +18,15 @@ class NoticesCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.only(
           top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
-      child: buildBannerView(notice),
+      elevation: 4,
+      shadowColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0),
+        child: buildBannerView(notice),
+      ),
     );
   }
 
@@ -29,20 +38,12 @@ class NoticesCard extends StatelessWidget {
       button: true,
       child: GestureDetector(
           onTap: () {
-            openLink(notice.link!);
+            openLink(notice.link);
           },
           child: ImageLoader(
             url: notice.imageUrl,
             fullSize: true,
           )),
     );
-  }
-
-  openLink(String url) async {
-    try {
-      launch(url, forceSafariVC: true);
-    } catch (e) {
-      // an error occurred, do nothing
-    }
   }
 }

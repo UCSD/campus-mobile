@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:dio/dio.dart';
@@ -9,14 +10,16 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class NetworkHelper {
   ///TODO: inside each service that file place a switch statement to handle all
   ///TODO: different errors thrown by the Dio client DioErrorType.RESPONSE
-  const NetworkHelper();
+
+  // private constructor to show that this class should not be instantiated
+  const NetworkHelper._();
 
   static const int SSO_REFRESH_MAX_RETRIES = 3;
   static const int SSO_REFRESH_RETRY_INCREMENT = 5000;
   static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
   static final int DEFAULT_TIMEOUT = int.parse(dotenv.get('DEFAULT_TIMEOUT'));
 
-  Future<dynamic> fetchData(String url) async {
+  static Future<dynamic> fetchData(String url) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -33,7 +36,8 @@ class NetworkHelper {
     }
   }
 
-  Future<dynamic> authorizedFetch(String url, Map<String, String> headers) async {
+  static Future<dynamic> authorizedFetch(
+      String url, Map<String, String> headers) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -53,10 +57,10 @@ class NetworkHelper {
     }
   }
 
-  Widget getSilentLoginDialog() {
+  static Widget getSilentLoginDialog() {
     return AlertDialog(
       title: const Text(LoginConstants.silentLoginFailedTitle),
-      content: Text(LoginConstants.silentLoginFailedDesc),
+      content: const Text(LoginConstants.silentLoginFailedDesc),
       actions: [
         TextButton(
           style: TextButton.styleFrom(
@@ -73,7 +77,7 @@ class NetworkHelper {
 
   // method for implementing exponential backoff for silentLogin
   // mimicking existing code from React Native versions of campus-mobile
-  Future<dynamic> authorizedPublicPost(
+  static Future<dynamic> authorizedPublicPost(
       String url, Map<String, String> headers, dynamic body) async {
     int retries = 0;
     int waitTime = 0;
@@ -108,7 +112,7 @@ class NetworkHelper {
     throw new Exception(ErrorConstants.silentLoginFailed);
   }
 
-  Future<dynamic> authorizedPost(
+  static Future<dynamic> authorizedPost(
       String url, Map<String, String>? headers, dynamic body) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
@@ -139,7 +143,7 @@ class NetworkHelper {
     }
   }
 
-  Future<dynamic> authorizedPut(
+  static Future<dynamic> authorizedPut(
       String url, Map<String, String> headers, dynamic body) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
@@ -168,7 +172,7 @@ class NetworkHelper {
     }
   }
 
-  Future<dynamic> authorizedDelete(
+  static Future<dynamic> authorizedDelete(
       String url, Map<String, String> headers) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
@@ -193,8 +197,8 @@ class NetworkHelper {
     }
   }
 
-  /// Used in What's Around Me TODO: Make it so that it uses env variables like getToken() below
-  Future<String> generateArcGISToken() async {
+  /// What's Around Me Points of Interest (ESRI API HERE) TODO: Make it so that it uses env variables like getToken() below
+  static Future<String> generateArcGISToken() async {
     final Dio _dio = Dio();
     // These are fixed client variables that have access to ESRI APIs
     final String clientId = "i4SJG8P4dIUx8j68";
@@ -234,7 +238,7 @@ class NetworkHelper {
     }
   }
 
-  Future<bool> getNewToken(Map<String, String> headers) async {
+  static Future<bool> getNewToken(Map<String, String> headers) async {
     final String tokenEndpoint = dotenv.get('NEW_TOKEN_ENDPOINT');
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',

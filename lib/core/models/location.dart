@@ -1,3 +1,4 @@
+// TODO: verify lat and lon are never null. It doesn't make rational sense why they could be...
 class Coordinates {
   double? lat;
   double? lon;

@@ -20,14 +20,16 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
     this.messageId = messageId;
   }
 
-  late FreeFoodDataProvider _freeFoodDataProvider;
+  /// STATES
   String? messageId;
+  var _isLoading = false;
+  var _isGoing = false;
+  var _buttonColor = Colors.white;
+  var _borderColor = Color(0xFF034161);
+  var _textColor = Color(0xFF034161);
 
-  bool _isLoading = false;
-  bool _isGoing = false;
-  Color _buttonColor = Colors.white;
-  Color _borderColor = Color(0xFF034161);
-  Color _textColor = Color(0xFF034161);
+  /// PROVIDERS
+  late FreeFoodDataProvider _freeFoodDataProvider;
 
   @override
   void didChangeDependencies() {
@@ -48,22 +50,20 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
 
   @override
   Widget build(BuildContext context) {
-    var isOverCount = _freeFoodDataProvider.isOverCount(messageId);
-
+    var isOverCount = _freeFoodDataProvider.isOverCount(messageId!);
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
-
-    var currCount = _freeFoodDataProvider.count(messageId);
+    var currCount = _freeFoodDataProvider.count(messageId!);
     var countText = currCount == 1
         ? '$currCount student is going'
         : '$currCount students are going';
 
     return Container(
-        margin: EdgeInsets.only(top: 10.0),
+        margin: EdgeInsets.only(top: 8.0),
         child: Row(
           children: <Widget>[
             Container(
-              height: 25,
-              width: 150,
+              height: 30,
+              width: 170,
               child: AnimatedCrossFade(
                 duration: Duration(milliseconds: 300),
                 crossFadeState: isOverCount
@@ -77,9 +77,9 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                         margin: EdgeInsets.only(top: 2.0),
                         child: Row(
                           children: <Widget>[
-                            Icon(Icons.report, color: Colors.grey, size: 10),
+                            Icon(Icons.report, color: Colors.grey, size: 15),
                             Text("There may not be enough food",
-                                style: TextStyle(fontSize: 9))
+                                style: TextStyle(fontSize: 12))
                           ],
                         )),
                   ],
@@ -88,7 +88,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                 secondChild: Align(
                   alignment: Alignment.topLeft,
                   child: Text(countText,
-                      style: TextStyle(fontSize: 10, color: Colors.green)),
+                      style: TextStyle(fontSize: 12, color: Colors.green)),
                 ),
               ),
             ),
@@ -145,7 +145,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                                 },
                               ))),
                       Text("I'm Going!",
-                          style: TextStyle(color: _textColor, fontSize: 10)),
+                          style: TextStyle(color: _textColor, fontSize: 12)),
                     ],
                   )),
                 )));

@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -13,7 +14,7 @@ class DiningList extends StatelessWidget {
     this.listSize,
   }) : super(key: key);
 
-  final int? listSize;
+  final listSize;
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +32,9 @@ class DiningList extends StatelessWidget {
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
-    var size;
-    if (listSize == null)
-      size = listOfDiners.length;
-    else
-      size = listSize;
-    for (int i = 0; i < size; i++) {
+    var size = listSize ?? listOfDiners.length;
+
+    for (var i = 0; i < size; i++) {
       final DiningModel item = listOfDiners[i];
       final tile = buildDiningTile(item, context);
       diningTiles.add(tile);
@@ -46,11 +44,17 @@ class DiningList extends StatelessWidget {
         ? ListView(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            children: ListTile.divideTiles(tiles: diningTiles, context: context)
+            children: ListTile.divideTiles(
+                    tiles: diningTiles,
+                    context: context,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? listTileDividerColorDark
+                        : listTileDividerColorLight)
                 .toList(),
           )
         : ContainerView(
             child: ListView(
+              padding: const EdgeInsets.only(left: 16, right: 16),
               children:
                   ListTile.divideTiles(tiles: diningTiles, context: context)
                       .toList(),
@@ -58,60 +62,65 @@ class DiningList extends StatelessWidget {
           );
   }
 
-  Widget getHoursForToday(RegularHours? hours) {
+  Widget textClosed(BuildContext context) {
+    return Text('Closed', style: Theme.of(context).textTheme.bodySmall);
+  }
+
+  Widget getHoursForToday(RegularHours hours, BuildContext context) {
     int weekday = DateTime.now().weekday;
     String? dayHours;
 
     switch (weekday) {
       case 1:
-        if (hours!.mon != null)
+        if (hours.mon != null)
           dayHours = hours.mon;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 2:
-        if (hours!.tue != null)
+        if (hours.tue != null)
           dayHours = hours.tue;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 3:
-        if (hours!.wed != null)
+        if (hours.wed != null)
           dayHours = hours.wed;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 4:
-        if (hours!.thu != null)
+        if (hours.thu != null)
           dayHours = hours.thu;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 5:
-        if (hours!.fri != null)
+        if (hours.fri != null)
           dayHours = hours.fri;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 6:
-        if (hours!.sat != null)
+        if (hours.sat != null)
           dayHours = hours.sat;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       case 7:
-        if (hours!.sun != null)
+        if (hours.sun != null)
           dayHours = hours.sun;
         else
-          return Text('Closed');
+          return textClosed(context);
         break;
       default:
-        return Text('Closed');
+        return textClosed(context);
     }
     if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
-      if (dayHours == 'Closed-Closed') {
-        return Text('Closed');
-      } else {
+      if (dayHours == 'Closed-Closed')
+        return textClosed(context);
+      else {
+        print('test');
         return Text(dayHours);
       }
     }
@@ -119,32 +128,35 @@ class DiningList extends StatelessWidget {
     return TimeRangeWidget(
         time: dayHours
             .replaceAllMapped(
-                //Add colon in between each time
+                // Add colon in between each time
                 RegExp(r"\b[0-9]{2}"),
                 (match) => "${match.group(0)}:")
             .replaceAllMapped(
-                //Add space around hyphen
+                // Add space around hyphen
                 RegExp(r"-"),
                 (match) => " ${match.group(0)} "));
   }
 
   Widget buildDiningTile(DiningModel data, BuildContext context) {
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       onTap: () {
-        if (data.id != null) {
+        if (data.id != null)
           Provider.of<DiningDataProvider>(context, listen: false)
               .fetchDiningMenu(data.id!);
-        }
+
         Navigator.pushNamed(context, RoutePaths.DiningDetailView,
             arguments: data);
       },
-      title: Text(
-        data.name!,
-        textAlign: TextAlign.start,
-        //overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 18),
+      title: Text(data.name,
+          textAlign: TextAlign.start,
+          style: Theme.of(context).brightness == Brightness.dark
+              ? textButtonSmallDark
+              : textButtonSmallLight),
+      subtitle: Padding(
+        padding: EdgeInsets.only(top: 6),
+        child: getHoursForToday(data.regularHours, context),
       ),
-      subtitle: getHoursForToday(data.regularHours),
       trailing: buildIconWithDistance(data, context),
     );
   }
@@ -152,8 +164,7 @@ class DiningList extends StatelessWidget {
   Widget buildIconWithDistance(DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
+        foregroundColor: Theme.of(context).colorScheme.background,
       ),
       onPressed: () {
         try {
@@ -165,19 +176,21 @@ class DiningList extends StatelessWidget {
         }
       },
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: Icon(Icons.directions_walk),
+          Icon(
+            Icons.directions_walk,
+            size: 28,
           ),
-          Padding(padding: EdgeInsets.only(bottom: 7.0)),
-          Expanded(
-            child: Text(
-              data.distance != null
-                  ? (num.parse(data.distance!.toStringAsFixed(1)).toString() +
-                      ' mi')
-                  : '--',
-            ),
+          SizedBox(
+              height:
+                  2), // Ensure there is some space between the icon and text
+          Text(
+            data.distance != null
+                ? (num.parse(data.distance!.toStringAsFixed(1)).toString() +
+                    ' mi')
+                : '--',
+            style: TextStyle(fontSize: 12),
           ),
         ],
       ),

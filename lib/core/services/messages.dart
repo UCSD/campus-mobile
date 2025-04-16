@@ -1,65 +1,59 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MessageService {
+  /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  Messages? _data;
+  late Messages _data;
 
-  final NetworkHelper _networkHelper = NetworkHelper();
-
-  Future<bool> fetchMyMessagesData(
-      int? timestamp, Map<String, String> authHeaders) async {
-    _error = null;
-    _isLoading = true;
+  Future<bool> fetchMyMessagesData(int timestamp, Map<String, String> authHeaders) async {
+    _error = null; _isLoading = true;
 
     try {
       /// fetch data
-      String _response = await _networkHelper.authorizedFetch(
+      String _response = await NetworkHelper.authorizedFetch(
           dotenv.get('MY_MESSAGES_API_ENDPOINT') + timestamp.toString(), authHeaders);
 
       /// parse data
       final data = messagesFromJson(_response);
-      _isLoading = false;
       _data = data;
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 
-  Future<bool> fetchTopicData(int? timestamp, List<String?> topics) async {
-    _error = null;
-    _isLoading = true;
-
-    String topicsEndpoint = 'topics=' + topics.join(',');
-    String timestampEndpoint = '&start=' + timestamp.toString();
-
+  Future<bool> fetchTopicData(int timestamp, List<String?> topics) async {
+    _error = null; _isLoading = true;
+    var topicsEndpoint = 'topics=' + topics.join(',');
+    var timestampEndpoint = '&start=' + timestamp.toString();
     try {
       /// fetch data
-      String _response = await _networkHelper
-          .fetchData(dotenv.get('TOPICS_API_ENDPOINT') + topicsEndpoint + timestampEndpoint);
+      String _response = await NetworkHelper.fetchData(
+          dotenv.get('TOPICS_API_ENDPOINT') + topicsEndpoint + timestampEndpoint);
 
       /// parse data
       final data = messagesFromJson(_response);
-      _isLoading = false;
       _data = data;
       return true;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 
-  String? get error => _error;
-  Messages? get messagingModels => _data;
-  bool get isLoading => _isLoading;
-  DateTime? get lastUpdated => _lastUpdated;
+  /// SIMPLE GETTERS
+  get error => _error;
+  get isLoading => _isLoading;
+  get lastUpdated => _lastUpdated;
+  Messages get messagingModels => _data;
 }

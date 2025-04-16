@@ -14,7 +14,7 @@ class MapSearchView extends StatelessWidget {
         children: <Widget>[
           Hero(
             tag: 'search_bar',
-            child: SearchBar(),
+            child: MapSearchBar(),
           ),
           QuickSearchIcons(),
           Provider.of<MapsDataProvider>(context).searchHistory.isEmpty

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:campus_mobile_experimental/app_styles.dart';
+
 /// This object takes a String that represents a time range in 24 hour format
 /// e.g. 17:01 - 19:20
 /// be cautious of the spacing, it must be exactly as shown above
@@ -11,25 +13,29 @@ class TimeRangeWidget extends StatelessWidget {
     required this.time,
   }) : super(key: key);
 
-  final String? time;
+  final String time;
+
   @override
   Widget build(BuildContext context) {
     return Text(
       getStartTime(context) + ' - ' + getStopTime(context),
+      style: Theme.of(context).brightness == Brightness.dark
+          ? descriptiveTextSmallDark
+          : descriptiveTextSmallLight,
     );
   }
 
   String getStartTime(BuildContext context) {
-    List<String> times = time!.split("-");
+    var times = time.split("-");
     return stringToTimeOfDay(times[0]).format(context);
   }
 
   String getStopTime(BuildContext context) {
-    List<String> times = time!.split("- ");
+    var times = time.split("- ");
     return stringToTimeOfDay(times[1]).format(context);
   }
 
-  TimeOfDay stringToTimeOfDay(String tod) {
+  static TimeOfDay stringToTimeOfDay(String tod) {
     final format = DateFormat.Hm();
     return TimeOfDay.fromDateTime(format.parse(tod));
   }

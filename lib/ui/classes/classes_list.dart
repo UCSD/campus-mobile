@@ -5,7 +5,7 @@ import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
-
+import 'package:campus_mobile_experimental/app_styles.dart';
 class ClassList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -17,15 +17,15 @@ class ClassList extends StatelessWidget {
   Widget buildSchedule(BuildContext context) {
     List<Widget> list = [];
     Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses!
-        .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms!);
+        .enrolledClasses
+        .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
     Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses!
+        .enrolledClasses
         .keys
         .forEach(
       (key) {
         if (Provider.of<ClassScheduleDataProvider>(context)
-            .enrolledClasses![key]!
+            .enrolledClasses[key]!
             .isNotEmpty) {
           list.add(SliverStickyHeader(
             header: buildWeekDayHeader(context, key),
@@ -34,16 +34,16 @@ class ClassList extends StatelessWidget {
                 if (key == 'MI') {
                   return buildMidterm(
                       Provider.of<ClassScheduleDataProvider>(context)
-                          .enrolledClasses![key]!
+                          .enrolledClasses[key]!
                           .elementAt(index));
                 }
                 return buildClass(
                     Provider.of<ClassScheduleDataProvider>(context)
-                        .enrolledClasses![key]!
+                        .enrolledClasses[key]!
                         .elementAt(index));
               },
                   childCount: Provider.of<ClassScheduleDataProvider>(context)
-                      .enrolledClasses![key]!
+                      .enrolledClasses[key]!
                       .length),
             ),
           ));
@@ -77,14 +77,15 @@ class ClassList extends StatelessWidget {
   Widget buildWeekDayHeader(BuildContext context, String weekday) {
     weekday = abbrevToFullWeekday(weekday);
     return Container(
-      color: Theme.of(context).secondaryHeaderColor,
+      color: Theme.of(context).brightness == Brightness.light
+          ? lightPrimaryColor
+          : descriptiveTextColorLight,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Text(
           weekday,
-          style: TextStyle(
-            fontSize: 20.0,
-            color: Colors.white,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Colors.white,
           ),
         ),
       ),
@@ -115,7 +116,7 @@ class ClassList extends StatelessWidget {
                     child: Row(children: [
                       Text(sectionData.meetingType! + ' '),
                       TimeRangeWidget(
-                        time: sectionData.time,
+                        time: sectionData.time!,
                       )
                     ]),
                   ),
@@ -178,7 +179,7 @@ class ClassList extends StatelessWidget {
                           formatDate(sectionData.date)! +
                           ' from '),
                       TimeRangeWidget(
-                        time: sectionData.time,
+                        time: sectionData.time!,
                       )
                     ]),
                   ),

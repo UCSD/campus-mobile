@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 
 class ImageLoader extends StatelessWidget {
-  final String? url;
+  final String url;
   final double width;
   final double height;
   final bool fullSize;
-  ImageLoader(
-      {required this.url,
-      this.width = 100.0,
-      this.height = 100.0,
-      this.fullSize = false});
+  final BoxFit fit;
+
+  ImageLoader({
+    required this.url,
+    this.width = 100.0,
+    this.height = 100.0,
+    this.fullSize = false,
+    this.fit = BoxFit.scaleDown,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return url!.isEmpty
+    return url.isEmpty
         ? Container(
             width: 0,
             height: 0,
           )
         : Image.network(
-            url!,
+            url,
             width: fullSize ? null : width,
             height: fullSize ? null : height,
+            fit: fit,
             loadingBuilder: (BuildContext context, Widget child,
                 ImageChunkEvent? loadingProgress) {
               if (loadingProgress == null) return child;
@@ -32,6 +38,13 @@ class ImageLoader extends StatelessWidget {
                           loadingProgress.expectedTotalBytes!
                       : null,
                 ),
+              );
+            },
+            errorBuilder:
+                (BuildContext context, Object error, StackTrace? stackTrace) {
+              return Container(
+                width: 0,
+                height: 0,
               );
             },
           );

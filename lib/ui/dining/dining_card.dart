@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_list.dart';
 import 'package:flutter/material.dart';
@@ -13,47 +14,29 @@ class DiningCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates![cardId],
+      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
       reload: () => Provider.of<DiningDataProvider>(context, listen: false)
           .fetchDiningLocations(),
       isLoading: Provider.of<DiningDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId],
+      titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<DiningDataProvider>(context).error,
       child: () => buildDiningCard(
           Provider.of<DiningDataProvider>(context).diningModels),
-      actionButtons: buildActionButtons(context),
+      actionButtons: [
+        ActionButton(
+            buttonText: 'VIEW ALL DINING OPTIONS',
+            onPressed: () =>
+                Navigator.pushNamed(context, RoutePaths.DiningViewAll))
+      ],
     );
   }
 
   Widget buildDiningCard(List<DiningModel> data) {
-    return DiningList(
-      listSize: 3,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: DiningList(listSize: 3),
     );
-  }
-
-  Widget buildTitle(String title) {
-    return Text(
-      title,
-      textAlign: TextAlign.start,
-    );
-  }
-
-  List<Widget> buildActionButtons(BuildContext context) {
-    List<Widget> actionButtons = [];
-    actionButtons.add(TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).backgroundColor,
-      ),
-      child: Text(
-        'View All',
-      ),
-      onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.DiningViewAll);
-      },
-    ));
-    return actionButtons;
   }
 }

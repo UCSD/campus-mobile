@@ -9,7 +9,7 @@ class PlaceDetailsService {
   String? _error;                                       // For Error Catch
   DateTime? _lastUpdated;                               // Timestamp
   PlaceDetailsModel? _data;
-  final NetworkHelper _networkHelper = NetworkHelper(); // For networkHelper use   // You also need a Request URL (where is the API located)
+  // final _networkHelper = NetworkHelper(); // For networkHelper use   // You also need a Request URL (where is the API located)
   // final String _placeDetailsAPIEndPoint = "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1/places";
   // String requestedFields = "address:streetAddress,address:locality,address:designatedMarketArea,address:region,address:postcode,address:poBox,address:country,location,categories,name,description,contactInfo:telephone,contactInfo:website,contactInfo:fax,contactInfo:email,socialMedia:facebookId,socialMedia:twitter,socialMedia:instagram,rating:price,rating:user,hours:opening,hours:popular,hours:openingText";
   PlaceDetailsService();                                // Service's noArgs Constructor
@@ -22,11 +22,11 @@ class PlaceDetailsService {
 
     try {
       // Generate ArcGIS token
-      String token = await _networkHelper.generateArcGISToken();
+      String token = await NetworkHelper.generateArcGISToken();
       print('Generated ArcGIS Token: $token');
 
       // Fetch Place Details Data
-      final _response = await (_networkHelper.fetchData(dotenv.get('LIST_BUILDER_ENDPOINT')));// await (_networkHelper.fetchData('$_placeDetailsAPIEndPoint/$placeId?requestedFields=$requestedFields&f=pjson&token=$token'));
+      final _response = await (NetworkHelper.fetchData(dotenv.get('LIST_BUILDER_ENDPOINT')));// await (_networkHelper.fetchData('$_placeDetailsAPIEndPoint/$placeId?requestedFields=$requestedFields&f=pjson&token=$token'));
       
       // Parse Data                                    // If Future<PlaceDetailsModel?>, then if (_response.statusCode == 200) { return PlaceDetailsModel.fromJson(_response.data); }
       final data = _response;

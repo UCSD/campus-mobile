@@ -1,18 +1,30 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/speed_test.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:wifi_connection/WifiConnection.dart';
 import 'package:wifi_connection/WifiInfo.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SpeedTestService {
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
   SpeedTestService();
+
+  /// STATES
+  bool _isLoading = false;
+  String? _error;
+  final Map<String, String> headers = {
+    "accept": "application/json",
+  };
+
+  /// MODELS
+  SpeedTestModel? _speedTestModel;
+
+  /// SERVICES
+  var deviceInfo = DeviceInfoPlugin();
+  var _connectivity = Connectivity();
+
   Future<bool> checkSimulation() async {
     try {
       if (Platform.isAndroid) {
@@ -32,49 +44,35 @@ class SpeedTestService {
     return false;
   }
 
-  Connectivity _connectivity = Connectivity();
-  final NetworkHelper _networkHelper = NetworkHelper();
-
-  SpeedTestModel? _speedTestModel;
-  bool _isLoading = false;
-  String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
-
   Future<bool> fetchSignedUrls() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
-      await _networkHelper.getNewToken(headers);
+      await NetworkHelper.getNewToken(headers);
       // Get download & upload urls
-      String? _downloadResponse = await _networkHelper.authorizedFetch(
-          dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'),
-          headers);
-      String? _uploadResponse = await _networkHelper.authorizedFetch(
-          dotenv.get('SPEED_TEST_UPLOAD_ENDPOINT'),
-          headers);
+      String? _downloadResponse = await NetworkHelper.authorizedFetch(
+          dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'), headers);
+      String? _uploadResponse = await NetworkHelper.authorizedFetch(
+          dotenv.get('SPEED_TEST_UPLOAD_ENDPOINT'), headers);
 
       /// parse data
       await fetchNetworkDiagnostics().then((WifiInfo? data) {
-        _speedTestModel = speedTestModelFromJson(
-            data, _downloadResponse!, _uploadResponse!, data != null);
+        _speedTestModel = speedTestModelFromJson(data, _downloadResponse!, _uploadResponse!, data != null);
       });
-      _isLoading = false;
       return true;
     } catch (exception) {
       // Occurs when there is no connection
       _speedTestModel = SpeedTestModel.fromJson(null, null, null, false);
       _error = exception.toString();
-      _isLoading = false;
       return false;
+    } finally {
+      _isLoading = false;
     }
   }
 
   Future<WifiInfo?> fetchNetworkDiagnostics() async {
     _isLoading = true;
     // Check connected to wifi
-    if (await _connectivity.checkConnectivity() != ConnectivityResult.wifi) {
+    if (!(await _connectivity.checkConnectivity()).contains(ConnectivityResult.wifi)) {
       _isLoading = false;
       return null;
     }
@@ -84,9 +82,8 @@ class SpeedTestService {
     return wiFiInfo;
   }
 
-  bool get isLoading => _isLoading;
-
-  String? get error => _error;
-
+  /// SIMPLE GETTERS
+  get isLoading => _isLoading;
+  get error => _error;
   SpeedTestModel? get speedTestModel => _speedTestModel;
 }

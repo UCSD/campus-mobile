@@ -9,7 +9,7 @@ class PlacesByCategoryService {
   bool _isLoading = false;                              // For Network Request Status
   String? _error;                                       // For Error Catch
   DateTime? _lastUpdated;                               // Timestamp
-  final NetworkHelper _networkHelper = NetworkHelper(); // For networkHelper use   // You also need a Request URL (where is the API located)
+  // final NetworkHelper _networkHelper = NetworkHelper(); // For networkHelper use   // You also need a Request URL (where is the API located)
   PlacesByCategoryService();                            // Service's noArgs Constructor
   PlacesByCategoryModel _placesByCategoryModelData = PlacesByCategoryModel();
 
@@ -30,7 +30,7 @@ class PlacesByCategoryService {
 
       // Fetch Place Details Data KEEP THE COMMENT BELOW UNTIL NO FURTHER ENDPOINT CHANGES ARE NEEDED
       //final _response = await (_networkHelper.fetchData(dotenv.get('LIST_BUILDER_ENDPOINT')+'?x=$x&y=$y&radius=1000&$categoryId&pageSize=5&f=pjson&token=$token'));
-      final _response = await (_networkHelper.fetchData(dotenv.get('LIST_BUILDER_ENDPOINT')));
+      final _response = await (NetworkHelper.fetchData(dotenv.get('LIST_BUILDER_ENDPOINT')));
 
       // Make the response a string first
       String dataString = _response.toString();

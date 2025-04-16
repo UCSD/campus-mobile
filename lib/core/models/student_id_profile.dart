@@ -11,30 +11,30 @@ String studentIdProfileModelToJson(StudentIdProfileModel data) =>
     json.encode(data.toJson());
 
 class StudentIdProfileModel {
-  String? studentPid;
-  String? termYear;
-  String? studentLevelCurrent;
-  String? collegeCurrent;
-  String? ugPrimaryMajorCurrent;
-  dynamic graduatePrimaryMajorCurrent;
-  int? athleteCurrentCount;
-  String? cardNumber;
-  String? barcode;
-  String? classificationType;
-  int? issueNumber;
+  String studentPid;
+  String termYear;
+  String studentLevelCurrent;
+  String collegeCurrent;
+  String ugPrimaryMajorCurrent;
+  String graduatePrimaryMajorCurrent;
+  int athleteCurrentCount;
+  String cardNumber;
+  String barcode;
+  String classificationType;
+  int issueNumber;
 
   StudentIdProfileModel({
-    this.studentPid,
-    this.termYear,
-    this.studentLevelCurrent,
-    this.collegeCurrent,
-    this.ugPrimaryMajorCurrent,
-    this.graduatePrimaryMajorCurrent,
-    this.athleteCurrentCount,
-    this.cardNumber,
-    this.barcode,
-    this.classificationType,
-    this.issueNumber,
+    this.studentPid = '',
+    this.termYear = '',
+    this.studentLevelCurrent = '',
+    this.collegeCurrent = '',
+    this.ugPrimaryMajorCurrent = '',
+    this.graduatePrimaryMajorCurrent = '',
+    this.athleteCurrentCount = 0,
+    this.cardNumber = '',
+    this.barcode = '',
+    this.classificationType = '',
+    this.issueNumber = 0
   });
 
   factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) =>
@@ -55,23 +55,20 @@ class StudentIdProfileModel {
         cardNumber: json["Card_Number"],
         barcode: json["Barcode"],
         classificationType: json["Classification_Type"],
-        issueNumber: json["Issue_Number"],
+        issueNumber: json["Issue_Number"]
       );
 
   Map<String, dynamic> toJson() => {
         "Student_PID": studentPid,
         "Term_Year": termYear,
         "Student_Level_Current": studentLevelCurrent,
-        "College_Current": collegeCurrent == null ? "" : collegeCurrent,
-        "UG_Primary_Major_Current":
-            ugPrimaryMajorCurrent == null ? "" : ugPrimaryMajorCurrent,
-        "Graduate_Primary_Major_Current": graduatePrimaryMajorCurrent == null
-            ? ""
-            : graduatePrimaryMajorCurrent,
+        "College_Current": collegeCurrent,
+        "UG_Primary_Major_Current": ugPrimaryMajorCurrent,
+        "Graduate_Primary_Major_Current": graduatePrimaryMajorCurrent,
         "Athlete_Current_Count": athleteCurrentCount,
         "Card_Number": cardNumber,
         "Barcode": barcode,
         "Classification_Type": classificationType,
-        "Issue_Number": issueNumber,
-      };
+        "Issue_Number": issueNumber
+  };
 }

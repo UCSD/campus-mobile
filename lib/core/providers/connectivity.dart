@@ -1,13 +1,15 @@
-import 'package:connectivity/connectivity.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:get/get.dart';
 
 class InternetConnectivityProvider extends ChangeNotifier {
+  /// STATES
   bool _noInternet = false;
-  bool get noInternet => _noInternet;
 
-  Connectivity _connectivity = Connectivity();
+  /// SERVICES
+  var _connectivity = Connectivity();
 
   Future<void> initConnectivity() async {
     try {
@@ -44,20 +46,14 @@ class InternetConnectivityProvider extends ChangeNotifier {
   }
 
   void _showOfflineAlert(BuildContext context) {
-    print("showing the offline alert dialog");
-    AlertDialog alert = AlertDialog(
-      title: Text(ConnectivityConstants.offlineTitle),
-      content: Text(ConnectivityConstants.offlineAlert),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'Ok'),
-          child: Text('Ok'),
-          style: TextButton.styleFrom(
-            // primary: Theme.of(context).buttonColor,
-            foregroundColor: Theme.of(context).backgroundColor,
-          ),
-        ),
-      ],
+    AlertDialogWidget alert = AlertDialogWidget(
+      type: MessageTypeConstants.ERROR,
+      icon: Icons.block_flipped,
+      title: ConnectivityConstants.offlineTitle,
+      description: ConnectivityConstants.offlineAlert,
+      onClose: () {
+        Navigator.of(context).pop();
+      },
     );
 
     Future.delayed(
@@ -71,4 +67,7 @@ class InternetConnectivityProvider extends ChangeNotifier {
               )
             });
   }
+
+  /// SIMPLE GETTERS
+  get noInternet => _noInternet;
 }

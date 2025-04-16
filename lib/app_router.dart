@@ -3,7 +3,6 @@ import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
-import 'package:campus_mobile_experimental/core/models/triton_media.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/availability/manage_availability_view.dart';
@@ -12,11 +11,8 @@ import 'package:campus_mobile_experimental/ui/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/dining/nutrition_facts_view.dart';
 import 'package:campus_mobile_experimental/ui/events/events_detail_view.dart';
-import 'package:campus_mobile_experimental/ui/events/events_list.dart';
+import 'package:campus_mobile_experimental/ui/events/events_card_list.dart';
 import 'package:campus_mobile_experimental/ui/events/events_view_all.dart';
-import 'package:campus_mobile_experimental/ui/triton_media/triton_media_detail_view.dart';
-import 'package:campus_mobile_experimental/ui/triton_media/triton_media_list.dart';
-import 'package:campus_mobile_experimental/ui/triton_media/triton_media_view_all.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/map/map_search_view.dart';
@@ -25,18 +21,15 @@ import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
-import 'package:campus_mobile_experimental/ui/onboarding/onboarding_affiliations.dart';
-import 'package:campus_mobile_experimental/ui/onboarding/onboarding_initial_screen.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_filter.dart';
+import 'package:campus_mobile_experimental/ui/onboarding/onboarding_slides.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_login.dart';
-import 'package:campus_mobile_experimental/ui/onboarding/onboarding_screen.dart';
 import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/neighborhood_lot_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/neighborhoods_view.dart';
-import 'package:campus_mobile_experimental/ui/parking/parking_lot_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/parking_structure_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/cards.dart';
-import 'package:campus_mobile_experimental/ui/profile/notifications.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/scanner/native_scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
@@ -51,11 +44,7 @@ class Router {
       case RoutePaths.BottomNavigationBar:
         return MaterialPageRoute(builder: (_) => BottomTabBar());
       case RoutePaths.OnboardingInitial:
-        return MaterialPageRoute(builder: (_) => OnboardingInitial());
-      case RoutePaths.Onboarding:
-        return MaterialPageRoute(builder: (_) => OnboardingScreen());
-      case RoutePaths.OnboardingAffiliations:
-        return MaterialPageRoute(builder: (_) => OnboardingAffiliations());
+        return MaterialPageRoute(builder: (_) => OnboardingSlides());
       case RoutePaths.OnboardingLogin:
         return MaterialPageRoute(builder: (_) => OnboardingLogin());
       case RoutePaths.Home:
@@ -79,12 +68,7 @@ class Router {
       case RoutePaths.EventsViewAll:
         return MaterialPageRoute(builder: (context) {
           Provider.of<CustomAppBar>(context).changeTitle(settings.name);
-          return EventsList();
-        });
-      case RoutePaths.MediaViewAll:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
-          return MediaList();
+          return EventsCardList();
         });
       case RoutePaths.NewsDetailView:
         Item newsItem = settings.arguments as Item;
@@ -102,17 +86,6 @@ class Router {
         return MaterialPageRoute(builder: (context) {
           Provider.of<CustomAppBar>(context).changeTitle(settings.name);
           return EventsAll();
-        });
-      case RoutePaths.MediaDetailView:
-        MediaModel data = settings.arguments as MediaModel;
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return MediaDetailView(data: data);
-        });
-      case RoutePaths.MediaAll:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
-          return MediaAll();
         });
       case RoutePaths.ManageAvailabilityView:
         return MaterialPageRoute(builder: (_) {
@@ -176,22 +149,12 @@ class Router {
       case RoutePaths.NotificationsFilter:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return NotificationsSettingsView();
+          return NotificationsFilterView();
         });
       case RoutePaths.ClassScheduleViewAll:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ClassList();
-        });
-      case RoutePaths.ManageParkingView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ManageParkingView();
-        });
-      case RoutePaths.ParkingLotsView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
-          return ParkingLotsView();
         });
       case RoutePaths.ParkingStructureView:
         return MaterialPageRoute(builder: (_) {
@@ -208,11 +171,6 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return NeighborhoodLotsView(data);
-        });
-      case RoutePaths.SpotTypesView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return SpotTypesView();
         });
       case RoutePaths.ScanditScanner:
         return MaterialPageRoute(builder: (_) => ScanditScanner());

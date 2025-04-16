@@ -1,67 +1,101 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/messages.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../navigator/bottom.dart';
 
-class NotificationsListView extends StatelessWidget {
+/// TODO: make this not global. Probably put into Widget as stateful variable...
+var hideListView = false;
+
+class NotificationsListView extends StatefulWidget {
+  @override
+  State<NotificationsListView> createState() => _NotificationsListViewState();
+}
+
+class _NotificationsListViewState extends State<NotificationsListView> {
+  @override
+  void initState() {
+    super.initState();
+    hideListView = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<MessagesDataProvider>(context, listen: false)
+          .notificationScrollController
+          .jumpTo(getNotificationsScrollOffset());
+      setState(() {
+        hideListView = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     initUniLinks(context);
-    return RefreshIndicator(
-      child: buildListView(context),
-      onRefresh: () => Provider.of<MessagesDataProvider>(context, listen: false)
-          .fetchMessages(true),
-      color: Theme.of(context).colorScheme.secondary,
+    return Offstage(
+      offstage: hideListView,
+      child: RefreshIndicator(
+        child: buildListView(context),
+        onRefresh: () {
+          return Provider.of<MessagesDataProvider>(context, listen: false)
+              .fetchMessages(true);
+        },
+        color: Theme.of(context).colorScheme.secondary,
+      ),
     );
   }
 
   Widget buildListView(BuildContext context) {
-    if (Provider.of<MessagesDataProvider>(context).messages!.length == 0) {
+    /// TODO: fix this logic up
+    Widget Function(BuildContext context, int index)? itemBuilder;
+    var itemCount = 0;
+    if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
       if (Provider.of<MessagesDataProvider>(context).error == null) {
-        if (Provider.of<MessagesDataProvider>(context).isLoading!) {
+        if (Provider.of<MessagesDataProvider>(context).isLoading) {
           // empty notifications view until they load in
         } else {
-          return ListView.separated(
-            physics: AlwaysScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) =>
-                _buildNoMessagesText(),
-            controller:
-                Provider.of<MessagesDataProvider>(context).scrollController,
-            itemCount: 1,
-            separatorBuilder: (BuildContext context, int index) => Divider(),
-          );
+          itemBuilder =
+              (BuildContext context, int index) => _buildNoMessagesText();
+          itemCount = 1;
         }
       } else {
-        return ListView.separated(
-          physics: AlwaysScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) => _buildErrorText(),
-          controller:
-              Provider.of<MessagesDataProvider>(context).scrollController,
-          itemCount: 1,
-          separatorBuilder: (BuildContext context, int index) => Divider(),
-        );
+        itemBuilder = (BuildContext context, int index) => _buildErrorText();
+        itemCount = 1;
       }
     }
-    return ListView.separated(
-      physics: AlwaysScrollableScrollPhysics(),
-      itemBuilder: _buildMessage,
-      controller: Provider.of<MessagesDataProvider>(context).scrollController,
-      itemCount: Provider.of<MessagesDataProvider>(context).messages!.length,
-      separatorBuilder: (BuildContext context, int index) => Divider(),
+    if (itemCount == 0) {
+      itemBuilder =
+          (BuildContext context, int index) => _buildMessage(context, index);
+      itemCount = Provider.of<MessagesDataProvider>(context).messages.length;
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: ListView.separated(
+        padding: EdgeInsets.only(top: 8),
+        physics: AlwaysScrollableScrollPhysics(),
+        itemBuilder: itemBuilder!,
+        controller: Provider.of<MessagesDataProvider>(context, listen: false)
+            .notificationScrollController,
+        itemCount: itemCount,
+        separatorBuilder: (BuildContext context, int index) => Divider(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? listTileDividerColorDark
+              : listTileDividerColorLight,
+        ),
+      ),
     );
   }
 
-  Widget _buildErrorText() {
+  static Widget _buildErrorText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -70,7 +104,7 @@ class NotificationsListView extends StatelessWidget {
     );
   }
 
-  Widget _buildNoMessagesText() {
+  static Widget _buildNoMessagesText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -108,74 +142,86 @@ class NotificationsListView extends StatelessWidget {
 
   Widget _buildMessage(BuildContext context, int index) {
     MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages![index]!;
+        Provider.of<MessagesDataProvider>(context).messages[index];
     FreeFoodDataProvider freefoodProvider =
         Provider.of<FreeFoodDataProvider>(context);
 
-    String? messageType;
-    if (data.audience!.topics == null) {
-      messageType = "DM";
-    } else {
-      messageType = data.audience?.topics![0];
-    }
-
-    return ListTile(
-        leading: Icon(_chooseIcon(messageType!),
-            color: Theme.of(context).colorScheme.secondary, size: 30),
-        title: Column(
-          children: <Widget>[
-            Text(
-              data.message!.title!,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Padding(padding: const EdgeInsets.all(3.5))
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        subtitle: Column(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: Linkify(
-                text: data.message!.message!,
-                onOpen: (link) async {
-                  try {
-                    await launch(link.url, forceSafariVC: true);
-                  } catch (e) {
-                    // an error occurred, do nothing
-                  }
-                },
-                options: LinkifyOptions(humanize: false),
-                style: TextStyle(fontSize: 12.5),
+    String messageType = data.audience.topics?[0] ?? "DM";
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: <Widget>[
+        ListTile(
+          minTileHeight: 20,
+          titleAlignment: ListTileTitleAlignment.top,
+          minVerticalPadding: 0,
+          minLeadingWidth: 10,
+          contentPadding: EdgeInsets.all(0),
+          leading: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(NotificationsFilterView.chooseIcons(messageType),
+                  color: Theme.of(context).iconTheme.color, size: 30),
+            ],
+          ),
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(data.message.title,
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? headlineMediumDark2
+                        : headlineMediumLight2),
               ),
+            ],
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Linkify(
+                    text: data.message.message,
+                    onOpen: (link) async {
+                      try {
+                        await launch(link.url, forceSafariVC: true);
+                      } catch (e) {
+                        // an error occurred, do nothing
+                      }
+                    },
+                    options: LinkifyOptions(humanize: false),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontSize: 12,
+                        height: 1.41,
+                        fontWeight: FontWeight.w400)),
+                freefoodProvider.isFreeFood(data.messageId)
+                    ? FreeFoodNotification(messageId: data.messageId)
+                    : Container(),
+              ],
             ),
-            freefoodProvider.isFreeFood(data.messageId)
-                ? FreeFoodNotification(messageId: data.messageId)
-                : Container(),
-          ],
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 6.0),
+                child: Text(_readTimestamp(data.timestamp),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontSize: 12,
+                        height: 1.41,
+                        fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
         ),
-        trailing: Column(children: <Widget>[
-          Text(_readTimestamp(data.timestamp!),
-              style: TextStyle(fontSize: 10, color: Colors.grey)),
-        ]));
+      ],
+    );
   }
 
-  IconData _chooseIcon(String messageType) {
-    if (messageType == "studentAnnouncements" ||
-        messageType == "testStudentAnnouncements") {
-      return Icons.school_outlined;
-    } else if (messageType == "freeFood") {
-      return Icons.restaurant_outlined;
-    } else if (messageType == "campusAnnouncements" ||
-        messageType == "testCampusAnnouncements") {
-      return Icons.campaign_outlined;
-    } else if (messageType == "DM") {
-      return Icons.info_outline;
-    }
-    return Icons.info_outline;
-  }
-
-  String _readTimestamp(int timestamp) {
+  static String _readTimestamp(int timestamp) {
     var now = new DateTime.now();
     var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
     var diff = now.difference(date);
@@ -184,31 +230,15 @@ class NotificationsListView extends StatelessWidget {
     if (diff.inSeconds < 60) {
       time = 'JUST NOW';
     } else if (diff.inMinutes < 60) {
-      if (diff.inMinutes.floor() == 1) {
-        time = diff.inMinutes.toString() + ' MIN';
-      } else {
-        time = diff.inMinutes.toString() + ' MINS';
-      }
+      time = '${diff.inMinutes} ${diff.inMinutes == 1 ? 'MIN' : 'MINS'}';
     } else if (diff.inHours < 24) {
-      if (diff.inHours.floor() == 1) {
-        time = diff.inHours.toString() + ' HR';
-      } else {
-        time = diff.inHours.toString() + ' HRS';
-      }
-    } else if (diff.inDays > 0 && diff.inDays < 7) {
-      if (diff.inDays == 1) {
-        time = diff.inDays.toString() + ' D';
-      } else {
-        time = diff.inDays.toString() + ' D';
-      }
-    } else if (diff.inDays >= 7 && diff.inDays < 365) {
-      if (diff.inDays.floor() == 7) {
-        time = (diff.inDays / 7).floor().toString() + ' W';
-      } else {
-        time = (diff.inDays / 7).floor().toString() + ' W';
-      }
+      time = '${diff.inHours} ${diff.inHours == 1 ? 'HR' : 'HRS'}';
+    } else if (diff.inDays < 7) {
+      time = '${diff.inDays} D';
+    } else if (diff.inDays < 365) {
+      time = '${(diff.inDays / 7).floor()} W';
     } else {
-      time = ((diff.inDays / 7).floor() / 52).floor().toString() + ' Y';
+      time = '${(diff.inDays / 365).floor()} Y';
     }
     return time;
   }
