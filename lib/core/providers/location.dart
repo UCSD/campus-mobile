@@ -22,29 +22,47 @@ class LocationDataProvider extends ChangeNotifier {
     _init();
   }
 
+  @override
+  void dispose() {
+    _locationController.close();
+    super.dispose();
+  }
+
   _init() async {
-    /// check to see if gps service is enabled on device
+    /// Check to see if GPS service is enabled on device
     var serviceStatus = await Geolocator.isLocationServiceEnabled();
     if (!serviceStatus) {
-      /// check to see if permission has been granted to the app
-      locationPermission = await Geolocator.requestPermission();
-      if (_permission) _enableListener();
+      // Prompt the user to enable the GPS
+      error = 'Location services are disabled. Please enable them in settings.';
     } else {
-      _permission = true;
-      _enableListener();
+      locationPermission = await Geolocator.requestPermission();
+      if (locationPermission == LocationPermission.denied) {
+        error = 'Location permissions are denied';
+      } else if (locationPermission == LocationPermission.deniedForever) {
+        error =
+            'Location permissions are permanently denied, we cannot request permissions.';
+      } else {
+        _permission = true;
+        _enableListener();
+      }
     }
   }
 
   void _enableListener() {
     if (_permission) {
       Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-              (Position? position) {
-                if (position == null) error = ErrorConstants.locationFailed;
-                _locationController.add(Coordinates(
-                  lat: position?.latitude,
-                  lon: position?.longitude
-                ));
-          });
+          (Position? position) {
+        if (position == null) {
+          error = 'Failed to get location. Position is null.';
+          _locationController.addError('Failed to get location');
+        } else {
+          _locationController.add(
+              Coordinates(lat: position.latitude, lon: position.longitude));
+        }
+      }, onError: (e) {
+        error = e.toString();
+        _locationController.addError('Failed to get location: $e');
+      });
     }
   }
 
