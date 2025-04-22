@@ -1,20 +1,22 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:provider/provider.dart';
+import '../common/action_button.dart';
+import '../common/action_link.dart';
+import '../common/alert_dialog_widget.dart';
 
 class WiFiCard extends StatefulWidget {
   @override
   _WiFiCardState createState() => _WiFiCardState();
 }
 
+enum TestStatus {initial, running, finished, unavailable, simulated}
 class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin {
   /// STATES
   String cardId = "speed_test";
@@ -27,8 +29,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
   static const int SPEED_TEST_TIMEOUT_CONST = 30;
 
   /// PROVIDERS
-  SpeedTestProvider _speedTestProvider = SpeedTestProvider();
-  UserDataProvider? _userDataProvider;
+  var _speedTestProvider = SpeedTestProvider();
 
   @override
   void initState() {
@@ -59,41 +60,32 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Widget buildTitle() {
-    return Text(
-      "Wifi Card",
-      textAlign: TextAlign.left,
-      style: TextStyle(
-        fontSize: ScalingUtility.horizontalSafeBlock * 2,
-      ),
-    );
-  }
-
+  // Wifi card changes its contents based on the state i.e.
+  // initial, speedTest, finished, unavailableState, simulated
   Widget buildCardContent(BuildContext context) {
     if (!_speedTestProvider.isUCSDWiFi!) {
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
         child: unavailableState(),
       );
     }
-
     if (timedOut) {
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
         child: finishedState(),
       );
     }
+
     _speedTestProvider.addListener(() {
-      /// TODO: Add print statements to verify not reloading
       try {
         if (_speedTestProvider.onSimulator!) {
-          cardState = TestStatus.simulated;
-        } else if (!_speedTestProvider.isUCSDWiFi!) {
           setState(() {
-            cardState = TestStatus.unavailable;
+            cardState = TestStatus.simulated;
           });
+        } else if (!_speedTestProvider.isUCSDWiFi!) {
+          setState(() => cardState = TestStatus.unavailable);
         } else if (_speedTestProvider.timeElapsedDownload +
-                _speedTestProvider.timeElapsedUpload >
+            _speedTestProvider.timeElapsedUpload >
             SPEED_TEST_TIMEOUT_CONST) {
           setState(() {
             goodSpeed = false;
@@ -108,43 +100,112 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             cardState = TestStatus.finished;
           });
         }
-      } catch (e) {}
+      } catch (_) {}
     });
-    switch (cardState) {
-      /// TODO: Add check to verify not over-checking states
-      case TestStatus.initial:
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: initialState(context),
-        );
-      case TestStatus.running:
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: speedTest(),
-        );
-      case TestStatus.finished:
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: finishedState(),
-        );
-      case TestStatus.unavailable:
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: unavailableState(),
-        );
-      case TestStatus.simulated:
-        return Padding(
-            padding: const EdgeInsets.all(8.0), child: simulatedState());
-      default:
-        return initialState(context);
-    }
+
+    // STATE MACHINE
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+      child:
+        switch (cardState) {
+          TestStatus.initial => initialState(context),
+          TestStatus.running => speedTest(),
+          TestStatus.finished => finishedState(),
+          TestStatus.unavailable => unavailableState(),
+          TestStatus.simulated => simulatedState(),
+          _ => initialState(context) // Default State (Initial)
+        },
+    );
   }
 
+  //////////// INITIAL STATE (Before Testing for the first time) ////////////
+  Column initialState(BuildContext context) {
+    if (buttonTimer != null) _buttonEnabled = true;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        // Wifi icon + Description
+        Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.wifi_sharp,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : darkPrimaryColor2,
+                size: 38,
+              ),
+              SizedBox(width: 10),
+              Padding(
+                  padding: EdgeInsets.only(top: 10),
+                child: Text(
+                  "Help identify campus WiFi issues.",
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              )
+            ]
+        ),
+        SizedBox(height: 50),
+        // TEST SPEED and REPORT ISSUE buttons
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // TEST SPEED
+            ActionButton(
+                buttonText: 'TEST SPEED',
+                onPressed: () {
+                  if (_speedTestProvider.onSimulator!) {
+                    setState(() {
+                      cardState = TestStatus.simulated;
+                    });
+                  } else {
+                    setState(() {
+                      cardState = TestStatus.running;
+                    });
+                    _speedTestProvider
+                        .speedTest()
+                        .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
+                  }
+                }
+            ),
+            // REPORT ISSUE
+            ActionLink(
+                buttonText: 'REPORT ISSUE',
+                onPressed: _buttonEnabled
+                    ? () {
+                  _speedTestProvider.reportIssue();
+                  showDialog(
+                  context: context,
+                  builder: (context) {
+                  return AlertDialogWidget(
+                    type: MessageTypeConstants.ERROR,
+                    icon: Icons.block_flipped,
+                    title: WifiConstants.wifiIssueFailedTitle,
+                    description: WifiConstants.wifiIssueFailedDesc,
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    });
+                });
+                } : () {},
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
+  //////////// SPEED TEST STATE (During testing) ////////////
   Column speedTest() {
     return Column(
       children: [
         Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
             child: RichText(
                 text: TextSpan(children: [
               TextSpan(
@@ -177,207 +238,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Column initialState(BuildContext context) {
-    if (buttonTimer != null) _buttonEnabled = true;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        RichText(
-            text: TextSpan(children: [
-          TextSpan(
-              text: "Test WiFi Speed ",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 36,
-              )),
-          WidgetSpan(
-            child: Icon(
-              Icons.wifi,
-              size: 36,
-            ),
-          ),
-          TextSpan(
-              text: "\n",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 36,
-              )),
-          TextSpan(
-            text: "Help identify campus WiFi issues. \nRun a speed test now.",
-            style: TextStyle(fontSize: 15, color: Colors.grey),
-          ),
-        ])),
-        MaterialButton(
-            padding: EdgeInsets.all(4.0),
-            elevation: 0.0,
-            onPressed: () {
-              if (_speedTestProvider.onSimulator!) {
-                setState(() {
-                  cardState = TestStatus.simulated;
-                });
-              } else {
-                setState(() {
-                  cardState = TestStatus.running;
-                });
-                _speedTestProvider
-                    .speedTest()
-                    .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
-              }
-            },
-            minWidth: 350,
-            height: 40,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              side: BorderSide(color: Colors.black),
-            ),
-            color: darkAppBarTheme.backgroundColor,
-            child: Text(
-              "Test WiFi Speed",
-              style: TextStyle(color: Colors.white),
-            )),
-        MaterialButton(
-            padding: EdgeInsets.all(12.0),
-            disabledColor: Colors.grey,
-            onPressed: _buttonEnabled
-                ? () {
-                    _speedTestProvider.reportIssue();
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Container(
-                              child: Text(
-                                  "Please run speed test to report issue."),
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                  child: Text("Dismiss"),
-                                  style: TextButton.styleFrom(
-                                    // primary: Theme.of(context).buttonColor,
-                                    foregroundColor:
-                                        Theme.of(context).colorScheme.background,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  })
-                            ],
-                          );
-                        });
-                  }
-                : null,
-            minWidth: 350,
-            height: 40,
-            elevation: 0.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              side: BorderSide(color: Colors.black),
-            ),
-            color: Colors.grey.shade100,
-            child: Text(
-              "Report Issue",
-              style: TextStyle(color: Colors.black),
-            )),
-      ],
-    );
-  }
-
-  Column timedOutState() {
-    _speedTestProvider.sendNetworkDiagnostics(lastSpeed);
-    var showDownload = false;
-    if (lastSpeed != null && lastSpeed! > 0) showDownload = true;
-    return Column(
-      children: [
-        RichText(
-            text: TextSpan(children: [
-          TextSpan(
-              text: "Your speed is:  ",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 36,
-              )),
-          TextSpan(
-            text:
-                '\n Download speed: ${lastSpeed != null ? lastSpeed!.toStringAsPrecision(3) : _speedTestProvider.speed!.toStringAsPrecision(3)} Mbps \n Upload speed: ${_speedTestProvider.uploadSpeed!.toStringAsPrecision(3)} Mbps\n',
-            style: TextStyle(fontSize: 15, color: Colors.grey),
-          )
-        ])),
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: MaterialButton(
-              elevation: 0.0,
-              onPressed: () {
-                setState(() {
-                  cardState = TestStatus.initial;
-                  _speedTestProvider.resetSpeedTest();
-                });
-              },
-              minWidth: 350,
-              height: 40,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: Colors.black),
-              ),
-              color: darkAppBarTheme.backgroundColor,
-              child: Text(
-                "Rerun Test",
-                style: TextStyle(color: Colors.white),
-              )),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: MaterialButton(
-              disabledColor: Colors.grey,
-              onPressed: _buttonEnabled
-                  ? () {
-                      _speedTestProvider.reportIssue();
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Container(
-                                child: Text(
-                                    "Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services."),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                    child: Text("Dismiss"),
-                                    style: TextButton.styleFrom(
-                                      // primary: Theme.of(context).buttonColor
-                                      foregroundColor:
-                                          Theme.of(context).colorScheme.background,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      _buttonEnabled = false;
-                                      buttonTimer =
-                                          new Timer(Duration(minutes: 2), () {
-                                        _buttonEnabled = true;
-                                        setState(() {});
-                                      });
-                                      setState(() {});
-                                    })
-                              ],
-                            );
-                          });
-                    }
-                  : null,
-              minWidth: 350,
-              height: 40,
-              elevation: 0.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: Colors.black),
-              ),
-              color: Colors.grey.shade100,
-              child: Text(
-                "Report Issue",
-                style: TextStyle(color: Colors.black),
-              )),
-        ),
-      ],
-    );
-  }
-
+  //////////// FINISHED STATE (After Testing) ////////////
   Column finishedState() {
     _speedTestProvider.sendNetworkDiagnostics(lastSpeed);
     String downloadSpeed = lastSpeed != null
@@ -396,100 +257,141 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
         downloadSpeed = "N/A (Timed Out)";
       }
     }
-
+    // Card contents for Download Speed and Upload Speed
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RichText(
-            text: TextSpan(children: [
-          TextSpan(
-            text:
-                '\n Download speed was: $downloadSpeed \n Upload speed was: $uploadSpeed\n',
-            style: TextStyle(fontSize: 15, color: Colors.grey),
-          )
-        ])),
+        // DOWNLOAD SPEED
         Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: MaterialButton(
-              elevation: 0.0,
-              onPressed: () {
-                setState(() {
-                  timedOut = false;
-                  cardState = TestStatus.initial;
-                  _speedTestProvider.resetSpeedTest();
-                });
-              },
-              minWidth: 350,
-              height: 40,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: Colors.black),
-              ),
-              color: darkAppBarTheme.backgroundColor,
-              child: Text(
-                "Rerun Test",
-                style: TextStyle(color: Colors.white),
-              )),
+          padding: EdgeInsets.only(left: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'Download speed:',
+                    style: TextStyle(
+                      fontSize: 26,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? descriptiveTextColorLight
+                          : descriptiveTextColorDark,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                // Download Speed in Mbps
+                Expanded(
+                  flex: 4,
+                    child: Text(
+                      downloadSpeed,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? lightPrimaryColor
+                            : darkPrimaryColor2,
+                      ),
+                    )
+                )
+              ],
+            ),
         ),
+        SizedBox(height: 20),
+        // UPLOAD SPEED
         Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: MaterialButton(
-              disabledColor: Colors.grey,
-              onPressed: _buttonEnabled
-                  ? () {
-                      _speedTestProvider.reportIssue();
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Container(
-                                child: Text(
-                                    "Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services."),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                    child: Text("Dismiss"),
-                                    style: TextButton.styleFrom(
-                                      // primary: Theme.of(context).buttonColor,
-                                      foregroundColor:
-                                          Theme.of(context).colorScheme.background,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      _buttonEnabled = false;
-                                      buttonTimer =
-                                          new Timer(Duration(minutes: 2), () {
-                                        _buttonEnabled = true;
-                                        setState(() {});
-                                      });
-                                      setState(() {});
-                                    })
-                              ],
-                            );
-                          });
-                    }
-                  : null,
-              minWidth: 350,
-              height: 40,
-              elevation: 0.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: Colors.black),
+          padding: EdgeInsets.only(left: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 3,
+                child: Text(
+                  'Upload speed:',
+                  style: TextStyle(
+                    fontSize: 26,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-              color: Colors.grey.shade100,
-              child: Text(
-                "Report Issue",
-                style: TextStyle(color: Colors.black),
-              )),
+              Expanded(
+                  flex: 4,
+                  child: Text(
+                    downloadSpeed,
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? lightPrimaryColor
+                          : darkPrimaryColor2,
+                    ),
+                  )
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 20),
+        // TEST SPEED and REPORT ISSUE buttons
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // TEST SPEED
+            // TODO: This brings you back to the initial state, but that requires two "TEST SPEED" Button clicks.
+            // TODO: For the UI people, do you want 1 click? or 2 clicks but the first one indicating to "Reset"
+            ActionButton(
+                buttonText: 'TEST SPEED',
+                onPressed: () {
+                    setState(() {
+                      timedOut = false;
+                      cardState = TestStatus.running;
+                      _speedTestProvider.resetSpeedTest();
+                    });
+                    _speedTestProvider
+                        .speedTest()
+                        .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
+                  // setState(() {
+                  //   timedOut = false;
+                  //   cardState = TestStatus.initial;
+                  //   _speedTestProvider.resetSpeedTest();
+                  // });
+                }
+            ),
+            SizedBox(width: 10),
+            // REPORT ISSUE
+            ActionLink(
+              buttonText: 'REPORT ISSUE',
+              onPressed: _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED?
+                  ? () {
+                _speedTestProvider.reportIssue();
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialogWidget(
+                          type: MessageTypeConstants.SUCCESS,
+                          icon: Icons.check_circle_outline_sharp,
+                          title: WifiConstants.wifiIssueSuccessTitle,
+                          description: WifiConstants.wifiIssueSuccessDesc,
+                          onClose: () {
+                            Navigator.of(context).pop();
+                          });
+                    });
+              } : () {},
+            )
+          ],
         ),
       ],
     );
   }
 
+  //////////// UNAVAILABLE STATE (Not in a UCSD Network) ////////////
   Column unavailableState() {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
           child: Text(
             "Connect to a UCSD Network",
             style: TextStyle(
@@ -498,25 +400,14 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             textAlign: TextAlign.center,
           ),
         ),
-        MaterialButton(
-            padding: EdgeInsets.all(4.0),
-            elevation: 0.0,
-            onPressed: () => tryAgain(),
-            minWidth: 350,
-            height: 40,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              side: BorderSide(color: Colors.black),
-            ),
-            color: darkAppBarTheme.backgroundColor,
-            child: Text(
-              "Try Again",
-              style: TextStyle(color: Colors.white),
-            )),
+        SizedBox(height: 50),
+        ActionButton(
+            buttonText: 'TRY AGAIN',
+            onPressed: () => tryAgain()
+        ),
       ],
     );
   }
-
   void tryAgain() async {
     // re check everything
     await Provider.of<SpeedTestProvider>(context, listen: false).init();
@@ -533,11 +424,13 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     }
   }
 
+////////////////////////////////////////////////////////////////////////////
+  ////////////// SIMULATED STATE ////////////
   Column simulatedState() {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(left: 8, right: 8, top: 8),
           child: Text(
             "Sorry",
             style: TextStyle(
@@ -547,7 +440,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
           child: Text(
             "This feature is only available on physical devices.",
             style: TextStyle(fontSize: 13),
@@ -557,7 +450,6 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       ],
     );
   }
-
   _onTimeout() {
     _speedTestProvider.cancelDownload();
     _speedTestProvider.cancelUpload();
@@ -584,12 +476,13 @@ class ScalingUtility {
 
     /// Calculate blocks accounting for notches and home bar
     horizontalSafeBlock = (_queryData.size.width -
-            (_queryData.padding.left + _queryData.padding.right)) / 100;
+        (_queryData.padding.left + _queryData.padding.right)) / 100;
     verticalSafeBlock = (_queryData.size.height -
-            (_queryData.padding.top + _queryData.padding.bottom)) / 100;
+        (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 
+// Configurations
 class SizeConfig {
   static late MediaQueryData _mediaQueryData;
   static late double screenWidth;
@@ -615,5 +508,3 @@ class SizeConfig {
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }
 }
-
-enum TestStatus { initial, running, finished, unavailable, simulated }

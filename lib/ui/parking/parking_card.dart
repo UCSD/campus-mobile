@@ -1,10 +1,13 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
+import 'package:campus_mobile_experimental/ui/common/action_link.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
-import 'package:campus_mobile_experimental/ui/common/dots_indicator.dart';
 import 'package:campus_mobile_experimental/ui/parking/circular_parking_indicator.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,14 +17,12 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  /// STATES
   static const cardId = 'parking';
 
-  /// PROVIDERS
   late ParkingDataProvider _parkingDataProvider;
 
-  /// SERVICES
-  final _controller = new PageController();
+  final _controller = PageController();
+  int _currentPage = 0;
 
   @override
   void didChangeDependencies() {
@@ -30,14 +31,8 @@ class _ParkingCardState extends State<ParkingCard> {
   }
 
   // ignore: must_call_super
+  @override
   Widget build(BuildContext context) {
-    Map<String, Function> menuOption = {
-      "Manage Lots": (context) =>
-          {Navigator.pushNamed(context, RoutePaths.ManageParkingView)},
-      "Manage Spots": (context) =>
-          {Navigator.pushNamed(context, RoutePaths.SpotTypesView)}
-    };
-    //super.build(context);
     return CardContainer(
       titleText: CardTitleConstants.titleMap[cardId]!,
       isLoading: _parkingDataProvider.isLoading,
@@ -47,7 +42,16 @@ class _ParkingCardState extends State<ParkingCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      actionButtons: buildActionButtons(),
+      actionButtons: [
+        ActionButton(
+            buttonText: 'MANAGE SPOTS',
+            onPressed: () =>
+                Navigator.pushNamed(context, RoutePaths.SpotTypesView)),
+        ActionLink(
+            buttonText: 'MANAGE LOTS',
+            onPressed: () =>
+                Navigator.pushNamed(context, RoutePaths.ManageParkingView)),
+      ],
     );
   }
 
@@ -55,11 +59,11 @@ class _ParkingCardState extends State<ParkingCard> {
     try {
       List<Widget> selectedLotsViews = [];
       for (ParkingModel model in _parkingDataProvider.parkingModels) {
-        if (_parkingDataProvider.parkingViewState[model.locationName] ==
-            true) {
+        if (_parkingDataProvider.parkingViewState[model.locationName] == true) {
           selectedLotsViews.add(CircularParkingIndicators(model: model));
         }
       }
+
       if (selectedLotsViews.isEmpty) {
         return (Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,21 +83,31 @@ class _ParkingCardState extends State<ParkingCard> {
           ],
         ));
       }
+
       return Column(
         children: <Widget>[
           Expanded(
             child: PageView(
               controller: _controller,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                });
+              },
               children: selectedLotsViews,
             ),
           ),
           DotsIndicator(
-            controller: _controller,
-            itemCount: selectedLotsViews.length,
-            onPageSelected: (int index) {
-              _controller.animateToPage(index,
-                  duration: Duration(seconds: 1), curve: Curves.decelerate);
-            },
+            position: _currentPage.toDouble(),
+            dotsCount: selectedLotsViews.length,
+            decorator: DotsDecorator(
+              color: dotsUnselectedColor,
+              activeColor: Theme.of(context).brightness == Brightness.dark
+                  ? dotsSelectedColorDark
+                  : dotsSelectedColorLight,
+              activeSize: const Size(22.0, 22.0),
+              size: const Size(10.0, 10.0),
+            ),
           ),
         ],
       );
@@ -108,34 +122,5 @@ class _ParkingCardState extends State<ParkingCard> {
         ),
       );
     }
-  }
-
-  List<Widget> buildActionButtons() {
-    List<Widget> actionButtons = [];
-    actionButtons.add(TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
-      ),
-      child: Text(
-        'Manage Lots',
-      ),
-      onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.ManageParkingView);
-      },
-    ));
-    actionButtons.add(TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
-      ),
-      child: Text(
-        'Manage Spots',
-      ),
-      onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.SpotTypesView);
-      },
-    ));
-    return actionButtons;
   }
 }

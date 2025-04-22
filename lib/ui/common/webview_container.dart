@@ -38,7 +38,8 @@ class WebViewContainer extends StatefulWidget {
   _WebViewContainerState createState() => _WebViewContainerState();
 }
 
-class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepAliveClientMixin {
+class _WebViewContainerState extends State<WebViewContainer>
+    with AutomaticKeepAliveClientMixin {
   /// STATES
   bool active = false;
   double _contentHeight = cardContentMinHeight;
@@ -66,7 +67,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
     // check if this webCard needs an auth token
     if (widget.requireAuth) {
       _userDataProvider = Provider.of<UserDataProvider>(context);
-      webCardUrl = widget.initialUrl+
+      webCardUrl = widget.initialUrl +
           "?expiration=${_userDataProvider.authenticationModel.expiration}#${_userDataProvider.authenticationModel.accessToken}";
     } else {
       webCardUrl = widget.initialUrl;
@@ -78,7 +79,19 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
       return Card(
         margin: EdgeInsets.only(
             top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+        elevation: 4,
+        shadowColor: Colors.black,
         semanticContainer: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(
+            color: dotsUnselectedColor,
+            width: 0.5,
+          ),
+        ),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? darkPrimaryBgColor
+            : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -88,10 +101,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
                 widget.titleText,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 18.0,
-                ),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               trailing: buildMenu(),
             ),
@@ -112,22 +122,28 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
   // builds the actual webview widget
   Widget buildBody(context) {
     print('webview_container:buildBody: ' + webCardUrl);
-    return Container(
-      height: _contentHeight,
-      child: WebView(
-        javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: webCardUrl,
-        onWebViewCreated: (controller) {
-          _webViewController = controller;
-        },
-        navigationDelegate: null,
-        javascriptChannels: <JavascriptChannel>[
-          _linksChannel(context),
-          _heightChannel(context),
-          _mapChannel(context),
-          _refreshTokenChannel(context),
-          _permanentRedirect(context)
-        ].toSet(),
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(12.0),
+        bottomRight: Radius.circular(12.0),
+      ),
+      child: Container(
+        height: _contentHeight,
+        child: WebView(
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: webCardUrl,
+          onWebViewCreated: (controller) {
+            _webViewController = controller;
+          },
+          navigationDelegate: null,
+          javascriptChannels: <JavascriptChannel>[
+            _linksChannel(context),
+            _heightChannel(context),
+            _mapChannel(context),
+            _refreshTokenChannel(context),
+            _permanentRedirect(context)
+          ].toSet(),
+        ),
       ),
     );
   }
@@ -154,14 +170,20 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
         child: Text(
           menuOption,
           textAlign: TextAlign.center,
+          style: TextStyle(color: dotsUnselectedColor),
         ),
       );
       menu.add(item as DropdownMenuItem<String>);
     });
     return DropdownButton(
       items: menu,
+      iconSize: 36,
+      iconEnabledColor: dotsUnselectedColor,
       underline: Container(),
-      icon: Icon(Icons.more_vert),
+      icon: Transform.translate(
+        offset: Offset(6, -3),
+        child: Icon(Icons.more_vert, color: dotsUnselectedColor),
+      ),
       onChanged: (String? selectedMenuItem) =>
           onMenuItemPressed(selectedMenuItem),
     );
@@ -170,15 +192,15 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
       case CardMenuOptionConstants.reloadCard:
-          _webViewController?.loadUrl(webCardUrl);
-          resetCardHeight(widget.cardId);
+        _webViewController?.loadUrl(webCardUrl);
+        resetCardHeight(widget.cardId);
         break;
       case CardMenuOptionConstants.hideCard:
-          hide();
-          resetCardHeight(widget.cardId);
+        hide();
+        resetCardHeight(widget.cardId);
         break;
       default:
-        // do nothing for now
+      // do nothing for now
     }
   }
 
@@ -198,7 +220,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
       name: 'SetHeight',
       onMessageReceived: (JavascriptMessage message) {
         setState(() {
-          _contentHeight = validateHeight(context, double.tryParse(message.message));
+          _contentHeight =
+              validateHeight(context, double.tryParse(message.message));
         });
       },
     );

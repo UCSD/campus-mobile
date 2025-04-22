@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_menu_list.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,7 +18,7 @@ class DiningDetailView extends StatelessWidget {
         separatorBuilder: (context, index) {
           return SizedBox(height: 8);
         },
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(20),
         itemBuilder: (context, index) {
           return buildDetailView(context, data)[index];
         },
@@ -31,23 +32,33 @@ class DiningDetailView extends StatelessWidget {
       Text(
         model.name,
         textAlign: TextAlign.start,
-        style: TextStyle(fontSize: 26),
+        style: Theme.of(context).textTheme.titleMedium,
       ),
       Text(
         model.description,
         textAlign: TextAlign.start,
-        style: TextStyle(fontSize: 15),
+        style: Theme.of(context).textTheme.bodySmall,
       ),
       buildHours(context, model),
-      if(model.specialHours != null)
-        buildSpecialHours(context,model),
+      if (model.specialHours != null) buildSpecialHours(context, model),
       buildPaymentOptions(context, model),
-      buildPictures(model),
-      Divider(),
+      //buildPictures(model),
+      SizedBox(height: 10),
+      Text(
+        'Location',
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
       buildDirectionsButton(context, model),
-      Divider(),
-      buildWebsiteButton(context, model),
-      buildMenu(context, model),
+      Row(
+        children: [
+          buildWebsiteButton(context, model),
+          SizedBox(width: 15),
+          buildMenuButton(context, model),
+        ],
+      ),
+      // TODO: removed the menu on March 25, 2025
+      //SizedBox(height: 20),
+      //buildMenu(context, model),
     ];
   }
 
@@ -57,27 +68,26 @@ class DiningDetailView extends StatelessWidget {
         model.coordinates!.lat != null &&
         model.coordinates!.lon != null) {
       return TextButton(
-        style: TextButton.styleFrom(
-          // primary: Theme.of(context).buttonColor,
-          foregroundColor: Theme.of(context).colorScheme.background,
-        ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              'Directions',
-              style: TextStyle(fontSize: 25),
+              'Get Directions',
+              style: linkTextDark.copyWith(fontSize: 14.0),
             ),
-            Column(
+            Row(
               children: <Widget>[
                 Icon(
                   Icons.directions_walk,
-                  size: 30,
+                  color: Theme.of(context).iconTheme.color,
                 ),
                 model.distance != null
-                    ? Text(num.parse(model.distance!.toStringAsFixed(1))
-                            .toString() +
-                        ' mi')
+                    ? Text(
+                        num.parse(model.distance!.toStringAsFixed(1))
+                                .toString() +
+                            ' mi',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 14.0,
+                            ))
                     : Text('--'),
               ],
             ),
@@ -92,23 +102,20 @@ class DiningDetailView extends StatelessWidget {
             // an error occurred, do nothing
           }
         },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.all(0.0),
+        ),
       );
     } else {
-      return Center(child: Text('Directions not available.'));
+      return Text('Directions not available.',
+          style: Theme.of(context).textTheme.bodySmall);
     }
   }
 
   Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
     if (model.url != null && model.url != '') {
-      return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Theme.of(context).primaryColor,
-          backgroundColor: Theme.of(context).colorScheme.background,
-        ),
-        child: Text('Visit Website',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.labelLarge!.color,
-            )),
+      return TextButton(
+        child: Text('Visit Website'),
         onPressed: () {
           try {
             launch(model.url!, forceSafariVC: true);
@@ -116,21 +123,25 @@ class DiningDetailView extends StatelessWidget {
             // an error occurred, do nothing
           }
         },
+        style: TextButton.styleFrom(
+          backgroundColor: actionButtonBackgroundColor,
+          foregroundColor: lightPrimaryColor,
+          padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+        ),
       );
     } else
       return Container();
   }
 
-  Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
+  Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
     if (model.menuWebsite != null && model.menuWebsite!.isNotEmpty) {
-      return ElevatedButton(
-        child: Text('View Menu',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.labelLarge!.color,
-            )),
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Theme.of(context).primaryColor,
-          backgroundColor: Theme.of(context).colorScheme.background,
+      return TextButton(
+        child: Row(
+          children: [
+            Text('View Menu'),
+            SizedBox(width: 5),
+            Icon(Icons.open_in_new, size: 16),
+          ],
         ),
         onPressed: () {
           try {
@@ -139,76 +150,110 @@ class DiningDetailView extends StatelessWidget {
             // an error occurred, do nothing
           }
         },
+        style: TextButton.styleFrom(
+          backgroundColor: Color(0xFF00629B),
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+        ),
       );
-    } else
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
+    if (model.meals != null) {
       return DiningMenuList(
         model: model,
       );
+    } else {
+      return Container();
+    }
   }
 
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SizedBox(height: 20),
       Text(
-        "Hours:",
+        "Hours",
         textAlign: TextAlign.start,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        style: Theme.of(context).textTheme.titleMedium,
       ),
-      Divider(height: 6),
+      SizedBox(height: 10),
       HoursOfDay(model: model, weekday: 1),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 2),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 3),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 4),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 5),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 6),
-      Divider(height: 10),
+      buildDivider(context),
       HoursOfDay(model: model, weekday: 7),
-      Divider(height: 10),
+      SizedBox(height: 20),
     ]);
   }
-Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
-    var specialHoursDuration = "";
-  if(model.specialHours?.specialHoursValidFrom != null && model.specialHours?.specialHoursValidTo != null){
-    specialHoursDuration = model.specialHours!.specialHoursValidFrom ! + " to " +
-        model.specialHours!.specialHoursValidTo ! + "\n";
+
+  Widget buildDivider(BuildContext context) {
+    return Divider(
+      height: 10,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? listTileDividerColorDark
+          : listTileDividerColorLight,
+    );
   }
-  return RichText(
-    text: TextSpan(
-      style: TextStyle(
-          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-          color: Theme.of(context).textTheme.bodyMedium!.color),
-      children: [
-        TextSpan(
-          text: "Special Hours: \n",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+
+  Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model) {
+    var specialHoursDuration = "";
+    if (model.specialHours?.specialHoursValidFrom != null &&
+        model.specialHours?.specialHoursValidTo != null) {
+      specialHoursDuration = model.specialHours!.specialHoursValidFrom! +
+          " to " +
+          model.specialHours!.specialHoursValidTo! +
+          "\n";
+    }
+    return Container(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          "Special Hours",
+          style: Theme.of(context).textTheme.titleMedium,
         ),
-        TextSpan(
-          text: model.specialHours!.specialHoursEvent + "\n"
+        SizedBox(height: 10),
+        Text(
+          model.specialHours!.specialHoursEvent,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        TextSpan(text: model.specialHours!.specialHoursEventDetails + "\n"),
-        TextSpan(text:specialHoursDuration)
-      ],
-    ),
-  );
-}
+        Text(
+          model.specialHours!.specialHoursEventDetails,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        Text(
+          specialHoursDuration,
+          style: Theme.of(context).textTheme.bodySmall,
+        )
+      ]),
+    );
+  }
 
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions.join(', ');
-    return RichText(
-      text: TextSpan(
-        style: TextStyle(
-            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-            color: Theme.of(context).textTheme.bodyMedium!.color),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextSpan(
-            text: "Payment Options:\n",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          Text(
+            "Payment Options",
+            style: Theme.of(context).textTheme.titleMedium,
           ),
-          TextSpan(text: options),
+          SizedBox(height: 10),
+          Text(
+            options,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ],
       ),
     );
@@ -218,8 +263,7 @@ Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model){
     List<ImageLoader> images = [];
     if (model.images != null && model.images!.length > 0) {
       for (prefix0.Image item in model.images!) {
-        if (item.small != null)
-          images.add(ImageLoader(url: item.small!));
+        if (item.small != null) images.add(ImageLoader(url: item.small!));
       }
       return Center(
         child: Container(
@@ -298,18 +342,47 @@ class HoursOfDay extends StatelessWidget {
     /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
     correct it to look right.*/
     if (theHours == 'Closed-Closed') theHours = 'Closed';
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('$theDay: '),
-        Flex(
-          direction: Axis.horizontal,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
+            Flexible(
+              flex: 3,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+                children: [
+                  weekday == DateTime.now().weekday
+                      ? buildGreenDot(theHours!)
+                      : Container(width: 10),
+                  SizedBox(width: 5),
+                  Text(
+                    '$theDay: ',
+                    style: weekday == DateTime.now().weekday
+                        ? Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(fontWeight: FontWeight.bold)
+                        : Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              flex: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
                   RegExp(r"\b[0-9]{2}").allMatches(theHours!).length != 2
-                      ? Text(theHours)
+                      ? Text(
+                          theHours,
+                          style: weekday == DateTime.now().weekday
+                              ? Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(fontWeight: FontWeight.bold)
+                              : Theme.of(context).textTheme.bodySmall,
+                        )
                       : TimeRangeWidget(
                           time: theHours
                               .replaceAllMapped(
@@ -319,16 +392,13 @@ class HoursOfDay extends StatelessWidget {
                               .replaceAllMapped(
                                   //Add space around hyphen
                                   RegExp(r"-"),
-                                  (match) => " ${match.group(0)} ")),
-                  SizedBox(width: 4),
-                  weekday == DateTime.now().weekday
-                      ? buildGreenDot(theHours)
-                      : Container(width: 10),
+                                  (match) => " ${match.group(0)} "),
+                        ),
                 ],
               ),
             ),
           ],
-        )
+        ),
       ],
     );
   }

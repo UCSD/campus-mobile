@@ -1,37 +1,28 @@
-## UC San Diego - Experimental
+## UC San Diego
 
-UC San Diego - Experimental is the rolling release of the UC San Diego Mobile app. This rolling release is for users interested in developing for, and experimenting with, the absolute latest version of the UC San Diego Mobile app.
+### Installation & Setup
 
-This version is intended for developers and designers and is absolutely, 100% NOT recommended for daily use. Rolling releases are not subject to the rigorous testing of the regular production release. Many things may (and probably are) only partially complete and are likely broken. 
+#### Campus Mobile MacOS Installer: 
+https://github.com/UCSD/campus-mobile/pull/2087
 
-If your feature or enhancement is selected as a possible release candidate, due to its sheer awesomeness or immediate need, it will go through an additional vetting process. Who knows? Your idea could be included in the next production release and help students navigate their UC San Diego experience for many classes to come. And give you a nice feather in your cap to show potential employers. If successful, your feature or enhancement will be published to the UC San Diego mobile app for its 30,000 users to experience, and you will be added as a collaborator on [mobile.ucsd.edu](https://mobile.ucsd.edu/).
+#### Campus Mobile Flutter Version:
+3.24.5
 
-We look forward to helping you become a published app developer!
 
-
-## How to Contribute
-
-### Install Flutter
-Campus Mobile supports [Flutter 3.24.x](https://docs.flutter.dev/development/tools/sdk/upgrading#switching-flutter-channels)
-
-### Creating a Fork
-
-From the [Campus Mobile GitHub repo](https://github.com/UCSD/campus-mobile) click the "Fork" button. Next, use your favorite git client or command line to clone the repo:
-
+### Clone the Campus Mobile repo
 ```shell
-# Clone your fork to your local machine
-git clone git@github.com:YOUR-USERNAME/campus-mobile.git
+git clone https://github.com/UCSD/campus-mobile.git
 ```
 
-### Keeping Your Fork Up to Date
-You'll want to make sure you keep your fork up to date by tracking the original "upstream" repo that you forked. To do this, you'll need to add a remote:
+### Keeping Your Repo Up to Date
+You'll want to make sure you keep your repo up to date by tracking the original "upstream" repo that you cloned. To do this, you'll need to add a remote:
 
 ```shell
 # Add 'upstream' repo to list of remotes
 git remote add upstream https://github.com/UCSD/campus-mobile.git
 ```
 
-Whenever you want to update your fork with the latest upstream changes, you'll need to first fetch the upstream repo's branches and latest commits to bring them into your repository:
+Whenever you want to update your repo with the latest upstream changes, you'll need to first fetch the upstream Campus Mobile repo's branches and latest commits to bring them into your repository:
 ```shell
 # Fetch from upstream remote
 git fetch upstream
@@ -48,6 +39,15 @@ Your local `experimental` branch is now up-to-date with any changes upstream.
 
 ### Doing Your Work
 
+```shell
+# Add 'upstream' repo to list of remotes
+git remote add upstream https://github.com/UCSD/campus-mobile.git
+```
+
+```shell
+# Fetch from upstream remote
+git fetch upstream
+```
 
 #### Create a Feature Branch
 When you begin working on a new feature or bugfix, it is important that you create a new branch. Not only is it proper git workflow, but it also keeps your changes organized and separated from the `experimental` branch so that you can easily submit and manage multiple pull requests for every task you complete.
@@ -59,7 +59,7 @@ To create a new branch and start working on it:
 git checkout experimental
 
 # Create and checkout a branch named newfeature
-git checkout -b newfeature
+git checkout -b experimental
 ```
 
 You are now ready to begin developing your new feature. Commit your code often, using present-tense and concise verbiage explaining the work completed.
@@ -76,7 +76,7 @@ git add lib/core/push_notifications_in_app.dart
 git commit -m "Add in-app push notifications"
 
 # Push your code
-git push -u origin newfeature
+git push -u upstream newfeature
 
 ```
 
@@ -93,25 +93,22 @@ git fetch upstream
 git checkout experimental
 git merge upstream/experimental
 
-# If there were any new commits, merge them from `experimental` and update your branch
+# If there were any new commits, merge them to your `newfeature` branch from the `experimental` branch
 git checkout newfeature
 git merge experimental
-git push origin newfeature
+git push upstream newfeature
 ```
 
 
 #### Submitting
-Once you've committed and pushed your feature branch `newfeature` to GitHub, go to the page for your fork on GitHub, select branch 'newfeature' and click the 'New pull request' button.
+Once you've committed and pushed your feature branch `newfeature` to GitHub, navigate to to your new feature branch on UCSD's Campus Mobile GitHub and click the 'New pull request' button.
 
-If you need to make future updates to your pull request, push the updates to your feature branch `newfeature` on GitHub. Your pull request will automatically track the changes on your feature branch and update
-
-
+If you need to make future updates to your pull request, push the new commit or commits to your feature branch `newfeature` on GitHub. Your pull request will automatically track the changes on your feature branch and generate new builds for iOS and Android.
 
 ## Platform
 The goal of this platform is to provide responsive and intuitive mobile interactions for a personalized campus experience.
 
 [UC San Diego](https://mobile.ucsd.edu/) uses this platform for its campus mobile app on iOS and Android.
-
 
 ## License
 	MIT
