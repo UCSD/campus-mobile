@@ -9,11 +9,11 @@ dependencies:
   connectivity_plus: 6.1.0
   dio: 4.0.6
   encrypt: 5.0.1
-  dots_indicator: ^4.0.1
-  firebase_analytics: ^11.4.5
-  firebase_core: ^3.13.0
-  firebase_crashlytics: ^4.3.5
-  firebase_messaging: ^15.2.5
+  dots_indicator: 3.0.0
+  firebase_analytics: ^11.4.4
+  firebase_core: ^3.12.1
+  firebase_crashlytics: ^4.3.4
+  firebase_messaging: ^15.2.4
   flutter:
     sdk: flutter
   flutter_dotenv:
@@ -36,12 +36,12 @@ dependencies:
   liquid_progress_indicator_v2: 0.5.0
   measured_size: 1.0.0
   geolocator: 9.0.2
-  package_info_plus: ^8.3.0
+  package_info_plus: ^8.1.0
   percent_indicator: 4.2.3
   permission_handler: ^11.3.1
   pointycastle: 3.4.0
-  provider: ^6.1.4
-  shared_preferences: ^2.5.3
+  provider: ^6.1.2
+  shared_preferences: ^2.3.2
   uni_links2: 0.6.0+2
   url_launcher: 6.0.20
   webview_flutter: 3.0.4
