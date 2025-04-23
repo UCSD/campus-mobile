@@ -1,5 +1,5 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list.dart';
+import 'package:campus_mobile_experimental/ui/OLD_whats_around_me/wam_place_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,7 @@ class WhatsAroundMeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      heroTag: "whats_around_me",
+      heroTag: "OLD_whats_around_me",
       child: Icon(
         Icons.emergency_share_sharp, // or Icons.explore_sharp,
         color: Colors.black,

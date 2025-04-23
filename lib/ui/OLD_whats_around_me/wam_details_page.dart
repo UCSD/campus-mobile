@@ -3,7 +3,7 @@
 /// 3) Use _mapController to ensure the directions button works
 /// 4) Integrate Busyness API
 
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page_model.dart';
+import 'package:campus_mobile_experimental/ui/OLD_whats_around_me/wam_details_page_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';

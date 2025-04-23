@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_provider.dart';
+import 'package:campus_mobile_experimental/ui/OLD_whats_around_me/wam_place_list_provider.dart';
 import 'package:provider/provider.dart';
 
 class BuildWhatsAroundMeList extends StatefulWidget {

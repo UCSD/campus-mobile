@@ -36,7 +36,7 @@ import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dar
 import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list.dart';
+//*import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -174,13 +174,14 @@ class Router {
         });
       case RoutePaths.ScanditScanner:
         return MaterialPageRoute(builder: (_) => ScanditScanner());
-      case RoutePaths.WhatsAroundMe:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => BuildWhatsAroundMeList(
-                context: context,
-                mapController: null
-            )
-        );
+        //* OLD WAM
+      // case RoutePaths.WhatsAroundMe:
+      //   return MaterialPageRoute(
+      //       builder: (BuildContext context) => BuildWhatsAroundMeList(
+      //           context: context,
+      //           mapController: null
+      //       )
+      //   );
       default:
         return MaterialPageRoute(builder: (_) => Home());
     }

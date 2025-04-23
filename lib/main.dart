@@ -73,8 +73,8 @@ void main() async {
 
 /* OLD WAM CODE
 Future onSelectNotification(String? payload) async {
-  if (payload == 'whats_around_me') {
-    Get.toNamed('/whats_around_me');
+  if (payload == 'OLD_whats_around_me') {
+    Get.toNamed('/OLD_whats_around_me');
   }
 }
 */
@@ -120,7 +120,7 @@ Future<void> initializeApp() async {
     'UC San Diego',
     'Find a list of interesting nearby places that you didn\'t know existed in our campus.',
     platformChannelSpecifics,
-    payload: 'whats_around_me',
+    payload: 'OLD_whats_around_me',
   );
 }
 

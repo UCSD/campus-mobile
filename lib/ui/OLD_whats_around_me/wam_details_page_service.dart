@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_details_page_model.dart';
+import 'package:campus_mobile_experimental/ui/OLD_whats_around_me/wam_details_page_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class PlaceDetailsService {

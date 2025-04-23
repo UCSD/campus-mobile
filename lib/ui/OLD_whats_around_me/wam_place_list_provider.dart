@@ -1,5 +1,5 @@
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_model.dart';
-import 'package:campus_mobile_experimental/ui/whats_around_me/wam_place_list_service.dart';
+import 'package:campus_mobile_experimental/ui/OLD_whats_around_me/wam_place_list_model.dart';
+import 'package:campus_mobile_experimental/ui/OLD_whats_around_me/wam_place_list_service.dart';
 import 'package:flutter/material.dart';
 
 class PlacesByCategoryProvider extends ChangeNotifier {
