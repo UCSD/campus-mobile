@@ -1,3 +1,4 @@
+/// WAM Model used to hold the response from the ESRI "Nearby Search" API
 class Place {
   final String name;
   final String location;

@@ -9,10 +9,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class NetworkHelper {
   ///TODO: inside each service that file place a switch statement to handle all
   ///TODO: different errors thrown by the Dio client DioErrorType.RESPONSE
-
   // private constructor to show that this class should not be instantiated
   const NetworkHelper._();
-
   static const int SSO_REFRESH_MAX_RETRIES = 3;
   static const int SSO_REFRESH_RETRY_INCREMENT = 5000;
   static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
@@ -193,47 +191,6 @@ class NetworkHelper {
       print('network error');
       print(err);
       return null;
-    }
-  }
-
-  /// What's Around Me Points of Interest (ESRI API HERE) TODO: Make it so that it uses env variables like getToken() below
-  static Future<String> generateArcGISToken() async {
-    final Dio _dio = Dio();
-    // These are fixed client variables that have access to ESRI APIs
-    final String clientId = "i4SJG8P4dIUx8j68";
-    final String clientSecret = "a5fd8ef37c4b4bcba7735725bbf49c2b";
-
-    // Prepare Network Parameters
-    final Map<String, String> params = {
-      'client_id': clientId,
-      'client_secret': clientSecret,
-      'grant_type': 'client_credentials',
-      'expiration': '1440', // Token expiration time in minutes (optional)
-      'f': 'json'
-    };
-
-    try {
-      // Send the POST request to the endpoint that returns ArcGIS Access Tokens
-      final response = await _dio.post(
-        'https://admin-enterprise-gis.ucsd.edu/portal/sharing/rest/oauth2/token',
-        data: params,
-        options: Options(
-          contentType: Headers.formUrlEncodedContentType,
-        ),
-      );
-
-      // Decode the response (token)
-      final Map<String, dynamic> data = response.data;
-
-      // Check for errors in the response
-      if (data.containsKey('error')) {
-        throw Exception(data['error']['message']);
-      }
-
-      // Return the access token
-      return data['access_token'];
-    } catch (e) {
-      throw Exception('Failed to generate ArcGIS token: $e');
     }
   }
 

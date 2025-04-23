@@ -22,7 +22,7 @@ class PlaceDetailsService {
 
     try {
       // Generate ArcGIS token
-      String token = await NetworkHelper.generateArcGISToken();
+      String token = ''; //await NetworkHelper.generateArcGISToken();
       print('Generated ArcGIS Token: $token');
 
       // Fetch Place Details Data

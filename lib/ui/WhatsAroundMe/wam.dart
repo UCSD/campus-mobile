@@ -11,14 +11,31 @@ class WhatsAroundMe extends StatefulWidget {
 
 class _WhatsAroundMeState extends State<WhatsAroundMe> {
   var showPlaces = false;
-  // Fetch Points of Interest using the ESRI API
-  late final List<Place> pointsOfInterest = generateRandomPlaces(20);
-  // Build the What's Around Me List using the Points of Interest
+  // Fetch Points of Interest using the ESRI Nearby Search API
+  //late final List<Place> pointsOfInterest = generateRandomPlaces(20);
+  // TEST TEST TEST //
+  late List<Place> TEST;
+
+ @override
+ void initState() {
+   super.initState();
+   fetchPlaces();
+ }
+
+  Future<void> fetchPlaces() async {
+    try {
+      TEST = await fetchPointsOfInterest(8);
+    } catch (e) {
+      print("Error fetching places: $e");
+      TEST = []; // Ensure TEST is initialized even on error
+    } finally {
+      setState(() {}); // Update the UI after fetching data
+    }
+  }
+
   List<Place> fetchTopNearbyPlaces() {
-    // Sort WAM list by distance (closest first)
-    List<Place> sorted = List.from(pointsOfInterest)
+    List<Place> sorted = List.from(TEST)
       ..sort((a, b) => a.distanceMi.compareTo(b.distanceMi));
-    // Only return top 8 places. Maybe we can make this a setting in the future?
     return sorted.take(8).toList();
   }
 

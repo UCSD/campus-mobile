@@ -1,64 +1,63 @@
+/// WAM Service used to fetch the points of interest around you
+import 'dart:convert';
 import 'dart:math';
 import 'package:campus_mobile_experimental/ui/WhatsAroundMe/places_list_model.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-/// TODO: Place this in "app_networking.dart
+import 'package:campus_mobile_experimental/ui/WhatsAroundMe/wam_model.dart';
+import '../../app_networking.dart';
 
-List<Place> fetchPointsOfInterest(int count) {
-  // USE ESRI API to fetch points of interest
-
-
-  // For each point of interest, extract the following (a.k.a. fill out the model)
-  final placeNames = []; // Extract placeNames from ESRI API response
-  final streets = []; // Extract streets from ESRI API response
-  final distancesMi = []; // Extract distances from ESRI API response
-  final businessHours = []; // Extract business hours from ESRI API response
-
-  // For loop that feeds these lists goes here:
-
-
-  // Putting it all together - list of ALL nearby points of interest
-  return List.generate(count, (i) {
-    return Place(
-      name: placeNames[i],
-      location: streets[i],
-      distanceMi: distancesMi[i],
-      businessHours: businessHours[i],
-    );
-  });
-}
-
-// Generate ESRI Token to access the Points of Interest API
-Future<String> generateESRIToken() async {
-  final _dio = Dio();
-  // Prepare Network Parameters
-  final Map<String, String> params = {
-    'client_id': dotenv.get('ESRI_CLIENT_ID'),
-    'client_secret': dotenv.get('ESRI_CLIENT_SECRET'),
-    'grant_type': 'client_credentials',
-    'expiration': '1440',
-    'f': 'json'
+/// Uses ESRI "Nearby Search" API to fetch all the points of interest around you: https://developers.arcgis.com/documentation/mapping-and-location-services/place-finding/nearby-search/#url-request
+Future<List<Place>> fetchPointsOfInterest(int count) async {
+  var _error;
+  var _isLoading = true;
+  const String esriToken = "AAPTxy8BH1VEsoebNVZXo8HurEBECxvQNl6npvATkbb_hlcfhfk79rCfKobWrsCcCmQweTxAFJBE9fJ-1TkjS0p-g1FP66bFWCf4wCndJBDLUIDaQMTFwe2spC_xe_TM6D03tEp47Bj9_1kjxhWECOxgsf61xi_HdThJnG04h7tseaSMG2xVQAovU4RQwiMjCHb15BCaGW5rPqt0_VbB1ogchLzpuxHI4gLW4wzJihTee3I.AT1_jIaJXaPU";
+  const double x_longitude = -117.23767559484368; // TODO: Replace with dynamic longitude
+  const double y_latitude = 32.88115782225114;   // TODO: Replace with dynamic latitude
+  const int radius = 650; // About 0.4 miles
+  const String url = "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1/places/near-point";
+  Map<String, String> queryParams = {
+    "f": "json",
+    "x": x_longitude.toString(),
+    "y": y_latitude.toString(),
+    "radius": radius.toString(),
+    "pageSize": count.toString(),
+    "token": esriToken,
   };
 
+  Uri uri = Uri.parse(url).replace(queryParameters: queryParams);
+  print(uri.toString());
+
   try {
-    final response = await _dio.post(
-      dotenv.get('ESRI_TOKEN_ENDPOINT'),
-      data: params,
-      options: Options(
-        contentType: Headers.formUrlEncodedContentType,
-      ),
+    /// Fetch data
+    String _nearbySearchResponse = await NetworkHelper.fetchData(uri.toString());
+
+    print("===================== API RESPONSE ======================");
+    print(_nearbySearchResponse);
+
+    /// Parse the response into the PlacesResponse model
+    final placesResponse = PlacesResponse.fromJson(
+      json.decode(_nearbySearchResponse),
     );
 
-  // Decode the response (token)
-    final Map<String, dynamic> data = response.data;
-  // Check for errors in the response
-    if (data.containsKey('error')) {
-      throw Exception(data['error']['message']);
-    }
-  // Return the access token
-    return data['access_token'];
+    /// Extract the list of places
+    final places = placesResponse.results.map((result) {
+      return Place(
+        name: result.name,
+        location: "${result.location.y}, ${result.location.x}",
+        distanceMi: result.distance,
+        businessHours: result.categories.isNotEmpty
+            ? result.categories.first.label
+            : "N/A",
+      );
+    }).toList();
+
+    return places;
+
   } catch (e) {
-    throw Exception('Failed to generate ESRI token: $e');
+    _error = e.toString();
+    print("Error fetching points of interest: $_error");
+    return [];
+  } finally {
+    _isLoading = false;
   }
 }
 
