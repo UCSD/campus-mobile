@@ -101,6 +101,7 @@ PODS:
     - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
+    - FlutterMacOS
   - Google-Maps-iOS-Utils (5.0.0):
     - GoogleMaps (~> 8.0)
   - google_maps_flutter_ios (0.0.1):
@@ -203,7 +204,7 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_scandit_plugin (from `.symlinks/plugins/flutter_scandit_plugin/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
-  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/darwin`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -259,7 +260,7 @@ EXTERNAL SOURCES:
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   geolocator_apple:
-    :path: ".symlinks/plugins/geolocator_apple/ios"
+    :path: ".symlinks/plugins/geolocator_apple/darwin"
   google_maps_flutter_ios:
     :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
   package_info_plus:
@@ -300,7 +301,7 @@ SPEC CHECKSUMS:
   flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
   flutter_scandit_plugin: 7ae738d4fff8f91d2913c4e3ce2fb9979e38d020
   flutter_secure_storage: 50035aef357c5a8bdd67fd6bc81370d46efc4d16
-  geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
+  geolocator_apple: ab36aa0e8b7d7a2d7639b3b4e48308394e8cef5e
   Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
   google_maps_flutter_ios: 0291eb2aa252298a769b04d075e4a9d747ff7264
   GoogleAppMeasurement: fc0817122bd4d4189164f85374e06773b9561896

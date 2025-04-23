@@ -31,7 +31,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
   Widget buildDotIndicator() =>
     DotsIndicator(
       dotsCount: 5,
-      position: currentIndex.toDouble(),
+      position: currentIndex,
       decorator: const DotsDecorator(
           activeColor: const Color(0xFF00619B),
           activeSize: const Size(16.0, 16.0) // Bigger active dot

@@ -190,7 +190,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 ),
 
                 // the spacer in between sign in and forgot password
-                // SizedBox(width: _screenWidth * 0.202),
+                SizedBox(width: _screenWidth * 0.09),
 
                 Padding(
                   padding: EdgeInsets.only(

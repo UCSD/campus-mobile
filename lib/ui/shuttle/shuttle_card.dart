@@ -98,7 +98,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
             ),
           ),
           DotsIndicator(
-            position: _currentPage.toDouble(),
+            position: _currentPage,
             dotsCount: renderList.length,
             decorator: DotsDecorator(
               color: dotsUnselectedColor,

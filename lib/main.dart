@@ -144,7 +144,7 @@ class CampusMobile extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: GetMaterialApp(
-        debugShowCheckedModeBanner: true,
+        debugShowCheckedModeBanner: false,
         title: 'UC San Diego',
         theme: lightTheme.copyWith(
           colorScheme:

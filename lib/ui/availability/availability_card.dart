@@ -117,7 +117,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
             child: Container(
               margin: const EdgeInsets.only(top: 30.0),
               child: DotsIndicator(
-                position: _currentPage.toDouble(),
+                position: _currentPage,
                 dotsCount: locationsList.length,
                 decorator: DotsDecorator(
                   color: dotsUnselectedColor,
