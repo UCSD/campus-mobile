@@ -22,8 +22,6 @@ import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
-//* import 'package:campus_mobile_experimental/ui/OLD_whats_around_me/wam_details_page_provider.dart';
-//* import 'package:campus_mobile_experimental/ui/OLD_whats_around_me/wam_place_list_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -58,31 +56,6 @@ List<SingleChildWidget> independentServices = [
       return _eventsDataProvider;
     },
   ),
-  /* OLD WAM CODE
-  // This is the provider for What's Around Me LIST Builder
-  ChangeNotifierProvider(
-      create: (_) => PlacesByCategoryProvider()
-  ),
-  // This is the Provider for What's Around Me Place Details/Description Page
-  ChangeNotifierProvider<PlaceDetailsProvider>(
-    create: (_) => PlaceDetailsProvider(),
-  ),
-  ChangeNotifierProvider<MediaDataProvider>(
-    create: (_) {
-      MediaDataProvider _mediaDataProvider = MediaDataProvider();
-      _mediaDataProvider.fetchMedia();
-      return _mediaDataProvider;
-    },
-  ),
-  ChangeNotifierProvider<WeatherDataProvider>(
-    create: (_) {
-      WeatherDataProvider _weatherDataProvider = WeatherDataProvider();
-      _weatherDataProvider.fetchWeather();
-      return _weatherDataProvider;
-    },
-  ),
-   */
-
   ChangeNotifierProvider<NewsDataProvider>(
     create: (_) {
       NewsDataProvider _newsDataProvider = NewsDataProvider();
