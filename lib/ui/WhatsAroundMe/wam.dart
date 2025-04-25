@@ -9,10 +9,6 @@ import 'wam_list.dart';
 /// the state and delegates the logic to `_WhatsAroundMeState` for fetching and displaying
 /// nearby places.
 ///
-/// **Key Features:**
-/// - Initializes the state for managing the list of nearby places.
-/// - Delegates the state management and UI rendering to `_WhatsAroundMeState`.
-///
 /// **Example Usage:**
 /// ```dart
 /// WhatsAroundMe();
@@ -23,32 +19,16 @@ class WhatsAroundMe extends StatefulWidget {
   State<WhatsAroundMe> createState() => _WhatsAroundMeState();
 }
 
-/// Manages the state and UI for displaying nearby points of interest.
-///
-/// This stateful widget fetches and displays a list of nearby places using the ESRI Nearby Search API.
-/// It includes functionality to toggle the visibility of the list, handle loading states, and sort the results
-/// by proximity. The UI consists of a button to fetch and display the places and a list view to show the results.
-///
+/// What's Around Me Class - Manages the state and UI for displaying places around you.
 /// **Key Features:**
 /// - Fetches nearby places asynchronously using `fetchNearbySearchPlaces`.
-/// - Displays a loading indicator while data is being fetched.
-/// - Sorts the fetched places by distance and limits the results to the top 13.
-/// - Provides a toggle button to show or hide the list of places.
-///
-/// **State Variables:**
-/// - `showPlaces` (*bool*): Controls the visibility of the places list.
+/// - Sorts and displays the fetched places by distance (closest first).
 /// - `nearbySearchList` (*List<Place>*): Stores the fetched list of places.
-/// - `isLoading` (*bool*): Indicates whether data is currently being fetched.
 ///
 /// **Methods:**
 /// - `initState()`: Initializes the state and triggers the initial fetch of places.
 /// - `fetchPlaces()`: Fetches the list of nearby places and updates the state.
-/// - `fetchTopNearbyPlaces()`: Sorts and retrieves the top 13 places by proximity.
-///
-/// **UI Components:**
-/// - A floating action button to toggle the visibility of the places list.
-/// - A container displaying the list of places with custom styling.
-/// - A loading indicator displayed while fetching data.
+/// - `fetchTopNearbyPlaces()`: Sorts and retrieves the top places by proximity.
 ///
 /// **Example Usage:**
 /// ```dart
@@ -66,19 +46,8 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
     fetchPlaces();
   }
 
-  /// Fetches a list of nearby places and updates the state.
-  ///
-  /// This asynchronous function retrieves nearby points of interest using the `fetchNearbySearchPlaces` method.
-  /// It manages the loading state before and after the fetch operation and ensures the `nearbySearchList`
-  /// is updated with the fetched data or an empty list in case of an error.
-  ///
-  /// **State Updates:**
-  /// - Sets `isLoading` to `true` before starting the fetch operation.
-  /// - Updates `nearbySearchList` with the fetched data or an empty list on error.
-  /// - Sets `isLoading` to `false` after the fetch operation completes.
-  ///
-  /// **Exceptions:**
-  /// - Catches and logs any errors encountered during the fetch operation.
+  /// Fetches a list of points places using the `fetchNearbySearchPlaces` service.
+  /// Updates `nearbySearchList` with the fetched data or an empty list on error.
   ///
   /// **Example Usage:**
   /// ```dart
@@ -96,17 +65,18 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
     }
   }
 
-  /// Retrieves the top nearby places sorted by proximity.
-  ///
-  /// This function creates a sorted copy of the `nearbySearchList` based on the distance
-  /// of each place in ascending order. It then selects and returns the top 13 closest places.
+  /// Retrieves the top nearby places (a subset of nearbySearchList) sorted by proximity.
+  /// This is a subset of the `nearbySearchList` by design.
+  /// If we want to let the student choose how many places to show, we can add a setting for that,
+  /// and that setting will modify this function's `placesToFetch`.
+  /// However, the student won't be able to see more than the places we fetch in nearbySearchList.
+  /// This is so we control the cost of using this API.
   ///
   /// **Returns:**
-  /// - A `List<Place>` containing the top 13 places sorted by distance.
+  /// - A `List<Place>` containing the top places sorted by proximity.
   ///
   /// **Notes:**
-  /// - The original `nearbySearchList` remains unmodified.
-  /// - Ensure that `nearbySearchList` is populated before calling this function.
+  /// - `nearbySearchList` should be populated before calling this function.
   ///
   /// **Example Usage:**
   /// ```dart
