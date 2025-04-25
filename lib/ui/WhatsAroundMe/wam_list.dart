@@ -41,7 +41,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
             ),
           ),
           trailing: Text(
-            "${metersToMiles(place.distanceMi).toStringAsFixed(1)} mi",
+            "${(place.distanceMeters/1609.34).toStringAsFixed(1)} mi",
             style: TextStyle(
               color: Theme.of(context).brightness == Brightness.light
                   ? descriptiveTextColorLight
@@ -53,9 +53,4 @@ class BuildWhatAroundMeList extends StatelessWidget {
       },
     );
   }
-}
-
-double metersToMiles(double meters) {
-  const double metersPerMile = 1609.34;
-  return meters / metersPerMile;
 }

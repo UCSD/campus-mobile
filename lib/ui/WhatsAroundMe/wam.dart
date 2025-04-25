@@ -33,7 +33,7 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
 
   List<Place> fetchTopNearbyPlaces() {
     List<Place> sorted = List.from(nearbySearchList)
-      ..sort((a, b) => a.distanceMi.compareTo(b.distanceMi));
+      ..sort((a, b) => a.distanceMeters.compareTo(b.distanceMeters));
     return sorted.take(10).toList();
   }
 

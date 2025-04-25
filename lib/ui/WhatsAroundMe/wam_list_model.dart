@@ -2,13 +2,13 @@
 class Place {
   final String name;
   final String location;
-  final double distanceMi;
+  final double distanceMeters;
   final String category;
 
   Place({
     required this.name,
     required this.location,
-    required this.distanceMi,
+    required this.distanceMeters,
     required this.category,
   });
 }

@@ -51,7 +51,7 @@ Future<List<Place>> fetchNearbySearchPlaces(int count) async {
       return Place(
         name: result.name,
         location: "${result.location.y}, ${result.location.x}",
-        distanceMi: result.distance,
+        distanceMeters: result.distance,
         category: result.categories.isNotEmpty
             ? result.categories.first.label
             : "N/A",
