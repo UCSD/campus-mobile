@@ -5,26 +5,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app_styles.dart';
 import '../../core/providers/map.dart';
 
-/// A stateless widget that builds a list of nearby places.
-///
-/// This widget displays a scrollable list of places, each represented as a `ListTile`
+/// A stateless widget that builds the scrollable list of nearby places
 /// with details such as the place name, category, distance, and a button to get walking directions.
-///
-/// **Key Features:**
-/// - Displays a list of places with their name, category, and distance.
-/// - Includes a button to open walking directions to each place in a maps application.
-/// - Handles cases where location services are disabled or unavailable.
 ///
 /// **Parameters:**
 /// - `places` (*List<Place>*): A list of `Place` objects to display.
-///
-/// **UI Components:**
-/// - A `ListView` to render the list of places.
-/// - A `ListTile` for each place, with:
-///   - A leading button to open walking directions.
-///   - A title showing the place name.
-///   - A subtitle showing the place category.
-///   - A trailing text showing the distance in miles.
 ///
 /// **Example Usage:**
 /// ```dart
@@ -108,24 +93,13 @@ class BuildWhatAroundMeList extends StatelessWidget {
   }
 }
 
-/// Opens walking directions to a specified location in a maps application.
-///
-/// This asynchronous function takes a location string in the format "latitude, longitude",
-/// parses it into latitude and longitude values, and attempts to open walking directions
-/// in either Google Maps or Apple Maps. If neither application can be launched, it throws an error.
+/// This async function takes a location string in the format "latitude, longitude"
+/// and opens walking directions to a WAM list item location in either Google Maps or Apple Maps.
+/// If neither application can be launched, it throws an error.
 ///
 /// **Parameters:**
 /// - `context` (*BuildContext*): The current build context.
 /// - `location` (*String*): A string containing the latitude and longitude of the destination, separated by a comma.
-///
-/// **Behavior:**
-/// - Parses the `location` string into latitude and longitude.
-/// - Constructs URLs for Google Maps and Apple Maps with walking directions to the destination.
-/// - Attempts to launch Google Maps first, then Apple Maps if Google Maps is unavailable.
-/// - Throws an exception if neither application can be launched.
-///
-/// **Exceptions:**
-/// - Throws an error if both Google Maps and Apple Maps fail to launch.
 ///
 /// **Example Usage:**
 /// ```dart
