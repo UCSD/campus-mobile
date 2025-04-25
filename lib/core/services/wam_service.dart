@@ -7,10 +7,7 @@ import '../../app_networking.dart';
 import 'package:geolocator/geolocator.dart';
 
 /// Fetches a list of nearby places using the ESRI "Nearby Search" API.
-///
-/// This function retrieves the user's current location,
-/// constructs a query to the ESRI Nearby Search API,
-/// and parses the response into a list of `Place` objects.
+/// Using the user's current location.
 ///
 /// **Parameters:**
 /// - `count` (*int*): The maximum number of results to fetch from the API.
@@ -33,7 +30,7 @@ import 'package:geolocator/geolocator.dart';
 ///
 /// **Example Usage:**
 /// ```dart
-/// List<Place> places = await fetchNearbySearchPlaces(10);
+/// List<Place> places = await fetchNearbySearchPlaces(13);
 /// ```
 Future<List<Place>> fetchNearbySearchPlaces(int count) async {
   // Default coordinates (Geisel Library)
@@ -93,12 +90,7 @@ Future<List<Place>> fetchNearbySearchPlaces(int count) async {
   }
 }
 
-/// Retrieves the user's current location with high accuracy.
-///
-/// This function checks if location services are enabled and ensures the necessary
-/// permissions are granted. If location services are disabled or permissions are denied,
-/// it throws an exception. Once all checks pass, it fetches the user's current location
-/// using the `Geolocator` package.
+/// If location is enabled, this retrieves the user's location using the `Geolocator` package.
 ///
 /// **Returns:**
 /// - A `Future` that resolves to a `Position` object containing the user's current latitude and longitude.
@@ -125,9 +117,7 @@ Future<List<Place>> fetchNearbySearchPlaces(int count) async {
 Future<Position> getCurrentLocation() async {
   // Check if location services are enabled
   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    throw Exception('Location services are disabled.');
-  }
+  if (!serviceEnabled) throw Exception('Location services are disabled.');
 
   // Check for location permissions
   LocationPermission permission = await Geolocator.checkPermission();
@@ -137,7 +127,6 @@ Future<Position> getCurrentLocation() async {
       throw Exception('Location permissions are denied.');
     }
   }
-
   if (permission == LocationPermission.deniedForever) {
     throw Exception('Location permissions are permanently denied.');
   }
@@ -150,11 +139,11 @@ Future<Position> getCurrentLocation() async {
 
 // Function to print the user's location to the console.
 // For testing purposes only.
-void fetchUserLocation() async {
-  try {
-    Position position = await getCurrentLocation();
-    print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
-  } catch (e) {
-    print('Error: $e');
-  }
-}
+// void fetchUserLocation() async {
+//   try {
+//     Position position = await getCurrentLocation();
+//     print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
+//   } catch (e) {
+//     print('Error: $e');
+//   }
+// }
