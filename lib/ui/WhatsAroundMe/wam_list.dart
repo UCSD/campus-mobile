@@ -1,15 +1,35 @@
 import 'package:campus_mobile_experimental/core/models/wam_list_model.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../app_constants.dart';
 import '../../app_styles.dart';
 import '../../core/providers/map.dart';
 
-/// TODO: Make each place name clickable to open a "place details page" (might need to update router)
-/// That would require the "Get Place Details API" ^
-/// https://developers.arcgis.com/documentation/mapping-and-location-services/place-finding/get-place-details/
+/// A stateless widget that builds a list of nearby places.
+///
+/// This widget displays a scrollable list of places, each represented as a `ListTile`
+/// with details such as the place name, category, distance, and a button to get walking directions.
+///
+/// **Key Features:**
+/// - Displays a list of places with their name, category, and distance.
+/// - Includes a button to open walking directions to each place in a maps application.
+/// - Handles cases where location services are disabled or unavailable.
+///
+/// **Parameters:**
+/// - `places` (*List<Place>*): A list of `Place` objects to display.
+///
+/// **UI Components:**
+/// - A `ListView` to render the list of places.
+/// - A `ListTile` for each place, with:
+///   - A leading button to open walking directions.
+///   - A title showing the place name.
+///   - A subtitle showing the place category.
+///   - A trailing text showing the distance in miles.
+///
+/// **Example Usage:**
+/// ```dart
+/// BuildWhatAroundMeList(places: nearbyPlaces);
+/// ```
 class BuildWhatAroundMeList extends StatelessWidget {
   final List<Place> places;
   const BuildWhatAroundMeList({Key? key, required this.places}) : super(key: key);
@@ -21,33 +41,29 @@ class BuildWhatAroundMeList extends StatelessWidget {
       itemCount: places.length,
       itemBuilder: (context, index) {
         final place = places[index];
+
         return ListTile(
           // Directions Button (Far left of the list item)
           leading: GestureDetector(
             onTap: () {
               print("Opening directions for ${place.name}...");
-              if (Provider.of<MapsDataProvider>(context, listen: false)
-                      .coordinates!
-                      .lat ==
-                  null ||
-                  Provider.of<MapsDataProvider>(context, listen: false)
-                      .coordinates!
-                      .lon ==
-                  null) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                      'Please turn your location on in order to use this feature.'),
-                  duration: Duration(seconds: 3),
-                ));
+              var coordinates = Provider.of<MapsDataProvider>(context, listen: false).coordinates;
+              if (coordinates!.lat == null || coordinates.lon == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Please turn your location on in order to use this feature.'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
               } else {
                 getDirectionsToPlace(context, place.location);
               }
             },
             child: Container(
-              padding: EdgeInsets.all(8.0), // Add padding around the icon
+              padding: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                color: Colors.lightBlue.withOpacity(0.2), // Light background color
-                shape: BoxShape.circle, // Circular shape for the container
+                color: Colors.lightBlue.withOpacity(0.2),
+                shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.directions_walk,
@@ -55,16 +71,19 @@ class BuildWhatAroundMeList extends StatelessWidget {
               ),
             ),
           ),
+          // Place Name // TODO: Make this clickable to open a "place details page"
+          // That would require the "Get Place Details API" ^
+          // https://developers.arcgis.com/documentation/mapping-and-location-services/place-finding/get-place-details/
           title: Text(
             place.name,
             style: TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.w700,
-              color: lightPrimaryColor
+              color: lightPrimaryColor,
             ),
           ),
+          // Place Category
           subtitle: Text(
-            // "${place.location} • ${place.category}", // TODO: replace location for busyness
             "${place.category}",
             style: TextStyle(
               color: Theme.of(context).brightness == Brightness.light
@@ -73,8 +92,9 @@ class BuildWhatAroundMeList extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ),
           ),
+          // Place Distance in miles
           trailing: Text(
-            "${(place.distanceMeters/1609.34).toStringAsFixed(1)} mi",
+            "${(place.distanceMeters / 1609.34).toStringAsFixed(1)} mi",
             style: TextStyle(
               color: Theme.of(context).brightness == Brightness.light
                   ? descriptiveTextColorLight
@@ -88,16 +108,43 @@ class BuildWhatAroundMeList extends StatelessWidget {
   }
 }
 
+/// Opens walking directions to a specified location in a maps application.
+///
+/// This asynchronous function takes a location string in the format "latitude, longitude",
+/// parses it into latitude and longitude values, and attempts to open walking directions
+/// in either Google Maps or Apple Maps. If neither application can be launched, it throws an error.
+///
+/// **Parameters:**
+/// - `context` (*BuildContext*): The current build context.
+/// - `location` (*String*): A string containing the latitude and longitude of the destination, separated by a comma.
+///
+/// **Behavior:**
+/// - Parses the `location` string into latitude and longitude.
+/// - Constructs URLs for Google Maps and Apple Maps with walking directions to the destination.
+/// - Attempts to launch Google Maps first, then Apple Maps if Google Maps is unavailable.
+/// - Throws an exception if neither application can be launched.
+///
+/// **Exceptions:**
+/// - Throws an error if both Google Maps and Apple Maps fail to launch.
+///
+/// **Example Usage:**
+/// ```dart
+/// await getDirectionsToPlace(context, "32.7157, -117.1611");
+/// ```
 Future<void> getDirectionsToPlace(BuildContext context, String location) async {
+  // Parse coordinates
   List<String> coordinates = location.split(', ');
   double latitude = double.parse(coordinates[0]);
   double longitude = double.parse(coordinates[1]);
 
-  print('Latitude: $latitude, Longitude: $longitude');
+  // Log coordinates for debugging
+  // print('Latitude: $latitude, Longitude: $longitude');
 
-  String googleUrl =
-      'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude&travelmode=walking';
+  // Construct URLs
+  String googleUrl = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude&travelmode=walking';
   String appleUrl = 'http://maps.apple.com/?daddr=$latitude,$longitude&dirflag=w';
+
+  // Launch directions
   if (await canLaunch(googleUrl)) {
     await launch(googleUrl);
   } else if (await canLaunch(appleUrl)) {

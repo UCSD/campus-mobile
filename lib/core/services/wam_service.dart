@@ -36,22 +36,26 @@ import 'package:geolocator/geolocator.dart';
 /// List<Place> places = await fetchNearbySearchPlaces(10);
 /// ```
 Future<List<Place>> fetchNearbySearchPlaces(int count) async {
-  var _error;
-  var _isLoading = true;
-  String? esriToken = dotenv.env['WAM_NEARBY_SEARCH_TOKEN'];
-  // Get the current location (default to Geisel Library)
+  // Default coordinates (Geisel Library)
   var x_longitude = -117.23767559484368;
   var y_latitude = 32.88115782225114;
+
+  // Fetch environment variables
+  String? esriToken = dotenv.env['WAM_NEARBY_SEARCH_TOKEN'];
+  String? nearbySearchURL = dotenv.env['WAM_NEARBY_SEARCH_ENDPOINT'];
+
+  // Attempt to get the current location
   try {
     Position position = await getCurrentLocation();
     print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
     x_longitude = position.longitude;
     y_latitude = position.latitude;
   } catch (e) {
-    print('Error: $e');
+    print('Error getting location: $e');
   }
+
+  // Define query parameters
   const int radius = 650; // About 0.4 miles // TODO: Make this a user setting
-  String? nearbySearchURL = dotenv.env['WAM_NEARBY_SEARCH_ENDPOINT'];
   Map<String, String> queryParams = {
     "f": "json",
     "x": x_longitude.toString(),
@@ -60,21 +64,17 @@ Future<List<Place>> fetchNearbySearchPlaces(int count) async {
     "pageSize": count.toString(),
     "token": esriToken!,
   };
+
+  // Construct the URI
   Uri uri = Uri.parse(nearbySearchURL!).replace(queryParameters: queryParams);
   print(uri.toString());
 
+  // Fetch and process data
   try {
-    /// Fetch data
     String _nearbySearchResponse = await NetworkHelper.fetchData(uri.toString());
-    print("===================== API RESPONSE ======================");
-    print(_nearbySearchResponse);
+    final placesResponse = PlacesResponse.fromJson(json.decode(_nearbySearchResponse));
 
-    /// Parse the response into the PlacesResponse model
-    final placesResponse = PlacesResponse.fromJson(
-      json.decode(_nearbySearchResponse),
-    );
-
-    /// Extract the list of places
+    // Extract the list of places
     final places = placesResponse.results.map((result) {
       return Place(
         name: result.name,
@@ -88,26 +88,49 @@ Future<List<Place>> fetchNearbySearchPlaces(int count) async {
 
     return places;
   } catch (e) {
-    _error = e.toString();
-    print("Error fetching points of interest: $_error");
+    print("Error fetching points of interest: $e");
     return [];
-  } finally {
-    _isLoading = false;
   }
 }
 
+/// Retrieves the user's current location with high accuracy.
+///
+/// This function checks if location services are enabled and ensures the necessary
+/// permissions are granted. If location services are disabled or permissions are denied,
+/// it throws an exception. Once all checks pass, it fetches the user's current location
+/// using the `Geolocator` package.
+///
+/// **Returns:**
+/// - A `Future` that resolves to a `Position` object containing the user's current latitude and longitude.
+///
+/// **Exceptions:**
+/// - Throws an `Exception` if:
+///   - Location services are disabled.
+///   - Location permissions are denied.
+///   - Location permissions are permanently denied.
+///
+/// **Notes:**
+/// - Ensure that the app has the required permissions for accessing location services.
+/// - This function uses `LocationAccuracy.high` for precise location data.
+///
+/// **Example Usage:**
+/// ```dart
+/// try {
+///   Position position = await getCurrentLocation();
+///   print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
+/// } catch (e) {
+///   print('Error: $e');
+/// }
+/// ```
 Future<Position> getCurrentLocation() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-
   // Check if location services are enabled
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     throw Exception('Location services are disabled.');
   }
 
   // Check for location permissions
-  permission = await Geolocator.checkPermission();
+  LocationPermission permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
@@ -125,6 +148,8 @@ Future<Position> getCurrentLocation() async {
   );
 }
 
+// Function to print the user's location to the console.
+// For testing purposes only.
 void fetchUserLocation() async {
   try {
     Position position = await getCurrentLocation();
@@ -133,63 +158,3 @@ void fetchUserLocation() async {
     print('Error: $e');
   }
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// Random Places Generator (for static, mock data)
-// List<Place> generateRandomPlaces(int count) {
-//   final random = Random();
-//   final names = [
-//     "Cafe Luna",
-//     "Green Market",
-//     "Sunny Park",
-//     "Blue Library",
-//     "Book Nook",
-//     "Rose Garden",
-//     "Fit Gym",
-//     "Olive Deli",
-//     "Bike World",
-//     "Tech Hub",
-//     "Sunset Cinema",
-//     "Java Bean",
-//     "Bloom Florist",
-//     "Fresh Cuts",
-//     "Smoothie Lab",
-//     "Cozy Corner",
-//     "Vibe Bar",
-//     "Glow Spa",
-//     "Crafted Studio",
-//     "Snack Shack"
-//   ];
-//   final streets = [
-//     "Main St",
-//     "Elm Ave",
-//     "Hill Rd",
-//     "Maple St",
-//     "Oak St",
-//     "Pine St",
-//     "Cedar Ln",
-//     "Birch Rd",
-//     "River Blvd",
-//     "Ocean Way"
-//   ];
-//   final hours = [
-//     "8AM–6PM",
-//     "9AM–9PM",
-//     "6AM–10PM",
-//     "10AM–8PM",
-//     "7AM–8PM",
-//     "5AM–11PM",
-//     "9AM–6PM",
-//     "8AM–5PM",
-//     "11AM–7PM",
-//     "12PM–12AM"
-//   ];
-//   return List.generate(count, (i) {
-//     return Place(
-//       name: names[i % names.length],
-//       location: streets[random.nextInt(streets.length)],
-//       distanceMi: (random.nextDouble() * 5).clamp(0.3, 4.9),
-//       category: hours[random.nextInt(hours.length)],
-//     );
-//   });
-// }
