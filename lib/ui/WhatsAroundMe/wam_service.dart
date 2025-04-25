@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:campus_mobile_experimental/ui/WhatsAroundMe/wam_list_model.dart';
 import 'package:campus_mobile_experimental/ui/WhatsAroundMe/wam_nearby_search_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../app_networking.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -9,7 +10,7 @@ import 'package:geolocator/geolocator.dart';
 Future<List<Place>> fetchNearbySearchPlaces(int count) async {
   var _error;
   var _isLoading = true;
-  const String esriToken = "AAPTxy8BH1VEsoebNVZXo8HurEBECxvQNl6npvATkbb_hlcfhfk79rCfKobWrsCcCmQweTxAFJBE9fJ-1TkjS0p-g1FP66bFWCf4wCndJBDLUIDaQMTFwe2spC_xe_TM6D03tEp47Bj9_1kjxhWECOxgsf61xi_HdThJnG04h7tseaSMG2xVQAovU4RQwiMjCHb15BCaGW5rPqt0_VbB1ogchLzpuxHI4gLW4wzJihTee3I.AT1_jIaJXaPU";
+  String? esriToken = dotenv.env['WAM_NEARBY_SEARCH_TOKEN'];
   // Get the current location (default to Geisel Library)
   var x_longitude = -117.23767559484368;
   var y_latitude = 32.88115782225114;
@@ -21,18 +22,17 @@ Future<List<Place>> fetchNearbySearchPlaces(int count) async {
   } catch (e) {
     print('Error: $e');
   }
-  const int radius = 650; // About 0.4 miles
-  const String url = "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1/places/near-point";
+  const int radius = 650; // About 0.4 miles // TODO: Make this a user setting
+  String? nearbySearchURL = dotenv.env['WAM_NEARBY_SEARCH_ENDPOINT'];
   Map<String, String> queryParams = {
     "f": "json",
     "x": x_longitude.toString(),
     "y": y_latitude.toString(),
     "radius": radius.toString(),
     "pageSize": count.toString(),
-    "token": esriToken,
+    "token": esriToken!,
   };
-
-  Uri uri = Uri.parse(url).replace(queryParameters: queryParams);
+  Uri uri = Uri.parse(nearbySearchURL!).replace(queryParameters: queryParams);
   print(uri.toString());
 
   try {

@@ -20,22 +20,29 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
    fetchPlaces();
  }
 
-  Future<void> fetchPlaces() async {
-    try {
-      nearbySearchList = await fetchNearbySearchPlaces(10);
-    } catch (e) {
-      print("Error fetching places: $e");
-      nearbySearchList = []; // Ensure TEST is initialized even on error
-    } finally {
-      setState(() {}); // Update the UI after fetching data
-    }
-  }
+bool isLoading = false;
 
-  List<Place> fetchTopNearbyPlaces() {
-    List<Place> sorted = List.from(nearbySearchList)
-      ..sort((a, b) => a.distanceMeters.compareTo(b.distanceMeters));
-    return sorted.take(10).toList();
+Future<void> fetchPlaces() async {
+  setState(() {
+    isLoading = true; // Set loading to true before fetching
+  });
+  try {
+    nearbySearchList = await fetchNearbySearchPlaces(13);
+  } catch (e) {
+    print("Error fetching places: $e");
+    nearbySearchList = []; // Ensure the list is initialized even on error
+  } finally {
+    setState(() {
+      isLoading = false; // Set loading to false after fetching
+    });
   }
+}
+
+List<Place> fetchTopNearbyPlaces() {
+  List<Place> sorted = List.from(nearbySearchList)
+    ..sort((a, b) => a.distanceMeters.compareTo(b.distanceMeters));
+  return sorted.take(13).toList();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -57,24 +64,30 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
     );
 
     /// What's Around Me
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // What's Around Me List
-        if (showPlaces)
-          Container(
-            constraints: containerConstraints,
-            decoration: containerDecoration,
-            child: BuildWhatAroundMeList(places: fetchTopNearbyPlaces()),
-          ),
-        SizedBox(height: 10),
-        // What's Around Me Button
-        FloatingActionButton.extended(
-          onPressed: () => setState(() => showPlaces = !showPlaces),
-          label: showPlaces? Icon(Icons.close, size: 20) : Text("What's Around You?"),
-          backgroundColor: Colors.lightBlue,
-        ),
-      ],
-    );
+   return isLoading
+        ? Center(
+            child: CircularProgressIndicator(), // Show loading indicator while fetching
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // What's Around Me List
+              if (showPlaces)
+                Container(
+                  constraints: containerConstraints,
+                  decoration: containerDecoration,
+                  child: BuildWhatAroundMeList(places: fetchTopNearbyPlaces()),
+                ),
+              SizedBox(height: 10),
+              // What's Around Me Button
+              FloatingActionButton.extended(
+                onPressed: () => setState(() => showPlaces = !showPlaces),
+                label: showPlaces
+                    ? Icon(Icons.close, size: 20)
+                    : Text("What's Around You?"),
+                backgroundColor: Colors.lightBlue,
+              ),
+            ],
+          );
   }
 }
