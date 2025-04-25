@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/ui/WhatsAroundMe/places_list_model.dart';
+import 'package:campus_mobile_experimental/ui/WhatsAroundMe/wam_list_model.dart';
 import 'package:flutter/material.dart';
-import 'fetch_places_api.dart';
+import 'wam_service.dart';
 import 'wam_list.dart';
 
 class WhatsAroundMe extends StatefulWidget {
@@ -9,12 +9,10 @@ class WhatsAroundMe extends StatefulWidget {
   State<WhatsAroundMe> createState() => _WhatsAroundMeState();
 }
 
+/// Fetches Points of Interest using the ESRI Nearby Search API
 class _WhatsAroundMeState extends State<WhatsAroundMe> {
   var showPlaces = false;
-  // Fetch Points of Interest using the ESRI Nearby Search API
-  //late final List<Place> pointsOfInterest = generateRandomPlaces(20);
-  // TEST TEST TEST //
-  late List<Place> TEST;
+  late List<Place> nearbySearchList;
 
  @override
  void initState() {
@@ -24,17 +22,17 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
 
   Future<void> fetchPlaces() async {
     try {
-      TEST = await fetchPointsOfInterest(10);
+      nearbySearchList = await fetchNearbySearchPlaces(10);
     } catch (e) {
       print("Error fetching places: $e");
-      TEST = []; // Ensure TEST is initialized even on error
+      nearbySearchList = []; // Ensure TEST is initialized even on error
     } finally {
       setState(() {}); // Update the UI after fetching data
     }
   }
 
   List<Place> fetchTopNearbyPlaces() {
-    List<Place> sorted = List.from(TEST)
+    List<Place> sorted = List.from(nearbySearchList)
       ..sort((a, b) => a.distanceMi.compareTo(b.distanceMi));
     return sorted.take(10).toList();
   }

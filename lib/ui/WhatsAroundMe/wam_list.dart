@@ -1,11 +1,10 @@
-import 'package:campus_mobile_experimental/ui/WhatsAroundMe/places_list_model.dart';
+import 'package:campus_mobile_experimental/ui/WhatsAroundMe/wam_list_model.dart';
 import 'package:flutter/material.dart';
 import '../../app_styles.dart';
 
 /// TODO: Make each place name clickable to open a "place details page" (might need to update router)
 /// That would require the "Get Place Details API" ^
 /// https://developers.arcgis.com/documentation/mapping-and-location-services/place-finding/get-place-details/
-
 class BuildWhatAroundMeList extends StatelessWidget {
   final List<Place> places;
   const BuildWhatAroundMeList({Key? key, required this.places}) : super(key: key);
