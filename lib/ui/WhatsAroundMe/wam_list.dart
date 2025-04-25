@@ -13,6 +13,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: EdgeInsets.only(top: 12.0),
       itemCount: places.length,
       itemBuilder: (context, index) {
         final place = places[index];
@@ -31,7 +32,8 @@ class BuildWhatAroundMeList extends StatelessWidget {
             ),
           ),
           subtitle: Text(
-            "${place.location} • ${place.businessHours}",
+            // "${place.location} • ${place.category}", // TODO: replace location for busyness
+            "${place.category}",
             style: TextStyle(
               color: Theme.of(context).brightness == Brightness.light
                   ? descriptiveTextColorLight
@@ -40,7 +42,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
             ),
           ),
           trailing: Text(
-            "${place.distanceMi.toStringAsFixed(1)} mi",
+            "${metersToMiles(place.distanceMi).toStringAsFixed(1)} mi",
             style: TextStyle(
               color: Theme.of(context).brightness == Brightness.light
                   ? descriptiveTextColorLight
@@ -52,4 +54,9 @@ class BuildWhatAroundMeList extends StatelessWidget {
       },
     );
   }
+}
+
+double metersToMiles(double meters) {
+  const double metersPerMile = 1609.34;
+  return meters / metersPerMile;
 }

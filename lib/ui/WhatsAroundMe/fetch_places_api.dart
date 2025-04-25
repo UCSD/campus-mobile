@@ -4,14 +4,23 @@ import 'dart:math';
 import 'package:campus_mobile_experimental/ui/WhatsAroundMe/places_list_model.dart';
 import 'package:campus_mobile_experimental/ui/WhatsAroundMe/wam_model.dart';
 import '../../app_networking.dart';
+import 'package:geolocator/geolocator.dart';
 
 /// Uses ESRI "Nearby Search" API to fetch all the points of interest around you: https://developers.arcgis.com/documentation/mapping-and-location-services/place-finding/nearby-search/#url-request
 Future<List<Place>> fetchPointsOfInterest(int count) async {
   var _error;
   var _isLoading = true;
   const String esriToken = "AAPTxy8BH1VEsoebNVZXo8HurEBECxvQNl6npvATkbb_hlcfhfk79rCfKobWrsCcCmQweTxAFJBE9fJ-1TkjS0p-g1FP66bFWCf4wCndJBDLUIDaQMTFwe2spC_xe_TM6D03tEp47Bj9_1kjxhWECOxgsf61xi_HdThJnG04h7tseaSMG2xVQAovU4RQwiMjCHb15BCaGW5rPqt0_VbB1ogchLzpuxHI4gLW4wzJihTee3I.AT1_jIaJXaPU";
-  const double x_longitude = -117.23767559484368; // TODO: Replace with dynamic longitude
-  const double y_latitude = 32.88115782225114;   // TODO: Replace with dynamic latitude
+  var x_longitude = -117.23767559484368; // TODO: Replace with dynamic longitude
+  var y_latitude = 32.88115782225114;   // TODO: Replace with dynamic latitude
+  try {
+    Position position = await getCurrentLocation();
+    print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
+    x_longitude = position.longitude;
+    y_latitude = position.latitude;
+  } catch (e) {
+    print('Error: $e');
+  }
   const int radius = 650; // About 0.4 miles
   const String url = "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1/places/near-point";
   Map<String, String> queryParams = {
@@ -44,7 +53,7 @@ Future<List<Place>> fetchPointsOfInterest(int count) async {
         name: result.name,
         location: "${result.location.y}, ${result.location.x}",
         distanceMi: result.distance,
-        businessHours: result.categories.isNotEmpty
+        category: result.categories.isNotEmpty
             ? result.categories.first.label
             : "N/A",
       );
@@ -58,6 +67,44 @@ Future<List<Place>> fetchPointsOfInterest(int count) async {
     return [];
   } finally {
     _isLoading = false;
+  }
+}
+
+Future<Position> getCurrentLocation() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Check if location services are enabled
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    throw Exception('Location services are disabled.');
+  }
+
+  // Check for location permissions
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      throw Exception('Location permissions are denied.');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    throw Exception('Location permissions are permanently denied.');
+  }
+
+  // Get the current location
+  return await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.high,
+  );
+}
+
+void fetchUserLocation() async {
+  try {
+    Position position = await getCurrentLocation();
+    print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
+  } catch (e) {
+    print('Error: $e');
   }
 }
 
@@ -116,7 +163,7 @@ List<Place> generateRandomPlaces(int count) {
       name: names[i % names.length],
       location: streets[random.nextInt(streets.length)],
       distanceMi: (random.nextDouble() * 5).clamp(0.3, 4.9),
-      businessHours: hours[random.nextInt(hours.length)],
+      category: hours[random.nextInt(hours.length)],
     );
   });
 }

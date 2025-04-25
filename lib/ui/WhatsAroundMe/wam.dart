@@ -24,7 +24,7 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
 
   Future<void> fetchPlaces() async {
     try {
-      TEST = await fetchPointsOfInterest(8);
+      TEST = await fetchPointsOfInterest(10);
     } catch (e) {
       print("Error fetching places: $e");
       TEST = []; // Ensure TEST is initialized even on error
@@ -36,7 +36,7 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
   List<Place> fetchTopNearbyPlaces() {
     List<Place> sorted = List.from(TEST)
       ..sort((a, b) => a.distanceMi.compareTo(b.distanceMi));
-    return sorted.take(8).toList();
+    return sorted.take(10).toList();
   }
 
   @override
