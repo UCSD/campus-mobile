@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/ui/WhatsAroundMe/wam_list_model.dart';
+import 'package:campus_mobile_experimental/core/models/wam_list_model.dart';
 import 'package:flutter/material.dart';
-import 'wam_service.dart';
+import '../../core/services/wam_service.dart';
 import 'wam_list.dart';
 
 class WhatsAroundMe extends StatefulWidget {

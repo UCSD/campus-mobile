@@ -1,12 +1,40 @@
 /// WAM Service used to fetch the points of interest around you
 import 'dart:convert';
-import 'package:campus_mobile_experimental/ui/WhatsAroundMe/wam_list_model.dart';
-import 'package:campus_mobile_experimental/ui/WhatsAroundMe/wam_nearby_search_model.dart';
+import 'package:campus_mobile_experimental/core/models/wam_list_model.dart';
+import 'package:campus_mobile_experimental/core/models/wam_nearby_search_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../app_networking.dart';
 import 'package:geolocator/geolocator.dart';
 
-/// Uses ESRI "Nearby Search" API to fetch all the points of interest around you: https://developers.arcgis.com/documentation/mapping-and-location-services/place-finding/nearby-search/#url-request
+/// Fetches a list of nearby places using the ESRI "Nearby Search" API.
+///
+/// This function retrieves the user's current location,
+/// constructs a query to the ESRI Nearby Search API,
+/// and parses the response into a list of `Place` objects.
+///
+/// **Parameters:**
+/// - `count` (*int*): The maximum number of results to fetch from the API.
+///
+/// **Returns:**
+/// - A `Future` that resolves to a `List<Place>` containing the nearby points of interest.
+///
+/// **API Reference:**
+/// - [ESRI Nearby Search API Documentation](https://developers.arcgis.com/documentation/mapping-and-location-services/place-finding/nearby-search/#url-request)
+///
+/// **Notes:**
+/// - The search radius is currently set to 650 meters (~0.4 miles) and can be made configurable in the future.
+/// - If location services are unavailable or permissions are denied, the function defaults to the Geisel Library coordinates.
+/// - The function requires the following environment variables to be set:
+///   - `WAM_NEARBY_SEARCH_TOKEN`: The API token for authentication.
+///   - `WAM_NEARBY_SEARCH_ENDPOINT`: The base URL of the ESRI Nearby Search API.
+///
+/// **Exceptions:**
+/// - Prints error messages to the console if location services fail or the API request encounters an issue.
+///
+/// **Example Usage:**
+/// ```dart
+/// List<Place> places = await fetchNearbySearchPlaces(10);
+/// ```
 Future<List<Place>> fetchNearbySearchPlaces(int count) async {
   var _error;
   var _isLoading = true;

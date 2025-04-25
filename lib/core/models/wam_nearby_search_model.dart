@@ -1,3 +1,5 @@
+/// WAM model used to hold all the data from the ESRI "Nearby Search" API
+
 // To parse this JSON data, do
 //
 //     final placesResponse = placesResponseFromJson(jsonString);

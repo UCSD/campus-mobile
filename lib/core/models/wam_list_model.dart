@@ -1,4 +1,5 @@
-/// WAM Model used to hold the response from the ESRI "Nearby Search" API
+/// WAM Model used to further filter the response from the ESRI "Nearby Search" API
+/// This model is used to build the What's Around Me List
 class Place {
   final String name;
   final String location;
