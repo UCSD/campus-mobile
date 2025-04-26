@@ -1,0 +1,123 @@
+/// WAM model used to hold all the data from the ESRI "Nearby Search" API
+
+// To parse this JSON data, do
+//
+//     final placesResponse = placesResponseFromJson(jsonString);
+
+import 'dart:convert';
+
+PlacesResponse placesResponseFromJson(String str) =>
+    PlacesResponse.fromJson(json.decode(str));
+
+String placesResponseToJson(PlacesResponse data) =>
+    json.encode(data.toJson());
+
+class PlacesResponse {
+  List<Result> results;
+  Pagination pagination;
+
+  PlacesResponse({
+    required this.results,
+    required this.pagination,
+  });
+
+  factory PlacesResponse.fromJson(Map<String, dynamic> json) => PlacesResponse(
+    results:
+    List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
+    pagination: Pagination.fromJson(json["pagination"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "results": List<dynamic>.from(results.map((x) => x.toJson())),
+    "pagination": pagination.toJson(),
+  };
+}
+
+class Result {
+  String placeId;
+  Location location;
+  List<Category> categories;
+  String name;
+  double distance;
+
+  Result({
+    required this.placeId,
+    required this.location,
+    required this.categories,
+    required this.name,
+    required this.distance,
+  });
+
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+    placeId: json["placeId"],
+    location: Location.fromJson(json["location"]),
+    categories: List<Category>.from(
+        json["categories"].map((x) => Category.fromJson(x))),
+    name: json["name"],
+    distance: json["distance"].toDouble(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "placeId": placeId,
+    "location": location.toJson(),
+    "categories": List<dynamic>.from(categories.map((x) => x.toJson())),
+    "name": name,
+    "distance": distance,
+  };
+}
+
+class Location {
+  double x;
+  double y;
+
+  Location({
+    required this.x,
+    required this.y,
+  });
+
+  factory Location.fromJson(Map<String, dynamic> json) => Location(
+    x: json["x"].toDouble(),
+    y: json["y"].toDouble(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "x": x,
+    "y": y,
+  };
+}
+
+class Category {
+  String categoryId;
+  String label;
+
+  Category({
+    required this.categoryId,
+    required this.label,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+    categoryId: json["categoryId"],
+    label: json["label"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "categoryId": categoryId,
+    "label": label,
+  };
+}
+
+class Pagination {
+  String nextUrl;
+
+  Pagination({
+    required this.nextUrl,
+  });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
+    nextUrl: json["nextUrl"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "nextUrl": nextUrl,
+  };
+}
