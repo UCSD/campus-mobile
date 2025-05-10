@@ -1,11 +1,32 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:arcgis_maps/arcgis_maps.dart';
+import 'esri_map_from_jack.dart';
 
+final List<String> _poiClasses = [
+  'Academic and Admin',
+  'Art',
+  'Athletic Facilities',
+  'Dining and Beverage',
+  'Emergency',
+  'Events',
+  'Healthcare',
+  'Information',
+  'Library',
+  'Loading Docks',
+  'Mobility',
+  'Recreation Facilities',
+  'Restrooms',
+  'Services',
+  'Shopping',
+  'Student Services',
+  'Sustainability',
+];
+
+/// Points of Interest (POI) quick search icons
 class QuickSearchIcons extends StatelessWidget {
-  const QuickSearchIcons({
-    Key? key,
-  }) : super(key: key);
+  const QuickSearchIcons({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,50 +41,22 @@ class QuickSearchIcons extends StatelessWidget {
             LabeledIconButton(
               icon: Icons.local_parking,
               text: 'Parking',
-              onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text = 'Parking';
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
-                Navigator.pop(context);
-              },
+              onPressed: () => _applyPOIDisplayFilter('Parking'),
             ),
             LabeledIconButton(
               icon: Icons.coronavirus_outlined,
               text: 'COVID Tests',
-              onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text = 'COVID Test Kits';
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
-                Navigator.pop(context);
-              },
+              onPressed: () => _applyPOIDisplayFilter('COVID Test Kits'),
             ),
             LabeledIconButton(
               icon: Icons.local_drink,
               text: 'Hydration',
-              onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text = 'Hydration';
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
-                Navigator.pop(context);
-              },
+              onPressed: () => _applyPOIDisplayFilter('Hydration'),
             ),
             LabeledIconButton(
               icon: Icons.local_atm,
               text: 'ATM',
-              onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text = 'ATM';
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
-                Navigator.pop(context);
-              },
+              onPressed: () => _applyPOIDisplayFilter('ATM'),
             ),
           ],
         ),
@@ -72,6 +65,7 @@ class QuickSearchIcons extends StatelessWidget {
   }
 }
 
+/// Constructs the button with an icon and a label
 class LabeledIconButton extends StatelessWidget {
   final IconData? icon;
   final String? text;

@@ -175,24 +175,26 @@ class DiningList extends StatelessWidget {
           // an error occurred, do nothing
         }
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.directions_walk,
-            size: 28,
-          ),
-          SizedBox(
-              height:
-                  2), // Ensure there is some space between the icon and text
-          Text(
-            data.distance != null
-                ? (num.parse(data.distance!.toStringAsFixed(1)).toString() +
-                    ' mi')
-                : '--',
-            style: TextStyle(fontSize: 12),
-          ),
-        ],
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.directions_walk,
+              size: 28,
+            ),
+            SizedBox(
+              height: 2, // Ensure there is some space between the icon and text
+            ),
+            Text(
+              data.distance != null
+                  ? (num.parse(data.distance!.toStringAsFixed(1)).toString() + ' mi')
+                  : '--',
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
       ),
     );
   }
