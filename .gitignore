@@ -9,6 +9,7 @@
 .history
 .svn/
 *.env
+arcgis_maps_core
 
 # IntelliJ related
 *.iml
