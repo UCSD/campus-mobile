@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../models/esri_poi.dart';
 
 class MapsDataProvider extends ChangeNotifier {
   MapsDataProvider() {
@@ -27,6 +28,7 @@ class MapsDataProvider extends ChangeNotifier {
 
   ///MODELS
   List<MapSearchModel> _mapSearchModels = [];
+  List<EsriPOIModel> _esriPOIModels = [];
 
   Coordinates? _coordinates;
   Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
@@ -112,9 +114,12 @@ class MapsDataProvider extends ChangeNotifier {
       }
     }
     else {
+      print("===================== USING ESRI Points of Interest API");
       if (await _mapSearchService.fetchESRILocations(query)) {
-        _mapSearchModels = _mapSearchService.results;
+        _esriPOIModels = _mapSearchService.esriResults;
+        print("===================== ESRI API Results: " + _esriPOIModels.toString());
         _noResults = false;
+        /// TODO: Create the equivalent of the two functions below for ESRI
         populateDistances();
         reorderLocations();
         addMarker(0);

@@ -122,11 +122,11 @@ class QuickSearchIcons extends StatelessWidget {
             ),
             LabeledIconButton(
               icon: Icons.local_atm,
-              text: 'ATM',
+              text: 'ATMs',
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text = 'ATM';
+                    .text = 'ATMs';
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .fetchLocations(true);
                 Navigator.pop(context);
