@@ -82,32 +82,58 @@ class MapsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fetchLocations() async {
+  void fetchLocations(bool esri) async {
     String query = searchBarController.text;
     markers.clear();
     _isLoading = true;
     _error = null;
     notifyListeners();
-    if (await _mapSearchService.fetchLocations(query)) {
-      _mapSearchModels = _mapSearchService.results;
-      _noResults = false;
-      populateDistances();
-      reorderLocations();
-      addMarker(0);
-      if (!_searchHistory.contains(query)) {
-        // Check to see if this search is already in history...
-        _searchHistory.add(query); // ...If it is not, add it...
+
+    if(esri == false) {
+      if (await _mapSearchService.fetchLocations(query)) {
+        _mapSearchModels = _mapSearchService.results;
+        _noResults = false;
+        populateDistances();
+        reorderLocations();
+        addMarker(0);
+        if (!_searchHistory.contains(query)) {
+          // Check to see if this search is already in history...
+          _searchHistory.add(query); // ...If it is not, add it...
+        } else {
+          // ...otherwise...
+          _searchHistory.remove(query); // ...reorder search history to put it back on top
+          _searchHistory.add(query);
+        }
+        _lastUpdated = DateTime.now();
       } else {
-        // ...otherwise...
-        _searchHistory.remove(query); // ...reorder search history to put it back on top
-        _searchHistory.add(query);
+        ///TODO: determine what error to show to the user
+        _error = _mapSearchService.error;
+        _noResults = true;
       }
-      _lastUpdated = DateTime.now();
-    } else {
-      ///TODO: determine what error to show to the user
-      _error = _mapSearchService.error;
-      _noResults = true;
     }
+    else {
+      if (await _mapSearchService.fetchESRILocations(query)) {
+        _mapSearchModels = _mapSearchService.results;
+        _noResults = false;
+        populateDistances();
+        reorderLocations();
+        addMarker(0);
+        if (!_searchHistory.contains(query)) {
+          // Check to see if this search is already in history...
+          _searchHistory.add(query); // ...If it is not, add it...
+        } else {
+          // ...otherwise...
+          _searchHistory.remove(query); // ...reorder search history to put it back on top
+          _searchHistory.add(query);
+        }
+        _lastUpdated = DateTime.now();
+      } else {
+        ///TODO: determine what error to show to the user
+        _error = _mapSearchService.error;
+        _noResults = true;
+      }
+    }
+
     _isLoading = false;
     notifyListeners();
   }

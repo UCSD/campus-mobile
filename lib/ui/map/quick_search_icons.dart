@@ -1,9 +1,74 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 // import 'package:arcgis_maps/arcgis_maps.dart';
+
+final subclasses = [
+  'ATMs',
+  'Athletic Facilities',
+  'Baby Changing Stations',
+  'Book Return',
+  'Broadcast Towers',
+  'COVID Test Kits',
+  'Cafes and Restaurants',
+  'Call Boxes',
+  'Career Services',
+  'Catering',
+  'Classrooms',
+  'Clean Energy',
+  'Coffee',
+  'Collections',
+  'Compost Locations',
+  'Computer Labs',
+  'Conference Rooms',
+  'Department Offices',
+  'Electric Vehicle Charging',
+  'Emergency Care',
+  'Emergency Containers',
+  'Gardens',
+  'Gender Inclusive',
+  'Global Initiatives',
+  'Hydration',
+  'Imprints',
+  'Information',
+  'Information Services',
+  'Kiosks',
+  'LEED Certified Buildings',
+  'Lactation',
+  'Laundry',
+  'Loading Docks',
+  'Lounges',
+  'Mail Boxes',
+  'Mail Offices',
+  'Markets',
+  'Medical Clinics',
+  'Memorial',
+  'Metropolitan Transit System (MTS)',
+  'North County Transit District (NCTD)',
+  'Parking Entrances',
+  'Parking Offices',
+  'Parking Pay Stations',
+  'Parking Structures',
+  'Pay Phones',
+  'Police',
+  'Public',
+  'Recreation Facilities',
+  'Research and Innovation',
+  'Research/Labs',
+  'Retail',
+  'SPIN Hubs',
+  'Showers',
+  'Special',
+  'Speciality Recycling Locations',
+  'Stryker Chairs',
+  'Stuart Collection',
+  'Student Organizations',
+  'Student Services',
+  'Sustainability',
+  'Triton Mobility Services',
+  'Vending Machines',
+  'WayPoints'
+];
 
 /// Points of Interest (POI) quick search icons
 class QuickSearchIcons extends StatelessWidget {
@@ -27,7 +92,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'Parking';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
+                    .fetchLocations(false);
                 Navigator.pop(context);
               },
             ),
@@ -39,7 +104,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'COVID Test Kits';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
+                    .fetchLocations(false);
                 Navigator.pop(context);
               },
             ),
@@ -51,7 +116,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'Hydration';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
+                    .fetchLocations(false);
                 Navigator.pop(context);
               },
             ),
@@ -63,7 +128,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'ATM';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
+                    .fetchLocations(true);
                 Navigator.pop(context);
               },
             ),
