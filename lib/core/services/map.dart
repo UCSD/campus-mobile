@@ -33,6 +33,32 @@ class MapSearchService {
     }
   }
 
+  /// Fetches locations from ESRI POINTS OF INTEREST
+  Future<bool> fetchESRILocations(String poi) async {
+    final poi_endpoint = 'https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0';
+    _error = null;
+    _isLoading = true;
+    try {
+      /// fetch data
+      String? _response = await NetworkHelper.fetchData(
+          poi_endpoint + '?query=' + poi + '&region=0');
+      if (_response != 'null') {
+        /// parse data
+        final data = mapSearchModelFromJson(_response!);
+        _results = data;
+      } else {
+        _results = [];
+        return false;
+      }
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+    }
+  }
+
   bool get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
