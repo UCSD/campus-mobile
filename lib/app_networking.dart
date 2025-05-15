@@ -11,14 +11,13 @@ class NetworkHelper {
   ///TODO: inside each service that file place a switch statement to handle all
   ///TODO: different errors thrown by the Dio client DioErrorType.RESPONSE
 
-
   // private constructor to show that this class should not be instantiated
   const NetworkHelper._();
 
   static const int SSO_REFRESH_MAX_RETRIES = 3;
   static const int SSO_REFRESH_RETRY_INCREMENT = 5000;
   static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
-  static final int DEFAULT_TIMEOUT = int.parse(dotenv.get('DEFAULT_TIMEOUT'));
+  static final DEFAULT_TIMEOUT = Duration(milliseconds: int.parse(dotenv.get('DEFAULT_TIMEOUT')));
 
   static Future<dynamic> fetchData(String url) async {
     Dio dio = new Dio();
