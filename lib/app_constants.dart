@@ -25,8 +25,6 @@ class RoutePaths {
   static const String DiningViewAll = 'dining/dining_list_view';
   static const String DiningDetailView = 'dining/dining_detail_view';
   static const String DiningNutritionView = 'dining/dining_nutrition_view';
-  static const String ScannerView = 'scanner/scanner_view';
-  static const String ScanditScanner = 'scanner/scandit_scanner';
   static const String Parking = "parking/parking_view";
   static const String SpotTypesView = "parking/spot_types_view";
   static const String ParkingStructureView = "parking/parking_structure_view";
@@ -68,13 +66,9 @@ class RouteTitles {
 
 class ParkingDefaults {
   static const defaultLots = [
+    "Athena",
     "Gilman",
-    "406",
-    "784",
-    "P782",
-    "P386 (Gliderport)",
-    "P704",
-    "P705"
+    "Hopkins",
   ];
   static const defaultSpots = ["S", "B", "A"];
 }
@@ -100,27 +94,6 @@ class ErrorConstants {
   static const locationFailed = "Location was not available";
 }
 
-enum ScannerError implements Exception {
-  duplicateRecord(
-      'Submission failed due to barcode already scanned. Please discard this test tube and get another one.\nCode #1035'),
-  duplicateRecordBloodScreen(
-      'Submission failed because this barcode has already been scanned. Please discard this kit.\nCode #1035'),
-  invalidMedia(
-      'Barcode is not valid. Please scan another barcode.\nCode #1036'),
-  barcodeError('An error occurred. Please try again.\nCode #1037'),
-  invalidToken('An error occurred. Please try again.\nCode #1038'),
-  loggedOut('An error occurred. Please try again.\nCode #1039'),
-  unknownError('An error occurred. Please try again.\nCode #1040'),
-  notAcceptable(
-      'Do not test within 30 days after receiving a positive test for COVID-19. Place all materials in the recycle and trash receptacles.\nCode #1041'),
-  scannerReauthFailure(
-      'Your session has expired. Please login to submit a scan.'),
-  noRecentScan('No scan submitted');
-
-  final String msg;
-  const ScannerError(this.msg);
-}
-
 class LoginConstants {
   static const silentLoginFailedTitle = 'Oops! You\'re not logged in.';
   static const silentLoginFailedDesc =
@@ -141,6 +114,15 @@ class ParkingConstants {
   static const lotMaxTitle = 'Maximum parking lots reached';
   static const lotMaxDesc =
       'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.';
+}
+
+class WifiConstants {
+  // Initial State
+  static const wifiIssueFailedTitle = 'Could not report issue';
+  static const wifiIssueFailedDesc = 'Please run speed test to report issue.';
+  // Finished State
+  static const wifiIssueSuccessTitle = 'Issue Reported';
+  static const wifiIssueSuccessDesc = 'Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services.';
 }
 
 class Plugins {
@@ -183,7 +165,6 @@ class DataPersistence {
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
   static const titleMap = {
-    'NativeScanner': 'SCANNER',
     'MyStudentChart': 'MyStudentChart',
     'MyUCSDChart': 'MyUCSDChart',
     'student_id': 'STUDENT ID',

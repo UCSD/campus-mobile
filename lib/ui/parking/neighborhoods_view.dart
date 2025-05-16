@@ -28,10 +28,9 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
       ListTile(
         title: Text(
           "Neighborhoods",
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium!
-              .copyWith(color: lightPrimaryColor),
+          style: Theme.of(context).brightness == Brightness.dark
+              ? textSubheaderDark
+              : textSubheaderLight,
         ),
       ),
     );

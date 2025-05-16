@@ -19,8 +19,7 @@ class _ManageParkingViewState extends State<ManageParkingView> {
   Widget buildLocationsList(BuildContext context) {
     const List<String> parkingType = [
       "Neighborhoods",
-      "Parking Structure",
-      "Parking Lots"
+      "Parking Structures",
     ];
 
     List<Widget> listTiles = [];
@@ -41,8 +40,6 @@ class _ManageParkingViewState extends State<ManageParkingView> {
               Navigator.pushNamed(context, RoutePaths.NeighborhoodsView);
             } else if (i == 1) {
               Navigator.pushNamed(context, RoutePaths.ParkingStructureView);
-            } else if (i == 2) {
-              Navigator.pushNamed(context, RoutePaths.ParkingLotsView);
             }
           },
         ),

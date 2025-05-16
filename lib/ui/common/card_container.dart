@@ -45,10 +45,13 @@ class CardContainer extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(
-            color: Color(0xFF747678),
+            color: dotsUnselectedColor,
             width: 0.5,
           ),
         ),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? darkPrimaryBgColor
+            : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -166,22 +169,26 @@ class CardContainer extends StatelessWidget {
       buttonPadding: const EdgeInsets.all(0),
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildMenuOptions({
-          CardMenuOptionConstants.reloadCard: reload,
-          CardMenuOptionConstants.hideCard: hide,
-        }),
+        buildMenuOptions(
+          {
+            CardMenuOptionConstants.reloadCard: reload,
+            CardMenuOptionConstants.hideCard: hide,
+          },
+        ),
       ],
     );
   }
 
   Widget buildMenuOptions(Map<String, Function> menuOptions) {
     List<DropdownMenuItem<String>> menu = [];
+
     menuOptions.forEach((menuOption, func) {
       Widget item = DropdownMenuItem<String>(
         value: menuOption,
         child: Text(
           menuOption,
           textAlign: TextAlign.center,
+          style: TextStyle(color: dotsUnselectedColor),
         ),
       );
       menu.add(item as DropdownMenuItem<String>);
@@ -190,11 +197,11 @@ class CardContainer extends StatelessWidget {
     return DropdownButton(
       items: menu,
       iconSize: 36,
-      iconEnabledColor: Color(0xFF747678),
+      iconEnabledColor: dotsUnselectedColor,
       underline: Container(),
       icon: Transform.translate(
         offset: Offset(6, -3),
-        child: Icon(Icons.more_vert),
+        child: Icon(Icons.more_vert, color: dotsUnselectedColor),
       ),
       onChanged: (String? selectedMenuItem) =>
           onMenuItemPressed(selectedMenuItem),

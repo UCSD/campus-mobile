@@ -55,7 +55,6 @@ class CardsDataProvider extends ChangeNotifier {
     'parking',
     'news',
     'speed_test',
-    'NativeScanner',
   ];
 
   // Native student cards

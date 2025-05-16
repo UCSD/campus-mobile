@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -133,81 +134,93 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
             // SIGN IN and Forgot Password?
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFCD00), // Yellow Button
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width *
+                              ((1 - 0.74444444) / 2) +
+                          6),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFCD00), // Yellow Button
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0.0,
+                      fixedSize: () {
+                        // calculate width using scaling ratio, then calculate height from width using aspect ratio
+                        final width = _screenWidth * 0.24111111;
+                        final height = width / 2.29268293;
+                        return Size(width, height);
+                      }(),
                     ),
-                    elevation: 0.0,
-                    fixedSize: () {
-                      // calculate width using scaling ratio, then calculate height from width using aspect ratio
-                      final width = _screenWidth * 0.24111111;
-                      final height = width / 2.29268293;
-                      return Size(width, height);
-                    }(),
-                  ),
-                  child: Semantics(
-                    button: true,
-                    hint:
-                        'press to login with your information inputted in above textfields',
-                    child: const Text(
-                      'SIGN IN',
-                      style: const TextStyle(
-                        fontFamily: 'Brix Sans',
-                        fontSize: 15.0,
-                        height: 1.195,
-                        color: Colors.black, // Text color on button
-                        fontWeight: FontWeight.bold,
+                    child: Semantics(
+                      button: true,
+                      hint:
+                          'press to login with your information inputted in above textfields',
+                      child: const Text(
+                        'SIGN IN',
+                        style: const TextStyle(
+                          fontFamily: 'Brix Sans',
+                          fontSize: 18.0,
+                          height: 1.195,
+                          color: Colors.black, // Text color on button
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
+                    onPressed: _userDataProvider.isLoading
+                        ? null
+                        : () {
+                            _userDataProvider
+                                .manualLogin(_emailTextFieldController.text,
+                                    _passwordTextFieldController.text)
+                                .then((isLoggedIn) async {
+                              if (isLoggedIn) {
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    RoutePaths.OnboardingInitial, (_) => false);
+                              } else {
+                                showAlertDialog(context);
+                              }
+                            });
+                          },
                   ),
-                  onPressed: _userDataProvider.isLoading
-                      ? null
-                      : () {
-                          _userDataProvider
-                              .manualLogin(_emailTextFieldController.text,
-                                  _passwordTextFieldController.text)
-                              .then((isLoggedIn) async {
-                            if (isLoggedIn) {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  RoutePaths.OnboardingInitial, (_) => false);
-                            } else {
-                              showAlertDialog(context);
-                            }
-                          });
-                        },
                 ),
 
                 // the spacer in between sign in and forgot password
-                SizedBox(width: _screenWidth * 0.202),
+                // SizedBox(width: _screenWidth * 0.202),
 
-                GestureDetector(
-                  child: Semantics(
-                    hint:
-                        'press to be redirected to the UCSD Password reset page',
-                    child: const Text(
-                      'Forgot Password?',
-                      style: const TextStyle(
-                        color: const Color(0xFF00629B),
-                        height: 1.42857143,
-                        decoration: TextDecoration.underline,
-                        //fontFamily: "Source Sans Pro" // this doesn't seem to be doing anything, so disabling for now
-                      ), // Light Blue
+                Padding(
+                  padding: EdgeInsets.only(
+                      right: MediaQuery.of(context).size.width *
+                              ((1 - 0.74444444) / 2) +
+                          6),
+                  child: GestureDetector(
+                    child: Semantics(
+                      hint:
+                          'press to be redirected to the UCSD Password reset page',
+                      child: const Text(
+                        'Forgot Password?',
+                        style: const TextStyle(
+                          color: const Color(0xFF00629B),
+                          height: 1.42857143,
+                          decoration: TextDecoration.underline,
+                          fontSize: 18.0,
+                        ), // Light Blue
+                      ),
                     ),
+                    onTap: () async {
+                      try {
+                        /// TODO: Update link to redirect to password reset
+                        String link =
+                            'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                        await launch(link, forceSafariVC: true);
+                      } catch (e) {
+                        // an error occurred, do nothing
+                      }
+                    },
                   ),
-                  onTap: () async {
-                    try {
-                      /// TODO: Update link to redirect to password reset
-                      String link =
-                          'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                      await launch(link, forceSafariVC: true);
-                    } catch (e) {
-                      // an error occurred, do nothing
-                    }
-                  },
                 ),
               ],
             ),
@@ -345,29 +358,17 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   }
 
   void showAlertDialog(BuildContext context) {
-    // set up the button
-    final okButton = TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
-      ),
-      child: const Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
-    // set up the AlertDialog
-    final alert = AlertDialog(
-      title: const Text(LoginConstants.loginFailedTitle),
-      content: const Text(LoginConstants.loginFailedDesc),
-      actions: [okButton],
-    );
-
-    // show the dialog
     showDialog(
       context: context,
-      builder: (BuildContext context) => alert,
+      builder: (BuildContext context) => AlertDialogWidget(
+        type: MessageTypeConstants.ERROR,
+        icon: Icons.error_outline,
+        title: LoginConstants.loginFailedTitle,
+        description: LoginConstants.loginFailedDesc,
+        onClose: () {
+          Navigator.of(context).pop(); // Close the dialog
+        },
+      ),
     );
   }
 }

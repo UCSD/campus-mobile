@@ -54,6 +54,7 @@ class DiningList extends StatelessWidget {
           )
         : ContainerView(
             child: ListView(
+              padding: const EdgeInsets.only(left: 16, right: 16),
               children:
                   ListTile.divideTiles(tiles: diningTiles, context: context)
                       .toList(),
@@ -138,7 +139,7 @@ class DiningList extends StatelessWidget {
 
   Widget buildDiningTile(DiningModel data, BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+      contentPadding: EdgeInsets.zero,
       onTap: () {
         if (data.id != null)
           Provider.of<DiningDataProvider>(context, listen: false)
