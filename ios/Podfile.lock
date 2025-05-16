@@ -94,9 +94,6 @@ PODS:
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
-  - flutter_scandit_plugin (0.0.1):
-    - Flutter
-    - ScanditBarcodeCapture (~> 6.6.3)
   - flutter_secure_storage (3.3.1):
     - Flutter
   - geolocator_apple (1.2.0):
@@ -177,9 +174,6 @@ PODS:
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
-  - ScanditBarcodeCapture (6.6.4):
-    - ScanditCaptureCore (= 6.6.4)
-  - ScanditCaptureCore (6.6.4)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -201,7 +195,6 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - flutter_scandit_plugin (from `.symlinks/plugins/flutter_scandit_plugin/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
@@ -234,8 +227,6 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - PromisesSwift
-    - ScanditBarcodeCapture
-    - ScanditCaptureCore
 
 EXTERNAL SOURCES:
   connectivity_plus:
@@ -254,8 +245,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  flutter_scandit_plugin:
-    :path: ".symlinks/plugins/flutter_scandit_plugin/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   geolocator_apple:
@@ -298,7 +287,6 @@ SPEC CHECKSUMS:
   FirebaseSessions: 655ff17f3cc1a635cbdc2d69b953878001f9e25b
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
-  flutter_scandit_plugin: a2a6a2f124c184cff00dbdf40c34ea0033b1e707
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   geolocator_apple: 9bcea1918ff7f0062d98345d238ae12718acfbc1
   Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
@@ -313,8 +301,6 @@ SPEC CHECKSUMS:
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
-  ScanditBarcodeCapture: 8de10f1d79cb4c669b75c61ddaed60c7c7daa7f4
-  ScanditCaptureCore: 7118e29ef970e70ca1ea6512fa8414e5a3761497
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   uni_links2: fbc37081577fc19c6e0f7e6cdbd3baa150023635
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe

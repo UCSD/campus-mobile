@@ -24,7 +24,6 @@ import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/news/news_card.dart';
 import 'package:campus_mobile_experimental/ui/notices/notices_card.dart';
 import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
-import 'package:campus_mobile_experimental/ui/scanner/native_scanner_card.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
@@ -188,7 +187,6 @@ class _HomeState extends State<Home> {
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
   static const _cardCtors = {
-    'NativeScanner': NativeScannerCard.new,
     'MyStudentChart': MyStudentChartCard.new,
     'dining': DiningCard.new,
     'news': NewsCard.new,
