@@ -31,7 +31,6 @@ import 'package:campus_mobile_experimental/ui/parking/parking_structure_view.dar
 import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/cards.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
-import 'package:campus_mobile_experimental/ui/scanner/native_scanner_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
 import 'package:flutter/material.dart';
@@ -171,8 +170,6 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return NeighborhoodLotsView(data);
         });
-      case RoutePaths.ScanditScanner:
-        return MaterialPageRoute(builder: (_) => ScanditScanner());
       default:
         return MaterialPageRoute(builder: (_) => Home());
     }
