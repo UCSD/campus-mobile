@@ -42,14 +42,27 @@ class MapsDataProvider extends ChangeNotifier {
   late MapSearchService _mapSearchService;
 
   void addMarker(int listIndex) {
-    final Marker marker = Marker(
-      markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
-      position: LatLng(_mapSearchModels[listIndex].mkrLat!,
-          _mapSearchModels[listIndex].mkrLong!),
-      infoWindow: InfoWindow(
-          title: _mapSearchModels[listIndex].title,
-          snippet: _mapSearchModels[listIndex].description),
-    );
+    var marker;
+    if(_mapSearchModels.isNotEmpty && listIndex >= 0 && listIndex < _mapSearchModels.length) {
+      marker = Marker(
+        markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
+        position: LatLng(_mapSearchModels[listIndex].mkrLat!,
+            _mapSearchModels[listIndex].mkrLong!),
+        infoWindow: InfoWindow(
+            title: _mapSearchModels[listIndex].title,
+            snippet: _mapSearchModels[listIndex].description),
+      );
+    }
+    else {
+      marker = Marker(
+        markerId: MarkerId(_esriPOIModels[listIndex].mkrMarkerid.toString()),
+        position: LatLng(_esriPOIModels[listIndex].attributes.latitude!,
+            _esriPOIModels[listIndex].attributes.longitude!),
+        infoWindow: InfoWindow(
+            title: _esriPOIModels[listIndex].attributes.c3dName,
+            snippet: _esriPOIModels[listIndex].attributes.c3dDescription),
+      );
+    }
     _markers.clear();
     _markers[marker.markerId] = marker;
 

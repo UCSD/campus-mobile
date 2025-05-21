@@ -10,6 +10,7 @@ class EsriPOIModel {
   Attributes attributes;
   Geometry geometry;
   double? distance;
+  int? mkrMarkerid;
 
   EsriPOIModel({
     required this.attributes,
