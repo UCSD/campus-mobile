@@ -12,14 +12,20 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
 
+import 'esri_more_results_list.dart';
+
 class Maps extends StatelessWidget {
   Widget resultsList(BuildContext context) {
     if (Provider.of<MapsDataProvider>(context).markers.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       });
+      if(Provider.of<MapsDataProvider>(context).usingESRI! == true) {
+        return MoreESRIResultsList();
+      }
       return MoreResultsList();
-    } else if (Provider.of<MapsDataProvider>(context).noResults!) {
+    }
+    else if (Provider.of<MapsDataProvider>(context).noResults!) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()

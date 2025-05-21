@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // import 'package:arcgis_maps/arcgis_maps.dart';
 
+/// Found in the legend's tab: https://www.arcgis.com/apps/mapviewer/index.html?url=https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0&source=sd
 final subclasses = [
   'ATMs',
   'Athletic Facilities',
@@ -90,9 +91,9 @@ class QuickSearchIcons extends StatelessWidget {
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text = 'Parking';
+                    .text = 'Parking Structures';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations(false);
+                    .fetchLocations(true);
                 Navigator.pop(context);
               },
             ),
@@ -128,7 +129,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'ATMs';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations(true);
+                    .fetchLocations(true); // true means using ESRI POI API
                 Navigator.pop(context);
               },
             ),

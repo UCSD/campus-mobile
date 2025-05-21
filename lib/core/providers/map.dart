@@ -14,6 +14,7 @@ class MapsDataProvider extends ChangeNotifier {
     ///INITIALIZE SERVICES
     _mapSearchService = MapSearchService();
     _mapSearchModels = [];
+    _esriPOIModels = [];
   }
 
   ///STATES
@@ -21,6 +22,7 @@ class MapsDataProvider extends ChangeNotifier {
   DateTime? _lastUpdated;
   String? _error;
   bool? _noResults;
+  bool? _usingESRI;
 
   ///Default coordinates for Price Center
   double? _defaultLat = 32.87990969506536;
@@ -86,6 +88,7 @@ class MapsDataProvider extends ChangeNotifier {
 
   void fetchLocations(bool esri) async {
     String query = searchBarController.text;
+    _usingESRI = esri;
     markers.clear();
     _isLoading = true;
     _error = null;
@@ -119,10 +122,12 @@ class MapsDataProvider extends ChangeNotifier {
         _esriPOIModels = _mapSearchService.esriResults;
         print("===================== ESRI API Results: " + _esriPOIModels.toString());
         _noResults = false;
+
         /// TODO: Create the equivalent of the two functions below for ESRI
-        populateDistances();
-        reorderLocations();
+        populateESRIDistances();
+        reorderESRILocations();
         addMarker(0);
+
         if (!_searchHistory.contains(query)) {
           // Check to see if this search is already in history...
           _searchHistory.add(query); // ...If it is not, add it...
@@ -133,7 +138,6 @@ class MapsDataProvider extends ChangeNotifier {
         }
         _lastUpdated = DateTime.now();
       } else {
-        ///TODO: determine what error to show to the user
         _error = _mapSearchService.error;
         _noResults = true;
       }
@@ -141,6 +145,31 @@ class MapsDataProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  void populateESRIDistances() {
+    double? latitude =
+    _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
+    double? longitude =
+    _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
+    if (_coordinates != null) {
+      for (EsriPOIModel model in _esriPOIModels) {
+        if (model.attributes.latitude != null && model.attributes.longitude != null) {
+          var distance = calculateDistance(
+              latitude!, longitude!, model.attributes.latitude!, model.attributes.longitude!);
+          model.distance = distance as double?;
+        }
+      }
+    }
+  }
+
+  void reorderESRILocations() {
+    _esriPOIModels.sort((EsriPOIModel a, EsriPOIModel b) {
+      if (a.distance != null && b.distance != null) {
+        return a.distance!.compareTo(b.distance!);
+      }
+      return 0;
+    });
   }
 
   void populateDistances() {
@@ -170,9 +199,11 @@ class MapsDataProvider extends ChangeNotifier {
 
   ///SIMPLE GETTERS
   bool? get isLoading => _isLoading;
+  bool? get usingESRI => _usingESRI;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
   List<MapSearchModel> get mapSearchModels => _mapSearchModels;
+  List<EsriPOIModel> get esriPOIModels => _esriPOIModels;
   List<String> get searchHistory => _searchHistory;
   Map<MarkerId, Marker> get markers => _markers;
   Coordinates? get coordinates => _coordinates;

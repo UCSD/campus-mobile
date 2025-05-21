@@ -40,12 +40,11 @@ class MapSearchService {
     final poi_endpoint = 'https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0';
     _error = null;
     _isLoading = true;
-
-    // https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0/query?where=Subclass='ATMs'&outFields=*&f=json
     try {
       /// fetch data
       print("============Fetching data from: ");
       print(poi_endpoint + '/query?where=Subclass=\'' + poi + '\'' + '&outFields=*' + '&f=json');
+      // https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0/query?where=Subclass='ATMs'&outFields=*&f=json
       var _response = await NetworkHelper.fetchData(
           poi_endpoint + '/query?where=Subclass=\'' + poi + '\'' + '&outFields=*' + '&f=json');
       if (_response != 'null') {

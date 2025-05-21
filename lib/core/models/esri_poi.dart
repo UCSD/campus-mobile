@@ -9,6 +9,7 @@ String esriPOIModelToJson(List<EsriPOIModel> data) =>
 class EsriPOIModel {
   Attributes attributes;
   Geometry geometry;
+  double? distance;
 
   EsriPOIModel({
     required this.attributes,
