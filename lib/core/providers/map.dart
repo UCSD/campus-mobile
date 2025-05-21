@@ -24,6 +24,12 @@ class MapsDataProvider extends ChangeNotifier {
   bool? _noResults;
   bool? _usingESRI;
 
+  Coordinates? _coordinates;
+  Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
+  TextEditingController _searchBarController = TextEditingController();
+  GoogleMapController? _mapController;
+  List<String> _searchHistory = [];
+
   ///Default coordinates for Price Center
   double? _defaultLat = 32.87990969506536;
   double? _defaultLong = -117.2362059310055;
@@ -31,12 +37,6 @@ class MapsDataProvider extends ChangeNotifier {
   ///MODELS
   List<MapSearchModel> _mapSearchModels = [];
   List<EsriPOIModel> _esriPOIModels = [];
-
-  Coordinates? _coordinates;
-  Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
-  TextEditingController _searchBarController = TextEditingController();
-  GoogleMapController? _mapController;
-  List<String> _searchHistory = [];
 
   ///SERVICES
   late MapSearchService _mapSearchService;
@@ -130,13 +130,10 @@ class MapsDataProvider extends ChangeNotifier {
       }
     }
     else {
-      print("===================== USING ESRI Points of Interest API");
       if (await _mapSearchService.fetchESRILocations(query)) {
         _esriPOIModels = _mapSearchService.esriResults;
         print("===================== ESRI API Results: " + _esriPOIModels.toString());
         _noResults = false;
-
-        /// TODO: Create the equivalent of the two functions below for ESRI
         populateESRIDistances();
         reorderESRILocations();
         addMarker(0);
@@ -145,7 +142,6 @@ class MapsDataProvider extends ChangeNotifier {
           // Check to see if this search is already in history...
           _searchHistory.add(query); // ...If it is not, add it...
         } else {
-          // ...otherwise...
           _searchHistory.remove(query); // ...reorder search history to put it back on top
           _searchHistory.add(query);
         }
@@ -210,21 +206,7 @@ class MapsDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  ///SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  bool? get usingESRI => _usingESRI;
-  String? get error => _error;
-  DateTime? get lastUpdated => _lastUpdated;
-  List<MapSearchModel> get mapSearchModels => _mapSearchModels;
-  List<EsriPOIModel> get esriPOIModels => _esriPOIModels;
-  List<String> get searchHistory => _searchHistory;
-  Map<MarkerId, Marker> get markers => _markers;
-  Coordinates? get coordinates => _coordinates;
-  TextEditingController get searchBarController => _searchBarController;
-  bool? get noResults => _noResults;
-  GoogleMapController? get mapController => _mapController;
-
-  ///Setters
+  /// Setters
   set coordinates(Coordinates? value) {
     _coordinates = value;
     notifyListeners();
@@ -239,4 +221,18 @@ class MapsDataProvider extends ChangeNotifier {
     _mapController = value;
     notifyListeners();
   }
+
+  /// SIMPLE GETTERS
+  bool? get isLoading => _isLoading;
+  bool? get usingESRI => _usingESRI;
+  bool? get noResults => _noResults;
+  String? get error => _error;
+  List<String> get searchHistory => _searchHistory;
+  List<MapSearchModel> get mapSearchModels => _mapSearchModels;
+  List<EsriPOIModel> get esriPOIModels => _esriPOIModels;
+  Map<MarkerId, Marker> get markers => _markers;
+  Coordinates? get coordinates => _coordinates;
+  DateTime? get lastUpdated => _lastUpdated;
+  TextEditingController get searchBarController => _searchBarController;
+  GoogleMapController? get mapController => _mapController;
 }

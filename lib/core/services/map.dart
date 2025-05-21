@@ -42,16 +42,13 @@ class MapSearchService {
     _isLoading = true;
     try {
       /// fetch data
-      print("============Fetching data from: ");
-      print(poi_endpoint + '/query?where=Subclass=\'' + poi + '\'' + '&outFields=*' + '&f=json');
-      // https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0/query?where=Subclass='ATMs'&outFields=*&f=json
+      print('============ Fetching data from: ' + poi_endpoint + '/query?where=Subclass=\'' + poi + '\'' + '&outFields=*' + '&f=json');
       var _response = await NetworkHelper.fetchData(
           poi_endpoint + '/query?where=Subclass=\'' + poi + '\'' + '&outFields=*' + '&f=json');
       if (_response != 'null') {
         /// parse data
         final data = esriPOIModelFromJson(_response!);
         _esriResults = data;
-        print("============Data fetched: ");
         print(_esriResults);
       } else {
         _esriResults = [];
