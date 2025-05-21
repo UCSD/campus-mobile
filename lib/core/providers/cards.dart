@@ -9,7 +9,8 @@ import 'package:hive/hive.dart';
 
 class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
-    CardTitleConstants.titleMap.keys.forEach((card) => _cardStates[card] = true);
+    CardTitleConstants.titleMap.keys
+        .forEach((card) => _cardStates[card] = true);
 
     /// temporary fix that prevents the student cards from causing issues on launch
     _cardOrder.removeWhere((element) => _studentCards.contains(element));
@@ -54,7 +55,6 @@ class CardsDataProvider extends ChangeNotifier {
     'parking',
     'news',
     'speed_test',
-    'NativeScanner',
   ];
 
   // Native student cards
@@ -71,9 +71,10 @@ class CardsDataProvider extends ChangeNotifier {
     'employee_id',
   ];
 
-  void updateAvailableCards(String? ucsdAffiliation) async
-  {
-    _isLoading = true; _error = null; notifyListeners();
+  void updateAvailableCards(String? ucsdAffiliation) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
 
     if (await _cardsService.fetchCards(ucsdAffiliation)) {
       _availableCards = _cardsService.cardsModel;
@@ -103,7 +104,8 @@ class CardsDataProvider extends ChangeNotifier {
     } else {
       _error = _cardsService.error;
     }
-    _isLoading = false; notifyListeners();
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future changeInternetStatus(bool noInternet) async {
@@ -135,8 +137,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin)
-      return;
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
 
     // checks if box is open, creates one if not
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
@@ -151,8 +152,7 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardOrder] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardOrder() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin)
-      return;
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
 
     _cardOrderBox = await Hive.openBox(DataPersistence.cardOrder);
 
@@ -186,10 +186,10 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// Update the [_cardStates] stored on disk
   Future updateCardStates() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin)
-      return;
+    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
 
-    var activeCards = _cardStates.keys.where((card) => _cardStates[card]!).toList();
+    var activeCards =
+        _cardStates.keys.where((card) => _cardStates[card]!).toList();
 
     // checks if box is open, creates one if not
     _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
@@ -276,10 +276,24 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void toggleCard(String card) {
-    if (_availableCards[card]!.isWebCard && _cardStates[card]!)
-      resetCardHeight(card);
-    _cardStates[card] = !_cardStates[card]!;
-    updateCardStates();
+    try {
+      if (_availableCards[card]!.isWebCard && _cardStates[card]!)
+        resetCardHeight(card);
+
+      // Toggle the card state
+      _cardStates[card] = !_cardStates[card]!;
+
+      // Update states in persistent storage
+      updateCardStates();
+
+      // Force an additional notification to ensure UI is updated
+      Future.microtask(() => notifyListeners());
+    } catch (e) {
+      print("Error toggling card state for $card: $e");
+      // Revert the state change if it fails
+      _cardStates[card] = !_cardStates[card]!;
+      notifyListeners();
+    }
   }
 
   /// SIMPLE SETTERS
