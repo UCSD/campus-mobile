@@ -323,7 +323,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
             child: Text(
               "tap for easier scanning",
               textAlign: TextAlign.center,
-              style: linkTextLight.copyWith(fontSize: 14.0),
+              style: linkTextLight.copyWith(fontSize: 16.0),
             ),
           ),
           Container(
