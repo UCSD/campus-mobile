@@ -56,16 +56,22 @@ class AvailabilityDisplay extends StatelessWidget {
                         arguments: subLocation)
                     : print('_handleIconClick: no subLocations'),
                 visualDensity: VisualDensity.compact,
-                trailing: subLocation.floors.length > 0
-                    ? Icon(Icons.arrow_forward_ios_rounded,
+                title: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        subLocation.name,
+                        style: Theme.of(context).brightness == Brightness.dark
+                          ? textButtonSmallDark : textButtonSmallLight
+                        )
+                    ),
+                    if (subLocation.floors.length > 0)
+                      Icon(Icons.arrow_forward_ios_rounded,
                         color: Theme.of(context).brightness == Brightness.dark
-                            ? linkColorLight
-                            : linkColorDark)
-                    : null,
-                title: Text(subLocation.name,
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? textButtonSmallDark
-                        : textButtonSmallLight),
+                          ? linkColorLight : linkColorDark
+                      )
+                  ]
+                ),
                 subtitle: Column(
                   children: <Widget>[
                     SizedBox(
