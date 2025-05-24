@@ -35,19 +35,39 @@ class MapSearchService {
     }
   }
 
-  /// Fetches locations from ESRI POINTS OF INTEREST
-  Future<bool> fetchESRILocations(String poi) async {
-    final poi_endpoint = 'https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0';
+  /// Fetches locations from an ESRI POINTS OF INTEREST
+  /// This function is used for the Search bar.
+  Future<bool> fetchESRILocations(String searchText) async {
+    final poi_endpoint = 'https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0/query';
+    // Escape any single-quotes in the user’s text
+    final escapedSearchText = searchText.trim().replaceAll("'", "''");
+    // Build a raw SQL WHERE clause for general search
+    final whereClause = """
+      C3DName            LIKE '$escapedSearchText%'
+      OR UpdatedName     LIKE '$escapedSearchText%'
+      OR C3DCategories   LIKE '$escapedSearchText%'
+      OR Class           LIKE '$escapedSearchText%'
+      OR Subclass        LIKE '$escapedSearchText%'
+      OR C3DKeywords     LIKE '$escapedSearchText%'
+      OR UpdatedKeywords LIKE '$escapedSearchText%'
+      OR C3DDescription  LIKE '$escapedSearchText%'
+      """;
+    final params = {
+      'where': whereClause,
+      'outFields': '*',
+      'f': 'json',
+    };
+    final uri = Uri.parse(poi_endpoint).replace(queryParameters: params);
     _error = null;
     _isLoading = true;
+
     try {
-      /// fetch data
-      print('============ Fetching data from: ' + poi_endpoint + '/query?where=Subclass=\'' + poi + '\'' + '&outFields=*' + '&f=json');
-      var _response = await NetworkHelper.fetchData(
-          poi_endpoint + '/query?where=Subclass=\'' + poi + '\'' + '&outFields=*' + '&f=json');
+      print('======== Fetching GENERAL data from: ' + uri.toString());
+      var _response = await NetworkHelper.fetchData(uri.toString());
       if (_response != 'null') {
         /// parse data
-        final data = esriPOIModelFromJson(_response!);
+        print(_response);
+        final data = esriPOIModelFromJson(_response);
         _esriResults = data;
         print(_esriResults);
       } else {
@@ -57,6 +77,7 @@ class MapSearchService {
       return true;
     } catch (e) {
       _error = e.toString();
+      print('======== Error fetching GENERAL data: ' + e.toString());
       return false;
     } finally {
       _isLoading = false;

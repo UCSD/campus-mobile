@@ -33,7 +33,7 @@ class MapSearchBar extends StatelessWidget {
                     .isNotEmpty) {
                   // Don't fetch on empty text field
                   Provider.of<MapsDataProvider>(context, listen: false)
-                      .fetchLocations(false); // Text doesn't need to be sent over because it's already in the controller
+                      .fetchLocations(true); // Text doesn't need to be sent over because it's already in the controller
                 }
                 Navigator.pop(context);
               },

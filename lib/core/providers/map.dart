@@ -129,7 +129,7 @@ class MapsDataProvider extends ChangeNotifier {
         _noResults = true;
       }
     }
-    else {
+    else { // We're using ESRI
       if (await _mapSearchService.fetchESRILocations(query)) {
         _esriPOIModels = _mapSearchService.esriResults;
         print("===================== ESRI API Results: " + _esriPOIModels.toString());

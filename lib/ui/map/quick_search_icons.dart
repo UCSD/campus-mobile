@@ -111,13 +111,13 @@ class QuickSearchIcons extends StatelessWidget {
             ),
             LabeledIconButton(
               icon: Icons.local_drink,
-              text: 'Hydration',
+              text: 'Coffee Shops',
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text = 'Hydration';
+                    .text = 'Coffee';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations(false);
+                    .fetchLocations(true);
                 Navigator.pop(context);
               },
             ),

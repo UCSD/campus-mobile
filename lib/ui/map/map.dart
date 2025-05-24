@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
-
+import '../../app_styles.dart';
 import 'esri_more_results_list.dart';
 
 class Maps extends StatelessWidget {
@@ -30,7 +30,11 @@ class Maps extends StatelessWidget {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
           ..showSnackBar(
-              SnackBar(content: Text('No results found for your search.')));
+              SnackBar(content: Text('No results found for your search.',
+                style: TextStyle(color: Colors.white),
+              ),
+                  backgroundColor: darkPrimaryColor,
+                  duration: Duration(seconds: 3)));
       });
     }
     return Container();
