@@ -197,7 +197,7 @@ class DiningDetailView extends StatelessWidget {
     ]);
   }
 
-  Widget buildDivider(BuildContext context) {
+  static Widget buildDivider(BuildContext context) {
     return Divider(
       height: 10,
       color: Theme.of(context).brightness == Brightness.dark

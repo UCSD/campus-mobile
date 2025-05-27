@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/dining/dining_detail_view.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityDetailedView extends StatelessWidget {
@@ -29,48 +30,52 @@ class AvailabilityDetailedView extends StatelessWidget {
 
     // Add a tile for every floor in the subLocation list
     for (int i = 0; i < subLocation.floors.length; i++) {
-      Floor floor = subLocation.floors[i];
-      list.add(
-        ListTile(
-          title: Text(
-            "${floor.name}",
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: LOCATION_FONT_SIZE),
-          ),
-          subtitle: Column(
-            children: <Widget>[
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    (100 * percentAvailability(floor)).toInt().toString() +
-                        '% Busy',
-                    // style: TextStyle(color: Colors.black),
-                  )),
-              Align(
+    Floor floor = subLocation.floors[i];
+    list.add(
+      ListTile(
+        title: Text(
+          "${floor.name}",
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: LOCATION_FONT_SIZE),
+        ),
+        subtitle: Column(
+          children: <Widget>[
+            Align(
                 alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  height: PROGRESS_BAR_HEIGHT,
-                  width: PROGRESS_BAR_WIDTH,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(BORDER_RADIUS),
-                    child: LinearProgressIndicator(
-                      value: percentAvailability(floor) as double?,
-                      backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        setIndicatorColor(
-                          percentAvailability(floor),
-                        ),
+                child: Text(
+                  (100 * percentAvailability(floor)).toInt().toString() +
+                      '% Busy',
+                  // style: TextStyle(color: Colors.black),
+                )),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: SizedBox(
+                height: PROGRESS_BAR_HEIGHT,
+                width: PROGRESS_BAR_WIDTH,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                  child: LinearProgressIndicator(
+                    value: percentAvailability(floor) as double?,
+                    backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      setIndicatorColor(
+                        percentAvailability(floor),
                       ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
+    // Add a divider after each floor except the last one
+    if (i < subLocation.floors.length - 1) {
+      list.add(DiningDetailView.buildDivider(context));
     }
+  }
     return ListView(
       physics: BouncingScrollPhysics(),
       children: list,

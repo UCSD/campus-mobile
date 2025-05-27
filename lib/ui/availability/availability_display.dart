@@ -62,7 +62,14 @@ class AvailabilityDisplay extends StatelessWidget {
                       child: Text(
                         subLocation.name,
                         style: Theme.of(context).brightness == Brightness.dark
-                          ? textButtonSmallDark : textButtonSmallLight
+                          ? textButtonSmallDark.copyWith(
+                            color: descriptiveTextColorDark,
+                            decoration: TextDecoration.none
+                          )
+                          : textButtonSmallLight.copyWith(
+                            color: descriptiveTextColorLight,
+                            decoration: TextDecoration.none
+                          ),
                         )
                     ),
                     if (subLocation.floors.length > 0)
