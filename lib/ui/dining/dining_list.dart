@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
+import 'package:campus_mobile_experimental/ui/dining/dining_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -38,26 +39,20 @@ class DiningList extends StatelessWidget {
       final DiningModel item = listOfDiners[i];
       final tile = buildDiningTile(item, context);
       diningTiles.add(tile);
+      if (i < size - 1)
+        diningTiles.add(DiningDetailView.buildDivider(context));
     }
 
     return listSize != null
         ? ListView(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            children: ListTile.divideTiles(
-                    tiles: diningTiles,
-                    context: context,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? listTileDividerColorDark
-                        : listTileDividerColorLight)
-                .toList(),
+            children: diningTiles
           )
         : ContainerView(
             child: ListView(
               padding: const EdgeInsets.only(left: 16, right: 16),
-              children:
-                  ListTile.divideTiles(tiles: diningTiles, context: context)
-                      .toList(),
+              children: diningTiles
             ),
           );
   }

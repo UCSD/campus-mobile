@@ -64,6 +64,7 @@ class DiningDetailView extends StatelessWidget {
 
   Widget buildDirectionsButton(
       BuildContext context, prefix0.DiningModel model) {
+  final linkTextStyle = getLinkTextStyle(context);
     if (model.coordinates != null &&
         model.coordinates!.lat != null &&
         model.coordinates!.lon != null) {
@@ -72,22 +73,21 @@ class DiningDetailView extends StatelessWidget {
           children: <Widget>[
             Text(
               'Get Directions',
-              style: linkTextDark.copyWith(fontSize: 14.0),
+              style: linkTextStyle.copyWith(fontSize: 14.0),
             ),
             Row(
               children: <Widget>[
                 Icon(
                   Icons.directions_walk,
-                  color: Theme.of(context).iconTheme.color,
+                  color: linkTextStyle.color,
                 ),
                 model.distance != null
                     ? Text(
                         num.parse(model.distance!.toStringAsFixed(1))
                                 .toString() +
                             ' mi',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 14.0,
-                            ))
+                        style: linkTextStyle.copyWith(fontSize: 14.0)
+                      )
                     : Text('--'),
               ],
             ),
