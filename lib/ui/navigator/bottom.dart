@@ -63,7 +63,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
             ),
           ],
         ),
-        height: 73,
+        height: 53,
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: provider.currentIndex,

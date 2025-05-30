@@ -31,8 +31,8 @@ const Color linkTextColorDark = Color(0xFF5496BC);
 
 const Color descriptiveTextColorLight = Color(0xFF6A6B6D);
 const Color descriptiveTextColorDark = Color(0xFFA1A2A4);
-const Color listTileDividerColorLight = Color(0xFF647185);
-const Color listTileDividerColorDark = Color(0xFF647185);
+const Color listTileDividerColorLight = Color(0xFF23282F);
+const Color listTileDividerColorDark = Color(0xFF23282F);
 
 const Color systemErrorTextColorLight = Color(0xFFAC1700);
 const Color systemErrorTextColorDark = Color(0xFFAC1700);
@@ -239,6 +239,12 @@ const TextStyle heading2StyleDark = TextStyle(
   fontWeight: FontWeight.w500,
   color: Colors.white,
 );
+
+TextStyle getLinkTextStyle(BuildContext context) {
+  return Theme.of(context).brightness == Brightness.dark
+      ? linkTextDark
+      : linkTextLight;
+}
 
 const TextStyle linkTextDark = TextStyle(
     fontFamily: 'Brix Sans',
