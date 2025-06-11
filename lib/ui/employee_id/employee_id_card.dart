@@ -323,7 +323,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
             child: Text(
               "tap for easier scanning",
               textAlign: TextAlign.center,
-              style: linkTextLight.copyWith(fontSize: 14.0),
+              style: linkTextLight.copyWith(fontSize: 18.0),
             ),
           ),
           Container(
@@ -419,7 +419,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
           textAlign: TextAlign.left,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 10.0,
+            fontSize: 16.0,
             color: decideColor(Theme.of(context)),
           ),
         ),
