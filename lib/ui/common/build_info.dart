@@ -55,9 +55,14 @@ class _BuildInfoState extends State<BuildInfo> {
                   _packageInfo.buildNumber +
                   ')' +
                   (buildEnv == 'PROD' ? '' : buildEnv),
-              style: Theme.of(context).brightness == Brightness.dark
-                  ? descriptiveTextSmallDark
-                  : descriptiveTextSmallLight,
+              style: TextStyle(
+                fontFamily: 'Brix Sans',
+                fontWeight: FontWeight.w400,
+                fontSize: 16.0,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? descriptiveTextColorDark
+                    : descriptiveTextColorLight,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
