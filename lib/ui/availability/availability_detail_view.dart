@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -15,7 +16,6 @@ class AvailabilityDetailedView extends StatelessWidget {
   }
 
   Widget buildLocationsList(BuildContext context, SubLocations subLocation) {
-    // Add a tile for the subLocation name
     List<Widget> list = [];
     list.add(ListTile(
       title: Text(
@@ -27,10 +27,10 @@ class AvailabilityDetailedView extends StatelessWidget {
       ),
     ));
 
-    // Add a tile for every floor in the subLocation list
+    List<Widget> floorTiles = [];
     for (int i = 0; i < subLocation.floors.length; i++) {
       Floor floor = subLocation.floors[i];
-      list.add(
+      floorTiles.add(
         ListTile(
           title: Text(
             "${floor.name}",
@@ -45,7 +45,6 @@ class AvailabilityDetailedView extends StatelessWidget {
                   child: Text(
                     (100 * percentAvailability(floor)).toInt().toString() +
                         '% Busy',
-                    // style: TextStyle(color: Colors.black),
                   )),
               Align(
                 alignment: Alignment.centerLeft,
@@ -71,17 +70,29 @@ class AvailabilityDetailedView extends StatelessWidget {
         ),
       );
     }
-    return ListView(
-      physics: BouncingScrollPhysics(),
-      children: list,
+
+    final dividedFloorTiles = ListTile.divideTiles(
+      context: context,
+      tiles: floorTiles,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? listTileDividerColorDark
+          : listTileDividerColorLight,
+    ).toList();
+
+    list.addAll(dividedFloorTiles);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ListView(
+        physics: BouncingScrollPhysics(),
+        children: list,
+      ),
     );
   }
 
-  // Calculate the percent available
   num percentAvailability(Floor subLocationFloor) =>
       subLocationFloor.percentage;
 
-  // Color options
   setIndicatorColor(num percentage) {
     if (percentage >= .75)
       return Colors.red;
