@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'package:campus_mobile_experimental/app_styles.dart';
 
 /// This object takes a String that represents a time range in 24 hour format
