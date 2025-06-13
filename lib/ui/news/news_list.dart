@@ -111,7 +111,7 @@ class NewsList extends StatelessWidget {
                                 .format(newsItem.date.toLocal()),
                             style: TextStyle(
                               fontSize: 16.0,
-                              // fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,
                               height: 1.42,
                               color:
                                   Theme.of(context).textTheme.bodyMedium!.color,
@@ -132,7 +132,7 @@ class NewsList extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineMedium!
-                                .copyWith(height: 1.42, fontSize: 16.0),
+                                .copyWith(height: 1.42, fontSize: 18.0),
                           ),
                         ],
                       ),
@@ -143,10 +143,7 @@ class NewsList extends StatelessWidget {
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(height: 1.42, fontSize: 16.0),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16.0, height: 1.42),
                     ),
                   ],
                 ),
