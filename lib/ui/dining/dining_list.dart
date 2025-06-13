@@ -55,9 +55,13 @@ class DiningList extends StatelessWidget {
         : ContainerView(
             child: ListView(
               padding: const EdgeInsets.only(left: 16, right: 16),
-              children:
-                  ListTile.divideTiles(tiles: diningTiles, context: context)
-                      .toList(),
+              children: ListTile.divideTiles(
+                tiles: diningTiles,
+                context: context,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? listTileDividerColorDark
+                    : listTileDividerColorLight,
+              ).toList(),
             ),
           );
   }
@@ -164,7 +168,7 @@ class DiningList extends StatelessWidget {
   Widget buildIconWithDistance(DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        foregroundColor: Theme.of(context).colorScheme.background,
+        foregroundColor: linkColorLight, 
       ),
       onPressed: () {
         try {
@@ -181,6 +185,7 @@ class DiningList extends StatelessWidget {
           Icon(
             Icons.directions_walk,
             size: 28,
+            color: linkColorLight, 
           ),
           SizedBox(
               height:
@@ -190,7 +195,7 @@ class DiningList extends StatelessWidget {
                 ? (num.parse(data.distance!.toStringAsFixed(1)).toString() +
                     ' mi')
                 : '--',
-            style: TextStyle(fontSize: 12),
+            style: TextStyle(fontSize: 12, color: linkColorLight), 
           ),
         ],
       ),
