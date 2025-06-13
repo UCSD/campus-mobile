@@ -290,7 +290,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                       fontFamily: 'Brix Sans',
                       textBaseline: TextBaseline.alphabetic,
                       color: const Color(
-                          0xFF737373), // TODO: figure out why color is being ignored
+                          0xFF182B49), // Fixed color format with full opacity
                       fontWeight: FontWeight.w400,
                       fontSize: 18.0,
                       height: 1.277, // line height: 23px
