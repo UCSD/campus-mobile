@@ -35,8 +35,10 @@ class ShuttleDisplay extends StatelessWidget {
           buildCircleStopRow(context),
           SizedBox(height: 14),
           buildUpcomingArrivalInfo(context),
+          SizedBox(height: 16),
           buildNextArrivalsText(context),
-          buildNextArrivalsList()
+          SizedBox(height: 16),
+          buildNextArrivalsList(context) /// fix
         ],
       );
     }
@@ -194,11 +196,11 @@ class ShuttleDisplay extends StatelessWidget {
     );
   }
 
-  Widget buildNextArrivalsList() {
+  Widget buildNextArrivalsList(BuildContext context) {
     List<Widget> arrivalsToRender = [];
     int count = arrivingShuttles!.length - 1 < 2 ? arrivingShuttles!.length - 1 : 2;
     for (var index = 1; index <= count; index++) {
-      arrivalsToRender.add(buildArrivalTime(arrivingShuttles![index]));
+      arrivalsToRender.add(buildArrivalTime(context, arrivingShuttles![index]));
       if (index != count) {
         arrivalsToRender.add(Divider());
       }
@@ -206,7 +208,7 @@ class ShuttleDisplay extends StatelessWidget {
     return Column(children: arrivalsToRender);
   }
 
-  Widget buildArrivalTime(ArrivingShuttle shuttle) {
+  Widget buildArrivalTime(BuildContext context, ArrivingShuttle shuttle) {
     var minutesToArrival = shuttle.secondsToArrival ~/ 60;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -234,7 +236,9 @@ class ShuttleDisplay extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             "$minutesToArrival min",
-            style: TextStyle(fontSize: 16),
+            style: Theme.of(context).brightness == Brightness.light
+                ? titleMediumLight
+                : titleMediumDark,
           ),
         ),
       ],
