@@ -31,10 +31,11 @@ class ShuttleDisplay extends StatelessWidget {
       );
     } else {
       return Column(
-        /// fix
         children: [
           buildInfoRow(context),
-          buildNextArrival(),
+          SizedBox(height: 12),
+          buildNextArrival(context),
+          /// fix
           Divider(),
           whetherNextArrivals(),
           buildArrivalData()
@@ -43,83 +44,167 @@ class ShuttleDisplay extends StatelessWidget {
     }
   }
 
-  Widget buildNextArrival() {
+  Row buildInfoRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(width: 16),
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 6), // shadow only at the bottom
+              ),
+            ],
+          ),
+          child: CircleAvatar(
+            minRadius: 40,
+            backgroundColor: HexColor(arrivingShuttles!.isEmpty
+                ? noArrivalsFoundColor
+                : arrivingShuttles![0].routeColor),
+            foregroundColor: Colors.black,
+            child: Builder(
+              builder: (context) {
+                Color circleColor = HexColor(arrivingShuttles!.isEmpty
+                    ? noArrivalsFoundColor
+                    : arrivingShuttles![0].routeColor);
+                // Calculate luminance to determine the color of "?"
+                final double luminance = circleColor.computeLuminance();
+                final Color textColor = luminance > 0.5 ? Colors.black : Colors.white;
+                return Text(
+                  arrivingShuttles!.isEmpty ? "?" : arrivingShuttles![0].routeName[0],
+                  style: TextStyle(
+                    fontSize: 50,
+                    color: textColor,
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        SizedBox(width: 16),
+        Text("@",
+            style: Theme.of(context).brightness == Brightness.light
+                ? titleMediumLight
+                : titleMediumDark),
+        SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            stop.name,
+            textAlign: TextAlign.start,
+            style: Theme.of(context).brightness == Brightness.light
+                ? titleMediumLight
+                : titleMediumDark,
+            overflow: TextOverflow.visible, // optional, default wraps
+            softWrap: true, // optional, default true
+          ),
+        ),
+        SizedBox(width: 16)
+      ],
+    );
+  }
+
+  Widget buildNextArrival(BuildContext context) {
     if (arrivingShuttles!.isEmpty || arrivingShuttles == null) {
-      return Text(
-        "No arrivals found.",
-        style: TextStyle(color: Colors.grey, fontSize: 20),
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(width: 16),
+          Text("No arrivals found.",
+            style: TextStyle(
+                fontSize: 23.0,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? descriptiveTextColorLight
+                    : descriptiveTextColorDark),
+          ),
+        ],
       );
     } else {
       return Column(
         children: [
-          Text(
-            arrivingShuttles![0].routeName,
-            style: TextStyle(fontSize: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 16),
+              Text(
+                arrivingShuttles![0].routeName,
+                style: TextStyle(
+                  fontSize: 23.0,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
+                ),
+              ),
+            ],
           ),
-          buildTimetoArrivalText()
+          SizedBox(width: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 16),
+              Text(
+                "Arriving in: ",
+                style: TextStyle(
+                  fontSize: 23.0,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
+                ),
+              ),
+              buildTimeToArrivalText(context),
+            ],
+          )
         ],
       );
     }
   }
 
-  Widget buildTimetoArrivalText() {
-    var minutesToArrival = arrivingShuttles![0].secondsToArrival~/ 60;
+  Widget buildTimeToArrivalText(BuildContext context) {
+    var minutesToArrival = arrivingShuttles![0].secondsToArrival ~/ 60;
     return Text(
-      "Arriving in: $minutesToArrival minutes",
-      style: TextStyle(color: Colors.grey, fontSize: 20),
+      "$minutesToArrival minutes",
+      style: Theme.of(context).brightness == Brightness.light
+          ? titleMediumLight
+          : titleMediumDark,
     );
   }
 
-  Row buildInfoRow(BuildContext context) {
+  Widget whetherNextArrivals() {
+    if (arrivingShuttles!.length <= 1) return Text("");
     return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: 16),
-            CircleAvatar(
-              minRadius: 40,
-              backgroundColor: HexColor(arrivingShuttles!.isEmpty
-                  ? "#CCCCCC"
-                  : arrivingShuttles![0].routeColor),
-              foregroundColor: Colors.black,
-              child: Text(
-                arrivingShuttles!.isEmpty
-                    ? "?"
-                    : arrivingShuttles![0].routeName[0],
-                style: TextStyle(fontSize: 50),
-              ),
-            ),
-            SizedBox(width: 16),
-            Text("@",
-                style: Theme.of(context).brightness == Brightness.light
-                    ? titleMediumLight
-                    : titleMediumDark
-            ),
-            SizedBox(width: 8),
-            Expanded(
-              child: Text(stop.name,
-                textAlign: TextAlign.start,
-                style: Theme.of(context).brightness == Brightness.light
-                    ? titleMediumLight
-                    : titleMediumDark,
-                overflow: TextOverflow.visible, // optional, default wraps
-                softWrap: true, // optional, default true
-              ),
-            ),
-            SizedBox(width: 16)
-          ],
-        );
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Text(
+            "Next Arrivals",
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget buildArrivalData() {
     List<Widget> arrivalsToRender = [];
-    for (var index = 1; index < arrivingShuttles!.length && index <= 2; index++) {
+    for (var index = 1;
+        index < arrivingShuttles!.length && index <= 2;
+        index++) {
       arrivalsToRender.add(buildArrivingShuttle(arrivingShuttles![index]));
     }
     return Column(children: arrivalsToRender);
   }
 
   Widget buildArrivingShuttle(ArrivingShuttle shuttle) {
-    var minutesToArrival = shuttle.secondsToArrival~/ 60;
+    var minutesToArrival = shuttle.secondsToArrival ~/ 60;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -159,22 +244,5 @@ class ShuttleDisplay extends StatelessWidget {
       str += "Route: ${element.routeId} - ${element.routeName}\n";
     });
     return str;
-  }
-
-  Widget whetherNextArrivals() {
-    if (arrivingShuttles!.length <= 1) return Text("");
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Text(
-            "Next Arrivals",
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ],
-    );
   }
 }
