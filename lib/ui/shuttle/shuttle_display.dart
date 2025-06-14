@@ -32,19 +32,17 @@ class ShuttleDisplay extends StatelessWidget {
     } else {
       return Column(
         children: [
-          buildInfoRow(context),
-          SizedBox(height: 12),
-          buildNextArrival(context),
-          /// fix
-          Divider(),
-          whetherNextArrivals(),
-          buildArrivalData()
+          buildCircleStopRow(context),
+          SizedBox(height: 14),
+          buildUpcomingArrivalInfo(context),
+          buildNextArrivalsText(context),
+          buildNextArrivalsList()
         ],
       );
     }
   }
 
-  Row buildInfoRow(BuildContext context) {
+  Row buildCircleStopRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -108,7 +106,7 @@ class ShuttleDisplay extends StatelessWidget {
     );
   }
 
-  Widget buildNextArrival(BuildContext context) {
+  Widget buildUpcomingArrivalInfo(BuildContext context) {
     if (arrivingShuttles!.isEmpty || arrivingShuttles == null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -176,7 +174,8 @@ class ShuttleDisplay extends StatelessWidget {
     );
   }
 
-  Widget whetherNextArrivals() {
+  ////////////////////////// Next Arrivals Section //////////////////////////
+  Widget buildNextArrivalsText(BuildContext context) {
     if (arrivingShuttles!.length <= 1) return Text("");
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -186,24 +185,28 @@ class ShuttleDisplay extends StatelessWidget {
           child: Text(
             "Next Arrivals",
             textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 20),
+            style: Theme.of(context).brightness == Brightness.light
+                ? titleMediumLight
+                : titleMediumDark,
           ),
         ),
       ],
     );
   }
 
-  Widget buildArrivalData() {
+  Widget buildNextArrivalsList() {
     List<Widget> arrivalsToRender = [];
-    for (var index = 1;
-        index < arrivingShuttles!.length && index <= 2;
-        index++) {
-      arrivalsToRender.add(buildArrivingShuttle(arrivingShuttles![index]));
+    int count = arrivingShuttles!.length - 1 < 2 ? arrivingShuttles!.length - 1 : 2;
+    for (var index = 1; index <= count; index++) {
+      arrivalsToRender.add(buildArrivalTime(arrivingShuttles![index]));
+      if (index != count) {
+        arrivalsToRender.add(Divider());
+      }
     }
     return Column(children: arrivalsToRender);
   }
 
-  Widget buildArrivingShuttle(ArrivingShuttle shuttle) {
+  Widget buildArrivalTime(ArrivingShuttle shuttle) {
     var minutesToArrival = shuttle.secondsToArrival ~/ 60;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -238,11 +241,11 @@ class ShuttleDisplay extends StatelessWidget {
     );
   }
 
-  String getArrivingShuttles() {
-    String str = "";
-    arrivingShuttles!.forEach((element) {
-      str += "Route: ${element.routeId} - ${element.routeName}\n";
-    });
-    return str;
-  }
+  // String getArrivingShuttles() {
+  //   String str = "";
+  //   arrivingShuttles!.forEach((element) {
+  //     str += "Route: ${element.routeId} - ${element.routeName}\n";
+  //   });
+  //   return str;
+  // }
 }
