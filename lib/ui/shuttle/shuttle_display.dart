@@ -3,6 +3,8 @@ import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:flutter/material.dart';
 
+import '../../app_styles.dart';
+
 class ShuttleDisplay extends StatelessWidget {
   ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles})
       : super(key: key);
@@ -29,8 +31,9 @@ class ShuttleDisplay extends StatelessWidget {
       );
     } else {
       return Column(
+        /// fix
         children: [
-          buildInfoRow(),
+          buildInfoRow(context),
           buildNextArrival(),
           Divider(),
           whetherNextArrivals(),
@@ -67,12 +70,11 @@ class ShuttleDisplay extends StatelessWidget {
     );
   }
 
-  Padding buildInfoRow() {
-    return Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Row buildInfoRow(BuildContext context) {
+    return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(width: 16),
             CircleAvatar(
               minRadius: 40,
               backgroundColor: HexColor(arrivingShuttles!.isEmpty
@@ -86,24 +88,26 @@ class ShuttleDisplay extends StatelessWidget {
                 style: TextStyle(fontSize: 50),
               ),
             ),
+            SizedBox(width: 16),
             Text("@",
-                style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.grey,
-                )),
-            Container(
-                alignment: Alignment.center,
-                width: 80.0,
-                height: 80.0,
-                padding: EdgeInsets.all(5.0),
-                decoration: new BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    shape: BoxShape.circle),
-                child: Text(stop.name,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12, color: Colors.grey))),
+                style: Theme.of(context).brightness == Brightness.light
+                    ? titleMediumLight
+                    : titleMediumDark
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(stop.name,
+                textAlign: TextAlign.start,
+                style: Theme.of(context).brightness == Brightness.light
+                    ? titleMediumLight
+                    : titleMediumDark,
+                overflow: TextOverflow.visible, // optional, default wraps
+                softWrap: true, // optional, default true
+              ),
+            ),
+            SizedBox(width: 16)
           ],
-        ));
+        );
   }
 
   Widget buildArrivalData() {
