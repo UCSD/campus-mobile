@@ -51,8 +51,10 @@ class _ShuttleCardState extends State<ShuttleCard> {
       actionButtons: [
         ActionLink(
             buttonText: 'MANAGE SHUTTLE STOPS',
-            onPressed: () =>
-                Navigator.pushNamed(context, RoutePaths.ManageShuttleView)),
+            onPressed: () {
+                  setState(() {_currentPage = 0;});
+                  Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+                }),
       ],
     );
   }
