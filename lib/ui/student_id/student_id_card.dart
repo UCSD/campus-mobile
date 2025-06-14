@@ -264,7 +264,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               decoration: TextDecoration.underline,
-              fontSize: ScalingUtility.horizontalSafeBlock * 2.5,
+              fontSize: ScalingUtility.horizontalSafeBlock * 3.8,
               color: Theme.of(context).brightness == Brightness.dark
                   ? linkColorDark
                   : linkColorLight,
