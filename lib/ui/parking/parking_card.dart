@@ -21,7 +21,7 @@ class _ParkingCardState extends State<ParkingCard> {
 
   late ParkingDataProvider _parkingDataProvider;
 
-  final _controller = PageController();
+  final _controller = PageController(viewportFraction: 0.92);
   int _currentPage = 0;
 
   @override
@@ -87,14 +87,32 @@ class _ParkingCardState extends State<ParkingCard> {
       return Column(
         children: <Widget>[
           Expanded(
-            child: PageView(
+            child: PageView.builder(
               controller: _controller,
+              itemCount: selectedLotsViews.length,
+              physics: BouncingScrollPhysics(),
               onPageChanged: (index) {
                 setState(() {
                   _currentPage = index;
                 });
               },
-              children: selectedLotsViews,
+              itemBuilder: (context, index) {
+                return AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    double value = 1.0;
+                    if (_controller.position.haveDimensions) {
+                      value = ((_controller.page ?? _controller.initialPage) - index).toDouble();
+                      value = (1 - (value.abs() * 0.5)).clamp(0.5, 1.0);
+                    }
+                    return Transform.scale(
+                      scale: value,
+                      child: child,
+                    );
+                  },
+                  child: selectedLotsViews[index],
+                );
+              },
             ),
           ),
           DotsIndicator(

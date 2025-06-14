@@ -26,13 +26,22 @@ class _SpotTypesViewState extends State<SpotTypesView> {
   Widget createListWidget(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: ListView(
-          children: ListTile.divideTiles(
-            tiles: createList(context),
-            context: context,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? listTileDividerColorDark
-                : listTileDividerColorLight,
-          ).toList(),
+          children: [
+            for (int i = 0; i < createList(context).length; i++) ...[
+              createList(context)[i],
+              if (i != createList(context).length - 1)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Divider(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? listTileDividerColorDark
+                        : listTileDividerColorLight,
+                    thickness: 1,
+                    height: 0,
+                  ),
+                ),
+            ]
+          ],
         ),
       );
 
