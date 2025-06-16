@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 class DiningDetailView extends StatelessWidget {
   const DiningDetailView({Key? key, required this.data}) : super(key: key);
   final prefix0.DiningModel data;
+
   @override
   Widget build(BuildContext context) {
     return ContainerView(
@@ -26,16 +27,14 @@ class DiningDetailView extends StatelessWidget {
     );
   }
 
-  List<Widget> buildDetailView(
-      BuildContext context, prefix0.DiningModel model) {
+  // Contains all the widgets that make up the Dinning detail view.
+  List<Widget> buildDetailView(BuildContext context, prefix0.DiningModel model) {
     return [
-      Text(
-        model.name,
+      Text(model.name,
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      Text(
-        model.description,
+      Text(model.description,
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.bodySmall,
       ),
@@ -68,117 +67,7 @@ class DiningDetailView extends StatelessWidget {
     ];
   }
 
-  Widget buildDirectionsButton(
-      BuildContext context, prefix0.DiningModel model) {
-    if (model.coordinates != null &&
-        model.coordinates!.lat != null &&
-        model.coordinates!.lon != null) {
-      return TextButton(
-        child: Row(
-          children: <Widget>[
-            Text(
-              'Get Directions',
-              style: linkTextDark.copyWith(fontSize: 18.0),
-            ),
-            Row(
-              children: <Widget>[
-                Icon(
-                  Icons.directions_walk,
-                  color: linkColorLight,
-                  size: 32,
-                ),
-                model.distance != null
-                    ? Text(
-                        num.parse(model.distance!.toStringAsFixed(1))
-                                .toString() +
-                            ' mi',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 18.0,
-                              color: linkColorLight, 
-                            ))
-                    : Text('--', style: TextStyle(color: linkColorLight)),
-              ],
-            ),
-          ],
-        ),
-        onPressed: () {
-          try {
-            launch(
-                'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates!.lat},${model.coordinates!.lon}&travelmode=walking',
-                forceSafariVC: true);
-          } catch (e) {
-            // an error occurred, do nothing
-          }
-        },
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.all(0.0),
-        ),
-      );
-    } else {
-      return Text('Directions not available.',
-          style: Theme.of(context).textTheme.bodySmall);
-    }
-  }
-
-  Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
-    if (model.url != null && model.url != '') {
-      return TextButton(
-        child: Text('Visit Website'),
-        onPressed: () {
-          try {
-            launch(model.url!, forceSafariVC: true);
-          } catch (e) {
-            // an error occurred, do nothing
-          }
-        },
-        style: TextButton.styleFrom(
-          backgroundColor: actionButtonBackgroundColor,
-          foregroundColor: lightPrimaryColor,
-          padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-        ),
-      );
-    } else
-      return Container();
-  }
-
-  Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
-    if (model.menuWebsite != null && model.menuWebsite!.isNotEmpty) {
-      return TextButton(
-        child: Row(
-          children: [
-            Text('View Menu'),
-            SizedBox(width: 5),
-            Icon(Icons.open_in_new, size: 16),
-          ],
-        ),
-        onPressed: () {
-          try {
-            launch(model.menuWebsite!, forceSafariVC: true);
-          } catch (e) {
-            // an error occurred, do nothing
-          }
-        },
-        style: TextButton.styleFrom(
-          backgroundColor: Color(0xFF00629B),
-          foregroundColor: Colors.white,
-          padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
-    if (model.meals != null) {
-      return DiningMenuList(
-        model: model,
-      );
-    } else {
-      return Container();
-    }
-  }
-
+  ///////////// Hours and Special Hours Section /////////////
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       SizedBox(height: 20),
@@ -246,6 +135,7 @@ class DiningDetailView extends StatelessWidget {
     );
   }
 
+  ///////////// Payment Options Section /////////////
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions.join(', ');
     return Container(
@@ -293,6 +183,120 @@ class DiningDetailView extends StatelessWidget {
   }
 }
 
+///////////// Location Section /////////////
+Widget buildDirectionsButton(
+    BuildContext context, prefix0.DiningModel model) {
+  if (model.coordinates != null &&
+      model.coordinates!.lat != null &&
+      model.coordinates!.lon != null) {
+    return TextButton(
+      child: Row(
+        children: <Widget>[
+          Text(
+            'Get Directions',
+            style: linkTextDark.copyWith(fontSize: 18.0),
+          ),
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.directions_walk,
+                color: linkColorLight,
+                size: 32,
+              ),
+              model.distance != null
+                  ? Text(
+                  num.parse(model.distance!.toStringAsFixed(1))
+                      .toString() +
+                      ' mi',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontSize: 18.0,
+                    color: linkColorLight,
+                  ))
+                  : Text('--', style: TextStyle(color: linkColorLight)),
+            ],
+          ),
+        ],
+      ),
+      onPressed: () {
+        try {
+          launch(
+              'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates!.lat},${model.coordinates!.lon}&travelmode=walking',
+              forceSafariVC: true);
+        } catch (e) {
+          // an error occurred, do nothing
+        }
+      },
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.all(0.0),
+      ),
+    );
+  } else {
+    return Text('Directions not available.',
+        style: Theme.of(context).textTheme.bodySmall);
+  }
+}
+
+///////////// Website and Menu Section /////////////
+Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
+  if (model.url != null && model.url != '') {
+    return TextButton(
+      child: Text('Visit Website'),
+      onPressed: () {
+        try {
+          launch(model.url!, forceSafariVC: true);
+        } catch (e) {
+          // an error occurred, do nothing
+        }
+      },
+      style: TextButton.styleFrom(
+        backgroundColor: actionButtonBackgroundColor,
+        foregroundColor: lightPrimaryColor,
+        padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+      ),
+    );
+  } else
+    return Container();
+}
+
+Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
+  if (model.menuWebsite != null && model.menuWebsite!.isNotEmpty) {
+    return TextButton(
+      child: Row(
+        children: [
+          Text('View Menu'),
+          SizedBox(width: 5),
+          Icon(Icons.open_in_new, size: 16),
+        ],
+      ),
+      onPressed: () {
+        try {
+          launch(model.menuWebsite!, forceSafariVC: true);
+        } catch (e) {
+          // an error occurred, do nothing
+        }
+      },
+      style: TextButton.styleFrom(
+        backgroundColor: Color(0xFF00629B),
+        foregroundColor: Colors.white,
+        padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+      ),
+    );
+  } else {
+    return Container();
+  }
+}
+
+Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
+  if (model.meals != null) {
+    return DiningMenuList(
+      model: model,
+    );
+  } else {
+    return Container();
+  }
+}
+
+// Feeds the "Hours" section of the Dining Detail View.
 class HoursOfDay extends StatelessWidget {
   final int? weekday;
   final prefix0.DiningModel? model;
