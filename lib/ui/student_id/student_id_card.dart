@@ -138,11 +138,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   SizedBox(height: ScalingUtility.verticalSafeBlock * 0.5),
                   _buildCollegeName(profileModel),
 
-                  Padding(
-                    padding:
-                        EdgeInsets.all(ScalingUtility.verticalSafeBlock * 0.9),
-                  ),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -526,7 +521,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   Widget _buildClassificationTitle(StudentIdProfileModel profileModel) => Text(
         profileModel.classificationType,
         style: TextStyle(
-          fontSize: ScalingUtility.horizontalSafeBlock * 3.5,
+          fontSize: ScalingUtility.horizontalSafeBlock * 4.0,
         ),
       );
 
