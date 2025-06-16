@@ -176,7 +176,7 @@ class ShuttleDisplay extends StatelessWidget {
 
   ////////////////////////// Next Arrivals Section //////////////////////////
   Widget buildNextArrivalsText(BuildContext context) {
-    if (arrivingShuttles!.length <= 1) return Text("");
+    if (arrivingShuttles!.length <= 1) return SizedBox.shrink();
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
