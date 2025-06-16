@@ -26,26 +26,37 @@ class DiningDetailView extends StatelessWidget {
     );
   }
 
-  List<Widget> buildDetailView(
-      BuildContext context, prefix0.DiningModel model) {
+  List<Widget> buildDetailView(BuildContext context, prefix0.DiningModel model) {
     return [
-      Text(
-        model.name,
-        textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.titleMedium,
+      Row(
+        children: [
+          // Vendor Logo
+          Icon(Icons.restaurant, color: Theme.of(context).primaryColor),
+          SizedBox(width: 12),
+          // Vendor Name
+          Text(
+            model.name,
+            textAlign: TextAlign.start,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ],
       ),
+      // Vendor Description
       Text(
         model.description,
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.bodySmall,
       ),
+      // Vendor hours
       buildHours(context, model),
+      // Vendor Special Hours
       if (model.specialHours != null) buildSpecialHours(context, model),
+      // Vendor Payment Options
       buildPaymentOptions(context, model),
       //buildPictures(model),
       SizedBox(height: 10),
-      Text(
-        'Location',
+      // Vendor Location
+      Text('Location',
         style: Theme.of(context).textTheme.titleMedium,
       ),
       Transform.translate(
