@@ -41,8 +41,10 @@ class _ShuttleCardState extends State<ShuttleCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<ShuttleDataProvider>(context, listen: false)
-          .fetchStops(true),
+     reload: () {
+            setState(() {_currentPage = 0;});
+            Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(true);
+          },
       isLoading: _shuttleCardDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _shuttleCardDataProvider.error,
@@ -51,8 +53,10 @@ class _ShuttleCardState extends State<ShuttleCard> {
       actionButtons: [
         ActionLink(
             buttonText: 'MANAGE SHUTTLE STOPS',
-            onPressed: () =>
-                Navigator.pushNamed(context, RoutePaths.ManageShuttleView)),
+            onPressed: () {
+                  setState(() {_currentPage = 0;});
+                  Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+                }),
       ],
     );
   }
@@ -61,12 +65,21 @@ class _ShuttleCardState extends State<ShuttleCard> {
       Map<int, List<ArrivingShuttle>> arrivalsToRender) {
     List<Widget> renderList = [];
     try {
-      if (_shuttleCardDataProvider.closestStop != null) {
-        renderList.add(ShuttleDisplay(
-            stop: _shuttleCardDataProvider.closestStop!,
-            arrivingShuttles:
-                arrivalsToRender[_shuttleCardDataProvider.closestStop!.id]));
+      // Initialize first shuttle display with arrival information
+      if (stopsToRender.isEmpty) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 42.0),
+          child: Center(child: Text('No shuttles found. Please add a stop.')),
+        );
       }
+
+      // TODO: Reuse if you want to show the closest stop, let's say in the "Manage Shuttle Stops" screen, delete if not needed
+      // if (_shuttleCardDataProvider.closestStop != null) {
+      //   renderList.add(ShuttleDisplay(
+      //       stop: _shuttleCardDataProvider.closestStop!,
+      //       arrivingShuttles:
+      //           arrivalsToRender[_shuttleCardDataProvider.closestStop!.id]));
+      // }
 
       for (var i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(
@@ -74,16 +87,6 @@ class _ShuttleCardState extends State<ShuttleCard> {
             arrivingShuttles: arrivalsToRender[
                 _shuttleCardDataProvider.stopsToRender[i].id]));
       }
-
-      // Initialize first shuttle display with arrival information
-      if (renderList.isEmpty) {
-        // if (stopsToRender.isEmpty) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 42.0),
-          child: Center(child: Text('No shuttles found. Please add a stop.')),
-        );
-      }
-
       return Column(
         children: <Widget>[
           Flexible(
