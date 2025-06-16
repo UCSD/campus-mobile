@@ -33,12 +33,12 @@ class ShuttleDisplay extends StatelessWidget {
       return Column(
         children: [
           buildCircleStopRow(context),
-          SizedBox(height: 14),
+          SizedBox(height: 16),
           buildUpcomingArrivalInfo(context),
           SizedBox(height: 16),
           buildNextArrivalsText(context),
           SizedBox(height: 16),
-          buildNextArrivalsList(context) /// fix
+          buildNextArrivalsList(context)
         ],
       );
     }
@@ -93,8 +93,7 @@ class ShuttleDisplay extends StatelessWidget {
                 : titleMediumDark),
         SizedBox(width: 8),
         Expanded(
-          child: Text(
-            stop.name,
+          child: Text(stop.name,
             textAlign: TextAlign.start,
             style: Theme.of(context).brightness == Brightness.light
                 ? titleMediumLight
@@ -131,8 +130,7 @@ class ShuttleDisplay extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(width: 16),
-              Text(
-                arrivingShuttles![0].routeName,
+              Text(arrivingShuttles![0].routeName,
                 style: TextStyle(
                   fontSize: 23.0,
                   fontWeight: FontWeight.w400,

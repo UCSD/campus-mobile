@@ -41,8 +41,10 @@ class _ShuttleCardState extends State<ShuttleCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-      reload: () => Provider.of<ShuttleDataProvider>(context, listen: false)
-          .fetchStops(true),
+     reload: () {
+            setState(() {_currentPage = 0;});
+            Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(true);
+          },
       isLoading: _shuttleCardDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _shuttleCardDataProvider.error,
@@ -84,7 +86,6 @@ class _ShuttleCardState extends State<ShuttleCard> {
             arrivingShuttles: arrivalsToRender[
                 _shuttleCardDataProvider.stopsToRender[i].id]));
       }
-
       return Column(
         children: <Widget>[
           Flexible(
