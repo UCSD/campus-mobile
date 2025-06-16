@@ -1,10 +1,10 @@
 import 'package:campus_mobile_experimental/core/models/dining.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
-import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_menu_list.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DiningDetailView extends StatelessWidget {
@@ -28,13 +28,16 @@ class DiningDetailView extends StatelessWidget {
   }
 
   // Contains all the widgets that make up the Dinning detail view.
-  List<Widget> buildDetailView(BuildContext context, prefix0.DiningModel model) {
+  List<Widget> buildDetailView(
+      BuildContext context, prefix0.DiningModel model) {
     return [
-      Text(model.name,
+      Text(
+        model.name,
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      Text(model.description,
+      Text(
+        model.description,
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.bodySmall,
       ),
@@ -71,8 +74,7 @@ class DiningDetailView extends StatelessWidget {
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       SizedBox(height: 20),
-      Text(
-        "Hours",
+      Text("Hours",
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.titleMedium,
       ),
@@ -184,34 +186,41 @@ class DiningDetailView extends StatelessWidget {
 }
 
 ///////////// Location Section /////////////
-Widget buildDirectionsButton(
-    BuildContext context, prefix0.DiningModel model) {
+Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
   if (model.coordinates != null &&
       model.coordinates!.lat != null &&
       model.coordinates!.lon != null) {
     return TextButton(
       child: Row(
         children: <Widget>[
-          Text(
-            'Get Directions',
-            style: linkTextDark.copyWith(fontSize: 18.0),
+          Text('Get Directions',
+            style: linkTextDark.copyWith(
+                fontSize: 18.0,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? linkColorLight
+                    : linkColorDark,
+            ),
           ),
+          SizedBox(width: 6),
           Row(
             children: <Widget>[
               Icon(
                 Icons.directions_walk,
-                color: linkColorLight,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? linkColorLight
+                    : linkColorDark,
                 size: 32,
               ),
               model.distance != null
                   ? Text(
-                  num.parse(model.distance!.toStringAsFixed(1))
-                      .toString() +
-                      ' mi',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 18.0,
-                    color: linkColorLight,
-                  ))
+                      num.parse(model.distance!.toStringAsFixed(1)).toString() +
+                          ' mi',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 18.0,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? linkColorLight
+                            : linkColorDark,
+                          ))
                   : Text('--', style: TextStyle(color: linkColorLight)),
             ],
           ),
@@ -351,9 +360,25 @@ class HoursOfDay extends StatelessWidget {
             : model!.regularHours.sun;
         break;
     }
+
     /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
     correct it to look right.*/
     if (theHours == 'Closed-Closed') theHours = 'Closed';
+
+    // Determine the hours' text
+    final String hoursText = (theHours != null && theHours.contains('Closed')) || theHours == 'Open 24/7'
+        ? theHours!
+        : (formattedTimeRange(theHours) ?? theHours!);
+    // Determine the hours' text style
+    final TextStyle hoursTextStyle = weekday == DateTime.now().weekday
+        ?  TextStyle(
+              fontSize: 17.0,
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : darkPrimaryColor2)
+        : Theme.of(context).textTheme.bodySmall!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -368,65 +393,36 @@ class HoursOfDay extends StatelessWidget {
                       ? buildGreenDot(theHours!)
                       : Container(width: 10),
                   SizedBox(width: 5),
-                  Text(
-                    '$theDay ',
+                  // "Monday" - Bold if today is Monday.
+                  Text('$theDay ',
                     style: weekday == DateTime.now().weekday
-                        ? Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(fontWeight: FontWeight.bold)
+                        ? TextStyle(
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.w700,
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : darkPrimaryColor2)
                         : Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
             ),
-            Flexible(
-              flex: 5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  RegExp(r"\b[0-9]{2}").allMatches(theHours!).length != 2
-                      ? Text(
-                          theHours,
-                          style: weekday == DateTime.now().weekday
-                              ? Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(fontWeight: FontWeight.bold)
-                              : Theme.of(context).textTheme.bodySmall,
-                        )
-                      : (weekday == DateTime.now().weekday
-                          ? DefaultTextStyle(
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontWeight: FontWeight.bold),
-                              child: TimeRangeWidget(
-                                time: theHours
-                                    .replaceAllMapped(
-                                        RegExp(r"\b[0-9]{2}"),
-                                        (match) => "${match.group(0)}:")
-                                    .replaceAllMapped(
-                                        RegExp(r"-"),
-                                        (match) => " ${match.group(0)} "),
-                              ),
-                            )
-                          : TimeRangeWidget(
-                              time: theHours
-                                  .replaceAllMapped(
-                                      RegExp(r"\b[0-9]{2}"),
-                                      (match) => "${match.group(0)}:")
-                                  .replaceAllMapped(
-                                      RegExp(r"-"),
-                                      (match) => " ${match.group(0)} "),
-                            )),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+              // Display the hours text i.e. 9:30 AM - 4:30 PM (using the finals above)
+              Flexible(
+                flex: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(hoursText,
+                      style: hoursTextStyle,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ]
+      );
   }
 
   Widget buildGreenDot(String hours) {
@@ -468,5 +464,29 @@ class HoursOfDay extends StatelessWidget {
       height: 10,
       decoration: BoxDecoration(shape: BoxShape.circle, color: color),
     );
+  }
+}
+
+/// Returns time in the format of HH:MM AM - HH:MM PM
+String? formattedTimeRange(String? theHours) {
+  if (theHours == null) return theHours;
+  final match = RegExp(r'^(\d{2})(\d{2})-(\d{2})(\d{2})$').firstMatch(theHours);
+  if (match == null) return theHours;
+
+  try {
+    final now = DateTime.now();
+    final startTime = DateTime(
+      now.year, now.month, now.day,
+      int.parse(match.group(1)!),
+      int.parse(match.group(2)!),
+    );
+    final endTime = DateTime(
+      now.year, now.month, now.day,
+      int.parse(match.group(3)!),
+      int.parse(match.group(4)!),
+    );
+    return '${DateFormat.jm().format(startTime)} - ${DateFormat.jm().format(endTime)}';
+  } catch (_) {
+    return theHours;
   }
 }
