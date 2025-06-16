@@ -315,6 +315,7 @@ const IconThemeData darkIconTheme = IconThemeData(color: darkPrimaryColor2);
 // Unselected / inactive colors
 const Color unselectedIconLightColor = Color(0xFF6A6B6D);
 const Color unselectedIconDarkColor = Color(0xFF6A6B6D);
+const noArrivalsFoundColor = "#747678";
 
 // Colors for text on buttons using light theme
 const TextTheme lightThemeText = TextTheme(

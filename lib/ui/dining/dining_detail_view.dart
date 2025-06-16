@@ -48,13 +48,19 @@ class DiningDetailView extends StatelessWidget {
         'Location',
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      buildDirectionsButton(context, model),
-      Row(
-        children: [
-          buildWebsiteButton(context, model),
-          SizedBox(width: 15),
-          buildMenuButton(context, model),
-        ],
+      Transform.translate(
+        offset: const Offset(0, -15),
+        child: buildDirectionsButton(context, model),
+      ),
+      Transform.translate(
+        offset: const Offset(0, -12),
+        child: Row(
+          children: [
+            buildWebsiteButton(context, model),
+            SizedBox(width: 15),
+            buildMenuButton(context, model),
+          ],
+        ),
       ),
       // TODO: removed the menu on March 25, 2025
       //SizedBox(height: 20),
@@ -72,13 +78,14 @@ class DiningDetailView extends StatelessWidget {
           children: <Widget>[
             Text(
               'Get Directions',
-              style: linkTextDark.copyWith(fontSize: 14.0),
+              style: linkTextDark.copyWith(fontSize: 18.0),
             ),
             Row(
               children: <Widget>[
                 Icon(
                   Icons.directions_walk,
-                  color: Theme.of(context).iconTheme.color,
+                  color: linkColorLight,
+                  size: 32,
                 ),
                 model.distance != null
                     ? Text(
@@ -86,9 +93,10 @@ class DiningDetailView extends StatelessWidget {
                                 .toString() +
                             ' mi',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 14.0,
+                              fontSize: 18.0,
+                              color: linkColorLight, 
                             ))
-                    : Text('--'),
+                    : Text('--', style: TextStyle(color: linkColorLight)),
               ],
             ),
           ],
@@ -357,7 +365,7 @@ class HoursOfDay extends StatelessWidget {
                       : Container(width: 10),
                   SizedBox(width: 5),
                   Text(
-                    '$theDay: ',
+                    '$theDay ',
                     style: weekday == DateTime.now().weekday
                         ? Theme.of(context)
                             .textTheme
@@ -383,17 +391,31 @@ class HoursOfDay extends StatelessWidget {
                                   ?.copyWith(fontWeight: FontWeight.bold)
                               : Theme.of(context).textTheme.bodySmall,
                         )
-                      : TimeRangeWidget(
-                          time: theHours
-                              .replaceAllMapped(
-                                  //Add colon in between each time
-                                  RegExp(r"\b[0-9]{2}"),
-                                  (match) => "${match.group(0)}:")
-                              .replaceAllMapped(
-                                  //Add space around hyphen
-                                  RegExp(r"-"),
-                                  (match) => " ${match.group(0)} "),
-                        ),
+                      : (weekday == DateTime.now().weekday
+                          ? DefaultTextStyle(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                              child: TimeRangeWidget(
+                                time: theHours
+                                    .replaceAllMapped(
+                                        RegExp(r"\b[0-9]{2}"),
+                                        (match) => "${match.group(0)}:")
+                                    .replaceAllMapped(
+                                        RegExp(r"-"),
+                                        (match) => " ${match.group(0)} "),
+                              ),
+                            )
+                          : TimeRangeWidget(
+                              time: theHours
+                                  .replaceAllMapped(
+                                      RegExp(r"\b[0-9]{2}"),
+                                      (match) => "${match.group(0)}:")
+                                  .replaceAllMapped(
+                                      RegExp(r"-"),
+                                      (match) => " ${match.group(0)} "),
+                            )),
                 ],
               ),
             ),

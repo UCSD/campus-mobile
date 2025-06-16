@@ -10,7 +10,6 @@ class AvailabilityDisplay extends StatelessWidget {
     required this.model,
   }) : super(key: key);
 
-  /// MODELS
   final AvailabilityModel model;
 
   @override
@@ -26,118 +25,120 @@ class AvailabilityDisplay extends StatelessWidget {
   Widget buildLocationTitle(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      margin: EdgeInsets.only(
-        bottom: 8,
-      ),
+      margin: EdgeInsets.only(bottom: 8),
       child: Text(
         model.name.toUpperCase(),
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.normal,
-            ),
+          fontWeight: FontWeight.normal,
+        ),
       ),
     );
   }
 
   Widget buildAvailabilityBars(BuildContext context) {
-    List<Widget> locations = [];
-    // add any children the model contains to the listview
-    if (model.subLocations.isNotEmpty) {
-      for (SubLocations subLocation in model.subLocations) {
-        locations.add(
-          SizedBox(
-            height: 79,
-            child: Center(
-              child: ListTile(
-                horizontalTitleGap: 0,
-                contentPadding: EdgeInsets.all(0),
-                onTap: () => subLocation.floors.length > 0
-                    ? Navigator.pushNamed(
-                        context, RoutePaths.AvailabilityDetailedView,
-                        arguments: subLocation)
-                    : print('_handleIconClick: no subLocations'),
-                visualDensity: VisualDensity.compact,
-                trailing: subLocation.floors.length > 0
-                    ? Icon(Icons.arrow_forward_ios_rounded,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? linkColorLight
-                            : linkColorDark)
-                    : null,
-                title: Text(subLocation.name,
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? textButtonSmallDark
-                        : textButtonSmallLight),
-                subtitle: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          (100 * percentAvailability(subLocation))
-                                  .toInt()
-                                  .toString() +
-                              '% Busy',
-                          style: Theme.of(context).brightness == Brightness.dark
-                              ? textSmallMoreInfoDark
-                              : textSmallMoreInfoLight,
-                        )),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        height: 12,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(BORDER_RADIUS),
-                          child: LinearProgressIndicator(
-                            value: percentAvailability(subLocation) as double?,
-                            backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              setIndicatorColor(
-                                percentAvailability(subLocation),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      }
-    }
-
-    // if no children, return an error container
-    else {
+    if (model.subLocations.isEmpty) {
       return Container(
         alignment: Alignment.center,
+        padding: EdgeInsets.only(top: DATA_UNAVAILABLE_TOP_PADDING),
         child: Text(
           "Data Unavailable",
           style: TextStyle(fontSize: LOCATION_FONT_SIZE),
         ),
-        padding: EdgeInsets.only(
-          top: DATA_UNAVAILABLE_TOP_PADDING,
-        ),
       );
     }
-    locations = ListTile.divideTiles(
-            tiles: locations,
-            context: context,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? listTileDividerColorDark
-                : listTileDividerColorLight)
-        .toList();
+
+    List<Widget> locations = model.subLocations.map((subLocation) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: GestureDetector(
+          onTap: () {
+            if (subLocation.floors.isNotEmpty) {
+              Navigator.pushNamed(
+                context,
+                RoutePaths.AvailabilityDetailedView,
+                arguments: subLocation,
+              );
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          subLocation.name,
+                          style: subLocation.floors.isNotEmpty
+                              ? (Theme.of(context).brightness == Brightness.dark
+                              ? textButtonSmallDark
+                              : textButtonSmallLight)
+                              : (Theme.of(context).brightness == Brightness.dark
+                              ? descriptiveTextSmallDark.copyWith(fontSize: 22.0)
+                              : descriptiveTextSmallLight.copyWith(fontSize: 22.0)),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          '${(100 * percentAvailability(subLocation)).toInt()}% Busy',
+                          style: Theme.of(context).brightness == Brightness.dark
+                              ? textSmallMoreInfoDark
+                              : textSmallMoreInfoLight,
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (subLocation.floors.isNotEmpty)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 35,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? linkColorLight
+                              : linkColorDark,
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+              SizedBox(height: 6),
+              SizedBox(
+                height: 12,
+                width: double.infinity,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                  child: LinearProgressIndicator(
+                    value: (percentAvailability(subLocation) <= 0.01)
+                        ? 0.01
+                        : percentAvailability(subLocation).toDouble(),
+                    backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      setIndicatorColor(percentAvailability(subLocation)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }).toList();
 
     return Flexible(
       child: Scrollbar(
         child: ListView(
           physics: NeverScrollableScrollPhysics(),
-          children: locations,
+          children: ListTile.divideTiles(
+            tiles: locations,
+            context: context,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? listTileDividerColorDark
+                : listTileDividerColorLight,
+          ).toList(),
         ),
       ),
     );
