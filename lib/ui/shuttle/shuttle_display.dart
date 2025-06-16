@@ -108,7 +108,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget buildUpcomingArrivalInfo(BuildContext context) {
-    if (arrivingShuttles == null || arrivingShuttles.isEmpty) {
+    if (arrivingShuttles?.isEmpty ?? true) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -212,7 +212,7 @@ class ShuttleDisplay extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 8.0),
           child: CircleAvatar(
             minRadius: 20,
             backgroundColor: HexColor(shuttle.routeColor),
