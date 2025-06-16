@@ -108,7 +108,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Widget buildUpcomingArrivalInfo(BuildContext context) {
-    if (arrivingShuttles!.isEmpty || arrivingShuttles == null) {
+    if (arrivingShuttles == null || arrivingShuttles.isEmpty) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
