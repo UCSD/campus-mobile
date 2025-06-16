@@ -33,7 +33,6 @@ class DiningList extends StatelessWidget {
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
     var size = listSize ?? listOfDiners.length;
-
     for (var i = 0; i < size; i++) {
       final DiningModel item = listOfDiners[i];
       final tile = buildDiningTile(item, context);
@@ -141,30 +140,38 @@ class DiningList extends StatelessWidget {
                 (match) => " ${match.group(0)} "));
   }
 
+
   Widget buildDiningTile(DiningModel data, BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      onTap: () {
-        if (data.id != null)
-          Provider.of<DiningDataProvider>(context, listen: false)
-              .fetchDiningMenu(data.id!);
-
-        Navigator.pushNamed(context, RoutePaths.DiningDetailView,
-            arguments: data);
-      },
+      // Vendor Logo
+      minLeadingWidth: 0, // Reduce minimum width
+      leading: SizedBox(
+        width: 20,
+        child: Icon(Icons.restaurant, color: Theme.of(context).primaryColor),
+      ),
+      // Vendor Name
       title: Text(data.name,
-          textAlign: TextAlign.start,
-          style: Theme.of(context).brightness == Brightness.dark
-              ? textButtonSmallDark
-              : textButtonSmallLight),
+        textAlign: TextAlign.start,
+        style: Theme.of(context).brightness == Brightness.dark
+            ? textButtonSmallDark
+            : textButtonSmallLight,
+      ),
+      // Vendor Hours
       subtitle: Padding(
         padding: EdgeInsets.only(top: 6),
         child: getHoursForToday(data.regularHours, context),
       ),
+      // Vendor's Distance and Directions
       trailing: buildIconWithDistance(data, context),
+      onTap: () {
+        if (data.id != null) Provider.of<DiningDataProvider>(context, listen: false).fetchDiningMenu(data.id!);
+        Navigator.pushNamed(context, RoutePaths.DiningDetailView, arguments: data);
+      },
     );
   }
 
+  // Builds the Right side of the ListTile containing the icon and distance
   Widget buildIconWithDistance(DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
@@ -187,9 +194,6 @@ class DiningList extends StatelessWidget {
             size: 28,
             color: linkColorLight, 
           ),
-          SizedBox(
-              height:
-                  2), // Ensure there is some space between the icon and text
           Text(
             data.distance != null
                 ? (num.parse(data.distance!.toStringAsFixed(1)).toString() +
