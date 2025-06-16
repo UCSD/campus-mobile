@@ -97,21 +97,7 @@ class _ParkingCardState extends State<ParkingCard> {
                 });
               },
               itemBuilder: (context, index) {
-                return AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) {
-                    double value = 1.0;
-                    if (_controller.position.haveDimensions) {
-                      value = ((_controller.page ?? _controller.initialPage) - index).toDouble();
-                      value = (1 - (value.abs() * 0.5)).clamp(0.5, 1.0);
-                    }
-                    return Transform.scale(
-                      scale: value,
-                      child: child,
-                    );
-                  },
-                  child: selectedLotsViews[index],
-                );
+                return selectedLotsViews[index];
               },
             ),
           ),
