@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/dining.dart';
+import 'package:campus_mobile_experimental/core/models/dining.dart' as dining_model;
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
@@ -18,15 +18,14 @@ class DiningList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<DiningModel> data =
-        Provider.of<DiningDataProvider>(context).diningModels;
+    List<dining_model.DiningModel> data = Provider.of<DiningDataProvider>(context).diningModels;
     return data.length > 0
         ? buildDiningList(data, context)
         : CircularProgressIndicator(
             color: Theme.of(context).colorScheme.secondary);
   }
 
-  Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
+  Widget buildDiningList(List<dining_model.DiningModel> listOfDiners, BuildContext context) {
     final List<Widget> diningTiles = [];
 
     /// check to see if we want to display only a limited number of elements
@@ -34,7 +33,7 @@ class DiningList extends StatelessWidget {
     /// are rendered
     var size = listSize ?? listOfDiners.length;
     for (var i = 0; i < size; i++) {
-      final DiningModel item = listOfDiners[i];
+      final dining_model.DiningModel item = listOfDiners[i];
       final tile = buildDiningTile(item, context);
       diningTiles.add(tile);
     }
@@ -69,7 +68,7 @@ class DiningList extends StatelessWidget {
     return Text('Closed', style: Theme.of(context).textTheme.bodySmall);
   }
 
-  Widget getHoursForToday(RegularHours hours, BuildContext context) {
+  Widget getHoursForToday(dining_model.RegularHours hours, BuildContext context) {
     int weekday = DateTime.now().weekday;
     String? dayHours;
 
@@ -140,15 +139,20 @@ class DiningList extends StatelessWidget {
                 (match) => " ${match.group(0)} "));
   }
 
-
-  Widget buildDiningTile(DiningModel data, BuildContext context) {
+  Widget buildDiningTile(dining_model.DiningModel data, BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       // Vendor Logo
       minLeadingWidth: 0, // Reduce minimum width
       leading: SizedBox(
         width: 20,
-        child: Icon(Icons.restaurant, color: Theme.of(context).primaryColor),
+        child: data.images != null && data.images!.isNotEmpty
+            ? Image.network(
+                data.images!.first.small ?? data.images!.first.large ?? '',
+                width: 20,
+                height: 20,
+              )
+            : Icon(Icons.restaurant, color: Theme.of(context).primaryColor),
       ),
       // Vendor Name
       title: Text(data.name,
@@ -172,7 +176,7 @@ class DiningList extends StatelessWidget {
   }
 
   // Builds the Right side of the ListTile containing the icon and distance
-  Widget buildIconWithDistance(DiningModel data, BuildContext context) {
+  Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
         foregroundColor: linkColorLight, 
