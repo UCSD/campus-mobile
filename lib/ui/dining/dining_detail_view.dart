@@ -460,8 +460,8 @@ class HoursOfDay extends StatelessWidget {
         color = Colors.red;
     }
     return Container(
-      width: 10,
-      height: 10,
+      width: 8,
+      height: 8,
       decoration: BoxDecoration(shape: BoxShape.circle, color: color),
     );
   }
