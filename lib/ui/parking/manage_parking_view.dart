@@ -50,13 +50,22 @@ class _ManageParkingViewState extends State<ManageParkingView> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(
         shrinkWrap: true,
-        children: ListTile.divideTiles(
-          tiles: listTiles,
-          context: context,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? listTileDividerColorDark
-              : listTileDividerColorLight,
-        ).toList(),
+        children: [
+          for (int i = 0; i < listTiles.length; i++) ...[
+            listTiles[i],
+            if (i != listTiles.length - 1)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Divider(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? listTileDividerColorDark
+                      : listTileDividerColorLight,
+                  thickness: 0.5,
+                  height: 0,
+                ),
+              ),
+          ]
+        ],
       ),
     );
   }

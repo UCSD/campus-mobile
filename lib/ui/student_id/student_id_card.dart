@@ -138,11 +138,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
                   SizedBox(height: ScalingUtility.verticalSafeBlock * 0.5),
                   _buildCollegeName(profileModel),
 
-                  Padding(
-                    padding:
-                        EdgeInsets.all(ScalingUtility.verticalSafeBlock * 0.9),
-                  ),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -256,38 +251,20 @@ class _StudentIdCardState extends State<StudentIdCard> {
     } else {
       // Normal orientation
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          InkWell(
-          child: Text(
-            "tap for easier scanning",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
-              fontSize: ScalingUtility.horizontalSafeBlock * 2.5,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? linkColorDark
-                  : linkColorLight,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
+            child: Text(
+              "tap for easier scanning",
+              textAlign: TextAlign.center,
+              style: linkTextLight.copyWith(fontSize: 18.0),
             ),
           ),
-          onTap: (){
-            createAlertDialog(
-              context,
-              returnBarcodeContainer(cardNumber, true, context),
-              cardNumber,
-              true,
-            );
-          },
-          ),
-          SizedBox(height: 8.0),
-          // Wrap barcode in FittedBox so it can shrink if needed
-          FittedBox(
-            fit: BoxFit.contain,
-            child: Container(
-              padding: addBorder(Theme.of(context)),
-              color: Colors.white,
-              child: barcodeWithText,
-            ),
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            color: Colors.white,
+            child: barcodeWithText,
           ),
         ],
       );
@@ -544,7 +521,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   Widget _buildClassificationTitle(StudentIdProfileModel profileModel) => Text(
         profileModel.classificationType,
         style: TextStyle(
-          fontSize: ScalingUtility.horizontalSafeBlock * 3.5,
+          fontSize: ScalingUtility.horizontalSafeBlock * 4.0,
         ),
       );
 
