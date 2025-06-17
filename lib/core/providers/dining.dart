@@ -43,6 +43,17 @@ class DiningDataProvider extends ChangeNotifier {
     Map<String, DiningModel> mapOfDiningLocations = {};
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data) {
+
+        // Fix the image URLs
+        if (model.images != null) {
+          for (var img in model.images!) {
+            img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+            img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+          }
+        }
+        print(model.images);
+
+        // Save the data
         mapOfDiningLocations[model.name] = model;
       }
 

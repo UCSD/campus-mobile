@@ -21,8 +21,7 @@ class DiningList extends StatelessWidget {
     List<dining_model.DiningModel> data = Provider.of<DiningDataProvider>(context).diningModels;
     return data.length > 0
         ? buildDiningList(data, context)
-        : CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary);
+        : CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
   }
 
   Widget buildDiningList(List<dining_model.DiningModel> listOfDiners, BuildContext context) {
@@ -145,12 +144,13 @@ class DiningList extends StatelessWidget {
       // Vendor Logo
       minLeadingWidth: 0, // Reduce minimum width
       leading: SizedBox(
-        width: 20,
+        width: 48,
+        height: 48,
         child: data.images != null && data.images!.isNotEmpty
             ? Image.network(
                 data.images!.first.small ?? data.images!.first.large ?? '',
-                width: 20,
-                height: 20,
+                width: 48,
+                height: 48,
               )
             : Icon(Icons.restaurant, color: Theme.of(context).primaryColor),
       ),
