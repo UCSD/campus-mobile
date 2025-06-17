@@ -27,7 +27,7 @@ class DiningDetailView extends StatelessWidget {
     );
   }
 
-  // Contains all the widgets that make up the Dinning detail view.
+  // Contains all the widgets that make up the Dining detail view.
   List<Widget> buildDetailView(
       BuildContext context, prefix0.DiningModel model) {
     return [
