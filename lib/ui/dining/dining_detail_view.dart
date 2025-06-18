@@ -36,29 +36,43 @@ class DiningDetailView extends StatelessWidget {
           data.vendorLogo != null
               ? Image.network(
                   data.vendorLogo!,
-                  width: 60,
-                  height: 60,
+                  width: 80,
+                  height: 80,
               )
               : Icon(
                   Icons.restaurant,
+                  size: 56,
                   color: Theme.of(context).brightness == Brightness.light
                       ? lightPrimaryColor
                       : darkPrimaryColor2
              ),
-          SizedBox(width: 12),
-          // Vendor Name
-          Text(
-            model.name,
-            textAlign: TextAlign.start,
-            style: Theme.of(context).textTheme.titleMedium,
+          SizedBox(width: 8),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Vendor Name
+                Text(
+                  model.name,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                SizedBox(height: 4),
+                // Vendor Description
+                Text(
+                  model.description,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  softWrap: true,
+                  textWidthBasis: TextWidthBasis.parent,
+                ),
+              ],
+            ),
           ),
+          SizedBox(width: 16),
         ],
-      ),
-      // Vendor Description
-      Text(
-        model.description,
-        textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.bodySmall,
       ),
       // Vendor hours
       buildHours(context, model),

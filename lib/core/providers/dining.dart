@@ -103,9 +103,6 @@ class DiningDataProvider extends ChangeNotifier {
         if(model.name == '64 Degrees') {
           model.vendorLogo = diningLogosEndpoint + "sixty-four-degrees.png";
         }
-        if(model.name == 'Sixth Market') {
-          model.vendorLogo = diningLogosEndpoint + "market-at-sixth.png";
-        }
         if(model.name == 'Pacific Café & Catering') {
           model.vendorLogo = diningLogosEndpoint + "pacific-cafe.png";
         }
