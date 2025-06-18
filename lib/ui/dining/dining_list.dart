@@ -126,16 +126,15 @@ class DiningList extends StatelessWidget {
       }
     }
 
-    return TimeRangeWidget(
-        time: dayHours
-            .replaceAllMapped(
-                // Add colon in between each time
-                RegExp(r"\b[0-9]{2}"),
-                (match) => "${match.group(0)}:")
-            .replaceAllMapped(
-                // Add space around hyphen
-                RegExp(r"-"),
-                (match) => " ${match.group(0)} "));
+    return Text(formattedTimeRange(dayHours) ?? dayHours,
+      style: TextStyle(
+          fontSize: 17.0,
+          fontWeight: FontWeight.w400,
+          color: Theme.of(context).brightness == Brightness.light
+              ? descriptiveTextColorLight
+              : descriptiveTextColorDark
+      ),
+    );
   }
 
   Widget buildDiningTile(dining_model.DiningModel data, BuildContext context) {
@@ -146,13 +145,19 @@ class DiningList extends StatelessWidget {
       leading: SizedBox(
         width: 48,
         height: 48,
-        child: data.images != null && data.images!.isNotEmpty
+        child: data.vendorLogo != null
             ? Image.network(
-                data.images!.first.small ?? data.images!.first.large ?? '',
+                data.vendorLogo!,
                 width: 48,
                 height: 48,
               )
-            : Icon(Icons.restaurant, color: Theme.of(context).primaryColor),
+            : Icon(
+                Icons.restaurant,
+                size: 32,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : darkPrimaryColor2
+            ),
       ),
       // Vendor Name
       title: Text(data.name,
@@ -196,14 +201,21 @@ class DiningList extends StatelessWidget {
           Icon(
             Icons.directions_walk,
             size: 28,
-            color: linkColorLight, 
+            color: Theme.of(context).brightness == Brightness.light
+                ? linkColorLight
+                : linkColorDark
           ),
           Text(
             data.distance != null
                 ? (num.parse(data.distance!.toStringAsFixed(1)).toString() +
                     ' mi')
                 : '--',
-            style: TextStyle(fontSize: 12, color: linkColorLight), 
+            style: TextStyle(
+                fontSize: 13,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? linkColorLight
+                    : linkColorDark
+            ),
           ),
         ],
       ),

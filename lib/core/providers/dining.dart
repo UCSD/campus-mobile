@@ -37,21 +37,70 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   void fetchDiningLocations() async {
+    final diningLogosEndpoint = "https://cdn.ucsd.edu/dining-logos/";
+    final List<String> diningLogos = [
+      "art-of-espresso.png",
+      "audreys.png",
+      "blue-bowl.png",
+      "blue-wave-bistro.png",
+      "canyon-vista-marketplace.png",
+      "carlolines.png",
+      "club-med.png",
+      "crafted.png",
+      "destiny-coast.png",
+      "fan-fan.png",
+      "faculty-club.png",
+      "foodworx.png",
+      "gong-cha.png",
+      "james-place.png",
+      "johns.png",
+      "market-at-sixth.png",
+      "ocean-view.png",
+      "pacific-cafe.png",
+      "pines.png",
+      "plant-power.png",
+      "restaurants-at-sixth.png",
+      "rogers-market.png",
+      "roots.png",
+      "sixth-market.png",
+      "sixty-four-degrees.png",
+      "street-corner.png",
+      "sunshine-market.png",
+      "tahini.png",
+      "the-bistro.png",
+      "ventanas.png",
+      "verdeli.png",
+    ];
+
     _isLoading = true; _error = null;
     notifyListeners();
-
     Map<String, DiningModel> mapOfDiningLocations = {};
+
+    /// fetch dining locations from the service
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data) {
+        print("=======================================================");
+        print('model.name: ${model.name}');
+        // Map vendor model with vendor logo
+        String normalize(String input) {
+          return input
+              .toLowerCase()
+              .replaceAll(RegExp(r"['’]"), '')       // remove apostrophes
+              .replaceAll(RegExp(r"[^a-z0-9]"), ''); // remove all non-alphanumeric
+        }
 
-        // Fix the image URLs
-        if (model.images != null) {
-          for (var img in model.images!) {
-            img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
-            img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+        for (var i = 0; i < diningLogos.length; i++) {
+          final logoBase = normalize(diningLogos[i].split('.')[0]);
+          final modelName = normalize(model.name);
+
+          if (modelName.contains(logoBase)) {
+            model.vendorLogo = diningLogosEndpoint + diningLogos[i];
+            print('Found logo for ${model.name}: ${model.vendorLogo}');
+            break;
           }
         }
-        print(model.images);
+
+        print(model.vendorLogo);
 
         // Save the data
         mapOfDiningLocations[model.name] = model;

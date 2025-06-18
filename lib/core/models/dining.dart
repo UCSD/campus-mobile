@@ -27,6 +27,7 @@ class DiningModel
   Meals? meals;
   String? persistentMenu;
   SpecialHour? specialHours;
+  String? vendorLogo;
 
   List<Image>? images;
   Coordinates? coordinates;
@@ -48,6 +49,7 @@ class DiningModel
     this.coordinates,
     required this.regularHours,
     this.specialHours,
+    this.vendorLogo,
     this.url,
     this.menuWebsite,
   });
@@ -103,9 +105,9 @@ class Image
   // TODO: BUG ON SERVER?? There have been images with no images observed in the wild...
   String? small;
   String? large;
-
   // TODO: no caption is valid JSON response. Should this be empty str rather than null?
   String? caption;
+
 
   Image({
     this.small,

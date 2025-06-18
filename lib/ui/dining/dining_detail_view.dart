@@ -4,7 +4,7 @@ import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_menu_list.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DiningDetailView extends StatelessWidget {
@@ -33,7 +33,18 @@ class DiningDetailView extends StatelessWidget {
       Row(
         children: [
           // Vendor Logo
-          Icon(Icons.restaurant, color: Theme.of(context).primaryColor),
+          data.vendorLogo != null
+              ? Image.network(
+                  data.vendorLogo!,
+                  width: 60,
+                  height: 60,
+              )
+              : Icon(
+                  Icons.restaurant,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? lightPrimaryColor
+                      : darkPrimaryColor2
+             ),
           SizedBox(width: 12),
           // Vendor Name
           Text(
@@ -387,7 +398,8 @@ class HoursOfDay extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: Theme.of(context).brightness == Brightness.light
                   ? lightPrimaryColor
-                  : darkPrimaryColor2)
+                  : darkPrimaryColor2
+        )
         : Theme.of(context).textTheme.bodySmall!;
 
     return Column(
@@ -475,29 +487,5 @@ class HoursOfDay extends StatelessWidget {
       height: 8,
       decoration: BoxDecoration(shape: BoxShape.circle, color: color),
     );
-  }
-}
-
-/// Returns time in the format of HH:MM AM - HH:MM PM
-String? formattedTimeRange(String? theHours) {
-  if (theHours == null) return theHours;
-  final match = RegExp(r'^(\d{2})(\d{2})-(\d{2})(\d{2})$').firstMatch(theHours);
-  if (match == null) return theHours;
-
-  try {
-    final now = DateTime.now();
-    final startTime = DateTime(
-      now.year, now.month, now.day,
-      int.parse(match.group(1)!),
-      int.parse(match.group(2)!),
-    );
-    final endTime = DateTime(
-      now.year, now.month, now.day,
-      int.parse(match.group(3)!),
-      int.parse(match.group(4)!),
-    );
-    return '${DateFormat.jm().format(startTime)} - ${DateFormat.jm().format(endTime)}';
-  } catch (_) {
-    return theHours;
   }
 }
