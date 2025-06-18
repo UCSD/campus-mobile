@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/dining.dart';
+import 'package:campus_mobile_experimental/core/models/dining.dart' as dining_model;
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
@@ -18,24 +18,21 @@ class DiningList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<DiningModel> data =
-        Provider.of<DiningDataProvider>(context).diningModels;
+    List<dining_model.DiningModel> data = Provider.of<DiningDataProvider>(context).diningModels;
     return data.length > 0
         ? buildDiningList(data, context)
-        : CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary);
+        : CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary);
   }
 
-  Widget buildDiningList(List<DiningModel> listOfDiners, BuildContext context) {
+  Widget buildDiningList(List<dining_model.DiningModel> listOfDiners, BuildContext context) {
     final List<Widget> diningTiles = [];
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
     var size = listSize ?? listOfDiners.length;
-
     for (var i = 0; i < size; i++) {
-      final DiningModel item = listOfDiners[i];
+      final dining_model.DiningModel item = listOfDiners[i];
       final tile = buildDiningTile(item, context);
       diningTiles.add(tile);
     }
@@ -70,7 +67,7 @@ class DiningList extends StatelessWidget {
     return Text('Closed', style: Theme.of(context).textTheme.bodySmall);
   }
 
-  Widget getHoursForToday(RegularHours hours, BuildContext context) {
+  Widget getHoursForToday(dining_model.RegularHours hours, BuildContext context) {
     int weekday = DateTime.now().weekday;
     String? dayHours;
 
@@ -129,43 +126,62 @@ class DiningList extends StatelessWidget {
       }
     }
 
-    return TimeRangeWidget(
-        time: dayHours
-            .replaceAllMapped(
-                // Add colon in between each time
-                RegExp(r"\b[0-9]{2}"),
-                (match) => "${match.group(0)}:")
-            .replaceAllMapped(
-                // Add space around hyphen
-                RegExp(r"-"),
-                (match) => " ${match.group(0)} "));
+    return Text(formattedTimeRange(dayHours) ?? dayHours,
+      style: TextStyle(
+          fontSize: 17.0,
+          fontWeight: FontWeight.w400,
+          color: Theme.of(context).brightness == Brightness.light
+              ? descriptiveTextColorLight
+              : descriptiveTextColorDark
+      ),
+    );
   }
 
-  Widget buildDiningTile(DiningModel data, BuildContext context) {
+  Widget buildDiningTile(dining_model.DiningModel data, BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      onTap: () {
-        if (data.id != null)
-          Provider.of<DiningDataProvider>(context, listen: false)
-              .fetchDiningMenu(data.id!);
-
-        Navigator.pushNamed(context, RoutePaths.DiningDetailView,
-            arguments: data);
-      },
+      // Vendor Logo
+      minLeadingWidth: 0, // Reduce minimum width
+      leading: SizedBox(
+        width: 48,
+        height: 48,
+        child: data.vendorLogo != null
+            ? Image.network(
+                data.vendorLogo!,
+                width: 48,
+                height: 48,
+              )
+            : Icon(
+                Icons.restaurant,
+                size: 32,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : darkPrimaryColor2
+            ),
+      ),
+      // Vendor Name
       title: Text(data.name,
-          textAlign: TextAlign.start,
-          style: Theme.of(context).brightness == Brightness.dark
-              ? textButtonSmallDark
-              : textButtonSmallLight),
+        textAlign: TextAlign.start,
+        style: Theme.of(context).brightness == Brightness.dark
+            ? textButtonSmallDark
+            : textButtonSmallLight,
+      ),
+      // Vendor Hours
       subtitle: Padding(
         padding: EdgeInsets.only(top: 6),
         child: getHoursForToday(data.regularHours, context),
       ),
+      // Vendor's Distance and Directions
       trailing: buildIconWithDistance(data, context),
+      onTap: () {
+        if (data.id != null) Provider.of<DiningDataProvider>(context, listen: false).fetchDiningMenu(data.id!);
+        Navigator.pushNamed(context, RoutePaths.DiningDetailView, arguments: data);
+      },
     );
   }
 
-  Widget buildIconWithDistance(DiningModel data, BuildContext context) {
+  // Builds the Right side of the ListTile containing the icon and distance
+  Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
         foregroundColor: linkColorLight, 
@@ -185,17 +201,21 @@ class DiningList extends StatelessWidget {
           Icon(
             Icons.directions_walk,
             size: 28,
-            color: linkColorLight, 
+            color: Theme.of(context).brightness == Brightness.light
+                ? linkColorLight
+                : linkColorDark
           ),
-          SizedBox(
-              height:
-                  2), // Ensure there is some space between the icon and text
           Text(
             data.distance != null
                 ? (num.parse(data.distance!.toStringAsFixed(1)).toString() +
                     ' mi')
                 : '--',
-            style: TextStyle(fontSize: 12, color: linkColorLight), 
+            style: TextStyle(
+                fontSize: 13,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? linkColorLight
+                    : linkColorDark
+            ),
           ),
         ],
       ),

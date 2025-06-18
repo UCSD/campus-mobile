@@ -1,10 +1,9 @@
 import 'package:campus_mobile_experimental/core/models/dining.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_menu_list.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DiningDetailView extends StatelessWidget {
@@ -19,7 +18,7 @@ class DiningDetailView extends StatelessWidget {
         separatorBuilder: (context, index) {
           return SizedBox(height: 8);
         },
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         itemBuilder: (context, index) {
           return buildDetailView(context, data)[index];
         },
@@ -28,26 +27,61 @@ class DiningDetailView extends StatelessWidget {
   }
 
   // Contains all the widgets that make up the Dining detail view.
-  List<Widget> buildDetailView(
-      BuildContext context, prefix0.DiningModel model) {
+  List<Widget> buildDetailView(BuildContext context, prefix0.DiningModel model) {
     return [
-      Text(
-        model.name,
-        textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.titleMedium,
+      Row(
+        children: [
+          // Vendor Logo
+          model.vendorLogo != null
+              ? Image.network(
+                  model.vendorLogo!,
+                  width: 80,
+                  height: 80,
+              )
+              : Icon(
+                  Icons.restaurant,
+                  size: 56,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? lightPrimaryColor
+                      : darkPrimaryColor2
+             ),
+          SizedBox(width: 8),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Vendor Name
+                Text(
+                  model.name,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                SizedBox(height: 4),
+                // Vendor Description
+                Text(
+                  model.description,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  softWrap: true,
+                  textWidthBasis: TextWidthBasis.parent,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 16),
+        ],
       ),
-      Text(
-        model.description,
-        textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.bodySmall,
-      ),
+      // Vendor hours
       buildHours(context, model),
+      // Vendor Special Hours
       if (model.specialHours != null) buildSpecialHours(context, model),
+      // Vendor Payment Options
       buildPaymentOptions(context, model),
-      //buildPictures(model),
-      SizedBox(height: 10),
-      Text(
-        'Location',
+      SizedBox(height: 16),
+      // Vendor Location
+      Text('Location',
         style: Theme.of(context).textTheme.titleMedium,
       ),
       Transform.translate(
@@ -78,7 +112,7 @@ class DiningDetailView extends StatelessWidget {
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      SizedBox(height: 10),
+      SizedBox(height: 8),
       HoursOfDay(model: model, weekday: 1),
       buildDivider(context),
       HoursOfDay(model: model, weekday: 2),
@@ -92,7 +126,7 @@ class DiningDetailView extends StatelessWidget {
       HoursOfDay(model: model, weekday: 6),
       buildDivider(context),
       HoursOfDay(model: model, weekday: 7),
-      SizedBox(height: 20),
+      SizedBox(height: 16),
     ]);
   }
 
@@ -141,7 +175,6 @@ class DiningDetailView extends StatelessWidget {
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions.join(', ');
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -159,30 +192,31 @@ class DiningDetailView extends StatelessWidget {
     );
   }
 
-  Widget buildPictures(prefix0.DiningModel model) {
-    List<ImageLoader> images = [];
-    if (model.images != null && model.images!.length > 0) {
-      for (prefix0.Image item in model.images!) {
-        if (item.small != null) images.add(ImageLoader(url: item.small!));
-      }
-      return Center(
-        child: Container(
-          height: 100,
-          child: ListView.separated(
-            itemCount: images.length,
-            itemBuilder: (BuildContext context, int index) {
-              return images[index];
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return Container(width: 10);
-            },
-            scrollDirection: Axis.horizontal,
-          ),
-        ),
-      );
-    }
-    return Container(height: 10);
-  }
+  // TODO: Unused, remove if not needed
+  // Widget buildPictures(prefix0.DiningModel model) {
+  //   List<ImageLoader> images = [];
+  //   if (model.images != null && model.images!.length > 0) {
+  //     for (prefix0.Image item in model.images!) {
+  //       if (item.small != null) images.add(ImageLoader(url: item.small!));
+  //     }
+  //     return Center(
+  //       child: Container(
+  //         height: 100,
+  //         child: ListView.separated(
+  //           itemCount: images.length,
+  //           itemBuilder: (BuildContext context, int index) {
+  //             return images[index];
+  //           },
+  //           separatorBuilder: (BuildContext context, int index) {
+  //             return Container(width: 10);
+  //           },
+  //           scrollDirection: Axis.horizontal,
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //   return Container(height: 10);
+  // }
 }
 
 ///////////// Location Section /////////////
@@ -240,8 +274,11 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
       ),
     );
   } else {
-    return Text('Directions not available.',
-        style: Theme.of(context).textTheme.bodySmall);
+    return Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: Text('Directions not available.',
+                style: Theme.of(context).textTheme.bodySmall)
+    );
   }
 }
 
@@ -376,7 +413,8 @@ class HoursOfDay extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: Theme.of(context).brightness == Brightness.light
                   ? lightPrimaryColor
-                  : darkPrimaryColor2)
+                  : darkPrimaryColor2
+        )
         : Theme.of(context).textTheme.bodySmall!;
 
     return Column(
@@ -464,29 +502,5 @@ class HoursOfDay extends StatelessWidget {
       height: 8,
       decoration: BoxDecoration(shape: BoxShape.circle, color: color),
     );
-  }
-}
-
-/// Returns time in the format of HH:MM AM - HH:MM PM
-String? formattedTimeRange(String? theHours) {
-  if (theHours == null) return theHours;
-  final match = RegExp(r'^(\d{2})(\d{2})-(\d{2})(\d{2})$').firstMatch(theHours);
-  if (match == null) return theHours;
-
-  try {
-    final now = DateTime.now();
-    final startTime = DateTime(
-      now.year, now.month, now.day,
-      int.parse(match.group(1)!),
-      int.parse(match.group(2)!),
-    );
-    final endTime = DateTime(
-      now.year, now.month, now.day,
-      int.parse(match.group(3)!),
-      int.parse(match.group(4)!),
-    );
-    return '${DateFormat.jm().format(startTime)} - ${DateFormat.jm().format(endTime)}';
-  } catch (_) {
-    return theHours;
   }
 }
