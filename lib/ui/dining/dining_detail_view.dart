@@ -32,9 +32,9 @@ class DiningDetailView extends StatelessWidget {
       Row(
         children: [
           // Vendor Logo
-          data.vendorLogo != null
+          model.vendorLogo != null
               ? Image.network(
-                  data.vendorLogo!,
+                  model.vendorLogo!,
                   width: 80,
                   height: 80,
               )
