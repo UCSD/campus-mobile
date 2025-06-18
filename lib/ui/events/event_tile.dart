@@ -52,52 +52,52 @@ class EventTile extends StatelessWidget {
   }
 
   Widget _eventDetailsCard(BuildContext context) {
+    final df = DateFormat("MMM d y");
+    final startDate = df.format(data.startDate.toLocal());
+    final endDate   = df.format(data.endDate.toLocal());
+    final dateDisplay = data.startDate.day == data.endDate.day
+        ? startDate
+        : '$startDate - $endDate';
+    final startTime = DateFormat.jm().format(data.startDate.toLocal());
+    final endTime   = DateFormat.jm().format(data.endDate.toLocal());
+    final hasTime   = startTime != endTime;
     return SizedBox(
-      height: 300,
-      width: 190,
-      // Black Outline
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border.all(width: 0.3),
-          borderRadius: BorderRadius.all(cornerRadius),
-        ),
-        child: Card(
-          // Black Outline Style
-          margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-          elevation: 4.0,
-            // Tile Contents
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Tile Image
-                _eventImageLoader(data.imageThumb),
-                // Date & Time
-                Row(
-                  children: [
-                    const SizedBox(width: 2),
-                    // Date (Top Left)
-                    StartEndDateContainer(
-                      date: (data.startDate.day == data.endDate.day)
-                          ? DateFormat("MMM d y").format(data.startDate.toLocal())
-                          : DateFormat("MMM d y").format(data.startDate.toLocal()) + ' - ' + DateFormat("MMM d y").format(data.endDate.toLocal()),
-                    ),
-                    const Spacer(),
-                    // Time (Top Right)
-                    TileTime(time: DateFormat.jm().format(data.startDate.toLocal()) +
-                        ' - ' + DateFormat.jm().format(data.endDate.toLocal())
-                    ),
-                    const SizedBox(width: 2),
-                  ]
-                ),
-                // Tile Title
-                TileTitle(title: data.title),
-                const Spacer()
-              ],
+    width: tileWidth,
+    height: 300,
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.3),
+        borderRadius: BorderRadius.all(cornerRadius),
+      ),
+      child: Card(
+        margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+        elevation: 4.0,
+        child: Column(
+          children: [
+            _eventImageLoader(data.imageThumb),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              child: Row(
+                mainAxisAlignment:
+                    hasTime ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  StartEndDateContainer(date: dateDisplay),
+                  if (hasTime)
+                    TileTime(time: '$startTime - $endTime'),
+                ],
+              ),
             ),
-          ),
+
+            // title & spacer remain the same
+            TileTitle(title: data.title),
+            const Spacer(),
+          ],
         ),
-    );
-  }
+      ),
+    ),
+  ); 
+}
 }
 
 Widget _eventImageLoader(String? url) {
@@ -111,7 +111,7 @@ Widget _eventImageLoader(String? url) {
             'assets/images/UCSDMobile_sharp.png',
             height: 150,
             width: EventTile.tileWidth,
-            fit: BoxFit.fitHeight
+            fit: BoxFit.cover,
           ))
         : ClipRRect(
             borderRadius: BorderRadius.only(
@@ -134,7 +134,7 @@ Widget _eventImageLoader(String? url) {
               },
               height: 150,
               width: EventTile.tileWidth,
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.cover,
             )
           );    
 }

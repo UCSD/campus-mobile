@@ -1,75 +1,54 @@
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:result_dart/result_dart.dart';
 
 class AuthenticationService {
   AuthenticationService();
 
-  /// STATES
-  String? _error;
-  AuthenticationModel? _data;
-  DateTime? _lastUpdated;
-  /// add state related things for view model here
-  /// add any type of data manipulation here so it can be accessed via provider
-
-  Future<bool> silentLogin(String base64EncodedWithEncryptedPassword) async {
-    _error = null;
+  Future<Result<AuthenticationModel>> silentLogin(
+      String base64EncodedWithEncryptedPassword
+  ) async {
     try {
       final Map<String, String> authServiceHeaders = {
         'x-api-key': dotenv.get('AUTH_SERVICE_API_KEY'),
         'Authorization': base64EncodedWithEncryptedPassword,
       };
 
-      /// fetch data
-      /// MODIFIED TO USE EXPONENTIAL RETRY
       var response = await NetworkHelper.authorizedPublicPost(
           dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
 
-      /// check to see if response has an error
-      if (response['errorMessage'] != null) throw (response['errorMessage']);
+      if (response['errorMessage'] != null) {
+        return Failure(Exception(response['errorMessage'].toString()));
+      }
 
-      /// parse data
       final authenticationModel = AuthenticationModel.fromJson(response);
-      _data = authenticationModel;
-      _lastUpdated = DateTime.now();
-      return true;
+      return Success(authenticationModel);
     } catch (e) {
-      /// TODO: handle errors thrown by the network class for different types of error responses
-      _error = e.toString();
-      return false;
+      return Failure(e is Exception ? e : Exception(e.toString())); //Change (return the string option) consider only catching exotic errors (like out of memory) memories that don't derive from the exception class
     }
   }
 
-  Future<bool> login(String base64EncodedWithEncryptedPassword) async {
-    _error = null;
+  Future<Result<AuthenticationModel>> login(
+      String base64EncodedWithEncryptedPassword
+  ) async {
     try {
       final Map<String, String> authServiceHeaders = {
         'x-api-key': dotenv.get('AUTH_SERVICE_API_KEY'),
         'Authorization': base64EncodedWithEncryptedPassword,
       };
 
-      /// fetch data
-      /// MODIFIED TO USE EXPONENTIAL RETRY
       var response = await NetworkHelper.authorizedPost(
-        dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
+          dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
 
-      /// check to see if response has an error
-      if (response['errorMessage'] != null) throw (response['errorMessage']);
+      if (response['errorMessage'] != null) {
+        return Failure(Exception(response['errorMessage'].toString()));
+      }
 
-      /// parse data
       final authenticationModel = AuthenticationModel.fromJson(response);
-      _data = authenticationModel;
-      _lastUpdated = DateTime.now();
-      return true;
+      return Success(authenticationModel);
     } catch (e) {
-      /// TODO: handle errors thrown by the network class for different types of error responses
-      _error = e.toString();
-      return false;
+      return Failure(e is Exception ? e : Exception(e.toString())); //Change as above
     }
   }
-
-  /// SIMPLE GETTERS
-  get lastUpdated => _lastUpdated;
-  get error => _error;
-  AuthenticationModel? get data => _data;
 }

@@ -58,7 +58,7 @@ class EventDetailView extends StatelessWidget {
                           text: data.location!,
                           looseUrl: true,
                           style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 16,
                               color: Theme.of(context).brightness == Brightness.light
                                 ? lightPrimaryColor
                                 : Colors.white,
@@ -124,7 +124,7 @@ class EventImage extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.33,
       decoration: BoxDecoration(
         image: DecorationImage(
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
           image: (imageUrl.isEmpty)
               ? AssetImage('assets/images/UCSDMobile_banner.png')
                   as ImageProvider
