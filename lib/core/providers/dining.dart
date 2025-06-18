@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
@@ -24,6 +23,41 @@ class DiningDataProvider extends ChangeNotifier {
   /// SERVICES
   var _diningService = DiningService();
 
+  /// LOGOS
+  final diningLogosEndpoint = "https://cdn.ucsd.edu/dining-logos/";
+  final diningLogos = [ // Add more logos as needed (Format: "name-of-vendor.png")
+    "art-of-espresso.png",
+    "audreys.png",
+    "blue-bowl.png",
+    "blue-wave-bistro.png",
+    "canyon-vista-marketplace.png",
+    "carlolines.png",
+    "club-med.png",
+    "crafted.png",
+    "destiny-coast.png",
+    "fan-fan.png",
+    "faculty-club.png",
+    "foodworx.png",
+    "gong-cha.png",
+    "james-place.png",
+    "johns.png",
+    "ocean-view.png",
+    "pacific-cafe.png",
+    "pines.png",
+    "plant-power.png",
+    "restaurants-at-sixth.png",
+    "rogers-market.png",
+    "roots.png",
+    "sixth-market.png",
+    "sixty-four-degrees.png",
+    "street-corner.png",
+    "sunshine-market.png",
+    "tahini.png",
+    "the-bistro.png",
+    "ventanas.png",
+    "verdeli.png",
+  ];
+
   void fetchDiningMenu(String menuId) async {
     _isLoading = true; _error = null;
     notifyListeners();
@@ -37,41 +71,6 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   void fetchDiningLocations() async {
-    final diningLogosEndpoint = "https://cdn.ucsd.edu/dining-logos/";
-    final List<String> diningLogos = [
-      "art-of-espresso.png",
-      "audreys.png",
-      "blue-bowl.png",
-      "blue-wave-bistro.png",
-      "canyon-vista-marketplace.png",
-      "carlolines.png",
-      "club-med.png",
-      "crafted.png",
-      "destiny-coast.png",
-      "fan-fan.png",
-      "faculty-club.png",
-      "foodworx.png",
-      "gong-cha.png",
-      "james-place.png",
-      "johns.png",
-      "market-at-sixth.png",
-      "ocean-view.png",
-      "pacific-cafe.png",
-      "pines.png",
-      "plant-power.png",
-      "restaurants-at-sixth.png",
-      "rogers-market.png",
-      "roots.png",
-      "sixth-market.png",
-      "sixty-four-degrees.png",
-      "street-corner.png",
-      "sunshine-market.png",
-      "tahini.png",
-      "the-bistro.png",
-      "ventanas.png",
-      "verdeli.png",
-    ];
-
     _isLoading = true; _error = null;
     notifyListeners();
     Map<String, DiningModel> mapOfDiningLocations = {};
@@ -79,13 +78,16 @@ class DiningDataProvider extends ChangeNotifier {
     /// fetch dining locations from the service
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data) {
-        // Fix the image URLs
+
+        // This fixes the image URLs to avoid 404 errors
+        // TODO: Remove this if we are not using model.images anymore due to having VendorLogos now
         if (model.images != null) {
           for (var img in model.images!) {
             img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
             img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
           }
         }
+
         ///////////// Map vendor with its logo /////////////
         for (var i = 0; i < diningLogos.length; i++) {
           // Normalize model name and logo names to check...
@@ -94,21 +96,18 @@ class DiningDataProvider extends ChangeNotifier {
           // ...if logo name is a substring of the model name
           if (modelName.contains(logoName)) {
             model.vendorLogo = diningLogosEndpoint + diningLogos[i];
-            print('Found logo for ${model.name}: ${model.vendorLogo}');
+            // print('Found logo for ${model.name}: ${model.vendorLogo}');
             break;
           }
         }
 
         // Special Cases
-        if(model.name == '64 Degrees') {
+        if(model.name == '64 Degrees')
           model.vendorLogo = diningLogosEndpoint + "sixty-four-degrees.png";
-        }
-        if(model.name == 'Pacific Café & Catering') {
+        if(model.name == 'Pacific Café & Catering')
           model.vendorLogo = diningLogosEndpoint + "pacific-cafe.png";
-        }
-        if(model.name == 'Caroline\'s Seaside Cafe') {
+        if(model.name == 'Caroline\'s Seaside Cafe')
           model.vendorLogo = diningLogosEndpoint + "carlolines.png";
-        }
 
         // Save the data
         mapOfDiningLocations[model.name] = model;
