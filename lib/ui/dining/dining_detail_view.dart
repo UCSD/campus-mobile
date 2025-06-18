@@ -1,6 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/dining.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_menu_list.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ class DiningDetailView extends StatelessWidget {
         separatorBuilder: (context, index) {
           return SizedBox(height: 8);
         },
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         itemBuilder: (context, index) {
           return buildDetailView(context, data)[index];
         },
@@ -80,8 +79,7 @@ class DiningDetailView extends StatelessWidget {
       if (model.specialHours != null) buildSpecialHours(context, model),
       // Vendor Payment Options
       buildPaymentOptions(context, model),
-      //buildPictures(model),
-      SizedBox(height: 10),
+      SizedBox(height: 16),
       // Vendor Location
       Text('Location',
         style: Theme.of(context).textTheme.titleMedium,
@@ -114,7 +112,7 @@ class DiningDetailView extends StatelessWidget {
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      SizedBox(height: 10),
+      SizedBox(height: 8),
       HoursOfDay(model: model, weekday: 1),
       buildDivider(context),
       HoursOfDay(model: model, weekday: 2),
@@ -128,7 +126,7 @@ class DiningDetailView extends StatelessWidget {
       HoursOfDay(model: model, weekday: 6),
       buildDivider(context),
       HoursOfDay(model: model, weekday: 7),
-      SizedBox(height: 20),
+      SizedBox(height: 16),
     ]);
   }
 
@@ -177,7 +175,6 @@ class DiningDetailView extends StatelessWidget {
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions.join(', ');
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -195,30 +192,31 @@ class DiningDetailView extends StatelessWidget {
     );
   }
 
-  Widget buildPictures(prefix0.DiningModel model) {
-    List<ImageLoader> images = [];
-    if (model.images != null && model.images!.length > 0) {
-      for (prefix0.Image item in model.images!) {
-        if (item.small != null) images.add(ImageLoader(url: item.small!));
-      }
-      return Center(
-        child: Container(
-          height: 100,
-          child: ListView.separated(
-            itemCount: images.length,
-            itemBuilder: (BuildContext context, int index) {
-              return images[index];
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return Container(width: 10);
-            },
-            scrollDirection: Axis.horizontal,
-          ),
-        ),
-      );
-    }
-    return Container(height: 10);
-  }
+  // TODO: Unused, remove if not needed
+  // Widget buildPictures(prefix0.DiningModel model) {
+  //   List<ImageLoader> images = [];
+  //   if (model.images != null && model.images!.length > 0) {
+  //     for (prefix0.Image item in model.images!) {
+  //       if (item.small != null) images.add(ImageLoader(url: item.small!));
+  //     }
+  //     return Center(
+  //       child: Container(
+  //         height: 100,
+  //         child: ListView.separated(
+  //           itemCount: images.length,
+  //           itemBuilder: (BuildContext context, int index) {
+  //             return images[index];
+  //           },
+  //           separatorBuilder: (BuildContext context, int index) {
+  //             return Container(width: 10);
+  //           },
+  //           scrollDirection: Axis.horizontal,
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //   return Container(height: 10);
+  // }
 }
 
 ///////////// Location Section /////////////
@@ -276,8 +274,11 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
       ),
     );
   } else {
-    return Text('Directions not available.',
-        style: Theme.of(context).textTheme.bodySmall);
+    return Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: Text('Directions not available.',
+                style: Theme.of(context).textTheme.bodySmall)
+    );
   }
 }
 
