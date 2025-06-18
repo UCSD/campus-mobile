@@ -79,28 +79,39 @@ class DiningDataProvider extends ChangeNotifier {
     /// fetch dining locations from the service
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data) {
-        print("=======================================================");
-        print('model.name: ${model.name}');
-        // Map vendor model with vendor logo
-        String normalize(String input) {
-          return input
-              .toLowerCase()
-              .replaceAll(RegExp(r"['’]"), '')       // remove apostrophes
-              .replaceAll(RegExp(r"[^a-z0-9]"), ''); // remove all non-alphanumeric
+        // Fix the image URLs
+        if (model.images != null) {
+          for (var img in model.images!) {
+            img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+            img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+          }
         }
-
+        ///////////// Map vendor with its logo /////////////
         for (var i = 0; i < diningLogos.length; i++) {
-          final logoBase = normalize(diningLogos[i].split('.')[0]);
+          // Normalize model name and logo names to check...
           final modelName = normalize(model.name);
-
-          if (modelName.contains(logoBase)) {
+          final logoName = normalize(diningLogos[i].split('.')[0]);
+          // ...if logo name is a substring of the model name
+          if (modelName.contains(logoName)) {
             model.vendorLogo = diningLogosEndpoint + diningLogos[i];
             print('Found logo for ${model.name}: ${model.vendorLogo}');
             break;
           }
         }
 
-        print(model.vendorLogo);
+        // Special Cases
+        if(model.name == '64 Degrees') {
+          model.vendorLogo = diningLogosEndpoint + "sixty-four-degrees.png";
+        }
+        if(model.name == 'Sixth Market') {
+          model.vendorLogo = diningLogosEndpoint + "market-at-sixth.png";
+        }
+        if(model.name == 'Pacific Café & Catering') {
+          model.vendorLogo = diningLogosEndpoint + "pacific-cafe.png";
+        }
+        if(model.name == 'Caroline\'s Seaside Cafe') {
+          model.vendorLogo = diningLogosEndpoint + "carlolines.png";
+        }
 
         // Save the data
         mapOfDiningLocations[model.name] = model;
@@ -194,6 +205,14 @@ class DiningDataProvider extends ChangeNotifier {
     /// check if we have a coordinates object
     if (_coordinates != null) return reorderLocations();
     return _diningModels.values.toList();
+  }
+
+  /// Removes apostrophes and non-alphanumeric characters
+  String normalize(String input) {
+    return input
+        .toLowerCase()
+        .replaceAll(RegExp(r"['’]"), '')       // remove apostrophes
+        .replaceAll(RegExp(r"[^a-z0-9]"), ''); // remove all non-alphanumeric
   }
 
   /// SIMPLE SETTERS
