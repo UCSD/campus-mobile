@@ -28,16 +28,13 @@ class _DiningDetailViewState extends State<DiningDetailView> {
 
   @override
   Widget build(BuildContext context) {
+    final detailWidgets = buildDetailView(context, widget.data);
     return ContainerView(
       child: ListView.separated(
-        itemCount: buildDetailView(context, widget.data).length,
-        separatorBuilder: (context, index) {
-          return SizedBox(height: 8);
-        },
-        padding: const EdgeInsets.all(16),
-        itemBuilder: (context, index) {
-          return buildDetailView(context, widget.data)[index];
-        },
+          itemCount: detailWidgets.length,
+          separatorBuilder: (context, index) => SizedBox(height: 8),
+          padding: const EdgeInsets.all(16),
+          itemBuilder: (context, index) => detailWidgets[index],
       ),
     );
   }
