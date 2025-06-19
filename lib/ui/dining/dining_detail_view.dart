@@ -72,7 +72,6 @@ class GreenDot extends StatelessWidget {
         return Colors.grey; // Error in parsing
       }
     }
-
     return Colors.grey; // Default color for unrecognized format
   }
 
