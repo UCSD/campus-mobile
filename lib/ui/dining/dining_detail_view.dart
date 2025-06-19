@@ -5,46 +5,76 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
+import '../../core/models/availability.dart';
+import '../../core/providers/availability.dart';
+import 'dining_busyness_bar.dart';
 
-class DiningDetailView extends StatelessWidget {
+class DiningDetailView extends StatefulWidget {
   const DiningDetailView({Key? key, required this.data}) : super(key: key);
   final prefix0.DiningModel data;
+
+  @override
+  State<DiningDetailView> createState() => _DiningDetailViewState();
+}
+
+class _DiningDetailViewState extends State<DiningDetailView> {
+  late AvailabilityDataProvider _availabilityDataProvider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return ContainerView(
       child: ListView.separated(
-        itemCount: buildDetailView(context, data).length,
+        itemCount: buildDetailView(context, widget.data).length,
         separatorBuilder: (context, index) {
           return SizedBox(height: 8);
         },
         padding: const EdgeInsets.all(16),
         itemBuilder: (context, index) {
-          return buildDetailView(context, data)[index];
+          return buildDetailView(context, widget.data)[index];
         },
       ),
     );
   }
 
   // Contains all the widgets that make up the Dining detail view.
-  List<Widget> buildDetailView(BuildContext context, prefix0.DiningModel model) {
+  List<Widget> buildDetailView(
+      BuildContext context, prefix0.DiningModel diningModel) {
+    // Get availability for all dining halls
+    List<AvailabilityModel?> availabilityModels = _availabilityDataProvider
+        .availabilityModels
+        .where((m) => m != null && m.name.contains("Dining Halls"))
+        .toList();
+    var busynessDiningHallModelOne = availabilityModels.firstWhere(
+      (m) => m != null && m.name.contains("Dining Halls (1/2)"),
+      orElse: () => null,
+    );
+    var busynessDiningHallModelTwo = availabilityModels.firstWhere(
+      (m) => m != null && m.name.contains("Dining Halls (2/2)"),
+      orElse: () => null,
+    );
+
     return [
       Row(
         children: [
           // Vendor Logo
-          model.vendorLogo != null
+          diningModel.vendorLogo != null
               ? Image.network(
-                  model.vendorLogo!,
+                  diningModel.vendorLogo!,
                   width: 80,
                   height: 80,
-              )
-              : Icon(
-                  Icons.restaurant,
+                )
+              : Icon(Icons.restaurant,
                   size: 56,
                   color: Theme.of(context).brightness == Brightness.light
                       ? lightPrimaryColor
-                      : darkPrimaryColor2
-             ),
+                      : darkPrimaryColor2),
           SizedBox(width: 8),
           Flexible(
             child: Column(
@@ -52,14 +82,14 @@ class DiningDetailView extends StatelessWidget {
               children: [
                 // Vendor Name
                 Text(
-                  model.name,
+                  diningModel.name,
                   textAlign: TextAlign.start,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 SizedBox(height: 4),
                 // Vendor Description
                 Text(
-                  model.description,
+                  diningModel.description,
                   textAlign: TextAlign.start,
                   style: Theme.of(context).textTheme.bodySmall,
                   overflow: TextOverflow.ellipsis,
@@ -73,12 +103,34 @@ class DiningDetailView extends StatelessWidget {
           SizedBox(width: 16),
         ],
       ),
+      // Availability Bars if applicable (Canyon Vista, Club Med, Pines, 64 Degrees, Cafe Ventanas)
+      if ((busynessDiningHallModelOne != null &&
+                busynessDiningHallModelOne.subLocations.any(
+                    (child) =>
+                        child.name.contains(diningModel.name) ||
+                        diningModel.name.contains(child.name))) ||
+            (busynessDiningHallModelTwo != null &&
+                busynessDiningHallModelTwo.subLocations.any(
+                    (child) =>
+                        child.name.contains(diningModel.name) ||
+                        diningModel.name.contains(child.name))))
+          DiningBusynessBar(
+            diningModel: diningModel,
+            busynessDiningHallModel: (busynessDiningHallModelOne != null &&
+                    busynessDiningHallModelOne.subLocations.any(
+                        (child) =>
+                            child.name.contains(diningModel.name) ||
+                            diningModel.name.contains(child.name)))
+                ? busynessDiningHallModelOne
+                : busynessDiningHallModelTwo!,
+          ),
       // Vendor hours
-      buildHours(context, model),
+      buildHours(context, diningModel),
       // Vendor Special Hours
-      if (model.specialHours != null) buildSpecialHours(context, model),
+      if (diningModel.specialHours != null)
+        buildSpecialHours(context, diningModel),
       // Vendor Payment Options
-      buildPaymentOptions(context, model),
+      buildPaymentOptions(context, diningModel),
       SizedBox(height: 16),
       // Vendor Location
       Text('Location',
@@ -86,15 +138,15 @@ class DiningDetailView extends StatelessWidget {
       ),
       Transform.translate(
         offset: const Offset(0, -15),
-        child: buildDirectionsButton(context, model),
+        child: buildDirectionsButton(context, diningModel),
       ),
       Transform.translate(
         offset: const Offset(0, -12),
         child: Row(
           children: [
-            buildWebsiteButton(context, model),
+            buildWebsiteButton(context, diningModel),
             SizedBox(width: 15),
-            buildMenuButton(context, model),
+            buildMenuButton(context, diningModel),
           ],
         ),
       ),
@@ -107,7 +159,7 @@ class DiningDetailView extends StatelessWidget {
   ///////////// Hours and Special Hours Section /////////////
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SizedBox(height: 20),
+      SizedBox(height: 14),
       Text("Hours",
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.titleMedium,
@@ -150,8 +202,7 @@ class DiningDetailView extends StatelessWidget {
     }
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(
-          "Special Hours",
+        Text("Special Hours",
           style: Theme.of(context).textTheme.titleMedium,
         ),
         SizedBox(height: 10),
@@ -178,8 +229,7 @@ class DiningDetailView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Payment Options",
+          Text("Payment Options",
             style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(height: 10),
@@ -229,10 +279,10 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
         children: <Widget>[
           Text('Get Directions',
             style: linkTextDark.copyWith(
-                fontSize: 18.0,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? linkColorLight
-                    : linkColorDark,
+              fontSize: 18.0,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? linkColorLight
+                  : linkColorDark,
             ),
           ),
           SizedBox(width: 6),
@@ -251,9 +301,10 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
                           ' mi',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontSize: 18.0,
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? linkColorLight
-                            : linkColorDark,
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? linkColorLight
+                                    : linkColorDark,
                           ))
                   : Text('--', style: TextStyle(color: linkColorLight)),
             ],
@@ -277,8 +328,7 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
     return Padding(
         padding: const EdgeInsets.only(top: 12.0),
         child: Text('Directions not available.',
-                style: Theme.of(context).textTheme.bodySmall)
-    );
+            style: Theme.of(context).textTheme.bodySmall));
   }
 }
 
@@ -403,64 +453,65 @@ class HoursOfDay extends StatelessWidget {
     if (theHours == 'Closed-Closed') theHours = 'Closed';
 
     // Determine the hours' text
-    final String hoursText = (theHours != null && theHours.contains('Closed')) || theHours == 'Open 24/7'
-        ? theHours!
-        : (formattedTimeRange(theHours) ?? theHours!);
+    final String hoursText =
+        (theHours != null && theHours.contains('Closed')) ||
+                theHours == 'Open 24/7'
+            ? theHours!
+            : (formattedTimeRange(theHours) ?? theHours!);
     // Determine the hours' text style
     final TextStyle hoursTextStyle = weekday == DateTime.now().weekday
-        ?  TextStyle(
-              fontSize: 17.0,
-              fontWeight: FontWeight.w700,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : darkPrimaryColor2
-        )
+        ? TextStyle(
+            fontSize: 17.0,
+            fontWeight: FontWeight.w700,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : darkPrimaryColor2)
         : Theme.of(context).textTheme.bodySmall!;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Flexible(
-              flex: 3,
-              child: Row(
-                children: [
-                  weekday == DateTime.now().weekday
-                      ? buildGreenDot(theHours!)
-                      : Container(width: 10),
-                  SizedBox(width: 5),
-                  // "Monday" - Bold if today is Monday.
-                  Text('$theDay ',
-                    style: weekday == DateTime.now().weekday
-                        ? TextStyle(
-                              fontSize: 17.0,
-                              fontWeight: FontWeight.w700,
-                              color: Theme.of(context).brightness == Brightness.light
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Flexible(
+            flex: 3,
+            child: Row(
+              children: [
+                weekday == DateTime.now().weekday
+                    ? buildGreenDot(theHours!)
+                    : Container(width: 10),
+                SizedBox(width: 5),
+                // "Monday" - Bold if today is Monday.
+                Text(
+                  '$theDay ',
+                  style: weekday == DateTime.now().weekday
+                      ? TextStyle(
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.w700,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
                                   ? lightPrimaryColor
                                   : darkPrimaryColor2)
-                        : Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-              // Display the hours text i.e. 9:30 AM - 4:30 PM (using the finals above)
-              Flexible(
-                flex: 5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(hoursText,
-                      style: hoursTextStyle,
-                    ),
-                  ],
+                      : Theme.of(context).textTheme.bodySmall,
                 ),
-              )
-            ],
+              ],
+            ),
           ),
-        ]
-      );
+          // Display the hours text i.e. 9:30 AM - 4:30 PM (using the finals above)
+          Flexible(
+            flex: 5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  hoursText,
+                  style: hoursTextStyle,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    ]);
   }
 
   Widget buildGreenDot(String hours) {
