@@ -1,5 +1,4 @@
 import 'package:campus_mobile_experimental/core/models/dining.dart' as prefix0;
-import 'package:campus_mobile_experimental/ui/availability/availability_display.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_menu_list.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -47,7 +46,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   // Contains all the widgets that make up the Dining detail view.
   List<Widget> buildDetailView(
       BuildContext context, prefix0.DiningModel diningModel) {
-    /// Get availability for all dining halls
+    // Get availability for all dining halls
     List<AvailabilityModel?> availabilityModels = _availabilityDataProvider
         .availabilityModels
         .where((m) => m != null && m.name.contains("Dining Halls"))
@@ -203,8 +202,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
     }
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(
-          "Special Hours",
+        Text("Special Hours",
           style: Theme.of(context).textTheme.titleMedium,
         ),
         SizedBox(height: 10),
@@ -231,8 +229,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Payment Options",
+          Text("Payment Options",
             style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(height: 10),
@@ -280,8 +277,7 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
     return TextButton(
       child: Row(
         children: <Widget>[
-          Text(
-            'Get Directions',
+          Text('Get Directions',
             style: linkTextDark.copyWith(
               fontSize: 18.0,
               color: Theme.of(context).brightness == Brightness.light
