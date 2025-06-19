@@ -106,19 +106,25 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       ),
       // Availability Bars if applicable (Canyon Vista, Club Med, Pines, 64 Degrees, Cafe Ventanas)
       if ((busynessDiningHallModelOne != null &&
-              busynessDiningHallModelOne.subLocations
-                  .any((child) => child.name.contains(diningModel.name)) ||
-          (busynessDiningHallModelTwo != null &&
-              busynessDiningHallModelTwo.subLocations
-                  .any((child) => child.name.contains(diningModel.name)))))
-        DiningBusynessBar(
-          diningModel: diningModel,
-          busynessDiningHallModel: (busynessDiningHallModelOne != null &&
-                  busynessDiningHallModelOne.subLocations
-                      .any((child) => child.name.contains(diningModel.name))
-              ? busynessDiningHallModelOne
-              : busynessDiningHallModelTwo)!,
-        ),
+                busynessDiningHallModelOne.subLocations.any(
+                    (child) =>
+                        child.name.contains(diningModel.name) ||
+                        diningModel.name.contains(child.name))) ||
+            (busynessDiningHallModelTwo != null &&
+                busynessDiningHallModelTwo.subLocations.any(
+                    (child) =>
+                        child.name.contains(diningModel.name) ||
+                        diningModel.name.contains(child.name))))
+          DiningBusynessBar(
+            diningModel: diningModel,
+            busynessDiningHallModel: (busynessDiningHallModelOne != null &&
+                    busynessDiningHallModelOne.subLocations.any(
+                        (child) =>
+                            child.name.contains(diningModel.name) ||
+                            diningModel.name.contains(child.name)))
+                ? busynessDiningHallModelOne
+                : busynessDiningHallModelTwo!,
+          ),
       // Vendor hours
       buildHours(context, diningModel),
       // Vendor Special Hours

@@ -37,7 +37,9 @@ class DiningBusynessBar extends StatelessWidget {
 
     // Only display the subLocation where subLocation.name == diningModel.name
     final matchingSubLocation = busynessDiningHallModel.subLocations
-        .where((subLocation) => subLocation.name.contains(diningModel.name))
+        .where((subLocation) =>
+            diningModel.name.contains(subLocation.name) ||
+            subLocation.name.contains(diningModel.name))
         .toList();
 
     if (matchingSubLocation.isEmpty) {
