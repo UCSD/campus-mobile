@@ -10,6 +10,7 @@ import '../../core/models/availability.dart';
 import '../../core/providers/availability.dart';
 import 'dining_busyness_bar.dart';
 
+late final int _currDay;
 class DiningDetailView extends StatefulWidget {
   const DiningDetailView({Key? key, required this.data}) : super(key: key);
   final prefix0.DiningModel data;
@@ -165,19 +166,19 @@ class _DiningDetailViewState extends State<DiningDetailView> {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       SizedBox(height: 8),
-      HoursOfDay(model: model, weekday: 1),
+      HoursOfDay(day: 1, model: model),
       buildDivider(context),
-      HoursOfDay(model: model, weekday: 2),
+      HoursOfDay(day: 2, model: model),
       buildDivider(context),
-      HoursOfDay(model: model, weekday: 3),
+      HoursOfDay(day: 3, model: model),
       buildDivider(context),
-      HoursOfDay(model: model, weekday: 4),
+      HoursOfDay(day: 4, model: model),
       buildDivider(context),
-      HoursOfDay(model: model, weekday: 5),
+      HoursOfDay(day: 5, model: model),
       buildDivider(context),
-      HoursOfDay(model: model, weekday: 6),
+      HoursOfDay(day: 6, model: model),
       buildDivider(context),
-      HoursOfDay(model: model, weekday: 7),
+      HoursOfDay(day: 7, model: model),
       SizedBox(height: 16),
     ]);
   }
@@ -382,84 +383,31 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
   }
 }
 
-Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
-  if (model.meals != null) {
-    return DiningMenuList(
-      model: model,
-    );
-  } else {
-    return Container();
-  }
-}
+// TODO: Unused, remove if not needed
+// Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
+//   if (model.meals != null) {
+//     return DiningMenuList(
+//       model: model,
+//     );
+//   } else {
+//     return Container();
+//   }
+// }
 
-// Feeds the "Hours" section of the Dining Detail View.
+// Feeds the "Hours" section of the Dining Detail View //
 class HoursOfDay extends StatelessWidget {
-  final int? weekday;
-  final prefix0.DiningModel? model;
-
-  const HoursOfDay({Key? key, this.weekday, this.model}) : super(key: key);
+  const HoursOfDay({Key? key, required this.day, required this.model}) : super(key: key);
+  final int day;
+  final prefix0.DiningModel model;
 
   @override
   Widget build(BuildContext context) {
-    var theDay;
-    String? theHours;
-    switch (weekday) {
-      case 1:
-        theDay = 'Monday';
-        theHours = model!.regularHours.mon == null
-            ? 'Closed'
-            : model!.regularHours.mon;
-        break;
-      case 2:
-        theDay = 'Tuesday';
-        theHours = model!.regularHours.tue == null
-            ? 'Closed'
-            : model!.regularHours.tue;
-        break;
-      case 3:
-        theDay = 'Wednesday';
-        theHours = model!.regularHours.wed == null
-            ? 'Closed'
-            : model!.regularHours.wed;
-        break;
-      case 4:
-        theDay = 'Thursday';
-        theHours = model!.regularHours.thu == null
-            ? 'Closed'
-            : model!.regularHours.thu;
-        break;
-      case 5:
-        theDay = 'Friday';
-        theHours = model!.regularHours.fri == null
-            ? 'Closed'
-            : model!.regularHours.fri;
-        break;
-      case 6:
-        theDay = 'Saturday';
-        theHours = model!.regularHours.sat == null
-            ? 'Closed'
-            : model!.regularHours.sat;
-        break;
-      case 7:
-        theDay = 'Sunday';
-        theHours = model!.regularHours.sun == null
-            ? 'Closed'
-            : model!.regularHours.sun;
-        break;
-    }
-
-    /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
-    correct it to look right.*/
-    if (theHours == 'Closed-Closed') theHours = 'Closed';
-
-    // Determine the hours' text
-    final String hoursText =
-        (theHours != null && theHours.contains('Closed')) ||
-                theHours == 'Open 24/7'
-            ? theHours!
-            : (formattedTimeRange(theHours) ?? theHours!);
+    // Extract the hours for the given day from the model
+    var result = extractDayHours(day, model);
+    var theDay = result['day'];
+    var hoursText = result['hours'];
     // Determine the hours' text style
-    final TextStyle hoursTextStyle = weekday == DateTime.now().weekday
+    final TextStyle hoursTextStyle = day == DateTime.now().weekday
         ? TextStyle(
             fontSize: 17.0,
             fontWeight: FontWeight.w700,
@@ -467,8 +415,9 @@ class HoursOfDay extends StatelessWidget {
                 ? lightPrimaryColor
                 : darkPrimaryColor2)
         : Theme.of(context).textTheme.bodySmall!;
-
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    // Display the given day and hours in a row, if the given day is today, add a green dot
+    return Column(crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -476,14 +425,10 @@ class HoursOfDay extends StatelessWidget {
             flex: 3,
             child: Row(
               children: [
-                weekday == DateTime.now().weekday
-                    ? buildGreenDot(theHours!)
-                    : Container(width: 10),
-                SizedBox(width: 5),
                 // "Monday" - Bold if today is Monday.
                 Text(
-                  '$theDay ',
-                  style: weekday == DateTime.now().weekday
+                  '$theDay',
+                  style: day == DateTime.now().weekday
                       ? TextStyle(
                           fontSize: 17.0,
                           fontWeight: FontWeight.w700,
@@ -503,7 +448,7 @@ class HoursOfDay extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  hoursText,
+                  hoursText!,
                   style: hoursTextStyle,
                 ),
               ],
@@ -513,45 +458,107 @@ class HoursOfDay extends StatelessWidget {
       ),
     ]);
   }
+}
 
-  Widget buildGreenDot(String hours) {
-    MaterialColor color;
-    if (RegExp(r"\b[0-9]{2}").allMatches(hours).length != 2) {
-      //If the hours are a special string (not a time)
-      /*If there are new strings that get returned instead of a time,
+Map<String, String> extractDayHours(int day, prefix0.DiningModel? model) {
+  var theDay;
+  var theHours;
+  // Extract the hours of the given day
+  switch (day) {
+    case 1:
+      theDay = 'Monday';
+      theHours = model!.regularHours.mon == null
+          ? 'Closed'
+          : model.regularHours.mon;
+      break;
+    case 2:
+      theDay = 'Tuesday';
+      theHours = model!.regularHours.tue == null
+          ? 'Closed'
+          : model.regularHours.tue;
+      break;
+    case 3:
+      theDay = 'Wednesday';
+      theHours = model!.regularHours.wed == null
+          ? 'Closed'
+          : model.regularHours.wed;
+      break;
+    case 4:
+      theDay = 'Thursday';
+      theHours = model!.regularHours.thu == null
+          ? 'Closed'
+          : model.regularHours.thu;
+      break;
+    case 5:
+      theDay = 'Friday';
+      theHours = model!.regularHours.fri == null
+          ? 'Closed'
+          : model.regularHours.fri;
+      break;
+    case 6:
+      theDay = 'Saturday';
+      theHours = model!.regularHours.sat == null
+          ? 'Closed'
+          : model.regularHours.sat;
+      break;
+    case 7:
+      theDay = 'Sunday';
+      theHours = model!.regularHours.sun == null
+          ? 'Closed'
+          : model.regularHours.sun;
+      break;
+  }
+
+  /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
+    correct it to look right.*/
+  if (theHours == 'Closed-Closed') theHours = 'Closed';
+  // Determine the hours' text
+  final String hoursText =
+  (theHours != null && theHours.contains('Closed')) ||
+      theHours == 'Open 24/7'
+      ? theHours!
+      : (formattedTimeRange(theHours) ?? theHours!);
+
+  return {'day': theDay, 'hours': hoursText};
+}
+
+Widget buildGreenDot(String hours) {
+  MaterialColor color;
+  if (RegExp(r"\b[0-9]{2}").allMatches(hours).length != 2) {
+    //If the hours are a special string (not a time)
+    /*If there are new strings that get returned instead of a time,
       put the strings here. This is a weird way to do it, but
       we're not in control of the API, so we have to manually determine
       if this means the establishment is open or not. The 'Closed' case is
       of my doing however as that simply denotes the establishment is closed.*/
-      switch (hours) {
-        case 'Closed':
-          color = Colors.red;
-          break;
-        case 'Open 24/7':
-          color = Colors.green;
-          break;
-        default:
-          return Container();
-      }
-    } else {
-      var times = hours.split('-');
-      var start = int.parse(times[0]);
-      var end = int.parse(times[1]);
-      var timeNow;
-      if (end < start) end += 2300; // If time goes into next day, prevent wrap
-      if (DateTime.now().minute.toString().length == 1)
-        timeNow = int.parse('${DateTime.now().hour}0${DateTime.now().minute}');
-      else
-        timeNow = int.parse('${DateTime.now().hour}${DateTime.now().minute}');
-      if (timeNow >= start && timeNow < end)
-        color = Colors.green;
-      else
+    switch (hours) {
+      case 'Closed':
         color = Colors.red;
+        break;
+      case 'Open 24/7':
+        color = Colors.green;
+        break;
+      default:
+        return Container();
     }
-    return Container(
-      width: 8,
-      height: 8,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-    );
+  } else {
+    var times = hours.split('-');
+    var start = int.parse(times[0]);
+    var end = int.parse(times[1]);
+    var timeNow;
+    if (end < start) end += 2300; // If time goes into next day, prevent wrap
+    if (DateTime.now().minute.toString().length == 1)
+      timeNow = int.parse('${DateTime.now().hour}0${DateTime.now().minute}');
+    else
+      timeNow = int.parse('${DateTime.now().hour}${DateTime.now().minute}');
+    if (timeNow >= start && timeNow < end)
+      color = Colors.green;
+    else
+      color = Colors.red;
   }
+  return Container(
+    width: 8,
+    height: 8,
+    decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+  );
 }
