@@ -256,7 +256,7 @@ String? findNextOpenTime(dining_model.RegularHours hours) {
     int nextDay = (now.weekday + i - 1) % 7;
     String? range = days[nextDay];
     if (range != null && range != 'Closed-Closed') {
-      return formattedTimeRange(range)?.split('–').first;
+      return formattedTimeRange(range)?.split('-').first.trim();
     }
   }
   return null;
