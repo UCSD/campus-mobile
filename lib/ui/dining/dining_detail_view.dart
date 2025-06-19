@@ -9,97 +9,6 @@ import '../../core/models/availability.dart';
 import '../../core/providers/availability.dart';
 import 'dining_busyness_bar.dart';
 
-int _currDay = -1;
-String _currHours = '';
-class GreenDot extends StatelessWidget {
-  const GreenDot({Key? key, required this.currHours}) : super(key: key);
-  final String currHours;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 8,
-      height: 8,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: _determineColor(),
-      ),
-    );
-  }
-
-  Color _determineColor() {
-    // Handle special cases like "Closed" or "Open 24/7"
-    if (currHours == 'Closed') {
-      return Colors.red;
-    } else if (currHours == 'Open 24/7') {
-      return Colors.green;
-    }
-
-    // If this is a time range like "9:00 AM - 5:00 PM"
-    if (currHours.contains('-')) {
-      try {
-        final timeStrings = currHours.split('-');
-        if (timeStrings.length != 2) {
-          return Colors.grey; // Invalid format
-        }
-
-        // Parse the start and end times
-        final now = TimeOfDay.now();
-        final currentTimeInMinutes = now.hour * 60 + now.minute;
-
-        // Parse start time (e.g. "9:00 AM")
-        final startTime = _parseTimeString(timeStrings[0].trim());
-        if (startTime == null) return Colors.grey;
-
-        // Parse end time (e.g. "5:00 PM")
-        final endTime = _parseTimeString(timeStrings[1].trim());
-        if (endTime == null) return Colors.grey;
-
-        // Adjust for overnight hours
-        int adjustedEndTime = endTime;
-        if (endTime < startTime) {
-          adjustedEndTime += 24 * 60; // Add a day in minutes
-        }
-
-        // Determine if current time is within the range
-        if (currentTimeInMinutes >= startTime &&
-            currentTimeInMinutes < adjustedEndTime) {
-          return Colors.green;
-        } else {
-          return Colors.red;
-        }
-      } catch (e) {
-        print('Error parsing time: $e');
-        return Colors.grey; // Error in parsing
-      }
-    }
-    return Colors.grey; // Default color for unrecognized format
-  }
-
-  // Parse time strings like "9:00 AM" into minutes since midnight
-  int? _parseTimeString(String timeString) {
-    // Try to extract the hour, minute, and AM/PM parts
-    final amPmRegex = RegExp(r'(\d+):(\d+)\s*(AM|PM)');
-    final match = amPmRegex.firstMatch(timeString);
-
-    if (match != null && match.groupCount >= 3) {
-      int hour = int.parse(match.group(1)!);
-      final int minute = int.parse(match.group(2)!);
-      final String amPm = match.group(3)!.toUpperCase();
-
-      // Convert 12-hour to 24-hour format
-      if (amPm == 'PM' && hour < 12) {
-        hour += 12;
-      } else if (amPm == 'AM' && hour == 12) {
-        hour = 0;
-      }
-
-      return hour * 60 + minute;
-    }
-
-    return null;
-  }
-}
-
 class DiningDetailView extends StatefulWidget {
   const DiningDetailView({Key? key, required this.data}) : super(key: key);
   final prefix0.DiningModel data;
@@ -195,25 +104,22 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       ),
       // Availability Bars if applicable (Canyon Vista, Club Med, Pines, 64 Degrees, Cafe Ventanas)
       if ((busynessDiningHallModelOne != null &&
-                busynessDiningHallModelOne.subLocations.any(
-                    (child) =>
-                        child.name.contains(diningModel.name) ||
-                        diningModel.name.contains(child.name))) ||
-            (busynessDiningHallModelTwo != null &&
-                busynessDiningHallModelTwo.subLocations.any(
-                    (child) =>
-                        child.name.contains(diningModel.name) ||
-                        diningModel.name.contains(child.name))))
-          DiningBusynessBar(
-            diningModel: diningModel,
-            busynessDiningHallModel: (busynessDiningHallModelOne != null &&
-                    busynessDiningHallModelOne.subLocations.any(
-                        (child) =>
-                            child.name.contains(diningModel.name) ||
-                            diningModel.name.contains(child.name)))
-                ? busynessDiningHallModelOne
-                : busynessDiningHallModelTwo!,
-          ),
+              busynessDiningHallModelOne.subLocations.any((child) =>
+                  child.name.contains(diningModel.name) ||
+                  diningModel.name.contains(child.name))) ||
+          (busynessDiningHallModelTwo != null &&
+              busynessDiningHallModelTwo.subLocations.any((child) =>
+                  child.name.contains(diningModel.name) ||
+                  diningModel.name.contains(child.name))))
+        DiningBusynessBar(
+          diningModel: diningModel,
+          busynessDiningHallModel: (busynessDiningHallModelOne != null &&
+                  busynessDiningHallModelOne.subLocations.any((child) =>
+                      child.name.contains(diningModel.name) ||
+                      diningModel.name.contains(child.name)))
+              ? busynessDiningHallModelOne
+              : busynessDiningHallModelTwo!,
+        ),
       // Vendor hours
       buildHours(context, diningModel),
       // Vendor Special Hours
@@ -255,10 +161,12 @@ class _DiningDetailViewState extends State<DiningDetailView> {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       SizedBox(height: 8),
-      ...List.generate(7, (i) => [
-            HoursOfDay(day: i + 1, model: model),
-            if (i < 6) buildDivider(context),
-          ]).expand((widgetPair) => widgetPair).toList(),
+      ...List.generate(
+          7,
+          (i) => [
+                HoursOfDay(day: i + 1, model: model),
+                if (i < 6) buildDivider(context),
+              ]).expand((widgetPair) => widgetPair).toList(),
       SizedBox(height: 16),
     ]);
   }
@@ -499,8 +407,7 @@ class HoursOfDay extends StatelessWidget {
 
     // Check if this is the current day
     final bool isToday = day == DateTime.now().weekday;
-    return Column(crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -555,63 +462,137 @@ Map<String, String> extractDayHours(int day, prefix0.DiningModel? model) {
   switch (day) {
     case 1:
       theDay = 'Monday';
-      theHours = model!.regularHours.mon == null
-          ? 'Closed'
-          : model.regularHours.mon;
+      theHours =
+          model!.regularHours.mon == null ? 'Closed' : model.regularHours.mon;
       break;
     case 2:
       theDay = 'Tuesday';
-      theHours = model!.regularHours.tue == null
-          ? 'Closed'
-          : model.regularHours.tue;
+      theHours =
+          model!.regularHours.tue == null ? 'Closed' : model.regularHours.tue;
       break;
     case 3:
       theDay = 'Wednesday';
-      theHours = model!.regularHours.wed == null
-          ? 'Closed'
-          : model.regularHours.wed;
+      theHours =
+          model!.regularHours.wed == null ? 'Closed' : model.regularHours.wed;
       break;
     case 4:
       theDay = 'Thursday';
-      theHours = model!.regularHours.thu == null
-          ? 'Closed'
-          : model.regularHours.thu;
+      theHours =
+          model!.regularHours.thu == null ? 'Closed' : model.regularHours.thu;
       break;
     case 5:
       theDay = 'Friday';
-      theHours = model!.regularHours.fri == null
-          ? 'Closed'
-          : model.regularHours.fri;
+      theHours =
+          model!.regularHours.fri == null ? 'Closed' : model.regularHours.fri;
       break;
     case 6:
       theDay = 'Saturday';
-      theHours = model!.regularHours.sat == null
-          ? 'Closed'
-          : model.regularHours.sat;
+      theHours =
+          model!.regularHours.sat == null ? 'Closed' : model.regularHours.sat;
       break;
     case 7:
       theDay = 'Sunday';
-      theHours = model!.regularHours.sun == null
-          ? 'Closed'
-          : model.regularHours.sun;
+      theHours =
+          model!.regularHours.sun == null ? 'Closed' : model.regularHours.sun;
       break;
   }
 
-  /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does,
-    correct it to look right.*/
+  /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does, correct it to look right.*/
   if (theHours == 'Closed-Closed') theHours = 'Closed';
   // Determine the hours' text
-  final String hoursText =
-  (theHours != null && theHours.contains('Closed')) ||
-      theHours == 'Open 24/7'
+  final String hoursText = (theHours != null && theHours.contains('Closed')) ||
+          theHours == 'Open 24/7'
       ? theHours!
       : (formattedTimeRange(theHours) ?? theHours!);
 
-  // For tracking the current day
-  if (day == DateTime.now().weekday) {
-    _currDay = day;
-    _currHours = hoursText;
+  return {'day': theDay, 'hours': hoursText};
+}
+
+class GreenDot extends StatelessWidget {
+  const GreenDot({Key? key, required this.currHours}) : super(key: key);
+  final String currHours;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 8,
+      height: 8,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: _determineColor(),
+      ),
+    );
   }
 
-  return {'day': theDay, 'hours': hoursText};
+  Color _determineColor() {
+    // Handle special cases like "Closed" or "Open 24/7"
+    if (currHours == 'Closed') {
+      return Colors.red;
+    } else if (currHours == 'Open 24/7') {
+      return Colors.green;
+    }
+
+    // If this is a time range like "9:00 AM - 5:00 PM"
+    if (currHours.contains('-')) {
+      try {
+        final timeStrings = currHours.split('-');
+        if (timeStrings.length != 2) {
+          return Colors.grey; // Invalid format
+        }
+
+        // Parse the start and end times
+        final now = TimeOfDay.now();
+        final currentTimeInMinutes = now.hour * 60 + now.minute;
+
+        // Parse start time (e.g. "9:00 AM")
+        final startTime = _parseTimeString(timeStrings[0].trim());
+        if (startTime == null) return Colors.grey;
+
+        // Parse end time (e.g. "5:00 PM")
+        final endTime = _parseTimeString(timeStrings[1].trim());
+        if (endTime == null) return Colors.grey;
+
+        // Adjust for overnight hours
+        int adjustedEndTime = endTime;
+        if (endTime < startTime) {
+          adjustedEndTime += 24 * 60; // Add a day in minutes
+        }
+
+        // Determine if current time is within the range
+        if (currentTimeInMinutes >= startTime &&
+            currentTimeInMinutes < adjustedEndTime) {
+          return Colors.green;
+        } else {
+          return Colors.red;
+        }
+      } catch (e) {
+        print('Error parsing time: $e');
+        return Colors.grey; // Error in parsing
+      }
+    }
+    return Colors.grey; // Default color for unrecognized format
+  }
+
+  // Parse time strings like "9:00 AM" into minutes since midnight
+  int? _parseTimeString(String timeString) {
+    // Try to extract the hour, minute, and AM/PM parts
+    final amPmRegex = RegExp(r'(\d+):(\d+)\s*(AM|PM)');
+    final match = amPmRegex.firstMatch(timeString);
+
+    if (match != null && match.groupCount >= 3) {
+      int hour = int.parse(match.group(1)!);
+      final int minute = int.parse(match.group(2)!);
+      final String amPm = match.group(3)!.toUpperCase();
+
+      // Convert 12-hour to 24-hour format
+      if (amPm == 'PM' && hour < 12) {
+        hour += 12;
+      } else if (amPm == 'AM' && hour == 12) {
+        hour = 0;
+      }
+
+      return hour * 60 + minute;
+    }
+
+    return null;
+  }
 }
