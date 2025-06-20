@@ -16,7 +16,6 @@ import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
-import 'package:result_dart/result_dart.dart';
 import '../../ui/home/home.dart';
 
 class UserDataProvider extends ChangeNotifier {
@@ -52,8 +51,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Update the [UserProfileModel] stored in state
   /// overwrite the [UserProfileModel] in persistent storage with the model passed in
   Future updateUserProfileModel(UserProfileModel model) async {
-    _userProfileModel = model;
-    var box;
+    _userProfileModel = model; var box;
     try {
       box = Hive.box<UserProfileModel?>('UserProfileModel');
     } catch (e) {
@@ -135,44 +133,24 @@ class UserDataProvider extends ChangeNotifier {
   /// Authenticate a user given an username and password
   /// Upon logging in we should make sure that users has an account
   /// If the user doesn't have an account one will be made by invoking [_createNewUser]
-  Future<bool> manualLogin(String username, String password) async {
-    _error = null;
-    _isLoading = true;
+  Future manualLogin(String username, String password) async {
+    _error = null; _isLoading = true;
     notifyListeners();
 
     if (username.isNotEmpty && password.isNotEmpty) {
       _encryptAndSaveCredentials(username, password);
 
-      // Result-based service call:
-      String? base64EncodedWithEncryptedPassword;
-      {
-        final encryptedPw = await _getEncryptedPasswordFromDevice();
-        if (encryptedPw != null) {
-          base64EncodedWithEncryptedPassword = base64.encode(utf8.encode('$username:$encryptedPw'));
+      if (await silentLogin()) {
+        if (_userProfileModel.classifications!.student!) {
+          cardsDataProvider.showAllStudentCards();
+        } else if (_userProfileModel.classifications!.staff!) {
+          cardsDataProvider.showAllStaffCards();
         }
-      }
-
-      if (base64EncodedWithEncryptedPassword != null) {
-        final result = await _authenticationService.silentLogin(base64EncodedWithEncryptedPassword);
-        if (result.isSuccess()) {
-          final authModel = result.getOrNull()!;               //
-          await updateAuthenticationModel(authModel);
-          if (_userProfileModel.classifications!.student!) {
-            cardsDataProvider.showAllStudentCards();
-          } else if (_userProfileModel.classifications!.staff!) {
-            cardsDataProvider.showAllStaffCards();
-          }
-          _isLoading = false;
-          notifyListeners();
-          return true;
-        } else {
-          _error = result.exceptionOrNull()?.toString();
-          _isLoading = false;
-          notifyListeners();
-          return false;
-        }
+        _isLoading = false;
+        notifyListeners();
+        return true;
       } else {
-        _error = "Could not get encrypted password from device";
+        _error = _authenticationService.error;
         _isLoading = false;
         notifyListeners();
         return false;
@@ -200,25 +178,17 @@ class UserDataProvider extends ChangeNotifier {
       resetAllCardHeights();
       resetNotificationsScrollOffset();
 
-      final result = await _authenticationService.silentLogin(base64EncodedWithEncryptedPassword);
-      if (result.isSuccess()) {
-        final authModel = result.getOrNull()!;
-        await updateAuthenticationModel(authModel);
+      if (await _authenticationService.silentLogin(base64EncodedWithEncryptedPassword)) {
+        await updateAuthenticationModel(_authenticationService.data!);
         await fetchUserProfile();
         var _cardsDataProvider = CardsDataProvider();
         _cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
         _subscribeToPushNotificationTopics(List<String>.from(userProfileModel.subscribedTopics!));
-        _pushNotificationDataProvider.registerDevice(authModel.accessToken);
+        _pushNotificationDataProvider.registerDevice(_authenticationService.data!.accessToken);
         await analytics.logEvent(name: 'loggedIn');
         _isInSilentLogin = false;
         notifyListeners();
         return true;
-      } else {
-        _error = result.exceptionOrNull()?.toString();
-        _isInSilentLogin = false;
-        notifyListeners();
-        logout();
-        return false;
       }
     }
 
@@ -267,8 +237,7 @@ class UserDataProvider extends ChangeNotifier {
   /// invoke [postUserProfile] once user profile is created
   /// if user has a profile then we invoke [updateUserProfileModel]
   Future fetchUserProfile() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
 
     if (isLoggedIn) {
@@ -363,15 +332,14 @@ class UserDataProvider extends ChangeNotifier {
   /// Invoke [updateUserProfileModel] with user profile that was passed in
   /// If user is logged in upload [UserProfileModel] to DB
   Future postUserProfile(UserProfileModel profile) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
 
     /// save settings to local storage
     await updateUserProfileModel(profile);
 
     /// check if user is logged in
-    if (_authenticationModel.isLoggedIn(_lastUpdated)) {
+    if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
       final Map<String, String> headers = {
         'Authorization': "Bearer " + _authenticationModel.accessToken!
       };
@@ -382,8 +350,7 @@ class UserDataProvider extends ChangeNotifier {
         if (profile.toJson()[key] != null) tempJson[key] = profile.toJson()[key];
       }
       if (await _userProfileService.uploadUserProfile(headers, tempJson)) {
-        _error = null;
-        _isLoading = false;
+        _error = null; _isLoading = false;
       } else {
         _error = _userProfileService.error;
       }
