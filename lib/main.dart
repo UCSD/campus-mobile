@@ -59,7 +59,7 @@ Future<void> initializeApp() async {
   final prefs = await SharedPreferences.getInstance();
 
   // TODO: fix this. We don't need two different persistent flags...
-  if (prefs.getBool('first_run') ?? true) {        
+  if (prefs.getBool('first_run') ?? true) {
     await clearSecuredStorage();
     await clearHiveStorage();
     prefs.setBool('showOnboardingScreen', true);

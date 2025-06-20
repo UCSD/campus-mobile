@@ -52,10 +52,8 @@ class NewsList extends StatelessWidget {
                 tiles: newsTiles,
                 context: context,
                 color: Theme.of(context).brightness == Brightness.dark
-                    // keep the dark theme divider as-is
                     ? listTileDividerColorDark
-                    // use a darker grey for light mode
-                    : Colors.grey.shade700,
+                    : listTileDividerColorLight,
               ).toList(),
             ),
           )
@@ -67,8 +65,8 @@ class NewsList extends StatelessWidget {
                   tiles: newsTiles,
                   context: context,
                   color: Theme.of(context).brightness == Brightness.dark
-                    ? listTileDividerColorDark
-                    : Colors.grey.shade700,
+                      ? listTileDividerColorDark
+                      : listTileDividerColorLight,
                 ).toList(),
               ),
             ),
