@@ -41,31 +41,44 @@ class MapsDataProvider extends ChangeNotifier {
   ///SERVICES
   late MapSearchService _mapSearchService;
 
+  /// Adds a marker to the map based on the given index.
+  /// TODO: Remove _mapSearchModels once we have fully transitioned to using ESRI.
   void addMarker(int listIndex) {
-    var marker;
-    if(_mapSearchModels.isNotEmpty && listIndex >= 0 && listIndex < _mapSearchModels.length) {
+    Marker? marker;
+    // Check if _mapSearchModels has data and the index is valid
+    if (_mapSearchModels.isNotEmpty && listIndex >= 0 && listIndex < _mapSearchModels.length) {
+      final model = _mapSearchModels[listIndex];
+      // Create a marker from the MapSearchModel at the given index
       marker = Marker(
-        markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
-        position: LatLng(_mapSearchModels[listIndex].mkrLat!,
-            _mapSearchModels[listIndex].mkrLong!),
+        markerId: MarkerId(model.mkrMarkerid.toString()),
+        position: LatLng(model.mkrLat!, model.mkrLong!),
         infoWindow: InfoWindow(
-            title: _mapSearchModels[listIndex].title,
-            snippet: _mapSearchModels[listIndex].description),
+          title: model.title,
+          snippet: model.description,
+        ),
       );
     }
-    else {
+    // Otherwise, check if _esriPOIModels has data and the index is valid
+    else if (_esriPOIModels.isNotEmpty && listIndex >= 0 && listIndex < _esriPOIModels.length) {
+      final model = _esriPOIModels[listIndex];
+      // Create a marker from the EsriPOIModel at the given index
       marker = Marker(
-        markerId: MarkerId(_esriPOIModels[listIndex].mkrMarkerid.toString()),
-        position: LatLng(_esriPOIModels[listIndex].attributes.latitude!,
-            _esriPOIModels[listIndex].attributes.longitude!),
+        markerId: MarkerId(model.mkrMarkerid.toString()),
+        position: LatLng(model.attributes.latitude!, model.attributes.longitude!),
         infoWindow: InfoWindow(
-            title: _esriPOIModels[listIndex].attributes.c3dName,
-            snippet: _esriPOIModels[listIndex].attributes.c3dDescription),
+          title: model.attributes.updatedName ?? model.attributes.c3dName,
+          snippet: model.attributes.c3dDescription,
+        ),
       );
+    } else {
+      return; // If neither list has valid data for the index, do nothing
     }
+
+    // Clear all existing markers and add the new marker
     _markers.clear();
     _markers[marker.markerId] = marker;
 
+    // Move the map camera to the new marker and show its info window
     updateMapPosition();
     notifyListeners();
   }
