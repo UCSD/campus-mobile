@@ -30,8 +30,9 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
     List<Widget> listTiles = [];
     listTiles.add(
       ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
         title: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Text("Parking Structures",
               style: Theme.of(context).brightness == Brightness.dark
                   ? textSubheaderDark
@@ -50,8 +51,9 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
           parkingDataProvider.parkingViewState[structureName]!;
       listTiles.add(
         ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
           title: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Text(
               structureName,
               style: Theme.of(context).textTheme.bodyMedium,
@@ -93,13 +95,22 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
     return ListView(
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,
-      children: ListTile.divideTiles(
-        tiles: listTiles,
-        context: context,
-        color: Theme.of(context).brightness == Brightness.dark
-            ? listTileDividerColorDark
-            : listTileDividerColorLight,
-      ).toList(),
+      children: [
+        for (int i = 0; i < listTiles.length; i++) ...[
+          listTiles[i],
+          if (i != listTiles.length - 1)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Divider(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? listTileDividerColorDark
+                    : listTileDividerColorLight,
+                thickness: 0.5,
+                height: 0,
+              ),
+            ),
+        ]
+      ],
     );
   }
 }

@@ -28,15 +28,14 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
   }
 
   // Dot Indicator
-  Widget buildDotIndicator() =>
-    DotsIndicator(
-      dotsCount: 5,
-      position: currentIndex.toDouble(),
-      decorator: const DotsDecorator(
-          activeColor: const Color(0xFF00619B),
-          activeSize: const Size(16.0, 16.0) // Bigger active dot
-      ),
-    );
+  Widget buildDotIndicator() => DotsIndicator(
+        dotsCount: 5,
+        position: currentIndex.toDouble(),
+        decorator: const DotsDecorator(
+            activeColor: const Color(0xFF00619B),
+            activeSize: const Size(16.0, 16.0) // Bigger active dot
+            ),
+      );
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -50,9 +49,19 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
                 controller: _backgroundPageController,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 5,
-                itemBuilder: (_, index) => Image.asset(
-                      "assets/images/onboarding/slide-${index + 1}-background.jpg",
-                      fit: BoxFit.fitWidth,
+                itemBuilder: (_, index) => Stack(
+                      children: [
+                        Positioned(
+                          left: -2.5,
+                          right: -2.5,
+                          top: 0,
+                          bottom: 0,
+                          child: Image.asset(
+                            "assets/images/onboarding/slide-${index + 1}-background.jpg",
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                      ],
                     )),
             Column(
               children: <Widget>[

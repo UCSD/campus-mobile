@@ -194,7 +194,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                     },
                     options: LinkifyOptions(humanize: false),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 12,
+                        fontSize: 16,
                         height: 1.41,
                         fontWeight: FontWeight.w400)),
                 freefoodProvider.isFreeFood(data.messageId)
