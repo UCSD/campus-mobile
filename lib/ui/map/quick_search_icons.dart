@@ -2,7 +2,7 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../app_styles.dart';
-// import 'package:arcgis_maps/arcgis_maps.dart';
+// import 'package:arcgis_maps/arcgis_maps.dart'; // Saved for future ESRI Map Integration
 
 /// Found in the legend's tab: https://www.arcgis.com/apps/mapviewer/index.html?url=https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0&source=sd
 final subclasses = [
@@ -111,12 +111,12 @@ class QuickSearchIcons extends StatelessWidget {
               },
             ),
             LabeledIconButton(
-              icon: Icons.coffee,
-              text: 'Coffee Shops',
+              icon: Icons.local_drink,
+              text: 'Hydration',
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text = 'Coffee';
+                    .text = 'Hydration';
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .fetchLocations(true);
                 Navigator.pop(context);

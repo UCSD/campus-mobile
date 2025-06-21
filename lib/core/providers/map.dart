@@ -102,6 +102,7 @@ class MapsDataProvider extends ChangeNotifier {
   /// Fetches locations from the MapSearchService or ESRI Points of Interest
   /// TODO: Finish transitioning to ESRI Points of Interest only after rigorous testing
   /// Transition happens when everything calling fetchLocations is set to "TRUE" and still works as expected.
+  /// For instance, we need to ensure it works with deep linking.
   void fetchLocations(bool esri) async {
     String query = searchBarController.text;
     _usingESRI = esri;
@@ -137,7 +138,7 @@ class MapsDataProvider extends ChangeNotifier {
       if (await _mapSearchService.fetchESRILocations(query)) {
         _esriPOIModels = _mapSearchService.esriResults;
         _noResults = false;
-        print("!!!!!!!!!!!!!!!!!!!! ESRI API Results: " + _esriPOIModels.toString());
+        // print("!!!!!!!!!!!!!!!!!!!! ESRI API Results: " + _esriPOIModels.toString());
         if (_esriPOIModels.isEmpty) {
           _noResults = true;
         } else {

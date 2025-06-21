@@ -11,6 +11,7 @@ class MapSearchService {
   List<MapSearchModel> _results = [];
   List<EsriPOIModel> _esriResults = [];
 
+  /// TODO: Remove this when GoogleMaps search is no longer used
   Future<bool> fetchLocations(String location) async {
     _error = null;
     _isLoading = true;
@@ -42,12 +43,7 @@ class MapSearchService {
     // Escape any single-quotes in the user’s text
     final escapedSearchText = searchText.trim().replaceAll("'", "''");
     // Build a raw SQL WHERE clause for general search
-    final whereClause = """
-      UpdatedName     LIKE '$escapedSearchText%'
-      OR Class           LIKE '$escapedSearchText%'
-      OR Subclass        LIKE '$escapedSearchText%'
-      OR UpdatedKeywords LIKE '$escapedSearchText%'
-      """;
+    final whereClause = "UpdatedName LIKE '$escapedSearchText%' OR Class LIKE '$escapedSearchText%' OR Subclass LIKE '$escapedSearchText%' OR UpdatedKeywords LIKE '$escapedSearchText%'";
     final params = {
       'where': whereClause,
       'outFields': '*',
