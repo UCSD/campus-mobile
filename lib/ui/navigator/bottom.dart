@@ -144,7 +144,9 @@ class _BottomTabBarState extends State<BottomTabBar> {
         icon,
         size: size,
         color: isSelected
-            ? theme.bottomNavigationBarTheme.selectedItemColor
+            ? (theme.brightness == Brightness.light
+                 ? theme.bottomNavigationBarTheme.selectedItemColor
+                 : bottomTabBarColorDark)
             : theme.bottomNavigationBarTheme.unselectedItemColor,
       ),
     );
