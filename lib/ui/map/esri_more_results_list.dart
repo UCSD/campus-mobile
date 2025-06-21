@@ -24,7 +24,7 @@ class MoreESRIResultsList extends StatelessWidget {
                     height: 50,
                     alignment: Alignment.center,
                     child: Text(
-                      'More ESRI Results',
+                      'More Results',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -56,7 +56,11 @@ class MoreESRIResultsList extends StatelessWidget {
                                 .toStringAsFixed(1) +
                                 ' mi'
                                 : '--',
-                            style: TextStyle(color: Colors.blue[600]),
+                            style: TextStyle(
+                                color: Theme.of(context).brightness == Brightness.light
+                                    ? linkColorLight
+                                    : linkColorDark
+                            ),
                           ),
                           onTap: () {
                             Provider.of<MapsDataProvider>(context, listen: false)
@@ -80,7 +84,7 @@ class MoreESRIResultsList extends StatelessWidget {
             ),
           ),
           child: Text(
-            'SHOW MORE ESRI RESULTS',
+            'SHOW MORE RESULTS',
             style: TextStyle(
               color: lightPrimaryColor,
               fontSize: 16,

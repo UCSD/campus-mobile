@@ -1,6 +1,8 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../app_styles.dart';
 // import 'package:arcgis_maps/arcgis_maps.dart';
 
 /// Found in the legend's tab: https://www.arcgis.com/apps/mapviewer/index.html?url=https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0&source=sd
@@ -110,7 +112,7 @@ class QuickSearchIcons extends StatelessWidget {
               },
             ),
             LabeledIconButton(
-              icon: Icons.local_drink,
+              icon: Icons.coffee,
               text: 'Coffee Shops',
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
@@ -153,7 +155,9 @@ class LabeledIconButton extends StatelessWidget {
       children: <Widget>[
         MaterialButton(
           onPressed: onPressed,
-          color: Colors.red,
+          color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : secondaryColorDark,
           textColor: Colors.white,
           child: Icon(
             icon,
@@ -163,7 +167,12 @@ class LabeledIconButton extends StatelessWidget {
           shape: CircleBorder(),
         ),
         SizedBox(height: 6),
-        Text(text!),
+        Text(text!,
+        style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? descriptiveTextColorLight
+                  : descriptiveTextColorDark,
+            )),
       ],
     );
   }
