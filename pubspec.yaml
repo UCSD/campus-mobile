@@ -45,7 +45,7 @@ dependencies:
     git:
       url: https://github.com/UCSD/wifi_connection.git
       ref: 179eb3a322b9d947752b4ff4e810582c3e262e47
-  device_info_plus: ^11.1.0
+  device_info_plus: ^10.1.0
 dependency_overrides:
   google_maps_flutter_ios: 2.13.1 # To fix the tooltips bug in Google Maps
 dev_dependencies:
