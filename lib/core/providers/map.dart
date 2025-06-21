@@ -139,7 +139,6 @@ class MapsDataProvider extends ChangeNotifier {
         print("!!!!!!!!!!!!!!!!!!!! ESRI API Results: " + _esriPOIModels.toString());
         if (_esriPOIModels.isEmpty) {
           _noResults = true;
-          _error = 'No ESRI results found.';
         } else {
           _noResults = false;
           populateESRIDistances();
@@ -227,6 +226,11 @@ class MapsDataProvider extends ChangeNotifier {
 
   set mapController(GoogleMapController? value) {
     _mapController = value;
+    notifyListeners();
+  }
+
+  void resetNoResults() {
+    _noResults = false;
     notifyListeners();
   }
 

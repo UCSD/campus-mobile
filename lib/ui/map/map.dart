@@ -28,8 +28,11 @@ class Maps extends StatelessWidget {
               SnackBar(content: Text('No results found for your search.',
                 style: TextStyle(color: Colors.white),
               ),
-                  backgroundColor: darkPrimaryColor,
+                  backgroundColor: Theme.of(context).brightness == Brightness.light
+                      ? bottomTabBarColorDark
+                      : darkPrimaryColor,
                   duration: Duration(seconds: 3)));
+        Provider.of<MapsDataProvider>(context, listen: false).resetNoResults();
       });
     }
     return Container();
