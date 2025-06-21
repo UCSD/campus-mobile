@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../app_styles.dart';
 // import 'package:arcgis_maps/arcgis_maps.dart';
 

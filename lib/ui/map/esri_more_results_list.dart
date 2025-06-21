@@ -37,12 +37,13 @@ class MoreESRIResultsList extends StatelessWidget {
                           .esriPOIModels
                           .length,
                       itemBuilder: (BuildContext context, int index) {
+                        // Builds the "More Results" list with Title and Distance
                         return ListTile(
                           title: Text(
                             Provider.of<MapsDataProvider>(context, listen: false)
                                 .esriPOIModels[index]
                                 .attributes
-                                .c3dName!,
+                                .updatedName!,
                           ),
                           trailing: Text(
                             Provider.of<MapsDataProvider>(context, listen: false)
