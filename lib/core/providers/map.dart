@@ -101,6 +101,7 @@ class MapsDataProvider extends ChangeNotifier {
 
   /// Fetches locations from the MapSearchService or ESRI Points of Interest
   /// TODO: Finish transitioning to ESRI Points of Interest only after rigorous testing
+  /// Transition happens when everything calling fetchLocations is set to "TRUE" and still works as expected.
   void fetchLocations(bool esri) async {
     String query = searchBarController.text;
     _usingESRI = esri;
