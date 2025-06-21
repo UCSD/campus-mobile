@@ -99,6 +99,8 @@ class MapsDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Fetches locations from the MapSearchService or ESRI Points of Interest
+  /// TODO: Finish transitioning to ESRI Points of Interest only after rigorous testing
   void fetchLocations(bool esri) async {
     String query = searchBarController.text;
     _usingESRI = esri;
@@ -129,15 +131,21 @@ class MapsDataProvider extends ChangeNotifier {
         _noResults = true;
       }
     }
-    else { // We're using ESRI
+    // We're using ESRI
+    else {
       if (await _mapSearchService.fetchESRILocations(query)) {
         _esriPOIModels = _mapSearchService.esriResults;
-        print("===================== ESRI API Results: " + _esriPOIModels.toString());
         _noResults = false;
-        populateESRIDistances();
-        reorderESRILocations();
-        addMarker(0);
-
+        print("!!!!!!!!!!!!!!!!!!!! ESRI API Results: " + _esriPOIModels.toString());
+        if (_esriPOIModels.isEmpty) {
+          _noResults = true;
+          _error = 'No ESRI results found.';
+        } else {
+          _noResults = false;
+          populateESRIDistances();
+          reorderESRILocations();
+          addMarker(0);
+        }
         if (!_searchHistory.contains(query)) {
           // Check to see if this search is already in history...
           _searchHistory.add(query); // ...If it is not, add it...

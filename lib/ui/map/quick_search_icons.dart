@@ -106,7 +106,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'COVID Test Kits';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations(false);
+                    .fetchLocations(true);
                 Navigator.pop(context);
               },
             ),
