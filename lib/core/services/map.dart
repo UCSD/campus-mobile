@@ -43,14 +43,10 @@ class MapSearchService {
     final escapedSearchText = searchText.trim().replaceAll("'", "''");
     // Build a raw SQL WHERE clause for general search
     final whereClause = """
-      C3DName            LIKE '$escapedSearchText%'
-      OR UpdatedName     LIKE '$escapedSearchText%'
-      OR C3DCategories   LIKE '$escapedSearchText%' 
+      UpdatedName     LIKE '$escapedSearchText%'
       OR Class           LIKE '$escapedSearchText%'
       OR Subclass        LIKE '$escapedSearchText%'
-      OR C3DKeywords     LIKE '$escapedSearchText%'
       OR UpdatedKeywords LIKE '$escapedSearchText%'
-      OR C3DDescription  LIKE '$escapedSearchText%'
       """;
     final params = {
       'where': whereClause,
