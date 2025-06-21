@@ -25,14 +25,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.7.0"
-  arcgis_maps:
-    dependency: "direct main"
-    description:
-      name: arcgis_maps
-      sha256: "8c6ddd6e6663f0a8691b604ade6617579ab3059139866b5499f81f29572c93d9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "200.6.0+4426"
   args:
     dependency: transitive
     description:
@@ -245,10 +237,10 @@ packages:
     dependency: "direct main"
     description:
       name: device_info_plus
-      sha256: a7fd703482b391a87d60b6061d04dfdeab07826b96f9abd8f5ed98068acc0074
+      sha256: "72d146c6d7098689ff5c5f66bcf593ac11efc530095385356e131070333e64da"
       url: "https://pub.dev"
     source: hosted
-    version: "10.1.2"
+    version: "11.3.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -261,34 +253,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: "253a18bbd4851fecba42f7343a1df3a9a4c1d31a2c1b37e221086b4fa8c8dbc9"
+      sha256: "7d328c4d898a61efc3cd93655a0955858e29a0aa647f0f9e02d59b3bb275e2e8"
       url: "https://pub.dev"
     source: hosted
-    version: "5.8.0+1"
-  dio_cache_interceptor:
-    dependency: transitive
-    description:
-      name: dio_cache_interceptor
-      sha256: "1346705a2057c265014d7696e3e2318b560bfb00b484dac7f9b01e2ceaebb07d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.5.1"
-  dio_cache_interceptor_db_store:
-    dependency: transitive
-    description:
-      name: dio_cache_interceptor_db_store
-      sha256: "920d9984b97522dc5bdd78a7d228ab41f3e64df57704490c5a367ca28e682e72"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.1"
-  dio_web_adapter:
-    dependency: transitive
-    description:
-      name: dio_web_adapter
-      sha256: "7586e476d70caecaf1686d21eee7247ea43ef5c345eab9e0cc3583ff13378d78"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
+    version: "4.0.6"
   dots_indicator:
     dependency: "direct main"
     description:
@@ -297,14 +265,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
-  drift:
-    dependency: transitive
-    description:
-      name: drift
-      sha256: b584ddeb2b74436735dd2cf746d2d021e19a9a6770f409212fd5cbc2814ada85
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.26.1"
   encrypt:
     dependency: "direct main"
     description:
@@ -548,22 +508,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_web_auth_2:
-    dependency: transitive
-    description:
-      name: flutter_web_auth_2
-      sha256: "4d3d2fd3d26bf1a26b3beafd4b4b899c0ffe10dc99af25abc58ffe24e991133c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.2"
-  flutter_web_auth_2_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_web_auth_2_platform_interface
-      sha256: e8669e262005a8354389ba2971f0fc1c36188481234ff50d013aaf993f30f739
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -697,14 +641,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  haptic_feedback:
-    dependency: transitive
-    description:
-      name: haptic_feedback
-      sha256: d3b5ad41858d18a35d317636c9cdc1cb8aef23c7b861ca5896273acc68e1a98a
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.1+1"
   hive:
     dependency: "direct main"
     description:
@@ -833,38 +769,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
-  location:
-    dependency: transitive
-    description:
-      name: location
-      sha256: ee57923720163324416ce0306b701db6d845d2c1a3bf44d25b607cbddbaa3973
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.1"
-  location_platform_interface:
-    dependency: transitive
-    description:
-      name: location_platform_interface
-      sha256: "1e535ccc8b4a9612de4e4319871136b45d2b5d1fb0c2a8bf99687242bf7ca5f7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.0"
-  location_web:
-    dependency: transitive
-    description:
-      name: location_web
-      sha256: e6435cfd175b0f6e94d6fdc43c104d13cec7e27b21a8cee00bd9516a3d6a4c81
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.4"
-  logger:
-    dependency: transitive
-    description:
-      name: logger
-      sha256: be4b23575aac7ebf01f225a241eb7f6b5641eeaf43c6a8613510fc2f8cf187d1
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.0"
   logging:
     dependency: transitive
     description:
@@ -1254,22 +1158,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
-  sqlite3:
-    dependency: transitive
-    description:
-      name: sqlite3
-      sha256: "310af39c40dd0bb2058538333c9d9840a2725ae0b9f77e4fd09ad6696aa8f66e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.7.5"
-  sqlite3_flutter_libs:
-    dependency: transitive
-    description:
-      name: sqlite3_flutter_libs
-      sha256: "1a96b59227828d9eb1463191d684b37a27d66ee5ed7597fcf42eee6452c88a14"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.32"
   stack_trace:
     dependency: transitive
     description:
@@ -1370,10 +1258,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: "9d06212b1362abc2f0f0d78e6f09f726608c74e3b9462e8368bb03314aa8d603"
+      sha256: "76d8206356ed276e1df3eda6523486148776cf1e5381d630b5726c92bb774d7e"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.1"
+    version: "6.0.20"
   url_launcher_android:
     dependency: transitive
     description:
@@ -1527,14 +1415,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.5"
-  window_to_front:
-    dependency: transitive
-    description:
-      name: window_to_front
-      sha256: "7aef379752b7190c10479e12b5fd7c0b9d92adc96817d9e96c59937929512aee"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
   xdg_directories:
     dependency: transitive
     description:
@@ -1561,4 +1441,4 @@ packages:
     version: "3.1.3"
 sdks:
   dart: ">=3.5.3 <4.0.0"
-  flutter: ">=3.24.3"
+  flutter: ">=3.24.0"

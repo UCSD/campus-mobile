@@ -7,7 +7,7 @@ environment:
 dependencies:
   barcode_widget: 2.0.4
   connectivity_plus: 6.1.0
-  dio: ^5.4.3+1
+  dio: 4.0.6
   encrypt: 5.0.1
   dots_indicator: 4.0.1
   firebase_analytics: 11.3.3
@@ -39,14 +39,13 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.3.2
   uni_links2: 0.6.0+2
-  url_launcher: ^6.2.5
+  url_launcher: 6.0.20
   webview_flutter: 2.0.13
   wifi_connection:
     git:
       url: https://github.com/UCSD/wifi_connection.git
       ref: 179eb3a322b9d947752b4ff4e810582c3e262e47
-  device_info_plus: ^10.1.0
-  arcgis_maps: ^200.6.0+4426
+  device_info_plus: ^11.1.0
 dependency_overrides:
   google_maps_flutter_ios: 2.13.1 # To fix the tooltips bug in Google Maps
 dev_dependencies:

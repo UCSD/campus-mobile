@@ -18,7 +18,7 @@ class NetworkHelper {
   static const int SSO_REFRESH_MAX_RETRIES = 3;
   static const int SSO_REFRESH_RETRY_INCREMENT = 5000;
   static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
-  static final Duration DEFAULT_TIMEOUT = Duration(milliseconds: int.parse(dotenv.get('DEFAULT_TIMEOUT')));
+  static final int DEFAULT_TIMEOUT = int.parse(dotenv.get('DEFAULT_TIMEOUT'));
 
   static Future<dynamic> fetchData(String url) async {
     Dio dio = new Dio();
