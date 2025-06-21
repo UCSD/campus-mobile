@@ -45,7 +45,7 @@ class MapSearchService {
     final whereClause = """
       C3DName            LIKE '$escapedSearchText%'
       OR UpdatedName     LIKE '$escapedSearchText%'
-      OR C3DCategories   LIKE '$escapedSearchText%'
+      OR C3DCategories   LIKE '$escapedSearchText%' 
       OR Class           LIKE '$escapedSearchText%'
       OR Subclass        LIKE '$escapedSearchText%'
       OR C3DKeywords     LIKE '$escapedSearchText%'
