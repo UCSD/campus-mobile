@@ -4,7 +4,6 @@ import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/services/dining.dart';
 import 'package:flutter/material.dart';
-import '../models/dining_specials.dart';
 
 enum Meal { breakfast, lunch, dinner }
 
@@ -111,11 +110,9 @@ class DiningDataProvider extends ChangeNotifier {
       // Feed the "Specials" section into the corresponding dining model.
       if (await _diningService.fetchSpecialsData()) {
         for (var eatery in _diningService.specialsData?.systemDataStructure.middleBlocks.eatery ?? []) {
-          print(eatery.name);
           for (var model in _diningModels.values) {
             if (eatery.name == model.name) {
               model.specialsPromotions = eatery.specialsPromotions;
-              print('Found specials for ${model.name}: ${model.specialsPromotions}');
               break;
             }
           }
