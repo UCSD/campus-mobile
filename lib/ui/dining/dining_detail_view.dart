@@ -129,6 +129,8 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       // Vendor Special Hours
       if (diningModel.specialHours != null)
         buildSpecialHours(context, diningModel),
+      // Specials Field TODO: Add condition like above to check if specials exist
+      buildSpecialsField(context, diningModel),
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
       SizedBox(height: 16),
@@ -220,6 +222,30 @@ class _DiningDetailViewState extends State<DiningDetailView> {
         )
       ]),
     );
+  }
+
+  ///////////// Specials Field /////////////
+  // TODO: Implement after backend is ready
+  Widget buildSpecialsField(BuildContext context, prefix0.DiningModel model) {
+    // if (model.specials != null && model.specials!.isNotEmpty) {
+    //   return Container(
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Text("Specials",
+    //           style: Theme.of(context).textTheme.titleMedium,
+    //         ),
+    //         SizedBox(height: 10),
+    //         Text(
+    //           model.specials!,
+    //           style: Theme.of(context).textTheme.bodySmall,
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // } else {
+      return Container();
+    //}
   }
 
   ///////////// Payment Options Section /////////////
