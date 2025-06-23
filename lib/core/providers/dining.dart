@@ -75,7 +75,7 @@ class DiningDataProvider extends ChangeNotifier {
       _diningModels = mapOfDiningLocations;
       populateDistances();
 
-      print("==================== SPECIALS ====================");
+      // Feed specials to models
       await _attachSpecialsToModels();
 
       _lastUpdated = DateTime.now();
@@ -122,11 +122,10 @@ class DiningDataProvider extends ChangeNotifier {
       final eateries = _diningService.specialsData?.systemDataStructure.middleBlocks.eatery ?? [];
 
       for (var eatery in eateries) {
-        print('Processing specials for eatery: ${eatery.name}');
         for (var model in _diningModels.values) {
           if (eatery.name.contains(model.name) || model.name.contains(eatery.name)) {
-            model.specialsPromotions = eatery.specialsPromotions;
-            print('Found specials for ${model.name}: ${model.specialsPromotions?.specialTitle}');
+              model.specialsPromotions = eatery.specialsPromotions;
+              // print('Found specials for ${model.name}: ${model.specialsPromotions?.specialTitle}');
             break;
           }
         }

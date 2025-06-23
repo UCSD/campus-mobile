@@ -133,7 +133,6 @@ class _DiningDetailViewState extends State<DiningDetailView> {
         buildSpecialsField(context, diningModel),
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
-      SizedBox(height: 16),
       // Vendor Location
       Text('Location',
         style: Theme.of(context).textTheme.titleMedium,
@@ -234,12 +233,18 @@ class _DiningDetailViewState extends State<DiningDetailView> {
             Text("Specials",
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 8),
             Text(
               model.specialsPromotions?.specialTitle ?? '',
-              style: Theme.of(context).textTheme.bodySmall,
+              style: TextStyle(
+                fontSize: 17,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? descriptiveTextColorLight
+                    : descriptiveTextColorDark,
+                fontWeight: FontWeight.w700
+              ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 4),
             Text(
               model.specialsPromotions?.specialDescription ?? '',
               style: Theme.of(context).textTheme.bodySmall,
