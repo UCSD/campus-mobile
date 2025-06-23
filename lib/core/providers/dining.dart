@@ -59,72 +59,79 @@ class DiningDataProvider extends ChangeNotifier {
   ];
 
   void fetchDiningLocations() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
+
     Map<String, DiningModel> mapOfDiningLocations = {};
 
-    /// fetch dining locations from the service
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data) {
-
-        // This fixes the image URLs to avoid 404 errors
-        // TODO: Remove this if we are not using model.images anymore due to having VendorLogos now
-        if (model.images != null) {
-          for (var img in model.images!) {
-            img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
-            img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
-          }
-        }
-
-        ///////////// Map vendor with its logo /////////////
-        for (var i = 0; i < diningLogos.length; i++) {
-          // Normalize model name and logo names to check...
-          final modelName = normalize(model.name);
-          final logoName = normalize(diningLogos[i].split('.')[0]);
-          // ...if logo name is a substring of the model name
-          if (modelName.contains(logoName)) {
-            model.vendorLogo = diningLogosEndpoint + diningLogos[i];
-            // print('Found logo for ${model.name}: ${model.vendorLogo}');
-            break;
-          }
-        }
-
-        // Special Cases
-        if(model.name == '64 Degrees')
-          model.vendorLogo = diningLogosEndpoint + "sixty-four-degrees.png";
-        if(model.name == 'Pacific Café & Catering')
-          model.vendorLogo = diningLogosEndpoint + "pacific-cafe.png";
-        if(model.name == 'Caroline\'s Seaside Cafe')
-          model.vendorLogo = diningLogosEndpoint + "carlolines.png";
-
-        // Save the data
+        _fixImageUrls(model);
+        _assignVendorLogo(model);
         mapOfDiningLocations[model.name] = model;
       }
 
-      // replace old list of locations with new one
       _diningModels = mapOfDiningLocations;
-
-      // calculate distance of each eatery to user's current location
       populateDistances();
 
-      // Feed the "Specials" section into the corresponding dining model.
-      if (await _diningService.fetchSpecialsData()) {
-        for (var eatery in _diningService.specialsData?.systemDataStructure.middleBlocks.eatery ?? []) {
-          for (var model in _diningModels.values) {
-            if (eatery.name == model.name) {
-              model.specialsPromotions = eatery.specialsPromotions;
-              break;
-            }
+      print("==================== SPECIALS ====================");
+      await _attachSpecialsToModels();
+
+      _lastUpdated = DateTime.now();
+    } else {
+      _error = _diningService.error;
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void _fixImageUrls(DiningModel model) {
+    if (model.images != null) {
+      for (var img in model.images!) {
+        img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+        img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+      }
+    }
+  }
+
+  void _assignVendorLogo(DiningModel model) {
+    final modelName = normalize(model.name);
+
+    for (var logo in diningLogos) {
+      final logoName = normalize(logo.split('.')[0]);
+      if (modelName.contains(logoName)) {
+        model.vendorLogo = diningLogosEndpoint + logo;
+        return;
+      }
+    }
+
+    // Special cases
+    if (model.name == '64 Degrees') {
+      model.vendorLogo = diningLogosEndpoint + "sixty-four-degrees.png";
+    } else if (model.name == 'Pacific Café & Catering') {
+      model.vendorLogo = diningLogosEndpoint + "pacific-cafe.png";
+    } else if (model.name == 'Caroline\'s Seaside Cafe') {
+      model.vendorLogo = diningLogosEndpoint + "carlolines.png";
+    }
+  }
+
+  Future<void> _attachSpecialsToModels() async {
+    if (await _diningService.fetchSpecialsData()) {
+      final eateries = _diningService.specialsData?.systemDataStructure.middleBlocks.eatery ?? [];
+
+      for (var eatery in eateries) {
+        print('Processing specials for eatery: ${eatery.name}');
+        for (var model in _diningModels.values) {
+          if (eatery.name.contains(model.name) || model.name.contains(eatery.name)) {
+            model.specialsPromotions = eatery.specialsPromotions;
+            print('Found specials for ${model.name}: ${model.specialsPromotions?.specialTitle}');
+            break;
           }
         }
       }
-      _lastUpdated = DateTime.now();
-    } else {
-      // TODO: determine what error to show to the user
-      _error = _diningService.error;
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
   List<DiningModel> reorderLocations() {

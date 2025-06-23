@@ -44,8 +44,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   }
 
   // Contains all the widgets that make up the Dining detail view.
-  List<Widget> buildDetailView(
-      BuildContext context, prefix0.DiningModel diningModel) {
+  List<Widget> buildDetailView(BuildContext context, prefix0.DiningModel diningModel) {
     // Get availability for all dining halls
     List<AvailabilityModel?> availabilityModels = _availabilityDataProvider
         .availabilityModels
@@ -59,7 +58,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       (m) => m != null && m.name.contains("Dining Halls (2/2)"),
       orElse: () => null,
     );
-
+    var specials = diningModel.specialsPromotions;
     return [
       Row(
         children: [
@@ -129,8 +128,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       // Vendor Special Hours
       if (diningModel.specialHours != null)
         buildSpecialHours(context, diningModel),
-      // Specials Field TODO: Add condition like above to check if specials exist
-      buildSpecialsField(context, diningModel),
+      // Specials Field
+      if (specials?.specialTitle.isNotEmpty == true)
+        buildSpecialsField(context, diningModel),
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
       SizedBox(height: 16),
@@ -227,25 +227,26 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   ///////////// Specials Field /////////////
   // TODO: Implement after backend is ready
   Widget buildSpecialsField(BuildContext context, prefix0.DiningModel model) {
-    // if (model.specials != null && model.specials!.isNotEmpty) {
-    //   return Container(
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         Text("Specials",
-    //           style: Theme.of(context).textTheme.titleMedium,
-    //         ),
-    //         SizedBox(height: 10),
-    //         Text(
-    //           model.specials!,
-    //           style: Theme.of(context).textTheme.bodySmall,
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // } else {
-      return Container();
-    //}
+      return Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Specials",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            SizedBox(height: 10),
+            Text(
+              model.specialsPromotions?.specialTitle ?? '',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            SizedBox(height: 10),
+            Text(
+              model.specialsPromotions?.specialDescription ?? '',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+      );
   }
 
   ///////////// Payment Options Section /////////////

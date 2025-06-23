@@ -238,11 +238,53 @@ class Eatery {
 }
 
 class SpecialsPromotions {
-  SpecialsPromotions();
+  final String specialDescription;
+  final String specialTitle;
+  final PromoDates promoDates;
 
-  factory SpecialsPromotions.fromJson(Map<String, dynamic> json) => SpecialsPromotions();
+  SpecialsPromotions({
+    required this.specialDescription,
+    required this.specialTitle,
+    required this.promoDates,
+  });
 
-  Map<String, dynamic> toJson() => {};
+  factory SpecialsPromotions.fromJson(Map<String, dynamic> json) => SpecialsPromotions(
+        specialDescription: json['special-description'] ?? '',
+        specialTitle: json['special-title'] ?? '',
+        promoDates: PromoDates.fromJson(json['promo-dates'] ?? {}),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'special-description': specialDescription,
+        'special-title': specialTitle,
+        'promo-dates': promoDates.toJson(),
+      };
+}
+
+class PromoDates {
+  final int endDate;
+  final int startDate;
+
+  PromoDates({
+    required this.endDate,
+    required this.startDate,
+  });
+
+  factory PromoDates.fromJson(Map<String, dynamic> json) => PromoDates(
+    endDate: _parseInt(json['end-date']),
+    startDate: _parseInt(json['start-date']),
+  );
+
+  static int _parseInt(dynamic val) {
+    if (val is int) return val;
+    if (val is String) return int.tryParse(val) ?? 0;
+    return 0;
+  }
+
+  Map<String, dynamic> toJson() => {
+        'end-date': endDate,
+        'start-date': startDate,
+      };
 }
 
 class Hours {

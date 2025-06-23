@@ -51,9 +51,11 @@ class DiningService {
     try {
       /// fetch data (Needs a UCSD network connection)
       String _response = await NetworkHelper.fetchData("https://qa-blink.ucsd.edu/facilities/services/general/personal/dining.json");
+      print(_response);
       /// parse data
       final sData = diningDataFromJson(_response);
       _specialsData = sData;
+      print("=========== After JSON =============");
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the token for this service
