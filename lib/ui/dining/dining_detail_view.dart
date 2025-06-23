@@ -224,7 +224,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   }
 
   ///////////// Specials Field /////////////
-  // TODO: Implement after backend is ready
+  // TODO: Implement the expiration if we decide to go in that direction
+  //  (maybe the API updates automatically, and when fetched, the old promotion will be null
+  //  so we don't really have to code an expiration. Only time will tell...
   Widget buildSpecialsField(BuildContext context, prefix0.DiningModel model) {
       return Container(
         child: Column(
