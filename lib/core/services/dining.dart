@@ -48,24 +48,17 @@ class DiningService {
 
   Future<bool> fetchSpecialsData() async {
     _error = null; _isLoading = true;
-    print("==================== SPECIALSSSS =========================");
-
     try {
-      /// fetch data
-      String _response = await NetworkHelper.fetchData(
-          "https://qa-blink.ucsd.edu/facilities/services/general/personal/dining.json");
-      print(_response);
+      /// fetch data (Needs a UCSD network connection)
+      String _response = await NetworkHelper.fetchData("https://qa-blink.ucsd.edu/facilities/services/general/personal/dining.json");
       /// parse data
       final sData = diningDataFromJson(_response);
       _specialsData = sData;
-      print("=======After JSON ============");
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
+      /// if the authorized fetch failed we know we have to refresh the token for this service
+      if (e.toString().contains("401"))
         if (await NetworkHelper.getNewToken(headers)) return await fetchSpecialsData();
-      }
       _error = e.toString();
       return false;
     } finally {
