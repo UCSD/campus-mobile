@@ -3,8 +3,8 @@
 //     final diningModel = diningModelFromJson(jsonString);
 
 import 'dart:convert';
-
 import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:campus_mobile_experimental/core/models/dining_specials.dart';
 
 List<DiningModel> diningModelFromJson(String str) => List<DiningModel>.from(
     json.decode(str).map((x) => DiningModel.fromJson(x)));
@@ -21,6 +21,7 @@ class DiningModel
   String tel;
   RegularHours regularHours; // doesn't ever seem to be null
   List<String> paymentOptions;
+  SpecialsPromotions? specialsPromotions;
 
   // CONFIRMED OPTIONAL
   String? id;
@@ -52,6 +53,7 @@ class DiningModel
     this.vendorLogo,
     this.url,
     this.menuWebsite,
+    this.specialsPromotions,
   });
 
   DiningModel.fromJson(Map<String, dynamic> json)
@@ -75,7 +77,11 @@ class DiningModel
             ? null
             : SpecialHour.fromJson(json["specialHours"]),
         url = json["url"],
-        menuWebsite = json["menuWebsite"];
+        menuWebsite = json["menuWebsite"],
+        specialsPromotions = json["specialsPromotions"] == null
+            ? null
+            : SpecialsPromotions.fromJson(json["specialsPromotions"]
+        );
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -96,6 +102,7 @@ class DiningModel
         "url": url,
         "menuWebsite": menuWebsite,
         "distance": distance,
+        "specialsPromotions": specialsPromotions?.toJson(),
       };
 }
 

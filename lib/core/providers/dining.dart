@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/services/dining.dart';
 import 'package:flutter/material.dart';
+import '../models/dining_specials.dart';
 
 enum Meal { breakfast, lunch, dinner }
 
@@ -58,18 +59,6 @@ class DiningDataProvider extends ChangeNotifier {
     "verdeli.png",
   ];
 
-  void fetchDiningMenu(String menuId) async {
-    _isLoading = true; _error = null;
-    notifyListeners();
-    if (await _diningService.fetchMenu(menuId)) {
-      _diningMenuItemModels[menuId] = _diningService.menuData!;
-    } else {
-      _error = _diningService.error;
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
-
   void fetchDiningLocations() async {
     _isLoading = true; _error = null;
     notifyListeners();
@@ -113,14 +102,28 @@ class DiningDataProvider extends ChangeNotifier {
         mapOfDiningLocations[model.name] = model;
       }
 
-      /// replace old list of locations with new one
+      // replace old list of locations with new one
       _diningModels = mapOfDiningLocations;
 
-      /// calculate distance of each eatery to user's current location
+      // calculate distance of each eatery to user's current location
       populateDistances();
+
+      // Feed the "Specials" section into the corresponding dining model.
+      if (await _diningService.fetchSpecialsData()) {
+        for (var eatery in _diningService.specialsData?.systemDataStructure.middleBlocks.eatery ?? []) {
+          print(eatery.name);
+          for (var model in _diningModels.values) {
+            if (eatery.name == model.name) {
+              model.specialsPromotions = eatery.specialsPromotions;
+              print('Found specials for ${model.name}: ${model.specialsPromotions}');
+              break;
+            }
+          }
+        }
+      }
       _lastUpdated = DateTime.now();
     } else {
-      /// TODO: determine what error to show to the user
+      // TODO: determine what error to show to the user
       _error = _diningService.error;
     }
     _isLoading = false;
@@ -176,6 +179,18 @@ class DiningDataProvider extends ChangeNotifier {
       fetchDiningMenu(id);
     }
     return null;
+  }
+
+  void fetchDiningMenu(String menuId) async {
+    _isLoading = true; _error = null;
+    notifyListeners();
+    if (await _diningService.fetchMenu(menuId)) {
+      _diningMenuItemModels[menuId] = _diningService.menuData!;
+    } else {
+      _error = _diningService.error;
+    }
+    _isLoading = false;
+    notifyListeners();
   }
 
   List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
