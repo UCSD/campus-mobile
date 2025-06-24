@@ -10,7 +10,7 @@ class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
 
   /// LAYOUT CONSTANTS
-  static const double tileWidth = 190;
+  static const double tileWidth = 220; 
   static const cornerRadius = Radius.circular(5.0);
   static const sideBorder = BorderSide(width: 0.3);
 
@@ -54,44 +54,40 @@ class EventTile extends StatelessWidget {
   Widget _eventDetailsCard(BuildContext context) {
     return SizedBox(
       height: 300,
-      width: 190,
-      // Black Outline
+      width: 240,       
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(width: 0.3),
           borderRadius: BorderRadius.all(cornerRadius),
         ),
-        child: Card(
-          // Black Outline Style
+        child: Card(        
           margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
           elevation: 4.0,
             // Tile Contents
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Tile Image
-                _eventImageLoader(data.imageThumb),
-                // Date & Time
+                _eventImageLoader(data.imageThumb),                
                 Row(
                   children: [
                     const SizedBox(width: 2),
-                    // Date (Top Left)
                     StartEndDateContainer(
-                      date: (data.startDate.day == data.endDate.day)
-                          ? DateFormat("MMM d y").format(data.startDate.toLocal())
-                          : DateFormat("MMM d y").format(data.startDate.toLocal()) + ' - ' + DateFormat("MMM d y").format(data.endDate.toLocal()),
+                      date: (data.endDate != null && data.startDate.day != data.endDate!.day)
+                        ? DateFormat("MMM d y").format(data.startDate) + ' - ' + DateFormat("MMM d y").format(data.endDate!)
+                        : DateFormat("MMM d y").format(data.startDate),
                     ),
                     const Spacer(),
-                    // Time (Top Right)
-                    TileTime(time: DateFormat.jm().format(data.startDate.toLocal()) +
-                        ' - ' + DateFormat.jm().format(data.endDate.toLocal())
+                    TileTime(
+                      time: data.endDate != null
+                        ? DateFormat.jm().format(data.startDate) + ' - ' + DateFormat.jm().format(data.endDate!)
+                        : DateFormat.jm().format(data.startDate),
+                      isRange: data.endDate != null && data.startDate.day != data.endDate!.day,
                     ),
                     const SizedBox(width: 2),
-                  ]
+                  ],
                 ),
-                // Tile Title
                 TileTitle(title: data.title),
-                const Spacer()
+                SizedBox(height: 4),
               ],
             ),
           ),
@@ -145,8 +141,8 @@ class TileTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
-      child: Center( // Centers the Text
+      padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), 
+      child: Center( 
         child: Text(
           title,
           textAlign: TextAlign.center,
@@ -159,7 +155,7 @@ class TileTitle extends StatelessWidget {
             fontSize: 16,
             height: 1.4,
             fontWeight: FontWeight.w600,
-            decoration: TextDecoration.underline,  // Underlines the text
+            decoration: TextDecoration.underline,  
           ),
         ),
       ),
@@ -169,15 +165,13 @@ class TileTitle extends StatelessWidget {
 
 class TileTime extends StatelessWidget {
   final String time;
-  const TileTime({Key? key, required this.time}) : super(key: key);
+  final bool isRange;
+  const TileTime({Key? key, required this.time, this.isRange = false}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final splitTimes = time.split(' - ');
-
-    // Extract start and end times from the time string
     final startTime = splitTimes[0];
-    final endTime = splitTimes[1];
-
+    final endTime = splitTimes.length > 1 ? splitTimes[1] : '';
     final style = TextStyle(
       fontSize: 14,
       color: Theme.of(context).brightness == Brightness.light
@@ -185,32 +179,36 @@ class TileTime extends StatelessWidget {
           : Colors.white,
       fontWeight: FontWeight.w400,
     );
-
-    return Padding(
-      padding: const EdgeInsets.only(right: 8, left: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (startTime != endTime)
+    if (isRange) {
+      return Padding(
+        padding: const EdgeInsets.only(right: 8, left: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Row(
               children: [
-                // Start Time
-                Text(
-                  startTime,
-                  textAlign: TextAlign.right,
-                  style: style,
-                ),
-                Text(" - ", style: style), // Separator
+                Text(startTime, textAlign: TextAlign.right, style: style),
+                Text(' - ', style: style),
               ],
             ),
-          Text(
-            endTime, // End Time
-            textAlign: TextAlign.right,
+            Text(endTime, textAlign: TextAlign.right, style: style),
+          ],
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.only(right: 8, left: 8),
+        child: Center(
+          child: Text(
+            time,
+            textAlign: TextAlign.center,
             style: style,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
-        ],
-      )
-    );
+        ),
+      );
+    }
   }
 }
 
@@ -242,6 +240,9 @@ class StartEndDateContainer extends StatelessWidget {
                                 : Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          maxLines: 1,
                         ),
                         // Start Date Day
                         Text(
@@ -253,6 +254,9 @@ class StartEndDateContainer extends StatelessWidget {
                                 : Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          maxLines: 1,
                         ),
                       ],
                     ),
@@ -288,6 +292,9 @@ class StartEndDateContainer extends StatelessWidget {
                                 : Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          maxLines: 1,
                         ),
                         // End Date Year
                         Text(
@@ -299,6 +306,9 @@ class StartEndDateContainer extends StatelessWidget {
                                 : Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          maxLines: 1,
                         ),
                       ],
                     ),
@@ -323,6 +333,9 @@ class StartEndDateContainer extends StatelessWidget {
                             : Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      maxLines: 1,
                     ),
                     // Day
                     Text(
@@ -334,6 +347,9 @@ class StartEndDateContainer extends StatelessWidget {
                             : Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      maxLines: 1,
                     ),
                   ],
                 ),
