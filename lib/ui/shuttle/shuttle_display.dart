@@ -38,7 +38,8 @@ class ShuttleDisplay extends StatelessWidget {
           SizedBox(height: 16),
           buildNextArrivalsText(context),
           SizedBox(height: 16),
-          buildNextArrivalsList(context)
+          buildNextArrivalsList(context),
+          SizedBox(height: 8),
         ],
       );
     }
@@ -196,7 +197,7 @@ class ShuttleDisplay extends StatelessWidget {
 
   Widget buildNextArrivalsList(BuildContext context) {
     List<Widget> arrivalsToRender = [];
-    int count = arrivingShuttles!.length - 1 < 2 ? arrivingShuttles!.length - 1 : 2;
+    int count = (arrivingShuttles!.length - 1).clamp(0, 2);
     for (var index = 1; index <= count; index++) {
       arrivalsToRender.add(buildArrivalTime(context, arrivingShuttles![index]));
       if (index != count) {
