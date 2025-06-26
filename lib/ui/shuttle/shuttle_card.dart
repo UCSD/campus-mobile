@@ -100,7 +100,6 @@ class _ShuttleCardState extends State<ShuttleCard> {
               },
             ),
           ),
-          SizedBox(height: 8),
           DotsIndicator(
             position: _currentPage.toDouble(),
             dotsCount: renderList.length,

@@ -39,7 +39,6 @@ class ShuttleDisplay extends StatelessWidget {
           buildNextArrivalsText(context),
           SizedBox(height: 16),
           buildNextArrivalsList(context),
-          SizedBox(height: 8),
         ],
       );
     }
