@@ -130,13 +130,18 @@ class ShuttleDisplay extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(width: 16),
-              Text(arrivingShuttles![0].routeName,
-                style: TextStyle(
-                  fontSize: 23.0,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
+              Flexible(
+                child: Text(
+                  arrivingShuttles![0].routeName,
+                  style: TextStyle(
+                    fontSize: 23.0,
+                    fontWeight: FontWeight.w400,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ],
@@ -223,12 +228,18 @@ class ShuttleDisplay extends StatelessWidget {
             ),
           ),
         ),
-        Text(
-          shuttle.routeName,
-          style: TextStyle(fontSize: 16),
+        Expanded(
+          flex: 3,
+          child: Text(
+            shuttle.routeName,
+            style: TextStyle(fontSize: 16),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
         Expanded(
-          child: Container(),
+            flex: 1,
+            child: Container()
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
