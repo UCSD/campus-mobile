@@ -23,52 +23,8 @@ class DiningDataProvider extends ChangeNotifier {
   /// SERVICES
   var _diningService = DiningService();
 
-  /// LOGOS
+  /// VENDOR LOGOS
   final diningLogosEndpoint = "https://cdn.ucsd.edu/dining-logos/";
-  final diningLogos = [ // Add more logos as needed (Format: "name-of-vendor.png")
-    "art-of-espresso.png",
-    "audreys.png",
-    "blue-bowl.png",
-    "blue-wave-bistro.png",
-    "canyon-vista-marketplace.png",
-    "carlolines.png",
-    "club-med.png",
-    "crafted.png",
-    "destiny-coast.png",
-    "fan-fan.png",
-    "faculty-club.png",
-    "foodworx.png",
-    "gong-cha.png",
-    "james-place.png",
-    "johns.png",
-    "ocean-view.png",
-    "pacific-cafe.png",
-    "pines.png",
-    "plant-power.png",
-    "restaurants-at-sixth.png",
-    "rogers-market.png",
-    "roots.png",
-    "sixth-market.png",
-    "sixty-four-degrees.png",
-    "street-corner.png",
-    "sunshine-market.png",
-    "tahini.png",
-    "the-bistro.png",
-    "ventanas.png",
-    "verdeli.png",
-  ];
-
-  void fetchDiningMenu(String menuId) async {
-    _isLoading = true; _error = null;
-    notifyListeners();
-    if (await _diningService.fetchMenu(menuId)) {
-      _diningMenuItemModels[menuId] = _diningService.menuData!;
-    } else {
-      _error = _diningService.error;
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
 
   void fetchDiningLocations() async {
     _isLoading = true; _error = null;
@@ -88,26 +44,19 @@ class DiningDataProvider extends ChangeNotifier {
           }
         }
 
-        ///////////// Map vendor with its logo /////////////
-        for (var i = 0; i < diningLogos.length; i++) {
-          // Normalize model name and logo names to check...
-          final modelName = normalize(model.name);
-          final logoName = normalize(diningLogos[i].split('.')[0]);
-          // ...if logo name is a substring of the model name
-          if (modelName.contains(logoName)) {
-            model.vendorLogo = diningLogosEndpoint + diningLogos[i];
-            // print('Found logo for ${model.name}: ${model.vendorLogo}');
-            break;
-          }
+        ///////////// Map the vendor with its logo /////////////
+        // Normalize model name (no apostrophes, all lowercase, spaces replaced with hyphens)
+        final vendorName = normalizeModelName(model.name);
+        // Build the endpoint for the vendor logo for this model name
+        final vendorLogoEndpoint = diningLogosEndpoint + vendorName + ".png";
+        // Check if the logo exists
+        if (await _diningService.fetchVendorLogo(vendorLogoEndpoint)) {
+          // Feed the vendor logo into the model
+          model.vendorLogo = vendorLogoEndpoint;
+          // print('Found logo for ${model.name}: ${model.vendorLogo}');
+        } else {
+          model.vendorLogo = null; // not found
         }
-
-        // Special Cases
-        if(model.name == '64 Degrees')
-          model.vendorLogo = diningLogosEndpoint + "sixty-four-degrees.png";
-        if(model.name == 'Pacific Café & Catering')
-          model.vendorLogo = diningLogosEndpoint + "pacific-cafe.png";
-        if(model.name == 'Caroline\'s Seaside Cafe')
-          model.vendorLogo = diningLogosEndpoint + "carlolines.png";
 
         // Save the data
         mapOfDiningLocations[model.name] = model;
@@ -121,6 +70,28 @@ class DiningDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
     } else {
       /// TODO: determine what error to show to the user
+      _error = _diningService.error;
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  /// Removes apostrophes and non-alphanumeric characters
+  String normalizeModelName(String input) {
+    return input
+        .trim()
+        .toLowerCase()
+        .replaceAll(RegExp(r"['’]"), '')            // remove apostrophes
+        .replaceAll(RegExp(r"\s+"), '-')            // replace spaces with hyphens
+        .replaceAll(RegExp(r"[^a-z0-9\-]"), '');    // remove all non-alphanumeric except hyphens
+  }
+
+  void fetchDiningMenu(String menuId) async {
+    _isLoading = true; _error = null;
+    notifyListeners();
+    if (await _diningService.fetchMenu(menuId)) {
+      _diningMenuItemModels[menuId] = _diningService.menuData!;
+    } else {
       _error = _diningService.error;
     }
     _isLoading = false;
@@ -201,14 +172,6 @@ class DiningDataProvider extends ChangeNotifier {
     /// check if we have a coordinates object
     if (_coordinates != null) return reorderLocations();
     return _diningModels.values.toList();
-  }
-
-  /// Removes apostrophes and non-alphanumeric characters
-  String normalize(String input) {
-    return input
-        .toLowerCase()
-        .replaceAll(RegExp(r"['’]"), '')       // remove apostrophes
-        .replaceAll(RegExp(r"[^a-z0-9]"), ''); // remove all non-alphanumeric
   }
 
   /// SIMPLE SETTERS

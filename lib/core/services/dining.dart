@@ -67,6 +67,27 @@ class DiningService {
     }
   }
 
+  /// Used to check whether a vendor logo exists in the CDN endpoint.
+  Future<bool> fetchVendorLogo(String vendorLogoEndpoint) async {
+    _error = null; _isLoading = true;
+    try {
+      /// fetch data
+      String _response = await NetworkHelper.fetchData(vendorLogoEndpoint);
+
+      /// if the response is empty, it means the logo was not found
+      if (_response.isEmpty) {
+        _error = "Vendor logo not found";
+        return false;
+      }
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+    }
+  }
+
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;
