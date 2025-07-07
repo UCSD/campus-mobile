@@ -63,9 +63,13 @@ class DiningList extends StatelessWidget {
           );
   }
 
-  Widget textClosed(BuildContext context) {
-    return Text('Closed', style: Theme.of(context).textTheme.bodySmall);
+Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTime}) {
+  String closedText = 'Closed';
+  if (nextOpenDay != null && nextOpenTime != null) {
+    closedText += '. Opens $nextOpenDay at $nextOpenTime.';
   }
+  return Text(closedText, style: Theme.of(context).textTheme.bodySmall);
+}
 
   Widget getHoursForToday(dining_model.RegularHours hours, BuildContext context) {
     int weekday = DateTime.now().weekday;
@@ -76,50 +80,50 @@ class DiningList extends StatelessWidget {
         if (hours.mon != null)
           dayHours = hours.mon;
         else
-          return textClosed(context);
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 2:
         if (hours.tue != null)
           dayHours = hours.tue;
         else
-          return textClosed(context);
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 3:
         if (hours.wed != null)
           dayHours = hours.wed;
         else
-          return textClosed(context);
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 4:
         if (hours.thu != null)
           dayHours = hours.thu;
         else
-          return textClosed(context);
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 5:
         if (hours.fri != null)
           dayHours = hours.fri;
         else
-          return textClosed(context);
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 6:
         if (hours.sat != null)
           dayHours = hours.sat;
         else
-          return textClosed(context);
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 7:
         if (hours.sun != null)
           dayHours = hours.sun;
         else
-          return textClosed(context);
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       default:
-        return textClosed(context);
+        return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
     }
     if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
       if (dayHours == 'Closed-Closed')
-        return textClosed(context);
+        return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
       else {
         print('test');
         return Text(dayHours);
@@ -221,4 +225,39 @@ class DiningList extends StatelessWidget {
       ),
     );
   }
+}
+
+String? findNextOpenDay(dining_model.RegularHours hours) {
+  final days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+  final now = DateTime.now();
+  for (int i = 1; i <= 7; i++) {
+    int nextDay = (now.weekday + i - 1) % 7;
+    String? value;
+    switch (nextDay + 1) {
+      case 1: value = hours.mon; break;
+      case 2: value = hours.tue; break;
+      case 3: value = hours.wed; break;
+      case 4: value = hours.thu; break;
+      case 5: value = hours.fri; break;
+      case 6: value = hours.sat; break;
+      case 7: value = hours.sun; break;
+    }
+    if (value != null && value != 'Closed-Closed') {
+      return days[nextDay][0].toUpperCase() + days[nextDay].substring(1);
+    }
+  }
+  return null;
+}
+
+String? findNextOpenTime(dining_model.RegularHours hours) {
+  final days = [hours.mon, hours.tue, hours.wed, hours.thu, hours.fri, hours.sat, hours.sun];
+  final now = DateTime.now();
+  for (int i = 1; i <= 7; i++) {
+    int nextDay = (now.weekday + i - 1) % 7;
+    String? range = days[nextDay];
+    if (range != null && range != 'Closed-Closed') {
+      return formattedTimeRange(range)?.split('-').first.trim();
+    }
+  }
+  return null;
 }
