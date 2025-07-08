@@ -35,7 +35,7 @@ class EventTile extends StatelessWidget {
       width: tileWidth,
       //height: 300,
       child: InkWell(
-        onTap: (){
+        onTap: () {
           Navigator.pushNamed(
             context,
             RoutePaths.EventDetailView,
@@ -54,50 +54,51 @@ class EventTile extends StatelessWidget {
   Widget _eventDetailsCard(BuildContext context) {
     final df = DateFormat("MMM d y");
     final startDate = df.format(data.startDate.toLocal());
-    final endDate   = df.format(data.endDate.toLocal());
+    final endDate = df.format(data.endDate.toLocal());
     final dateDisplay = data.startDate.day == data.endDate.day
         ? startDate
         : '$startDate - $endDate';
     final startTime = DateFormat.jm().format(data.startDate.toLocal());
-    final endTime   = DateFormat.jm().format(data.endDate.toLocal());
-    final hasTime   = startTime != endTime;
+    final endTime = DateFormat.jm().format(data.endDate.toLocal());
+    final hasTime = startTime != endTime;
     return SizedBox(
-    width: tileWidth,
-    height: 300,
-    child: DecoratedBox(
-      decoration: BoxDecoration(
-        border: Border.all(width: 0.3),
-        borderRadius: BorderRadius.all(cornerRadius),
-      ),
-      child: Card(
-        margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-        elevation: 4.0,
-        child: Column(
-          children: [
-            _eventImageLoader(data.imageThumb),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-              child: Row(
-                mainAxisAlignment:
-                    hasTime ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  StartEndDateContainer(date: dateDisplay),
-                  if (hasTime)
-                    TileTime(time: '$startTime - $endTime'),
-                ],
+      width: tileWidth,
+      height: 300,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(width: 0.3),
+          borderRadius: BorderRadius.all(cornerRadius),
+        ),
+        child: Card(
+          margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+          elevation: 4.0,
+          child: Column(
+            children: [
+              _eventImageLoader(data.imageThumb),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                child: Row(
+                  mainAxisAlignment: hasTime
+                      ? MainAxisAlignment.spaceEvenly
+                      : MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    StartEndDateContainer(date: dateDisplay),
+                    if (hasTime) TileTime(time: '$startTime - $endTime'),
+                  ],
+                ),
               ),
-            ),
 
-            // title & spacer remain the same
-            TileTitle(title: data.title),
-            const Spacer(),
-          ],
+              // title & spacer remain the same
+              TileTitle(title: data.title),
+              const Spacer(),
+            ],
+          ),
         ),
       ),
-    ),
-  ); 
-}
+    );
+  }
 }
 
 Widget _eventImageLoader(String? url) {
@@ -113,30 +114,29 @@ Widget _eventImageLoader(String? url) {
             width: EventTile.tileWidth,
             fit: BoxFit.cover,
           ))
-        : ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: EventTile.cornerRadius,
-              topRight: EventTile.cornerRadius,
-            ),
-            child: Image.network(
-              url!,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.secondary,
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-              height: 150,
-              width: EventTile.tileWidth,
-              fit: BoxFit.cover,
-            )
-          );    
+      : ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: EventTile.cornerRadius,
+            topRight: EventTile.cornerRadius,
+          ),
+          child: Image.network(
+            url!,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              );
+            },
+            height: 150,
+            width: EventTile.tileWidth,
+            fit: BoxFit.cover,
+          ));
 }
 
 class TileTitle extends StatelessWidget {
@@ -145,8 +145,10 @@ class TileTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
-      child: Center( // Centers the Text
+      padding:
+          EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
+      child: Center(
+        // Centers the Text
         child: Text(
           title,
           textAlign: TextAlign.center,
@@ -159,7 +161,7 @@ class TileTitle extends StatelessWidget {
             fontSize: 16,
             height: 1.4,
             fontWeight: FontWeight.w600,
-            decoration: TextDecoration.underline,  // Underlines the text
+            decoration: TextDecoration.underline, // Underlines the text
           ),
         ),
       ),
@@ -187,158 +189,163 @@ class TileTime extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.only(right: 8, left: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (startTime != endTime)
-            Row(
-              children: [
-                // Start Time
-                Text(
-                  startTime,
-                  textAlign: TextAlign.right,
-                  style: style,
-                ),
-                Text(" - ", style: style), // Separator
-              ],
+        padding: const EdgeInsets.only(right: 8, left: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (startTime != endTime)
+              Row(
+                children: [
+                  // Start Time
+                  Text(
+                    startTime,
+                    textAlign: TextAlign.right,
+                    style: style,
+                  ),
+                  Text(" - ", style: style), // Separator
+                ],
+              ),
+            Text(
+              endTime, // End Time
+              textAlign: TextAlign.right,
+              style: style,
             ),
-          Text(
-            endTime, // End Time
-            textAlign: TextAlign.right,
-            style: style,
-          ),
-        ],
-      )
-    );
+          ],
+        ));
   }
 }
 
 class StartEndDateContainer extends StatelessWidget {
   final String date;
-  const StartEndDateContainer ({Key? key, required this.date}) : super(key: key);
+  const StartEndDateContainer({Key? key, required this.date}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 5.0),
       child: Row(
-        children: [ // Mar 24 2025 - May 2 2025
-                    //  0   1   2  3  4  5  6
-          if (date.contains(' - '))
-            ...[
-              Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Column(
-                      children: [
-                        // Start Date Month
-                        Text(
-                          date.split(' ')[0].toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Theme.of(context).brightness == Brightness.light
-                                ? lightPrimaryColor
-                                : Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
+        children: [
+          // Mar 24 2025 - May 2 2025
+          //  0   1   2  3  4  5  6
+          if (date.contains(' - ')) ...[
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Column(
+                    children: [
+                      // Start Date Month
+                      Text(
+                        date.split(' ')[0].toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
+                          fontWeight: FontWeight.w600,
                         ),
-                        // Start Date Day
-                        Text(
-                          date.split(' ')[1].toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Theme.of(context).brightness == Brightness.light
-                                ? lightPrimaryColor
-                                : Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      // Start Date Day
+                      Text(
+                        date.split(' ')[1].toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 22,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              Padding( // "-"
-                padding: EdgeInsets.symmetric(horizontal: 4.0),
-                child: Text(
-                  date.split(' ')[3].toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? lightPrimaryColor
-                        : Colors.white,
-                    fontWeight: FontWeight.w400,
+                      ),
+                    ],
                   ),
+                )
+              ],
+            ),
+            Padding(
+              // "-"
+              padding: EdgeInsets.symmetric(horizontal: 4.0),
+              child: Text(
+                date.split(' ')[3].toUpperCase(),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? lightPrimaryColor
+                      : Colors.white,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
-              Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 8), // Adjust padding as needed
-                    child: Column(
-                      children: [
-                        // End Date Day
-                        Text(
-                          date.split(' ')[4].toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Theme.of(context).brightness == Brightness.light
-                                ? lightPrimaryColor
-                                : Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.only(right: 8), // Adjust padding as needed
+                  child: Column(
+                    children: [
+                      // End Date Day
+                      Text(
+                        date.split(' ')[4].toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
+                          fontWeight: FontWeight.w600,
                         ),
-                        // End Date Year
-                        Text(
-                          date.split(' ')[5].toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Theme.of(context).brightness == Brightness.light
-                                ? lightPrimaryColor
-                                : Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      // End Date Year
+                      Text(
+                        date.split(' ')[5].toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 22,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ],
-                    ),
-                  )
-                ],
-              )
-            ]
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )
+          ]
           // If it's a single date, display it normally
-          else
-            ...[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the padding as needed
-                child: Column(
-                  children: [
-                    // Month
-                    Text(
-                      date.split(' ')[0].toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? lightPrimaryColor
-                            : Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
+          else ...[
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: 8.0), // Adjust the padding as needed
+              child: Column(
+                children: [
+                  // Month
+                  Text(
+                    date.split(' ')[0].toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? lightPrimaryColor
+                          : Colors.white,
+                      fontWeight: FontWeight.w600,
                     ),
-                    // Day
-                    Text(
-                      date.split(' ')[1].toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 22,
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? lightPrimaryColor
-                            : Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  ),
+                  // Day
+                  Text(
+                    date.split(' ')[1].toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? lightPrimaryColor
+                          : Colors.white,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
-                ),
-              )
-            ],
+                  ),
+                ],
+              ),
+            )
+          ],
         ],
       ),
     );
