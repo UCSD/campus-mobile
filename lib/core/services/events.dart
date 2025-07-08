@@ -10,23 +10,30 @@ class EventsService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
+    final Map<String, String> headers = {
+    "accept": "application/json",
+  };
 
   /// MODELS
   late List<EventModel> _data;
+
 
   Future<bool> fetchData() async {
     _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response = await NetworkHelper.fetchData(dotenv.get('EVENTS_ENDPOINT'));
+      String _response = await NetworkHelper.authorizedFetch(dotenv.get('EVENTS_ENDPOINT'),headers);
 
       /// parse data
       final data = eventModelFromJson(_response);
       _data = data;
       return true;
     } catch (e) {
-      _error = e.toString();
-      return false;
+      if (e.toString().contains("401")) {
+        if (await NetworkHelper.getNewToken(headers)) return await fetchData();
+      }
+    _error = e.toString();
+    return false;
     } finally {
       _isLoading = false;
     }
