@@ -34,7 +34,6 @@ class DiningDataProvider extends ChangeNotifier {
     /// fetch dining locations from the service
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data) {
-
         // This fixes the image URLs to avoid 404 errors
         // TODO: Remove this if we are not using model.images anymore due to having VendorLogos now
         if (model.images != null) {
@@ -44,20 +43,8 @@ class DiningDataProvider extends ChangeNotifier {
           }
         }
 
-        ///////////// Map the vendor with its logo /////////////
-        // Normalize model name (no apostrophes, all lowercase, spaces replaced with hyphens)
-        final vendorName = normalizeModelName(model.name);
-        // Build the endpoint for the vendor logo for this model name
-        final vendorLogoEndpoint = diningLogosEndpoint + vendorName + ".png";
-        // Check if the logo exists
-        if (await _diningService.fetchVendorLogo(vendorLogoEndpoint)) {
-          // Feed the vendor logo into the model
-          model.vendorLogo = vendorLogoEndpoint;
-          // print('Found logo for ${model.name}: ${model.vendorLogo}');
-        } else {
-          model.vendorLogo = null; // not found
-        }
-
+        print("==============================");
+        print("Dining Location: ${model.name} and vendor logo: ${model.vendorLogo}");
         // Save the data
         mapOfDiningLocations[model.name] = model;
       }
@@ -74,16 +61,6 @@ class DiningDataProvider extends ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
-  }
-
-  /// Removes apostrophes and non-alphanumeric characters
-  String normalizeModelName(String input) {
-    return input
-        .trim()
-        .toLowerCase()
-        .replaceAll(RegExp(r"['’]"), '')            // remove apostrophes
-        .replaceAll(RegExp(r"\s+"), '-')            // replace spaces with hyphens
-        .replaceAll(RegExp(r"[^a-z0-9\-]"), '');    // remove all non-alphanumeric except hyphens
   }
 
   void fetchDiningMenu(String menuId) async {
