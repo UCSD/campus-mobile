@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/services.dart';
 
 var showOnboardingScreen = true;
 var isFirstRunFlag = false;
@@ -30,9 +31,14 @@ void main() async {
 
     final mapsImplementation = GoogleMapsFlutterPlatform.instance;
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
-      WidgetsFlutterBinding.ensureInitialized();
-      await mapsImplementation
-          .initializeWithRenderer(AndroidMapRenderer.latest);
+      try {
+        await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
+        } on PlatformException catch (e) {
+      // Ignore if already initialized
+      if (e.code != 'Renderer already initialized') {
+        rethrow;
+      }
+    }
     }
 
     // dotenv loading

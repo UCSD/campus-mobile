@@ -31,8 +31,9 @@ const Color linkTextColorDark = Color(0xFF5496BC);
 
 const Color descriptiveTextColorLight = Color(0xFF6A6B6D);
 const Color descriptiveTextColorDark = Color(0xFFA1A2A4);
-const Color listTileDividerColorLight = Color(0xFF647185);
-const Color listTileDividerColorDark = Color(0xFF647185);
+
+const Color listTileDividerColorLight = Color(0xFF21293A);
+const Color listTileDividerColorDark = Color(0xFFAFC2D8);
 
 const Color systemErrorTextColorLight = Color(0xFFAC1700);
 const Color systemErrorTextColorDark = Color(0xFFAC1700);
