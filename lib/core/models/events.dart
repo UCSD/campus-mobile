@@ -15,7 +15,7 @@ class EventModel {
     required this.title,
     this.description,
     required this.startDate,
-    this.endDate,
+    required this.endDate,
     required this.imageHQ,
     required this.imageThumb,
     this.link,
@@ -27,7 +27,7 @@ class EventModel {
   String title;
   String? description;
   DateTime startDate;
-  DateTime? endDate;
+  DateTime endDate;
   String imageHQ;
   String imageThumb;
   String? link;
@@ -39,7 +39,7 @@ class EventModel {
       : title = json["title"],
         description = json["description"],
         startDate = DateTime.parse(json["startDate"]),
-        endDate = json["endDate"] != null ? DateTime.parse(json["endDate"]) : null,
+        endDate = DateTime.parse(json["endDate"]),
         imageHQ = json["imageHQ"],
         imageThumb = json["imageThumb"],
         link = json["link"],
@@ -52,8 +52,8 @@ class EventModel {
   Map<String, dynamic> toJson() => {
         "title": title,
         "description": description,
-        "startDate": startDate.toIso8601String(),
-        "endDate": endDate?.toIso8601String(),
+        "startDate": startDate,
+        "endDate": endDate,
         "imageHQ": imageHQ,
         "imageThumb": imageThumb,
         "link": link,
