@@ -32,13 +32,13 @@ class EventsAll extends StatelessWidget {
     }
 
     if (listOfEvents.length > 0) {
-      return GridView.extent(
-        maxCrossAxisExtent: 220, 
+      return GridView.count(
+        crossAxisCount: 2,
+        crossAxisSpacing: 1,
         mainAxisSpacing: 8,
-        crossAxisSpacing: 12,
-        padding: const EdgeInsets.all(12),
         children: eventTiles,
-        childAspectRatio: 220 / 300, 
+        childAspectRatio: MediaQuery.of(context).size.width /
+            (MediaQuery.of(context).size.height / 1.4),
       );
     } else {
       return ContainerView(

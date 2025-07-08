@@ -19,7 +19,7 @@ class EventsCardList extends StatelessWidget {
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
-    final List<Widget> eventTiles = [const SizedBox(width: 12)]; 
+    final List<Widget> eventTiles = [const SizedBox(width: 7.5)]; // start off with left spacer
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
@@ -31,7 +31,7 @@ class EventsCardList extends StatelessWidget {
 
     for (var i = 0; i < size; i++) {
       eventTiles.add(EventTile(data: listOfEvents[i])); // get event model and then create a tile from it
-      eventTiles.add(const SizedBox(width: 12)); 
+      eventTiles.add(const SizedBox(width: 9)); // spacer between tiles
     }
 
     if (listSize != null) {

@@ -71,7 +71,7 @@ class EventDetailView extends StatelessWidget {
                 // Event Time
                 Text(
                   DateFormat.jm().format(data.startDate.toLocal())
-                      + (data.endDate != null ? ' - ' + DateFormat.jm().format(data.endDate!.toLocal()) : ''),
+                      + ' - ' + DateFormat.jm().format(data.endDate.toLocal()),
                   style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).brightness == Brightness.light
