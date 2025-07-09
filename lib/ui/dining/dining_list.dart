@@ -124,10 +124,10 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
     if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
       if (dayHours == 'Closed-Closed')
         return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
-      else {
-        print('test');
-        return Text(dayHours);
-      }
+      if(dayHours == 'Invalid Date-Invalid Date')
+        return Text("Unknown hours", style: Theme.of(context).textTheme.bodySmall);
+      print("test");
+      return Text(dayHours, style: Theme.of(context).textTheme.bodySmall);
     }
 
     return Text(formattedTimeRange(dayHours) ?? dayHours,
