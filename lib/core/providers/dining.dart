@@ -62,7 +62,6 @@ class DiningDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-
     Map<String, DiningModel> mapOfDiningLocations = {};
 
     if (await _diningService.fetchData()) {
@@ -71,13 +70,8 @@ class DiningDataProvider extends ChangeNotifier {
         _assignVendorLogo(model);
         mapOfDiningLocations[model.name] = model;
       }
-
       _diningModels = mapOfDiningLocations;
       populateDistances();
-
-      // Feed specials to models
-      await _attachSpecialsToModels();
-
       _lastUpdated = DateTime.now();
     } else {
       _error = _diningService.error;
@@ -114,22 +108,6 @@ class DiningDataProvider extends ChangeNotifier {
       model.vendorLogo = diningLogosEndpoint + "pacific-cafe.png";
     } else if (model.name == 'Caroline\'s Seaside Cafe') {
       model.vendorLogo = diningLogosEndpoint + "carlolines.png";
-    }
-  }
-
-  Future<void> _attachSpecialsToModels() async {
-    if (await _diningService.fetchSpecialsData()) {
-      final eateries = _diningService.specialsData?.systemDataStructure.middleBlocks.eatery ?? [];
-
-      for (var eatery in eateries) {
-        for (var model in _diningModels.values) {
-          if (eatery.name.contains(model.name) || model.name.contains(eatery.name)) {
-              model.specialsPromotions = eatery.specialsPromotions;
-              // print('Found specials for ${model.name}: ${model.specialsPromotions?.specialTitle}');
-            break;
-          }
-        }
-      }
     }
   }
 

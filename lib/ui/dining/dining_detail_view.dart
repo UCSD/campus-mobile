@@ -54,7 +54,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       (m) => m != null && m.name.contains("Dining Halls (2/2)"),
       orElse: () => null,
     );
-    var specials = diningModel.specialsPromotions;
+    var specials = diningModel.specials;
     return [
       Row(
         children: [
@@ -122,7 +122,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       if (diningModel.specialHours != null)
         buildSpecialHours(context, diningModel),
       // Specials Field
-      if (specials?.specialTitle.isNotEmpty == true)
+      if (specials?.specialTitle?.isNotEmpty == true)
         buildSpecialsField(context, diningModel),
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
@@ -224,7 +224,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
             ),
             SizedBox(height: 8),
             Text(
-              model.specialsPromotions?.specialTitle ?? '',
+              model.specials?.specialTitle ?? '',
               style: TextStyle(
                 fontSize: 17,
                 color: Theme.of(context).brightness == Brightness.light
@@ -235,7 +235,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
             ),
             SizedBox(height: 4),
             Text(
-              model.specialsPromotions?.specialDescription ?? '',
+              model.specials?.specialDescription ?? '',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
