@@ -36,7 +36,7 @@ class EmployeeIdModel {
         employeeId: json["Employee ID"] == null ? "" : json["Employee ID"],
         department: json["Department"] == null ? "" : json["Department"],
         barcode: json["Barcode"] == null ? "" : json["Barcode"],
-        photo: json["Photo"] == null ? "" : json["Photo"],
+        photo: json["Photo"], // Keep null as null for proper base64 handling
         classificationType: json["Classification Type"] == null
             ? "Employee"
             : json["Classification Type"],
