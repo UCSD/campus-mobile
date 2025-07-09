@@ -35,7 +35,8 @@ class EventDetailView extends StatelessWidget {
           child: Row(
             children: [
               // Event Start Date
-              StartDateContainer(date: DateFormat("MMM d y").format(data.startDate.toLocal())),
+              StartDateContainer(
+                  date: DateFormat("MMM d y").format(data.startDate.toLocal())),
               // Event Title
               Expanded(child: EventTitle(title: data.title)),
             ],
@@ -43,65 +44,66 @@ class EventDetailView extends StatelessWidget {
         ),
         Container(
             padding: const EdgeInsets.only(left: 17.0),
-            child: Row(
-                children: [
-                // Event Location
-                Icon(Icons.location_on_sharp, size: 36,
+            child: Row(children: [
+              // Event Location
+              Icon(
+                Icons.location_on_sharp,
+                size: 36,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : Colors.white,
+              ),
+              SizedBox(width: 5),
+              Expanded(
+                child: data.location != null && data.location!.isNotEmpty
+                    ? LinkifyWithCatch(
+                        text: data.location!,
+                        looseUrl: true,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      )
+                    : Container(),
+              ),
+              SizedBox(width: 5),
+              // Event Time
+              Text(
+                DateFormat.jm().format(data.startDate.toLocal()) +
+                    ' - ' +
+                    DateFormat.jm().format(data.endDate.toLocal()),
+                style: TextStyle(
+                  fontSize: 16,
                   color: Theme.of(context).brightness == Brightness.light
                       ? lightPrimaryColor
                       : Colors.white,
+                  fontWeight: FontWeight.w400,
                 ),
-                SizedBox(width: 5),
-                Expanded(
-                  child: data.location != null && data.location!.isNotEmpty
-                      ? LinkifyWithCatch(
-                          text: data.location!,
-                          looseUrl: true,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(context).brightness == Brightness.light
-                                ? lightPrimaryColor
-                                : Colors.white,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        )
-                      : Container(),
-                ),
-                SizedBox(width: 5),
-                // Event Time
-                Text(
-                  DateFormat.jm().format(data.startDate.toLocal())
-                      + ' - ' + DateFormat.jm().format(data.endDate.toLocal()),
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? lightPrimaryColor
-                        : Colors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                  SizedBox(width: 16),
-                ]
-            )
-        ),
+              ),
+              SizedBox(width: 16),
+            ])),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              ///////////////// Horizontal Division ///////////////////
-              Divider(color: listTileDividerColorDark, thickness: 0.6),
-              // Event Description
-              data.description != null && data.description!.isNotEmpty
-                  ? Text(
-                data.description!,
-                style: TextStyle(
-                    fontSize: 16,
-                    height: 1.4,
-                    fontWeight: FontWeight.w400),
-                ) : Container(),
-            ],
-          )
-        ),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                ///////////////// Horizontal Division ///////////////////
+                Divider(color: listTileDividerColorDark, thickness: 0.6),
+                // Event Description
+                data.description != null && data.description!.isNotEmpty
+                    ? Text(
+                        data.description!,
+                        style: TextStyle(
+                            fontSize: 16,
+                            height: 1.4,
+                            fontWeight: FontWeight.w400),
+                      )
+                    : Container(),
+              ],
+            )),
         Container(
           padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
           // "GO TO EVENT PAGE" Button
@@ -121,10 +123,10 @@ class EventImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.33,
+      height: MediaQuery.of(context).size.width / 2.1,
       decoration: BoxDecoration(
         image: DecorationImage(
-          fit: BoxFit.fill,
+          fit: BoxFit.cover, // Ensure the image fills the container
           image: (imageUrl.isEmpty)
               ? AssetImage('assets/images/UCSDMobile_banner.png')
                   as ImageProvider
@@ -142,41 +144,38 @@ class StartDateContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Month
-          Text(
-              date.split(' ')[0].toUpperCase(),
-              style: TextStyle(fontSize: 18,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? lightPrimaryColor
-                    : Colors.white,
-                fontWeight: FontWeight.w400,
-              )
-          ),
-          // Day
-          Text(
-              date.split(' ')[1].toUpperCase(),
-              style: TextStyle(fontSize: 20,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? lightPrimaryColor
-                    : Colors.white,
-                fontWeight: FontWeight.w500,
-              )
-          ),
-          // Year
-          Text(
-              date.split(' ')[2].toUpperCase(),
-              style: TextStyle(fontSize: 18,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? lightPrimaryColor
-                    : Colors.white,
-                fontWeight: FontWeight.w400,
-              )
-          ),
-        ],
-      );
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // Month
+        Text(date.split(' ')[0].toUpperCase(),
+            style: TextStyle(
+              fontSize: 18,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : Colors.white,
+              fontWeight: FontWeight.w400,
+            )),
+        // Day
+        Text(date.split(' ')[1].toUpperCase(),
+            style: TextStyle(
+              fontSize: 20,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : Colors.white,
+              fontWeight: FontWeight.w500,
+            )),
+        // Year
+        Text(date.split(' ')[2].toUpperCase(),
+            style: TextStyle(
+              fontSize: 18,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : Colors.white,
+              fontWeight: FontWeight.w400,
+            )),
+      ],
+    );
   }
 }
 
@@ -224,7 +223,8 @@ class GoToEventPageButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: actionButtonBackgroundColor,
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           onPressed: () async {
             try {
@@ -249,4 +249,3 @@ class GoToEventPageButton extends StatelessWidget {
     );
   }
 }
-
