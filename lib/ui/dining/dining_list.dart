@@ -126,7 +126,7 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
         return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
       if(dayHours == 'Invalid Date-Invalid Date')
         return Text("Unknown hours", style: Theme.of(context).textTheme.bodySmall);
-      print("test");
+      
       return Text(dayHours, style: Theme.of(context).textTheme.bodySmall);
     }
 
