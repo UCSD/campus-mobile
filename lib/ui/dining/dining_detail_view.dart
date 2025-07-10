@@ -391,7 +391,7 @@ class HoursOfDay extends StatelessWidget {
     // Extract the hours for the given day from the model
     var result = extractDayHours(day, model);
     var theDay = result['day'];
-    var hoursText = result['hours'];
+    var hoursText = (result['hours'] == "Invalid Date-Invalid Date") ? "Unknown Hours" : result['hours'];
     // Determine the hours' text style
     final TextStyle hoursTextStyle = day == DateTime.now().weekday
         ? TextStyle(
