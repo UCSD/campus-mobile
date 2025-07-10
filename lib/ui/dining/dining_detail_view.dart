@@ -215,8 +215,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   //  (maybe the API updates automatically, and when fetched, the old promotion will be null
   //  so we don't really have to code an expiration. Only time will tell...
   Widget buildSpecialsField(BuildContext context, prefix0.DiningModel model) {
-      return Container(
-        child: Column(
+      return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Specials",
@@ -239,8 +238,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
-        ),
-      );
+        );
   }
 
   ///////////// Payment Options Section /////////////
