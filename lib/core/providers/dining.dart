@@ -23,9 +23,6 @@ class DiningDataProvider extends ChangeNotifier {
   /// SERVICES
   var _diningService = DiningService();
 
-  /// VENDOR LOGOS
-  final diningLogosEndpoint = "https://cdn.ucsd.edu/dining-logos/";
-
   void fetchDiningLocations() async {
     _isLoading = true;
     _error = null;
@@ -35,7 +32,6 @@ class DiningDataProvider extends ChangeNotifier {
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data) {
         _fixImageUrls(model);
-        _assignVendorLogo(model);
         mapOfDiningLocations[model.name] = model;
       }
       _diningModels = mapOfDiningLocations;
@@ -55,27 +51,6 @@ class DiningDataProvider extends ChangeNotifier {
         img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
         img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
       }
-    }
-  }
-
-  void _assignVendorLogo(DiningModel model) {
-    final modelName = normalize(model.name);
-
-    for (var logo in diningLogos) {
-      final logoName = normalize(logo.split('.')[0]);
-      if (modelName.contains(logoName)) {
-        model.vendorLogo = diningLogosEndpoint + logo;
-        return;
-      }
-    }
-
-    // Special cases
-    if (model.name == '64 Degrees') {
-      model.vendorLogo = diningLogosEndpoint + "sixty-four-degrees.png";
-    } else if (model.name == 'Pacific Café & Catering') {
-      model.vendorLogo = diningLogosEndpoint + "pacific-cafe.png";
-    } else if (model.name == 'Caroline\'s Seaside Cafe') {
-      model.vendorLogo = diningLogosEndpoint + "carlolines.png";
     }
   }
 
