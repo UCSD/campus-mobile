@@ -76,16 +76,27 @@ class EventTile extends StatelessWidget {
             children: [
               _eventImageLoader(data.imageThumb),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 child: Row(
-                  mainAxisAlignment: hasTime
-                      ? MainAxisAlignment.spaceEvenly
-                      : MainAxisAlignment.center,
+                  mainAxisAlignment:
+                      hasTime ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    StartEndDateContainer(date: dateDisplay),
-                    if (hasTime) TileTime(time: '$startTime - $endTime'),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: StartEndDateContainer(date: dateDisplay),
+                      ),
+                    ),
+                    if (hasTime)
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: TileTime(time: '$startTime - $endTime'),
+                        ),
+                      ),
                   ],
                 ),
               ),
