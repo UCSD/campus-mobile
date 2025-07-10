@@ -40,8 +40,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   }
 
   // Contains all the widgets that make up the Dining detail view.
-  List<Widget> buildDetailView(
-      BuildContext context, prefix0.DiningModel diningModel) {
+  List<Widget> buildDetailView(BuildContext context, prefix0.DiningModel diningModel) {
     // Get availability for all dining halls
     List<AvailabilityModel?> availabilityModels = _availabilityDataProvider
         .availabilityModels
@@ -55,7 +54,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       (m) => m != null && m.name.contains("Dining Halls (2/2)"),
       orElse: () => null,
     );
-
+    var specials = diningModel.specials;
     return [
       Row(
         children: [
@@ -122,9 +121,11 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       // Vendor Special Hours
       if (diningModel.specialHours != null)
         buildSpecialHours(context, diningModel),
+      // Specials Field
+      if (specials?.specialTitle?.isNotEmpty == true)
+        buildSpecialsField(context, diningModel),
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
-      SizedBox(height: 16),
       // Vendor Location
       Text('Location',
         style: Theme.of(context).textTheme.titleMedium,
@@ -207,6 +208,37 @@ class _DiningDetailViewState extends State<DiningDetailView> {
         )
       ]),
     );
+  }
+
+  ///////////// Specials Field /////////////
+  // TODO: Implement the expiration if we decide to go in that direction
+  //  (maybe the API updates automatically, and when fetched, the old promotion will be null
+  //  so we don't really have to code an expiration. Only time will tell...
+  Widget buildSpecialsField(BuildContext context, prefix0.DiningModel model) {
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Specials",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            SizedBox(height: 8),
+            Text(
+              model.specials?.specialTitle ?? '',
+              style: TextStyle(
+                fontSize: 17,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? descriptiveTextColorLight
+                    : descriptiveTextColorDark,
+                fontWeight: FontWeight.w700
+              ),
+            ),
+            SizedBox(height: 4),
+            Text(
+              model.specials?.specialDescription ?? '',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        );
   }
 
   ///////////// Payment Options Section /////////////
@@ -391,7 +423,7 @@ class HoursOfDay extends StatelessWidget {
     // Extract the hours for the given day from the model
     var result = extractDayHours(day, model);
     var theDay = result['day'];
-    var hoursText = result['hours'];
+    var hoursText = (result['hours'] == "Invalid Date-Invalid Date") ? "Unknown Hours" : result['hours'];
     // Determine the hours' text style
     final TextStyle hoursTextStyle = day == DateTime.now().weekday
         ? TextStyle(

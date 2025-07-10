@@ -27,52 +27,56 @@ class DiningDataProvider extends ChangeNotifier {
   final diningLogosEndpoint = "https://cdn.ucsd.edu/dining-logos/";
 
   void fetchDiningLocations() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
     Map<String, DiningModel> mapOfDiningLocations = {};
 
-    /// fetch dining locations from the service
     if (await _diningService.fetchData()) {
       for (DiningModel model in _diningService.data) {
-        // This fixes the image URLs to avoid 404 errors
-        // TODO: Remove this if we are not using model.images anymore due to having VendorLogos now
-        if (model.images != null) {
-          for (var img in model.images!) {
-            img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
-            img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
-          }
-        }
-
-        print("==============================");
-        print("Dining Location: ${model.name} and vendor logo: ${model.vendorLogo}");
-        // Save the data
+        _fixImageUrls(model);
+        _assignVendorLogo(model);
         mapOfDiningLocations[model.name] = model;
       }
-
-      /// replace old list of locations with new one
       _diningModels = mapOfDiningLocations;
-
-      /// calculate distance of each eatery to user's current location
       populateDistances();
       _lastUpdated = DateTime.now();
     } else {
-      /// TODO: determine what error to show to the user
       _error = _diningService.error;
     }
+
     _isLoading = false;
     notifyListeners();
   }
 
-  void fetchDiningMenu(String menuId) async {
-    _isLoading = true; _error = null;
-    notifyListeners();
-    if (await _diningService.fetchMenu(menuId)) {
-      _diningMenuItemModels[menuId] = _diningService.menuData!;
-    } else {
-      _error = _diningService.error;
+  void _fixImageUrls(DiningModel model) {
+    if (model.images != null) {
+      for (var img in model.images!) {
+        img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+        img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+      }
     }
-    _isLoading = false;
-    notifyListeners();
+  }
+
+  void _assignVendorLogo(DiningModel model) {
+    final modelName = normalize(model.name);
+
+    for (var logo in diningLogos) {
+      final logoName = normalize(logo.split('.')[0]);
+      if (modelName.contains(logoName)) {
+        model.vendorLogo = diningLogosEndpoint + logo;
+        return;
+      }
+    }
+
+    // Special cases
+    if (model.name == '64 Degrees') {
+      model.vendorLogo = diningLogosEndpoint + "sixty-four-degrees.png";
+    } else if (model.name == 'Pacific Café & Catering') {
+      model.vendorLogo = diningLogosEndpoint + "pacific-cafe.png";
+    } else if (model.name == 'Caroline\'s Seaside Cafe') {
+      model.vendorLogo = diningLogosEndpoint + "carlolines.png";
+    }
   }
 
   List<DiningModel> reorderLocations() {
@@ -113,35 +117,6 @@ class DiningDataProvider extends ChangeNotifier {
         c((lat2 - lat1) * p) / 2 +
         c(lat1 * p) * c(lat2 * p) * (1 - c((lng2 - lng1) * p)) / 2;
     return 12742 * asin(sqrt(a)) * 0.621371;
-  }
-
-  /// Returns menu data for a given id
-  /// Fetches menu if not already downloaded
-  DiningMenuItemsModel? getMenuData(String? id) {
-    if (id != null && _diningMenuItemModels.containsKey(id)) {
-      return _diningMenuItemModels[id];
-    } else if (id != null) {
-      fetchDiningMenu(id);
-    }
-    return null;
-  }
-
-  List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
-    List<DiningMenuItem>? menuItems;
-    if (id != null && _diningMenuItemModels[id] != null) {
-      menuItems = _diningMenuItemModels[id]!.menuItems;
-    }
-    List<DiningMenuItem> filteredMenuItems = [];
-    if (menuItems != null) {
-      for (var menuItem in menuItems) {
-        var matched = 0;
-        for (var i = 0; i < filters.length; i++) {
-          if (menuItem.tags.contains(filters[i])) matched++;
-        }
-        if (matched == filters.length) filteredMenuItems.add(menuItem);
-      }
-    }
-    return filteredMenuItems;
   }
 
   /// RETURNS A List<diningModels> sorted by distance

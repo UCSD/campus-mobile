@@ -1,10 +1,9 @@
+import 'dart:convert';
+import 'package:campus_mobile_experimental/core/models/location.dart';
+
 // To parse this JSON data, do
 //
 //     final diningModel = diningModelFromJson(jsonString);
-
-import 'dart:convert';
-
-import 'package:campus_mobile_experimental/core/models/location.dart';
 
 List<DiningModel> diningModelFromJson(String str) => List<DiningModel>.from(
     json.decode(str).map((x) => DiningModel.fromJson(x)));
@@ -21,14 +20,13 @@ class DiningModel
   String tel;
   RegularHours regularHours; // doesn't ever seem to be null
   List<String> paymentOptions;
-
+  Specials? specials;
   // CONFIRMED OPTIONAL
   String? id;
   Meals? meals;
   String? persistentMenu;
   SpecialHour? specialHours;
   String? vendorLogo;
-
   List<Image>? images;
   Coordinates? coordinates;
   String? url;
@@ -52,6 +50,7 @@ class DiningModel
     this.vendorLogo,
     this.url,
     this.menuWebsite,
+    this.specials,
   });
 
   DiningModel.fromJson(Map<String, dynamic> json)
@@ -76,7 +75,10 @@ class DiningModel
             : SpecialHour.fromJson(json["specialHours"]),
         vendorLogo = json["vendorLogo"],
         url = json["url"],
-        menuWebsite = json["menuWebsite"];
+        menuWebsite = json["menuWebsite"],
+        specials = json["specials"] == null
+            ? null
+            : Specials.fromJson(json["specials"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -98,6 +100,7 @@ class DiningModel
         "vendorLogo": vendorLogo,
         "menuWebsite": menuWebsite,
         "distance": distance,
+        "specials": specials?.toJson(),
       };
 }
 
@@ -202,6 +205,54 @@ class SpecialHour {
         "specialHoursEventDetails": specialHoursEventDetails,
         "specialHoursValidFrom": specialHoursValidFrom,
         "specialHoursValidTo": specialHoursValidTo
+      };
+}
+
+class Specials {
+  String? specialDescription;
+  String? specialTitle;
+  PromoDates? promoDates;
+
+  Specials({
+    this.specialDescription,
+    this.specialTitle,
+    this.promoDates,
+  });
+
+  Specials.fromJson(Map<String, dynamic> json)
+      : specialDescription = json["specialDescription"],
+        specialTitle = json["specialTitle"],
+        promoDates = json["promoDates"] == null
+            ? null
+            : PromoDates.fromJson(json["promoDates"]);
+
+  Map<String, dynamic> toJson() => {
+        "specialDescription": specialDescription,
+        "specialTitle": specialTitle,
+        "promoDates": promoDates?.toJson(),
+      };
+}
+
+class PromoDates {
+  int? startDate;
+  int? endDate;
+
+  PromoDates({
+    this.startDate,
+    this.endDate,
+  });
+
+  PromoDates.fromJson(Map<String, dynamic> json)
+      : startDate = json["startDate"] is String
+            ? int.tryParse(json["startDate"])
+            : json["startDate"],
+        endDate = json["endDate"] is String
+            ? int.tryParse(json["endDate"])
+            : json["endDate"];
+
+  Map<String, dynamic> toJson() => {
+        "startDate": startDate,
+        "endDate": endDate,
       };
 }
 
