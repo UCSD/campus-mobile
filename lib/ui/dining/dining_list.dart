@@ -178,7 +178,7 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
       // Vendor's Distance and Directions
       trailing: buildIconWithDistance(data, context),
       onTap: () {
-        if (data.id != null) Provider.of<DiningDataProvider>(context, listen: false).fetchDiningMenu(data.id!);
+        // if (data.id != null) Provider.of<DiningDataProvider>(context, listen: false).fetchDiningMenu(data.id!);
         Navigator.pushNamed(context, RoutePaths.DiningDetailView, arguments: data);
       },
     );

@@ -153,44 +153,44 @@ class DiningDataProvider extends ChangeNotifier {
 
   /// Returns menu data for a given id
   /// Fetches menu if not already downloaded
-  DiningMenuItemsModel? getMenuData(String? id) {
-    if (id != null && _diningMenuItemModels.containsKey(id)) {
-      return _diningMenuItemModels[id];
-    } else if (id != null) {
-      fetchDiningMenu(id);
-    }
-    return null;
-  }
+  // DiningMenuItemsModel? getMenuData(String? id) {
+  //   if (id != null && _diningMenuItemModels.containsKey(id)) {
+  //     return _diningMenuItemModels[id];
+  //   } else if (id != null) {
+  //     fetchDiningMenu(id);
+  //   }
+  //   return null;
+  // }
 
-  void fetchDiningMenu(String menuId) async {
-    _isLoading = true; _error = null;
-    notifyListeners();
-    if (await _diningService.fetchMenu(menuId)) {
-      _diningMenuItemModels[menuId] = _diningService.menuData!;
-    } else {
-      _error = _diningService.error;
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
+  // void fetchDiningMenu(String menuId) async {
+  //   _isLoading = true; _error = null;
+  //   notifyListeners();
+  //   if (await _diningService.fetchMenu(menuId)) {
+  //     _diningMenuItemModels[menuId] = _diningService.menuData!;
+  //   } else {
+  //     _error = _diningService.error;
+  //   }
+  //   _isLoading = false;
+  //   notifyListeners();
+  // }
 
-  List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
-    List<DiningMenuItem>? menuItems;
-    if (id != null && _diningMenuItemModels[id] != null) {
-      menuItems = _diningMenuItemModels[id]!.menuItems;
-    }
-    List<DiningMenuItem> filteredMenuItems = [];
-    if (menuItems != null) {
-      for (var menuItem in menuItems) {
-        var matched = 0;
-        for (var i = 0; i < filters.length; i++) {
-          if (menuItem.tags.contains(filters[i])) matched++;
-        }
-        if (matched == filters.length) filteredMenuItems.add(menuItem);
-      }
-    }
-    return filteredMenuItems;
-  }
+  // List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
+  //   List<DiningMenuItem>? menuItems;
+  //   if (id != null && _diningMenuItemModels[id] != null) {
+  //     menuItems = _diningMenuItemModels[id]!.menuItems;
+  //   }
+  //   List<DiningMenuItem> filteredMenuItems = [];
+  //   if (menuItems != null) {
+  //     for (var menuItem in menuItems) {
+  //       var matched = 0;
+  //       for (var i = 0; i < filters.length; i++) {
+  //         if (menuItem.tags.contains(filters[i])) matched++;
+  //       }
+  //       if (matched == filters.length) filteredMenuItems.add(menuItem);
+  //     }
+  //   }
+  //   return filteredMenuItems;
+  // }
 
   /// RETURNS A List<diningModels> sorted by distance
   List<DiningModel> get diningModels {
