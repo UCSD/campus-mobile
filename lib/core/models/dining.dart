@@ -73,6 +73,7 @@ class DiningModel
         specialHours = (json["specialHours"] == null || json["specialHours"].isEmpty)
             ? null
             : SpecialHour.fromJson(json["specialHours"]),
+        vendorLogo = json["vendorLogo"],
         url = json["url"],
         menuWebsite = json["menuWebsite"],
         specials = json["specials"] == null
@@ -96,6 +97,7 @@ class DiningModel
         "regularHours": regularHours.toJson(),
         "specialHours": specialHours?.toJson(),
         "url": url,
+        "vendorLogo": vendorLogo,
         "menuWebsite": menuWebsite,
         "distance": distance,
         "specials": specials?.toJson(),
@@ -110,7 +112,6 @@ class Image
   String? large;
   // TODO: no caption is valid JSON response. Should this be empty str rather than null?
   String? caption;
-
 
   Image({
     this.small,

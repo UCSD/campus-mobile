@@ -23,40 +23,8 @@ class DiningDataProvider extends ChangeNotifier {
   /// SERVICES
   var _diningService = DiningService();
 
-  /// LOGOS
+  /// VENDOR LOGOS
   final diningLogosEndpoint = "https://cdn.ucsd.edu/dining-logos/";
-  final diningLogos = [ // Add more logos as needed (Format: "name-of-vendor.png")
-    "art-of-espresso.png",
-    "audreys.png",
-    "blue-bowl.png",
-    "blue-wave-bistro.png",
-    "canyon-vista-marketplace.png",
-    "carlolines.png",
-    "club-med.png",
-    "crafted.png",
-    "destiny-coast.png",
-    "fan-fan.png",
-    "faculty-club.png",
-    "foodworx.png",
-    "gong-cha.png",
-    "james-place.png",
-    "johns.png",
-    "ocean-view.png",
-    "pacific-cafe.png",
-    "pines.png",
-    "plant-power.png",
-    "restaurants-at-sixth.png",
-    "rogers-market.png",
-    "roots.png",
-    "sixth-market.png",
-    "sixty-four-degrees.png",
-    "street-corner.png",
-    "sunshine-market.png",
-    "tahini.png",
-    "the-bistro.png",
-    "ventanas.png",
-    "verdeli.png",
-  ];
 
   void fetchDiningLocations() async {
     _isLoading = true;
@@ -151,60 +119,11 @@ class DiningDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  /// Returns menu data for a given id
-  /// Fetches menu if not already downloaded
-  // DiningMenuItemsModel? getMenuData(String? id) {
-  //   if (id != null && _diningMenuItemModels.containsKey(id)) {
-  //     return _diningMenuItemModels[id];
-  //   } else if (id != null) {
-  //     fetchDiningMenu(id);
-  //   }
-  //   return null;
-  // }
-
-  // void fetchDiningMenu(String menuId) async {
-  //   _isLoading = true; _error = null;
-  //   notifyListeners();
-  //   if (await _diningService.fetchMenu(menuId)) {
-  //     _diningMenuItemModels[menuId] = _diningService.menuData!;
-  //   } else {
-  //     _error = _diningService.error;
-  //   }
-  //   _isLoading = false;
-  //   notifyListeners();
-  // }
-
-  // List<DiningMenuItem>? getMenuItems(String? id, List<String> filters) {
-  //   List<DiningMenuItem>? menuItems;
-  //   if (id != null && _diningMenuItemModels[id] != null) {
-  //     menuItems = _diningMenuItemModels[id]!.menuItems;
-  //   }
-  //   List<DiningMenuItem> filteredMenuItems = [];
-  //   if (menuItems != null) {
-  //     for (var menuItem in menuItems) {
-  //       var matched = 0;
-  //       for (var i = 0; i < filters.length; i++) {
-  //         if (menuItem.tags.contains(filters[i])) matched++;
-  //       }
-  //       if (matched == filters.length) filteredMenuItems.add(menuItem);
-  //     }
-  //   }
-  //   return filteredMenuItems;
-  // }
-
   /// RETURNS A List<diningModels> sorted by distance
   List<DiningModel> get diningModels {
     /// check if we have a coordinates object
     if (_coordinates != null) return reorderLocations();
     return _diningModels.values.toList();
-  }
-
-  /// Removes apostrophes and non-alphanumeric characters
-  String normalize(String input) {
-    return input
-        .toLowerCase()
-        .replaceAll(RegExp(r"['’]"), '')       // remove apostrophes
-        .replaceAll(RegExp(r"[^a-z0-9]"), ''); // remove all non-alphanumeric
   }
 
   /// SIMPLE SETTERS
