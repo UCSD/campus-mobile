@@ -260,32 +260,6 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       ),
     );
   }
-
-  // TODO: Unused, remove if not needed
-  // Widget buildPictures(prefix0.DiningModel model) {
-  //   List<ImageLoader> images = [];
-  //   if (model.images != null && model.images!.length > 0) {
-  //     for (prefix0.Image item in model.images!) {
-  //       if (item.small != null) images.add(ImageLoader(url: item.small!));
-  //     }
-  //     return Center(
-  //       child: Container(
-  //         height: 100,
-  //         child: ListView.separated(
-  //           itemCount: images.length,
-  //           itemBuilder: (BuildContext context, int index) {
-  //             return images[index];
-  //           },
-  //           separatorBuilder: (BuildContext context, int index) {
-  //             return Container(width: 10);
-  //           },
-  //           scrollDirection: Axis.horizontal,
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return Container(height: 10);
-  // }
 }
 
 ///////////// Location Section /////////////
@@ -401,18 +375,6 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
   }
 }
 
-// TODO: Unused, remove if not needed
-// Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
-//   if (model.meals != null) {
-//     return DiningMenuList(
-//       model: model,
-//     );
-//   } else {
-//     return Container();
-//   }
-// }
-
-// Feeds the "Hours" section of the Dining Detail View //
 class HoursOfDay extends StatelessWidget {
   const HoursOfDay({Key? key, required this.day, required this.model}) : super(key: key);
   final int day;
@@ -604,7 +566,7 @@ class GreenDot extends StatelessWidget {
   // Parse time strings like "9:00 AM" into minutes since midnight
   int? _parseTimeString(String timeString) {
     // Try to extract the hour, minute, and AM/PM parts
-    final amPmRegex = RegExp(r'(\d+):(\d+)\s*(AM|PM)');
+    final amPmRegex = RegExp(r'(\d+):(\d+)\s*(AM|PM)', caseSensitive: false);
     final match = amPmRegex.firstMatch(timeString);
 
     if (match != null && match.groupCount >= 3) {
