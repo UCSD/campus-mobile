@@ -35,6 +35,17 @@ class DiningDataProvider extends ChangeNotifier {
         mapOfDiningLocations[model.name] = model;
       }
       _diningModels = mapOfDiningLocations;
+
+      // ─── LOGO-FILENAME DUMP ──────────────────────────────────────────
+      final logos = _diningModels.values
+        .where((m) => m.vendorLogo != null)
+        .map((m) => Uri.parse(m.vendorLogo!).pathSegments.last)
+        .toSet()      // remove duplicates
+        .toList()
+      ..sort();      // alphabetical
+      debugPrint('🖼️ Expected vendor logos: $logos');
+      // ─────────────────────────────────────────────────────────────────
+
       populateDistances();
       _lastUpdated = DateTime.now();
     } else {
@@ -48,8 +59,10 @@ class DiningDataProvider extends ChangeNotifier {
   void _fixImageUrls(DiningModel model) {
     if (model.images != null) {
       for (var img in model.images!) {
-        img.small = img.small?.replaceAll('http://hdh-web.ucsd.edu/images', '');
-        img.large = img.large?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+        img.small = img.small
+            ?.replaceAll('http://hdh-web.ucsd.edu/images', '');
+        img.large = img.large
+            ?.replaceAll('http://hdh-web.ucsd.edu/images', '');
       }
     }
   }
@@ -57,7 +70,7 @@ class DiningDataProvider extends ChangeNotifier {
   List<DiningModel> reorderLocations() {
     if (_coordinates == null) return _diningModels.values.toList();
     List<DiningModel> orderedListOfLots = _diningModels.values.toList();
-    orderedListOfLots.sort((DiningModel a, DiningModel b) {
+    orderedListOfLots.sort((a, b) {
       if (a.distance != null && b.distance != null) {
         return a.distance!.compareTo(b.distance!);
       }
@@ -68,14 +81,16 @@ class DiningDataProvider extends ChangeNotifier {
 
   void populateDistances() {
     // TODO: fix the Coordinates system! Totally messed up design
-    if (_coordinates != null && _coordinates!.lat != null && _coordinates!.lon != null) {
-      for (DiningModel model in _diningModels.values.toList()) {
+    if (_coordinates != null &&
+        _coordinates!.lat != null &&
+        _coordinates!.lon != null) {
+      for (DiningModel model in _diningModels.values) {
         if (model.coordinates != null) {
           var distance = calculateDistance(
-              _coordinates!.lat!,
-              _coordinates!.lon!,
-              model.coordinates!.lat!,
-              model.coordinates!.lon!
+            _coordinates!.lat!,
+            _coordinates!.lon!,
+            model.coordinates!.lat!,
+            model.coordinates!.lon!,
           );
           model.distance = distance.toDouble();
         } else {
@@ -85,7 +100,8 @@ class DiningDataProvider extends ChangeNotifier {
     }
   }
 
-  num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+  num calculateDistance(
+      double lat1, double lng1, double lat2, double lng2) {
     var p = 0.017453292519943295;
     var c = cos;
     var a = 0.5 -
@@ -96,13 +112,11 @@ class DiningDataProvider extends ChangeNotifier {
 
   /// RETURNS A List<diningModels> sorted by distance
   List<DiningModel> get diningModels {
-    /// check if we have a coordinates object
     if (_coordinates != null) return reorderLocations();
     return _diningModels.values.toList();
   }
 
   /// SIMPLE SETTERS
-  /// This setter is only used in provider to supply an updated Coordinates object
   set coordinates(Coordinates value) => _coordinates = value;
 
   /// SIMPLE GETTERS
