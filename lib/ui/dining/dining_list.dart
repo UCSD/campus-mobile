@@ -153,17 +153,11 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
             ? Container(
                 decoration: Theme.of(context).brightness == Brightness.dark
                     ? BoxDecoration(
+                        color: Colors.white, // solid white background
                         border: Border.all(
                           color: darkLogoBorderColor, // global dark border color
                           width: 2,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: darkLogoShadowColor.withOpacity(0.5), // global dark shadow color
-                            blurRadius: 6,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
                         shape: BoxShape.circle,
                       )
                     : null,
