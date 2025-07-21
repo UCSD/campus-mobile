@@ -63,17 +63,11 @@ class _DiningDetailViewState extends State<DiningDetailView> {
               ? Container(
                   decoration: Theme.of(context).brightness == Brightness.dark
                       ? BoxDecoration(
+                          color: lightTextColor,
                           border: Border.all(
-                            color: darkLogoBorderColor, // global dark border color
+                            color: darkLogoBorderColor,
                             width: 2,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: darkLogoShadowColor.withOpacity(0.5), // global dark shadow color
-                              blurRadius: 8,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
                           shape: BoxShape.circle,
                         )
                       : null,

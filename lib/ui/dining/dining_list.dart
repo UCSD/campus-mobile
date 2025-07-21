@@ -153,9 +153,9 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
             ? Container(
                 decoration: Theme.of(context).brightness == Brightness.dark
                     ? BoxDecoration(
-                        color: Colors.white, // solid white background
+                        color: lightTextColor,
                         border: Border.all(
-                          color: darkLogoBorderColor, // global dark border color
+                          color: darkLogoBorderColor,
                           width: 2,
                         ),
                         shape: BoxShape.circle,
