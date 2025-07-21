@@ -150,10 +150,23 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
         width: 48,
         height: 48,
         child: data.vendorLogo != null
-            ? ColorFiltered(
-                colorFilter: Theme.of(context).brightness == Brightness.dark
-                    ? const ColorFilter.matrix(grayscaleInvertMatrix)
-                    : const ColorFilter.mode(Colors.transparent, BlendMode.multiply),
+            ? Container(
+                decoration: Theme.of(context).brightness == Brightness.dark
+                    ? BoxDecoration(
+                        border: Border.all(
+                          color: darkLogoBorderColor, // global dark border color
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: darkLogoShadowColor.withOpacity(0.5), // global dark shadow color
+                            blurRadius: 6,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                        shape: BoxShape.circle,
+                      )
+                    : null,
                 child: Image.network(
                   data.vendorLogo!,
                   width: 48,

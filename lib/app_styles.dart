@@ -379,3 +379,7 @@ const List<double> grayscaleInvertMatrix = [
   -0.2126, -0.7152, -0.0722, 0, 255, // blue
   0,        0,        0,     1,   0, // alpha
 ];
+
+// Dining logo border and shadow colors for dark mode
+const Color darkLogoBorderColor = Color(0xFF444444); // subtle dark border
+const Color darkLogoShadowColor = Color(0xFF000000); // shadow for logo elevation
