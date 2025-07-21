@@ -150,10 +150,15 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
         width: 48,
         height: 48,
         child: data.vendorLogo != null
-            ? Image.network(
-                data.vendorLogo!,
-                width: 48,
-                height: 48,
+            ? ColorFiltered(
+                colorFilter: Theme.of(context).brightness == Brightness.dark
+                    ? const ColorFilter.matrix(grayscaleInvertMatrix)
+                    : const ColorFilter.mode(Colors.transparent, BlendMode.multiply),
+                child: Image.network(
+                  data.vendorLogo!,
+                  width: 48,
+                  height: 48,
+                ),
               )
             : Icon(
                 Icons.restaurant,
