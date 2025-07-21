@@ -55,7 +55,7 @@ class EventTile extends StatelessWidget {
     final df = DateFormat("MMM d y");
     final startDate = df.format(data.startDate.toLocal());
     final endDate = df.format(data.endDate.toLocal());
-    final dateDisplay = data.startDate.day == data.endDate.day
+    final dateDisplay = startDate == endDate
         ? startDate
         : '$startDate - $endDate';
     final startTime = DateFormat.jm().format(data.startDate.toLocal());
