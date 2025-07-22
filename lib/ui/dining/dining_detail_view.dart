@@ -60,10 +60,22 @@ class _DiningDetailViewState extends State<DiningDetailView> {
         children: [
           // Vendor Logo
           diningModel.vendorLogo != null
-              ? Image.network(
-                  diningModel.vendorLogo!,
-                  width: 80,
-                  height: 80,
+              ? Container(
+                  decoration: Theme.of(context).brightness == Brightness.dark
+                      ? BoxDecoration(
+                          color: lightTextColor,
+                          border: Border.all(
+                            color: darkLogoBorderColor,
+                            width: 2,
+                          ),
+                          shape: BoxShape.circle,
+                        )
+                      : null,
+                  child: Image.network(
+                    diningModel.vendorLogo!,
+                    width: 80,
+                    height: 80,
+                  ),
                 )
               : Icon(Icons.restaurant,
                   size: 56,
