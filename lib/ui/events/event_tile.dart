@@ -53,13 +53,19 @@ class EventTile extends StatelessWidget {
 
   Widget _eventDetailsCard(BuildContext context) {
     final df = DateFormat("MMM d y");
-    final startDate = df.format(data.startDate.toLocal());
-    final endDate = df.format(data.endDate.toLocal());
-    final dateDisplay = startDate == endDate
-        ? startDate
-        : '$startDate - $endDate';
-    final startTime = DateFormat.jm().format(data.startDate.toLocal());
-    final endTime = DateFormat.jm().format(data.endDate.toLocal());
+
+    final localStart = data.startDate.toLocal();
+    final localEnd = data.endDate.toLocal();
+
+    final startDate = df.format(localStart);
+    final endDate = df.format(localEnd);
+    final dateDisplay =
+        startDate == endDate ? startDate : '$startDate - $endDate';
+    final startTime = DateFormat.jm().format(localStart);
+    final endTime = DateFormat.jm().format(localEnd);
+
+    final isAllDay = (localStart.hour == 0) && (localEnd.hour == 23);
+
     final hasTime = startTime != endTime;
     return SizedBox(
       width: tileWidth,
@@ -76,10 +82,12 @@ class EventTile extends StatelessWidget {
             children: [
               _eventImageLoader(data.imageThumb),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 child: Row(
-                  mainAxisAlignment:
-                      hasTime ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center,
+                  mainAxisAlignment: hasTime
+                      ? MainAxisAlignment.spaceEvenly
+                      : MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
@@ -94,7 +102,19 @@ class EventTile extends StatelessWidget {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           alignment: Alignment.centerRight,
-                          child: TileTime(time: '$startTime - $endTime'),
+                          child: isAllDay
+                              ? Text('All day',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? lightPrimaryColor
+                                        : Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                  ))
+                              : TileTime(
+                                  time: '$startTime - $endTime',
+                                ),
                         ),
                       ),
                   ],

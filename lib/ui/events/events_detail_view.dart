@@ -25,6 +25,7 @@ class EventDetailView extends StatelessWidget {
 
   /// TODO: What color to use for dark theme?
   Widget buildDetailView(BuildContext context) {
+
     return ListView(
       children: [
         // Event Image
@@ -73,6 +74,8 @@ class EventDetailView extends StatelessWidget {
               SizedBox(width: 5),
               // Event Time
               Text(
+                data.startDate.toLocal().hour == 0 &&  data.endDate.toLocal().hour == 23 ?
+                    '    All day     ' :
                 DateFormat.jm().format(data.startDate.toLocal()) +
                     ' - ' +
                     DateFormat.jm().format(data.endDate.toLocal()),
