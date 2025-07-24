@@ -342,11 +342,24 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
           ),
         ],
       ),
-      onPressed: () {
+      onPressed: () async {
+        final lat = model.coordinates!.lat!;
+        final lon = model.coordinates!.lon!;
+        final iosGoogleMapsUrl='comgooglemaps://?daddr=$lat,$lon&directionsmode=walking';
+        final iosAppleMapsUrl='http://maps.apple.com/?daddr=$lat,$lon&dirflg=w';
+        final googleMapsUrl='https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking';
+
         try {
-          launch(
-              'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates!.lat},${model.coordinates!.lon}&travelmode=walking',
-              forceSafariVC: true);
+          // on iOS, will open in google maps if app is available
+          if (await canLaunch(iosGoogleMapsUrl)) {
+            await launch(iosGoogleMapsUrl, forceSafariVC: false);
+          // on iOS, will open in apple maps if app is available
+          } else if (await canLaunch(iosAppleMapsUrl)) {
+            await launch(iosAppleMapsUrl, forceSafariVC: false);
+          // fallback to google maps link, android will open in google maps app
+          } else {
+            await launch(googleMapsUrl, forceSafariVC: false, forceWebView: false);
+          }
         } catch (e) {
           // an error occurred, do nothing
         }
