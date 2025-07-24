@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
@@ -61,15 +62,28 @@ class DirectionsButton extends StatelessWidget {
     double lat = currentPin.latitude;
     double lon = currentPin.longitude;
 
-    String googleUrl =
-        'https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking';
-    String appleUrl = 'http://maps.apple.com/?daddr=$lat,$lon&dirflag=w';
+    if (Platform.isIOS) {
+      // On iOS, try Apple Maps native app first
+      String appleUrl = 'maps://?daddr=$lat,$lon&dirflg=w';
+      if (await canLaunch(appleUrl)) {
+        await launch(appleUrl);
+        return;
+      }
+    }
+    
+    // Try Google Maps app URL scheme (works on both iOS and Android)
+    String googleMapsAppUrl = 'comgooglemaps://?daddr=$lat,$lon&directionsmode=walking';
+    if (await canLaunch(googleMapsAppUrl)) {
+      await launch(googleMapsAppUrl);
+      return;
+    }
+    
+    // Fall back to Google Maps web
+    String googleUrl = 'https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking';
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
-    } else if (await canLaunch(appleUrl)) {
-      await launch(appleUrl);
     } else {
-      throw 'Could not launch $googleUrl';
+      throw 'Could not launch directions';
     }
   }
 }
