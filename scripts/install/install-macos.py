@@ -387,10 +387,10 @@ def configure_campus_mobile():
 	installer_path = os.path.join(downloads_path, 'campus-mobile-installer')
 	ios_path = os.path.join(project_path, 'ios', 'Runner')
 	android_path = os.path.join(project_path, 'android', 'app')
-	zip_files = ['campus-mobile-7.31-qa.env.zip', 'campus-mobile-push-qa.zip']
+	zip_files = ['campus-mobile-qa.env.zip', 'campus-mobile-push-qa.zip']
 
 	expected_files = {
-		'campus-mobile-7.31-qa.env.zip': os.path.join(installer_path, '.env'),
+		'campus-mobile-qa.env.zip': os.path.join(installer_path, '.env'),
 		'campus-mobile-push-qa.zip': [
 			os.path.join(installer_path, 'ios', 'Runner', 'GoogleService-Info.plist'),
 			os.path.join(installer_path, 'android', 'app', 'google-services.json')
@@ -422,7 +422,7 @@ def configure_campus_mobile():
 		if not all_files_present:
 			print("\n  *** USER ACTION REQUIRED ***")
 			print("  1. Navigate to LastPass -> All Items -> Search for 'Shared-Campus Mobile Config' -> View")
-			print("  2. Save the files 'campus-mobile-7.31-qa.env.zip' and 'campus-mobile-push-qa.zip' directly to your '~/Downloads' folder.")
+			print("  2. Save the files 'campus-mobile-qa.env.zip' and 'campus-mobile-push-qa.zip' directly to your '~/Downloads' folder.")
 			try:
 				input("\nPress any key to continue (or Control-C to exit).")
 			except KeyboardInterrupt:
