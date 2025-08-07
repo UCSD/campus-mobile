@@ -64,11 +64,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
                   decoration: Theme.of(context).brightness == Brightness.dark
                       ? BoxDecoration(
                           color: lightTextColor,
-                          border: Border.all(
-                            color: darkLogoBorderColor,
-                            width: 2,
-                          ),
-                          shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(8),
                         )
                       : null,
                   child: Image.network(
