@@ -399,13 +399,21 @@ class HoursOfDay extends StatelessWidget {
     var theDay = result['day'];
     var hoursText = (result['hours'] == "Invalid Date-Invalid Date") ? "Unknown Hours" : result['hours'];
     // Determine the hours' text style
-    final TextStyle hoursTextStyle = day == DateTime.now().weekday
-        ? TextStyle(
-            fontSize: 17.0,
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2)
+    // final TextStyle hoursTextStyle = day == DateTime.now().weekday
+    //     ? TextStyle(
+    //         fontSize: 17.0,
+    //         fontWeight: FontWeight.w700,
+    //         color: Theme.of(context).brightness == Brightness.light
+    //             ? lightPrimaryColor
+    //             : darkPrimaryColor2)
+    //     : Theme.of(context).textTheme.bodySmall!;
+    final TextStyle hoursTextStyle = day == DateTime.now().weekday ?
+
+    Theme.of(context).textTheme.bodySmall!.copyWith(
+        fontWeight: FontWeight.w700,
+        color: Theme.of(context).brightness == Brightness.light
+            ? lightPrimaryColor
+            : darkPrimaryColor2)
         : Theme.of(context).textTheme.bodySmall!;
 
     // Check if this is the current day
@@ -420,22 +428,32 @@ class HoursOfDay extends StatelessWidget {
               children: [
                 // Show the green dot for today
                 if (isToday) ...[
-                  GreenDot(currHours: hoursText!),
-                  SizedBox(width: 5),
+                  SizedBox(
+                    width: 0,
+                    height: 0,
+                    child: OverflowBox(
+                      maxWidth: 10, //enough width and height to hold the dot
+                      maxHeight: 10,
+                      alignment: Alignment.centerLeft,
+                      child: Transform.translate(
+                        offset: const Offset(-11.5, 0),
+                        child: GreenDot(currHours: hoursText!),
+                      ),
+                    ),
+                  ),
+                  // SizedBox(width: 2),
                 ],
                 // "Monday" - Bold if today is Monday.
                 Text(
                   '$theDay',
                   style: isToday
-                      ? TextStyle(
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.w700,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? lightPrimaryColor
-                                  : darkPrimaryColor2)
+                    ? Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).brightness == Brightness.light
+                                      ? lightPrimaryColor
+                                      : darkPrimaryColor2)
                       : Theme.of(context).textTheme.bodySmall,
-                ),
+                  ),
               ],
             ),
           ),
@@ -517,8 +535,8 @@ class GreenDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 8,
-      height: 8,
+      width: 7,
+      height: 7,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: _determineColor(),
