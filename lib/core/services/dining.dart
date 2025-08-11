@@ -43,29 +43,29 @@ class DiningService {
     }
   }
 
-  Future<bool> fetchMenu(String id) async {
-    _error = null; _isLoading = true;
-    try {
-      /// fetch data
-      String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('DINING_BASE_ENDPOINT') + '/menu/' + id, headers);
-
-      /// parse data
-      _menuData = diningMenuItemsModelFromJson(_response);
-      _isLoading = false;
-      return true;
-    } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) return await fetchMenu(id);
-      }
-      _error = e.toString();
-      return false;
-    } finally {
-      _isLoading = false;
-    }
-  }
+  // Future<bool> fetchMenu(String id) async {
+  //   _error = null; _isLoading = true;
+  //   try {
+  //     /// fetch data
+  //     String _response = await NetworkHelper.authorizedFetch(
+  //         dotenv.get('DINING_BASE_ENDPOINT') + '/menu/' + id, headers);
+  //
+  //     /// parse data
+  //     _menuData = diningMenuItemsModelFromJson(_response);
+  //     _isLoading = false;
+  //     return true;
+  //   } catch (e) {
+  //     /// if the authorized fetch failed we know we have to refresh the
+  //     /// token for this service
+  //     if (e.toString().contains("401")) {
+  //       if (await NetworkHelper.getNewToken(headers)) return await fetchMenu(id);
+  //     }
+  //     _error = e.toString();
+  //     return false;
+  //   } finally {
+  //     _isLoading = false;
+  //   }
+  // }
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;

@@ -61,8 +61,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
     );
   }
 
-  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
-      Map<int, List<ArrivingShuttle>> arrivalsToRender) {
+  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender, Map<int, List<ArrivingShuttle>> arrivalsToRender) {
     List<Widget> renderList = [];
     try {
       // Initialize first shuttle display with arrival information
@@ -81,6 +80,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       //           arrivalsToRender[_shuttleCardDataProvider.closestStop!.id]));
       // }
 
+      // Display all the shuttle stops with their respective arrivals
       for (var i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
@@ -118,9 +118,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       return Container(
         width: double.infinity,
         child: Center(
-          child: Container(
-            child: Text('An error occurred, please try again.' + e.toString()),
-          ),
+          child: Text('An error occurred, please try again. ${e.toString()}'),
         ),
       );
     }

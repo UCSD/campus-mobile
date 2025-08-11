@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/ui/profile/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links2/uni_links.dart';
+import '../../core/providers/user.dart';
 import '../../core/utils/webview.dart';
 
 class Profile extends StatelessWidget {
@@ -36,6 +37,10 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final _userDataProvider = Provider.of<UserDataProvider>(context);
+    final isLoggedIn = _userDataProvider.isLoggedIn;
+
     initUniLinks(context);
     return Container(
       child: Column(
@@ -111,6 +116,18 @@ class Profile extends StatelessWidget {
                   ),
                   onTap: handlePrivacyTap,
                 ),
+                if(isLoggedIn)
+                  ListTile(
+                    leading: Icon(Icons.warning_amber_rounded,
+                        color: Theme.of(context).iconTheme.color, size: 36.0),
+                    title: Text(
+                      'Report a Campus Facility Issue',
+                      style: Theme.of(context).brightness == Brightness.dark
+                          ? linkTextDark
+                          : linkTextLight,
+                    ),
+                    onTap: handleReportTap,
+                  ),
               ],
             ),
           ),
@@ -132,5 +149,10 @@ class Profile extends StatelessWidget {
   Future<void> handlePrivacyTap() async {
     const privacyUrl = "https://mobile.ucsd.edu/privacy-policy.html";
     openLink(privacyUrl);
+  }
+
+  Future<void>handleReportTap() async {
+    const reportUrl = "https://experience.arcgis.com/experience/91b8f66d6fa547f481c2a1cb6af252d0";
+    openLink(reportUrl);
   }
 }

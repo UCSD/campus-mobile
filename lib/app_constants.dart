@@ -69,6 +69,7 @@ class ParkingDefaults {
     "Athena",
     "Gilman",
     "Hopkins",
+    "Living & Learning Garage",
   ];
   static const defaultSpots = ["S", "B", "A"];
 }

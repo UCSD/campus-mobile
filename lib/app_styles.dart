@@ -371,3 +371,15 @@ const darkListTileTheme =
 
 // New Onboarding Screen Colors
 const lightOnboardingScreen = Color.fromARGB(255, 245, 240, 228);
+
+// In app_styles.dart (add this global variable)
+const List<double> grayscaleInvertMatrix = [
+  -0.2126, -0.7152, -0.0722, 0, 255, // red
+  -0.2126, -0.7152, -0.0722, 0, 255, // green
+  -0.2126, -0.7152, -0.0722, 0, 255, // blue
+  0,        0,        0,     1,   0, // alpha
+];
+
+// Dining logo border and shadow colors for dark mode
+const Color darkLogoBorderColor = Color(0xFF444444); // subtle dark border
+const Color darkLogoShadowColor = Colors.white; // use white for shadow in dark mode
