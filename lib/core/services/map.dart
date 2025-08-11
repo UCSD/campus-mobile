@@ -54,11 +54,11 @@ class MapSearchService {
     _isLoading = true;
 
     try {
-      print('======== Fetching GENERAL data from: ' + uri.toString());
+      // print('======== Fetching GENERAL data from: ' + uri.toString());
       var _response = await NetworkHelper.fetchData(uri.toString());
       if (_response != 'null') {
         /// parse data
-        print(_response);
+        // print(_response);
         final data = esriPOIModelFromJson(_response);
         _esriResults = data;
         print(_esriResults);

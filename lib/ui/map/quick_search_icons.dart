@@ -1,78 +1,11 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 // import 'package:arcgis_maps/arcgis_maps.dart'; // Saved for future ESRI Map Integration
 
-/// Found in the legend's tab: https://www.arcgis.com/apps/mapviewer/index.html?url=https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0&source=sd
-final subclasses = [
-  'ATMs',
-  'Athletic Facilities',
-  'Baby Changing Stations',
-  'Book Return',
-  'Broadcast Towers',
-  'COVID Test Kits',
-  'Cafes and Restaurants',
-  'Call Boxes',
-  'Career Services',
-  'Catering',
-  'Classrooms',
-  'Clean Energy',
-  'Coffee',
-  'Collections',
-  'Compost Locations',
-  'Computer Labs',
-  'Conference Rooms',
-  'Department Offices',
-  'Electric Vehicle Charging',
-  'Emergency Care',
-  'Emergency Containers',
-  'Gardens',
-  'Gender Inclusive',
-  'Global Initiatives',
-  'Hydration',
-  'Imprints',
-  'Information',
-  'Information Services',
-  'Kiosks',
-  'LEED Certified Buildings',
-  'Lactation',
-  'Laundry',
-  'Loading Docks',
-  'Lounges',
-  'Mail Boxes',
-  'Mail Offices',
-  'Markets',
-  'Medical Clinics',
-  'Memorial',
-  'Metropolitan Transit System (MTS)',
-  'North County Transit District (NCTD)',
-  'Parking Entrances',
-  'Parking Offices',
-  'Parking Pay Stations',
-  'Parking Structures',
-  'Pay Phones',
-  'Police',
-  'Public',
-  'Recreation Facilities',
-  'Research and Innovation',
-  'Research/Labs',
-  'Retail',
-  'SPIN Hubs',
-  'Showers',
-  'Special',
-  'Speciality Recycling Locations',
-  'Stryker Chairs',
-  'Stuart Collection',
-  'Student Organizations',
-  'Student Services',
-  'Sustainability',
-  'Triton Mobility Services',
-  'Vending Machines',
-  'WayPoints'
-];
-
 /// Points of Interest (POI) quick search icons
+/// Find more subclasses in the legend's tab: https://www.arcgis.com/apps/mapviewer/index.html?url=https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0&source=sd
 class QuickSearchIcons extends StatelessWidget {
   const QuickSearchIcons({Key? key}) : super(key: key);
 
