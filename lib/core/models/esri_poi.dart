@@ -59,9 +59,10 @@ class Attributes {
   int? subtypeId;
   String? globalId;
   String? createdUser;
-  String? createdDate;
+  int? createdDate;
   String? lastEditedUser;
-  String? lastEditedDate;
+  int? lastEditedDate;
+  String? facilityLongName;
 
   Attributes({
     required this.objectId,
@@ -92,6 +93,7 @@ class Attributes {
     this.createdDate,
     this.lastEditedUser,
     this.lastEditedDate,
+    this.facilityLongName,
   });
 
   factory Attributes.fromJson(Map<String, dynamic> json) => Attributes(
@@ -123,6 +125,7 @@ class Attributes {
         createdDate: json["created_date"],
         lastEditedUser: json["last_edited_user"],
         lastEditedDate: json["last_edited_date"],
+        facilityLongName: json["FacilityLongName"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -154,6 +157,7 @@ class Attributes {
         "created_date": createdDate,
         "last_edited_user": lastEditedUser,
         "last_edited_date": lastEditedDate,
+        "FacilityLongName": facilityLongName,
       };
 
   @override
