@@ -112,6 +112,8 @@ class CircularParkingIndicators extends StatelessWidget {
                                   size: 25.0,
                                   color: colorFromHex(spotType.textColor),
                                 )
+                              : spotType.text.contains("&#x1F465;") ?
+                                Icon(Icons.people, size: 25.0, color: colorFromHex(spotType.textColor))
                               : Text(
                                   spotType.text,
                                   style: TextStyle(
@@ -167,6 +169,8 @@ class CircularParkingIndicators extends StatelessWidget {
                                   size: 25.0,
                                   color: colorFromHex(spotType.textColor),
                                 )
+                               : spotType.text.contains("&#x1F465;") ?
+                              Icon(Icons.people, size: 25.0, color: colorFromHex(spotType.textColor))
                               : Text(
                                   spotType.text,
                                   style: TextStyle(
