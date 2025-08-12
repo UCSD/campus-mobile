@@ -100,7 +100,6 @@ class _ParkingCardState extends State<ParkingCard> {
                 });
               },
               itemBuilder: (context, index) {
-                print("index, $index");
                 return selectedLotsViews[index];
               },
             ),
