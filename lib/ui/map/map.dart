@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
@@ -7,6 +6,7 @@ import 'package:campus_mobile_experimental/ui/map/directions_button.dart';
 import 'package:campus_mobile_experimental/ui/map/map_search_bar_ph.dart';
 import 'package:campus_mobile_experimental/ui/map/more_results_list.dart';
 import 'package:campus_mobile_experimental/ui/map/my_location_button.dart';
+import 'package:campus_mobile_experimental/ui/map/wam.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -98,6 +98,19 @@ class Maps extends StatelessWidget {
         MapSearchBarPlaceHolder(),
         buildButtons(context),
         resultsList(context),
+        /// What's Around Me Button
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.02,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              WhatsAroundMe(),
+            ],
+          ),
+        )
       ],
     );
   }
