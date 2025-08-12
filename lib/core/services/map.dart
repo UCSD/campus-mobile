@@ -40,11 +40,12 @@ class MapSearchService {
   /// This function is used for the Search bar.
   Future<bool> fetchESRILocations(String searchText) async {
     final poi_endpoint = 'https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0/query';
-    // Escape any single-quotes in the user’s text
+    // Stem the search text by removing trailing 's' and trimming whitespace
     final stemmedSearchText = searchText.trim().replaceAll(RegExp(r's$'), '');
+    // Escape any single-quotes in the user’s text
     final escapedSearchText = stemmedSearchText.replaceAll("'", "''");
     // Build a raw SQL WHERE clause for general search
-    final whereClause = "UpdatedName LIKE '%$escapedSearchText%' OR Class LIKE '%$escapedSearchText%' OR Subclass LIKE '%$escapedSearchText%' OR UpdatedKeywords LIKE '%$escapedSearchText%' OR FacilityLongName LIKE '%$escapedSearchText%'";
+    final whereClause = "UpdatedName LIKE '%$escapedSearchText%' OR Class LIKE '%$escapedSearchText%' OR Subclass LIKE '%$escapedSearchText%' OR UpdatedKeywords LIKE '%$escapedSearchText%' OR URL LIKE '%$escapedSearchText%' OR FacilityLongName LIKE '%$escapedSearchText%'";
     final params = {
       'where': whereClause,
       'outFields': '*',
@@ -55,11 +56,11 @@ class MapSearchService {
     _isLoading = true;
 
     try {
-      print('======== Fetching ' + escapedSearchText + ' data from: ' + uri.toString());
+      // print('======== Fetching ' + escapedSearchText + ' data from: ' + uri.toString());
       var _response = await NetworkHelper.fetchData(uri.toString());
       if (_response != 'null') {
         /// parse data
-        print(_response);
+        // print(_response);
         final data = esriPOIModelFromJson(_response);
         _esriResults = data;
         print(_esriResults);

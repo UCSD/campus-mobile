@@ -101,6 +101,7 @@ class LabeledIconButton extends StatelessWidget {
         SizedBox(height: 6),
         Text(text!,
         style: TextStyle(
+              fontSize: 19,
               color: Theme.of(context).brightness == Brightness.light
                   ? descriptiveTextColorLight
                   : descriptiveTextColorDark,
