@@ -61,6 +61,11 @@ class MapsDataProvider extends ChangeNotifier {
     // Otherwise, check if _esriPOIModels has data and the index is valid
     else if (_esriPOIModels.isNotEmpty && listIndex >= 0 && listIndex < _esriPOIModels.length) {
       final model = _esriPOIModels[listIndex];
+      // Check for valid coordinates before creating the marker
+      if (model.attributes.latitude == null || model.attributes.longitude == null) {
+        // If the coordinates are invalid, do not create a marker (a.k.a. nothing will happen when you click on this location)
+        return;
+      }
       // Create a marker from the EsriPOIModel at the given index
       marker = Marker(
         markerId: MarkerId(model.mkrMarkerid.toString()),
