@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-List<EsriPOIModel> esriPOIModelFromJson(String str) =>
-    List<EsriPOIModel>.from(json.decode(str)["features"].map((x) => EsriPOIModel.fromJson(x)));
+List<EsriPOIModel> esriPOIModelFromJson(String str) => List<EsriPOIModel>.from(
+    json.decode(str)["features"].map((x) => EsriPOIModel.fromJson(x)));
 
 String esriPOIModelToJson(List<EsriPOIModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -162,7 +162,7 @@ class Attributes {
 
   @override
   String toString() {
-    return 'Attributes(objectId: $objectId, c3dName: $c3dName, updatedName: $updatedName, latitude: $latitude, longitude: $longitude)';
+    return 'Attributes(objectId: $objectId, c3dName: $c3dName, updatedName: $updatedName, c3dMarkerId: $c3dMarkerId, c3dCategories: $c3dCategories, classType: $classType, subclass: $subclass, c3dKeywords: $c3dKeywords, updatedKeywords: $updatedKeywords, c3dDescription: $c3dDescription, url: $url, contactInformation: $contactInformation, floor: $floor, connectionCodes: $connectionCodes, classroomCodes: $classroomCodes, mailCode: $mailCode, tritonPlusAccepted: $tritonPlusAccepted, status: $status, latitude: $latitude, longitude: $longitude, issues: $issues, notesQuestions: $notesQuestions, subtypeId: $subtypeId, globalId: $globalId, createdUser: $createdUser, createdDate: $createdDate, lastEditedUser: $lastEditedUser, lastEditedDate: $lastEditedDate, facilityLongName: $facilityLongName)';
   }
 }
 

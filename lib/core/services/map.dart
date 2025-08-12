@@ -43,7 +43,7 @@ class MapSearchService {
     // Escape any single-quotes in the user’s text
     final escapedSearchText = searchText.trim().replaceAll("'", "''");
     // Build a raw SQL WHERE clause for general search
-    final whereClause = "UpdatedName LIKE '$escapedSearchText%' OR Class LIKE '$escapedSearchText%' OR Subclass LIKE '$escapedSearchText%' OR UpdatedKeywords LIKE '$escapedSearchText%' OR FacilityLongName LIKE '$escapedSearchText%'";
+    final whereClause = "UpdatedName LIKE '%$escapedSearchText%' OR Class LIKE '%$escapedSearchText%' OR Subclass LIKE '%$escapedSearchText%' OR UpdatedKeywords LIKE '%$escapedSearchText%' OR FacilityLongName LIKE '%$escapedSearchText%'";
     final params = {
       'where': whereClause,
       'outFields': '*',
@@ -54,7 +54,7 @@ class MapSearchService {
     _isLoading = true;
 
     try {
-      print('======== Fetching GENERAL data from: ' + uri.toString());
+      print('======== Fetching ' + escapedSearchText + ' data from: ' + uri.toString());
       var _response = await NetworkHelper.fetchData(uri.toString());
       if (_response != 'null') {
         /// parse data
