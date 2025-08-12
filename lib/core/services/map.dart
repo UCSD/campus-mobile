@@ -41,7 +41,8 @@ class MapSearchService {
   Future<bool> fetchESRILocations(String searchText) async {
     final poi_endpoint = 'https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0/query';
     // Escape any single-quotes in the user’s text
-    final escapedSearchText = searchText.trim().replaceAll("'", "''");
+    final stemmedSearchText = searchText.trim().replaceAll(RegExp(r's$'), '');
+    final escapedSearchText = stemmedSearchText.replaceAll("'", "''");
     // Build a raw SQL WHERE clause for general search
     final whereClause = "UpdatedName LIKE '%$escapedSearchText%' OR Class LIKE '%$escapedSearchText%' OR Subclass LIKE '%$escapedSearchText%' OR UpdatedKeywords LIKE '%$escapedSearchText%' OR FacilityLongName LIKE '%$escapedSearchText%'";
     final params = {
