@@ -45,8 +45,11 @@ class _ParkingCardState extends State<ParkingCard> {
       actionButtons: [
         ActionButton(
             buttonText: 'MANAGE SPOTS',
-            onPressed: () =>
-                Navigator.pushNamed(context, RoutePaths.SpotTypesView)),
+            onPressed: () {
+                Navigator.pushNamed(context, RoutePaths.SpotTypesView);
+                _controller.jumpToPage(0);
+            }
+        ),
         ActionLink(
             buttonText: 'MANAGE LOTS',
             onPressed: () =>
@@ -97,6 +100,7 @@ class _ParkingCardState extends State<ParkingCard> {
                 });
               },
               itemBuilder: (context, index) {
+                print("index, $index");
                 return selectedLotsViews[index];
               },
             ),
