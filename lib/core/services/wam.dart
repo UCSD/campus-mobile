@@ -22,12 +22,12 @@ import 'package:geolocator/geolocator.dart';
 /// ```dart
 /// List<Place> places = await fetchNearbySearchPlaces(13);
 /// ```
-Future<List<Place>> fetchWhatsAroundYou(int count) async {
+Future<List<Place>> fetchWhatsAroundMe(int count) async {
   // Default coordinates (Geisel Library)
   var x_longitude = -117.23767559484368;
   var y_latitude = 32.88115782225114;
 
-  // Attempt to get the current location
+  // Attempt to get the current location (even needed?)
   try {
     Position position = await getCurrentLocation();
     print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
@@ -44,6 +44,25 @@ Future<List<Place>> fetchWhatsAroundYou(int count) async {
   try {
     /// TODO: Search for each of the categories (restaurant, building, shop, cafe, etc.)
     /// Use the map's Search Bar, you can see how that's done in "quickSearch buttons"
+    ///  Provider.of<MapsDataProvider>(context, listen: false)
+    //                     .searchBarController
+    //                     .text = 'restaurants';
+    ///
+    ///  Provider.of<MapsDataProvider>(context, listen: false)
+    //                     .searchBarController
+    //                     .text = 'buildings';
+    ///
+    ///  Provider.of<MapsDataProvider>(context, listen: false)
+    //                     .searchBarController
+    //                     .text = 'stores';
+    ///
+    ///  Provider.of<MapsDataProvider>(context, listen: false)
+    //                     .searchBarController
+    //                     .text = 'Stuart';
+    ///
+    ///  Provider.of<MapsDataProvider>(context, listen: false)
+    //                     .searchBarController
+    //                     .text = 'centers';
     /// Access the esriPOIModel, which contains the search results and get 3 places of each category.
     /// They should already be sorted by distance from the user.
     /// feed the Place (wam) model with this list
@@ -68,7 +87,6 @@ Future<List<Place>> fetchWhatsAroundYou(int count) async {
   }
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
 /// If location is enabled, this retrieves the user's location using the `Geolocator` package.
 ///
 /// **Returns:**
