@@ -44,7 +44,7 @@ class MapSearchService {
     // Escape any single-quotes in the user’s text
     final escapedSearchText = stemmedSearchText.replaceAll("'", "''");
     // Build a raw SQL WHERE clause for general search
-    final whereClause = "UpdatedName LIKE '%$escapedSearchText%' OR Class LIKE '%$escapedSearchText%' OR Subclass LIKE '%$escapedSearchText%' OR UpdatedKeywords LIKE '%$escapedSearchText%' OR URL LIKE '%$escapedSearchText%' OR FacilityLongName LIKE '%$escapedSearchText%'";
+    final whereClause = dotenv.get('MAP_POI_WHERE_CLAUSE').replaceAll('{query}', escapedSearchText);
     final params = {
       'where': whereClause,
       'outFields': '*',
