@@ -25,7 +25,8 @@ class MoreESRIResultsList extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       'More Results',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Divider(
@@ -37,39 +38,45 @@ class MoreESRIResultsList extends StatelessWidget {
                           .esriPOIModels
                           .length,
                       itemBuilder: (BuildContext context, int index) {
-                        // Builds the "More Results" list with Title and Distance
+                        // Builds the "More Results" list with location Name and Distance
                         return ListTile(
                           title: Text(
                             // As of June 2025 - If updatedName is null, use c3dName.
                             // But c3dName is deprecated and will be removed in the future.
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                                .esriPOIModels[index]
-                                .attributes
-                                .updatedName ?? Provider.of<MapsDataProvider>(context, listen: false)
-                                .esriPOIModels[index]
-                                .attributes
-                                .c3dName ?? "Unknown Location",
+                            Provider.of<MapsDataProvider>(context,
+                                        listen: false)
+                                    .esriPOIModels[index]
+                                    .attributes
+                                    .updatedName ??
+                                Provider.of<MapsDataProvider>(context,
+                                        listen: false)
+                                    .esriPOIModels[index]
+                                    .attributes
+                                    .c3dName ??
+                                "Unknown Location",
                           ),
                           trailing: Text(
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                                .esriPOIModels[index]
-                                .distance !=
-                                null
+                            Provider.of<MapsDataProvider>(context,
+                                            listen: false)
+                                        .esriPOIModels[index]
+                                        .distance !=
+                                    null
                                 ? Provider.of<MapsDataProvider>(context,
-                                listen: false)
-                                .esriPOIModels[index]
-                                .distance!
-                                .toStringAsFixed(1) +
-                                ' mi'
+                                            listen: false)
+                                        .esriPOIModels[index]
+                                        .distance!
+                                        .toStringAsFixed(1) +
+                                    ' mi'
                                 : '--',
                             style: TextStyle(
-                                color: Theme.of(context).brightness == Brightness.light
+                                color: Theme.of(context).brightness ==
+                                        Brightness.light
                                     ? linkColorLight
-                                    : linkColorDark
-                            ),
+                                    : linkColorDark),
                           ),
                           onTap: () {
-                            Provider.of<MapsDataProvider>(context, listen: false)
+                            Provider.of<MapsDataProvider>(context,
+                                    listen: false)
                                 .addMarker(index);
                             Navigator.pop(context);
                           },
@@ -82,8 +89,7 @@ class MoreESRIResultsList extends StatelessWidget {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor:
-            actionButtonBackgroundColor,
+            backgroundColor: actionButtonBackgroundColor,
             padding: EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
