@@ -82,12 +82,12 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
             child: BuildWhatAroundMeList(places: whatsAroundMeList),
           ),
         SizedBox(height: 10),
-        /// What's Around Me? Button
+        /// What's Around Me Button
         FloatingActionButton.extended(
           onPressed: () => setState(() => showPlaces = !showPlaces),
           label: showPlaces
               ? Icon(Icons.close, size: 20)
-              : Text("What's Around Me?"),
+              : Text("What's Around Me"),
           backgroundColor: Colors.lightBlue,
         ),
       ],
