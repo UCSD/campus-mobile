@@ -41,8 +41,9 @@ class MoreESRIResultsList extends StatelessWidget {
                         // Builds the "More Results" list with location Name and Distance
                         return ListTile(
                           title: Text(
-                            // As of June 2025 - If updatedName is null, use c3dName.
+                            // As of August 2025 - If updatedName is null, use c3dName.
                             // But c3dName is deprecated and will be removed in the future.
+                            // facilityLongName is going to replace c3dName but is not fully ready yet.
                             Provider.of<MapsDataProvider>(context,
                                         listen: false)
                                     .esriPOIModels[index]
@@ -53,6 +54,11 @@ class MoreESRIResultsList extends StatelessWidget {
                                     .esriPOIModels[index]
                                     .attributes
                                     .c3dName ??
+                                Provider.of<MapsDataProvider>(context,
+                                        listen: false)
+                                    .esriPOIModels[index]
+                                    .attributes
+                                    .facilityLongName ??
                                 "Unknown Location",
                           ),
                           trailing: Text(
