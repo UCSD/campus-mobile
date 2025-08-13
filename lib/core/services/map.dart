@@ -39,7 +39,6 @@ class MapSearchService {
   /// Fetches locations from an ESRI POINTS OF INTEREST
   /// This function is used for the Search bar.
   Future<bool> fetchESRILocations(String searchText) async {
-    final poi_endpoint = 'https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0/query';
     // Stem the search text by removing trailing 's' and trimming whitespace
     final stemmedSearchText = searchText.trim().replaceAll(RegExp(r's$'), '');
     // Escape any single-quotes in the user’s text
@@ -51,7 +50,7 @@ class MapSearchService {
       'outFields': '*',
       'f': 'json',
     };
-    final uri = Uri.parse(poi_endpoint).replace(queryParameters: params);
+    final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: params);
     _error = null;
     _isLoading = true;
 
