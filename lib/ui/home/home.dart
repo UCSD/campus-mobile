@@ -154,7 +154,7 @@ class _HomeState extends State<Home> {
     context.read<MapsDataProvider>()
         .searchBarController
         .text = query;
-    context.read<MapsDataProvider>().fetchLocations(false);
+    context.read<MapsDataProvider>().fetchLocations(true);
     context.read<BottomNavigationBarProvider>()
         .currentIndex = NavigatorConstants.MapTab;
     context.read<CustomAppBar>().changeTitle("Maps");
