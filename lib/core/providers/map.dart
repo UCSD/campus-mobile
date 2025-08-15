@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:campus_mobile_experimental/core/models/location.dart';
-import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,9 +10,9 @@ class MapsDataProvider extends ChangeNotifier {
     ///DEFAULT STATES
     _isLoading = false;
     _noResults = false;
+
     ///INITIALIZE SERVICES
     _mapSearchService = MapSearchService();
-    _mapSearchModels = [];
     _esriPOIModels = [];
   }
 
@@ -35,41 +34,30 @@ class MapsDataProvider extends ChangeNotifier {
   double? _defaultLong = -117.2362059310055;
 
   ///MODELS
-  List<MapSearchModel> _mapSearchModels = [];
   List<EsriPOIModel> _esriPOIModels = [];
 
   ///SERVICES
   late MapSearchService _mapSearchService;
 
   /// Adds a marker to the map based on the given index.
-  /// TODO: Remove _mapSearchModels once we have fully transitioned to using ESRI.
   void addMarker(int listIndex) {
     Marker? marker;
-    // Check if _mapSearchModels has data and the index is valid
-    if (_mapSearchModels.isNotEmpty && listIndex >= 0 && listIndex < _mapSearchModels.length) {
-      final model = _mapSearchModels[listIndex];
-      // Create a marker from the MapSearchModel at the given index
-      marker = Marker(
-        markerId: MarkerId(model.mkrMarkerid.toString()),
-        position: LatLng(model.mkrLat!, model.mkrLong!),
-        infoWindow: InfoWindow(
-          title: model.title,
-          snippet: model.description,
-        ),
-      );
-    }
-    // Otherwise, check if _esriPOIModels has data and the index is valid
-    else if (_esriPOIModels.isNotEmpty && listIndex >= 0 && listIndex < _esriPOIModels.length) {
+    // Check if _esriPOIModels has data and the index is valid
+    if (_esriPOIModels.isNotEmpty &&
+        listIndex >= 0 &&
+        listIndex < _esriPOIModels.length) {
       final model = _esriPOIModels[listIndex];
       // Check for valid coordinates before creating the marker
-      if (model.attributes.latitude == null || model.attributes.longitude == null) {
+      if (model.attributes.latitude == null ||
+          model.attributes.longitude == null) {
         // If the coordinates are invalid, do not create a marker (a.k.a. nothing will happen when you click on this location)
         return;
       }
       // Create a marker from the EsriPOIModel at the given index
       marker = Marker(
         markerId: MarkerId(model.mkrMarkerid.toString()),
-        position: LatLng(model.attributes.latitude!, model.attributes.longitude!),
+        position:
+            LatLng(model.attributes.latitude!, model.attributes.longitude!),
         infoWindow: InfoWindow(
           title: model.attributes.updatedName ?? model.attributes.c3dName,
           snippet: model.attributes.c3dDescription,
@@ -103,80 +91,43 @@ class MapsDataProvider extends ChangeNotifier {
     }
   }
 
-  void reorderLocations() {
-    _mapSearchModels.sort((MapSearchModel a, MapSearchModel b) {
-      if (a.distance != null && b.distance != null) {
-        return a.distance!.compareTo(b.distance!);
-      }
-      return 0;
-    });
-  }
-
   void removeFromSearchHistory(String item) {
     searchHistory.remove(item);
     notifyListeners();
   }
 
   /// Fetches locations from the MapSearchService or ESRI Points of Interest
-  /// TODO: Finish transitioning to ESRI Points of Interest only after rigorous testing
-  /// Transition happens when everything calling fetchLocations is set to "TRUE" and still works as expected.
-  /// For instance, we need to ensure it works with deep linking.
-  void fetchLocations(bool esri) async {
+  void fetchLocations() async {
     String query = searchBarController.text;
-    _usingESRI = esri;
     markers.clear();
     _isLoading = true;
     _error = null;
     notifyListeners();
 
-    if(esri == false) {
-      if (await _mapSearchService.fetchLocations(query)) {
-        _mapSearchModels = _mapSearchService.results;
+    if (await _mapSearchService.fetchESRILocations(query)) {
+      _esriPOIModels = _mapSearchService.esriResults;
+      _noResults = false;
+      // print("!!!!!!!!!!!!!!!!!!!! ESRI API Results: " + _esriPOIModels.toString());
+      if (_esriPOIModels.isEmpty) {
+        _noResults = true;
+      } else {
         _noResults = false;
-        populateDistances();
-        reorderLocations();
+        populateESRIDistances();
+        reorderESRILocations();
         addMarker(0);
-        if (!_searchHistory.contains(query)) {
-          // Check to see if this search is already in history...
-          _searchHistory.add(query); // ...If it is not, add it...
-        } else {
-          // ...otherwise...
-          _searchHistory.remove(query); // ...reorder search history to put it back on top
-          _searchHistory.add(query);
-        }
-        _lastUpdated = DateTime.now();
-      } else {
-        ///TODO: determine what error to show to the user
-        _error = _mapSearchService.error;
-        _noResults = true;
       }
-    }
-    // We're using ESRI
-    else {
-      if (await _mapSearchService.fetchESRILocations(query)) {
-        _esriPOIModels = _mapSearchService.esriResults;
-        _noResults = false;
-        // print("!!!!!!!!!!!!!!!!!!!! ESRI API Results: " + _esriPOIModels.toString());
-        if (_esriPOIModels.isEmpty) {
-          _noResults = true;
-        } else {
-          _noResults = false;
-          populateESRIDistances();
-          reorderESRILocations();
-          addMarker(0);
-        }
-        if (!_searchHistory.contains(query)) {
-          // Check to see if this search is already in history...
-          _searchHistory.add(query); // ...If it is not, add it...
-        } else {
-          _searchHistory.remove(query); // ...reorder search history to put it back on top
-          _searchHistory.add(query);
-        }
-        _lastUpdated = DateTime.now();
+      if (!_searchHistory.contains(query)) {
+        // Check to see if this search is already in history...
+        _searchHistory.add(query); // ...If it is not, add it...
       } else {
-        _error = _mapSearchService.error;
-        _noResults = true;
+        _searchHistory
+            .remove(query); // ...reorder search history to put it back on top
+        _searchHistory.add(query);
       }
+      _lastUpdated = DateTime.now();
+    } else {
+      _error = _mapSearchService.error;
+      _noResults = true;
     }
 
     _isLoading = false;
@@ -185,14 +136,15 @@ class MapsDataProvider extends ChangeNotifier {
 
   void populateESRIDistances() {
     double? latitude =
-    _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
+        _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
     double? longitude =
-    _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
+        _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
     if (_coordinates != null) {
       for (EsriPOIModel model in _esriPOIModels) {
-        if (model.attributes.latitude != null && model.attributes.longitude != null) {
-          var distance = calculateDistance(
-              latitude!, longitude!, model.attributes.latitude!, model.attributes.longitude!);
+        if (model.attributes.latitude != null &&
+            model.attributes.longitude != null) {
+          var distance = calculateDistance(latitude!, longitude!,
+              model.attributes.latitude!, model.attributes.longitude!);
           model.distance = distance as double?;
         }
       }
@@ -206,22 +158,6 @@ class MapsDataProvider extends ChangeNotifier {
       }
       return 0;
     });
-  }
-
-  void populateDistances() {
-    double? latitude =
-        _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
-    double? longitude =
-        _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
-    if (_coordinates != null) {
-      for (MapSearchModel model in _mapSearchModels) {
-        if (model.mkrLat != null && model.mkrLong != null) {
-          var distance = calculateDistance(
-              latitude!, longitude!, model.mkrLat!, model.mkrLong!);
-          model.distance = distance as double?;
-        }
-      }
-    }
   }
 
   num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
@@ -260,7 +196,6 @@ class MapsDataProvider extends ChangeNotifier {
   bool? get noResults => _noResults;
   String? get error => _error;
   List<String> get searchHistory => _searchHistory;
-  List<MapSearchModel> get mapSearchModels => _mapSearchModels;
   List<EsriPOIModel> get esriPOIModels => _esriPOIModels;
   Map<MarkerId, Marker> get markers => _markers;
   Coordinates? get coordinates => _coordinates;

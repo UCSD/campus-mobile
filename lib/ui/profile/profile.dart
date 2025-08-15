@@ -26,7 +26,7 @@ class Profile extends StatelessWidget {
         Provider.of<MapsDataProvider>(context, listen: false)
             .searchBarController
             .text = query;
-        Provider.of<MapsDataProvider>(context, listen: false).fetchLocations(true);
+        Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
         // received deeplink, cancel stream to prevent memory leaks

@@ -27,7 +27,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'Parking Structures';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations(true);
+                    .fetchLocations();
                 Navigator.pop(context);
               },
             ),
@@ -39,7 +39,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'COVID Test Kits';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations(true);
+                    .fetchLocations();
                 Navigator.pop(context);
               },
             ),
@@ -51,7 +51,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'Hydration';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations(true);
+                    .fetchLocations();
                 Navigator.pop(context);
               },
             ),
@@ -63,7 +63,7 @@ class QuickSearchIcons extends StatelessWidget {
                     .searchBarController
                     .text = 'ATMs';
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations(true); // true means using ESRI POI API
+                    .fetchLocations();
                 Navigator.pop(context);
               },
             ),

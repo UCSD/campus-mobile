@@ -46,7 +46,7 @@ class SearchHistoryList extends StatelessWidget {
                         .reversed
                         .toList()[index];
                 Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations(true);
+                    .fetchLocations();
                 Navigator.pop(context);
               },
             );

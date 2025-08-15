@@ -1,7 +1,7 @@
 // To parse this JSON data, do
 //
 //     final mapSearchModel = mapSearchModelFromJson(jsonString);
-
+/// TODO: REMOVE THIS FILE SINCE GOOGLE SEARCH IS DEPRECATED
 import 'dart:convert';
 
 List<MapSearchModel> mapSearchModelFromJson(String str) =>
