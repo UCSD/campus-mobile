@@ -39,7 +39,6 @@ class MapsDataProvider extends ChangeNotifier {
   late MapSearchService _mapSearchService;
 
   /// Adds a marker to the map based on the given index.
-  /// TODO: Find a replacement for c3dDescription, which is deprecated.
   void addMarker(int listIndex) {
     Marker? marker;
     // Check if _esriPOIModels has data and the index is valid
@@ -54,6 +53,7 @@ class MapsDataProvider extends ChangeNotifier {
         return;
       }
       // Create a marker from the EsriPOIModel at the given index
+      // TODO: Replace c3dDescription once a replacement becomes available - As of August 2025, it is planned to be deprecated.
       marker = Marker(
         markerId: MarkerId(model.mkrMarkerid.toString()),
         position:
@@ -107,7 +107,7 @@ class MapsDataProvider extends ChangeNotifier {
     if (await _mapSearchService.fetchESRILocations(query)) {
       _esriPOIModels = _mapSearchService.esriResults;
       _noResults = false;
-      // print("!!!!!!!!!!!!!!!!!!!! ESRI API Results: " + _esriPOIModels.toString());
+      // print("ESRI API Results: " + _esriPOIModels.toString());
       if (_esriPOIModels.isEmpty) {
         _noResults = true;
       } else {
