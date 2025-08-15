@@ -21,7 +21,6 @@ class MapsDataProvider extends ChangeNotifier {
   DateTime? _lastUpdated;
   String? _error;
   bool? _noResults;
-  bool? _usingESRI;
 
   Coordinates? _coordinates;
   Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
@@ -40,6 +39,7 @@ class MapsDataProvider extends ChangeNotifier {
   late MapSearchService _mapSearchService;
 
   /// Adds a marker to the map based on the given index.
+  /// TODO: Find a replacement for c3dDescription, which is deprecated.
   void addMarker(int listIndex) {
     Marker? marker;
     // Check if _esriPOIModels has data and the index is valid
@@ -192,7 +192,6 @@ class MapsDataProvider extends ChangeNotifier {
 
   /// SIMPLE GETTERS
   bool? get isLoading => _isLoading;
-  bool? get usingESRI => _usingESRI;
   bool? get noResults => _noResults;
   String? get error => _error;
   List<String> get searchHistory => _searchHistory;
