@@ -59,7 +59,7 @@ To create a new branch and start working on it:
 git checkout experimental
 
 # Create and checkout a branch named newfeature
-git checkout -b experimental
+git checkout -b newfeature
 ```
 
 You are now ready to begin developing your new feature. Commit your code often, using present-tense and concise verbiage explaining the work completed.
