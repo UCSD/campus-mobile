@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:campus_mobile_experimental/core/models/dining.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
@@ -345,7 +345,7 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
       ),
       onPressed: () async {
         try {
-          await _openDirections(model.coordinates!.lat!, model.coordinates!.lon!);
+          await DirectionsHelper.openDirections(model.coordinates!.lat!, model.coordinates!.lon!);
         } catch (e) {
           // an error occurred, do nothing
           debugPrint('Error opening directions: $e');
@@ -635,33 +635,5 @@ class GreenDot extends StatelessWidget {
     }
 
     return null;
-  }
-}
-
-/// Opens directions using the best available map app based on platform and availability
-Future<void> _openDirections(double lat, double lon) async {
-  if (Platform.isIOS) {
-    // On iOS, try Apple Maps native app first
-    final appleMapsUrl = 'maps://?daddr=$lat,$lon&dirflg=w';
-    if (await canLaunch(appleMapsUrl)) {
-      await launch(appleMapsUrl);
-      return;
-    }
-  }
-  
-  // Try Google Maps app URL scheme (works on both iOS and Android)
-  final googleMapsAppUrl = 'comgooglemaps://?daddr=$lat,$lon&directionsmode=walking';
-  if (await canLaunch(googleMapsAppUrl)) {
-    await launch(googleMapsAppUrl);
-    return;
-  }
-  
-  // Fall back to Google Maps web
-  final googleMapsWebUrl = 'https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking';
-  if (await canLaunch(googleMapsWebUrl)) {
-    await launch(googleMapsWebUrl, forceSafariVC: true);
-  } else {
-    // If all else fails, show an error
-    debugPrint('Failed to open directions: No map apps available');
   }
 }
