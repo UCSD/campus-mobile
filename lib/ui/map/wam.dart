@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// "What's Around Me" feature. 
+/// "What's Around Me" feature.
 /// It fetches and displays what's around you in a sorted list.
 ///
 /// **Example Usage:**
@@ -102,14 +102,18 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
   /// await feedWhatsAroundMeList();
   /// ```
   Future<void> feedWhatsAroundMeList() async {
-    setState(() { isLoading = true; });
+    setState(() {
+      isLoading = true;
+    });
     try {
       whatsAroundMeList = await fetchWhatsAroundMe(amountOfPlacesToFetch);
     } catch (e) {
       print("Error fetching $amountOfPlacesToFetch places: $e");
       whatsAroundMeList = []; // Ensure the list is initialized even on error
     } finally {
-      setState(() { isLoading = false; });
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }
@@ -127,7 +131,8 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
 /// ```
 class BuildWhatAroundMeList extends StatelessWidget {
   final List<Place> places;
-  const BuildWhatAroundMeList({Key? key, required this.places}) : super(key: key);
+  const BuildWhatAroundMeList({Key? key, required this.places})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -142,11 +147,14 @@ class BuildWhatAroundMeList extends StatelessWidget {
           leading: GestureDetector(
             onTap: () {
               print("Opening directions for ${place.name}...");
-              var coordinates = Provider.of<MapsDataProvider>(context, listen: false).coordinates;
+              var coordinates =
+                  Provider.of<MapsDataProvider>(context, listen: false)
+                      .coordinates;
               if (coordinates!.lat == null || coordinates.lon == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Please turn your location on in order to use this feature.'),
+                    content: Text(
+                        'Please turn your location on in order to use this feature.'),
                     duration: Duration(seconds: 3),
                   ),
                 );
@@ -166,6 +174,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
               ),
             ),
           ),
+
           /// Place Name // TODO: Make this clickable to open a "place details page"
           // That would require the "Get Place Details API" ^
           // https://developers.arcgis.com/documentation/mapping-and-location-services/place-finding/get-place-details/
@@ -177,6 +186,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
               color: lightPrimaryColor,
             ),
           ),
+
           /// Place Category
           subtitle: Text(
             "${place.category}",
@@ -187,6 +197,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ),
           ),
+
           /// Place's Distance from you in miles
           trailing: Text(
             "${(place.distanceFromUser / 1609.34).toStringAsFixed(1)} mi",
@@ -225,8 +236,10 @@ Future<void> getDirectionsToPlace(BuildContext context, String location) async {
   // print('Latitude: $latitude, Longitude: $longitude');
 
   // Construct URLs
-  String googleUrl = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude&travelmode=walking';
-  String appleUrl = 'http://maps.apple.com/?daddr=$latitude,$longitude&dirflag=w';
+  String googleUrl =
+      'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude&travelmode=walking';
+  String appleUrl =
+      'http://maps.apple.com/?daddr=$latitude,$longitude&dirflag=w';
 
   // Launch directions
   if (await canLaunch(googleUrl)) {

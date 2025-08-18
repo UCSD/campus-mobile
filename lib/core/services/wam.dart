@@ -1,6 +1,20 @@
 /// WAM Service used to fetch the points of interest around you
+import 'dart:math';
+
 import 'package:campus_mobile_experimental/core/models/wam.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:campus_mobile_experimental/core/models/esri_poi.dart';
+import 'package:campus_mobile_experimental/app_networking.dart';
+
+List<EsriPOIModel> _nearbyLocations = [];
+
+// Default coordinates (Geisel Library)
+var x_longitude = -117.23767559484368;
+var y_latitude = 32.88115782225114;
+
+// Default radius // TODO: Make this a user setting
+const double radius = 0.3;
 
 /// Fetches a list of nearby places by querying Points of Interest with different categories
 /// such as restaurants, buildings, shops, cafes, etc.
@@ -23,11 +37,7 @@ import 'package:geolocator/geolocator.dart';
 /// List<Place> places = await fetchNearbySearchPlaces(13);
 /// ```
 Future<List<Place>> fetchWhatsAroundMe(int count) async {
-  // Default coordinates (Geisel Library)
-  var x_longitude = -117.23767559484368;
-  var y_latitude = 32.88115782225114;
-
-  // Attempt to get the current location (even needed?)
+  // Attempt to get the current location
   try {
     Position position = await getCurrentLocation();
     print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
@@ -37,8 +47,14 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
     print('Error getting location: $e');
   }
 
-  // Default radius // TODO: Make this a user setting
-  const double radius = 0.3;
+  final whereClause = dotenv.get('WAM_WHERE_CLAUSE');
+  final params = {
+    'where': whereClause,
+    'outFields': '*',
+    'f': 'json',
+  };
+  final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT'))
+      .replace(queryParameters: params);
 
   // Gain access to the esriPOIModel, which contains the search results.
   try {
@@ -66,25 +82,70 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
     /// Access the esriPOIModel, which contains the search results and get 3 places of each category.
     /// They should already be sorted by distance from the user.
     /// feed the Place (wam) model with this list
-    /// return
+    print('======== Fetching data from: ' + uri.toString());
+    var _response = await NetworkHelper.fetchData(uri.toString());
+    if (_response != 'null') {
+      /// parse data
+      final data = esriPOIModelFromJson(_response);
+      _nearbyLocations = data;
+      print("==========================");
+      print(_nearbyLocations);
+    } else {
+      _nearbyLocations = [];
+    }
 
-    // // Extract the list of places
-    // final places = placesResponse.results.map((result) {
-    //   return Place(
-    //     name: result.name,
-    //     location: "${result.location.y}, ${result.location.x}",
-    //     distanceFromUser: result.distance,
-    //     category: result.categories.isNotEmpty
-    //         ? result.categories.first.label
-    //         : "N/A",
-    //   );
-    // }).toList();
+    populateWAMDistances();
+    reorderWAMLocations();
 
-    return [];
+    // Extract the list of places
+    final wamResults = _nearbyLocations.map((result) {
+      return Place(
+        name: result.attributes.updatedName ??
+            ((result.attributes.subclass ?? "") +
+                " - " +
+                (result.attributes.facilityLongName ?? "")),
+        location: "${result.geometry.y}, ${result.geometry.x}",
+        distanceFromUser: result.distance!,
+        category: result.attributes.classType ?? "N/A",
+      );
+    }).toList();
+
+    print("/////////////////////////////////////////////////////");
+    print("WAM Results: $wamResults");
+    return wamResults;
   } catch (e) {
-    print("Error fetching points of interest: $e");
+    print("Error fetching WAM results using POI: $e");
     return [];
   }
+}
+
+void populateWAMDistances() {
+  for (EsriPOIModel model in _nearbyLocations) {
+    if (model.attributes.latitude != null &&
+        model.attributes.longitude != null) {
+      var distance = calculateDistance(y_latitude, x_longitude,
+          model.attributes.latitude!, model.attributes.longitude!);
+      model.distance = distance as double?;
+    }
+  }
+}
+
+void reorderWAMLocations() {
+  _nearbyLocations.sort((EsriPOIModel a, EsriPOIModel b) {
+    if (a.distance != null && b.distance != null) {
+      return a.distance!.compareTo(b.distance!);
+    }
+    return 0;
+  });
+}
+
+num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+  var p = 0.017453292519943295;
+  var c = cos;
+  var a = 0.5 -
+      c((lat2 - lat1) * p) / 2 +
+      c(lat1 * p) * c(lat2 * p) * (1 - c((lng2 - lng1) * p)) / 2;
+  return 12742 * asin(sqrt(a)) * 0.621371;
 }
 
 /// If location is enabled, this retrieves the user's location using the `Geolocator` package.
