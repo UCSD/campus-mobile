@@ -1,6 +1,5 @@
 /// WAM Service used to fetch the points of interest around you
 import 'dart:math';
-
 import 'package:campus_mobile_experimental/core/models/wam.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
@@ -94,8 +93,23 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
       _nearbyLocations = [];
     }
 
-    populateWAMDistances();
-    reorderWAMLocations();
+    // Populate WAM distances
+    for (EsriPOIModel model in _nearbyLocations) {
+      if (model.attributes.latitude != null &&
+          model.attributes.longitude != null) {
+        var distance = calculateDistance(y_latitude, x_longitude,
+            model.attributes.latitude!, model.attributes.longitude!);
+        model.distance = distance as double?;
+      }
+    }
+
+    // Sort locations by distance from user
+    _nearbyLocations.sort((EsriPOIModel a, EsriPOIModel b) {
+      if (a.distance != null && b.distance != null) {
+        return a.distance!.compareTo(b.distance!);
+      }
+      return 0;
+    });
 
     // Extract the list of places
     final wamResults = _nearbyLocations.map((result) {
@@ -105,7 +119,7 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
                 " - " +
                 (result.attributes.facilityLongName ?? "")),
         location: "${result.geometry.y}, ${result.geometry.x}",
-        distanceFromUser: result.distance!,
+        distanceFromUser: result.distance ?? 1000.0, // Default to 1000 if distance is null
         category: result.attributes.classType ?? "N/A",
       );
     }).toList();
@@ -117,26 +131,6 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
     print("Error fetching WAM results using POI: $e");
     return [];
   }
-}
-
-void populateWAMDistances() {
-  for (EsriPOIModel model in _nearbyLocations) {
-    if (model.attributes.latitude != null &&
-        model.attributes.longitude != null) {
-      var distance = calculateDistance(y_latitude, x_longitude,
-          model.attributes.latitude!, model.attributes.longitude!);
-      model.distance = distance as double?;
-    }
-  }
-}
-
-void reorderWAMLocations() {
-  _nearbyLocations.sort((EsriPOIModel a, EsriPOIModel b) {
-    if (a.distance != null && b.distance != null) {
-      return a.distance!.compareTo(b.distance!);
-    }
-    return 0;
-  });
 }
 
 num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
