@@ -98,7 +98,7 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
             ((result.attributes.subclass ?? "") +
                 " - " +
                 (result.attributes.facilityLongName ?? "")),
-        location: "${result.geometry.y}, ${result.geometry.x}",
+        location: "${result.attributes.latitude}, ${result.attributes.longitude}",
         distanceFromUser: result.distance ?? 1000.0, // Default to 1000 if distance is null
         category: result.attributes.classType ?? "N/A",
       );

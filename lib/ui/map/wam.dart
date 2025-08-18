@@ -118,7 +118,6 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
 /// What's Around Me List Class (2) - Displays a scrollable list of nearby places
 /// using the whatsAroundMeList data that was fetched in 'feedWhatsAroundMeList()'.
 ///
@@ -147,9 +146,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
           leading: GestureDetector(
             onTap: () {
               print("Opening directions for ${place.name}...");
-              var coordinates =
-                  Provider.of<MapsDataProvider>(context, listen: false)
-                      .coordinates;
+              var coordinates = Provider.of<MapsDataProvider>(context, listen: false).coordinates;
               if (coordinates!.lat == null || coordinates.lon == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -159,6 +156,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
                   ),
                 );
               } else {
+                // Open the user's map application with walking directions
                 getDirectionsToPlace(context, place.location);
               }
             },
@@ -198,9 +196,9 @@ class BuildWhatAroundMeList extends StatelessWidget {
             ),
           ),
 
-          /// Place's Distance from you in miles
+          /// Place's Distance from you in miles (1 decimal place)
           trailing: Text(
-            "${(place.distanceFromUser / 1609.34).toStringAsFixed(1)} mi",
+            "${place.distanceFromUser.toStringAsFixed(1)} mi",
             style: TextStyle(
               color: Theme.of(context).brightness == Brightness.light
                   ? descriptiveTextColorLight
@@ -236,10 +234,8 @@ Future<void> getDirectionsToPlace(BuildContext context, String location) async {
   // print('Latitude: $latitude, Longitude: $longitude');
 
   // Construct URLs
-  String googleUrl =
-      'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude&travelmode=walking';
-  String appleUrl =
-      'http://maps.apple.com/?daddr=$latitude,$longitude&dirflag=w';
+  String googleUrl = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude&travelmode=walking';
+  String appleUrl = 'http://maps.apple.com/?daddr=$latitude,$longitude&dirflag=w';
 
   // Launch directions
   if (await canLaunch(googleUrl)) {
@@ -250,26 +246,3 @@ Future<void> getDirectionsToPlace(BuildContext context, String location) async {
     throw 'Could not launch $googleUrl';
   }
 }
-
-// /// Retrieves the top nearby places (a subset of whatsAroundMeList) sorted by proximity.
-// /// This is a subset of the `whatsAroundMeList` by design.
-// /// If we want to let the student choose how many places to show,
-// /// we can add a setting for that, and that setting will modify this function's `placesToFetch`.
-// /// However, the student won't be able to see more than the places we fetch in whatsAroundMeList.
-// /// This is so we control the cost of using this API.
-// ///
-// /// **Returns:**
-// /// - A `List<Place>` containing the top places sorted by proximity.
-// ///
-// /// **Notes:**
-// /// - `whatsAroundMeList` should be populated before calling this function.
-// ///
-// /// **Example Usage:**
-// /// ```dart
-// /// List<Place> topPlaces = fetchTopNearbyPlaces();
-// /// ```
-// List<Place> fetchTopNearbyPlaces() {
-//   List<Place> sorted = List.from(whatsAroundMeList)
-//     ..sort((a, b) => a.distanceFromUser.compareTo(b.distanceFromUser));
-//   return sorted.take(placesToFetch).toList();
-// }
