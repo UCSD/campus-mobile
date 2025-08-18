@@ -12,4 +12,9 @@ class Place {
     required this.distanceFromUser,
     required this.category,
   });
+
+  @override
+  String toString() {
+    return 'Place(name: $name, location: $location, distanceFromUser: $distanceFromUser, category: $category)';
+  }
 }

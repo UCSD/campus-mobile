@@ -6,81 +6,56 @@ import 'package:geolocator/geolocator.dart';
 import 'package:campus_mobile_experimental/core/models/esri_poi.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
 
-List<EsriPOIModel> _nearbyLocations = [];
-
 // Default coordinates (Geisel Library)
 var x_longitude = -117.23767559484368;
 var y_latitude = 32.88115782225114;
 
-// Default radius // TODO: Make this a user setting
+// Default radius TODO: Make this a user setting
 const double radius = 0.3;
 
-/// Fetches a list of nearby places by querying Points of Interest with different categories
-/// such as restaurants, buildings, shops, cafes, etc.
+// Vessel to hold the fetched nearby locations from POI
+List<EsriPOIModel> _nearbyLocations = [];
+
+/// Fetches a list of nearby places by querying Points of Interest with different
+/// categories such as restaurants, buildings, shops, cafes, etc.
 ///
 /// **Parameters:**
 /// - `count` (*int*): The maximum number of results to fetch from the API.
 ///
 /// **Returns:**
-/// - A `Future` that resolves to a `List<Place>` containing the nearby points of interest.
+/// - A `List<Place>` containing nearby points of interest in a `Place` format.
 ///
 /// **Notes:**
 /// - The search radius is currently set to 650 meters (~0.4 miles) and can be made configurable in the future.
 /// - If location services are unavailable or permissions are denied, the function defaults to the Geisel Library coordinates.
-///
-/// **Exceptions:**
-/// - Prints error messages to the console if location services fail or the API request encounters an issue.
 ///
 /// **Example Usage:**
 /// ```dart
 /// List<Place> places = await fetchNearbySearchPlaces(13);
 /// ```
 Future<List<Place>> fetchWhatsAroundMe(int count) async {
-  // Attempt to get the current location
+  // Attempt to get the student's current location
   try {
     Position position = await getCurrentLocation();
     print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
     x_longitude = position.longitude;
     y_latitude = position.latitude;
   } catch (e) {
-    print('Error getting location: $e');
+    print('Error getting location: $e, using Geisel Library coordinates instead.');
   }
 
+  // Prepare Points of Interest call
   final whereClause = dotenv.get('WAM_WHERE_CLAUSE');
   final params = {
     'where': whereClause,
     'outFields': '*',
     'f': 'json',
   };
-  final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT'))
-      .replace(queryParameters: params);
+  final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: params);
 
-  // Gain access to the esriPOIModel, which contains the search results.
+  /// TODO: Search for each of the categories (buildings, stores, cafe, stuart, centers)
+  // Perform the API call
   try {
-    /// TODO: Search for each of the categories (restaurant, building, shop, cafe, etc.)
-    /// Use the map's Search Bar, you can see how that's done in "quickSearch buttons"
-    ///  Provider.of<MapsDataProvider>(context, listen: false)
-    //                     .searchBarController
-    //                     .text = 'restaurants';
-    ///
-    ///  Provider.of<MapsDataProvider>(context, listen: false)
-    //                     .searchBarController
-    //                     .text = 'buildings';
-    ///
-    ///  Provider.of<MapsDataProvider>(context, listen: false)
-    //                     .searchBarController
-    //                     .text = 'stores';
-    ///
-    ///  Provider.of<MapsDataProvider>(context, listen: false)
-    //                     .searchBarController
-    //                     .text = 'Stuart';
-    ///
-    ///  Provider.of<MapsDataProvider>(context, listen: false)
-    //                     .searchBarController
-    //                     .text = 'centers';
-    /// Access the esriPOIModel, which contains the search results and get 3 places of each category.
-    /// They should already be sorted by distance from the user.
-    /// feed the Place (wam) model with this list
     print('======== Fetching data from: ' + uri.toString());
     var _response = await NetworkHelper.fetchData(uri.toString());
     if (_response != 'null') {
@@ -92,26 +67,31 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
     } else {
       _nearbyLocations = [];
     }
+  } catch (e) {
+    print("Error fetching WAM results using POI: $e");
+    return [];
+  }
 
-    // Populate WAM distances
-    for (EsriPOIModel model in _nearbyLocations) {
-      if (model.attributes.latitude != null &&
-          model.attributes.longitude != null) {
-        var distance = calculateDistance(y_latitude, x_longitude,
-            model.attributes.latitude!, model.attributes.longitude!);
-        model.distance = distance as double?;
-      }
+  // Populate distance from student for each location
+  for (EsriPOIModel model in _nearbyLocations) {
+    if (model.attributes.latitude != null &&
+        model.attributes.longitude != null) {
+      var distance = calculateDistance(y_latitude, x_longitude,
+          model.attributes.latitude!, model.attributes.longitude!);
+      model.distance = distance as double?;
     }
+  }
 
-    // Sort locations by distance from user
-    _nearbyLocations.sort((EsriPOIModel a, EsriPOIModel b) {
-      if (a.distance != null && b.distance != null) {
-        return a.distance!.compareTo(b.distance!);
-      }
-      return 0;
-    });
+  // Sort locations by distance from user
+  _nearbyLocations.sort((EsriPOIModel a, EsriPOIModel b) {
+    if (a.distance != null && b.distance != null) {
+      return a.distance!.compareTo(b.distance!);
+    }
+    return 0;
+  });
 
-    // Extract the list of places
+  // Extract only desired attributes to show in the WAM list
+  try {
     final wamResults = _nearbyLocations.map((result) {
       return Place(
         name: result.attributes.updatedName ??
@@ -124,11 +104,12 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
       );
     }).toList();
 
-    print("/////////////////////////////////////////////////////");
-    print("WAM Results: $wamResults");
+    print("///////////////////////////////// wamResults //////////////////////////////////");
+    print("WAM Results: ${wamResults.map((place) => place.toString()).toList()}");
     return wamResults;
-  } catch (e) {
-    print("Error fetching WAM results using POI: $e");
+  }
+  catch (e) {
+    print("Error feeding wamResults: $e");
     return [];
   }
 }
