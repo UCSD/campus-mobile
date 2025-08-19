@@ -90,22 +90,27 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
   // Extract only `count` amount of desired attributes to show in the WAM list
   // while avoiding potential duplicates based on `objectId`.
   // Note that distanceFromUser becomes 1000.0 if distance is null so it never shows in the list.
+  // Note that places with an "Unknown Location" are also filtered out at the end.
   try {
     final seen = <dynamic>{};
     final wamResults = _nearbyLocations
         .where((result) => seen.add(result.attributes.objectId))
-        .take(count)
+        .take(count * 2) // Take more to account for possible filtering
         .map((result) {
+      final name = result.attributes.updatedName ??
+          ((result.attributes.subclass != null && result.attributes.facilityLongName != null)
+              ? result.attributes.subclass! + " - " + result.attributes.facilityLongName!
+              : "Unknown Location");
       return Place(
-        name: result.attributes.updatedName ??
-            ((result.attributes.subclass ?? "") +
-                " - " +
-                (result.attributes.facilityLongName ?? "")),
+        name: name,
         location: "${result.attributes.latitude}, ${result.attributes.longitude}",
         distanceFromUser: result.distance ?? 1000.0,
         category: result.attributes.classType ?? " ",
       );
-    }).toList();
+    })
+    .where((place) => place.name != "Unknown Location")
+    .take(count)
+    .toList();
 
     // print("/////////////////////// wamResults ////////////////////////");
     // print("WAM Results: ${wamResults.map((place) => place.toString()).toList()}");
