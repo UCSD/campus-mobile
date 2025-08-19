@@ -53,17 +53,14 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
   };
   final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: params);
 
-  /// TODO: Search for each of the categories (buildings, stores, cafe, stuart, centers)
   // Perform the API call
   try {
-    print('======== Fetching data from: ' + uri.toString());
+    // print('======== Fetching data from: ' + uri.toString());
     var _response = await NetworkHelper.fetchData(uri.toString());
     if (_response != 'null') {
       /// parse data
       final data = esriPOIModelFromJson(_response);
       _nearbyLocations = data;
-      print("==========================");
-      print(_nearbyLocations);
     } else {
       _nearbyLocations = [];
     }
@@ -104,8 +101,8 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
       );
     }).toList();
 
-    print("///////////////////////////////// wamResults //////////////////////////////////");
-    print("WAM Results: ${wamResults.map((place) => place.toString()).toList()}");
+    // print("///////////////////////////////// wamResults //////////////////////////////////");
+    // print("WAM Results: ${wamResults.map((place) => place.toString()).toList()}");
     return wamResults;
   }
   catch (e) {
