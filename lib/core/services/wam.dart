@@ -92,7 +92,7 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
 
   // Extract only desired attributes to show in the WAM list
   try {
-    final wamResults = _nearbyLocations.map((result) {
+    final wamResults = _nearbyLocations.take(count).map((result) {
       return Place(
         name: result.attributes.updatedName ??
             ((result.attributes.subclass ?? "") +
