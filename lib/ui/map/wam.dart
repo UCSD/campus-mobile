@@ -135,14 +135,25 @@ class BuildWhatAroundMeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (places.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Text(
+            "Please ensure you are within UCSD's boundaries to use this feature.\n If you are, please try again.",
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
     return ListView.builder(
       padding: EdgeInsets.only(top: 12.0),
       itemCount: places.length,
       itemBuilder: (context, index) {
         final place = places[index];
-
         return ListTile(
-          /// Directions Button (Far left of the list item)
+          /// Directions Button
           leading: GestureDetector(
             onTap: () {
               print("Opening directions for ${place.name}...");
