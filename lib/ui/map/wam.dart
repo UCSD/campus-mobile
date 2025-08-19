@@ -179,9 +179,9 @@ class BuildWhatAroundMeList extends StatelessWidget {
           title: Text(
             place.name,
             style: TextStyle(
-              fontSize: 24.0,
               fontWeight: FontWeight.w700,
               color: lightPrimaryColor,
+              fontSize: 20,
             ),
           ),
 
@@ -193,6 +193,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
                   ? descriptiveTextColorLight
                   : descriptiveTextColorDark,
               fontWeight: FontWeight.w400,
+              fontSize: 18,
             ),
           ),
 
@@ -204,6 +205,7 @@ class BuildWhatAroundMeList extends StatelessWidget {
                   ? descriptiveTextColorLight
                   : descriptiveTextColorDark,
               fontWeight: FontWeight.w400,
+              fontSize: 20,
             ),
           ),
         );

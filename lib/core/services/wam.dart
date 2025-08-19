@@ -37,7 +37,7 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
   // Attempt to get the student's current location
   try {
     Position position = await getCurrentLocation();
-    print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
+    // print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
     x_longitude = position.longitude;
     y_latitude = position.latitude;
   } catch (e) {
@@ -88,20 +88,26 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
   });
 
   // Extract only `count` amount of desired attributes to show in the WAM list
+  // while avoiding potential duplicates based on `objectId`.
+  // Note that distanceFromUser becomes 1000.0 if distance is null so it never shows in the list.
   try {
-    final wamResults = _nearbyLocations.take(count).map((result) {
+    final seen = <dynamic>{};
+    final wamResults = _nearbyLocations
+        .where((result) => seen.add(result.attributes.objectId))
+        .take(count)
+        .map((result) {
       return Place(
         name: result.attributes.updatedName ??
             ((result.attributes.subclass ?? "") +
                 " - " +
                 (result.attributes.facilityLongName ?? "")),
         location: "${result.attributes.latitude}, ${result.attributes.longitude}",
-        distanceFromUser: result.distance ?? 1000.0, // Default to 1000 if distance is null
-        category: result.attributes.classType ?? "N/A",
+        distanceFromUser: result.distance ?? 1000.0,
+        category: result.attributes.classType ?? " ",
       );
     }).toList();
 
-    // print("///////////////////////////////// wamResults //////////////////////////////////");
+    // print("/////////////////////// wamResults ////////////////////////");
     // print("WAM Results: ${wamResults.map((place) => place.toString()).toList()}");
     return wamResults;
   }
