@@ -161,6 +161,13 @@ class CampusMobile extends StatelessWidget {
             // : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
+        builder: (context, child) {
+          return SafeArea(
+            top: false,
+            bottom: true,
+            child: child!,
+          );
+        },
       ),
     );
   }
