@@ -110,8 +110,8 @@ class Maps extends StatelessWidget {
           // kToolbarHeight is a constant from the Flutter framework that
           // represents the default height of the AppBar (toolbar) in logical pixels.
           // Its value is 56.0. It is commonly used to position widgets relative to the top app bar.
-          top: kToolbarHeight + 5, // adjust as needed to be below the search bar
-          right: 16,
+          top: kToolbarHeight + 2, // adjust as needed to be below the search bar
+          right: 10,
           child: moreResultsList(context),
         ),
         buildButtons(context),

@@ -87,7 +87,7 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
           onPressed: () => setState(() => showPlaces = !showPlaces),
           label: showPlaces
               ? Icon(Icons.close, size: 20)
-              : Text("What's Around Me"),
+              : Text("Around Me"),
           backgroundColor: Colors.lightBlue,
         ),
       ],
