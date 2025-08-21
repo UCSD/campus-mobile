@@ -158,9 +158,15 @@ class CampusMobile extends StatelessWidget {
         initialRoute: showOnboardingScreen
             ? RoutePaths.OnboardingLogin
             : RoutePaths.BottomNavigationBar,
-            // : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
+        builder: (context, child) {
+          return SafeArea(
+            top: false,
+            bottom: true,
+            child: child!,
+          );
+        },
       ),
     );
   }
