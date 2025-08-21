@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class DirectionsButton extends StatelessWidget {
   const DirectionsButton({
@@ -34,7 +35,10 @@ class DirectionsButton extends StatelessWidget {
                 null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-                'Please turn your location on in order to use this feature.'),
+              'Please turn your location on in order to use this feature.',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: darkPrimaryColor,
             duration: Duration(seconds: 3),
           ));
         } else {

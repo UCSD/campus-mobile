@@ -106,7 +106,7 @@ List<SingleChildWidget> dependentServices = [
     return mapsDataProvider;
   }, update: (_, coordinates, mapsDataProvider) {
     mapsDataProvider!.coordinates = coordinates;
-    mapsDataProvider.populateDistances();
+    mapsDataProvider.populateESRIDistances();
     return mapsDataProvider;
   }),
   ChangeNotifierProxyProvider<PushNotificationDataProvider, UserDataProvider>(
