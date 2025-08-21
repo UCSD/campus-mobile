@@ -6,7 +6,6 @@ import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class ManageShuttleView extends StatefulWidget {

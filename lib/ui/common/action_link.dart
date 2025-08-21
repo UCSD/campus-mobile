@@ -14,7 +14,7 @@ class ActionLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll<Color>(Colors.transparent),
+        backgroundColor: WidgetStatePropertyAll<Color>(Colors.transparent),
         alignment: Alignment.bottomCenter,
       ),
       child: Padding(

@@ -110,7 +110,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        employeeIdModel!.employeePreferredDisplayName,
+                        employeeIdModel.employeePreferredDisplayName,
                         style: TextStyle(
                           color: Theme.of(context).brightness == Brightness.dark
                               ? darkPrimaryColor2

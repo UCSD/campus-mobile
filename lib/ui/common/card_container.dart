@@ -165,9 +165,7 @@ class CardContainer extends StatelessWidget {
   Widget buildMenu() {
     if (hideMenu) return Container();
 
-    return ButtonBar(
-      buttonPadding: const EdgeInsets.all(0),
-      mainAxisSize: MainAxisSize.min,
+    return OverflowBar(
       children: [
         buildMenuOptions(
           {
