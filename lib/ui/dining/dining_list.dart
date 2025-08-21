@@ -196,7 +196,7 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
   Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        foregroundColor: linkColorLight, 
+        foregroundColor: linkColorLight,
       ),
       onPressed: () {
         try {
