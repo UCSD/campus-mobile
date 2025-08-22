@@ -154,11 +154,7 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
                 decoration: Theme.of(context).brightness == Brightness.dark
                     ? BoxDecoration(
                         color: lightTextColor,
-                        border: Border.all(
-                          color: darkLogoBorderColor,
-                          width: 2,
-                        ),
-                        shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(8),
                       )
                     : null,
                 child: Image.network(
@@ -200,7 +196,7 @@ Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTi
   Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        foregroundColor: linkColorLight, 
+        foregroundColor: linkColorLight,
       ),
       onPressed: () {
         try {

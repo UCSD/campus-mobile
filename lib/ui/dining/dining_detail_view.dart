@@ -65,11 +65,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
                   decoration: Theme.of(context).brightness == Brightness.dark
                       ? BoxDecoration(
                           color: lightTextColor,
-                          border: Border.all(
-                            color: darkLogoBorderColor,
-                            width: 2,
-                          ),
-                          shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(8),
                         )
                       : null,
                   child: Image.network(
@@ -273,32 +269,6 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       ),
     );
   }
-
-  // TODO: Unused, remove if not needed
-  // Widget buildPictures(prefix0.DiningModel model) {
-  //   List<ImageLoader> images = [];
-  //   if (model.images != null && model.images!.length > 0) {
-  //     for (prefix0.Image item in model.images!) {
-  //       if (item.small != null) images.add(ImageLoader(url: item.small!));
-  //     }
-  //     return Center(
-  //       child: Container(
-  //         height: 100,
-  //         child: ListView.separated(
-  //           itemCount: images.length,
-  //           itemBuilder: (BuildContext context, int index) {
-  //             return images[index];
-  //           },
-  //           separatorBuilder: (BuildContext context, int index) {
-  //             return Container(width: 10);
-  //           },
-  //           scrollDirection: Axis.horizontal,
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return Container(height: 10);
-  // }
 }
 
 ///////////// Location Section /////////////
@@ -413,18 +383,6 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
   }
 }
 
-// TODO: Unused, remove if not needed
-// Widget buildMenu(BuildContext context, prefix0.DiningModel model) {
-//   if (model.meals != null) {
-//     return DiningMenuList(
-//       model: model,
-//     );
-//   } else {
-//     return Container();
-//   }
-// }
-
-// Feeds the "Hours" section of the Dining Detail View //
 class HoursOfDay extends StatelessWidget {
   const HoursOfDay({Key? key, required this.day, required this.model}) : super(key: key);
   final int day;
@@ -437,13 +395,21 @@ class HoursOfDay extends StatelessWidget {
     var theDay = result['day'];
     var hoursText = (result['hours'] == "Invalid Date-Invalid Date") ? "Unknown Hours" : result['hours'];
     // Determine the hours' text style
-    final TextStyle hoursTextStyle = day == DateTime.now().weekday
-        ? TextStyle(
-            fontSize: 17.0,
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2)
+    // final TextStyle hoursTextStyle = day == DateTime.now().weekday
+    //     ? TextStyle(
+    //         fontSize: 17.0,
+    //         fontWeight: FontWeight.w700,
+    //         color: Theme.of(context).brightness == Brightness.light
+    //             ? lightPrimaryColor
+    //             : darkPrimaryColor2)
+    //     : Theme.of(context).textTheme.bodySmall!;
+    final TextStyle hoursTextStyle = day == DateTime.now().weekday ?
+
+    Theme.of(context).textTheme.bodySmall!.copyWith(
+        fontWeight: FontWeight.w700,
+        color: Theme.of(context).brightness == Brightness.light
+            ? lightPrimaryColor
+            : darkPrimaryColor2)
         : Theme.of(context).textTheme.bodySmall!;
 
     // Check if this is the current day
@@ -458,22 +424,32 @@ class HoursOfDay extends StatelessWidget {
               children: [
                 // Show the green dot for today
                 if (isToday) ...[
-                  GreenDot(currHours: hoursText!),
-                  SizedBox(width: 5),
+                  SizedBox(
+                    width: 0,
+                    height: 0,
+                    child: OverflowBox(
+                      maxWidth: 10, //enough width and height to hold the dot
+                      maxHeight: 10,
+                      alignment: Alignment.centerLeft,
+                      child: Transform.translate(
+                        offset: const Offset(-11.5, 0),
+                        child: GreenDot(currHours: hoursText!),
+                      ),
+                    ),
+                  ),
+                  // SizedBox(width: 2),
                 ],
                 // "Monday" - Bold if today is Monday.
                 Text(
                   '$theDay',
                   style: isToday
-                      ? TextStyle(
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.w700,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? lightPrimaryColor
-                                  : darkPrimaryColor2)
+                    ? Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).brightness == Brightness.light
+                                      ? lightPrimaryColor
+                                      : darkPrimaryColor2)
                       : Theme.of(context).textTheme.bodySmall,
-                ),
+                  ),
               ],
             ),
           ),
@@ -555,8 +531,8 @@ class GreenDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 8,
-      height: 8,
+      width: 7,
+      height: 7,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: _determineColor(),
@@ -616,7 +592,7 @@ class GreenDot extends StatelessWidget {
   // Parse time strings like "9:00 AM" into minutes since midnight
   int? _parseTimeString(String timeString) {
     // Try to extract the hour, minute, and AM/PM parts
-    final amPmRegex = RegExp(r'(\d+):(\d+)\s*(AM|PM)');
+    final amPmRegex = RegExp(r'(\d+):(\d+)\s*(AM|PM)', caseSensitive: false);
     final match = amPmRegex.firstMatch(timeString);
 
     if (match != null && match.groupCount >= 3) {
