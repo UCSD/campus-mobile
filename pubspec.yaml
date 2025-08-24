@@ -37,7 +37,7 @@ dependencies:
   permission_handler: ^11.3.1
   pointycastle: 3.4.0
   provider: ^6.1.2
-  shared_preferences: ^2.3.2
+  shared_preferences: ^2.5.3
   uni_links2: 0.6.0+2
   url_launcher: 6.0.20
   webview_flutter: 2.0.13
