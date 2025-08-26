@@ -34,7 +34,7 @@ ctx = ClientContext(site_url).with_credentials(user_credentials)
 web = ctx.web
 ctx.load(web)
 ctx.execute_query()
-print(f"Web title: {web.properties['Title']}")
+# print(f"Web title: {web.properties['Title']}")
 
 with open(fileName, 'rb') as test_file:
     file_content = test_file.read()
