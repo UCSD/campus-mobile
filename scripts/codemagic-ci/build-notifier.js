@@ -35,8 +35,7 @@ const buildNotify = async () => {
 		console.log('buildPlatform: ' + ENV_VARS.buildPlatform)
 		// Check build success
 		if (buildSuccess) {
-			saveArtifactApkSuccess = true
-			saveArtifactIpaSuccess = true
+
 			// Supplemental GitHub metadata for PRs
 			if (ENV_VARS.prNumber) {
 				prAuthor = await githubMeta()
