@@ -15,6 +15,7 @@ const buildArtifacts = {}
 ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
 
 const { spawnSync }  = require('child_process')
+spawnSync('python', ['-m','pip','install','--target','./python_modules','-r','requirements.txt'], { stdio: 'inherit' });
 
 const buildNotify = async () => {
 	try {
@@ -152,7 +153,7 @@ const saveArtifact = async (artifactFilename) => {
 //			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildApkFinalFilename)
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
 			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
-			console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
+			console.log('trying to upload ' + fileOptions.fileName + ' to ' + fileOptions.folder )
 			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
 			if (pythonProcess.status == 0) {
 			    console.log("Uploading apk succeeded")

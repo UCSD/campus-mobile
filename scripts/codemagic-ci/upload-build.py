@@ -1,9 +1,12 @@
-from office365.sharepoint.client_context import ClientContext
-from office365.runtime.auth.user_credential import UserCredential
 import os
 import sys
 import json
 import traceback
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'python_modules'))
+
+from office365.sharepoint.client_context import ClientContext
+from office365.runtime.auth.user_credential import UserCredential
 
 # site_url = str(sys.argv[1]).strip() #"https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds"
 site_url = "https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds/"
