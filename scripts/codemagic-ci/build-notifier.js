@@ -154,7 +154,7 @@ const saveArtifact = async (artifactFilename) => {
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
 			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 			console.log('trying to upload ' + fileOptions.fileName + ' to ' + fileOptions.folder )
-			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
+			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
 			if (pythonProcess.status == 0) {
 			    console.log("Uploading apk succeeded")
 			} else {
@@ -171,7 +171,7 @@ const saveArtifact = async (artifactFilename) => {
 //			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildIpaFinalFilename)
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
 			console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
-			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
+			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
             if (pythonProcess.status == 0) {
                 console.log("Uploading ipa succeeded")
             } else {
@@ -263,7 +263,7 @@ const generateTestPlan = async (prAuthor) => {
 //			fileContent: fs.readFileSync(testPlanFilename)
 		}
 		console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
-		const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
+		const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
         if (pythonProcess.status == 0) {
             console.log("Uploading test succeeded")
         } else {
