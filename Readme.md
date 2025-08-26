@@ -8,6 +8,7 @@ https://github.com/UCSD/campus-mobile/pull/2087
 #### Campus Mobile Flutter Version:
 3.24.5
 
+<!-- Build Pipeline Testing -->
 
 ### Clone the Campus Mobile repo
 ```shell
