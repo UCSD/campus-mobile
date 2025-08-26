@@ -73,11 +73,10 @@ class _SpotTypesViewState extends State<SpotTypesView> {
             ),
             child: Align(
               alignment: Alignment.center,
-              child: data.text.contains("&#x267f;")
-                  ? Icon(Icons.accessible, size: 25.0, color: textColor)
-                  : data.text.contains("&#x1F465;") ?
-              Icon(Icons.people, size: 25.0, color: textColor) :
-              Text(data.text, style: TextStyle(color: textColor)),
+              child: data.text==null && data.icon != null ?
+              Icon(IconData(int.parse(data.icon!, radix: 16), fontFamily: 'MaterialIcons'), size: 25.0, color: textColor)
+                  : Text(data.text!, style: TextStyle(color: textColor,),
+              ),
             ),
           ),
           title: Text(

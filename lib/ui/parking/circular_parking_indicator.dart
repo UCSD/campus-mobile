@@ -106,16 +106,10 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
-                          child: spotType.text.contains("&#x267f;")
-                              ? Icon(
-                                  Icons.accessible,
-                                  size: 25.0,
-                                  color: colorFromHex(spotType.textColor),
-                                )
-                              : spotType.text.contains("&#x1F465;") ?
-                                Icon(Icons.people, size: 25.0, color: colorFromHex(spotType.textColor))
+                          child: spotType.text==null && spotType.icon != null ?
+                            Icon(IconData(int.parse(spotType.icon!, radix: 16), fontFamily: 'MaterialIcons'), size: 25.0, color: colorFromHex(spotType.textColor))
                               : Text(
-                                  spotType.text,
+                                  spotType.text!,
                                   style: TextStyle(
                                     color: colorFromHex(spotType.textColor),
                                     fontFamily: 'Brix Sans',
@@ -163,16 +157,10 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
-                          child: spotType.text.contains("&#x267f;")
-                              ? Icon(
-                                  Icons.accessible,
-                                  size: 25.0,
-                                  color: colorFromHex(spotType.textColor),
-                                )
-                               : spotType.text.contains("&#x1F465;") ?
-                              Icon(Icons.people, size: 25.0, color: colorFromHex(spotType.textColor))
+                          child: spotType.text==null && spotType.icon != null ?
+                          Icon(IconData(int.parse(spotType.icon!, radix: 16)), size: 25.0, color: colorFromHex(spotType.textColor))
                               : Text(
-                                  spotType.text,
+                                  spotType.text!,
                                   style: TextStyle(
                                     color: colorFromHex(spotType.textColor),
                                     fontFamily: 'Brix Sans',
