@@ -152,7 +152,7 @@ const saveArtifact = async (artifactFilename) => {
 			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildApkFinalFilename)
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
 			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
-			const pythonProcess = spawnSync('python', ["upload-build.py", coreOptions, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
+			const pythonProcess = spawnSync('python', ["upload-build.py", coreOptions.siteUrL, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
 			if (pythonProcess==0) {
 			    console.log("successfuly upload apk")
 			} else {

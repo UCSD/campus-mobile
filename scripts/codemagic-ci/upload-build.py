@@ -4,7 +4,7 @@ import os
 import sys
 import json
 
-site_url = str(sys.argv[1]) #"https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds"
+site_url = str(sys.argv[1]).strip() #"https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds"
 credentials = json.loads(str(sys.argv[2]))
 user = credentials["username"]
 password = credentials["password"]
@@ -40,6 +40,6 @@ with open(fileName, 'rb') as test_file:
 dir, name = os.path.split(remote_path)
 try:
     file = ctx.web.get_folder_by_server_relative_url(dir).upload_file(name, file_content).execute_query()
-    return 0
+    sys.exit(0)
 except Exception as e:
-    return 1
+    sys.exit(1)
