@@ -22,6 +22,12 @@ class EmployeeIdService {
       _employeeIdModel = employeeIdModelFromJson(_response);
       return true;
     } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
+      if (e.toString().contains("401")) {
+        if (await NetworkHelper.getNewToken(headers))
+          return await fetchEmployeeIdProfile(headers);
+      }
       _error = e.toString();
       return false;
     } finally {
