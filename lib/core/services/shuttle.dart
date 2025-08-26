@@ -13,7 +13,6 @@ class ShuttleService {
   String? _error;
   final Map<String, String> headers = {
     "accept": "application/json",
-    "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
   };
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
@@ -56,6 +55,11 @@ class ShuttleService {
       final arrivingData = getArrivingShuttles(_response);
       return arrivingData;
     } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
+      if (e.toString().contains("401")) {
+        if (await NetworkHelper.getNewToken(headers)) return await getArrivingInformation(stopId);
+      }
       _error = e.toString();
       return [];
     } finally {
