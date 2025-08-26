@@ -15,7 +15,7 @@ user = credentials["username"]
 password = credentials["password"]
 fileOptions = json.loads(str(sys.argv[3]))
 fileName = fileOptions["fileName"].strip() #same as local_path
-folder = fileOptions["folder"] #/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Folder here
+folder = fileOptions["folder"].strip() #/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Folder here
 # folder = "/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Pull Request Builds/"
 
 
