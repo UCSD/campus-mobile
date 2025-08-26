@@ -41,7 +41,8 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
     x_longitude = position.longitude;
     y_latitude = position.latitude;
   } catch (e) {
-    print('Error getting location: $e, using Geisel Library coordinates instead.');
+    print(
+        'Error getting location: $e, using Geisel Library coordinates instead.');
   }
 
   // Prepare Points of Interest call
@@ -51,7 +52,8 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
     'outFields': '*',
     'f': 'json',
   };
-  final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: params);
+  final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT'))
+      .replace(queryParameters: params);
 
   // Perform the API call
   try {
@@ -97,26 +99,29 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
         .where((result) => seen.add(result.attributes.objectId))
         .take(count * 2) // Take more to account for possible filtering
         .map((result) {
-      final name = result.attributes.updatedName ??
-          ((result.attributes.subclass != null && result.attributes.facilityLongName != null)
-              ? result.attributes.subclass! + " - " + result.attributes.facilityLongName!
-              : "Unknown Location");
-      return Place(
-        name: name,
-        location: "${result.attributes.latitude}, ${result.attributes.longitude}",
-        distanceFromUser: result.distance ?? 1000.0,
-        category: result.attributes.classType ?? " ",
-      );
-    })
-    .where((place) => place.name != "Unknown Location")
-    .take(count)
-    .toList();
+          final name = result.attributes.updatedName ??
+              ((result.attributes.subclass != null &&
+                      result.attributes.facilityLongName != null)
+                  ? result.attributes.subclass! +
+                      " - " +
+                      result.attributes.facilityLongName!
+                  : "Unknown Location");
+          return Place(
+            name: name,
+            location:
+                "${result.attributes.latitude}, ${result.attributes.longitude}",
+            distanceFromUser: result.distance ?? 1000.0,
+            category: result.attributes.classType ?? " ",
+          );
+        })
+        .where((place) => place.name != "Unknown Location")
+        .take(count)
+        .toList();
 
     // print("/////////////////////// wamResults ////////////////////////");
     // print("WAM Results: ${wamResults.map((place) => place.toString()).toList()}");
     return wamResults;
-  }
-  catch (e) {
+  } catch (e) {
     print("Error feeding wamResults: $e");
     return [];
   }

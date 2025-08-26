@@ -13,7 +13,8 @@ class EmployeeIdService {
   EmployeeIdModel _employeeIdModel = EmployeeIdModel();
 
   Future<bool> fetchEmployeeIdProfile(Map<String, String> headers) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(

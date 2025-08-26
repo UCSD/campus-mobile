@@ -17,13 +17,16 @@ class MapSearchService {
     // Escape any single-quotes in the user’s text
     final escapedSearchText = stemmedSearchText.replaceAll("'", "''");
     // Build a raw SQL WHERE clause for general search
-    final whereClause = dotenv.get('MAP_POI_WHERE_CLAUSE').replaceAll('{query}', escapedSearchText);
+    final whereClause = dotenv
+        .get('MAP_POI_WHERE_CLAUSE')
+        .replaceAll('{query}', escapedSearchText);
     final params = {
       'where': whereClause,
       'outFields': '*',
       'f': 'json',
     };
-    final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: params);
+    final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT'))
+        .replace(queryParameters: params);
     _error = null;
     _isLoading = true;
 
