@@ -4,13 +4,15 @@ import os
 import sys
 import json
 
-site_url = str(sys.argv[1]).strip() #"https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds"
+# site_url = str(sys.argv[1]).strip() #"https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds"
+site_url = "https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds/"
 credentials = json.loads(str(sys.argv[2]))
 user = credentials["username"]
 password = credentials["password"]
 fileOptions = json.loads(str(sys.argv[3]))
 fileName = fileOptions["fileName"]
-folder = fileOptions["folder"] #/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Folder here
+# folder = fileOptions["folder"] #/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Folder here
+folder = "/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Pull Request Builds/test2.txt"
 
 
 user_credentials = UserCredential(user, password)

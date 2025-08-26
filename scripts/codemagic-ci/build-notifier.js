@@ -153,11 +153,11 @@ const saveArtifact = async (artifactFilename) => {
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
 			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 			const pythonProcess = spawnSync('python', ["upload-build.py", coreOptions.siteUrL, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
-			if (pythonProcess==0) {
-			    console.log("successfuly upload apk")
-			} else {
-			    console.log("Uploading apk failed")
-			}
+//			if (pythonProcess==0) {
+//			    console.log("successfuly upload apk")
+//			} else {
+//			    console.log("Uploading apk failed")
+//			}
 			return true
 		} else if (ENV_VARS.buildPlatform === 'IOS') {
 			buildArtifacts.buildIpaFilepath = '../../build/ios/ipa/UC San Diego.ipa'
