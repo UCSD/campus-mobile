@@ -3,6 +3,7 @@ from office365.runtime.auth.user_credential import UserCredential
 import os
 import sys
 import json
+import traceback
 
 # site_url = str(sys.argv[1]).strip() #"https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds"
 site_url = "https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds/"
@@ -43,7 +44,7 @@ dir, name = os.path.split(remote_path)
 print(f"trying to upload{fileName} to {remote_path}")
 try:
     file = ctx.web.get_folder_by_server_relative_url(dir).upload_file(name, file_content).execute_query()
-    print(f'uploaded file {fileName} to {remote_path}')
+    print(f'uploaded file {fileName} to {remote_path}', flush = True)
     sys.exit(0)
 except Exception as e:
     print(f"Error in python script: {e}")

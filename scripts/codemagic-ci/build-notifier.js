@@ -152,11 +152,12 @@ const saveArtifact = async (artifactFilename) => {
 //			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildApkFinalFilename)
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
 			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
-			const pythonProcess = spawnSync('python', ["upload-build.py", SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
+			console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
+			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
 			if (pythonProcess.status == 0) {
 			    console.log("Uploading apk succeeded")
 			} else {
-			    console.log("Uploadeding apk failed")
+			    console.log("Uploading apk failed")
 			}
 
 			return true
@@ -168,7 +169,8 @@ const saveArtifact = async (artifactFilename) => {
 			fileOptions.fileName = buildArtifacts.buildIpaFinalFilename
 //			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildIpaFinalFilename)
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
-			const pythonProcess = spawnSync('python', ["upload-build.py", SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
+			console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
+			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
             if (pythonProcess == 0) {
                 console.log("Uploading ipa succeeded")
             } else {
@@ -259,11 +261,12 @@ const generateTestPlan = async (prAuthor) => {
 			fileName: testPlanFilename,
 //			fileContent: fs.readFileSync(testPlanFilename)
 		}
-		const pythonProcess = spawnSync('python', ["upload-build.py", SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
+		console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
+		const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
         if (pythonProcess == 0) {
             console.log("Uploading test succeeded")
         } else {
-            console.log('Uploadeding test failed')
+            console.log('Uploading test failed')
         }
 		// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 		return {
