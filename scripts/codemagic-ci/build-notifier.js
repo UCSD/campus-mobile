@@ -153,7 +153,7 @@ const saveArtifact = async (artifactFilename) => {
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
 			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 			const pythonProcess = spawnSync('python', ["upload-build.py", coreOptions.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
-			if (pythonProcess.error) {
+			if (pythonProcess.status == 0) {
 			    console.log("Uploading apk failed")
 			} else {
 			    console.log("successfuly uploaded apk")
@@ -170,9 +170,9 @@ const saveArtifact = async (artifactFilename) => {
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
 			const pythonProcess = spawnSync('python', ["upload-build.py", coreOptions.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
             if (pythonProcess.error) {
-                console.log("Uploading apk failed")
+                console.log("Uploading ipa failed")
             } else {
-                console.log('successfuly uploaded apk')
+                console.log('successfuly uploaded ipa')
             }
 			return true
 		}
@@ -259,6 +259,12 @@ const generateTestPlan = async (prAuthor) => {
 			fileName: testPlanFilename,
 			fileContent: fs.readFileSync(testPlanFilename)
 		}
+		const pythonProcess = spawnSync('python', ["upload-build.py", coreOptions.siteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
+        if (pythonProcess.error) {
+            console.log("Uploading test failed")
+        } else {
+            console.log('successfuly uploaded test')
+        }
 		// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 		return {
 			testPlanFilename: testPlanFilename,
