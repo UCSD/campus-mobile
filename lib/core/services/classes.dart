@@ -26,6 +26,12 @@ class ClassScheduleService {
       _unData = classScheduleModelFromJson(_response);
       return true;
     } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
+      if (e.toString().contains("401")) {
+        if (await NetworkHelper.getNewToken(headers))
+          return await fetchUNCourses(headers, term);
+      }
       _error = e.toString();
       return false;
     } finally {
@@ -44,6 +50,12 @@ class ClassScheduleService {
       _grData = classScheduleModelFromJson(_response);
       return true;
     } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
+      if (e.toString().contains("401")) {
+        if (await NetworkHelper.getNewToken(headers))
+          return await fetchGRCourses(headers, term);
+      }
       _error = e.toString();
       return false;
     } finally {
