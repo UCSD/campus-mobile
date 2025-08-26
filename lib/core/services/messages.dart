@@ -23,6 +23,12 @@ class MessageService {
       _data = data;
       return true;
     } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
+      if (e.toString().contains("401")) {
+        if (await NetworkHelper.getNewToken(authHeaders))
+          return await fetchMyMessagesData(timestamp, authHeaders);
+      }
       _error = e.toString();
       return false;
     } finally {
