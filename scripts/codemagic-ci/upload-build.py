@@ -42,6 +42,7 @@ with open(fileName, 'rb') as test_file:
 dir, name = os.path.split(remote_path)
 try:
     file = ctx.web.get_folder_by_server_relative_url(dir).upload_file(name, file_content).execute_query()
+    print(f'uploaded file {fileName} to {remote_path}')
     sys.exit(0)
 except Exception as e:
     sys.exit(1)
