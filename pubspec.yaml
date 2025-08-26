@@ -24,7 +24,7 @@ dependencies:
   flutter_local_notifications: 17.2.3
   flutter_secure_storage: 5.0.2
   flutter_sticky_header: ^0.7.0
-  get: 4.6.6
+  get: 4.7.2
   google_maps_flutter: 2.10.1
   hive: 2.2.3
   hive_flutter: 1.1.0
@@ -32,7 +32,7 @@ dependencies:
   liquid_progress_indicator_v2: 0.5.0
   measured_size: 1.0.0
   geolocator: 9.0.2
-  package_info_plus: ^8.1.0
+  package_info_plus: ^8.3.1
   percent_indicator: 4.2.3
   permission_handler: ^11.3.1
   pointycastle: 3.4.0
