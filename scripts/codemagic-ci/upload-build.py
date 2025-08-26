@@ -10,9 +10,9 @@ credentials = json.loads(str(sys.argv[2]))
 user = credentials["username"]
 password = credentials["password"]
 fileOptions = json.loads(str(sys.argv[3]))
-fileName = fileOptions["fileName"]
+fileName = fileOptions["fileName"].strip()
 # folder = fileOptions["folder"] #/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Folder here
-folder = "/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Pull Request Builds/test2.txt"
+folder = "/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Pull Request Builds/"
 
 
 user_credentials = UserCredential(user, password)
