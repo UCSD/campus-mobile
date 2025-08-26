@@ -14,6 +14,7 @@ class ShuttleService {
   final Map<String, String> headers = {
     "accept": "application/json",
   };
+
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
 
@@ -21,11 +22,12 @@ class ShuttleService {
   List<ShuttleStopModel> _data = [];
 
   Future<bool> fetchData() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await (NetworkHelper.authorizedFetch(dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
+      String _response = await (NetworkHelper.authorizedFetch(
+          dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
 
       /// parse data
       var data = shuttleStopModelFromJson(_response);
@@ -45,7 +47,8 @@ class ShuttleService {
   }
 
   Future<List<ArrivingShuttle>> getArrivingInformation(stopId) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await (NetworkHelper.authorizedFetch(
@@ -58,7 +61,8 @@ class ShuttleService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) return await getArrivingInformation(stopId);
+        if (await NetworkHelper.getNewToken(headers))
+          return await getArrivingInformation(stopId);
       }
       _error = e.toString();
       return [];

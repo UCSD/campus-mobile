@@ -16,17 +16,17 @@ class AvailabilityService {
 
   /// MODELS
   late List<AvailabilityModel> _data;
+
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
 
   Future<bool> fetchData() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('AVAILABILITY_API_ENDPOINT'),
-          { "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY') }
-      );
+          dotenv.get('AVAILABILITY_API_ENDPOINT'), headers);
 
       /// parse data
       final data = availabilityStatusFromJson(_response);
