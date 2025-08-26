@@ -106,8 +106,12 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
-                          child: spotType.text==null && spotType.icon != null ?
-                            Icon(IconData(int.parse(spotType.icon!, radix: 16), fontFamily: 'MaterialIcons'), size: 25.0, color: colorFromHex(spotType.textColor))
+                          child: spotType.text == null && spotType.icon != null
+                              ? Icon(
+                                  IconData(int.parse(spotType.icon!, radix: 16),
+                                      fontFamily: 'MaterialIcons'),
+                                  size: 25.0,
+                                  color: colorFromHex(spotType.textColor))
                               : Text(
                                   spotType.text!,
                                   style: TextStyle(
@@ -157,8 +161,12 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
-                          child: spotType.text==null && spotType.icon != null ?
-                          Icon(IconData(int.parse(spotType.icon!, radix: 16), fontFamily: 'MaterialIcons'), size: 25.0, color: colorFromHex(spotType.textColor))
+                          child: spotType.text == null && spotType.icon != null
+                              ? Icon(
+                                  IconData(int.parse(spotType.icon!, radix: 16),
+                                      fontFamily: 'MaterialIcons'),
+                                  size: 25.0,
+                                  color: colorFromHex(spotType.textColor))
                               // Text("hi")
                               : Text(
                                   spotType.text!,
