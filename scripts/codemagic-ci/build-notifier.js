@@ -14,6 +14,8 @@ const buildArtifacts = {}
 
 ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
 
+const { spawnSync }  = require('child_process')
+
 const buildNotify = async () => {
 	try {
 		const buildTimestamp = moment().format('YYYY-MM-DD h:mm A')
@@ -150,6 +152,12 @@ const saveArtifact = async (artifactFilename) => {
 			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildApkFinalFilename)
 			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
 			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
+			const pythonProcess = spawnSync('python', ["upload-build.py", coreOptions, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)])
+			if (pythonProcess==0) {
+			    console.log("successfuly upload apk")
+			} else {
+			    console.log("Uploading apk failed")
+			}
 			return true
 		} else if (ENV_VARS.buildPlatform === 'IOS') {
 			buildArtifacts.buildIpaFilepath = '../../build/ios/ipa/UC San Diego.ipa'
