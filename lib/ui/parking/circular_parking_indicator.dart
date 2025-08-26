@@ -158,7 +158,8 @@ class CircularParkingIndicators extends StatelessWidget {
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
                           child: spotType.text==null && spotType.icon != null ?
-                          Icon(IconData(int.parse(spotType.icon!, radix: 16)), size: 25.0, color: colorFromHex(spotType.textColor))
+                          Icon(IconData(int.parse(spotType.icon!, radix: 16), fontFamily: 'MaterialIcons'), size: 25.0, color: colorFromHex(spotType.textColor))
+                              // Text("hi")
                               : Text(
                                   spotType.text!,
                                   style: TextStyle(
