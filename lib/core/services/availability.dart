@@ -10,6 +10,9 @@ class AvailabilityService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
+  final Map<String, String> headers = {
+    "accept": "application/json",
+  };
 
   /// MODELS
   late List<AvailabilityModel> _data;
@@ -30,6 +33,11 @@ class AvailabilityService {
       _data = data.data;
       return true;
     } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
+      if (e.toString().contains("401")) {
+        if (await NetworkHelper.getNewToken(headers)) return await fetchData();
+      }
       _error = e.toString();
       return false;
     } finally {
