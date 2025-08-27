@@ -15,7 +15,6 @@ const buildArtifacts = {}
 ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
 
 const { spawnSync }  = require('child_process')
-//spawnSync('python', ['-m','pip','install','--target','./python_modules','-r','requirements.txt'], { stdio: 'inherit' });
 
 const buildNotify = async () => {
 	try {
@@ -140,7 +139,7 @@ const saveArtifact = async (artifactFilename) => {
 		}
 
 		const buildFilenamePrEnvStr = ENV_VARS.prNumber ? '-PR-' + ENV_VARS.prNumber : '-' + ENV_VARS.buildEnv
-		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder	
+		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolderLink : SP_CONFIG.spRegressionBuildFolderLink
 		const coreOptions = { siteUrl: SP_CONFIG.spSiteUrl }
 		const fileOptions = { folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder }
 
@@ -194,7 +193,7 @@ const generateTestPlan = async (prAuthor) => {
 		if (ENV_VARS.prNumber) {
 			console.log('Generating test plan for PR ' + ENV_VARS.prNumber)
 			testPlanFilename = 'PR-' + ENV_VARS.prNumber + '-Test-Plan-' + ENV_VARS.appVersion + '-' + ENV_VARS.buildEnv + '-' + finalBuildNumber + '.xlsx'
-			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spPullRequestTestFolder + testPlanFilename + '?web=1').replace(/ /g, '%20')
+			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spPullRequestTestFolderLink + testPlanFilename + '?web=1').replace(/ /g, '%20')
 			console.log('  (1/3) Downloading PR test plan template ...')
 			if (ENV_VARS.buildPlatform === 'IOS') {
 				
@@ -205,7 +204,7 @@ const generateTestPlan = async (prAuthor) => {
 		} else {
 			console.log('Generating regression test plan for branch ' + ENV_VARS.buildBranch)
 			testPlanFilename = 'Regression-Test-Plan-' + ENV_VARS.appVersion + '-' + ENV_VARS.buildEnv + '-' + finalBuildNumber + '.xlsx'
-			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spRegressionTestFolder + testPlanFilename + '?web=1').replace(/ /g, '%20')
+			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spRegressionTestFolderLink + testPlanFilename + '?web=1').replace(/ /g, '%20')
 			switch(ENV_VARS.buildEnv) {
 				case 'PROD':
 					console.log('  (1/3) Downloading PROD regression test plan template ...')
