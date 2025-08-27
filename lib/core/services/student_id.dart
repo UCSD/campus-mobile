@@ -20,8 +20,7 @@ class StudentIdService {
 
   //Removed term (not used)
   Future<bool> fetchStudentIdName(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
@@ -31,12 +30,6 @@ class StudentIdService {
       _studentIdNameModel = studentIdNameModelFromJson(_response);
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await fetchStudentIdName(headers);
-      }
       _error = e.toString();
       return false;
     } finally {
@@ -46,8 +39,7 @@ class StudentIdService {
 
   // Removed term (not used)
   Future<bool> fetchStudentIdPhoto(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
@@ -57,12 +49,6 @@ class StudentIdService {
       _studentIdPhotoModel = studentIdPhotoModelFromJson(_response);
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await fetchStudentIdPhoto(headers);
-      }
       _error = e.toString();
       return false;
     } finally {
@@ -72,8 +58,7 @@ class StudentIdService {
 
   /// Removed term (not used)
   Future<bool> fetchStudentIdProfile(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
@@ -82,12 +67,6 @@ class StudentIdService {
       _studentIdProfileModel = studentIdProfileModelFromJson(_response);
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await fetchStudentIdProfile(headers);
-      }
       _error = e.toString();
       return false;
     } finally {

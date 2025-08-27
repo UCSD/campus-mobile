@@ -15,19 +15,12 @@ class UserProfileService {
   late UserProfileModel _userProfileModel;
 
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       _userProfileModel = userProfileModelFromJson(
           await NetworkHelper.authorizedFetch(_endpoint + '/profile', headers));
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await downloadUserProfile(headers);
-      }
       _error = e.toString();
       return false;
     } finally {
@@ -35,23 +28,13 @@ class UserProfileService {
     }
   }
 
-  Future<bool> uploadUserProfile(
-      Map<String, String> headers, Map<String, dynamic> body) async {
-    _error = null;
-    _isLoading = true;
+  Future<bool> uploadUserProfile(Map<String, String> headers, Map<String, dynamic> body) async {
+    _error = null; _isLoading = true;
     try {
       final response = await NetworkHelper.authorizedPost(
           _endpoint + '/profile', headers, createAttributeValueJson(body));
-      return response.toString() == 'Success'
-          ? true
-          : throw response.toString();
+      return response.toString() == 'Success' ? true : throw response.toString();
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await uploadUserProfile(headers, body);
-      }
       _error = e.toString();
     } finally {
       _isLoading = false;
@@ -63,8 +46,7 @@ class UserProfileService {
   /// required json format:
   /// [{'attribute': 'name of column to edit in db, 'value': 'value to put in db'}]
   /// if attribute does not exists in db then it will be created
-  List<Map<String, dynamic>> createAttributeValueJson(
-      Map<String, dynamic> json) {
+  List<Map<String, dynamic>> createAttributeValueJson(Map<String, dynamic> json) {
     List<Map<String, dynamic>> correctlyFormattedData = [];
     json.forEach((key, value) {
       correctlyFormattedData.add({"attribute": key, "value": value});

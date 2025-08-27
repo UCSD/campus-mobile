@@ -4,9 +4,7 @@ import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SpotTypesService {
-  SpotTypesService() {
-    fetchSpotTypesData();
-  }
+  SpotTypesService() { fetchSpotTypesData(); }
 
   /// STATES
   bool _isLoading = false;
@@ -20,12 +18,10 @@ class SpotTypesService {
   SpotTypeModel _spotTypeModel = SpotTypeModel();
 
   Future<bool> fetchSpotTypesData() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await NetworkHelper.fetchData(dotenv.get('SPOT_TYPES_ENDPOINT'));
+      String _response = await NetworkHelper.fetchData(dotenv.get('SPOT_TYPES_ENDPOINT'));
       _spotTypeModel = spotTypeModelFromJson(_response);
       return true;
     } catch (e) {

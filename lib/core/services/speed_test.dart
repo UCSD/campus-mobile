@@ -45,9 +45,9 @@ class SpeedTestService {
   }
 
   Future<bool> fetchSignedUrls() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
+      await NetworkHelper.getNewToken(headers);
       // Get download & upload urls
       String? _downloadResponse = await NetworkHelper.authorizedFetch(
           dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'), headers);
@@ -56,17 +56,10 @@ class SpeedTestService {
 
       /// parse data
       await fetchNetworkDiagnostics().then((WifiInfo? data) {
-        _speedTestModel = speedTestModelFromJson(
-            data, _downloadResponse!, _uploadResponse!, data != null);
+        _speedTestModel = speedTestModelFromJson(data, _downloadResponse!, _uploadResponse!, data != null);
       });
       return true;
     } catch (exception) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (exception.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await fetchSignedUrls();
-      }
       // Occurs when there is no connection
       _speedTestModel = SpeedTestModel.fromJson(null, null, null, false);
       _error = exception.toString();
@@ -79,8 +72,7 @@ class SpeedTestService {
   Future<WifiInfo?> fetchNetworkDiagnostics() async {
     _isLoading = true;
     // Check connected to wifi
-    if (!(await _connectivity.checkConnectivity())
-        .contains(ConnectivityResult.wifi)) {
+    if (!(await _connectivity.checkConnectivity()).contains(ConnectivityResult.wifi)) {
       _isLoading = false;
       return null;
     }

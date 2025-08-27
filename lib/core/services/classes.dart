@@ -16,26 +16,16 @@ class ClassScheduleService {
   AcademicTermModel? _academicTermModel;
 
   Future<bool> fetchUNCourses(Map<String, String> headers, String term) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') +
-              '?academic_level=UN&term_code=' +
-              term,
-          headers);
+          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=UN&term_code=' + term, headers);
 
       /// parse data
       _unData = classScheduleModelFromJson(_response);
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await fetchUNCourses(headers, term);
-      }
       _error = e.toString();
       return false;
     } finally {
@@ -44,26 +34,16 @@ class ClassScheduleService {
   }
 
   Future<bool> fetchGRCourses(Map<String, String> headers, String term) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') +
-              '?academic_level=GR&term_code=' +
-              term,
-          headers);
+          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=GR&term_code=' + term, headers);
 
       /// parse data
       _grData = classScheduleModelFromJson(_response);
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await fetchGRCourses(headers, term);
-      }
       _error = e.toString();
       return false;
     } finally {
@@ -72,11 +52,9 @@ class ClassScheduleService {
   }
 
   Future<bool> fetchAcademicTerm() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
-      String _response = await NetworkHelper.fetchData(
-          dotenv.get('ACADEMIC_TERM_API_ENDPOINT'));
+      String _response = await NetworkHelper.fetchData(dotenv.get('ACADEMIC_TERM_API_ENDPOINT'));
       _academicTermModel = academicTermModelFromJson(_response);
       return true;
     } catch (e) {

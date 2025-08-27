@@ -10,28 +10,19 @@ class MessageService {
   String? _error;
   late Messages _data;
 
-  Future<bool> fetchMyMessagesData(
-      int timestamp, Map<String, String> authHeaders) async {
-    _error = null;
-    _isLoading = true;
+  Future<bool> fetchMyMessagesData(int timestamp, Map<String, String> authHeaders) async {
+    _error = null; _isLoading = true;
 
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_MESSAGES_API_ENDPOINT') + timestamp.toString(),
-          authHeaders);
+          dotenv.get('MY_MESSAGES_API_ENDPOINT') + timestamp.toString(), authHeaders);
 
       /// parse data
       final data = messagesFromJson(_response);
       _data = data;
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(authHeaders))
-          return await fetchMyMessagesData(timestamp, authHeaders);
-      }
       _error = e.toString();
       return false;
     } finally {
@@ -40,16 +31,13 @@ class MessageService {
   }
 
   Future<bool> fetchTopicData(int timestamp, List<String?> topics) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     var topicsEndpoint = 'topics=' + topics.join(',');
     var timestampEndpoint = '&start=' + timestamp.toString();
     try {
       /// fetch data
       String _response = await NetworkHelper.fetchData(
-          dotenv.get('TOPICS_API_ENDPOINT') +
-              topicsEndpoint +
-              timestampEndpoint);
+          dotenv.get('TOPICS_API_ENDPOINT') + topicsEndpoint + timestampEndpoint);
 
       /// parse data
       final data = messagesFromJson(_response);

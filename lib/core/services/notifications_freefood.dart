@@ -17,16 +17,12 @@ class FreeFoodService {
   late FreeFoodModel _data;
 
   Future<bool> fetchData(String id) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       var _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') +
-              'events/' +
-              id +
-              '/rsvpCount',
-          headers);
+          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' +
+              id + '/rsvpCount', headers);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
@@ -48,13 +44,10 @@ class FreeFoodService {
   }
 
   Future<bool> fetchMaxCount(String id) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') +
-          'events/' +
-          id +
-          '/rsvpLimit';
+          'events/' + id + '/rsvpLimit';
 
       /// fetch data
       var _response = await NetworkHelper.authorizedFetch(_url, headers);
@@ -79,8 +72,7 @@ class FreeFoodService {
   }
 
   Future<bool> updateCount(String id, Map<String, dynamic> body) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id;
 
@@ -91,8 +83,7 @@ class FreeFoodService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await updateCount(id, body);
+        if (await NetworkHelper.getNewToken(headers)) return await updateCount(id, body);
       }
       _error = e.toString();
       return false;
