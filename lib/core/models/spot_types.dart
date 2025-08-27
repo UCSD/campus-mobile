@@ -28,35 +28,31 @@ class SpotTypeModel {
 class Spot {
   String spotKey;
   String name;
-  String color;
-  String? text;
-  String textColor;
-  String? icon;
+  String logoBackgroundColor;
+  String logoText;
+  String logoTextColor;
 
   Spot({
     this.spotKey = '',
     this.name = '',
-    this.color = '',
-    this.text,
-    this.textColor = '',
-    this.icon
+    this.logoBackgroundColor = '',
+    this.logoText = '',
+    this.logoTextColor = '',
   });
 
   factory Spot.fromJson(Map<String, dynamic> json) => Spot(
-        spotKey: json["key"],
-        name: json["name"],
-        color: json["color"],
-        text: json["text"],
-        textColor: json["text_color"],
-        icon: json["icon"],
+        spotKey: json["key"] ?? '',
+        name: json["name"] ?? '',
+        logoBackgroundColor: json["logo_background_color"] ?? '',
+        logoText: json["logo_text"],
+        logoTextColor: json["logo_text_color"] ?? '',
   );
 
   Map<String, dynamic> toJson() => {
         "key": spotKey,
         "name": name,
-        "color": color,
-        "text": text,
-        "text_color": textColor,
-        "icon": icon,
+        "logo_background_color": logoBackgroundColor,
+        "logo_text": logoText,
+        "logo_text_color": logoTextColor,
       };
 }
