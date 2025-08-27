@@ -73,33 +73,43 @@ class _SpotTypesViewState extends State<SpotTypesView> {
               ),
               child: Align(
                 alignment: Alignment.center,
-                child: data.logoText.startsWith('icon - ')
+                child: data.logoText == 'icon - e486'
                     ? Icon(
-                        IconData(
-                            int.parse(data.logoText.replaceFirst('icon - ', ''),
-                                radix: 16),
-                            fontFamily: 'MaterialIcons'),
+                        IconData(0xe486, fontFamily: 'MaterialIcons'),
                         size: 25.0,
                         color: textColor)
-                    : (data.logoText.isNotEmpty
-                        ? Text(
-                            data.logoText,
-                            style: TextStyle(
-                              color: textColor,
-                              fontFamily: 'Brix Sans',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 28,
-                            ),
-                          )
-                        : Text(
-                            '?',
-                            style: TextStyle(
-                              color: textColor,
-                              fontFamily: 'Brix Sans',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 28,
-                            ),
-                          )),
+                    : data.logoText == 'icon - e03e'
+                        ? Icon(
+                            IconData(0xe03e, fontFamily: 'MaterialIcons'),
+                            size: 25.0,
+                            color: textColor)
+                        : data.logoText.startsWith('icon - ')
+                            ? Icon(
+                                IconData(
+                                    int.parse(data.logoText.replaceFirst('icon - ', ''),
+                                        radix: 16),
+                                    fontFamily: 'MaterialIcons'),
+                                size: 25.0,
+                                color: textColor)
+                            : (data.logoText.isNotEmpty
+                                ? Text(
+                                    data.logoText,
+                                    style: TextStyle(
+                                      color: textColor,
+                                      fontFamily: 'Brix Sans',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 28,
+                                    ),
+                                  )
+                                : Text(
+                                    '?',
+                                    style: TextStyle(
+                                      color: textColor,
+                                      fontFamily: 'Brix Sans',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 28,
+                                    ),
+                                  )),
               )),
           title: Text(
             data.name,
