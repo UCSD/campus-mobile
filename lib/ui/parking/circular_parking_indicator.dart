@@ -106,21 +106,25 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
-                          child: spotType.text.contains("&#x267f;")
+                          child: (spotType.text == null ||
+                                      spotType.text!.isEmpty) &&
+                                  spotType.icon != null
                               ? Icon(
-                                  Icons.accessible,
+                                  IconData(int.parse(spotType.icon!, radix: 16),
+                                      fontFamily: 'MaterialIcons'),
                                   size: 25.0,
-                                  color: colorFromHex(spotType.textColor),
-                                )
-                              : Text(
-                                  spotType.text,
-                                  style: TextStyle(
-                                    color: colorFromHex(spotType.textColor),
-                                    fontFamily: 'Brix Sans',
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
+                                  color: colorFromHex(spotType.textColor))
+                              : (spotType.text != null
+                                  ? Text(
+                                      spotType.text!,
+                                      style: TextStyle(
+                                        color: colorFromHex(spotType.textColor),
+                                        fontFamily: 'Brix Sans',
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    )
+                                  : SizedBox.shrink()),
                         )
                       : Container(),
                 )
@@ -161,21 +165,23 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
-                          child: spotType.text.contains("&#x267f;")
+                          child: spotType.text == null && spotType.icon != null
                               ? Icon(
-                                  Icons.accessible,
+                                  IconData(int.parse(spotType.icon!, radix: 16),
+                                      fontFamily: 'MaterialIcons'),
                                   size: 25.0,
-                                  color: colorFromHex(spotType.textColor),
-                                )
-                              : Text(
-                                  spotType.text,
-                                  style: TextStyle(
-                                    color: colorFromHex(spotType.textColor),
-                                    fontFamily: 'Brix Sans',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 28,
-                                  ),
-                                ),
+                                  color: colorFromHex(spotType.textColor))
+                              : (spotType.text != null
+                                  ? Text(
+                                      spotType.text!,
+                                      style: TextStyle(
+                                        color: colorFromHex(spotType.textColor),
+                                        fontFamily: 'Brix Sans',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 28,
+                                      ),
+                                    )
+                                  : SizedBox.shrink()),
                         )
                       : Container(),
                 )

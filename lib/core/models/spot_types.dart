@@ -29,15 +29,17 @@ class Spot {
   String spotKey;
   String name;
   String color;
-  String text;
+  String? text;
   String textColor;
+  String? icon;
 
   Spot({
     this.spotKey = '',
     this.name = '',
     this.color = '',
-    this.text = '',
-    this.textColor = ''
+    this.text,
+    this.textColor = '',
+    this.icon
   });
 
   factory Spot.fromJson(Map<String, dynamic> json) => Spot(
@@ -46,6 +48,7 @@ class Spot {
         color: json["color"],
         text: json["text"],
         textColor: json["text_color"],
+        icon: json["icon"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -53,6 +56,7 @@ class Spot {
         "name": name,
         "color": color,
         "text": text,
-        "textColor": textColor
+        "text_color": textColor,
+        "icon": icon,
       };
 }
