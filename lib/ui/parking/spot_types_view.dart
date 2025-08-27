@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../app_constants.dart';
 import '../common/alert_dialog_widget.dart';
-import 'circular_parking_indicator.dart';
 
 class SpotTypesView extends StatefulWidget {
   @override
@@ -59,8 +58,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       var isSelected = Provider.of<ParkingDataProvider>(context)
           .spotTypesState[data.spotKey]!;
 
-      var iconColor = HexColor(data.color);
-      var textColor = HexColor(data.textColor);
+      var iconColor = HexColor(data.logoBackgroundColor);
+      var textColor = HexColor(data.logoTextColor);
 
       list.add(
         ListTile(
@@ -74,24 +73,26 @@ class _SpotTypesViewState extends State<SpotTypesView> {
               ),
               child: Align(
                 alignment: Alignment.center,
-                child: (data.text == null || data.text!.isEmpty) &&
-                        (data.icon != null && data.icon!.isNotEmpty)
+                child: data.logoText.startsWith('icon - ')
                     ? Icon(
-                        IconData(int.parse(data.icon!, radix: 16),
+                        IconData(int.parse(data.logoText.replaceFirst('icon - ', ''), radix: 16),
                             fontFamily: 'MaterialIcons'),
                         size: 25.0,
                         color: textColor)
-                    : (data.text != null && data.text!.isNotEmpty
+                    : (data.logoText.isNotEmpty
                         ? Text(
-                            data.text!,
+                            data.logoText,
                             style: TextStyle(
                               color: textColor,
+                              fontFamily: 'Brix Sans',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 28,
                             ),
                           )
                         : Text(
                             '?',
                             style: TextStyle(
-                              color: colorFromHex(data.textColor),
+                              color: textColor,
                               fontFamily: 'Brix Sans',
                               fontWeight: FontWeight.w700,
                               fontSize: 28,
