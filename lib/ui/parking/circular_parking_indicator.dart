@@ -106,21 +106,25 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
-                          child: spotType.text == null && spotType.icon != null
+                          child: (spotType.text == null ||
+                                      spotType.text!.isEmpty) &&
+                                  spotType.icon != null
                               ? Icon(
                                   IconData(int.parse(spotType.icon!, radix: 16),
                                       fontFamily: 'MaterialIcons'),
                                   size: 25.0,
                                   color: colorFromHex(spotType.textColor))
-                              : Text(
-                                  spotType.text!,
-                                  style: TextStyle(
-                                    color: colorFromHex(spotType.textColor),
-                                    fontFamily: 'Brix Sans',
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
+                              : (spotType.text != null
+                                  ? Text(
+                                      spotType.text!,
+                                      style: TextStyle(
+                                        color: colorFromHex(spotType.textColor),
+                                        fontFamily: 'Brix Sans',
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    )
+                                  : SizedBox.shrink()),
                         )
                       : Container(),
                 )
@@ -162,21 +166,22 @@ class CircularParkingIndicators extends StatelessWidget {
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
                           child: spotType.text == null && spotType.icon != null
-                              ? Icon(
-                                  IconData(int.parse(spotType.icon!, radix: 16),
-                                      fontFamily: 'MaterialIcons'),
-                                  size: 25.0,
-                                  color: colorFromHex(spotType.textColor))
-                              // Text("hi")
-                              : Text(
-                                  spotType.text!,
-                                  style: TextStyle(
-                                    color: colorFromHex(spotType.textColor),
-                                    fontFamily: 'Brix Sans',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 28,
-                                  ),
-                                ),
+                                    ? Icon(
+                                        IconData(int.parse(spotType.icon!, radix: 16),
+                                            fontFamily: 'MaterialIcons'),
+                                        size: 25.0,
+                                        color: colorFromHex(spotType.textColor))
+                                    : (spotType.text != null
+                                        ? Text(
+                                            spotType.text!,
+                                            style: TextStyle(
+                                              color: colorFromHex(spotType.textColor),
+                                              fontFamily: 'Brix Sans',
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 28,
+                                            ),
+                                          )
+                                        : SizedBox.shrink()),
                         )
                       : Container(),
                 )
