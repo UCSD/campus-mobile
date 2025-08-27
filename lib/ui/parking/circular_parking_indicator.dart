@@ -106,15 +106,13 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
-                          child: (spotType.text == null ||
-                                      spotType.text!.isEmpty) &&
-                                  spotType.icon != null
+                          child: (spotType.text == null || spotType.text!.isEmpty) && (spotType.icon != null && spotType.icon!.isNotEmpty)
                               ? Icon(
                                   IconData(int.parse(spotType.icon!, radix: 16),
                                       fontFamily: 'MaterialIcons'),
                                   size: 25.0,
                                   color: colorFromHex(spotType.textColor))
-                              : (spotType.text != null
+                              : (spotType.text != null && spotType.text!.isNotEmpty
                                   ? Text(
                                       spotType.text!,
                                       style: TextStyle(
@@ -173,13 +171,13 @@ class CircularParkingIndicators extends StatelessWidget {
                   child: spotType != null
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.color),
-                          child: spotType.text == null && spotType.icon != null
+                          child: (spotType.text == null || spotType.text!.isEmpty) && (spotType.icon != null && spotType.icon!.isNotEmpty)
                               ? Icon(
                                   IconData(int.parse(spotType.icon!, radix: 16),
                                       fontFamily: 'MaterialIcons'),
                                   size: 25.0,
                                   color: colorFromHex(spotType.textColor))
-                              : (spotType.text != null
+                              : (spotType.text != null && spotType.text!.isNotEmpty
                                   ? Text(
                                       spotType.text!,
                                       style: TextStyle(
