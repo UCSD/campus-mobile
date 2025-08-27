@@ -16,13 +16,13 @@ class SpotTypeModel {
         spots: json["spots"] == null
             ? null
             : List<Spot>.from(json["spots"].map((x) => Spot.fromJson(x))),
-  );
+      );
 
   Map<String, dynamic> toJson() => {
         "spots": spots == null
             ? null
             : List<dynamic>.from(spots!.map((x) => x.toJson())),
-  };
+      };
 }
 
 class Spot {
@@ -46,7 +46,7 @@ class Spot {
         logoBackgroundColor: json["logo_background_color"] ?? '',
         logoText: json["logo_text"],
         logoTextColor: json["logo_text_color"] ?? '',
-  );
+      );
 
   Map<String, dynamic> toJson() => {
         "key": spotKey,

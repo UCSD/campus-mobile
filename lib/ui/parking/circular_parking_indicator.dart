@@ -105,10 +105,15 @@ class CircularParkingIndicators extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: spotType != null
                       ? CircleAvatar(
-                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
+                          backgroundColor:
+                              colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText.startsWith('icon - ')
                               ? Icon(
-                                  IconData(int.parse(spotType.logoText.replaceFirst('icon - ', ''), radix: 16),
+                                  IconData(
+                                      int.parse(
+                                          spotType.logoText
+                                              .replaceFirst('icon - ', ''),
+                                          radix: 16),
                                       fontFamily: 'MaterialIcons'),
                                   size: 25.0,
                                   color: colorFromHex(spotType.logoTextColor))
@@ -116,7 +121,8 @@ class CircularParkingIndicators extends StatelessWidget {
                                   ? Text(
                                       spotType.logoText,
                                       style: TextStyle(
-                                        color: colorFromHex(spotType.logoTextColor),
+                                        color: colorFromHex(
+                                            spotType.logoTextColor),
                                         fontFamily: 'Brix Sans',
                                         fontSize: 28,
                                         fontWeight: FontWeight.w700,
@@ -125,7 +131,8 @@ class CircularParkingIndicators extends StatelessWidget {
                                   : Text(
                                       '?',
                                       style: TextStyle(
-                                        color: colorFromHex(spotType.logoTextColor),
+                                        color: colorFromHex(
+                                            spotType.logoTextColor),
                                         fontFamily: 'Brix Sans',
                                         fontWeight: FontWeight.w700,
                                         fontSize: 28,
@@ -170,10 +177,15 @@ class CircularParkingIndicators extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: spotType != null
                       ? CircleAvatar(
-                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
+                          backgroundColor:
+                              colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText.startsWith('icon - ')
                               ? Icon(
-                                  IconData(int.parse(spotType.logoText.replaceFirst('icon - ', ''), radix: 16),
+                                  IconData(
+                                      int.parse(
+                                          spotType.logoText
+                                              .replaceFirst('icon - ', ''),
+                                          radix: 16),
                                       fontFamily: 'MaterialIcons'),
                                   size: 25.0,
                                   color: colorFromHex(spotType.logoTextColor))
@@ -181,7 +193,8 @@ class CircularParkingIndicators extends StatelessWidget {
                                   ? Text(
                                       spotType.logoText,
                                       style: TextStyle(
-                                        color: colorFromHex(spotType.logoTextColor),
+                                        color: colorFromHex(
+                                            spotType.logoTextColor),
                                         fontFamily: 'Brix Sans',
                                         fontWeight: FontWeight.w700,
                                         fontSize: 28,
@@ -190,7 +203,8 @@ class CircularParkingIndicators extends StatelessWidget {
                                   : Text(
                                       '?',
                                       style: TextStyle(
-                                        color: colorFromHex(spotType.logoTextColor),
+                                        color: colorFromHex(
+                                            spotType.logoTextColor),
                                         fontFamily: 'Brix Sans',
                                         fontWeight: FontWeight.w700,
                                         fontSize: 28,
