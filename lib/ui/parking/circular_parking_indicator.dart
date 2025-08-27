@@ -116,18 +116,19 @@ class CircularParkingIndicators extends StatelessWidget {
                                       size: 25.0,
                                       color:
                                           colorFromHex(spotType.logoTextColor))
-                                  : spotType.logoText.startsWith('icon - ')
-                                      ? Icon(
-                                          IconData(
-                                              int.parse(
-                                                  spotType.logoText
-                                                      .replaceFirst(
-                                                          'icon - ', ''),
-                                                  radix: 16),
-                                              fontFamily: 'MaterialIcons'),
-                                          size: 25.0,
-                                          color: colorFromHex(
-                                              spotType.logoTextColor))
+                                  // Load icon dynamically from MaterialIcons if prefixed with 'icon - '
+                                  // : spotType.logoText.startsWith('icon - ')
+                                  //     ? Icon(
+                                  //         IconData(
+                                  //             int.parse(
+                                  //                 spotType.logoText
+                                  //                     .replaceFirst(
+                                  //                         'icon - ', ''),
+                                  //                 radix: 16),
+                                  //             fontFamily: 'MaterialIcons'),
+                                  //         size: 25.0,
+                                  //         color: colorFromHex(
+                                  //             spotType.logoTextColor))
                                       : (spotType.logoText.isNotEmpty
                                           ? Text(
                                               spotType.logoText,
@@ -190,18 +191,19 @@ class CircularParkingIndicators extends StatelessWidget {
                                       size: 25.0,
                                       color:
                                           colorFromHex(spotType.logoTextColor))
-                                  : spotType.logoText.startsWith('icon - ')
-                                      ? Icon(
-                                          IconData(
-                                              int.parse(
-                                                  spotType.logoText
-                                                      .replaceFirst(
-                                                          'icon - ', ''),
-                                                  radix: 16),
-                                              fontFamily: 'MaterialIcons'),
-                                          size: 25.0,
-                                          color: colorFromHex(
-                                              spotType.logoTextColor))
+                                  // Load icon dynamically from MaterialIcons if prefixed with 'icon - '
+                                  // : spotType.logoText.startsWith('icon - ')
+                                  //     ? Icon(
+                                  //         IconData(
+                                  //             int.parse(
+                                  //                 spotType.logoText
+                                  //                     .replaceFirst(
+                                  //                         'icon - ', ''),
+                                  //                 radix: 16),
+                                  //             fontFamily: 'MaterialIcons'),
+                                  //         size: 25.0,
+                                  //         color: colorFromHex(
+                                  //             spotType.logoTextColor))
                                       : (spotType.logoText.isNotEmpty
                                           ? Text(
                                               spotType.logoText,

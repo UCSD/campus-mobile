@@ -77,16 +77,17 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                     ? Icon(Icons.group, size: 25.0, color: textColor)
                     : data.logoText == 'icon - e03e'
                         ? Icon(Icons.accessible, size: 25.0, color: textColor)
-                        : data.logoText.startsWith('icon - ')
-                            ? Icon(
-                                IconData(
-                                    int.parse(
-                                        data.logoText
-                                            .replaceFirst('icon - ', ''),
-                                        radix: 16),
-                                    fontFamily: 'MaterialIcons'),
-                                size: 25.0,
-                                color: textColor)
+                        // Load icon dynamically from MaterialIcons if prefixed with 'icon - '
+                        // : data.logoText.startsWith('icon - ')
+                        //     ? Icon(
+                        //         IconData(
+                        //             int.parse(
+                        //                 data.logoText
+                        //                     .replaceFirst('icon - ', ''),
+                        //                 radix: 16),
+                        //             fontFamily: 'MaterialIcons'),
+                        //         size: 25.0,
+                        //         color: textColor)
                             : (data.logoText.isNotEmpty
                                 ? Text(
                                     data.logoText,
