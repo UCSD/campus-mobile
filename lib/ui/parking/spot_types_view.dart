@@ -74,19 +74,15 @@ class _SpotTypesViewState extends State<SpotTypesView> {
               child: Align(
                 alignment: Alignment.center,
                 child: data.logoText == 'icon - e486'
-                    ? Icon(
-                        IconData(0xe486, fontFamily: 'MaterialIcons'),
-                        size: 25.0,
-                        color: textColor)
+                    ? Icon(Icons.group, size: 25.0, color: textColor)
                     : data.logoText == 'icon - e03e'
-                        ? Icon(
-                            IconData(0xe03e, fontFamily: 'MaterialIcons'),
-                            size: 25.0,
-                            color: textColor)
+                        ? Icon(Icons.accessible, size: 25.0, color: textColor)
                         : data.logoText.startsWith('icon - ')
                             ? Icon(
                                 IconData(
-                                    int.parse(data.logoText.replaceFirst('icon - ', ''),
+                                    int.parse(
+                                        data.logoText
+                                            .replaceFirst('icon - ', ''),
                                         radix: 16),
                                     fontFamily: 'MaterialIcons'),
                                 size: 25.0,

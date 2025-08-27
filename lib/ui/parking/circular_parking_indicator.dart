@@ -108,25 +108,26 @@ class CircularParkingIndicators extends StatelessWidget {
                           backgroundColor:
                               colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText == 'icon - e486'
-                              ? Icon(
-                                  IconData(0xe486, fontFamily: 'MaterialIcons'),
+                              ? Icon(Icons.group,
                                   size: 25.0,
                                   color: colorFromHex(spotType.logoTextColor))
                               : spotType.logoText == 'icon - e03e'
-                                  ? Icon(
-                                      IconData(0xe03e, fontFamily: 'MaterialIcons'),
+                                  ? Icon(Icons.accessible,
                                       size: 25.0,
-                                      color: colorFromHex(spotType.logoTextColor))
+                                      color:
+                                          colorFromHex(spotType.logoTextColor))
                                   : spotType.logoText.startsWith('icon - ')
                                       ? Icon(
                                           IconData(
                                               int.parse(
                                                   spotType.logoText
-                                                      .replaceFirst('icon - ', ''),
+                                                      .replaceFirst(
+                                                          'icon - ', ''),
                                                   radix: 16),
-                                          fontFamily: 'MaterialIcons'),
+                                              fontFamily: 'MaterialIcons'),
                                           size: 25.0,
-                                          color: colorFromHex(spotType.logoTextColor))
+                                          color: colorFromHex(
+                                              spotType.logoTextColor))
                                       : (spotType.logoText.isNotEmpty
                                           ? Text(
                                               spotType.logoText,
@@ -190,25 +191,26 @@ class CircularParkingIndicators extends StatelessWidget {
                           backgroundColor:
                               colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText == 'icon - e486'
-                              ? Icon(
-                                  IconData(0xe486, fontFamily: 'MaterialIcons'),
+                              ? Icon(Icons.group,
                                   size: 25.0,
                                   color: colorFromHex(spotType.logoTextColor))
                               : spotType.logoText == 'icon - e03e'
-                                  ? Icon(
-                                      IconData(0xe03e, fontFamily: 'MaterialIcons'),
+                                  ? Icon(Icons.accessible,
                                       size: 25.0,
-                                      color: colorFromHex(spotType.logoTextColor))
+                                      color:
+                                          colorFromHex(spotType.logoTextColor))
                                   : spotType.logoText.startsWith('icon - ')
                                       ? Icon(
                                           IconData(
                                               int.parse(
                                                   spotType.logoText
-                                                      .replaceFirst('icon - ', ''),
+                                                      .replaceFirst(
+                                                          'icon - ', ''),
                                                   radix: 16),
-                                          fontFamily: 'MaterialIcons'),
+                                              fontFamily: 'MaterialIcons'),
                                           size: 25.0,
-                                          color: colorFromHex(spotType.logoTextColor))
+                                          color: colorFromHex(
+                                              spotType.logoTextColor))
                                       : (spotType.logoText.isNotEmpty
                                           ? Text(
                                               spotType.logoText,
