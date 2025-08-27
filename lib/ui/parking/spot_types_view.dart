@@ -97,16 +97,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                                       fontSize: 28,
                                     ),
                                   )
-                                : Text(
-                                    '?',
-                                    style: TextStyle(
-                                      color: textColor,
-                                      fontFamily: 'Brix Sans',
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 28,
-                                    ),
-                                  )),
-              )),
+                                : SizedBox.shrink()
+              ))),
           title: Text(
             data.name,
             style: Theme.of(context).textTheme.bodyMedium,

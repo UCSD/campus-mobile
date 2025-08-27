@@ -139,17 +139,8 @@ class CircularParkingIndicators extends StatelessWidget {
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             )
-                                          : Text(
-                                              '?',
-                                              style: TextStyle(
-                                                color: colorFromHex(
-                                                    spotType.logoTextColor),
-                                                fontFamily: 'Brix Sans',
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 28,
-                                              ),
-                                            )),
-                        )
+                                          : SizedBox.shrink()
+                        ))
                       : Container(),
                 )
               ],
@@ -222,17 +213,8 @@ class CircularParkingIndicators extends StatelessWidget {
                                                 fontSize: 28,
                                               ),
                                             )
-                                          : Text(
-                                              '?',
-                                              style: TextStyle(
-                                                color: colorFromHex(
-                                                    spotType.logoTextColor),
-                                                fontFamily: 'Brix Sans',
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 28,
-                                              ),
-                                            )),
-                        )
+                                          : SizedBox.shrink()
+                        ))
                       : Container(),
                 )
               ],
