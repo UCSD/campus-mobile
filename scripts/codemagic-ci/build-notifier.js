@@ -139,7 +139,7 @@ const saveArtifact = async (artifactFilename) => {
 		}
 
 		const buildFilenamePrEnvStr = ENV_VARS.prNumber ? '-PR-' + ENV_VARS.prNumber : '-' + ENV_VARS.buildEnv
-		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolderLink : SP_CONFIG.spRegressionBuildFolderLink
+		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder
 		const coreOptions = { siteUrl: SP_CONFIG.spSiteUrl }
 		const fileOptions = { folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder }
 
