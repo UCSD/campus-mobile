@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../app_constants.dart';
 import '../common/alert_dialog_widget.dart';
+import 'circular_parking_indicator.dart';
 
 class SpotTypesView extends StatefulWidget {
   @override
@@ -86,7 +87,15 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                               color: textColor,
                             ),
                           )
-                        : SizedBox.shrink()),
+                        : Text(
+                            '?',
+                            style: TextStyle(
+                              color: colorFromHex(data.textColor),
+                              fontFamily: 'Brix Sans',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 28,
+                            ),
+                          )),
               )),
           title: Text(
             data.name,

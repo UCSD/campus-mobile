@@ -124,7 +124,15 @@ class CircularParkingIndicators extends StatelessWidget {
                                         fontWeight: FontWeight.w700,
                                       ),
                                     )
-                                  : SizedBox.shrink()),
+                                  : Text(
+                                      '?',
+                                      style: TextStyle(
+                                        color: colorFromHex(spotType.textColor),
+                                        fontFamily: 'Brix Sans',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 28,
+                                      ),
+                                    )),
                         )
                       : Container(),
                 )
@@ -181,7 +189,15 @@ class CircularParkingIndicators extends StatelessWidget {
                                         fontSize: 28,
                                       ),
                                     )
-                                  : SizedBox.shrink()),
+                                  : Text(
+                                      '?',
+                                      style: TextStyle(
+                                        color: colorFromHex(spotType.textColor),
+                                        fontFamily: 'Brix Sans',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 28,
+                                      ),
+                                    )),
                         )
                       : Container(),
                 )
