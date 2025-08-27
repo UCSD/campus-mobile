@@ -9,14 +9,12 @@ from office365.sharepoint.client_context import ClientContext
 from office365.runtime.auth.user_credential import UserCredential
 
 site_url = str(sys.argv[1]).strip()
-# site_url = "https://ucsdcloud.sharepoint.com/sites/WorkplaceTechnologyServices-CampusMobileBuilds/"
 credentials = json.loads(str(sys.argv[2]))
 user = credentials["username"]
 password = credentials["password"]
 fileOptions = json.loads(str(sys.argv[3]))
-fileName = fileOptions["fileName"].strip() #same as local_path
-folder = fileOptions["folder"].strip() #/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Folder here
-# folder = "/sites/WorkplaceTechnologyServices-CampusMobileBuilds/Shared Documents/Campus Mobile Builds/Pull Request Builds/"
+fileName = fileOptions["fileName"].strip()
+folder = fileOptions["folder"].strip()
 
 
 user_credentials = UserCredential(user, password)

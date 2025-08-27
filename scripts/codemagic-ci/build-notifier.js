@@ -139,7 +139,7 @@ const saveArtifact = async (artifactFilename) => {
 		}
 
 		const buildFilenamePrEnvStr = ENV_VARS.prNumber ? '-PR-' + ENV_VARS.prNumber : '-' + ENV_VARS.buildEnv
-		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder
+		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolderLink : SP_CONFIG.spRegressionBuildFolderLink
 		const coreOptions = { siteUrl: SP_CONFIG.spSiteUrl }
 		const fileOptions = { folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder }
 
@@ -150,9 +150,7 @@ const saveArtifact = async (artifactFilename) => {
 			buildArtifacts.buildApkFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildApkFinalFilename).replace(/ /g, '%20')
 			fs.copyFileSync(buildArtifacts.buildApkFilepath, './' + buildArtifacts.buildApkFinalFilename)
 			fileOptions.fileName = buildArtifacts.buildApkFinalFilename
-//			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildApkFinalFilename)
 			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
-			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 			console.log('trying to upload ' + fileOptions.fileName + ' to ' + fileOptions.folder )
 			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
 			if (pythonProcess.status == 0) {
@@ -168,7 +166,6 @@ const saveArtifact = async (artifactFilename) => {
 			buildArtifacts.buildIpaFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildIpaFinalFilename).replace(/ /g, '%20')
 			fs.copyFileSync(buildArtifacts.buildIpaFilepath, './' + buildArtifacts.buildIpaFinalFilename)
 			fileOptions.fileName = buildArtifacts.buildIpaFinalFilename
-//			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildIpaFinalFilename)
 			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
 			console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
 			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
@@ -260,7 +257,6 @@ const generateTestPlan = async (prAuthor) => {
 		const fileOptions = {
 			folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestTestFolder : SP_CONFIG.spRegressionTestFolder,
 			fileName: testPlanFilename,
-//			fileContent: fs.readFileSync(testPlanFilename)
 		}
 		console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
 		const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
@@ -269,7 +265,6 @@ const generateTestPlan = async (prAuthor) => {
         } else {
             console.log('Uploading test failed')
         }
-		// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
 		return {
 			testPlanFilename: testPlanFilename,
 			testPlanUrl: testPlanUrl,
