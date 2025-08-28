@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/ui/map/directions_button.dart';
 import 'package:campus_mobile_experimental/ui/map/map_search_bar_ph.dart';
 import 'package:campus_mobile_experimental/ui/map/my_location_button.dart';
+import 'package:campus_mobile_experimental/ui/map/wam.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/ui/map/more_results_list.dart';
 
 class Maps extends StatelessWidget {
-  Widget resultsList(BuildContext context) {
+  Widget moreResultsList(BuildContext context) {
     if (Provider.of<MapsDataProvider>(context).markers.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -102,8 +103,29 @@ class Maps extends StatelessWidget {
           ),
         ),
         MapSearchBarPlaceHolder(),
+        /// Show More Results Button
+        Positioned(
+          // kToolbarHeight is a constant from the Flutter framework that
+          // represents the default height of the AppBar (toolbar) in logical pixels.
+          // Its value is 56.0. It is commonly used to position widgets relative to the top app bar.
+          top: kToolbarHeight + 2, // adjust as needed to be below the search bar
+          right: 10,
+          child: moreResultsList(context),
+        ),
         buildButtons(context),
-        resultsList(context),
+        /// What's Around Me Button
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.02,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              WhatsAroundMe(),
+            ],
+          ),
+        )
       ],
     );
   }

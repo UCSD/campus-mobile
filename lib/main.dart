@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart'
@@ -163,7 +164,7 @@ class CampusMobile extends StatelessWidget {
         builder: (context, child) {
           return SafeArea(
             top: false,
-            bottom: true,
+            bottom: Platform.isAndroid,
             child: child!,
           );
         },
