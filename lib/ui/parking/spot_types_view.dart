@@ -6,7 +6,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_constants.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
 import '../common/alert_dialog_widget.dart';
 
 class SpotTypesView extends StatefulWidget {
@@ -58,26 +58,38 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       var isSelected = Provider.of<ParkingDataProvider>(context)
           .spotTypesState[data.spotKey]!;
 
-      var iconColor = HexColor(data.color);
-      var textColor = HexColor(data.textColor);
+      var iconColor = HexColor(data.logoBackgroundColor);
+      var textColor = HexColor(data.logoTextColor);
 
       list.add(
         ListTile(
           key: Key(data.name.toString()),
           leading: Container(
-            width: 35,
-            height: 35,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: iconColor,
-            ),
-            child: Align(
-              alignment: Alignment.center,
-              child: data.text.contains("&#x267f;")
-                  ? Icon(Icons.accessible, size: 25.0, color: textColor)
-                  : Text(data.text, style: TextStyle(color: textColor)),
-            ),
-          ),
+              width: 35,
+              height: 35,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: iconColor,
+              ),
+              child: Align(
+                  alignment: Alignment.center,
+                  child: data.logoText.startsWith('icon - ')
+                      ? Icon(
+                          ParkingConstants.stringToIconData[data.logoText] ??
+                              Icons.error,
+                          size: 25.0,
+                          color: textColor)
+                      : (data.logoText.isNotEmpty
+                          ? Text(
+                              data.logoText,
+                              style: TextStyle(
+                                color: textColor,
+                                fontFamily: 'Brix Sans',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 28,
+                              ),
+                            )
+                          : SizedBox.shrink()))),
           title: Text(
             data.name,
             style: Theme.of(context).textTheme.bodyMedium,
@@ -104,7 +116,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                   );
                   return;
                 }
-                spotTypesDataProvider.toggleSpotSelection(data.spotKey, selectedSpots);
+                spotTypesDataProvider.toggleSpotSelection(
+                    data.spotKey, selectedSpots);
               },
               activeColor: toggleActiveColor,
               trackColor: Colors.grey.shade400,

@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 class RoutePaths {
   static const String Home = '/';
   static const String BottomNavigationBar = 'bottom_navigation_bar';
@@ -116,6 +119,10 @@ class ParkingConstants {
   static const lotMaxTitle = 'Maximum parking lots reached';
   static const lotMaxDesc =
       'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.';
+  static const Map<String, IconData> stringToIconData = {
+    'icon - e03e': Icons.accessible,
+    'icon - e486': Icons.group,
+  };
 }
 
 class WifiConstants {
@@ -124,7 +131,8 @@ class WifiConstants {
   static const wifiIssueFailedDesc = 'Please run speed test to report issue.';
   // Finished State
   static const wifiIssueSuccessTitle = 'Issue Reported';
-  static const wifiIssueSuccessDesc = 'Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services.';
+  static const wifiIssueSuccessDesc =
+      'Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services.';
 }
 
 class Plugins {
