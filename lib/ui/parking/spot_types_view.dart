@@ -6,7 +6,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_constants.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
 import '../common/alert_dialog_widget.dart';
 
 class SpotTypesView extends StatefulWidget {
@@ -72,34 +72,24 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                 color: iconColor,
               ),
               child: Align(
-                alignment: Alignment.center,
-                child: data.logoText == 'icon - e486'
-                    ? Icon(Icons.group, size: 25.0, color: textColor)
-                    : data.logoText == 'icon - e03e'
-                        ? Icon(Icons.accessible, size: 25.0, color: textColor)
-                        // Load icon dynamically from MaterialIcons if prefixed with 'icon - '
-                        // : data.logoText.startsWith('icon - ')
-                        //     ? Icon(
-                        //         IconData(
-                        //             int.parse(
-                        //                 data.logoText
-                        //                     .replaceFirst('icon - ', ''),
-                        //                 radix: 16),
-                        //             fontFamily: 'MaterialIcons'),
-                        //         size: 25.0,
-                        //         color: textColor)
-                            : (data.logoText.isNotEmpty
-                                ? Text(
-                                    data.logoText,
-                                    style: TextStyle(
-                                      color: textColor,
-                                      fontFamily: 'Brix Sans',
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 28,
-                                    ),
-                                  )
-                                : SizedBox.shrink()
-              ))),
+                  alignment: Alignment.center,
+                  child: data.logoText.startsWith('icon - ')
+                      ? Icon(
+                          ParkingConstants.stringToIconData[data.logoText] ??
+                              Icons.error,
+                          size: 25.0,
+                          color: textColor)
+                      : (data.logoText.isNotEmpty
+                          ? Text(
+                              data.logoText,
+                              style: TextStyle(
+                                color: textColor,
+                                fontFamily: 'Brix Sans',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 28,
+                              ),
+                            )
+                          : SizedBox.shrink()))),
           title: Text(
             data.name,
             style: Theme.of(context).textTheme.bodyMedium,
