@@ -52,9 +52,7 @@ class Maps extends StatelessWidget {
               mapController:
                   Provider.of<MapsDataProvider>(context).mapController),
           SizedBox(height: 10),
-          DirectionsButton(
-              mapController:
-                  Provider.of<MapsDataProvider>(context).mapController),
+          DirectionsButton(),
         ],
       ),
     );

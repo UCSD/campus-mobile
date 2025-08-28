@@ -1,5 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/dining.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
@@ -312,13 +313,12 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
           ),
         ],
       ),
-      onPressed: () {
+      onPressed: () async {
         try {
-          launch(
-              'https://www.google.com/maps/dir/?api=1&destination=${model.coordinates!.lat},${model.coordinates!.lon}&travelmode=walking',
-              forceSafariVC: true);
+          await DirectionsHelper.openDirections(model.coordinates!.lat!, model.coordinates!.lon!);
         } catch (e) {
           // an error occurred, do nothing
+          debugPrint('Error opening directions: $e');
         }
       },
       style: TextButton.styleFrom(
