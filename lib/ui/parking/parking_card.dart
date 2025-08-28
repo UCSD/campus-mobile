@@ -34,7 +34,6 @@ class _ParkingCardState extends State<ParkingCard> {
     }
   }
 
-  // ignore: must_call_super
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -50,16 +49,16 @@ class _ParkingCardState extends State<ParkingCard> {
         ActionButton(
             buttonText: 'MANAGE SPOTS',
             onPressed: () {
-              if(!_parkingDataProvider.isLoading && _parkingDataProvider.error == null) {
+              if (!_parkingDataProvider.isLoading &&
+                  _parkingDataProvider.error == null) {
                 Navigator.pushNamed(context, RoutePaths.SpotTypesView);
-                // _controller.jumpToPage(currentPage);
-
               }
             }),
         ActionLink(
             buttonText: 'MANAGE LOTS',
             onPressed: () {
-              if(!_parkingDataProvider.isLoading && _parkingDataProvider.error == null) {
+              if (!_parkingDataProvider.isLoading &&
+                  _parkingDataProvider.error == null) {
                 Navigator.pushNamed(context, RoutePaths.ManageParkingView);
               }
             }),
