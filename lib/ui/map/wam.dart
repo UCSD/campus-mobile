@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/wam.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/services/wam.dart';
+import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,7 +40,8 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
   /// STATES
   var showPlaces = false;
   bool isLoading = false;
-  final amountOfPlacesToFetch = 13; // TODO: Make # of places to fetch a user setting
+  final amountOfPlacesToFetch =
+      13; // TODO: Make # of places to fetch a user setting
   late List<Place> whatsAroundMeList;
 
   @override
@@ -72,26 +74,28 @@ class _WhatsAroundMeState extends State<WhatsAroundMe> {
     /// What's Around Me
     return isLoading
         ? Center(child: CircularProgressIndicator())
-        : Column(mainAxisSize: MainAxisSize.min,
-      children: [
-        /// What's Around Me List
-        if (showPlaces)
-          Container(
-            constraints: containerConstraints,
-            decoration: containerDecoration,
-            child: BuildWhatAroundMeList(places: whatsAroundMeList),
-          ),
-        SizedBox(height: 10),
-        /// What's Around Me Button
-        FloatingActionButton.extended(
-          onPressed: () => setState(() => showPlaces = !showPlaces),
-          label: showPlaces
-              ? Icon(Icons.close, size: 20)
-              : Text("Around Me"),
-          backgroundColor: Colors.lightBlue,
-        ),
-      ],
-    );
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              /// What's Around Me List
+              if (showPlaces)
+                Container(
+                  constraints: containerConstraints,
+                  decoration: containerDecoration,
+                  child: BuildWhatAroundMeList(places: whatsAroundMeList),
+                ),
+              SizedBox(height: 10),
+
+              /// What's Around Me Button
+              FloatingActionButton.extended(
+                onPressed: () => setState(() => showPlaces = !showPlaces),
+                label: showPlaces
+                    ? Icon(Icons.close, size: 20)
+                    : Text("Around Me"),
+                backgroundColor: Colors.lightBlue,
+              ),
+            ],
+          );
   }
 
   /// Updates `whatsAroundMeList` with the fetched data from 'fetchWhatsAroundMe()'
@@ -157,7 +161,9 @@ class BuildWhatAroundMeList extends StatelessWidget {
           leading: GestureDetector(
             onTap: () {
               print("Opening directions for ${place.name}...");
-              var coordinates = Provider.of<MapsDataProvider>(context, listen: false).coordinates;
+              var coordinates =
+                  Provider.of<MapsDataProvider>(context, listen: false)
+                      .coordinates;
               if (coordinates!.lat == null || coordinates.lon == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -243,19 +249,9 @@ Future<void> getDirectionsToPlace(BuildContext context, String location) async {
   double latitude = double.parse(coordinates[0]);
   double longitude = double.parse(coordinates[1]);
 
-  // Log coordinates for debugging
-  // print('Latitude: $latitude, Longitude: $longitude');
-
-  // Construct URLs
-  String googleUrl = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude&travelmode=walking';
-  String appleUrl = 'http://maps.apple.com/?daddr=$latitude,$longitude&dirflag=w';
-
-  // Launch directions
-  if (await canLaunch(googleUrl)) {
-    await launch(googleUrl);
-  } else if (await canLaunch(appleUrl)) {
-    await launch(appleUrl);
-  } else {
-    throw 'Could not launch $googleUrl';
+  try {
+    await DirectionsHelper.openDirections(latitude, longitude);
+  } catch (e) {
+    // an error occurred
   }
 }
