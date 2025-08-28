@@ -1,9 +1,12 @@
 import 'package:campus_mobile_experimental/core/models/parking.dart';
+import 'package:campus_mobile_experimental/core/models/shuttle.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
+
+import '../../app_constants.dart';
 
 class CircularParkingIndicators extends StatelessWidget {
   const CircularParkingIndicators({
@@ -107,41 +110,25 @@ class CircularParkingIndicators extends StatelessWidget {
                       ? CircleAvatar(
                           backgroundColor:
                               colorFromHex(spotType.logoBackgroundColor),
-                          child: spotType.logoText == 'icon - e486'
-                              ? Icon(Icons.group,
+                          child: spotType.logoText.startsWith('icon - ')
+                              ? Icon(
+                                  ParkingConstants.stringToIconData[
+                                          spotType.logoText] ??
+                                      Icons.error,
                                   size: 25.0,
                                   color: colorFromHex(spotType.logoTextColor))
-                              : spotType.logoText == 'icon - e03e'
-                                  ? Icon(Icons.accessible,
-                                      size: 25.0,
-                                      color:
-                                          colorFromHex(spotType.logoTextColor))
-                                  // Load icon dynamically from MaterialIcons if prefixed with 'icon - '
-                                  // : spotType.logoText.startsWith('icon - ')
-                                  //     ? Icon(
-                                  //         IconData(
-                                  //             int.parse(
-                                  //                 spotType.logoText
-                                  //                     .replaceFirst(
-                                  //                         'icon - ', ''),
-                                  //                 radix: 16),
-                                  //             fontFamily: 'MaterialIcons'),
-                                  //         size: 25.0,
-                                  //         color: colorFromHex(
-                                  //             spotType.logoTextColor))
-                                      : (spotType.logoText.isNotEmpty
-                                          ? Text(
-                                              spotType.logoText,
-                                              style: TextStyle(
-                                                color: colorFromHex(
-                                                    spotType.logoTextColor),
-                                                fontFamily: 'Brix Sans',
-                                                fontSize: 28,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            )
-                                          : SizedBox.shrink()
-                        ))
+                              : (spotType.logoText.isNotEmpty
+                                  ? Text(
+                                      spotType.logoText,
+                                      style: TextStyle(
+                                        color: colorFromHex(
+                                            spotType.logoTextColor),
+                                        fontFamily: 'Brix Sans',
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    )
+                                  : SizedBox.shrink()))
                       : Container(),
                 )
               ],
@@ -182,41 +169,25 @@ class CircularParkingIndicators extends StatelessWidget {
                       ? CircleAvatar(
                           backgroundColor:
                               colorFromHex(spotType.logoBackgroundColor),
-                          child: spotType.logoText == 'icon - e486'
-                              ? Icon(Icons.group,
+                          child: spotType.logoText.startsWith('icon - ')
+                              ? Icon(
+                                  ParkingConstants.stringToIconData[
+                                          spotType.logoText] ??
+                                      Icons.error,
                                   size: 25.0,
                                   color: colorFromHex(spotType.logoTextColor))
-                              : spotType.logoText == 'icon - e03e'
-                                  ? Icon(Icons.accessible,
-                                      size: 25.0,
-                                      color:
-                                          colorFromHex(spotType.logoTextColor))
-                                  // Load icon dynamically from MaterialIcons if prefixed with 'icon - '
-                                  // : spotType.logoText.startsWith('icon - ')
-                                  //     ? Icon(
-                                  //         IconData(
-                                  //             int.parse(
-                                  //                 spotType.logoText
-                                  //                     .replaceFirst(
-                                  //                         'icon - ', ''),
-                                  //                 radix: 16),
-                                  //             fontFamily: 'MaterialIcons'),
-                                  //         size: 25.0,
-                                  //         color: colorFromHex(
-                                  //             spotType.logoTextColor))
-                                      : (spotType.logoText.isNotEmpty
-                                          ? Text(
-                                              spotType.logoText,
-                                              style: TextStyle(
-                                                color: colorFromHex(
-                                                    spotType.logoTextColor),
-                                                fontFamily: 'Brix Sans',
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 28,
-                                              ),
-                                            )
-                                          : SizedBox.shrink()
-                        ))
+                              : (spotType.logoText.isNotEmpty
+                                  ? Text(
+                                      spotType.logoText,
+                                      style: TextStyle(
+                                        color: colorFromHex(
+                                            spotType.logoTextColor),
+                                        fontFamily: 'Brix Sans',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 28,
+                                      ),
+                                    )
+                                  : SizedBox.shrink()))
                       : Container(),
                 )
               ],
