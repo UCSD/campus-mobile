@@ -3,11 +3,14 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MoreESRIResultsList extends StatelessWidget {
-  const MoreESRIResultsList({
-    Key? key,
-  }) : super(key: key);
+class MoreESRIResultsList extends StatefulWidget {
+  const MoreESRIResultsList({Key? key}) : super(key: key);
 
+  @override
+  State<MoreESRIResultsList> createState() => _MoreESRIResultsListState();
+}
+
+class _MoreESRIResultsListState extends State<MoreESRIResultsList> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,85 +21,93 @@ class MoreESRIResultsList extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet(
               context: context,
-              builder: (context) => Column(
-                children: <Widget>[
-                  Container(
-                    height: 50,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'More Results',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: Provider.of<MapsDataProvider>(context)
-                          .esriPOIModels
-                          .length,
-                      itemBuilder: (BuildContext context, int index) {
-                        // Builds the "More Results" list with location Name and Distance
-                        return ListTile(
-                          title: Text(
-                            // As of August 2025 - If updatedName is null, use {Subclass} + {Facility Long Name}.
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                            .esriPOIModels[index]
-                            .attributes
-                            .updatedName ??
-                          (
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                              .esriPOIModels[index]
-                              .attributes
-                              .subclass != null &&
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                              .esriPOIModels[index]
-                              .attributes
-                              .facilityLongName != null
-                              ? Provider.of<MapsDataProvider>(context, listen: false)
-                                  .esriPOIModels[index]
-                                  .attributes
-                                  .subclass! +
-                                ' - ' +
-                                Provider.of<MapsDataProvider>(context, listen: false)
-                                  .esriPOIModels[index]
-                                  .attributes
-                                  .facilityLongName!
-                              : 'Unknown Location'
-                          )),
-                          trailing: Text(
-                            Provider.of<MapsDataProvider>(context,
-                                            listen: false)
-                                        .esriPOIModels[index]
-                                        .distance !=
-                                    null
-                                ? Provider.of<MapsDataProvider>(context,
-                                            listen: false)
-                                        .esriPOIModels[index]
-                                        .distance!
-                                        .toStringAsFixed(1) +
-                                    ' mi'
-                                : '--',
-                            style: TextStyle(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.light
-                                    ? linkColorLight
-                                    : linkColorDark),
+              builder: (context) {
+                final esriPOIModels = Provider.of<MapsDataProvider>(context, listen: false).esriPOIModels;
+                final totalResults = esriPOIModels.length;
+                int displayedCount = 50;
+                return StatefulBuilder(
+                  builder: (context, setModalState) {
+                    // Recalculate on every build
+                    final showLoadMore = displayedCount < totalResults;
+                    final itemCount = showLoadMore ? displayedCount + 1 : totalResults;
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          child: Text(
+                            'More Results',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
-                          onTap: () {
-                            Provider.of<MapsDataProvider>(context,
-                                    listen: false)
-                                .addMarker(index);
-                            Navigator.pop(context);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                        ),
+                        Divider(height: 0),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: itemCount,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == displayedCount && showLoadMore) {
+                                return Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        setModalState(() {
+                                          displayedCount = (displayedCount + 50).clamp(0, totalResults);
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: actionButtonBackgroundColor,
+                                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'LOAD MORE',
+                                        style: TextStyle(
+                                          color: lightPrimaryColor,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              // Builds the "More Results" list with location Name and Distance
+                              return ListTile(
+                                title: Text(
+                                  esriPOIModels[index].attributes.updatedName ??
+                                  (
+                                    esriPOIModels[index].attributes.subclass != null &&
+                                    esriPOIModels[index].attributes.facilityLongName != null
+                                      ? esriPOIModels[index].attributes.subclass! +
+                                        ' - ' +
+                                        esriPOIModels[index].attributes.facilityLongName!
+                                      : 'Unknown Location'
+                                  )
+                                ),
+                                trailing: Text(
+                                  esriPOIModels[index].distance != null
+                                    ? esriPOIModels[index].distance!.toStringAsFixed(1) + ' mi'
+                                    : '--',
+                                  style: TextStyle(
+                                    color: Theme.of(context).brightness == Brightness.light
+                                      ? linkColorLight
+                                      : linkColorDark),
+                                ),
+                                onTap: () {
+                                  Provider.of<MapsDataProvider>(context, listen: false).addMarker(index);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
             );
           },
           style: ElevatedButton.styleFrom(
