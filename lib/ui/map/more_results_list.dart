@@ -45,6 +45,9 @@ class _MoreESRIResultsListState extends State<MoreESRIResultsList> {
                           child: ListView.builder(
                             itemCount: itemCount,
                             itemBuilder: (BuildContext context, int index) {
+                              // If we are at the end of the 50 items,
+                              // and there are more to load, only then
+                              // you show the "Load More" button
                               if (index == displayedCount && showLoadMore) {
                                 return Center(
                                   child: Padding(
@@ -73,7 +76,7 @@ class _MoreESRIResultsListState extends State<MoreESRIResultsList> {
                                   ),
                                 );
                               }
-                              // Builds the "More Results" list with location Name and Distance
+                              // Else, show the "More Results" list with 50 locations Names and Distances
                               return ListTile(
                                 title: Text(
                                   esriPOIModels[index].attributes.updatedName ??
