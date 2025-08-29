@@ -34,7 +34,6 @@ class MapSearchBar extends StatelessWidget {
                     .searchBarController
                     .text;
                 if (searchText.length < 3) {
-                  print(Text("need to search more than 3"));
                   showDialog(
                       context: context,
                       builder: (context) {
