@@ -37,51 +37,28 @@ class MoreESRIResultsList extends StatelessWidget {
                       itemCount: Provider.of<MapsDataProvider>(context)
                           .esriPOIModels
                           .length,
+                      // Builds the "More Results" list with location Name and Distance
                       itemBuilder: (BuildContext context, int index) {
-                        // Builds the "More Results" list with location Name and Distance
+                        final poi = Provider.of<MapsDataProvider>(context, listen: false).esriPOIModels[index];
+                        final attributes = poi.attributes;
+                        // As of August 2025 - If updatedName is null, use {Subclass} + {Facility Long Name}.
+                        final title = attributes.updatedName ??
+                            ((attributes.subclass != null &&
+                                    attributes.facilityLongName != null)
+                                ? attributes.subclass! +
+                                    ' - ' +
+                                    attributes.facilityLongName!
+                                : 'Unknown Location');
+                        // If we don't know the location, don't show it in the list
+                        if (title == 'Unknown Location') return const SizedBox.shrink();
                         return ListTile(
-                          title: Text(
-                            // As of August 2025 - If updatedName is null, use {Subclass} + {Facility Long Name}.
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                            .esriPOIModels[index]
-                            .attributes
-                            .updatedName ??
-                          (
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                              .esriPOIModels[index]
-                              .attributes
-                              .subclass != null &&
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                              .esriPOIModels[index]
-                              .attributes
-                              .facilityLongName != null
-                              ? Provider.of<MapsDataProvider>(context, listen: false)
-                                  .esriPOIModels[index]
-                                  .attributes
-                                  .subclass! +
-                                ' - ' +
-                                Provider.of<MapsDataProvider>(context, listen: false)
-                                  .esriPOIModels[index]
-                                  .attributes
-                                  .facilityLongName!
-                              : 'Unknown Location'
-                          )),
+                          title: Text(title),
                           trailing: Text(
-                            Provider.of<MapsDataProvider>(context,
-                                            listen: false)
-                                        .esriPOIModels[index]
-                                        .distance !=
-                                    null
-                                ? Provider.of<MapsDataProvider>(context,
-                                            listen: false)
-                                        .esriPOIModels[index]
-                                        .distance!
-                                        .toStringAsFixed(1) +
-                                    ' mi'
+                            poi.distance != null
+                                ? poi.distance!.toStringAsFixed(1) + ' mi'
                                 : '--',
                             style: TextStyle(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.light
+                                color: Theme.of(context).brightness == Brightness.light
                                     ? linkColorLight
                                     : linkColorDark),
                           ),
