@@ -110,6 +110,10 @@ class LoginConstants {
   static const shuttleMaxTitle = 'Maximum shuttle stops reached';
   static const shuttleMaxDesc =
       'The maximum number of shuttle stops allowed is five. Please remove some stops to add more.';
+
+  static const mapSearchMinTitle = "Error Searching";
+  static const mapSearchMinDesc = "Enter at least 3 characters to search. ";
+
 }
 
 class ParkingConstants {
