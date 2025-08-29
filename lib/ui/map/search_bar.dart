@@ -2,8 +2,8 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../app_constants.dart';
-import '../common/alert_dialog_widget.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 
 class MapSearchBar extends StatelessWidget {
   const MapSearchBar({
