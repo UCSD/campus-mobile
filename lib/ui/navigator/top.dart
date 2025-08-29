@@ -2,7 +2,6 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/ui/common/top_content.dart';
 
@@ -95,12 +94,6 @@ class CustomAppBar extends ChangeNotifier {
     title = RouteTitles.titleMap[newTitle];
     doneButton = done;
     notificationsFilterButton = notification;
-
-    // if (newTitle == "Notifications") {
-    //   notificationsFilterButton = true;
-    // } else {
-    //   notificationsFilterButton = false;
-    // }
 
     makeAppBar();
   }
