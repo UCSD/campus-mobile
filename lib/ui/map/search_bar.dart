@@ -2,6 +2,9 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_constants.dart';
+import '../common/alert_dialog_widget.dart';
+
 class MapSearchBar extends StatelessWidget {
   const MapSearchBar({
     Key? key,
@@ -27,13 +30,30 @@ class MapSearchBar extends StatelessWidget {
               textInputAction: TextInputAction.search,
               onChanged: (text) {},
               onSubmitted: (text) {
-                if (Provider.of<MapsDataProvider>(context, listen: false)
+                var searchText = Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text
-                    .isNotEmpty) {
-                  // Don't fetch on empty text field
+                    .text;
+                if (searchText.length < 3) {
+                  print(Text("need to search more than 3"));
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialogWidget(
+                          type: MessageTypeConstants.ERROR,
+                          icon: Icons.block_flipped,
+                          title: LoginConstants.mapSearchMinTitle,
+                          description: LoginConstants.mapSearchMinDesc,
+                          onClose: () {
+                            Navigator.of(context).pop();
+                          },
+                        );
+                      }
+                      );
+                  return;
+                }
+                if (searchText.isNotEmpty){
                   Provider.of<MapsDataProvider>(context, listen: false)
-                      .fetchLocations(); // Text doesn't need to be sent over because it's already in the controller
+                      .fetchLocations();
                 }
                 Navigator.pop(context);
               },
