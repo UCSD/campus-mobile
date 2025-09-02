@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RoutePaths {
@@ -65,8 +64,8 @@ class RouteTitles {
     'dining/dining_list_view': 'DINING',
     'dining/dining_detail_view': 'DINING',
     'dining/dining_nutrition_view': 'DINING',
-    'availability/detailed_view': 'BUSYNESS',
     'dining/dining_filter_view': 'PAYMENT FILTERS',
+    'availability/detailed_view': 'BUSYNESS',
   };
 }
 
@@ -78,6 +77,19 @@ class ParkingDefaults {
     "Theatre District",
   ];
   static const defaultSpots = ["S", "B", "A"];
+}
+
+class DiningConstants {
+  static const filterCount = 7;
+  static const payment_filter_types = [
+    "Triton Cash",
+    "Dining Dollars",
+    "Apple/Google Pay",
+    "MaterCard, Visa",
+    "American Express",
+    "Cash",
+    "Other",
+  ];
 }
 
 class ButtonText {
