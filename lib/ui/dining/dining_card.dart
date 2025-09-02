@@ -38,10 +38,10 @@ class DiningCard extends StatelessWidget {
     );
   }
 
-  Widget buildDiningCard(List<DiningModel> data) {
+ Widget buildDiningCard(List<DiningModel> data) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: DiningList(listSize: 3),
+      child: DiningList(listSize: data.length >= 3 ? 3 : data.length),
     );
   }
 }
