@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../app_styles.dart';
 import '../common/container_view.dart';
 
@@ -10,7 +7,8 @@ class DiningFilterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContainerView(child: buildSettingsList(context, payment_options));
+    return ContainerView(
+        child: buildSettingsList(context, payment_filter_types));
   }
 
   Widget buildSettingsList(BuildContext context, List<String> topicsData) {
@@ -28,7 +26,7 @@ class DiningFilterView extends StatelessWidget {
     ));
   }
 
-  final payment_options = [
+  final payment_filter_types = [
     "Triton Cash",
     "Dining Dollars",
     "Apple/Google Pay",
@@ -38,29 +36,34 @@ class DiningFilterView extends StatelessWidget {
     "Other",
   ];
 
-  List<Widget> createList(BuildContext context, List<String> topicsAvailable) {
-    List<Widget> list = [];
-    for (String topic in topicsAvailable) {
-      list.add(
+  // Creates a list of tiles containing filter types with switches
+  List<Widget> createList(BuildContext context, List<String> typesAvailable) {
+    List<Widget> filterTypesList = [];
+    for (String type in typesAvailable) {
+      filterTypesList.add(
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ListTile(
             horizontalTitleGap: 0,
             contentPadding: EdgeInsets.all(0),
             visualDensity: VisualDensity.compact,
-            key: Key(topic),
+            // Use the type as a unique key
+            key: Key(type),
             title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: Text(
-                topic,
+                type, // Display the filter type name (i.e. "Triton Cash")
                 style: Theme.of(context).textTheme.labelMedium,
               ),
             ),
+            // Add a switch to the end of the ListTile
             trailing: Transform.scale(
               scale: 0.9,
               child: Switch.adaptive(
-                value: true,
-                onChanged: (value) {},
+                value: true, // TODO: Switch is always on (placeholder)
+                onChanged: (value) {
+
+                }, // TODO: No action on change (placeholder)
                 activeColor: toggleActiveColor,
               ),
             ),
@@ -68,6 +71,7 @@ class DiningFilterView extends StatelessWidget {
         ),
       );
     }
-    return list;
+    // Return the list of filter types to display
+    return filterTypesList;
   }
 }
