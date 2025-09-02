@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
-import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
+// import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/services/dining.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class DiningDataProvider extends ChangeNotifier {
 
   /// MODELS
   Map<String, DiningModel> _diningModels = {};
-  Map<String, DiningMenuItemsModel> _diningMenuItemModels = {};
+  // Map<String, DiningMenuItemsModel> _diningMenuItemModels = {};
 
   /// SERVICES
   var _diningService = DiningService();
@@ -67,7 +67,6 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   void populateDistances() {
-    // TODO: fix the Coordinates system! Totally messed up design
     if (_coordinates != null && _coordinates!.lat != null && _coordinates!.lon != null) {
       for (DiningModel model in _diningModels.values.toList()) {
         if (model.coordinates != null) {
