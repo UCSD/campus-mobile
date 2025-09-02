@@ -29,14 +29,13 @@ class DiningFilterView extends StatelessWidget {
   }
 
   final payment_options = [
-    "Card",
-    "Visa",
-    "MaterCard",
-    "American Express",
-    "Dining Dollars",
     "Triton Cash",
-    "Dept Recharge",
-    "Community Dining"
+    "Dining Dollars",
+    "Apple/Google Pay",
+    "MaterCard, Visa",
+    "American Express",
+    "Cash",
+    "Other",
   ];
 
   List<Widget> createList(BuildContext context, List<String> topicsAvailable) {
