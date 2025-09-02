@@ -71,7 +71,7 @@ class CMAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: IconButton(
             icon: Image.asset(
-              "assets/images/Icon.png",
+              "assets/images/payment_filter.png",
             ),
             onPressed: (){
               Navigator.pushNamed(
