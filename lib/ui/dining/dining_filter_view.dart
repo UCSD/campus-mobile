@@ -60,10 +60,18 @@ class DiningFilterView extends StatelessWidget {
             trailing: Transform.scale(
               scale: 0.9,
               child: Switch.adaptive(
-                value: true, // TODO: Switch is always on (placeholder)
+                value: false, // TODO: Switch is always on (placeholder)
                 onChanged: (value) {
+                  // TODO: No action on change (placeholder)
 
-                }, // TODO: No action on change (placeholder)
+
+                },
+                thumbColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return Colors.white;
+                  }
+                  return null;
+                }),
                 activeColor: toggleActiveColor,
               ),
             ),
