@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/ui/availability/availability_detail_v
 import 'package:campus_mobile_experimental/ui/availability/manage_availability_view.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_list.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_detail_view.dart';
+import 'package:campus_mobile_experimental/ui/dining/dining_filter_view.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_list.dart';
 import 'package:campus_mobile_experimental/ui/dining/nutrition_facts_view.dart';
 import 'package:campus_mobile_experimental/ui/events/events_detail_view.dart';
@@ -98,7 +99,7 @@ class Router {
         });
       case RoutePaths.DiningViewAll:
         return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name, dining: true);
           return DiningList();
         });
       case RoutePaths.DiningDetailView:
@@ -119,7 +120,12 @@ class Router {
                   disclaimer: disclaimer,
                   disclaimerEmail: disclaimerEmail,
                 ));
-      case RoutePaths.ManageParkingView:
+      case RoutePaths.DiningFilterView:
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return DiningFilterView();
+        });
+        case RoutePaths.ManageParkingView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageParkingView();

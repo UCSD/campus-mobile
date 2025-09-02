@@ -36,6 +36,7 @@ class RoutePaths {
   static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
   static const String AvailabilityDetailedView = "availability/detailed_view";
   static const String WhatsAroundMe = "lib/ui/WhatsAroundMe/wam.dart";
+  static const String DiningFilterView = "dining/dining_filter_view";
 }
 
 class RouteTitles {
@@ -64,7 +65,8 @@ class RouteTitles {
     'dining/dining_list_view': 'DINING',
     'dining/dining_detail_view': 'DINING',
     'dining/dining_nutrition_view': 'DINING',
-    'availability/detailed_view': 'BUSYNESS'
+    'availability/detailed_view': 'BUSYNESS',
+    'dining/dining_filter_view': 'PAYMENT FILTERS',
   };
 }
 
