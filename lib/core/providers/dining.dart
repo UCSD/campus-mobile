@@ -42,6 +42,7 @@ class DiningDataProvider extends ChangeNotifier {
       _diningModels = mapOfDiningLocations;
       populateDistances();
       _lastUpdated = DateTime.now();
+      _updateFilteredDiningModels();
     } else {
       _error = _diningService.error;
     }
@@ -50,7 +51,7 @@ class DiningDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateFilteredDiningModels() {
+  void _updateFilteredDiningModels() {
     _diningFilteredModels = {
       for (var dining in diningModels)
         if (dining.paymentFilterTypes
@@ -59,11 +60,11 @@ class DiningDataProvider extends ChangeNotifier {
             .any((type) => _diningFilterTypeStates[type] == true))
           dining.name: dining
     };
-    notifyListeners();
   }
 
   void toggleFilterType(String type) {
     _diningFilterTypeStates[type] = !_diningFilterTypeStates[type]!;
+    _updateFilteredDiningModels();
     notifyListeners();
   }
 
@@ -133,12 +134,6 @@ class DiningDataProvider extends ChangeNotifier {
         _diningFilterTypeStates.values.every((f) => f)) {
       return diningModels;
     }
-
-    /// If filters have changed, update filtered dining models
-    /// so it contains only dining models that match the selected filters
-    updateFilteredDiningModels();
-
-    /// then (or else) return filtered dining models
     return _diningFilteredModels.values.toList();
   }
 
