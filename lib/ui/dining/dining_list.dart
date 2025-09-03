@@ -20,6 +20,7 @@ class DiningList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Using Filtered Dining Models so that the list respects the filters
     List<dining_model.DiningModel> data =
         Provider.of<DiningDataProvider>(context).filteredDiningModels;
     if (data.isEmpty) {

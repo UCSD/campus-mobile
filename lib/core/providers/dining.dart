@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 enum Meal { breakfast, lunch, dinner }
 
 class DiningDataProvider extends ChangeNotifier {
+  // Set all filter types to true by default
   DiningDataProvider() {
     DiningConstants.payment_filter_types
         .forEach((type) => _diningFilterTypeStates[type] = true);
@@ -19,11 +20,12 @@ class DiningDataProvider extends ChangeNotifier {
   String? _error;
   Coordinates? _coordinates;
   Meal mealTime = Meal.breakfast;
+  // Contains the state of each filter type (true = on, false = off)
   Map<String, bool> _diningFilterTypeStates = {};
 
   /// MODELS
-  Map<String, DiningModel> _diningModels = {};
-  Map<String, DiningModel> _diningFilteredModels = {};
+  Map<String, DiningModel> _diningModels = {}; // Source of truth
+  Map<String, DiningModel> _filteredDiningModels = {}; // Used for displaying filtered results
 
   /// SERVICES
   var _diningService = DiningService();
@@ -42,6 +44,8 @@ class DiningDataProvider extends ChangeNotifier {
       _diningModels = mapOfDiningLocations;
       populateDistances();
       _lastUpdated = DateTime.now();
+      // Apply filters after fetching new data
+      // a.k.a. "feed" _filteredDiningModels
       _updateFilteredDiningModels();
     } else {
       _error = _diningService.error;
@@ -51,17 +55,28 @@ class DiningDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// This function "feeds" the desired dining models
+  /// into ```_filteredDiningModels```, based on the filters that are on,
+  /// and using ```diningModels``` as the source of truth - since
+  /// ```diningModels``` contains ALL dining locations from the Dining API.
   void _updateFilteredDiningModels() {
-    _diningFilteredModels = {
-      for (var dining in diningModels)
-        if (dining.paymentFilterTypes
+    _filteredDiningModels = {
+      // For each diningModel in diningModels,
+      for (var diningModel in diningModels)
+        // If its paymentFilterTypes contains any type that is toggled on,
+        if (diningModel.paymentFilterTypes
             .split(',')
             .map((type) => type.trim())
             .any((type) => _diningFilterTypeStates[type] == true))
-          dining.name: dining
+          // Add it to _filteredDiningModels as a key-value pair
+          // Key: diningModel.name, Value: the whole diningModel
+          diningModel.name: diningModel
     };
   }
 
+  /// This function toggles the state of a filter type (on/off)
+  /// and notifies listeners to update _filteredDiningModels and,
+  /// consequently, the UI.
   void toggleFilterType(String type) {
     _diningFilterTypeStates[type] = !_diningFilterTypeStates[type]!;
     _updateFilteredDiningModels();
@@ -128,18 +143,21 @@ class DiningDataProvider extends ChangeNotifier {
     return _diningModels.values.toList();
   }
 
+  /// RETURNS A List<diningModels> filtered by the selected filter types
   List<DiningModel> get filteredDiningModels {
-    /// If all or no filters are selected, then return diningModels
+    // If all or no filters are selected, then return diningModels (the source of truth)
     if (!_diningFilterTypeStates.values.contains(true) ||
         _diningFilterTypeStates.values.every((f) => f)) {
       return diningModels;
     }
-    return _diningFilteredModels.values.toList();
+    // Else, return the updated filtered list
+    return _filteredDiningModels.values.toList();
   }
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;
   get lastUpdated => _lastUpdated;
+  // Used in dining_filter_view.dart to show the "on/off" state of each filter type's UI.
   Map<String, bool> get diningFilterTypeStates => _diningFilterTypeStates;
 }
