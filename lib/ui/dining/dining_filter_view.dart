@@ -5,6 +5,10 @@ import '../../app_styles.dart';
 import '../common/container_view.dart';
 import '../../core/providers/dining.dart';
 
+/// View for dining payment filter settings
+/// This displays a list of filter types with on/off switches to toggle
+/// Uses DiningDataProvider's ```diningFilterTypeStates``` to manage
+/// the toggle state of each filter type to filter accordingly.
 class DiningFilterView extends StatelessWidget {
   DiningFilterView({super.key});
 
@@ -35,6 +39,9 @@ class DiningFilterView extends StatelessWidget {
   List<Widget> createList(BuildContext context, List<String> typesAvailable,
       DiningDataProvider diningProvider) {
     List<Widget> filterTypesList = [];
+    // For each filter type available, create a ListTile with a switch
+    // ```type``` is the filter type's name (i.e. "Triton Cash")
+    // See DiningConstants.payment_filter_types for all available filter types
     for (String type in typesAvailable) {
       filterTypesList.add(
         Padding(
@@ -43,21 +50,24 @@ class DiningFilterView extends StatelessWidget {
             horizontalTitleGap: 0,
             contentPadding: EdgeInsets.all(0),
             visualDensity: VisualDensity.compact,
-            // Use the type as a unique key
+            // Use the ```type``` as the unique string key
             key: Key(type),
             title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: Text(
-                type, // Display the filter type name (i.e. "Triton Cash")
+                type, // Display the filter type's name
                 style: Theme.of(context).textTheme.labelMedium,
               ),
             ),
-            // Add a switch to the end of the ListTile
+            // Display a switch button at the end of each ListTile
             trailing: Transform.scale(
               scale: 0.9,
               child: Switch.adaptive(
-                value: diningProvider.diningFilterTypeStates[type]!,
+                // Each filter type's switch is 'on' or 'off' based on the filter type's state
+                value: diningProvider.diningFilterTypeStates[type]!, // Remember that ```type``` is a string key (i.e. "Triton Cash")
                 onChanged: (_) {
+                  // On changed, this calls the provider function that "toggles" the filter type's state
+                  // i.e. if "Triton Cash" was on (true), it makes it off (false).
                   diningProvider.toggleFilterType(type);
                 },
                 thumbColor: WidgetStateProperty.resolveWith((states) {
