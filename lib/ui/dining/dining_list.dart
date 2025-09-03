@@ -21,11 +21,24 @@ class DiningList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<dining_model.DiningModel> data =
-        Provider.of<DiningDataProvider>(context).diningModels;
-    return data.length > 0
-        ? buildDiningList(data, context)
-        : CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary);
+        Provider.of<DiningDataProvider>(context).filteredDiningModels;
+    if (data.isEmpty) {
+      return ContainerView(
+        child: ListView(
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 32),
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            Text(
+              'No dining locations match your filters.',
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+    return buildDiningList(data, context);
   }
 
   Widget buildDiningList(
@@ -57,6 +70,7 @@ class DiningList extends StatelessWidget {
         : ContainerView(
             child: ListView(
               padding: const EdgeInsets.only(left: 16, right: 16),
+              shrinkWrap: true,
               children: ListTile.divideTiles(
                 tiles: diningTiles,
                 context: context,
