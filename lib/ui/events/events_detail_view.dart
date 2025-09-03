@@ -23,9 +23,7 @@ class EventDetailView extends StatelessWidget {
         : ContainerView(child: buildDetailView(context));
   }
 
-  /// TODO: What color to use for dark theme?
   Widget buildDetailView(BuildContext context) {
-
     return ListView(
       children: [
         // Event Image
@@ -35,9 +33,15 @@ class EventDetailView extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              // Event Start Date
-              StartDateContainer(
-                  date: DateFormat("MMM d y").format(data.startDate.toLocal())),
+              // Event Date
+              EventDateContainer(
+                date: DateFormat("MMM d y").format(
+                  isMultiDay(data.startDate, data.endDate)
+                      ? getDisplayDate(data.startDate, data.endDate)
+                      : data.startDate.toLocal(),
+                ),
+              ),
+
               // Event Title
               Expanded(child: EventTitle(title: data.title)),
             ],
@@ -74,11 +78,12 @@ class EventDetailView extends StatelessWidget {
               SizedBox(width: 5),
               // Event Time
               Text(
-                data.startDate.toLocal().hour == 0 &&  data.endDate.toLocal().hour == 23 ?
-                    '    All day     ' :
-                DateFormat.jm().format(data.startDate.toLocal()) +
-                    ' - ' +
-                    DateFormat.jm().format(data.endDate.toLocal()),
+                data.startDate.toLocal().hour == 0 &&
+                        data.endDate.toLocal().hour == 23
+                    ? '    All day     '
+                    : DateFormat.jm().format(data.startDate.toLocal()) +
+                        ' - ' +
+                        DateFormat.jm().format(data.endDate.toLocal()),
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).brightness == Brightness.light
@@ -117,6 +122,26 @@ class EventDetailView extends StatelessWidget {
       ],
     );
   }
+
+  DateTime getDisplayDate(DateTime start, DateTime end) {
+    final now = DateTime.now();
+    final localStart = start.toLocal();
+    final localEnd = end.toLocal();
+
+    // If today is within the event window
+    if (!now.isBefore(localStart) && !now.isAfter(localEnd)) {
+      return now;
+    }
+
+    // Otherwise, show the earlier of the two future dates
+    return localStart.isBefore(localEnd) ? localStart : localEnd;
+  }
+
+  bool isMultiDay(DateTime start, DateTime end) {
+    final s = start.toLocal();
+    final e = end.toLocal();
+    return s.year != e.year || s.month != e.month || s.day != e.day;
+  }
 }
 
 // CREATE EVENT IMAGE
@@ -141,9 +166,9 @@ class EventImage extends StatelessWidget {
 }
 
 // CREATE START DATE CONTAINER
-class StartDateContainer extends StatelessWidget {
+class EventDateContainer extends StatelessWidget {
   final String date;
-  const StartDateContainer({Key? key, required this.date}) : super(key: key);
+  const EventDateContainer({Key? key, required this.date}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
