@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/ui/common/top_content.dart';
 
-//TODO:Find the reason why toggling pushes payment filters to the stack and prevent it from doing that,
-// so we don't need to check "Payment Filters" manually..
-
 class CMAppBar extends StatelessWidget {
   CMAppBar({
     this.title,
@@ -25,7 +22,7 @@ class CMAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (doneButton == true) {
       return TopContent(
-        filter :false,
+        hasFilter: false,
         title: title,
         action: Padding(
             padding: EdgeInsets.only(bottom: 8, right: 20),
@@ -38,69 +35,57 @@ class CMAppBar extends StatelessWidget {
               ),
               onPressed: () {
                 // Set tab bar index to the Home tab
-                Provider.of<BottomNavigationBarProvider>(context,
-                    listen: false)
+                Provider.of<BottomNavigationBarProvider>(context, listen: false)
                     .currentIndex = NavigatorConstants.HomeTab;
                 // Navigate to Home tab
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     RoutePaths.BottomNavigationBar,
-                        (Route<dynamic> route) => false);
+                    (Route<dynamic> route) => false);
                 // change the appBar title to the ucsd logo
                 Provider.of<CustomAppBar>(context, listen: false)
                     .changeTitle(CustomAppBar().appBar.title);
               },
             )),
-          has_action: true,
+        hasAction: true,
       );
     } else if (notificationsFilterButton == true) {
       return TopContent(
-        filter :false,
+        hasFilter: false,
         title: title,
         action: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: IconButton(
             icon: Icon(Icons.filter_list_outlined),
             onPressed: () {
-              Navigator.pushNamed(
-                  context, RoutePaths.NotificationsFilter);
+              Navigator.pushNamed(context, RoutePaths.NotificationsFilter);
             },
           ),
         ),
-        has_action: true,
+        hasAction: true,
       );
-    } else if (diningFilterButton == true){
+    } else if (diningFilterButton == true && title == 'DINING LOCATIONS') {
       return TopContent(
-          filter :false,
-        title: title,
-        has_action: true,
-        action: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: IconButton(
-            icon: Image.asset(
-              "assets/images/payment_filter.png",
-            ),
-            onPressed: (){
-              Navigator.pushNamed(
-                context, RoutePaths.DiningFilterView
-              );
-            }
-          )
-        )
-      );
-    } else if(title == 'PAYMENT FILTERS'){
-      return TopContent(
-          filter :true,
+          hasFilter: false,
           title: title,
-          has_action: false,
-          action: null
-      );
-    }
-    else {
+          hasAction: true,
+          action: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: IconButton(
+                  icon: Image.asset(
+                    "assets/images/payment_filter.png",
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, RoutePaths.DiningFilterView);
+                  })));
+    } else if (title == 'PAYMENT FILTERS') {
       return TopContent(
-        filter :false,
+          hasFilter: true, title: title, hasAction: false, action: null);
+    } else {
+      return TopContent(
+        hasFilter: false,
         title: title,
         action: null,
-        has_action: false,
+        hasAction: false,
       );
     }
   }
@@ -128,6 +113,7 @@ class CustomAppBar extends ChangeNotifier {
   }
 
   changeTitle(String? newTitle, {done = false, notification = false, dining = false}) {
+    // print("\u001b[34m[CustomAppBar] new route is " + (newTitle ?? 'null') + "\u001b[34m, done=$done, notification=$notification, dining=$dining");
     title = RouteTitles.titleMap[newTitle];
     doneButton = done;
     notificationsFilterButton = notification;
