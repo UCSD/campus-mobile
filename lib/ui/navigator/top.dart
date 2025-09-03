@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/ui/common/top_content.dart';
 
+//TODO:Find the reason why toggling pushes payment filters to the stack and prevent it from doing that,
+// so we don't need to check "Payment Filters" manually..
+
 class CMAppBar extends StatelessWidget {
   CMAppBar({
     this.title,
@@ -22,6 +25,7 @@ class CMAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (doneButton == true) {
       return TopContent(
+        filter :false,
         title: title,
         action: Padding(
             padding: EdgeInsets.only(bottom: 8, right: 20),
@@ -50,6 +54,7 @@ class CMAppBar extends StatelessWidget {
       );
     } else if (notificationsFilterButton == true) {
       return TopContent(
+        filter :false,
         title: title,
         action: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
@@ -65,6 +70,7 @@ class CMAppBar extends StatelessWidget {
       );
     } else if (diningFilterButton == true){
       return TopContent(
+          filter :false,
         title: title,
         has_action: true,
         action: Padding(
@@ -81,8 +87,17 @@ class CMAppBar extends StatelessWidget {
           )
         )
       );
-    } else {
+    } else if(title == 'PAYMENT FILTERS'){
       return TopContent(
+          filter :true,
+          title: title,
+          has_action: false,
+          action: null
+      );
+    }
+    else {
+      return TopContent(
+        filter :false,
         title: title,
         action: null,
         has_action: false,
