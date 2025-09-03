@@ -1,6 +1,6 @@
 import 'dart:math';
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
-// import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/services/dining.dart';
 import 'package:flutter/material.dart';
@@ -8,17 +8,22 @@ import 'package:flutter/material.dart';
 enum Meal { breakfast, lunch, dinner }
 
 class DiningDataProvider extends ChangeNotifier {
+  DiningDataProvider() {
+    DiningConstants.payment_filter_types
+        .forEach((type) => _diningFilterTypeStates[type] = true);
+  }
+
   /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
   Coordinates? _coordinates;
   Meal mealTime = Meal.breakfast;
-  List<bool> filtersSelected = [false, false, false];
+  Map<String, bool> _diningFilterTypeStates = {};
 
   /// MODELS
   Map<String, DiningModel> _diningModels = {};
-  // Map<String, DiningMenuItemsModel> _diningMenuItemModels = {};
+  Map<String, DiningModel> _diningFilteredModels = {};
 
   /// SERVICES
   var _diningService = DiningService();
@@ -45,6 +50,23 @@ class DiningDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFilteredDiningModels() {
+    _diningFilteredModels = {
+      for (var dining in diningModels)
+        if (dining.paymentFilterTypes
+            .split(',')
+            .map((type) => type.trim())
+            .any((type) => _diningFilterTypeStates[type] == true))
+          dining.name: dining
+    };
+    notifyListeners();
+  }
+
+  void toggleFilterType(String type) {
+    _diningFilterTypeStates[type] = !_diningFilterTypeStates[type]!;
+    notifyListeners();
+  }
+
   void _fixImageUrls(DiningModel model) {
     if (model.images != null) {
       for (var img in model.images!) {
@@ -67,15 +89,16 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   void populateDistances() {
-    if (_coordinates != null && _coordinates!.lat != null && _coordinates!.lon != null) {
+    if (_coordinates != null &&
+        _coordinates!.lat != null &&
+        _coordinates!.lon != null) {
       for (DiningModel model in _diningModels.values.toList()) {
         if (model.coordinates != null) {
           var distance = calculateDistance(
               _coordinates!.lat!,
               _coordinates!.lon!,
               model.coordinates!.lat!,
-              model.coordinates!.lon!
-          );
+              model.coordinates!.lon!);
           model.distance = distance.toDouble();
         } else {
           model.distance = null;
@@ -93,6 +116,10 @@ class DiningDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
+  /// SIMPLE SETTERS
+  /// This setter is only used in provider to supply an updated Coordinates object
+  set coordinates(Coordinates value) => _coordinates = value;
+
   /// RETURNS A List<diningModels> sorted by distance
   List<DiningModel> get diningModels {
     /// check if we have a coordinates object
@@ -100,12 +127,24 @@ class DiningDataProvider extends ChangeNotifier {
     return _diningModels.values.toList();
   }
 
-  /// SIMPLE SETTERS
-  /// This setter is only used in provider to supply an updated Coordinates object
-  set coordinates(Coordinates value) => _coordinates = value;
+  List<DiningModel> get filteredDiningModels {
+    /// If all or no filters are selected, then return diningModels
+    if (!_diningFilterTypeStates.values.contains(true) ||
+        _diningFilterTypeStates.values.every((f) => f)) {
+      return diningModels;
+    }
+
+    /// If filters have changed, update filtered dining models
+    /// so it contains only dining models that match the selected filters
+    updateFilteredDiningModels();
+
+    /// then (or else) return filtered dining models
+    return _diningFilteredModels.values.toList();
+  }
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
   get error => _error;
   get lastUpdated => _lastUpdated;
+  Map<String, bool> get diningFilterTypeStates => _diningFilterTypeStates;
 }

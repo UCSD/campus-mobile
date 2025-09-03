@@ -1,6 +1,9 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../app_styles.dart';
 import '../common/container_view.dart';
+import '../../core/providers/dining.dart';
 
 class DiningFilterView extends StatelessWidget {
   DiningFilterView({super.key});
@@ -8,16 +11,18 @@ class DiningFilterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerView(
-        child: buildSettingsList(context, payment_filter_types));
+        child: buildSettingsList(context, DiningConstants.payment_filter_types)
+    );
   }
 
   Widget buildSettingsList(BuildContext context, List<String> topicsData) {
+    final diningProvider = Provider.of<DiningDataProvider>(context);
     return (Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: ListView(
         children: ListTile.divideTiles(
           context: context,
-          tiles: createList(context, topicsData),
+          tiles: createList(context, topicsData, diningProvider),
           color: Theme.of(context).brightness == Brightness.dark
               ? listTileDividerColorDark
               : listTileDividerColorLight,
@@ -26,18 +31,9 @@ class DiningFilterView extends StatelessWidget {
     ));
   }
 
-  final payment_filter_types = [
-    "Triton Cash",
-    "Dining Dollars",
-    "Apple/Google Pay",
-    "MaterCard, Visa",
-    "American Express",
-    "Cash",
-    "Other",
-  ];
-
   // Creates a list of tiles containing filter types with switches
-  List<Widget> createList(BuildContext context, List<String> typesAvailable) {
+  List<Widget> createList(BuildContext context, List<String> typesAvailable,
+      DiningDataProvider diningProvider) {
     List<Widget> filterTypesList = [];
     for (String type in typesAvailable) {
       filterTypesList.add(
@@ -60,11 +56,9 @@ class DiningFilterView extends StatelessWidget {
             trailing: Transform.scale(
               scale: 0.9,
               child: Switch.adaptive(
-                value: false, // TODO: Switch is always on (placeholder)
-                onChanged: (value) {
-                  // TODO: No action on change (placeholder)
-
-
+                value: diningProvider.diningFilterTypeStates[type]!,
+                onChanged: (_) {
+                  diningProvider.toggleFilterType(type);
                 },
                 thumbColor: WidgetStateProperty.resolveWith((states) {
                   if (states.contains(WidgetState.selected)) {
