@@ -45,9 +45,21 @@ class _MoreESRIResultsListState extends State<MoreESRIResultsList> {
                           child: ListView.builder(
                             itemCount: itemCount,
                             itemBuilder: (BuildContext context, int index) {
-                              // If we are at the end of the 50 items,
-                              // and there are more to load, only then
-                              // you show the "Load More" button
+                              // Determine the names that will be shown to the user
+                              final poi = Provider.of<MapsDataProvider>(context, listen: false).esriPOIModels[index];
+                              final attributes = poi.attributes;
+                              // As of August 2025 - If updatedName is null, use {Subclass} + {Facility Long Name}.
+                              final title = attributes.updatedName ??
+                                  ((attributes.subclass != null &&
+                                      attributes.facilityLongName != null)
+                                      ? attributes.subclass! +
+                                      ' - ' +
+                                      attributes.facilityLongName!
+                                      : 'Unknown Location');
+                              // If we don't know the location, don't show it in the list
+                              if (title == 'Unknown Location') return const SizedBox.shrink();
+                              // Create the `Load More` button if we are at the end
+                              // of the first 50 items, and there are more to load.
                               if (index == displayedCount && showLoadMore) {
                                 return Center(
                                   child: Padding(
@@ -76,27 +88,17 @@ class _MoreESRIResultsListState extends State<MoreESRIResultsList> {
                                   ),
                                 );
                               }
-                              // Else, show the "More Results" list with 50 locations Names and Distances
+                              // Show the "More Results" list with the first 50 locations Names determined above
                               return ListTile(
-                                title: Text(
-                                  esriPOIModels[index].attributes.updatedName ??
-                                  (
-                                    esriPOIModels[index].attributes.subclass != null &&
-                                    esriPOIModels[index].attributes.facilityLongName != null
-                                      ? esriPOIModels[index].attributes.subclass! +
-                                        ' - ' +
-                                        esriPOIModels[index].attributes.facilityLongName!
-                                      : 'Unknown Location'
-                                  )
-                                ),
+                                title: Text(title),
                                 trailing: Text(
-                                  esriPOIModels[index].distance != null
-                                    ? esriPOIModels[index].distance!.toStringAsFixed(1) + ' mi'
-                                    : '--',
+                                  poi.distance != null
+                                      ? poi.distance!.toStringAsFixed(1) + ' mi'
+                                      : '--',
                                   style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.light
-                                      ? linkColorLight
-                                      : linkColorDark),
+                                      color: Theme.of(context).brightness == Brightness.light
+                                          ? linkColorLight
+                                          : linkColorDark),
                                 ),
                                 onTap: () {
                                   Provider.of<MapsDataProvider>(context, listen: false).addMarker(index);

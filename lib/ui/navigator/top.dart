@@ -2,8 +2,8 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/ui/common/top_content.dart';
 
 class CMAppBar extends StatelessWidget {
   CMAppBar({
@@ -19,114 +19,53 @@ class CMAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (doneButton == true) {
-      return PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: AppBar(
-              elevation: 0,
-              backgroundColor: ColorPrimary,
-              foregroundColor: lightTextColor,
-              primary: true,
-              centerTitle: true,
-              title: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: title == null
-                    ? Image.asset(
-                        'assets/images/UCSanDiegoLogo-nav.png',
-                        fit: BoxFit.contain,
-                        height: 28,
-                      )
-                    : Text(
-                        title!,
-                        style: appBarTitleStyle,
-                      ),
+      return TopContent(
+        title: title,
+        action: Padding(
+            padding: EdgeInsets.only(bottom: 8, right: 20),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: darkButtonColor,
               ),
-              actions: <Widget>[
-                Padding(
-                    padding: EdgeInsets.only(bottom: 8, right: 20),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: darkButtonColor,
-                      ),
-                      child: Text(
-                        'Done',
-                      ),
-                      onPressed: () {
-                        // Set tab bar index to the Home tab
-                        Provider.of<BottomNavigationBarProvider>(context,
-                                listen: false)
-                            .currentIndex = NavigatorConstants.HomeTab;
-
-                        // Navigate to Home tab
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            RoutePaths.BottomNavigationBar,
-                            (Route<dynamic> route) => false);
-
-                        // change the appBar title to the ucsd logo
-                        Provider.of<CustomAppBar>(context, listen: false)
-                            .changeTitle(CustomAppBar().appBar.title);
-                      },
-                    ))
-              ],
-              systemOverlayStyle: SystemUiOverlayStyle.light));
+              child: Text(
+                'Done',
+              ),
+              onPressed: () {
+                // Set tab bar index to the Home tab
+                Provider.of<BottomNavigationBarProvider>(context,
+                    listen: false)
+                    .currentIndex = NavigatorConstants.HomeTab;
+                // Navigate to Home tab
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    RoutePaths.BottomNavigationBar,
+                        (Route<dynamic> route) => false);
+                // change the appBar title to the ucsd logo
+                Provider.of<CustomAppBar>(context, listen: false)
+                    .changeTitle(CustomAppBar().appBar.title);
+              },
+            )),
+          has_action: true,
+      );
     } else if (notificationsFilterButton == true) {
-      return PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: AppBar(
-              elevation: 0,
-              backgroundColor: ColorPrimary,
-              foregroundColor: lightTextColor,
-              primary: true,
-              centerTitle: true,
-              title: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: title == null
-                    ? Image.asset(
-                        'assets/images/UCSanDiegoLogo-nav.png',
-                        fit: BoxFit.contain,
-                        height: 28,
-                      )
-                    : Text(
-                        title!,
-                        style: appBarTitleStyle,
-                      ),
-              ),
-              actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: IconButton(
-                    icon: Icon(Icons.filter_list_outlined),
-                    onPressed: () {
-                      Navigator.pushNamed(
-                          context, RoutePaths.NotificationsFilter);
-                    },
-                  ),
-                )
-              ],
-              systemOverlayStyle: SystemUiOverlayStyle.light));
-    } else {
-      return PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: AppBar(
-          elevation: 0,
-          backgroundColor: ColorPrimary,
-          foregroundColor: lightTextColor,
-          primary: true,
-          centerTitle: true,
-          title: Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: title == null
-                ? Image.asset(
-                    'assets/images/UCSanDiegoLogo-nav.png',
-                    fit: BoxFit.contain,
-                    height: 28,
-                  )
-                : Text(
-                    title!,
-                    style: appBarTitleStyle,
-                  ),
+      return TopContent(
+        title: title,
+        action: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: IconButton(
+            icon: Icon(Icons.filter_list_outlined),
+            onPressed: () {
+              Navigator.pushNamed(
+                  context, RoutePaths.NotificationsFilter);
+            },
           ),
-          systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
+        has_action: true,
+      );
+    } else {
+      return TopContent(
+        title: title,
+        action: null,
+        has_action: false,
       );
     }
   }
@@ -155,12 +94,6 @@ class CustomAppBar extends ChangeNotifier {
     title = RouteTitles.titleMap[newTitle];
     doneButton = done;
     notificationsFilterButton = notification;
-
-    // if (newTitle == "Notifications") {
-    //   notificationsFilterButton = true;
-    // } else {
-    //   notificationsFilterButton = false;
-    // }
 
     makeAppBar();
   }
