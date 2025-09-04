@@ -98,7 +98,7 @@ class ParkingDataProvider extends ChangeNotifier {
       Map<String, bool> newMapOfSpotTypes = Map<String, bool>();
       for (Spot spot in _spotTypeModel.spots!) {
         newMapOfSpotTypes[spot.spotKey] =
-            _selectedSpotTypesState[spot.spotKey]!;
+            _selectedSpotTypesState[spot.spotKey] ?? false;
       }
       _selectedSpotTypesState = newMapOfSpotTypes;
 
