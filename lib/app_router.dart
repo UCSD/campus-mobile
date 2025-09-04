@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
-import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_detail_view.dart';
@@ -10,7 +9,6 @@ import 'package:campus_mobile_experimental/ui/classes/classes_list.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_filter_view.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_list.dart';
-import 'package:campus_mobile_experimental/ui/dining/nutrition_facts_view.dart';
 import 'package:campus_mobile_experimental/ui/events/events_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/events/events_card_list.dart';
 import 'package:campus_mobile_experimental/ui/events/events_view_all.dart';
@@ -100,30 +98,30 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return AvailabilityDetailedView(subLocation: subLocation);
         });
-      case RoutePaths.DiningViewAll:
+      case RoutePaths.DiningViewAllDiningOptions:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name, dining: true);
           return DiningList();
         });
-      case RoutePaths.DiningDetailView:
+      case RoutePaths.DiningOptionDetailView:
         DiningModel data = settings.arguments as DiningModel;
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return DiningDetailView(data: data);
         });
-      case RoutePaths.DiningNutritionView:
-        Map<String, Object?> arguments =
-            settings.arguments as Map<String, Object?>;
-        DiningMenuItem data = arguments['data'] as DiningMenuItem;
-        String? disclaimer = arguments['disclaimer'] as String?;
-        String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
-        return MaterialPageRoute(
-            builder: (_) => NutritionFactsView(
-                  data: data,
-                  disclaimer: disclaimer,
-                  disclaimerEmail: disclaimerEmail,
-                ));
-      case RoutePaths.DiningFilterView:
+      // case RoutePaths.DiningNutritionView:
+      //   Map<String, Object?> arguments =
+      //       settings.arguments as Map<String, Object?>;
+      //   DiningMenuItem data = arguments['data'] as DiningMenuItem;
+      //   String? disclaimer = arguments['disclaimer'] as String?;
+      //   String? disclaimerEmail = arguments['disclaimerEmail'] as String?;
+      //   return MaterialPageRoute(
+      //       builder: (_) => NutritionFactsView(
+      //             data: data,
+      //             disclaimer: disclaimer,
+      //             disclaimerEmail: disclaimerEmail,
+      //           ));
+      case RoutePaths.DiningPaymentFilterView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return DiningFilterView();

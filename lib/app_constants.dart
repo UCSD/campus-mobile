@@ -19,14 +19,14 @@ class RoutePaths {
   static const String EventDetailView = 'events/event_detail_view';
   static const String LinksViewAll = 'links/links_list';
   static const String ClassScheduleViewAll = 'class/classList';
-  static const String ManageAvailabilityView =
-      'availability/manage_locations_view';
+  static const String ManageAvailabilityView = 'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
   static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
   static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
-  static const String DiningViewAll = 'dining/dining_view_all';
-  static const String DiningDetailView = 'dining/dining_detail_view';
-  static const String DiningNutritionView = 'dining/dining_nutrition_view';
+  static const String DiningViewAllDiningOptions = 'dining/view_all_dining_options';
+  static const String DiningOptionDetailView = 'dining/option_detail_view';
+  static const String DiningPaymentFilterView = "dining/payment_filter_view";
+  // static const String DiningNutritionView = 'dining/dining_nutrition_view';
   static const String Parking = "parking/parking_view";
   static const String SpotTypesView = "parking/spot_types_view";
   static const String ParkingStructureView = "parking/parking_structure_view";
@@ -35,7 +35,6 @@ class RoutePaths {
   static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
   static const String AvailabilityDetailedView = "availability/detailed_view";
   static const String WhatsAroundMe = "lib/ui/WhatsAroundMe/wam.dart";
-  static const String DiningFilterView = "dining/dining_filter_view";
 }
 
 class RouteTitles {
@@ -61,10 +60,10 @@ class RouteTitles {
     'parking/parking_lots_view': 'MANAGE LOTS',
     'parking/parking_structure_view': 'MANAGE LOTS',
     'parking/spot_types_view': 'MANAGE SPOTS',
-    'dining/dining_view_all': 'DINING LOCATIONS',
-    'dining/dining_detail_view': 'DINING',
-    'dining/dining_nutrition_view': 'DINING',
-    'dining/dining_filter_view': 'PAYMENT FILTERS',
+    'dining/view_all_dining_options': 'DINING OPTIONS',
+    'dining/option_detail_view': 'OPTION DETAILS',
+    'dining/payment_filter_view': 'PAYMENT FILTERS',
+    // 'dining/dining_nutrition_view': 'DINING',
     'availability/detailed_view': 'BUSYNESS',
   };
 }

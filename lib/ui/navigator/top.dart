@@ -63,7 +63,7 @@ class CMAppBar extends StatelessWidget {
         ),
         hasAction: true,
       );
-    } else if (diningFilterButton == true && title == 'DINING LOCATIONS') {
+    } else if (diningFilterButton == true && title == 'DINING OPTIONS') {
       return TopContent(
           hasFilter: false,
           title: title,
@@ -75,7 +75,7 @@ class CMAppBar extends StatelessWidget {
                     "assets/images/payment_filter.png",
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, RoutePaths.DiningFilterView);
+                    Navigator.pushNamed(context, RoutePaths.DiningPaymentFilterView);
                   })));
     } else if (title == 'PAYMENT FILTERS') {
       return TopContent(
