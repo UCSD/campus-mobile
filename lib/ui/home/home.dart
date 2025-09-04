@@ -165,6 +165,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     initUniLinks();
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
+    Provider.of<CustomAppBar>(context).changeTitle(null);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(

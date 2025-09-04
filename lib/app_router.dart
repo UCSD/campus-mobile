@@ -47,7 +47,10 @@ class Router {
       case RoutePaths.OnboardingLogin:
         return MaterialPageRoute(builder: (_) => OnboardingLogin());
       case RoutePaths.Home:
-        return MaterialPageRoute(builder: (_) => Home());
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(null);
+          return Home();
+        });
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Maps());
       case RoutePaths.MapSearch:
@@ -125,7 +128,7 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return DiningFilterView();
         });
-        case RoutePaths.ManageParkingView:
+      case RoutePaths.ManageParkingView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageParkingView();
@@ -177,7 +180,10 @@ class Router {
           return NeighborhoodLotsView(data);
         });
       default:
-        return MaterialPageRoute(builder: (_) => Home());
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(null);
+          return Home();
+        });
     }
   }
 }
