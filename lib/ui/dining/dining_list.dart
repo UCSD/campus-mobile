@@ -6,7 +6,6 @@ import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
-import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,12 +19,6 @@ class DiningList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Ensure AppBar title is set to DINING LOCATIONS only when this view is visible
-    final customAppBar = Provider.of<CustomAppBar>(context, listen: false);
-    final route = ModalRoute.of(context);
-    if (route?.isCurrent == true && customAppBar.title != 'DINING LOCATIONS') {
-      customAppBar.changeTitle(RoutePaths.DiningViewAll, dining: true);
-    }
     // Using Provider's filteredDiningModels so that the list respects the filters
     List<dining_model.DiningModel> data =
         Provider.of<DiningDataProvider>(context).filteredDiningModels;
