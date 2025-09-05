@@ -100,7 +100,7 @@ class Router {
         });
       case RoutePaths.DiningViewAllDiningOptions:
         return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name, dining: true);
+          Provider.of<CustomAppBar>(_).changeTitle(RoutePaths.DiningViewAllDiningOptions, dining: true);
           return DiningList();
         });
       case RoutePaths.DiningOptionDetailView:
@@ -108,6 +108,12 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return DiningDetailView(data: data);
+        });
+      case RoutePaths.DiningPaymentFilterView:
+        return MaterialPageRoute(builder: (_) {
+            Provider.of<CustomAppBar>(_)
+                .changeTitle(RoutePaths.DiningPaymentFilterView);
+          return DiningFilterView();
         });
       // case RoutePaths.DiningNutritionView:
       //   Map<String, Object?> arguments =
@@ -121,11 +127,6 @@ class Router {
       //             disclaimer: disclaimer,
       //             disclaimerEmail: disclaimerEmail,
       //           ));
-      case RoutePaths.DiningPaymentFilterView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return DiningFilterView();
-        });
       case RoutePaths.ManageParkingView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
