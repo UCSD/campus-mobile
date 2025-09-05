@@ -2,6 +2,8 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../app_constants.dart';
+
 class TopContent extends StatelessWidget {
   TopContent({
     this.title,
@@ -23,6 +25,21 @@ class TopContent extends StatelessWidget {
         foregroundColor: lightTextColor,
         primary: true,
         centerTitle: true,
+        leading: Navigator.of(context).canPop()
+            ? IconButton(
+                icon: Icon(Icons.arrow_back_sharp),
+                onPressed: () {
+                  final currentRoute = ModalRoute.of(context)?.settings.name;
+                  print("\x1B[32mCurrent route name: "+(currentRoute ?? "null")+"\x1B[0m");
+                  if (currentRoute == RoutePaths.DiningPaymentFilterView) {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacementNamed(RoutePaths.DiningViewAllDiningOptions);
+                  } else {
+                    Navigator.of(context).pop();
+                  }
+                },
+              )
+            : null,
         title: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: title == null
