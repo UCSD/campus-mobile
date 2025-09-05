@@ -1,5 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_route_generator.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/navigator_keys.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/wrappers/push_notifications.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
@@ -7,6 +9,8 @@ import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
+import 'package:campus_mobile_experimental/ui/events/events_card_list.dart';
+import 'package:campus_mobile_experimental/ui/dining/dining_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,11 +34,33 @@ class BottomTabBar extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar> {
-  var currentTab = [
-    Home(),
-    prefix0.Maps(),
-    NotificationsListView(),
-    Profile(),
+  final List<Widget> tabNavigators = [
+    Navigator(
+      key: TabNavigatorKeys.homeTabKey,
+      initialRoute: RoutePaths.Home,
+      onGenerateRoute: (settings) => generateAppRoute(settings, context: context),
+    ),
+    Navigator(
+      key: TabNavigatorKeys.mapTabKey,
+      onGenerateRoute: (settings) => MaterialPageRoute(
+        builder: (_) => prefix0.Maps(),
+        settings: settings,
+      ),
+    ),
+    Navigator(
+      key: TabNavigatorKeys.notificationsTabKey,
+      onGenerateRoute: (settings) => MaterialPageRoute(
+        builder: (_) => NotificationsListView(),
+        settings: settings,
+      ),
+    ),
+    Navigator(
+      key: TabNavigatorKeys.profileTabKey,
+      onGenerateRoute: (settings) => MaterialPageRoute(
+        builder: (_) => Profile(),
+        settings: settings,
+      ),
+    ),
   ];
 
   @override
@@ -50,7 +76,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(42),
           child: Provider.of<CustomAppBar>(context).appBar),
-      body: PushNotificationWrapper(child: currentTab[provider.currentIndex]),
+      body: PushNotificationWrapper(child: tabNavigators[provider.currentIndex]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: theme.bottomNavigationBarTheme.backgroundColor,

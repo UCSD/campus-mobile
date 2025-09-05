@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/ui/common/top_content.dart';
 
+import '../../core/navigator_keys.dart';
+
 class CMAppBar extends StatelessWidget {
   CMAppBar({
     this.title,
@@ -54,8 +56,9 @@ class CMAppBar extends StatelessWidget {
           child: IconButton(
             icon: Icon(Icons.filter_list_outlined),
             onPressed: () {
-              Navigator.pushNamed(
-                  context, RoutePaths.NotificationsFilter);
+              //Navigator.pushNamed(context, RoutePaths.NotificationsFilter);
+              TabNavigatorKeys.notificationsTabKey.currentState
+                  ?.pushNamed(RoutePaths.NotificationsFilter);
             },
           ),
         ),
@@ -91,6 +94,7 @@ class CustomAppBar extends ChangeNotifier {
   }
 
   changeTitle(String? newTitle, {done = false, notification = false}) {
+    print("\x1B[34m[CustomAppBar] new route is " + (newTitle ?? 'null') + "\x1B[0m, done=$done, notification=$notification");
     title = RouteTitles.titleMap[newTitle];
     doneButton = done;
     notificationsFilterButton = notification;

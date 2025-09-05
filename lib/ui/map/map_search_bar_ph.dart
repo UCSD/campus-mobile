@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/navigator_keys.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,8 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
           margin: EdgeInsets.all(5),
           child: RawMaterialButton(
             onPressed: () {
-              Navigator.pushNamed(context, RoutePaths.MapSearch);
+              // Navigator.pushNamed(context, RoutePaths.MapSearch);
+              TabNavigatorKeys.mapTabKey.currentState?.pushNamed(RoutePaths.MapSearch);
             },
             child: Row(
               children: <Widget>[
