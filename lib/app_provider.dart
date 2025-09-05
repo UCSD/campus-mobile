@@ -36,9 +36,6 @@ final FirebaseAnalyticsObserver observer =
 
 List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
-  ChangeNotifierProvider<CustomAppBar>(
-    create: (_) => CustomAppBar(),
-  ),
   ChangeNotifierProvider<BottomNavigationBarProvider>(
     create: (_) {
       return BottomNavigationBarProvider();
@@ -71,6 +68,9 @@ List<SingleChildWidget> independentServices = [
       return LocationDataProvider().locationStream;
     },
     lazy: false,
+  ),
+  ChangeNotifierProvider<CustomAppBar>(
+    create: (_) => CustomAppBar(),
   ),
   ChangeNotifierProvider<NoticesDataProvider>(
     create: (_) {

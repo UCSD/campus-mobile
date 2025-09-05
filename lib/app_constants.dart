@@ -79,7 +79,6 @@ class ParkingDefaults {
 }
 
 class DiningConstants {
-  static const filterCount = 7;
   static const payment_filter_types = [
     "Triton Cash",
     "Dining Dollars",
