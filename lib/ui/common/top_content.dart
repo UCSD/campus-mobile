@@ -7,13 +7,11 @@ class TopContent extends StatelessWidget {
     this.title,
     this.action,
     required this.hasAction,
-    required this.hasFilter,
   });
 
   final String? title;
   final Widget? action;
   final bool hasAction;
-  final bool hasFilter;
 
   @override
   Widget build(BuildContext context) {

@@ -22,7 +22,6 @@ class CMAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (doneButton == true) {
       return TopContent(
-        hasFilter: false,
         title: title,
         action: Padding(
             padding: EdgeInsets.only(bottom: 8, right: 20),
@@ -50,7 +49,6 @@ class CMAppBar extends StatelessWidget {
       );
     } else if (notificationsFilterButton == true) {
       return TopContent(
-        hasFilter: false,
         title: title,
         action: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
@@ -63,9 +61,8 @@ class CMAppBar extends StatelessWidget {
         ),
         hasAction: true,
       );
-    } else if (diningFilterButton == true && title == 'DINING OPTIONS') {
+    } else if (diningFilterButton == true) {
       return TopContent(
-          hasFilter: false,
           title: title,
           hasAction: true,
           action: Padding(
@@ -75,14 +72,11 @@ class CMAppBar extends StatelessWidget {
                     "assets/images/payment_filter.png",
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, RoutePaths.DiningPaymentFilterView);
+                    Navigator.pushNamed(
+                        context, RoutePaths.DiningPaymentFilterView);
                   })));
-    } else if (title == 'PAYMENT FILTERS') {
-      return TopContent(
-          hasFilter: true, title: title, hasAction: false, action: null);
     } else {
       return TopContent(
-        hasFilter: false,
         title: title,
         action: null,
         hasAction: false,
@@ -118,7 +112,6 @@ class CustomAppBar extends ChangeNotifier {
     doneButton = done;
     notificationsFilterButton = notification;
     diningFilterButton = dining;
-
     makeAppBar();
   }
 }

@@ -38,7 +38,6 @@ List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
   ChangeNotifierProvider<CustomAppBar>(
     create: (_) => CustomAppBar(),
-    lazy: false,
   ),
   ChangeNotifierProvider<BottomNavigationBarProvider>(
     create: (_) {
