@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
+import 'package:campus_mobile_experimental/ui/dining/payment_filter_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -67,18 +68,27 @@ class DiningList extends StatelessWidget {
                         : listTileDividerColorLight)
                 .toList(),
           )
-        : ContainerView(
-            child: ListView(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              shrinkWrap: true,
-              children: ListTile.divideTiles(
-                tiles: diningTiles,
-                context: context,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? listTileDividerColorDark
-                    : listTileDividerColorLight,
-              ).toList(),
-            ),
+        : Stack(
+            children: [
+              ContainerView(
+                child: ListView(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  shrinkWrap: true,
+                  children: ListTile.divideTiles(
+                    tiles: diningTiles,
+                    context: context,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? listTileDividerColorDark
+                        : listTileDividerColorLight,
+                  ).toList(),
+                ),
+              ),
+              Positioned(
+                bottom: 24,
+                right: 24,
+                child: PaymentFilterButton(),
+              ),
+            ],
           );
   }
 
