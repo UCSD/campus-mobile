@@ -14,26 +14,23 @@ class DiningFilterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final diningProvider = Provider.of<DiningDataProvider>(context);
     return ContainerView(
-        child: buildSettingsList(context, DiningConstants.payment_filter_types)
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: ListView(
+          children: ListTile.divideTiles(
+            context: context,
+            tiles: createList(context, DiningConstants.payment_filter_types, diningProvider),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? listTileDividerColorDark
+                : listTileDividerColorLight,
+          ).toList(),
+        ),
+      ),
     );
   }
 
-  Widget buildSettingsList(BuildContext context, List<String> topicsData) {
-    final diningProvider = Provider.of<DiningDataProvider>(context);
-    return (Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      child: ListView(
-        children: ListTile.divideTiles(
-          context: context,
-          tiles: createList(context, topicsData, diningProvider),
-          color: Theme.of(context).brightness == Brightness.dark
-              ? listTileDividerColorDark
-              : listTileDividerColorLight,
-        ).toList(),
-      ),
-    ));
-  }
 
   // Creates a list of tiles containing filter types with switches
   List<Widget> createList(BuildContext context, List<String> typesAvailable,
