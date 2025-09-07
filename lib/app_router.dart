@@ -109,6 +109,9 @@ class Router {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return DiningDetailView(data: data);
         });
+      case RoutePaths.DiningPaymentFilterView:
+        // Don't Change the app bar title for this view
+        return MaterialPageRoute(builder: (_) => DiningFilterView());
       // case RoutePaths.DiningNutritionView:
       //   Map<String, Object?> arguments =
       //       settings.arguments as Map<String, Object?>;
@@ -121,11 +124,6 @@ class Router {
       //             disclaimer: disclaimer,
       //             disclaimerEmail: disclaimerEmail,
       //           ));
-      case RoutePaths.DiningPaymentFilterView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return DiningFilterView();
-        });
       case RoutePaths.ManageParkingView:
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);

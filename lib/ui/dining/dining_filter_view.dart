@@ -15,18 +15,33 @@ class DiningFilterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final diningProvider = Provider.of<DiningDataProvider>(context);
+    // A ContainerView with a Column allows us to overlap the filter list
+    // on top of the current screen. That way, we don't need nested navigators.
     return ContainerView(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        child: ListView(
-          children: ListTile.divideTiles(
-            context: context,
-            tiles: createList(context, DiningConstants.payment_filter_types, diningProvider),
-            color: Theme.of(context).brightness == Brightness.dark
-                ? listTileDividerColorDark
-                : listTileDividerColorLight,
-          ).toList(),
-        ),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Text(
+              'Dining Payment Filters',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: ListView(
+                children: ListTile.divideTiles(
+                  context: context,
+                  tiles: createList(context, DiningConstants.payment_filter_types, diningProvider),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? listTileDividerColorDark
+                      : listTileDividerColorLight,
+                ).toList(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
