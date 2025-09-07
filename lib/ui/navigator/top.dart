@@ -89,7 +89,7 @@ class CustomAppBar extends ChangeNotifier {
   }
 
   changeTitle(String? newTitle, {done = false, notification = false}) {
-    print("\x1B[34m[CustomAppBar] new route is " + (newTitle ?? 'null') + "\x1B[0m, done=$done, notification=$notification");
+    // print("\x1B[34m[CustomAppBar] new route is " + (newTitle ?? 'null') + "\x1B[0m, done=$done, notification=$notification");
     title = RouteTitles.titleMap[newTitle];
     doneButton = done;
     notificationsFilterButton = notification;
