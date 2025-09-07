@@ -10,13 +10,11 @@ class CMAppBar extends StatelessWidget {
     this.title,
     this.doneButton,
     this.notificationsFilterButton,
-    this.diningFilterButton,
   });
 
   final String? title;
   final bool? doneButton;
   final bool? notificationsFilterButton;
-  final bool? diningFilterButton;
 
   @override
   Widget build(BuildContext context) {
@@ -61,20 +59,6 @@ class CMAppBar extends StatelessWidget {
         ),
         hasAction: true,
       );
-    } else if (diningFilterButton == true) {
-      return TopContent(
-          title: title,
-          hasAction: true,
-          action: Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: IconButton(
-                  icon: Image.asset(
-                    "assets/images/payment_filter.png",
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                        context, RoutePaths.DiningPaymentFilterView);
-                  })));
     } else {
       return TopContent(
         title: title,
@@ -94,7 +78,6 @@ class CustomAppBar extends ChangeNotifier {
   String? title;
   bool? doneButton;
   bool? notificationsFilterButton;
-  bool? diningFilterButton;
   late CMAppBar appBar;
 
   makeAppBar() {
@@ -102,16 +85,14 @@ class CustomAppBar extends ChangeNotifier {
       title: title,
       doneButton: doneButton,
       notificationsFilterButton: notificationsFilterButton,
-      diningFilterButton: diningFilterButton,
     );
   }
 
-  changeTitle(String? newTitle, {done = false, notification = false, dining = false}) {
-    print("\x1B[34m[CustomAppBar] new route is " + (newTitle ?? 'null') + "\x1B[0m, done=$done, notification=$notification, dining=$dining");
+  changeTitle(String? newTitle, {done = false, notification = false}) {
+    print("\x1B[34m[CustomAppBar] new route is " + (newTitle ?? 'null') + "\x1B[0m, done=$done, notification=$notification");
     title = RouteTitles.titleMap[newTitle];
     doneButton = done;
     notificationsFilterButton = notification;
-    diningFilterButton = dining;
     makeAppBar();
   }
 }

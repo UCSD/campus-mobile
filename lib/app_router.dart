@@ -100,7 +100,7 @@ class Router {
         });
       case RoutePaths.DiningViewAllDiningOptions:
         return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name, dining: true);
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return DiningList();
         });
       case RoutePaths.DiningOptionDetailView:
