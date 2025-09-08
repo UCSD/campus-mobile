@@ -176,7 +176,10 @@ class Router {
           return NeighborhoodLotsView(data);
         });
       default:
-        return MaterialPageRoute(builder: (_) => Home());
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(null);
+          return Home();
+        });
     }
   }
 }
