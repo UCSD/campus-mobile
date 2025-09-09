@@ -48,7 +48,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
           ? lightPrimaryColor
           : theme.scaffoldBackgroundColor,
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(42),
+          preferredSize: Size.fromHeight(50),
           child: Provider.of<CustomAppBar>(context).appBar),
       body: PushNotificationWrapper(child: currentTab[provider.currentIndex]),
       bottomNavigationBar: Container(

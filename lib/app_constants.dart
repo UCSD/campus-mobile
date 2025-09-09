@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RoutePaths {
@@ -20,14 +19,14 @@ class RoutePaths {
   static const String EventDetailView = 'events/event_detail_view';
   static const String LinksViewAll = 'links/links_list';
   static const String ClassScheduleViewAll = 'class/classList';
-  static const String ManageAvailabilityView =
-      'availability/manage_locations_view';
+  static const String ManageAvailabilityView = 'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
   static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
   static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
-  static const String DiningViewAll = 'dining/dining_list_view';
-  static const String DiningDetailView = 'dining/dining_detail_view';
-  static const String DiningNutritionView = 'dining/dining_nutrition_view';
+  static const String DiningViewAllDiningOptions = 'dining/view_all_dining_options';
+  static const String DiningOptionDetailView = 'dining/option_detail_view';
+  static const String DiningPaymentFilterView = "dining/payment_filter_view";
+  // static const String DiningNutritionView = 'dining/dining_nutrition_view';
   static const String Parking = "parking/parking_view";
   static const String SpotTypesView = "parking/spot_types_view";
   static const String ParkingStructureView = "parking/parking_structure_view";
@@ -61,10 +60,11 @@ class RouteTitles {
     'parking/parking_lots_view': 'MANAGE LOTS',
     'parking/parking_structure_view': 'MANAGE LOTS',
     'parking/spot_types_view': 'MANAGE SPOTS',
-    'dining/dining_list_view': 'DINING',
-    'dining/dining_detail_view': 'DINING',
-    'dining/dining_nutrition_view': 'DINING',
-    'availability/detailed_view': 'BUSYNESS'
+    'dining/view_all_dining_options': 'DINING',
+    'dining/option_detail_view': 'DINING',
+    'dining/payment_filter_view': 'PAYMENT FILTERS',
+    // 'dining/dining_nutrition_view': 'DINING',
+    'availability/detailed_view': 'BUSYNESS',
   };
 }
 
@@ -76,6 +76,18 @@ class ParkingDefaults {
     "Theatre District",
   ];
   static const defaultSpots = ["S", "B", "A"];
+}
+
+class DiningConstants {
+  static const payment_filter_types = [
+    "Triton Cash",
+    "Dining Dollars",
+    "Apple/Google Pay",
+    "MasterCard, Visa",
+    "American Express",
+    "Cash",
+    "Other",
+  ];
 }
 
 class ButtonText {

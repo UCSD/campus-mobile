@@ -70,9 +70,7 @@ List<SingleChildWidget> independentServices = [
     lazy: false,
   ),
   ChangeNotifierProvider<CustomAppBar>(
-    create: (_) {
-      return CustomAppBar();
-    },
+    create: (_) => CustomAppBar(),
   ),
   ChangeNotifierProvider<NoticesDataProvider>(
     create: (_) {

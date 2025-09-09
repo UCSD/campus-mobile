@@ -163,6 +163,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<CustomAppBar>(context).changeTitle(null); // reset title to logo
     initUniLinks();
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return Padding(

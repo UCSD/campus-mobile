@@ -6,9 +6,9 @@ import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
+import 'package:campus_mobile_experimental/ui/dining/payment_filter_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DiningList extends StatelessWidget {
   const DiningList({
@@ -20,12 +20,26 @@ class DiningList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Using Provider's filteredDiningModels so that the list respects the filters
     List<dining_model.DiningModel> data =
-        Provider.of<DiningDataProvider>(context).diningModels;
-    return data.length > 0
-        ? buildDiningList(data, context)
-        : CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary);
+        Provider.of<DiningDataProvider>(context).filteredDiningModels;
+    if (data.isEmpty) {
+      return ContainerView(
+        child: ListView(
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 32),
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            Text(
+              'No dining locations match your filters.',
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+    return buildDiningList(data, context);
   }
 
   Widget buildDiningList(
@@ -54,17 +68,27 @@ class DiningList extends StatelessWidget {
                         : listTileDividerColorLight)
                 .toList(),
           )
-        : ContainerView(
-            child: ListView(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              children: ListTile.divideTiles(
-                tiles: diningTiles,
-                context: context,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? listTileDividerColorDark
-                    : listTileDividerColorLight,
-              ).toList(),
-            ),
+        : Stack(
+            children: [
+              ContainerView(
+                child: ListView(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  shrinkWrap: true,
+                  children: ListTile.divideTiles(
+                    tiles: diningTiles,
+                    context: context,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? listTileDividerColorDark
+                        : listTileDividerColorLight,
+                  ).toList(),
+                ),
+              ),
+              Positioned(
+                bottom: 24,
+                right: 24,
+                child: PaymentFilterButton(),
+              ),
+            ],
           );
   }
 
@@ -212,7 +236,7 @@ class DiningList extends StatelessWidget {
       trailing: buildIconWithDistance(data, context),
       onTap: () {
         // if (data.id != null) Provider.of<DiningDataProvider>(context, listen: false).fetchDiningMenu(data.id!);
-        Navigator.pushNamed(context, RoutePaths.DiningDetailView,
+        Navigator.pushNamed(context, RoutePaths.DiningOptionDetailView,
             arguments: data);
       },
     );
