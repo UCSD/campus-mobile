@@ -12,11 +12,15 @@ class PaymentFilterButton extends StatelessWidget {
     return FloatingActionButton(
       heroTag: "directions",
       child: Image.asset(
-        "assets/images/payment_filter.png",
+        Theme.of(context).brightness == Brightness.light
+            ? "assets/images/payment_filter.png"
+            : "assets/images/payment_filter_dark.png",
         width: 32,
         height: 32,
       ),
-      backgroundColor: ColorPrimary,
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? ColorPrimary
+          : Colors.white,
       onPressed: () {
         Navigator.pushNamed(context, RoutePaths.DiningPaymentFilterView);
       },
