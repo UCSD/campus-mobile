@@ -6,6 +6,30 @@ List<EsriPOIModel> esriPOIModelFromJson(String str) => List<EsriPOIModel>.from(
 String esriPOIModelToJson(List<EsriPOIModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+/// Parses JSON from the Public Buildings API which has a different structure
+/// and maps it to the EsriPOIModel structure by extracting the common attributes
+/// which are Object ID, and FacilityLongName, and geometry x/y coordinates.
+/// TODO: Add latitude and longitude
+List<EsriPOIModel> esriPOIModelFromForeignJson(String str) {
+  final jsonData = json.decode(str);
+  final features = jsonData["features"] ?? [];
+  return List<EsriPOIModel>.from(features.map((feature) {
+    final attrs = feature["attributes"] ?? {};
+    final geom = feature["geometry"] ?? {};
+    return EsriPOIModel(
+      attributes: Attributes(
+        objectId: attrs["OBJECTID"],
+        facilityLongName: attrs["FacilityLongName"],
+        // All other fields are left null
+      ),
+      geometry: Geometry(
+        x: geom["x"]?.toDouble() ?? 0.0,
+        y: geom["y"]?.toDouble() ?? 0.0,
+      ),
+    );
+  }));
+}
+
 class EsriPOIModel {
   Attributes attributes;
   Geometry geometry;
