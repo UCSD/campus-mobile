@@ -30,6 +30,7 @@ List<EsriPOIModel> esriPOIModelFromForeignJson(String str) {
   }));
 }
 
+/// Model that holds the data from ESRI's Points of Interest API
 class EsriPOIModel {
   Attributes attributes;
   Geometry geometry;

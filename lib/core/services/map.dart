@@ -17,35 +17,60 @@ class MapSearchService {
     // Escape any single-quotes in the user’s text
     final escapedSearchText = stemmedSearchText.replaceAll("'", "''");
     // Build a raw SQL WHERE clause for general search
-    final whereClause = dotenv.get('MAP_POI_WHERE_CLAUSE').replaceAll('{query}', escapedSearchText);
-    final params = {
-      'where': whereClause,
+    final whereClausePOI = dotenv.get('MAP_POI_WHERE_CLAUSE').replaceAll('{query}', escapedSearchText);
+    final paramsPOI = {
+      'where': whereClausePOI,
       'outFields': '*',
       'f': 'json',
     };
-    final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: params);
+    final uriPOI = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: paramsPOI);
+    // Build a raw SQL WHERE clause for public buildings search
+    final whereClausePublicBuildings = dotenv.get('MAP_PUBLIC_BUILDINGS_WHERE_CLAUSE').replaceAll('{query}', escapedSearchText);
+    final paramsPublicBuildings = {
+      'where': whereClausePublicBuildings,
+      'outFields': '*',
+      'f': 'json',
+    };
+    final uriPublicBuildings = Uri.parse(dotenv.get('MAP_PUBLIC_BUILDINGS_ENDPOINT')).replace(queryParameters: paramsPublicBuildings);
+
     _error = null;
     _isLoading = true;
-
     try {
       // print('======== Fetching ' + escapedSearchText + ' data from: ' + uri.toString());
-      var _response = await NetworkHelper.fetchData(uri.toString());
-      if (_response != 'null') {
+      var _responsePOI = await NetworkHelper.fetchData(uriPOI.toString());
+      if (_responsePOI != 'null') {
         /// parse data
-        // print(_response);
-        final data = esriPOIModelFromJson(_response);
+        final data = esriPOIModelFromJson(_responsePOI);
         _esriResults = data;
-        print(_esriResults);
       } else {
         _esriResults = [];
         return false;
       }
+      // return true;
+    } catch (e) {
+      _error = e.toString();
+      print('======== Error fetching Points of Interest data: ' + e.toString());
+      return false;
+    }
+
+    try {
+      // Fetch public buildings data
+      var _responsePublicBuildings = await NetworkHelper.fetchData(uriPublicBuildings.toString());
+      if (_responsePublicBuildings != 'null') {
+        /// parse data (only extract relevant fields)
+        final publicBuildingsData = esriPOIModelFromForeignJson(_responsePublicBuildings);
+        _esriResults.addAll(publicBuildingsData);
+        print('======== Merged results =============');
+        print(_esriResults);
+      }
+
       return true;
     } catch (e) {
       _error = e.toString();
-      print('======== Error fetching GENERAL data: ' + e.toString());
+      print('======== Error fetching Public Buildings data: ' + e.toString());
       return false;
-    } finally {
+    }
+    finally {
       _isLoading = false;
     }
   }
