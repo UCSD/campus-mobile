@@ -59,11 +59,14 @@ class MapSearchService {
       if (_responsePublicBuildings != 'null') {
         /// parse data (only extract relevant fields)
         final publicBuildingsData = esriPOIModelFromForeignJson(_responsePublicBuildings);
+        print('======== Public Buildings results =============');
+        print(publicBuildingsData);
+        // Merge the two lists
         _esriResults.addAll(publicBuildingsData);
         print('======== Merged results =============');
-        print(_esriResults);
       }
 
+      print(_esriResults);
       return true;
     } catch (e) {
       _error = e.toString();
