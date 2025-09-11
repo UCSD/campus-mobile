@@ -42,17 +42,21 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
     x_longitude = position.longitude;
     y_latitude = position.latitude;
   } catch (e) {
-    print('Error getting location: $e, using Geisel Library coordinates instead.');
+    print(
+        'Error getting location: $e, using Geisel Library coordinates instead.');
   }
 
   // Prepare Points of Interest call
-  final params = {'isWAM': 'true'};
-  final uri = Uri.parse(dotenv.get('CAMPUS_MAP_SEARCH_ENDPOINT')).replace(queryParameters: params);
+  final Map<String, String> headers = {
+    "x-api-key": dotenv.get('CAMPUS_MAP_SEARCH_KEY'),
+  };
 
   // Perform the API call
   try {
-    // print('======== Fetching data from: ' + uri.toString());
-    var _response = await NetworkHelper.fetchData(uri.toString());
+    var _response = await NetworkHelper.authorizedFetch(
+        dotenv.get('CAMPUS_MAP_SEARCH_ENDPOINT') +
+            '?isWAM=true', headers);
+
     if (_response != 'null') {
       /// parse data
       final data = mapFeatureFromJson(_response);
@@ -93,26 +97,29 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
         .where((result) => seen.add(result.attributes.ObjectId))
         .take(count * 2) // Take more to account for possible filtering
         .map((result) {
-      final name = result.attributes.UpdatedName ??
-          ((result.attributes.Subclass != null && result.attributes.FacilityLongName != null)
-              ? result.attributes.Subclass! + " - " + result.attributes.FacilityLongName!
-              : "Unknown Location");
-      return Place(
-        name: name,
-        location: "${result.attributes.Latitude}, ${result.attributes.Longitude}",
-        distanceFromUser: result.distance ?? 1000.0,
-        category: result.attributes.Subclass ?? " ",
-      );
-    })
-    .where((place) => place.name != "Unknown Location")
-    .take(count)
-    .toList();
+          final name = result.attributes.UpdatedName ??
+              ((result.attributes.Subclass != null &&
+                      result.attributes.FacilityLongName != null)
+                  ? result.attributes.Subclass! +
+                      " - " +
+                      result.attributes.FacilityLongName!
+                  : "Unknown Location");
+          return Place(
+            name: name,
+            location:
+                "${result.attributes.Latitude}, ${result.attributes.Longitude}",
+            distanceFromUser: result.distance ?? 1000.0,
+            category: result.attributes.Subclass ?? " ",
+          );
+        })
+        .where((place) => place.name != "Unknown Location")
+        .take(count)
+        .toList();
 
     // print("/////////////////////// wamResults ////////////////////////");
     // print("WAM Results: ${wamResults.map((place) => place.toString()).toList()}");
     return wamResults;
-  }
-  catch (e) {
+  } catch (e) {
     print("Error feeding wamResults: $e");
     return [];
   }

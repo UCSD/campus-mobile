@@ -106,7 +106,7 @@ class MapsDataProvider extends ChangeNotifier {
     if (await _mapSearchService.fetchESRILocations(query)) {
       _mapSearchModels = _mapSearchService.mapSearchResults;
       _noResults = false;
-      // print("ESRI API Results: " + _mapSearchModels.toString());
+      // print("MapSearchAPI Results: " + _mapSearchModels.toString());
       if (_mapSearchModels.isEmpty) {
         _noResults = true;
       } else {
