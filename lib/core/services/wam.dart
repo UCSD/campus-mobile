@@ -4,7 +4,6 @@ import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/models/wam.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:campus_mobile_experimental/core/models/esri_poi.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
 
 // Default coordinates (Geisel Library)
