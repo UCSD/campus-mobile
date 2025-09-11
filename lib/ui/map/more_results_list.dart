@@ -18,62 +18,77 @@ class MoreESRIResultsList extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet(
               context: context,
-              builder: (context) => Column(
-                children: <Widget>[
-                  Container(
-                    height: 50,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'More Results',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              builder: (context) {
+                // Get all POIs
+                final allPOIs =
+                    Provider.of<MapsDataProvider>(context, listen: false)
+                        .mapSearchModels;
+                // Separate TopResult == "1" and TopResult == "0"
+                final topResults = allPOIs
+                    .where((poi) => poi.attributes.TopResult == "1")
+                    .toList();
+                final otherResults = allPOIs
+                    .where((poi) => poi.attributes.TopResult == "0")
+                    .toList();
+                // Sort each by distance ascending
+                topResults.sort((a, b) => (a.distance ?? double.infinity)
+                    .compareTo(b.distance ?? double.infinity));
+                otherResults.sort((a, b) => (a.distance ?? double.infinity)
+                    .compareTo(b.distance ?? double.infinity));
+                // Concatenate
+                final sortedPOIs = [...topResults, ...otherResults];
+                return Column(
+                  children: <Widget>[
+                    Container(
+                      height: 50,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'More Results',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  Divider(
-                    height: 0,
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: Provider.of<MapsDataProvider>(context)
-                          .mapSearchModels
-                          .length,
-                      // Builds the "More Results" list with location Name and Distance
-                      itemBuilder: (BuildContext context, int index) {
-                        final poi = Provider.of<MapsDataProvider>(context, listen: false).mapSearchModels[index];
-                        final attributes = poi.attributes;
-                        // As of August 2025 - If updatedName is null, use {Subclass} + {Facility Long Name}.
-                        final title = attributes.UpdatedName ??
-                            ((attributes.Subclass != null &&
-                                    attributes.FacilityLongName != null)
-                                ? attributes.Subclass! +
-                                    ' - ' +
-                                    attributes.FacilityLongName!
-                                : 'Unknown Location');
-                        // If we don't know the location, don't show it in the list
-                        if (title == 'Unknown Location') return const SizedBox.shrink();
-                        return ListTile(
-                          title: Text(title),
-                          trailing: Text(
-                            poi.distance != null
-                                ? poi.distance!.toStringAsFixed(1) + ' mi'
-                                : '--',
-                            style: TextStyle(
-                                color: Theme.of(context).brightness == Brightness.light
-                                    ? linkColorLight
-                                    : linkColorDark),
-                          ),
-                          onTap: () {
-                            Provider.of<MapsDataProvider>(context,
-                                    listen: false)
-                                .addMarker(index);
-                            Navigator.pop(context);
-                          },
-                        );
-                      },
+                    Divider(
+                      height: 0,
                     ),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: sortedPOIs.length,
+                        // Builds the "More Results" list with location Name and Distance
+                        itemBuilder: (BuildContext context, int index) {
+                          final poi = sortedPOIs[index];
+                          final attributes = poi.attributes;
+                          // As of August 2025 - If updatedName is null, use {Subclass} + {Facility Long Name}.
+                          /// TODO: Move this title logic to the lambda
+                          final title = getPOITitle(attributes);
+                          // If we don't know the location, don't show it in the list
+                          if (title == 'Unknown Location')
+                            return const SizedBox.shrink();
+                          return ListTile(
+                            title: Text(title),
+                            trailing: Text(
+                              poi.distance != null
+                                  ? poi.distance!.toStringAsFixed(1) + ' mi'
+                                  : '--',
+                              style: TextStyle(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? linkColorLight
+                                      : linkColorDark),
+                            ),
+                            onTap: () {
+                              Provider.of<MapsDataProvider>(context,
+                                      listen: false)
+                                  .addMarker(allPOIs.indexOf(poi));
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           },
           style: ElevatedButton.styleFrom(
@@ -93,5 +108,23 @@ class MoreESRIResultsList extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+String getPOITitle(dynamic attributes) {
+  if (attributes.UpdatedName != null) {
+    if (int.tryParse(attributes.UpdatedName!) != null) {
+      return attributes.Subclass != null
+          ? attributes.Subclass! + ' - ' + attributes.UpdatedName!
+          : attributes.UpdatedName!;
+    } else {
+      return attributes.UpdatedName!;
+    }
+  } else if (attributes.Subclass != null && attributes.FacilityLongName != null) {
+    return attributes.Subclass! + ' - ' + attributes.FacilityLongName!;
+  } else if (attributes.FacilityLongName != null) {
+    return attributes.FacilityLongName!;
+  } else {
+    return 'Unknown Location';
   }
 }

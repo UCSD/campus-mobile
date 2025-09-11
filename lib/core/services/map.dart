@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,22 +13,21 @@ class MapSearchService {
   /// Fetches locations from a ESRI's POINTS OF INTEREST
   /// This function is used for the Search bar.
   Future<bool> fetchESRILocations(String searchText) async {
-    final params = {
-      'isWAM': 'false',
-      'searchTerm': searchText,
+    final Map<String, String> headers = {
+      "x-api-key": dotenv.get('CAMPUS_MAP_SEARCH_KEY'),
     };
-    final uri = Uri.parse(dotenv.get('CAMPUS_MAP_SEARCH_ENDPOINT')).replace(queryParameters: params);
     _error = null;
     _isLoading = true;
 
     try {
-      // print('======== Fetching ' + escapedSearchText + ' data from: ' + uri.toString());
-      var _response = await NetworkHelper.fetchData(uri.toString());
+      var _response = await NetworkHelper.authorizedFetch(
+          dotenv.get('CAMPUS_MAP_SEARCH_ENDPOINT') +
+              '?isWAM=false&searchTerm=${searchText}', headers);
+
       if (_response != 'null') {
         /// parse data
-        // print(_response);
-        final data = mapFeatureFromJson(_response);
-        _mapSearchResults = data;
+        final collection = MapSearchCollection.fromJson(json.decode(_response));
+        _mapSearchResults = collection.features;
         print(_mapSearchResults);
       } else {
         _mapSearchResults = [];
