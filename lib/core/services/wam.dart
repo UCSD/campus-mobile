@@ -1,5 +1,6 @@
 /// WAM Service used to fetch the points of interest around you
 import 'dart:math';
+import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/models/wam.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,7 +15,7 @@ var y_latitude = 32.88115782225114;
 const double radius = 0.3;
 
 // Vessel to hold the fetched nearby locations from POI
-List<EsriPOIModel> _nearbyLocations = [];
+List<MapSearchModel> _nearbyLocations = [];
 
 /// Fetches a list of nearby places by querying Points of Interest with different
 /// categories such as restaurants, buildings, shops, cafes, etc.
@@ -45,13 +46,8 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
   }
 
   // Prepare Points of Interest call
-  final whereClause = dotenv.get('WAM_WHERE_CLAUSE');
-  final params = {
-    'where': whereClause,
-    'outFields': '*',
-    'f': 'json',
-  };
-  final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: params);
+  final params = {'isWAM': 'true'};
+  final uri = Uri.parse(dotenv.get('CAMPUS_MAP_SEARCH_ENDPOINT')).replace(queryParameters: params);
 
   // Perform the API call
   try {
@@ -59,28 +55,28 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
     var _response = await NetworkHelper.fetchData(uri.toString());
     if (_response != 'null') {
       /// parse data
-      final data = esriPOIModelFromJson(_response);
+      final data = mapFeatureFromJson(_response);
       _nearbyLocations = data;
     } else {
       _nearbyLocations = [];
     }
   } catch (e) {
-    print("Error fetching WAM results using POI: $e");
+    print("Error fetching WAM results: $e");
     return [];
   }
 
   // Populate distance from student for each location
-  for (EsriPOIModel model in _nearbyLocations) {
-    if (model.attributes.latitude != null &&
-        model.attributes.longitude != null) {
+  for (MapSearchModel model in _nearbyLocations) {
+    if (model.attributes.Latitude != null &&
+        model.attributes.Longitude != null) {
       var distance = calculateDistance(y_latitude, x_longitude,
-          model.attributes.latitude!, model.attributes.longitude!);
+          model.attributes.Latitude!, model.attributes.Longitude!);
       model.distance = distance as double?;
     }
   }
 
   // Sort locations by distance from user
-  _nearbyLocations.sort((EsriPOIModel a, EsriPOIModel b) {
+  _nearbyLocations.sort((MapSearchModel a, MapSearchModel b) {
     if (a.distance != null && b.distance != null) {
       return a.distance!.compareTo(b.distance!);
     }
@@ -94,18 +90,18 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
   try {
     final seen = <dynamic>{};
     final wamResults = _nearbyLocations
-        .where((result) => seen.add(result.attributes.objectId))
+        .where((result) => seen.add(result.attributes.ObjectId))
         .take(count * 2) // Take more to account for possible filtering
         .map((result) {
-      final name = result.attributes.updatedName ??
-          ((result.attributes.subclass != null && result.attributes.facilityLongName != null)
-              ? result.attributes.subclass! + " - " + result.attributes.facilityLongName!
+      final name = result.attributes.UpdatedName ??
+          ((result.attributes.Subclass != null && result.attributes.FacilityLongName != null)
+              ? result.attributes.Subclass! + " - " + result.attributes.FacilityLongName!
               : "Unknown Location");
       return Place(
         name: name,
-        location: "${result.attributes.latitude}, ${result.attributes.longitude}",
+        location: "${result.attributes.Latitude}, ${result.attributes.Longitude}",
         distanceFromUser: result.distance ?? 1000.0,
-        category: result.attributes.classType ?? " ",
+        category: result.attributes.Subclass ?? " ",
       );
     })
     .where((place) => place.name != "Unknown Location")

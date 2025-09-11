@@ -6,6 +6,8 @@ List<MapSearchModel> mapFeatureFromJson(String str) => List<MapSearchModel>.from
 String mapFeatureToJson(List<MapSearchModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+/// The Campus Map Search API returns a list (collection) named "features"
+/// that contains all the attributes and geometry for each location.
 class MapSearchCollection {
   final List<MapSearchModel> features;
 
@@ -61,9 +63,10 @@ class MapSearchModel {
 
 class Attributes {
   final int ObjectId;
-  final String UpdatedName;
-  final String Class;
-  final String Subclass;
+  final String? UpdatedName;
+  final String? Description;
+  final String? Class;
+  final String? Subclass;
   final String? UpdatedKeywords;
   final String? URL;
   final String? ContactInformation;
@@ -71,8 +74,8 @@ class Attributes {
   final String? ConnectionCodes;
   final String? ClassroomCodes;
   final String? TritonPlusAccepted;
-  final double Latitude;
-  final double Longitude;
+  final double? Latitude;
+  final double? Longitude;
   final String? FacilityLongName;
   final String? BuildingAliases;
   final String? StreetAddress;
@@ -82,9 +85,10 @@ class Attributes {
 
   Attributes({
     required this.ObjectId,
-    required this.UpdatedName,
-    required this.Class,
-    required this.Subclass,
+    this.UpdatedName,
+    this.Description,
+    this.Class,
+    this.Subclass,
     this.UpdatedKeywords,
     this.URL,
     this.ContactInformation,
@@ -92,8 +96,8 @@ class Attributes {
     this.ConnectionCodes,
     this.ClassroomCodes,
     this.TritonPlusAccepted,
-    required this.Latitude,
-    required this.Longitude,
+    this.Latitude,
+    this.Longitude,
     this.FacilityLongName,
     this.BuildingAliases,
     this.StreetAddress,
@@ -105,7 +109,8 @@ class Attributes {
   factory Attributes.fromJson(Map<String, dynamic> json) {
     return Attributes(
       ObjectId: json['OBJECTID'] as int,
-      UpdatedName: json['UpdatedName'] as String,
+      UpdatedName: json['UpdatedName'] as String?,
+      Description: json['Description'] as String?,
       Class: json['Class'] as String,
       Subclass: json['Subclass'] as String,
       UpdatedKeywords: json['UpdatedKeywords'] as String?,
@@ -129,6 +134,7 @@ class Attributes {
   Map<String, dynamic> toJson() => {
         'OBJECTID': ObjectId,
         'UpdatedName': UpdatedName,
+        'Description': Description,
         'Class': Class,
         'Subclass': Subclass,
         'UpdatedKeywords': UpdatedKeywords,

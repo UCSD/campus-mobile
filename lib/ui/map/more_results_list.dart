@@ -35,19 +35,19 @@ class MoreESRIResultsList extends StatelessWidget {
                   Expanded(
                     child: ListView.builder(
                       itemCount: Provider.of<MapsDataProvider>(context)
-                          .esriPOIModels
+                          .mapSearchModels
                           .length,
                       // Builds the "More Results" list with location Name and Distance
                       itemBuilder: (BuildContext context, int index) {
-                        final poi = Provider.of<MapsDataProvider>(context, listen: false).esriPOIModels[index];
+                        final poi = Provider.of<MapsDataProvider>(context, listen: false).mapSearchModels[index];
                         final attributes = poi.attributes;
                         // As of August 2025 - If updatedName is null, use {Subclass} + {Facility Long Name}.
-                        final title = attributes.updatedName ??
-                            ((attributes.subclass != null &&
-                                    attributes.facilityLongName != null)
-                                ? attributes.subclass! +
+                        final title = attributes.UpdatedName ??
+                            ((attributes.Subclass != null &&
+                                    attributes.FacilityLongName != null)
+                                ? attributes.Subclass! +
                                     ' - ' +
-                                    attributes.facilityLongName!
+                                    attributes.FacilityLongName!
                                 : 'Unknown Location');
                         // If we don't know the location, don't show it in the list
                         if (title == 'Unknown Location') return const SizedBox.shrink();

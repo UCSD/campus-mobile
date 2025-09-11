@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:campus_mobile_experimental/core/models/esri_poi.dart';
+import 'package:campus_mobile_experimental/core/models/map.dart';
 
 class MapsDataProvider extends ChangeNotifier {
   MapsDataProvider() {
@@ -13,7 +13,7 @@ class MapsDataProvider extends ChangeNotifier {
 
     ///INITIALIZE SERVICES
     _mapSearchService = MapSearchService();
-    _esriPOIModels = [];
+    _mapSearchModels = [];
   }
 
   ///STATES
@@ -33,7 +33,7 @@ class MapsDataProvider extends ChangeNotifier {
   double? _defaultLong = -117.2362059310055;
 
   ///MODELS
-  List<EsriPOIModel> _esriPOIModels = [];
+  List<MapSearchModel> _mapSearchModels = [];
 
   ///SERVICES
   late MapSearchService _mapSearchService;
@@ -41,14 +41,13 @@ class MapsDataProvider extends ChangeNotifier {
   /// Adds a marker to the map based on the given index.
   void addMarker(int listIndex) {
     Marker? marker;
-    // Check if _esriPOIModels has data and the index is valid
-    if (_esriPOIModels.isNotEmpty &&
+    // Check if _mapSearchModels has data and the index is valid
+    if (_mapSearchModels.isNotEmpty &&
         listIndex >= 0 &&
-        listIndex < _esriPOIModels.length) {
-      final model = _esriPOIModels[listIndex];
+        listIndex < _mapSearchModels.length) {
+      final model = _mapSearchModels[listIndex];
       // Check for valid coordinates before creating the marker
-      if (model.attributes.latitude == null ||
-          model.attributes.longitude == null) {
+      if (model.attributes.Latitude == null || model.attributes.Longitude == null) {
         // If the coordinates are invalid, do not create a marker (a.k.a. nothing will happen when you click on this location)
         return;
       }
@@ -57,10 +56,10 @@ class MapsDataProvider extends ChangeNotifier {
       marker = Marker(
         markerId: MarkerId(model.mkrMarkerid.toString()),
         position:
-            LatLng(model.attributes.latitude!, model.attributes.longitude!),
+            LatLng(model.attributes.Latitude!, model.attributes.Longitude!),
         infoWindow: InfoWindow(
-          title: model.attributes.updatedName ?? model.attributes.c3dName,
-          snippet: model.attributes.c3dDescription,
+          title: model.attributes.UpdatedName,
+          snippet: model.attributes.Description,
         ),
       );
     } else {
@@ -105,10 +104,10 @@ class MapsDataProvider extends ChangeNotifier {
     notifyListeners();
 
     if (await _mapSearchService.fetchESRILocations(query)) {
-      _esriPOIModels = _mapSearchService.esriResults;
+      _mapSearchModels = _mapSearchService.mapSearchResults;
       _noResults = false;
-      // print("ESRI API Results: " + _esriPOIModels.toString());
-      if (_esriPOIModels.isEmpty) {
+      // print("ESRI API Results: " + _mapSearchModels.toString());
+      if (_mapSearchModels.isEmpty) {
         _noResults = true;
       } else {
         _noResults = false;
@@ -140,11 +139,11 @@ class MapsDataProvider extends ChangeNotifier {
     double? longitude =
         _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
     if (_coordinates != null) {
-      for (EsriPOIModel model in _esriPOIModels) {
-        if (model.attributes.latitude != null &&
-            model.attributes.longitude != null) {
+      for (MapSearchModel model in _mapSearchModels) {
+        if (model.attributes.Latitude != null &&
+            model.attributes.Longitude != null) {
           var distance = calculateDistance(latitude!, longitude!,
-              model.attributes.latitude!, model.attributes.longitude!);
+              model.attributes.Latitude!, model.attributes.Longitude!);
           model.distance = distance as double?;
         }
       }
@@ -152,7 +151,7 @@ class MapsDataProvider extends ChangeNotifier {
   }
 
   void reorderESRILocations() {
-    _esriPOIModels.sort((EsriPOIModel a, EsriPOIModel b) {
+    _mapSearchModels.sort((MapSearchModel a, MapSearchModel b) {
       if (a.distance != null && b.distance != null) {
         return a.distance!.compareTo(b.distance!);
       }
@@ -195,7 +194,7 @@ class MapsDataProvider extends ChangeNotifier {
   bool? get noResults => _noResults;
   String? get error => _error;
   List<String> get searchHistory => _searchHistory;
-  List<EsriPOIModel> get esriPOIModels => _esriPOIModels;
+  List<MapSearchModel> get mapSearchModels => _mapSearchModels;
   Map<MarkerId, Marker> get markers => _markers;
   Coordinates? get coordinates => _coordinates;
   DateTime? get lastUpdated => _lastUpdated;

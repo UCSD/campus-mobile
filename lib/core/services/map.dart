@@ -1,29 +1,22 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/esri_poi.dart';
+import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MapSearchService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  List<EsriPOIModel> _esriResults = [];
+  List<MapSearchModel> _mapSearchResults = [];
 
   /// Fetches locations from a ESRI's POINTS OF INTEREST
   /// This function is used for the Search bar.
   Future<bool> fetchESRILocations(String searchText) async {
-    // Stem the search text by removing trailing 's' and trimming whitespace
-    final stemmedSearchText = searchText.trim().replaceAll(RegExp(r's$'), '');
-    // Escape any single-quotes in the user’s text
-    final escapedSearchText = stemmedSearchText.replaceAll("'", "''");
-    // Build a raw SQL WHERE clause for general search
-    final whereClause = dotenv.get('MAP_POI_WHERE_CLAUSE').replaceAll('{query}', escapedSearchText);
     final params = {
-      'where': whereClause,
-      'outFields': '*',
-      'f': 'json',
+      'isWAM': 'false',
+      'searchTerm': searchText,
     };
-    final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: params);
+    final uri = Uri.parse(dotenv.get('CAMPUS_MAP_SEARCH_ENDPOINT')).replace(queryParameters: params);
     _error = null;
     _isLoading = true;
 
@@ -33,11 +26,11 @@ class MapSearchService {
       if (_response != 'null') {
         /// parse data
         // print(_response);
-        final data = esriPOIModelFromJson(_response);
-        _esriResults = data;
-        print(_esriResults);
+        final data = mapFeatureFromJson(_response);
+        _mapSearchResults = data;
+        print(_mapSearchResults);
       } else {
-        _esriResults = [];
+        _mapSearchResults = [];
         return false;
       }
       return true;
@@ -53,5 +46,5 @@ class MapSearchService {
   bool get isLoading => _isLoading;
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
-  List<EsriPOIModel> get esriResults => _esriResults;
+  List<MapSearchModel> get mapSearchResults => _mapSearchResults;
 }
