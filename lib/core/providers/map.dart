@@ -41,36 +41,47 @@ class MapsDataProvider extends ChangeNotifier {
   /// Adds a marker to the map based on the given index.
   void addMarker(int listIndex) {
     Marker? marker;
-    // Check if _mapSearchModels has data and the index is valid
-    if (_mapSearchModels.isNotEmpty &&
-        listIndex >= 0 &&
-        listIndex < _mapSearchModels.length) {
-      final model = _mapSearchModels[listIndex];
-      // Check for valid coordinates before creating the marker
-      if (model.attributes.Latitude == null || model.attributes.Longitude == null) {
-        // If the coordinates are invalid, do not create a marker (a.k.a. nothing will happen when you click on this location)
-        return;
+    int validIndex = -1;
+
+    // Search for the first valid location starting from listIndex
+    for (int i = listIndex; i < _mapSearchModels.length; i++) {
+      final model = _mapSearchModels[i];
+      if (model.attributes.Latitude != null && model.attributes.Longitude != null) {
+        validIndex = i;
+        break;
       }
-      // Create a marker from the EsriPOIModel at the given index
-      // TODO: Replace c3dDescription once a replacement becomes available - As of August 2025, it is planned to be deprecated.
-      marker = Marker(
-        markerId: MarkerId(model.mkrMarkerid.toString()),
-        position:
-            LatLng(model.attributes.Latitude!, model.attributes.Longitude!),
-        infoWindow: InfoWindow(
-          title: model.attributes.UpdatedName,
-          snippet: model.attributes.Description,
-        ),
-      );
-    } else {
-      return; // If neither list has valid data for the index, do nothing
     }
 
-    // Clear all existing markers and add the new marker
+    // If not found, search from the beginning up to listIndex
+    // Uncomment this if you're not calling addMarker with 0 initially
+    // if (validIndex == -1) {
+    //   for (int i = 0; i < listIndex; i++) {
+    //     final model = _mapSearchModels[i];
+    //     if (model.attributes.Latitude != null && model.attributes.Longitude != null) {
+    //       validIndex = i;
+    //       break;
+    //     }
+    //   }
+    // }
+
+    // If still not found, return
+    if (validIndex == -1) {
+      print("No valid location found with latitude and longitude.");
+      return;
+    }
+
+    final model = _mapSearchModels[validIndex];
+    marker = Marker(
+      markerId: MarkerId(model.mkrMarkerid.toString()),
+      position: LatLng(model.attributes.Latitude!, model.attributes.Longitude!),
+      infoWindow: InfoWindow(
+        title: model.attributes.UpdatedName,
+        snippet: model.attributes.Description,
+      ),
+    );
+
     _markers.clear();
     _markers[marker.markerId] = marker;
-
-    // Move the map camera to the new marker and show its info window
     updateMapPosition();
     notifyListeners();
   }
