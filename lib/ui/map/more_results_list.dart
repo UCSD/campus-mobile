@@ -101,13 +101,13 @@ class MoreESRIResultsList extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: actionButtonBackgroundColor,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            padding: EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
           child: Text(
-            'MORE RESULTS',
+            'SHOW MORE RESULTS',
             style: TextStyle(
               color: lightPrimaryColor,
               fontSize: 16,
