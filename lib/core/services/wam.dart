@@ -1,9 +1,9 @@
 /// WAM Service used to fetch the points of interest around you
 import 'dart:math';
-import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/models/wam.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:campus_mobile_experimental/core/models/esri_poi.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
 
 // Default coordinates (Geisel Library)
@@ -14,7 +14,7 @@ var y_latitude = 32.88115782225114;
 const double radius = 0.3;
 
 // Vessel to hold the fetched nearby locations from POI
-List<MapSearchModel> _nearbyLocations = [];
+List<EsriPOIModel> _nearbyLocations = [];
 
 /// Fetches a list of nearby places by querying Points of Interest with different
 /// categories such as restaurants, buildings, shops, cafes, etc.
@@ -41,45 +41,46 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
     x_longitude = position.longitude;
     y_latitude = position.latitude;
   } catch (e) {
-    print(
-        'Error getting location: $e, using Geisel Library coordinates instead.');
+    print('Error getting location: $e, using Geisel Library coordinates instead.');
   }
 
   // Prepare Points of Interest call
-  final Map<String, String> headers = {
-    "x-api-key": dotenv.get('CAMPUS_MAP_SEARCH_KEY'),
+  final whereClause = dotenv.get('WAM_WHERE_CLAUSE');
+  final params = {
+    'where': whereClause,
+    'outFields': '*',
+    'f': 'json',
   };
+  final uri = Uri.parse(dotenv.get('MAP_POI_ENDPOINT')).replace(queryParameters: params);
 
   // Perform the API call
   try {
-    var _response = await NetworkHelper.authorizedFetch(
-        dotenv.get('CAMPUS_MAP_SEARCH_ENDPOINT') +
-            '?isWAM=true', headers);
-
+    // print('======== Fetching data from: ' + uri.toString());
+    var _response = await NetworkHelper.fetchData(uri.toString());
     if (_response != 'null') {
       /// parse data
-      final data = mapFeatureFromJson(_response);
+      final data = esriPOIModelFromJson(_response);
       _nearbyLocations = data;
     } else {
       _nearbyLocations = [];
     }
   } catch (e) {
-    print("Error fetching WAM results: $e");
+    print("Error fetching WAM results using POI: $e");
     return [];
   }
 
   // Populate distance from student for each location
-  for (MapSearchModel model in _nearbyLocations) {
-    if (model.attributes.Latitude != null &&
-        model.attributes.Longitude != null) {
+  for (EsriPOIModel model in _nearbyLocations) {
+    if (model.attributes.latitude != null &&
+        model.attributes.longitude != null) {
       var distance = calculateDistance(y_latitude, x_longitude,
-          model.attributes.Latitude!, model.attributes.Longitude!);
+          model.attributes.latitude!, model.attributes.longitude!);
       model.distance = distance as double?;
     }
   }
 
   // Sort locations by distance from user
-  _nearbyLocations.sort((MapSearchModel a, MapSearchModel b) {
+  _nearbyLocations.sort((EsriPOIModel a, EsriPOIModel b) {
     if (a.distance != null && b.distance != null) {
       return a.distance!.compareTo(b.distance!);
     }
@@ -93,32 +94,29 @@ Future<List<Place>> fetchWhatsAroundMe(int count) async {
   try {
     final seen = <dynamic>{};
     final wamResults = _nearbyLocations
-        .where((result) => seen.add(result.attributes.ObjectId))
+        .where((result) => seen.add(result.attributes.objectId))
         .take(count * 2) // Take more to account for possible filtering
         .map((result) {
-          final name = result.attributes.UpdatedName ??
-              ((result.attributes.Subclass != null &&
-                      result.attributes.FacilityLongName != null)
-                  ? result.attributes.Subclass! +
-                      " - " +
-                      result.attributes.FacilityLongName!
-                  : "Unknown Location");
-          return Place(
-            name: name,
-            location:
-                "${result.attributes.Latitude}, ${result.attributes.Longitude}",
-            distanceFromUser: result.distance ?? 1000.0,
-            category: result.attributes.Subclass ?? " ",
-          );
-        })
-        .where((place) => place.name != "Unknown Location")
-        .take(count)
-        .toList();
+      final name = result.attributes.updatedName ??
+          ((result.attributes.subclass != null && result.attributes.facilityLongName != null)
+              ? result.attributes.subclass! + " - " + result.attributes.facilityLongName!
+              : "Unknown Location");
+      return Place(
+        name: name,
+        location: "${result.attributes.latitude}, ${result.attributes.longitude}",
+        distanceFromUser: result.distance ?? 1000.0,
+        category: result.attributes.classType ?? " ",
+      );
+    })
+    .where((place) => place.name != "Unknown Location")
+    .take(count)
+    .toList();
 
     // print("/////////////////////// wamResults ////////////////////////");
     // print("WAM Results: ${wamResults.map((place) => place.toString()).toList()}");
     return wamResults;
-  } catch (e) {
+  }
+  catch (e) {
     print("Error feeding wamResults: $e");
     return [];
   }
