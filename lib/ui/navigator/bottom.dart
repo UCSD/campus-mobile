@@ -133,20 +133,15 @@ class _BottomTabBarState extends State<BottomTabBar> {
       margin: EdgeInsets.only(top: size == 34 ? 4 : 2),
       padding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
       decoration: BoxDecoration(
-       color: isSelected
-                ? (theme.brightness == Brightness.light
-                    ? theme.listTileTheme.selectedColor
-                    : dotsSelectedColorDark)
-                : Colors.transparent,
+        color:
+            isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
         borderRadius: BorderRadius.circular(34),
       ),
       child: Icon(
         icon,
         size: size,
         color: isSelected
-            ? (theme.brightness == Brightness.light
-                 ? theme.bottomNavigationBarTheme.selectedItemColor
-                 : bottomTabBarColorDark)
+            ? theme.bottomNavigationBarTheme.selectedItemColor
             : theme.bottomNavigationBarTheme.unselectedItemColor,
       ),
     );
