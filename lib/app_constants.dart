@@ -83,7 +83,7 @@ class DiningConstants {
     "Triton Cash",
     "Dining Dollars",
     "Apple/Google Pay",
-    "MasterCard, Visa",
+    "MasterCard/Visa",
     "American Express",
     "Cash",
     "Other",
