@@ -11,46 +11,48 @@ List<DiningModel> diningModelFromJson(String str) => List<DiningModel>.from(
 String diningModelToJson(List<DiningModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class DiningModel
-{
-  String name;
+class DiningModel {
+  String address;
   String description;
   String location; // empty is valid state
-  String address;
-  String tel;
-  RegularHours regularHours; // doesn't ever seem to be null
+  String name;
   List<String> paymentOptions;
-  Specials? specials;
+  String paymentFilterTypes;
+  RegularHours regularHours; // doesn't ever seem to be null
+  String tel;
   // CONFIRMED OPTIONAL
+  Coordinates? coordinates;
+  double? distance;
   String? id;
+  List<Image>? images;
   Meals? meals;
+  String? menuWebsite;
   String? persistentMenu;
   SpecialHour? specialHours;
-  String? vendorLogo;
-  List<Image>? images;
-  Coordinates? coordinates;
+  Specials? specials;
+  String? subLocationNum;
   String? url;
-  String? menuWebsite;
-  double? distance;
+  String? vendorLogo;
 
   DiningModel({
-    this.id,
-    required this.name,
+    required this.address,
     required this.description,
     required this.location,
-    required this.address,
-    required this.tel,
-    this.meals,
-    this.persistentMenu,
+    required this.name,
+    required this.paymentFilterTypes,
     required this.paymentOptions,
-    this.images,
-    this.coordinates,
     required this.regularHours,
-    this.specialHours,
-    this.vendorLogo,
-    this.url,
+    required this.tel,
+    this.coordinates,
+    this.id,
+    this.images,
+    this.meals,
     this.menuWebsite,
+    this.persistentMenu,
+    this.specialHours,
     this.specials,
+    this.url,
+    this.vendorLogo,
   });
 
   DiningModel.fromJson(Map<String, dynamic> json)
@@ -62,7 +64,9 @@ class DiningModel
         tel = json["tel"],
         meals = json["meals"] == null ? null : mealsValues.map[json["meals"]],
         persistentMenu = json["persistentMenu"],
-        paymentOptions = List<String>.from(json["paymentOptions"].map((x) => x)),
+        paymentOptions =
+            List<String>.from(json["paymentOptions"].map((x) => x)),
+        paymentFilterTypes = json["paymentFilterTypes"],
         images = json["images"] == null
             ? null
             : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
@@ -70,9 +74,10 @@ class DiningModel
             ? null
             : Coordinates.fromJson(json["coords"]),
         regularHours = RegularHours.fromJson(json["regularHours"]),
-        specialHours = (json["specialHours"] == null || json["specialHours"].isEmpty)
-            ? null
-            : SpecialHour.fromJson(json["specialHours"]),
+        specialHours =
+            (json["specialHours"] == null || json["specialHours"].isEmpty)
+                ? null
+                : SpecialHour.fromJson(json["specialHours"]),
         vendorLogo = json["vendorLogo"],
         url = json["url"],
         menuWebsite = json["menuWebsite"],
@@ -90,6 +95,7 @@ class DiningModel
         "meals": meals == null ? null : mealsValues.reverse[meals!],
         "persistentMenu": persistentMenu,
         "paymentOptions": List<dynamic>.from(paymentOptions.map((x) => x)),
+        "paymentFilterTypes": paymentFilterTypes,
         "images": images == null
             ? null
             : List<dynamic>.from(images!.map((x) => x.toJson())),
@@ -104,8 +110,7 @@ class DiningModel
       };
 }
 
-class Image
-{
+class Image {
   // links to different sizes of the image
   // TODO: BUG ON SERVER?? There have been images with no images observed in the wild...
   String? small;
@@ -138,8 +143,7 @@ final mealsValues = EnumValues({
   "lunch, dinner": Meals.LUNCH_DINNER
 });
 
-class RegularHours
-{
+class RegularHours {
   // ALL CONFIRMED OPTIONAL
   String? mon;
   String? tue;
@@ -187,18 +191,17 @@ class SpecialHour {
   String? specialHoursValidFrom;
   String? specialHoursValidTo;
 
-  SpecialHour({
-    required this.specialHoursEvent,
-    required this.specialHoursEventDetails,
-    this.specialHoursValidFrom,
-    this.specialHoursValidTo
-  });
+  SpecialHour(
+      {required this.specialHoursEvent,
+      required this.specialHoursEventDetails,
+      this.specialHoursValidFrom,
+      this.specialHoursValidTo});
 
   SpecialHour.fromJson(Map<String, dynamic> json)
-    : specialHoursEvent = json["specialHoursEvent"],
-      specialHoursEventDetails = json["specialHoursEventDetails"],
-      specialHoursValidFrom = json["specialHoursValidFrom"],
-      specialHoursValidTo = json["specialHoursValidTo"];
+      : specialHoursEvent = json["specialHoursEvent"],
+        specialHoursEventDetails = json["specialHoursEventDetails"],
+        specialHoursValidFrom = json["specialHoursValidFrom"],
+        specialHoursValidTo = json["specialHoursValidTo"];
 
   Map<String, dynamic> toJson() => {
         "specialHoursEvent": specialHoursEvent,

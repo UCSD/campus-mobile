@@ -253,6 +253,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   ///////////// Payment Options Section /////////////
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions.join(', ');
+    if (options.trim().isEmpty) {
+      return SizedBox.shrink();
+    }
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
