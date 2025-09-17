@@ -81,8 +81,9 @@ class ParkingDataProvider extends ChangeNotifier {
       }
       if (_userDataProvider.userProfileModel.selectedParkingSpots!.isNotEmpty) {
         // Load selected spots types from user Profile
-        _selectedSpotTypesState = _userDataProvider
-            .userProfileModel.selectedParkingSpots! as Map<String, bool>;
+        _selectedSpotTypesState = Map<String, bool>.from(
+          _userDataProvider.userProfileModel.selectedParkingSpots!,
+        );
       } else {
         // Load default spot types
         for (Spot spot in _spotTypeModel.spots!) {
@@ -97,7 +98,7 @@ class ParkingDataProvider extends ChangeNotifier {
       Map<String, bool> newMapOfSpotTypes = Map<String, bool>();
       for (Spot spot in _spotTypeModel.spots!) {
         newMapOfSpotTypes[spot.spotKey] =
-            _selectedSpotTypesState[spot.spotKey]!;
+            _selectedSpotTypesState[spot.spotKey] ?? false;
       }
       _selectedSpotTypesState = newMapOfSpotTypes;
 

@@ -14,6 +14,8 @@ const buildArtifacts = {}
 
 ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
 
+const { spawnSync }  = require('child_process')
+
 const buildNotify = async () => {
 	try {
 		const buildTimestamp = moment().format('YYYY-MM-DD h:mm A')
@@ -32,8 +34,7 @@ const buildNotify = async () => {
 		console.log('buildPlatform: ' + ENV_VARS.buildPlatform)
 		// Check build success
 		if (buildSuccess) {
-			saveArtifactApkSuccess = true
-			saveArtifactIpaSuccess = true
+
 			// Supplemental GitHub metadata for PRs
 			if (ENV_VARS.prNumber) {
 				prAuthor = await githubMeta()
@@ -49,6 +50,8 @@ const buildNotify = async () => {
 			// Generate test plan
 			;({ testPlanFilename, testPlanUrl } = await generateTestPlan(prAuthor))
 		}
+		console.log('saveArtifactIpaSuccess: ' + saveArtifactIpaSuccess)
+        console.log('saveArtifactApkSuccess: ' + saveArtifactApkSuccess)
 
 		// Construct build notifier message
 		let teamsMessage = '#### Campus Mobile Build Notifier\n\n'
@@ -74,7 +77,7 @@ const buildNotify = async () => {
 			}
 		} else if (ENV_VARS.buildPlatform === 'ANDROID') {
 			if (saveArtifactApkSuccess) {
-				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td>CodeMagic</td></tr>'
+				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><a href="' + buildArtifacts.buildApkFinalUrl + '" download style="text-decoration:underline">' + buildArtifacts.buildApkFinalFilename + '</a></td></tr>'
 			} else {
 				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><span style="color:#d60000">N/A</span></td></tr>'
 			}
@@ -82,7 +85,7 @@ const buildNotify = async () => {
 
 		// Test plan
 		if (testPlanUrl && testPlanFilename) {
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Testing:</b></td><td>Manual</td></tr>'
+			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Testing:</b></td><td><a href="' + testPlanUrl + '" style="text-decoration:underline">' + testPlanFilename + '</a></td></tr>'
 		}
 
 		const successEmojiList = ['🥇','🏆','🎖','🎉','🎊','🚀','🛫','🏋','💪','👏','💯']
@@ -136,7 +139,7 @@ const saveArtifact = async (artifactFilename) => {
 		}
 
 		const buildFilenamePrEnvStr = ENV_VARS.prNumber ? '-PR-' + ENV_VARS.prNumber : '-' + ENV_VARS.buildEnv
-		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder	
+		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolderLink : SP_CONFIG.spRegressionBuildFolderLink
 		const coreOptions = { siteUrl: SP_CONFIG.spSiteUrl }
 		const fileOptions = { folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder }
 
@@ -147,9 +150,15 @@ const saveArtifact = async (artifactFilename) => {
 			buildArtifacts.buildApkFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildApkFinalFilename).replace(/ /g, '%20')
 			fs.copyFileSync(buildArtifacts.buildApkFilepath, './' + buildArtifacts.buildApkFinalFilename)
 			fileOptions.fileName = buildArtifacts.buildApkFinalFilename
-			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildApkFinalFilename)
-			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
-			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
+			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
+			console.log('trying to upload ' + fileOptions.fileName + ' to ' + fileOptions.folder )
+			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
+			if (pythonProcess.status == 0) {
+			    console.log("Uploading apk succeeded")
+			} else {
+			    console.log("Uploading apk failed")
+			}
+
 			return true
 		} else if (ENV_VARS.buildPlatform === 'IOS') {
 			buildArtifacts.buildIpaFilepath = '../../build/ios/ipa/UC San Diego.ipa'
@@ -157,9 +166,14 @@ const saveArtifact = async (artifactFilename) => {
 			buildArtifacts.buildIpaFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildIpaFinalFilename).replace(/ /g, '%20')
 			fs.copyFileSync(buildArtifacts.buildIpaFilepath, './' + buildArtifacts.buildIpaFinalFilename)
 			fileOptions.fileName = buildArtifacts.buildIpaFinalFilename
-			fileOptions.fileContent = fs.readFileSync(buildArtifacts.buildIpaFinalFilename)
-			console.log('[DISABLED-CAAPP-447] Saving artifact `' + fileOptions.fileName + ' to SP...')
-			// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
+			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
+			console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
+			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
+            if (pythonProcess.status == 0) {
+                console.log("Uploading ipa succeeded")
+            } else {
+                console.log('Uploaded ipa failed')
+            }
 			return true
 		}
 		return false
@@ -176,7 +190,7 @@ const generateTestPlan = async (prAuthor) => {
 		if (ENV_VARS.prNumber) {
 			console.log('Generating test plan for PR ' + ENV_VARS.prNumber)
 			testPlanFilename = 'PR-' + ENV_VARS.prNumber + '-Test-Plan-' + ENV_VARS.appVersion + '-' + ENV_VARS.buildEnv + '-' + finalBuildNumber + '.xlsx'
-			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spPullRequestTestFolder + testPlanFilename + '?web=1').replace(/ /g, '%20')
+			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spPullRequestTestFolderLink + testPlanFilename + '?web=1').replace(/ /g, '%20')
 			console.log('  (1/3) Downloading PR test plan template ...')
 			if (ENV_VARS.buildPlatform === 'IOS') {
 				
@@ -187,7 +201,7 @@ const generateTestPlan = async (prAuthor) => {
 		} else {
 			console.log('Generating regression test plan for branch ' + ENV_VARS.buildBranch)
 			testPlanFilename = 'Regression-Test-Plan-' + ENV_VARS.appVersion + '-' + ENV_VARS.buildEnv + '-' + finalBuildNumber + '.xlsx'
-			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spRegressionTestFolder + testPlanFilename + '?web=1').replace(/ /g, '%20')
+			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spRegressionTestFolderLink + testPlanFilename + '?web=1').replace(/ /g, '%20')
 			switch(ENV_VARS.buildEnv) {
 				case 'PROD':
 					console.log('  (1/3) Downloading PROD regression test plan template ...')
@@ -238,14 +252,19 @@ const generateTestPlan = async (prAuthor) => {
 			'base64'
 		))
 
-		console.log('  [DISABLED-CAAPP-447] (4/4) Uploading test plan for build ' + finalBuildNumber)
+		console.log('(4/4) Uploading test plan for build ' + finalBuildNumber)
 		const coreOptions = { siteUrl: SP_CONFIG.spSiteUrl }
 		const fileOptions = {
 			folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestTestFolder : SP_CONFIG.spRegressionTestFolder,
 			fileName: testPlanFilename,
-			fileContent: fs.readFileSync(testPlanFilename)
 		}
-		// await spsave(coreOptions, SP_CONFIG.credentials, fileOptions)
+		console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
+		const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
+        if (pythonProcess.status == 0) {
+            console.log("Uploading test succeeded")
+        } else {
+            console.log('Uploading test failed')
+        }
 		return {
 			testPlanFilename: testPlanFilename,
 			testPlanUrl: testPlanUrl,
