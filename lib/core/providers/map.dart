@@ -1,19 +1,18 @@
 import 'dart:math';
 import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:campus_mobile_experimental/core/models/esri_poi.dart';
 
 class MapsDataProvider extends ChangeNotifier {
   MapsDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
     _noResults = false;
-
     ///INITIALIZE SERVICES
     _mapSearchService = MapSearchService();
-    _esriPOIModels = [];
+    _mapSearchModels = [];
   }
 
   ///STATES
@@ -22,56 +21,34 @@ class MapsDataProvider extends ChangeNotifier {
   String? _error;
   bool? _noResults;
 
+  ///Default coordinates for Price Center
+  double? _defaultLat = 32.87990969506536;
+  double? _defaultLong = -117.2362059310055;
+
+  ///MODELS
+  List<MapSearchModel> _mapSearchModels = [];
+
   Coordinates? _coordinates;
   Map<MarkerId, Marker> _markers = Map<MarkerId, Marker>();
   TextEditingController _searchBarController = TextEditingController();
   GoogleMapController? _mapController;
   List<String> _searchHistory = [];
 
-  ///Default coordinates for Price Center
-  double? _defaultLat = 32.87990969506536;
-  double? _defaultLong = -117.2362059310055;
-
-  ///MODELS
-  List<EsriPOIModel> _esriPOIModels = [];
-
   ///SERVICES
   late MapSearchService _mapSearchService;
 
-  /// Adds a marker to the map based on the given index.
   void addMarker(int listIndex) {
-    Marker? marker;
-    // Check if _esriPOIModels has data and the index is valid
-    if (_esriPOIModels.isNotEmpty &&
-        listIndex >= 0 &&
-        listIndex < _esriPOIModels.length) {
-      final model = _esriPOIModels[listIndex];
-      // Check for valid coordinates before creating the marker
-      if (model.attributes.latitude == null ||
-          model.attributes.longitude == null) {
-        // If the coordinates are invalid, do not create a marker (a.k.a. nothing will happen when you click on this location)
-        return;
-      }
-      // Create a marker from the EsriPOIModel at the given index
-      // TODO: Replace c3dDescription once a replacement becomes available - As of August 2025, it is planned to be deprecated.
-      marker = Marker(
-        markerId: MarkerId(model.mkrMarkerid.toString()),
-        position:
-            LatLng(model.attributes.latitude!, model.attributes.longitude!),
-        infoWindow: InfoWindow(
-          title: model.attributes.updatedName ?? model.attributes.c3dName,
-          snippet: model.attributes.c3dDescription,
-        ),
-      );
-    } else {
-      return; // If neither list has valid data for the index, do nothing
-    }
-
-    // Clear all existing markers and add the new marker
+    final Marker marker = Marker(
+      markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
+      position: LatLng(_mapSearchModels[listIndex].mkrLat!,
+          _mapSearchModels[listIndex].mkrLong!),
+      infoWindow: InfoWindow(
+          title: _mapSearchModels[listIndex].title,
+          snippet: _mapSearchModels[listIndex].description),
+    );
     _markers.clear();
     _markers[marker.markerId] = marker;
 
-    // Move the map camera to the new marker and show its info window
     updateMapPosition();
     notifyListeners();
   }
@@ -91,73 +68,64 @@ class MapsDataProvider extends ChangeNotifier {
     }
   }
 
+  void reorderLocations() {
+    _mapSearchModels.sort((MapSearchModel a, MapSearchModel b) {
+      if (a.distance != null && b.distance != null) {
+        return a.distance!.compareTo(b.distance!);
+      }
+      return 0;
+    });
+  }
+
   void removeFromSearchHistory(String item) {
     searchHistory.remove(item);
     notifyListeners();
   }
 
-  /// Fetches locations from the MapSearchService or ESRI Points of Interest
   void fetchLocations() async {
     String query = searchBarController.text;
     markers.clear();
     _isLoading = true;
     _error = null;
     notifyListeners();
-
-    if (await _mapSearchService.fetchESRILocations(query)) {
-      _esriPOIModels = _mapSearchService.esriResults;
+    if (await _mapSearchService.fetchLocations(query)) {
+      _mapSearchModels = _mapSearchService.results;
       _noResults = false;
-      // print("ESRI API Results: " + _esriPOIModels.toString());
-      if (_esriPOIModels.isEmpty) {
-        _noResults = true;
-      } else {
-        _noResults = false;
-        populateESRIDistances();
-        reorderESRILocations();
-        addMarker(0);
-      }
+      populateDistances();
+      reorderLocations();
+      addMarker(0);
       if (!_searchHistory.contains(query)) {
         // Check to see if this search is already in history...
         _searchHistory.add(query); // ...If it is not, add it...
       } else {
-        _searchHistory
-            .remove(query); // ...reorder search history to put it back on top
+        // ...otherwise...
+        _searchHistory.remove(query); // ...reorder search history to put it back on top
         _searchHistory.add(query);
       }
       _lastUpdated = DateTime.now();
     } else {
+      ///TODO: determine what error to show to the user
       _error = _mapSearchService.error;
       _noResults = true;
     }
-
     _isLoading = false;
     notifyListeners();
   }
 
-  void populateESRIDistances() {
+  void populateDistances() {
     double? latitude =
         _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
     double? longitude =
         _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
     if (_coordinates != null) {
-      for (EsriPOIModel model in _esriPOIModels) {
-        if (model.attributes.latitude != null &&
-            model.attributes.longitude != null) {
-          var distance = calculateDistance(latitude!, longitude!,
-              model.attributes.latitude!, model.attributes.longitude!);
+      for (MapSearchModel model in _mapSearchModels) {
+        if (model.mkrLat != null && model.mkrLong != null) {
+          var distance = calculateDistance(
+              latitude!, longitude!, model.mkrLat!, model.mkrLong!);
           model.distance = distance as double?;
         }
       }
     }
-  }
-
-  void reorderESRILocations() {
-    _esriPOIModels.sort((EsriPOIModel a, EsriPOIModel b) {
-      if (a.distance != null && b.distance != null) {
-        return a.distance!.compareTo(b.distance!);
-      }
-      return 0;
-    });
   }
 
   num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
@@ -169,7 +137,19 @@ class MapsDataProvider extends ChangeNotifier {
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 
-  /// Setters
+  ///SIMPLE GETTERS
+  bool? get isLoading => _isLoading;
+  String? get error => _error;
+  DateTime? get lastUpdated => _lastUpdated;
+  List<MapSearchModel> get mapSearchModels => _mapSearchModels;
+  List<String> get searchHistory => _searchHistory;
+  Map<MarkerId, Marker> get markers => _markers;
+  Coordinates? get coordinates => _coordinates;
+  TextEditingController get searchBarController => _searchBarController;
+  bool? get noResults => _noResults;
+  GoogleMapController? get mapController => _mapController;
+
+  ///Setters
   set coordinates(Coordinates? value) {
     _coordinates = value;
     notifyListeners();
@@ -184,21 +164,4 @@ class MapsDataProvider extends ChangeNotifier {
     _mapController = value;
     notifyListeners();
   }
-
-  void resetNoResults() {
-    _noResults = false;
-    notifyListeners();
-  }
-
-  /// SIMPLE GETTERS
-  bool? get isLoading => _isLoading;
-  bool? get noResults => _noResults;
-  String? get error => _error;
-  List<String> get searchHistory => _searchHistory;
-  List<EsriPOIModel> get esriPOIModels => _esriPOIModels;
-  Map<MarkerId, Marker> get markers => _markers;
-  Coordinates? get coordinates => _coordinates;
-  DateTime? get lastUpdated => _lastUpdated;
-  TextEditingController get searchBarController => _searchBarController;
-  GoogleMapController? get mapController => _mapController;
 }

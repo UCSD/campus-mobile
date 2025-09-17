@@ -70,9 +70,7 @@ List<SingleChildWidget> independentServices = [
     lazy: false,
   ),
   ChangeNotifierProvider<CustomAppBar>(
-    create: (_) {
-      return CustomAppBar();
-    },
+    create: (_) => CustomAppBar(),
   ),
   ChangeNotifierProvider<NoticesDataProvider>(
     create: (_) {
@@ -106,7 +104,7 @@ List<SingleChildWidget> dependentServices = [
     return mapsDataProvider;
   }, update: (_, coordinates, mapsDataProvider) {
     mapsDataProvider!.coordinates = coordinates;
-    mapsDataProvider.populateESRIDistances();
+    mapsDataProvider.populateDistances();
     return mapsDataProvider;
   }),
   ChangeNotifierProxyProvider<PushNotificationDataProvider, UserDataProvider>(

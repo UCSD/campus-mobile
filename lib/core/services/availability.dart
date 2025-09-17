@@ -10,26 +10,34 @@ class AvailabilityService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
+  final Map<String, String> headers = {
+    "accept": "application/json",
+  };
 
   /// MODELS
   late List<AvailabilityModel> _data;
+
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
 
   Future<bool> fetchData() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('AVAILABILITY_API_ENDPOINT'),
-          { "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY') }
-      );
+          dotenv.get('AVAILABILITY_API_ENDPOINT'), headers);
 
       /// parse data
       final data = availabilityStatusFromJson(_response);
       _data = data.data;
       return true;
     } catch (e) {
+      /// if the authorized fetch failed we know we have to refresh the
+      /// token for this service
+      if (e.toString().contains("401")) {
+        if (await NetworkHelper.getNewToken(headers)) return await fetchData();
+      }
       _error = e.toString();
       return false;
     } finally {
