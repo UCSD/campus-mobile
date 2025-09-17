@@ -10,9 +10,6 @@
 .svn/
 *.env
 
-# Created when running `flutter pub get` and using arcgis_maps. It contains the `.so` files inside the Android folder.
-arcgis_maps_core
-
 # IntelliJ related
 *.iml
 *.ipr

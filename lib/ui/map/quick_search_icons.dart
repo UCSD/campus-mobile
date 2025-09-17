@@ -1,13 +1,11 @@
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
-// import 'package:arcgis_maps/arcgis_maps.dart'; // Saved for future ESRI Map Integration
 
-/// Points of Interest (POI) quick search icons
-/// Find more subclasses in the legend's tab: https://www.arcgis.com/apps/mapviewer/index.html?url=https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Points_Of_Interest/FeatureServer/0&source=sd
 class QuickSearchIcons extends StatelessWidget {
-  const QuickSearchIcons({Key? key}) : super(key: key);
+  const QuickSearchIcons({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +23,7 @@ class QuickSearchIcons extends StatelessWidget {
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text = 'Parking Structures';
+                    .text = 'Parking';
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .fetchLocations();
                 Navigator.pop(context);
@@ -57,11 +55,11 @@ class QuickSearchIcons extends StatelessWidget {
             ),
             LabeledIconButton(
               icon: Icons.local_atm,
-              text: 'ATMs',
+              text: 'ATM',
               onPressed: () {
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .searchBarController
-                    .text = 'ATMs';
+                    .text = 'ATM';
                 Provider.of<MapsDataProvider>(context, listen: false)
                     .fetchLocations();
                 Navigator.pop(context);
@@ -74,22 +72,19 @@ class QuickSearchIcons extends StatelessWidget {
   }
 }
 
-/// Constructs the button with an icon and a label
 class LabeledIconButton extends StatelessWidget {
   final IconData? icon;
   final String? text;
-  final void Function() onPressed;
-  LabeledIconButton({this.icon, this.text, required this.onPressed});
+  final Function? onPressed;
+  LabeledIconButton({this.icon, this.text, this.onPressed});
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         MaterialButton(
-          onPressed: onPressed,
-          color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : secondaryColorDark,
+          onPressed: onPressed as void Function()?,
+          color: Colors.red,
           textColor: Colors.white,
           child: Icon(
             icon,
@@ -99,13 +94,7 @@ class LabeledIconButton extends StatelessWidget {
           shape: CircleBorder(),
         ),
         SizedBox(height: 6),
-        Text(text!,
-        style: TextStyle(
-              fontSize: 19,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? descriptiveTextColorLight
-                  : descriptiveTextColorDark,
-            )),
+        Text(text!),
       ],
     );
   }
