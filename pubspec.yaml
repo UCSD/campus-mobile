@@ -28,7 +28,7 @@ dependencies:
   google_maps_flutter: 2.10.1
   hive: 2.2.3
   hive_flutter: 1.1.0
-  intl: 0.19.0
+  intl: ^0.20.2
   liquid_progress_indicator_v2: 0.5.0
   measured_size: 1.0.0
   geolocator: 9.0.2
