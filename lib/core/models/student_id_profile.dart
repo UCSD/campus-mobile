@@ -41,7 +41,7 @@ class StudentIdProfileModel {
       StudentIdProfileModel(
         studentPid: json["Student_PID"],
         termYear: json["Term_Year"],
-        studentLevelCurrent: json["Student_Level_Current"],
+        studentLevelCurrent: json["Student_Level_Current"] == null ? "" : json["Student_Level_Current"],
         collegeCurrent:
             json["College_Current"] == null ? "" : json["College_Current"],
         ugPrimaryMajorCurrent: json["UG_Primary_Major_Current"] == null

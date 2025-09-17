@@ -3,8 +3,8 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MoreESRIResultsList extends StatelessWidget {
-  const MoreESRIResultsList({
+class MoreResultsList extends StatelessWidget {
+  const MoreResultsList({
     Key? key,
   }) : super(key: key);
 
@@ -25,8 +25,7 @@ class MoreESRIResultsList extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       'More Results',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Divider(
@@ -35,61 +34,33 @@ class MoreESRIResultsList extends StatelessWidget {
                   Expanded(
                     child: ListView.builder(
                       itemCount: Provider.of<MapsDataProvider>(context)
-                          .esriPOIModels
+                          .mapSearchModels
                           .length,
-                      itemBuilder: (BuildContext context, int index) {
-                        // Builds the "More Results" list with location Name and Distance
+                      itemBuilder: (BuildContext cntxt, int index) {
                         return ListTile(
                           title: Text(
-                            // As of August 2025 - If updatedName is null, use {Subclass} + {Facility Long Name}.
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                            .esriPOIModels[index]
-                            .attributes
-                            .updatedName ??
-                          (
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                              .esriPOIModels[index]
-                              .attributes
-                              .subclass != null &&
-                            Provider.of<MapsDataProvider>(context, listen: false)
-                              .esriPOIModels[index]
-                              .attributes
-                              .facilityLongName != null
-                              ? Provider.of<MapsDataProvider>(context, listen: false)
-                                  .esriPOIModels[index]
-                                  .attributes
-                                  .subclass! +
-                                ' - ' +
-                                Provider.of<MapsDataProvider>(context, listen: false)
-                                  .esriPOIModels[index]
-                                  .attributes
-                                  .facilityLongName!
-                              : 'Unknown Location'
-                          )),
+                            Provider.of<MapsDataProvider>(cntxt, listen: false)
+                                .mapSearchModels[index]
+                                .title!,
+                          ),
                           trailing: Text(
-                            Provider.of<MapsDataProvider>(context,
-                                            listen: false)
-                                        .esriPOIModels[index]
+                            Provider.of<MapsDataProvider>(cntxt, listen: false)
+                                        .mapSearchModels[index]
                                         .distance !=
                                     null
-                                ? Provider.of<MapsDataProvider>(context,
+                                ? Provider.of<MapsDataProvider>(cntxt,
                                             listen: false)
-                                        .esriPOIModels[index]
+                                        .mapSearchModels[index]
                                         .distance!
                                         .toStringAsFixed(1) +
                                     ' mi'
                                 : '--',
-                            style: TextStyle(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.light
-                                    ? linkColorLight
-                                    : linkColorDark),
+                            style: TextStyle(color: Colors.blue[600]),
                           ),
                           onTap: () {
-                            Provider.of<MapsDataProvider>(context,
-                                    listen: false)
+                            Provider.of<MapsDataProvider>(cntxt, listen: false)
                                 .addMarker(index);
-                            Navigator.pop(context);
+                            Navigator.pop(cntxt);
                           },
                         );
                       },
@@ -100,14 +71,15 @@ class MoreESRIResultsList extends StatelessWidget {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: actionButtonBackgroundColor,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            backgroundColor:
+                actionButtonBackgroundColor,
+            padding: EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
           child: Text(
-            'MORE RESULTS',
+            'SHOW MORE RESULTS',
             style: TextStyle(
               color: lightPrimaryColor,
               fontSize: 16,

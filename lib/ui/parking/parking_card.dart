@@ -24,13 +24,16 @@ class _ParkingCardState extends State<ParkingCard> {
   final _controller = PageController(viewportFraction: 0.92);
   int _currentPage = 0;
 
+  //if parking data provider changes (e.g in "Manage Spots"), this will be called.
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
+    if (_controller.hasClients) {
+      _controller.jumpToPage(_currentPage);
+    }
   }
 
-  // ignore: must_call_super
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -45,12 +48,20 @@ class _ParkingCardState extends State<ParkingCard> {
       actionButtons: [
         ActionButton(
             buttonText: 'MANAGE SPOTS',
-            onPressed: () =>
-                Navigator.pushNamed(context, RoutePaths.SpotTypesView)),
+            onPressed: () {
+              if (!_parkingDataProvider.isLoading &&
+                  _parkingDataProvider.error == null) {
+                Navigator.pushNamed(context, RoutePaths.SpotTypesView);
+              }
+            }),
         ActionLink(
             buttonText: 'MANAGE LOTS',
-            onPressed: () =>
-                Navigator.pushNamed(context, RoutePaths.ManageParkingView)),
+            onPressed: () {
+              if (!_parkingDataProvider.isLoading &&
+                  _parkingDataProvider.error == null) {
+                Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+              }
+            }),
       ],
     );
   }
