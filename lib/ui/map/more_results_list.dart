@@ -3,8 +3,8 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MoreESRIResultsList extends StatelessWidget {
-  const MoreESRIResultsList({
+class MoreResultsList extends StatelessWidget {
+  const MoreResultsList({
     Key? key,
   }) : super(key: key);
 
@@ -25,8 +25,7 @@ class MoreESRIResultsList extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       'More Results',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Divider(
@@ -35,38 +34,33 @@ class MoreESRIResultsList extends StatelessWidget {
                   Expanded(
                     child: ListView.builder(
                       itemCount: Provider.of<MapsDataProvider>(context)
-                          .esriPOIModels
+                          .mapSearchModels
                           .length,
-                      // Builds the "More Results" list with location Name and Distance
-                      itemBuilder: (BuildContext context, int index) {
-                        final poi = Provider.of<MapsDataProvider>(context, listen: false).esriPOIModels[index];
-                        final attributes = poi.attributes;
-                        // As of August 2025 - If updatedName is null, use {Subclass} + {Facility Long Name}.
-                        final title = attributes.updatedName ??
-                            ((attributes.subclass != null &&
-                                    attributes.facilityLongName != null)
-                                ? attributes.subclass! +
-                                    ' - ' +
-                                    attributes.facilityLongName!
-                                : 'Unknown Location');
-                        // If we don't know the location, don't show it in the list
-                        if (title == 'Unknown Location') return const SizedBox.shrink();
+                      itemBuilder: (BuildContext cntxt, int index) {
                         return ListTile(
-                          title: Text(title),
+                          title: Text(
+                            Provider.of<MapsDataProvider>(cntxt, listen: false)
+                                .mapSearchModels[index]
+                                .title!,
+                          ),
                           trailing: Text(
-                            poi.distance != null
-                                ? poi.distance!.toStringAsFixed(1) + ' mi'
+                            Provider.of<MapsDataProvider>(cntxt, listen: false)
+                                        .mapSearchModels[index]
+                                        .distance !=
+                                    null
+                                ? Provider.of<MapsDataProvider>(cntxt,
+                                            listen: false)
+                                        .mapSearchModels[index]
+                                        .distance!
+                                        .toStringAsFixed(1) +
+                                    ' mi'
                                 : '--',
-                            style: TextStyle(
-                                color: Theme.of(context).brightness == Brightness.light
-                                    ? linkColorLight
-                                    : linkColorDark),
+                            style: TextStyle(color: Colors.blue[600]),
                           ),
                           onTap: () {
-                            Provider.of<MapsDataProvider>(context,
-                                    listen: false)
+                            Provider.of<MapsDataProvider>(cntxt, listen: false)
                                 .addMarker(index);
-                            Navigator.pop(context);
+                            Navigator.pop(cntxt);
                           },
                         );
                       },
@@ -77,14 +71,15 @@ class MoreESRIResultsList extends StatelessWidget {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: actionButtonBackgroundColor,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            backgroundColor:
+                actionButtonBackgroundColor,
+            padding: EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
           child: Text(
-            'MORE RESULTS',
+            'SHOW MORE RESULTS',
             style: TextStyle(
               color: lightPrimaryColor,
               fontSize: 16,

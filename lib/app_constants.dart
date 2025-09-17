@@ -34,7 +34,6 @@ class RoutePaths {
   static const String NeighborhoodsView = "parking/neighborhoods_view";
   static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
   static const String AvailabilityDetailedView = "availability/detailed_view";
-  static const String WhatsAroundMe = "lib/ui/WhatsAroundMe/wam.dart";
 }
 
 class RouteTitles {
@@ -83,7 +82,7 @@ class DiningConstants {
     "Triton Cash",
     "Dining Dollars",
     "Apple/Google Pay",
-    "MasterCard, Visa",
+    "MasterCard/Visa",
     "American Express",
     "Cash",
     "Other",
@@ -122,10 +121,6 @@ class LoginConstants {
   static const shuttleMaxTitle = 'Maximum shuttle stops reached';
   static const shuttleMaxDesc =
       'The maximum number of shuttle stops allowed is five. Please remove some stops to add more.';
-
-  static const mapSearchMinTitle = "Error Searching";
-  static const mapSearchMinDesc = "Enter at least 3 characters to search. ";
-
 }
 
 class ParkingConstants {
