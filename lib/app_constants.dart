@@ -73,6 +73,8 @@ class ParkingDefaults {
     "Gilman",
     "Hopkins",
     "Theatre District",
+    "South",
+    "Scholars",
   ];
   static const defaultSpots = ["S", "B", "A"];
 }
