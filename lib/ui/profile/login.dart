@@ -3,7 +3,6 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -97,7 +96,7 @@ class _LoginState extends State<Login> {
       ),
       trailing: TextButton(
         style: TextButton.styleFrom(
-          foregroundColor: Theme.of(context).colorScheme.background,
+          foregroundColor: Theme.of(context).colorScheme.surface,
         ),
         child: Text(
           'LOG OUT',
