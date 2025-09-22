@@ -56,7 +56,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
           color: theme.bottomNavigationBarTheme.backgroundColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 8,
               spreadRadius: 2,
               offset: Offset(0, -2),
