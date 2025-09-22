@@ -51,7 +51,7 @@ class _WebViewContainerState extends State<WebViewContainer>
 
   /// SERVICES
   // WebViewController? _webViewController;
-  late final WebViewController _webViewController;
+  late WebViewController _webViewController;
 
   @override
   void initState() {
@@ -189,24 +189,6 @@ class _WebViewContainerState extends State<WebViewContainer>
         height: _contentHeight,
         child: WebViewWidget(controller: _webViewController),
       ),
-      // child: Container(
-      //   height: _contentHeight,
-      //   child: WebView(
-      //     javaScriptMode: JavaScriptMode.unrestricted,
-      //     initialUrl: webCardUrl,
-      //     onWebViewCreated: (controller) {
-      //       _webViewController = controller;
-      //     },
-      //     navigationDelegate: null,
-      //     javascriptChannels: <JavascriptChannel>[
-      //       _linksChannel(context),
-      //       _heightChannel(context),
-      //       _mapChannel(context),
-      //       _refreshTokenChannel(context),
-      //       _permanentRedirect(context)
-      //     ].toSet(),
-      //   ),
-      // ),
     );
   }
 
@@ -267,77 +249,11 @@ class _WebViewContainerState extends State<WebViewContainer>
     }
   }
 
-  // channel for opening links
-  // JavascriptChannel _linksChannel(BuildContext context) {
-  //   return JavascriptChannel(
-  //     name: 'OpenLink',
-  //     onMessageReceived: (JavaScriptMessage message) {
-  //       openLink(message.message);
-  //     },
-  //   );
-  // }
-
-  // channel for dynamically setting the height of the card
-  // JavascriptChannel _heightChannel(BuildContext context) {
-  //   return JavascriptChannel(
-  //     name: 'SetHeight',
-  //     onMessageReceived: (JavaScriptMessage message) {
-  //       setState(() {
-  //         _contentHeight =
-  //             validateHeight(context, double.tryParse(message.message));
-  //       });
-  //     },
-  //   );
-  // }
-
-  // channel for performing a map search based on given query
-  // JavascriptChannel _mapChannel(BuildContext context) {
-  //   return JavascriptChannel(
-  //     name: 'MapSearch',
-  //     onMessageReceived: (JavaScriptMessage message) {
-  //       // navigate to map and search with message.message
-  //       Provider.of<MapsDataProvider>(context, listen: false)
-  //           .searchBarController
-  //           .text = message.message;
-  //       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-  //       Provider.of<BottomNavigationBarProvider>(context, listen: false)
-  //           .currentIndex = NavigatorConstants.MapTab;
-  //       Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
-  //       // Navigator.pushNamed(context, RoutePaths.Map);
-  //     },
-  //   );
-  // }
-
-  // JavascriptChannel _refreshTokenChannel(BuildContext context) {
-  //   return JavascriptChannel(
-  //     name: 'RefreshToken',
-  //     onMessageReceived: (JavaScriptMessage message) async {
-  //       if (!Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-  //         if (await _userDataProvider.silentLogin()) {
-  //           _webViewController?.reload();
-  //         }
-  //       }
-  //     },
-  //   );
-  // }
-
-  // // javascript channel for redirecting the user to a new webcard URL
-  // JavascriptChannel _permanentRedirect(BuildContext context) {
-  //   return JavascriptChannel(
-  //     name: 'Redirect',
-  //     onMessageReceived: (JavaScriptMessage message) async {
-  //       webCardUrl = message.message;
-  //       _webViewController!.loadUrl(message.message);
-  //     },
-  //   );
-  // }
-
   // this function checks to see if the current url of the state is different
   // to the webViewController's url, and loads in the new url if so
   void checkWebURL() async {
     String? currentUrl = await _webViewController.currentUrl();
-    if (_webViewController != null && webCardUrl != currentUrl) {
-      // _webViewController?.loadUrl(webCardUrl);
+    if (webCardUrl != currentUrl) {
       _webViewController.loadRequest(Uri.parse(webCardUrl));
     }
   }
