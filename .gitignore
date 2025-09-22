@@ -21,7 +21,6 @@
 
 # Flutter/Dart/Pub related
 .flutter-plugins-dependencies
-.fvm/flutter_sdk
 **/doc/api/
 .dart_tool/
 .flutter-plugins
@@ -83,6 +82,11 @@ android/app/google-services.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 **/ios/Runner/GoogleService-Info.plist
 **/ios/**/build/
+
+# fvm related
+.fvm/flutter_sdk
+.fvm/
+.fvmrc
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
