@@ -35,6 +35,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     compileSdkVersion 35
+    namespace = "edu.ucsd"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
