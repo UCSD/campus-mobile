@@ -40,7 +40,7 @@ dependencies:
   shared_preferences: ^2.5.3
   uni_links2: 0.6.0+2
   url_launcher: 6.0.20
-  webview_flutter: 2.0.13
+  webview_flutter: ^4.13.0 
   wifi_connection:
     git:
       url: https://github.com/UCSD/wifi_connection.git
