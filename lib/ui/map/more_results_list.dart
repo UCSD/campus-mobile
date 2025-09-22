@@ -3,11 +3,14 @@ import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MoreESRIResultsList extends StatelessWidget {
-  const MoreESRIResultsList({
-    Key? key,
-  }) : super(key: key);
+class MoreESRIResultsList extends StatefulWidget {
+  const MoreESRIResultsList({Key? key}) : super(key: key);
 
+  @override
+  State<MoreESRIResultsList> createState() => _MoreESRIResultsListState();
+}
+
+class _MoreESRIResultsListState extends State<MoreESRIResultsList> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -37,6 +40,13 @@ class MoreESRIResultsList extends StatelessWidget {
                     .compareTo(b.distance ?? double.infinity));
                 // Concatenate
                 final sortedPOIs = [...topResults, ...otherResults];
+                final totalResults = allPOIs.length;
+                int displayedCount = 50;
+                return StatefulBuilder(
+                  builder: (context, setModalState) {
+                    // Recalculate on every build
+                    final showLoadMore = displayedCount < totalResults;
+                    final itemCount = showLoadMore ? displayedCount + 1 : totalResults;
                 return Column(
                   children: <Widget>[
                     Container(
@@ -48,12 +58,10 @@ class MoreESRIResultsList extends StatelessWidget {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Divider(
-                      height: 0,
-                    ),
+                    Divider(height: 0),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: sortedPOIs.length,
+                        itemCount: itemCount,
                         // Builds the "More Results" list with location Name and Distance
                         itemBuilder: (BuildContext context, int index) {
                           final poi = sortedPOIs[index];
@@ -64,6 +72,37 @@ class MoreESRIResultsList extends StatelessWidget {
                           // If we don't know the location, don't show it in the list
                           if (title == 'Unknown Location')
                             return const SizedBox.shrink();
+                          // Create the `Load More` button if we are at the end
+                          // of the first 50 items, and there are more to load.
+                          if (index == displayedCount && showLoadMore) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    setModalState(() {
+                                      displayedCount = (displayedCount + 50).clamp(0, totalResults);
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: actionButtonBackgroundColor,
+                                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'LOAD MORE',
+                                    style: TextStyle(
+                                      color: lightPrimaryColor,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          // Show the "More Results" list with the first 50 locations Names determined above
                           return ListTile(
                             title: Text(title),
                             trailing: Text(
@@ -90,7 +129,8 @@ class MoreESRIResultsList extends StatelessWidget {
                 );
               },
             );
-          },
+          },);
+                },
           style: ElevatedButton.styleFrom(
             backgroundColor: actionButtonBackgroundColor,
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
