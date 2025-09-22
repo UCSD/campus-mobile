@@ -39,7 +39,7 @@ dependencies:
   provider: ^6.1.5+1
   shared_preferences: ^2.5.3
   uni_links2: 0.6.0+2
-  url_launcher: 6.0.20
+  url_launcher: ^6.3.2
   webview_flutter: ^4.13.0 
   wifi_connection:
     git:

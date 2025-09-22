@@ -9,7 +9,7 @@ void reloadWebView(String url, WebViewController controller) => controller.loadR
 
 void openLink(String url) async {
   try {
-    launch(url, forceSafariVC: true);
+    launchUrl(Uri.parse(url), mode: LaunchMode.inAppBrowserView);
   } catch (e) {
     // an error occurred, do nothing
   }
