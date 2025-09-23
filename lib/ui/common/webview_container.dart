@@ -51,6 +51,7 @@ class _WebViewContainerState extends State<WebViewContainer>
   double _contentHeight = cardContentMinHeight;
   late Function hide;
   late String webCardUrl;
+  String? _lastLoadedUrl;
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
@@ -90,7 +91,6 @@ class _WebViewContainerState extends State<WebViewContainer>
       ..addJavaScriptChannel(
         'MapSearch',
         onMessageReceived: (JavaScriptMessage message) {
-          // navigate to map and search with message.message
           Provider.of<MapsDataProvider>(context, listen: false)
               .searchBarController
               .text = message.message;
@@ -99,7 +99,6 @@ class _WebViewContainerState extends State<WebViewContainer>
           Provider.of<BottomNavigationBarProvider>(context, listen: false)
               .currentIndex = NavigatorConstants.MapTab;
           Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
-          // Navigator.pushNamed(context, RoutePaths.Map);
         },
       )
       //refresh token
@@ -121,6 +120,16 @@ class _WebViewContainerState extends State<WebViewContainer>
           webCardUrl = message.message;
           _webViewController.loadRequest(Uri.parse(webCardUrl));
         },
+      )
+      // navigation delegate for page finished
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (url) {
+            if (widget.onPageFinished != null) {
+              widget.onPageFinished!();
+            }
+          },
+        ),
       );
   }
 
@@ -187,10 +196,9 @@ class _WebViewContainerState extends State<WebViewContainer>
   // builds the actual webview widget
   Widget buildBody(context) {
     print('webview_container:buildBody: ' + webCardUrl);
-
-    _webViewController.loadRequest(Uri.parse(webCardUrl));
-    if (widget.onPageFinished != null) {
-      widget.onPageFinished!();
+    if (_lastLoadedUrl != webCardUrl) {
+      _webViewController.loadRequest(Uri.parse(webCardUrl));
+      _lastLoadedUrl = webCardUrl;
     }
     return ClipRRect(
       borderRadius: BorderRadius.only(
@@ -199,7 +207,9 @@ class _WebViewContainerState extends State<WebViewContainer>
       ),
       child: SizedBox(
         height: _contentHeight,
-        child: WebViewWidget(controller: _webViewController),
+        child: WebViewWidget(
+          controller: _webViewController,
+        ),
       ),
     );
   }

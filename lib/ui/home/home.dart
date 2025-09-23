@@ -91,15 +91,6 @@ void resetAllCardLoadedStates() {
   webViewCardNotLoaded.clear();
 }
 
-void setNewCardHeight(String card, double height) {
-  if (!webViewCardHeights.containsKey(card) ||
-      height > webViewCardHeights[card]!) {
-    webViewCardNotLoaded[card] = false;
-    webViewCardHeights[card] = height;
-  }
-}
-//---------------------------------------------------------------------
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -111,12 +102,13 @@ class _HomeState extends State<Home> {
   );
   InternetConnectivityProvider? _connectivityProvider;
 
-  _HomeState() : super() {
-    _controller.addListener(
-      () {
-        setHomeScrollOffset(_controller.offset);
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      setHomeScrollOffset(_controller.offset);
+    });
+    initUniLinks();
   }
 
   Future<Null> initUniLinks() async {
@@ -155,7 +147,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     // Provider.of<CustomAppBar>(context).changeTitle(null); // reset title to logo (for dining)
-    initUniLinks();
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
@@ -194,6 +185,20 @@ class _HomeState extends State<Home> {
     'shuttle': ShuttleCard.new
   };
 
+  void setNewCardHeight(String card, double height) {
+    final prevHeight = webViewCardHeights[card];
+    final prevLoaded = webViewCardNotLoaded[card];
+    // Only update if height actually changed and loaded state is not already false
+    if (prevHeight == null || height > prevHeight) {
+      if (prevLoaded != false) {
+        setState(() {
+          webViewCardNotLoaded[card] = false;
+          webViewCardHeights[card] = height;
+        });
+      }
+    }
+  }
+
   List<Widget> getOrderedCardsList(List<String> order)
   {
     final orderedCards = <Widget>[];
@@ -218,9 +223,14 @@ class _HomeState extends State<Home> {
             requireAuth: card.requireAuth ?? false,
             isLoaded: webViewCardNotLoaded[cardName] ?? true,
             onPageFinished: () {
-              setState(() {
-                webViewCardNotLoaded[cardName] = true;
-              });
+              // Only update if loaded state is not already true
+              if (webViewCardNotLoaded[cardName] != true) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                    webViewCardNotLoaded[cardName] = true;
+                  });
+                });
+              }
             },
             onWidgetSizeChange: (size) {
               setNewCardHeight(cardName, size.height);
