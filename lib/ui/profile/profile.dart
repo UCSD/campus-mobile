@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/ui/common/build_info.dart';
 import 'package:campus_mobile_experimental/ui/profile/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uni_links2/uni_links.dart';
+import 'package:app_links/app_links.dart';
 import '../../core/providers/user.dart';
 import '../../core/utils/webview.dart';
 
@@ -16,21 +16,27 @@ class Profile extends StatelessWidget {
   /// the specific host needs to be added in AndroidManifest.xml and Info.plist
   /// currently, this method handles executing custom map query
   Future<Null> initUniLinks(BuildContext context) async {
-    late StreamSubscription _sub;
-    _sub = linkStream.listen((String? link) async {
-      // map query handler
-      if (link!.contains("deeplinking.searchmap")) {
-        var uri = Uri.dataFromString(link);
-        var query = uri.queryParameters['query']!;
-        // redirect query to maps tab and search with query
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text = query;
+    final appLinks = AppLinks();
+    StreamSubscription? _sub;
+
+    Uri? initialUri = await appLinks.getInitialAppLink();
+    String? initialLink = initialUri?.toString();
+    if (initialLink != null && initialLink.contains("deeplinking.searchmap")) {
+      var uri = Uri.dataFromString(initialLink);
+      var query = uri.queryParameters['query']!;
+      Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
+      Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
+      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+    }
+
+    _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
+      String? link = uri?.toString();
+      if (link != null && link.contains("deeplinking.searchmap")) {
+        var query = uri!.queryParameters['query']!;
+        Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.MapTab;
-        // received deeplink, cancel stream to prevent memory leaks
-        _sub.cancel();
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+        _sub?.cancel();
       }
     });
   }

@@ -21,6 +21,9 @@ class WebViewContainer extends StatefulWidget {
     this.overFlowMenu,
     this.actionButtons,
     this.hideMenu = false,
+    this.isLoaded = true,
+    this.onPageFinished,
+    this.onWidgetSizeChange,
   }) : super(key: key);
 
   /// required parameters
@@ -33,6 +36,9 @@ class WebViewContainer extends StatefulWidget {
   final Map<String, Function>? overFlowMenu;
   final bool hideMenu;
   final List<Widget>? actionButtons;
+  final bool isLoaded;
+  final VoidCallback? onPageFinished;
+  final Function(Size)? onWidgetSizeChange;
 
   @override
   _WebViewContainerState createState() => _WebViewContainerState();
@@ -74,6 +80,9 @@ class _WebViewContainerState extends State<WebViewContainer>
           setState(() {
             _contentHeight =
                 validateHeight(context, double.tryParse(message.message));
+            if (widget.onWidgetSizeChange != null) {
+              widget.onWidgetSizeChange!(Size(MediaQuery.of(context).size.width, _contentHeight));
+            }
           });
         },
       )
@@ -180,6 +189,9 @@ class _WebViewContainerState extends State<WebViewContainer>
     print('webview_container:buildBody: ' + webCardUrl);
 
     _webViewController.loadRequest(Uri.parse(webCardUrl));
+    if (widget.onPageFinished != null) {
+      widget.onPageFinished!();
+    }
     return ClipRRect(
       borderRadius: BorderRadius.only(
         bottomLeft: Radius.circular(12.0),

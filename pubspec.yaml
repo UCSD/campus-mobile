@@ -38,13 +38,13 @@ dependencies:
   pointycastle: 3.4.0
   provider: ^6.1.5+1
   shared_preferences: ^2.5.3
-  uni_links2: ^0.6.0+2
-  url_launcher: ^6.3.2
-  webview_flutter: ^4.13.0 
+  app_links: ^3.0.0
+  url_launcher: ^6.3.1
+  webview_flutter: ^4.4.2
   wifi_connection:
     git:
       url: https://github.com/UCSD/wifi_connection.git
-      ref: 179eb3a322b9d947752b4ff4e810582c3e262e47
+      ref: e0fb416f81daedeabb1eedef22041e67f30f792b
   device_info_plus: ^11.1.0
 dependency_overrides:
   google_maps_flutter_ios: 2.13.1 # To fix the tooltips bug in Google Maps

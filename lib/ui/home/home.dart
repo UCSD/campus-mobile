@@ -29,7 +29,7 @@ import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
 import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uni_links2/uni_links.dart';
+import 'package:app_links/app_links.dart';
 import 'package:flutter/rendering.dart';
 
 //--- code to track size changes of dynamic web card widget content ---
@@ -120,32 +120,23 @@ class _HomeState extends State<Home> {
   }
 
   Future<Null> initUniLinks() async {
-    // deep links are received by this method
-    // the specific host needs to be added in AndroidManifest.xml and Info.plist
-    // currently, this method handles executing custom map query
-    late StreamSubscription _sub;
+    final appLinks = AppLinks();
+    StreamSubscription? _sub;
 
-    // Used to handle links on cold app start
-    String? initialLink = await getInitialLink();
-    if (!executedInitialDeeplinkQuery &&
-        initialLink != null &&
-        initialLink.contains("deeplinking.searchmap")) {
+    Uri? initialUri = await appLinks.getInitialAppLink();
+    String? initialLink = initialUri?.toString();
+    if (initialLink != null && initialLink.contains("deeplinking.searchmap")) {
       var uri = Uri.dataFromString(initialLink);
       var query = uri.queryParameters['query']!;
-      // redirect query to maps tab and search with query
       executeQuery(query);
     }
 
-    // used to handle links while app is in foreground/background
-    _sub = linkStream.listen((String? link) async {
-      // handling for map query
-      if (link!.contains("deeplinking.searchmap")) {
-        var uri = Uri.dataFromString(link);
-        var query = uri.queryParameters['query']!;
-        // redirect query to maps tab and search with query
+    _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
+      String? link = uri?.toString();
+      if (link != null && link.contains("deeplinking.searchmap")) {
+        var query = uri!.queryParameters['query']!;
         executeQuery(query);
-        // received deeplink, cancel stream to prevent memory leaks
-        _sub.cancel();
+        _sub?.cancel();
       }
     });
   }
@@ -212,71 +203,33 @@ class _HomeState extends State<Home> {
       /// TODO: if-branches logic here theoretically could be simplified
       if (!webCards.containsKey(cardName)) {
         final cardCtor = _cardCtors[cardName];
-        if (cardCtor != null)
+        if (cardCtor != null) {
           orderedCards.add(cardCtor());
-      } else {
-        // dynamically insert webCards into the list
-        orderedCards.add(StatefulBuilder(
-          builder: (context, setState) {
-            var currentCard = cardName;
-            if (webViewCardNotLoaded[currentCard] == null) {
-              webViewCardNotLoaded[currentCard] = true;
-            }
-            return Stack(children: <Widget>[
-              MeasureSize(
-                onChange: (Size size) {
-                  setNewCardHeight(cardName, size.height);
-                  webViewCardNotLoaded[cardName] = (size.height != webViewCardHeights[cardName]);
-                  setState(() {});
-                },
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: WebViewContainer(
-                    titleText: webCards[currentCard]!.titleText,
-                    initialUrl: webCards[currentCard]!.initialURL,
-                    cardId: currentCard,
-                    requireAuth: webCards[currentCard]!.requireAuth,
-                  ),
-                ),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                    minHeight: webViewCardHeights[currentCard] ?? 0.0,
-                    minWidth: 400.0),
-                child: Builder(builder: (BuildContext context) {
-                  final currentCard = cardName;
-                  return Visibility(
-                    visible: webViewCardNotLoaded[currentCard]!,
-                    child: IntrinsicHeight(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Expanded(
-                            child: Container(
-                              color: Theme.of(context).cardColor,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: Theme.of(context).colorScheme.secondary,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ]);
-          },
-        ));
+        }
+      }
+      else {
+        final card = webCards[cardName]!;
+        orderedCards.add(
+          WebViewContainer(
+            key: ValueKey(cardName),
+            initialUrl: card.initialURL,
+            titleText: card.titleText ?? '',
+            cardId: cardName,
+            requireAuth: card.requireAuth ?? false,
+            isLoaded: webViewCardNotLoaded[cardName] ?? true,
+            onPageFinished: () {
+              setState(() {
+                webViewCardNotLoaded[cardName] = true;
+              });
+            },
+            onWidgetSizeChange: (size) {
+              setNewCardHeight(cardName, size.height);
+            },
+          ),
+        );
       }
     }
+
     return orderedCards;
   }
 }
