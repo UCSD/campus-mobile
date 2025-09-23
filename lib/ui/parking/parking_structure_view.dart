@@ -63,8 +63,8 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
             scale: 0.9,
             child: CupertinoSwitch(
               value: structureState,
-              activeColor: toggleActiveColor,
-              trackColor: Colors.grey.shade400,
+              activeTrackColor: toggleActiveColor,
+              inactiveTrackColor: Colors.grey.shade400,
               onChanged: (bool newValue) {
                 if (selectedLots == 10 && !structureState && !showedScaffold) {
                   showDialog(
