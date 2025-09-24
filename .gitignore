@@ -44,6 +44,7 @@ node_modules/
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 **/android/**/build/
+**/android/app/.cxx/
 *.keystore
 !gradle-wrapper.jar
 android/.project
