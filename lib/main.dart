@@ -2,15 +2,13 @@ import 'dart:async';
 import 'dart:io';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
-import 'package:campus_mobile_experimental/app_router.dart'
-    as campusMobileRouter;
+import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'core/services/storage_service.dart';
 
 var showOnboardingScreen = true;
 var isFirstRunFlag = false;
@@ -32,8 +32,7 @@ void main() async {
     final mapsImplementation = GoogleMapsFlutterPlatform.instance;
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
-      await mapsImplementation
-          .initializeWithRenderer(AndroidMapRenderer.latest);
+      await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
     }
 
     // dotenv loading
@@ -71,16 +70,14 @@ Future<void> initializeApp() async {
 }
 
 Future<void> clearSecuredStorage() async {
-  FlutterSecureStorage storage = FlutterSecureStorage();
-  await storage.deleteAll();
+  await StorageService.clearAll();
 }
 
 // TODO: refactor this to load multiple futures in one statement
 Future<void> clearHiveStorage() async {
   await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
-  await (await Hive.openBox(DataPersistence.AuthenticationModel))
-      .deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.AuthenticationModel)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.UserProfileModel)).deleteFromDisk();
 }
 
@@ -148,17 +145,13 @@ class CampusMobile extends StatelessWidget {
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
         theme: lightTheme.copyWith(
-          colorScheme:
-              lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
+          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
-          colorScheme:
-              darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+          colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
         themeMode: ThemeMode.system,
-        initialRoute: showOnboardingScreen
-            ? RoutePaths.OnboardingLogin
-            : RoutePaths.BottomNavigationBar,
+        initialRoute: showOnboardingScreen ? RoutePaths.OnboardingLogin : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
         builder: (context, child) {

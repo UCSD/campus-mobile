@@ -11,12 +11,12 @@ import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
 import '../../ui/home/home.dart';
+import '../services/storage_service.dart';
 
 class UserDataProvider extends ChangeNotifier {
   /// STATES
@@ -37,7 +37,6 @@ class UserDataProvider extends ChangeNotifier {
   /// SERVICES
   var _authenticationService = AuthenticationService();
   var _userProfileService = UserProfileService();
-  var storage = FlutterSecureStorage();
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -51,7 +50,8 @@ class UserDataProvider extends ChangeNotifier {
   /// Update the [UserProfileModel] stored in state
   /// overwrite the [UserProfileModel] in persistent storage with the model passed in
   Future updateUserProfileModel(UserProfileModel model) async {
-    _userProfileModel = model; var box;
+    _userProfileModel = model;
+    var box;
     try {
       box = Hive.box<UserProfileModel?>('UserProfileModel');
     } catch (e) {
@@ -99,22 +99,23 @@ class UserDataProvider extends ChangeNotifier {
   }
 
   /// Save encrypted password to device
-  void _saveEncryptedPasswordToDevice(String encryptedPassword) => storage.write(key: 'encrypted_password', value: encryptedPassword);
+  void _saveEncryptedPasswordToDevice(String encryptedPassword) =>
+      StorageService.storeCredential('encrypted_password', encryptedPassword);
 
   /// Get encrypted password that has been saved to device
-  Future<String?> _getEncryptedPasswordFromDevice() => storage.read(key: 'encrypted_password');
+  Future<String?> _getEncryptedPasswordFromDevice() => StorageService.getCredential('encrypted_password');
 
   /// Save username to device
-  void _saveUsernameToDevice(String username) => storage.write(key: 'username', value: username);
+  void _saveUsernameToDevice(String username) => StorageService.storeCredential('username', username);
 
   /// Get username from device
-  Future<String?> getUsernameFromDevice() => storage.read(key: 'username');
+  Future<String?> getUsernameFromDevice() => StorageService.getCredential('username');
 
   /// Delete username from device
-  void _deleteUsernameFromDevice() => storage.delete(key: 'username');
+  void _deleteUsernameFromDevice() => StorageService.removeCredential('username');
 
   /// Delete password from device
-  void _deletePasswordFromDevice() => storage.delete(key: 'password');
+  void _deletePasswordFromDevice() => StorageService.removeCredential('password');
 
   /// Encrypt given username and password and store on device
   void _encryptAndSaveCredentials(String username, String password) {
@@ -134,7 +135,8 @@ class UserDataProvider extends ChangeNotifier {
   /// Upon logging in we should make sure that users has an account
   /// If the user doesn't have an account one will be made by invoking [_createNewUser]
   Future manualLogin(String username, String password) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     notifyListeners();
 
     if (username.isNotEmpty && password.isNotEmpty) {
@@ -200,7 +202,8 @@ class UserDataProvider extends ChangeNotifier {
   /// Unregisters device from direct push notification using [_pushNotificationDataProvider]
   /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage
   void logout() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     notifyListeners();
     resetHomeScrollOffset();
     resetAllCardHeights();
@@ -237,14 +240,13 @@ class UserDataProvider extends ChangeNotifier {
   /// invoke [postUserProfile] once user profile is created
   /// if user has a profile then we invoke [updateUserProfileModel]
   Future fetchUserProfile() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     notifyListeners();
 
     if (isLoggedIn) {
       /// we fetch the user data now
-      final Map<String, String> headers = {
-        'Authorization': 'Bearer ' + _authenticationModel.accessToken!
-      };
+      final Map<String, String> headers = {'Authorization': 'Bearer ' + _authenticationModel.accessToken!};
       if (await _userProfileService.downloadUserProfile(headers)) {
         /// if the user profile has no ucsd affiliation then we know the user is new
         /// so create a new profile and upload to DB using [postUserProfile]
@@ -262,17 +264,14 @@ class UserDataProvider extends ChangeNotifier {
           final staffPattern = RegExp('[E]');
 
           if ((newModel.ucsdaffiliation ?? "").contains(studentPattern)) {
-            newModel
-              ..classifications = Classifications.fromJson({'student': true, 'staff': false});
+            newModel..classifications = Classifications.fromJson({'student': true, 'staff': false});
           } else if ((newModel.ucsdaffiliation ?? "").contains(staffPattern)) {
-            newModel
-              ..classifications = Classifications.fromJson({'staff': true, 'student': false});
+            newModel..classifications = Classifications.fromJson({'staff': true, 'student': false});
           } else {
             newModel.classifications = Classifications.fromJson({'student': false, 'staff': false});
           }
           await updateUserProfileModel(newModel);
-          _pushNotificationDataProvider
-              .subscribeToTopics(newModel.subscribedTopics!.cast<String>());
+          _pushNotificationDataProvider.subscribeToTopics(newModel.subscribedTopics!.cast<String>());
         }
       } else {
         _error = _userProfileService.error;
@@ -313,13 +312,11 @@ class UserDataProvider extends ChangeNotifier {
       if ((profile.ucsdaffiliation ?? "").contains(studentPattern)) {
         profile
           ..classifications = Classifications.fromJson({'student': true, 'staff': false})
-          ..subscribedTopics!
-              .addAll(_pushNotificationDataProvider.studentTopics());
+          ..subscribedTopics!.addAll(_pushNotificationDataProvider.studentTopics());
       } else if ((profile.ucsdaffiliation ?? "").contains(staffPattern)) {
         profile
           ..classifications = Classifications.fromJson({'staff': true, 'student': false})
-          ..subscribedTopics!
-              .addAll(_pushNotificationDataProvider.staffTopics());
+          ..subscribedTopics!.addAll(_pushNotificationDataProvider.staffTopics());
       } else {
         profile.classifications = Classifications.fromJson({'student': false, 'staff': false});
       }
@@ -332,7 +329,8 @@ class UserDataProvider extends ChangeNotifier {
   /// Invoke [updateUserProfileModel] with user profile that was passed in
   /// If user is logged in upload [UserProfileModel] to DB
   Future postUserProfile(UserProfileModel profile) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     notifyListeners();
 
     /// save settings to local storage
@@ -340,9 +338,7 @@ class UserDataProvider extends ChangeNotifier {
 
     /// check if user is logged in
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
-      final Map<String, String> headers = {
-        'Authorization': "Bearer " + _authenticationModel.accessToken!
-      };
+      final Map<String, String> headers = {'Authorization': "Bearer " + _authenticationModel.accessToken!};
 
       /// we only want to push data that is not null
       var tempJson = Map<String, dynamic>();
@@ -350,7 +346,8 @@ class UserDataProvider extends ChangeNotifier {
         if (profile.toJson()[key] != null) tempJson[key] = profile.toJson()[key];
       }
       if (await _userProfileService.uploadUserProfile(headers, tempJson)) {
-        _error = null; _isLoading = false;
+        _error = null;
+        _isLoading = false;
       } else {
         _error = _userProfileService.error;
       }
@@ -372,6 +369,7 @@ class UserDataProvider extends ChangeNotifier {
   get isInSilentLogin => _isInSilentLogin;
   UserProfileModel get userProfileModel => _userProfileModel;
   AuthenticationModel get authenticationModel => _authenticationModel;
+
   /// TODO: fix this after UserProfileModel's nullability is fixed
   List<String?>? get subscribedTopics => _userProfileModel.subscribedTopics;
 }
