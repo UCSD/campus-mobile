@@ -1,2 +1,0 @@
-C:/Users/leona/Downloads/ITS/campus-mobile/android/app/.cxx/Debug/2c5k17k6/x86/CMakeFiles/edit_cache.dir
-C:/Users/leona/Downloads/ITS/campus-mobile/android/app/.cxx/Debug/2c5k17k6/x86/CMakeFiles/rebuild_cache.dir
