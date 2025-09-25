@@ -22,7 +22,7 @@ dependencies:
       ref: master
   flutter_linkify: 6.0.0
   flutter_local_notifications: 17.2.3
-  flutter_secure_storage: ^9.0.0
+  flutter_secure_storage: 5.0.2
   flutter_sticky_header: ^0.7.0
   get: 4.7.2
   google_maps_flutter: 2.10.1

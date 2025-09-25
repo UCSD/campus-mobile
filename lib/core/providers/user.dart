@@ -16,7 +16,8 @@ import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
 import '../../ui/home/home.dart';
-import '../services/storage_service.dart';
+// import '../services/storage_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserDataProvider extends ChangeNotifier {
   /// STATES
@@ -37,6 +38,7 @@ class UserDataProvider extends ChangeNotifier {
   /// SERVICES
   var _authenticationService = AuthenticationService();
   var _userProfileService = UserProfileService();
+  var storage = FlutterSecureStorage();
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -50,8 +52,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Update the [UserProfileModel] stored in state
   /// overwrite the [UserProfileModel] in persistent storage with the model passed in
   Future updateUserProfileModel(UserProfileModel model) async {
-    _userProfileModel = model;
-    var box;
+    _userProfileModel = model; var box;
     try {
       box = Hive.box<UserProfileModel?>('UserProfileModel');
     } catch (e) {
@@ -98,24 +99,42 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // /// Save encrypted password to device
+  // void _saveEncryptedPasswordToDevice(String encryptedPassword) =>
+  //     StorageService.storeCredential('encrypted_password', encryptedPassword);
+
   /// Save encrypted password to device
-  void _saveEncryptedPasswordToDevice(String encryptedPassword) =>
-      StorageService.storeCredential('encrypted_password', encryptedPassword);
+  void _saveEncryptedPasswordToDevice(String encryptedPassword) => storage.write(key: 'encrypted_password', value: encryptedPassword);
+
+  // /// Get encrypted password that has been saved to device
+  // Future<String?> _getEncryptedPasswordFromDevice() => StorageService.getCredential('encrypted_password');
 
   /// Get encrypted password that has been saved to device
-  Future<String?> _getEncryptedPasswordFromDevice() => StorageService.getCredential('encrypted_password');
+  Future<String?> _getEncryptedPasswordFromDevice() => storage.read(key: 'encrypted_password');
+
+  // /// Save username to device
+  // void _saveUsernameToDevice(String username) => StorageService.storeCredential('username', username);
 
   /// Save username to device
-  void _saveUsernameToDevice(String username) => StorageService.storeCredential('username', username);
+  void _saveUsernameToDevice(String username) => storage.write(key: 'username', value: username);
+
+  // /// Get username from device
+  // Future<String?> getUsernameFromDevice() => StorageService.getCredential('username');
 
   /// Get username from device
-  Future<String?> getUsernameFromDevice() => StorageService.getCredential('username');
+  Future<String?> getUsernameFromDevice() => storage.read(key: 'username');
+
+  // /// Delete username from device
+  // void _deleteUsernameFromDevice() => StorageService.removeCredential('username');
 
   /// Delete username from device
-  void _deleteUsernameFromDevice() => StorageService.removeCredential('username');
+  void _deleteUsernameFromDevice() => storage.delete(key: 'username');
+
+  // /// Delete password from device
+  // void _deletePasswordFromDevice() => StorageService.removeCredential('password');
 
   /// Delete password from device
-  void _deletePasswordFromDevice() => StorageService.removeCredential('password');
+  void _deletePasswordFromDevice() => storage.delete(key: 'password');
 
   /// Encrypt given username and password and store on device
   void _encryptAndSaveCredentials(String username, String password) {
@@ -135,8 +154,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Upon logging in we should make sure that users has an account
   /// If the user doesn't have an account one will be made by invoking [_createNewUser]
   Future manualLogin(String username, String password) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
 
     if (username.isNotEmpty && password.isNotEmpty) {
@@ -202,8 +220,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Unregisters device from direct push notification using [_pushNotificationDataProvider]
   /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage
   void logout() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
     resetHomeScrollOffset();
     resetAllCardHeights();
@@ -240,13 +257,13 @@ class UserDataProvider extends ChangeNotifier {
   /// invoke [postUserProfile] once user profile is created
   /// if user has a profile then we invoke [updateUserProfileModel]
   Future fetchUserProfile() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
 
     if (isLoggedIn) {
       /// we fetch the user data now
       final Map<String, String> headers = {'Authorization': 'Bearer ' + _authenticationModel.accessToken!};
+
       if (await _userProfileService.downloadUserProfile(headers)) {
         /// if the user profile has no ucsd affiliation then we know the user is new
         /// so create a new profile and upload to DB using [postUserProfile]
@@ -329,8 +346,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Invoke [updateUserProfileModel] with user profile that was passed in
   /// If user is logged in upload [UserProfileModel] to DB
   Future postUserProfile(UserProfileModel profile) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     notifyListeners();
 
     /// save settings to local storage

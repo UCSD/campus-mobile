@@ -16,8 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-import 'core/services/storage_service.dart';
+// import 'core/services/storage_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 var showOnboardingScreen = true;
 var isFirstRunFlag = false;
@@ -70,7 +70,9 @@ Future<void> initializeApp() async {
 }
 
 Future<void> clearSecuredStorage() async {
-  await StorageService.clearAll();
+  // await StorageService.clearAll();
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  await storage.deleteAll();
 }
 
 // TODO: refactor this to load multiple futures in one statement
