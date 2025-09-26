@@ -38,7 +38,12 @@ class UserDataProvider extends ChangeNotifier {
   /// SERVICES
   var _authenticationService = AuthenticationService();
   var _userProfileService = UserProfileService();
-  var storage = FlutterSecureStorage();
+  // var storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage(
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.first_unlock_this_device,
+    ),
+  );
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -104,7 +109,9 @@ class UserDataProvider extends ChangeNotifier {
   //     StorageService.storeCredential('encrypted_password', encryptedPassword);
 
   /// Save encrypted password to device
-  void _saveEncryptedPasswordToDevice(String encryptedPassword) => storage.write(key: 'encrypted_password', value: encryptedPassword);
+  // void _saveEncryptedPasswordToDevice(String encryptedPassword) => storage.write(key: 'encrypted_password', value: encryptedPassword);
+  Future<void> _saveEncryptedPasswordToDevice(String encryptedPassword) async =>
+      await storage.write(key: 'encrypted_password', value: encryptedPassword);
 
   // /// Get encrypted password that has been saved to device
   // Future<String?> _getEncryptedPasswordFromDevice() => StorageService.getCredential('encrypted_password');
@@ -116,7 +123,9 @@ class UserDataProvider extends ChangeNotifier {
   // void _saveUsernameToDevice(String username) => StorageService.storeCredential('username', username);
 
   /// Save username to device
-  void _saveUsernameToDevice(String username) => storage.write(key: 'username', value: username);
+  // void _saveUsernameToDevice(String username) => storage.write(key: 'username', value: username);
+  Future<void> _saveUsernameToDevice(String username) async =>
+      await storage.write(key: 'username', value: username);
 
   // /// Get username from device
   // Future<String?> getUsernameFromDevice() => StorageService.getCredential('username');
@@ -137,7 +146,7 @@ class UserDataProvider extends ChangeNotifier {
   void _deletePasswordFromDevice() => storage.delete(key: 'password');
 
   /// Encrypt given username and password and store on device
-  void _encryptAndSaveCredentials(String username, String password) {
+  Future <void> _encryptAndSaveCredentials(String username, String password) async {
     final pkString = dotenv.get('USER_CREDENTIALS_PUBLIC_KEY');
     final rsaParser = RSAKeyParser();
     final pc.RSAPublicKey publicKey = rsaParser.parse(pkString) as RSAPublicKey;
@@ -146,8 +155,8 @@ class UserDataProvider extends ChangeNotifier {
     cipher.init(true, keyParametersPublic);
     Uint8List output = cipher.process(utf8.encode(password));
     var base64EncodedText = base64.encode(output);
-    _saveUsernameToDevice(username);
-    _saveEncryptedPasswordToDevice(base64EncodedText);
+    await _saveUsernameToDevice(username);
+    await _saveEncryptedPasswordToDevice(base64EncodedText);
   }
 
   /// Authenticate a user given an username and password
@@ -158,7 +167,7 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
 
     if (username.isNotEmpty && password.isNotEmpty) {
-      _encryptAndSaveCredentials(username, password);
+      await _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
         if (_userProfileModel.classifications!.student!) {
