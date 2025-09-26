@@ -15,8 +15,7 @@ import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
-import '../../ui/home/home.dart';
-// import '../services/storage_service.dart';
+import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserDataProvider extends ChangeNotifier {
@@ -42,6 +41,9 @@ class UserDataProvider extends ChangeNotifier {
   final storage = const FlutterSecureStorage(
     iOptions: IOSOptions(
       accessibility: KeychainAccessibility.first_unlock_this_device,
+    ),
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
     ),
   );
 
@@ -81,7 +83,7 @@ class UserDataProvider extends ChangeNotifier {
   Future _loadSavedAuthenticationModel() async {
     var authBox = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
     AuthenticationModel temp = AuthenticationModel.fromJson({});
-    //check to see if we have added the authentication model into the box already
+    // Check to see if we have added the authentication model into the box already
     if (authBox.get('AuthenticationModel') == null) {
       await authBox.put('AuthenticationModel', temp);
       temp = authBox.get('AuthenticationModel')!;
@@ -104,43 +106,24 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // /// Save encrypted password to device
-  // void _saveEncryptedPasswordToDevice(String encryptedPassword) =>
-  //     StorageService.storeCredential('encrypted_password', encryptedPassword);
-
   /// Save encrypted password to device
   // void _saveEncryptedPasswordToDevice(String encryptedPassword) => storage.write(key: 'encrypted_password', value: encryptedPassword);
   Future<void> _saveEncryptedPasswordToDevice(String encryptedPassword) async =>
       await storage.write(key: 'encrypted_password', value: encryptedPassword);
 
-  // /// Get encrypted password that has been saved to device
-  // Future<String?> _getEncryptedPasswordFromDevice() => StorageService.getCredential('encrypted_password');
-
   /// Get encrypted password that has been saved to device
   Future<String?> _getEncryptedPasswordFromDevice() => storage.read(key: 'encrypted_password');
-
-  // /// Save username to device
-  // void _saveUsernameToDevice(String username) => StorageService.storeCredential('username', username);
 
   /// Save username to device
   // void _saveUsernameToDevice(String username) => storage.write(key: 'username', value: username);
   Future<void> _saveUsernameToDevice(String username) async =>
       await storage.write(key: 'username', value: username);
 
-  // /// Get username from device
-  // Future<String?> getUsernameFromDevice() => StorageService.getCredential('username');
-
   /// Get username from device
   Future<String?> getUsernameFromDevice() => storage.read(key: 'username');
 
-  // /// Delete username from device
-  // void _deleteUsernameFromDevice() => StorageService.removeCredential('username');
-
   /// Delete username from device
   void _deleteUsernameFromDevice() => storage.delete(key: 'username');
-
-  // /// Delete password from device
-  // void _deletePasswordFromDevice() => StorageService.removeCredential('password');
 
   /// Delete password from device
   void _deletePasswordFromDevice() => storage.delete(key: 'password');
