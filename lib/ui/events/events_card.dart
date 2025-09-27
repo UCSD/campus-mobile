@@ -1,10 +1,10 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/models/events.dart';
-import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/events.dart';
-import 'package:campus_mobile_experimental/ui/common/action_button.dart';
-import 'package:campus_mobile_experimental/ui/common/card_container.dart';
-import 'package:campus_mobile_experimental/ui/events/events_card_list.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/core/models/events.dart';
+import 'package:campus_mobile/core/providers/cards.dart';
+import 'package:campus_mobile/core/providers/events.dart';
+import 'package:campus_mobile/ui/common/action_button.dart';
+import 'package:campus_mobile/ui/common/card_container.dart';
+import 'package:campus_mobile/ui/events/events_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

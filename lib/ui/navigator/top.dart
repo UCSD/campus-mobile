@@ -1,9 +1,9 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile/core/providers/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/ui/common/top_content.dart';
+import 'package:campus_mobile/ui/common/top_content.dart';
 
 class CMAppBar extends StatelessWidget {
   CMAppBar({

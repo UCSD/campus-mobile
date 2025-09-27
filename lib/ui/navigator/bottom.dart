@@ -1,12 +1,12 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
-import 'package:campus_mobile_experimental/core/wrappers/push_notifications.dart';
-import 'package:campus_mobile_experimental/ui/home/home.dart';
-import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
-import 'package:campus_mobile_experimental/ui/navigator/top.dart';
-import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
-import 'package:campus_mobile_experimental/ui/profile/profile.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile/core/providers/bottom_nav.dart';
+import 'package:campus_mobile/core/wrappers/push_notifications.dart';
+import 'package:campus_mobile/ui/home/home.dart';
+import 'package:campus_mobile/ui/map/map.dart' as prefix0;
+import 'package:campus_mobile/ui/navigator/top.dart';
+import 'package:campus_mobile/ui/notifications/notifications_list_view.dart';
+import 'package:campus_mobile/ui/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

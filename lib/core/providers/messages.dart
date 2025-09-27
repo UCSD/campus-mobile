@@ -1,7 +1,7 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/models/notifications.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/services/messages.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/core/models/notifications.dart';
+import 'package:campus_mobile/core/providers/user.dart';
+import 'package:campus_mobile/core/services/messages.dart';
 import 'package:flutter/material.dart';
 import '../../ui/navigator/bottom.dart';
 

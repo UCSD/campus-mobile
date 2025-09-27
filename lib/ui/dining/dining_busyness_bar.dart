@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/availability.dart';
-import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
+import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile/core/models/availability.dart';
+import 'package:campus_mobile/ui/availability/availability_constants.dart';
 import 'package:flutter/material.dart';
 import '../../core/models/dining.dart';
 

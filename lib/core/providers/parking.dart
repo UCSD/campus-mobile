@@ -1,9 +1,9 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/models/parking.dart';
-import 'package:campus_mobile_experimental/core/models/spot_types.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/services/parking.dart';
-import 'package:campus_mobile_experimental/core/services/spot_types.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/core/models/parking.dart';
+import 'package:campus_mobile/core/models/spot_types.dart';
+import 'package:campus_mobile/core/providers/user.dart';
+import 'package:campus_mobile/core/services/parking.dart';
+import 'package:campus_mobile/core/services/spot_types.dart';
 import 'package:flutter/material.dart';
 
 class ParkingDataProvider extends ChangeNotifier {

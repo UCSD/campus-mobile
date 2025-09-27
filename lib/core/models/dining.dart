@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:campus_mobile/core/models/location.dart';
 
 // To parse this JSON data, do
 //

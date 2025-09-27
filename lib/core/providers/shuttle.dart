@@ -1,10 +1,10 @@
 import 'dart:math' as Math;
 
-import 'package:campus_mobile_experimental/core/models/location.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/services/shuttle.dart';
+import 'package:campus_mobile/core/models/location.dart';
+import 'package:campus_mobile/core/models/shuttle_arrival.dart';
+import 'package:campus_mobile/core/models/shuttle_stop.dart';
+import 'package:campus_mobile/core/providers/user.dart';
+import 'package:campus_mobile/core/services/shuttle.dart';
 import 'package:flutter/material.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {

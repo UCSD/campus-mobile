@@ -1,7 +1,7 @@
-import 'package:campus_mobile_experimental/core/models/parking.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle.dart';
-import 'package:campus_mobile_experimental/core/models/spot_types.dart';
-import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile/core/models/parking.dart';
+import 'package:campus_mobile/core/models/shuttle.dart';
+import 'package:campus_mobile/core/models/spot_types.dart';
+import 'package:campus_mobile/core/providers/parking.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';

@@ -1,8 +1,8 @@
-// import 'package:campus_mobile_experimental/app_constants.dart';
-// import 'package:campus_mobile_experimental/core/models/dining.dart';
-// import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
-// import 'package:campus_mobile_experimental/core/providers/dining.dart';
-// import 'package:campus_mobile_experimental/app_styles.dart';
+// import 'package:campus_mobile/app_constants.dart';
+// import 'package:campus_mobile/core/models/dining.dart';
+// import 'package:campus_mobile/core/models/dining_menu.dart';
+// import 'package:campus_mobile/core/providers/dining.dart';
+// import 'package:campus_mobile/app_styles.dart';
 // import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 //

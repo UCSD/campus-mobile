@@ -1,5 +1,5 @@
-import 'package:campus_mobile_experimental/app_networking.dart';
-import 'package:campus_mobile_experimental/core/models/authentication.dart';
+import 'package:campus_mobile/app_networking.dart';
+import 'package:campus_mobile/core/models/authentication.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthenticationService {

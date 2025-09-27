@@ -1,7 +1,7 @@
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/providers/notifications.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile/core/providers/notifications.dart';
+import 'package:campus_mobile/core/providers/user.dart';
+import 'package:campus_mobile/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

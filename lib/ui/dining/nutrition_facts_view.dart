@@ -1,5 +1,5 @@
-// import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
-// import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+// import 'package:campus_mobile/core/models/dining_menu.dart';
+// import 'package:campus_mobile/ui/common/container_view.dart';
 // import 'package:flutter/material.dart';
 //
 // class NutritionFactsView extends StatelessWidget {

@@ -1,9 +1,9 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/news.dart';
-import 'package:campus_mobile_experimental/core/providers/news.dart';
-import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile/core/models/news.dart';
+import 'package:campus_mobile/core/providers/news.dart';
+import 'package:campus_mobile/ui/common/container_view.dart';
+import 'package:campus_mobile/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/providers/map.dart';
-import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/core/providers/map.dart';
+import 'package:campus_mobile/ui/common/directions_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';

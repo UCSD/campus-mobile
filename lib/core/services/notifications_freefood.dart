@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile/app_networking.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
+import 'package:campus_mobile/core/models/notifications_freefood.dart';
 
 class FreeFoodService {
   FreeFoodService();

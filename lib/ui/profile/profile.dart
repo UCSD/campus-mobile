@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
-import 'package:campus_mobile_experimental/core/providers/map.dart';
-import 'package:campus_mobile_experimental/ui/common/build_info.dart';
-import 'package:campus_mobile_experimental/ui/profile/login.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile/core/providers/bottom_nav.dart';
+import 'package:campus_mobile/core/providers/map.dart';
+import 'package:campus_mobile/ui/common/build_info.dart';
+import 'package:campus_mobile/ui/profile/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_links/app_links.dart';

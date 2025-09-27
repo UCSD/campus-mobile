@@ -1,7 +1,7 @@
-import 'package:campus_mobile_experimental/core/models/events.dart';
-import 'package:campus_mobile_experimental/core/providers/events.dart';
-import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/common/linkify_with_catch.dart';
+import 'package:campus_mobile/core/models/events.dart';
+import 'package:campus_mobile/core/providers/events.dart';
+import 'package:campus_mobile/ui/common/container_view.dart';
+import 'package:campus_mobile/ui/common/linkify_with_catch.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

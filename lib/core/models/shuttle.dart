@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
+import 'package:campus_mobile/core/models/shuttle_stop.dart';
 
 List<ShuttleModel>? shuttleModelFromJson(String str) =>
     json.decode(str).map((x) => ShuttleModel.fromJson(x));

@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
-import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile/core/providers/cards.dart';
+import 'package:campus_mobile/ui/common/alert_dialog_widget.dart';
+import 'package:campus_mobile/ui/common/container_view.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

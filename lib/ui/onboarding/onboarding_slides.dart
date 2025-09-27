@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile/app_styles.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

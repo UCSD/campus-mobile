@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:campus_mobile_experimental/app_provider.dart';
-import 'package:campus_mobile_experimental/core/models/authentication.dart';
-import 'package:campus_mobile_experimental/core/models/user_profile.dart';
-import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/notifications.dart';
-import 'package:campus_mobile_experimental/core/services/authentication.dart';
-import 'package:campus_mobile_experimental/core/services/user.dart';
-import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
+import 'package:campus_mobile/app_provider.dart';
+import 'package:campus_mobile/core/models/authentication.dart';
+import 'package:campus_mobile/core/models/user_profile.dart';
+import 'package:campus_mobile/core/providers/cards.dart';
+import 'package:campus_mobile/core/providers/notifications.dart';
+import 'package:campus_mobile/core/services/authentication.dart';
+import 'package:campus_mobile/core/services/user.dart';
+import 'package:campus_mobile/ui/navigator/bottom.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,7 +15,7 @@ import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
-import 'package:campus_mobile_experimental/ui/home/home.dart';
+import 'package:campus_mobile/ui/home/home.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserDataProvider extends ChangeNotifier {

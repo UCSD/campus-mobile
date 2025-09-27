@@ -1,5 +1,5 @@
-import 'package:campus_mobile_experimental/core/models/news.dart';
-import 'package:campus_mobile_experimental/core/services/news.dart';
+import 'package:campus_mobile/core/models/news.dart';
+import 'package:campus_mobile/core/services/news.dart';
 import 'package:flutter/material.dart';
 
 class NewsDataProvider extends ChangeNotifier {

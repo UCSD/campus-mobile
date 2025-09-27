@@ -1,15 +1,15 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
-import 'package:campus_mobile_experimental/core/providers/cards.dart';
-import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
-import 'package:campus_mobile_experimental/ui/common/action_link.dart';
-import 'package:campus_mobile_experimental/ui/common/card_container.dart';
-import 'package:campus_mobile_experimental/ui/shuttle/shuttle_display.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile/core/models/shuttle_arrival.dart';
+import 'package:campus_mobile/core/models/shuttle_stop.dart';
+import 'package:campus_mobile/core/providers/cards.dart';
+import 'package:campus_mobile/core/providers/shuttle.dart';
+import 'package:campus_mobile/ui/common/action_link.dart';
+import 'package:campus_mobile/ui/common/card_container.dart';
+import 'package:campus_mobile/ui/shuttle/shuttle_display.dart';
 
 const String cardId = 'shuttle';
 

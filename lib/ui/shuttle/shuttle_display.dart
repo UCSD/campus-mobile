@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/core/models/shuttle.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
-import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
+import 'package:campus_mobile/core/models/shuttle.dart';
+import 'package:campus_mobile/core/models/shuttle_arrival.dart';
+import 'package:campus_mobile/core/models/shuttle_stop.dart';
 import 'package:flutter/material.dart';
 
 import '../../app_styles.dart';

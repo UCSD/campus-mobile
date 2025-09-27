@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/providers/notifications.dart';
+import 'package:campus_mobile/core/providers/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

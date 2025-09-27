@@ -1,9 +1,9 @@
 import 'dart:collection';
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/models/notifications.dart';
-import 'package:campus_mobile_experimental/core/models/notifications_freefood.dart';
-import 'package:campus_mobile_experimental/core/providers/messages.dart';
-import 'package:campus_mobile_experimental/core/services/notifications_freefood.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/core/models/notifications.dart';
+import 'package:campus_mobile/core/models/notifications_freefood.dart';
+import 'package:campus_mobile/core/providers/messages.dart';
+import 'package:campus_mobile/core/services/notifications_freefood.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 

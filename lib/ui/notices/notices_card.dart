@@ -1,7 +1,7 @@
-import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/notices.dart';
-import 'package:campus_mobile_experimental/core/utils/webview.dart';
-import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
+import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile/core/models/notices.dart';
+import 'package:campus_mobile/core/utils/webview.dart';
+import 'package:campus_mobile/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
 
 class NoticesCard extends StatelessWidget {

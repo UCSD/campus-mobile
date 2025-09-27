@@ -1,5 +1,5 @@
-import 'package:campus_mobile_experimental/core/models/news.dart';
-import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile/core/models/news.dart';
+import 'package:campus_mobile/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';

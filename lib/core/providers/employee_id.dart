@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/core/models/employee_id.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
-import 'package:campus_mobile_experimental/core/services/employee_id.dart';
+import 'package:campus_mobile/core/models/employee_id.dart';
+import 'package:campus_mobile/core/providers/user.dart';
+import 'package:campus_mobile/core/services/employee_id.dart';
 import 'package:flutter/material.dart';
 
 class EmployeeIdDataProvider extends ChangeNotifier {

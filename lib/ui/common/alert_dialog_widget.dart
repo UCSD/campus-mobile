@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile/app_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile/app_styles.dart';
 
 class AlertDialogWidget extends StatelessWidget {
   final int type;

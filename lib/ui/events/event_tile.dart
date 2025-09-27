@@ -1,6 +1,6 @@
-import 'package:campus_mobile_experimental/app_constants.dart';
-import 'package:campus_mobile_experimental/core/models/events.dart';
-import 'package:campus_mobile_experimental/core/providers/events.dart';
+import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile/core/models/events.dart';
+import 'package:campus_mobile/core/providers/events.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

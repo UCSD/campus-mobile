@@ -1,11 +1,11 @@
-import 'package:campus_mobile_experimental/core/models/classes.dart';
-import 'package:campus_mobile_experimental/core/providers/classes.dart';
-import 'package:campus_mobile_experimental/ui/common/container_view.dart';
-import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
+import 'package:campus_mobile/core/models/classes.dart';
+import 'package:campus_mobile/core/providers/classes.dart';
+import 'package:campus_mobile/ui/common/container_view.dart';
+import 'package:campus_mobile/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile/app_styles.dart';
 class ClassList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
