@@ -1,13 +1,13 @@
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/core/models/classes.dart';
-import 'package:campus_mobile/core/providers/cards.dart';
-import 'package:campus_mobile/core/providers/classes.dart';
-import 'package:campus_mobile/ui/common/card_container.dart';
-import 'package:campus_mobile/ui/common/last_updated_widget.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/classes.dart';
+import 'package:campus_mobile_experimental/ui/common/card_container.dart';
+import 'package:campus_mobile_experimental/ui/common/last_updated_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 const cardId = 'finals';
 
@@ -58,8 +58,8 @@ class FinalsCard extends StatelessWidget {
     }
   }
 
-  Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
-      DateTime lastUpdated, String? nextDayWithClasses, BuildContext context) {
+  Widget buildFinalsCard(Map<String, List<SectionData>> finalsData, DateTime lastUpdated, String? nextDayWithClasses,
+      BuildContext context) {
     try {
       var finalsCount = 0, i = 1;
       // Iterate through the map and count the number Finals
@@ -92,8 +92,7 @@ class FinalsCard extends StatelessWidget {
                 // WLH 2005
                 buildLocationRow(context, data.building! + ' ' + data.room!),
                 ///////////////// Horizontal Division ///////////////////
-                if(i < finalsCount)
-                  Divider(color: listTileDividerColorLight, thickness: 0.7),
+                if (i < finalsCount) Divider(color: listTileDividerColorLight, thickness: 0.7),
               ],
             ),
           ));
@@ -118,10 +117,10 @@ class FinalsCard extends StatelessWidget {
         width: double.infinity,
         child: Center(
           child: Padding(
-            padding: EdgeInsets.only(left: 12,top: 32, bottom: 48),
+            padding: EdgeInsets.only(left: 12, top: 32, bottom: 48),
             child: Container(
-              child: Text(
-                  "Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
+              child:
+                  Text("Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
             ),
           ),
         ),
@@ -136,27 +135,21 @@ class FinalsCard extends StatelessWidget {
       style: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.w500,
-        color: Theme.of(context).brightness == Brightness.light
-            ? lightPrimaryColor
-            : darkPrimaryColor2,
+        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
       ),
     );
   }
 
   // Heading 3 i.e. "CSE 140"
   Widget buildClassCode(BuildContext context, String className) {
-    return Text(
-      className,
-      style: TextStyle(
+    return Text(className,
+        style: TextStyle(
           fontSize: 18.0,
           fontFamily: 'Refrigerator Deluxe',
           fontWeight: FontWeight.w900,
           letterSpacing: 1.1,
-        color: Theme.of(context).brightness == Brightness.light
-            ? lightPrimaryColor
-            : darkPrimaryColor2,
-      )
-    );
+          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+        ));
   }
 
   // Small body text i.e. 15:00 - 17:59 (24hr format)
@@ -165,27 +158,20 @@ class FinalsCard extends StatelessWidget {
       time ?? 'TBA', // TBA if time is null or empty
       style: TextStyle(
         fontSize: 16,
-        color: Theme.of(context).brightness == Brightness.light
-            ? descriptiveTextColorLight
-            : descriptiveTextColorDark,
+        color: Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
         fontWeight: FontWeight.w400,
       ),
     );
   }
 
-
   // Medium Body text i.e. "Intro to Computer Security"
   Widget buildClassTitle(BuildContext context, String title) {
-    return Text(
-        title,
-      style: TextStyle(
-          fontSize: 18.0,
-          color: Theme.of(context).brightness == Brightness.light
-              ? descriptiveTextColorLight
-              : descriptiveTextColorDark,
-          fontWeight: FontWeight.w400
-      )
-    );
+    return Text(title,
+        style: TextStyle(
+            fontSize: 18.0,
+            color:
+                Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
+            fontWeight: FontWeight.w400));
   }
 
   // Medium Body Text i.e. "WLH 2005"
@@ -202,9 +188,7 @@ class FinalsCard extends StatelessWidget {
                       color: Theme.of(context).brightness == Brightness.light
                           ? descriptiveTextColorLight
                           : descriptiveTextColorDark,
-                      fontWeight: FontWeight.w400
-                  )
-              ),
+                      fontWeight: FontWeight.w400)),
             ],
           ),
         ),

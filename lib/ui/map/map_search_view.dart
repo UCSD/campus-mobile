@@ -1,8 +1,8 @@
-import 'package:campus_mobile/core/providers/map.dart';
-import 'package:campus_mobile/ui/common/container_view.dart';
-import 'package:campus_mobile/ui/map/quick_search_icons.dart';
-import 'package:campus_mobile/ui/map/search_bar.dart';
-import 'package:campus_mobile/ui/map/search_history_list.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/map/quick_search_icons.dart';
+import 'package:campus_mobile_experimental/ui/map/search_bar.dart';
+import 'package:campus_mobile_experimental/ui/map/search_history_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

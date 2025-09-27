@@ -1,14 +1,11 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final diningMenuItemsModel = diningMenuItemsModelFromJson(jsonString);
+DiningMenuItemsModel diningMenuItemsModelFromJson(String str) => DiningMenuItemsModel.fromJson(json.decode(str));
 
-import 'dart:convert';
-
-DiningMenuItemsModel diningMenuItemsModelFromJson(String str) =>
-    DiningMenuItemsModel.fromJson(json.decode(str));
-
-String diningMenuItemsModelToJson(DiningMenuItemsModel data) =>
-    json.encode(data.toJson());
+String diningMenuItemsModelToJson(DiningMenuItemsModel data) => json.encode(data.toJson());
 
 class DiningMenuItemsModel {
   List<DiningMenuItem>? menuItems;
@@ -23,19 +20,16 @@ class DiningMenuItemsModel {
 
   DiningMenuItemsModel.fromJson(Map<String, dynamic> json)
       : menuItems = json["menuitems"] != null
-      ? List<DiningMenuItem>.from(
-      json["menuitems"].map((x) => DiningMenuItem.fromJson(x)))
-      : [],
+            ? List<DiningMenuItem>.from(json["menuitems"].map((x) => DiningMenuItem.fromJson(x)))
+            : [],
         disclaimer = json["disclaimer"],
         disclaimerEmail = json["disclaimerEmail"];
 
   Map<String, dynamic> toJson() => {
-    "menuitems": menuItems!.isNotEmpty
-        ? List<dynamic>.from(menuItems!.map((x) => x.toJson()))
-        : null,
-    "disclaimer": disclaimer,
-    "disclaimerEmail": disclaimerEmail,
-  };
+        "menuitems": menuItems!.isNotEmpty ? List<dynamic>.from(menuItems!.map((x) => x.toJson())) : null,
+        "disclaimer": disclaimer,
+        "disclaimerEmail": disclaimerEmail,
+      };
 }
 
 class DiningMenuItem {
@@ -68,14 +62,14 @@ class DiningMenuItem {
         nutrition = Nutrition.fromJson(json["nutrition"]);
 
   Map<String, dynamic> toJson() => {
-    "name": name,
-    "itemID": itemId,
-    "station": station,
-    "price": price,
-    "images": images,
-    "tags": tags,
-    "nutrition": nutrition.toJson(),
-  };
+        "name": name,
+        "itemID": itemId,
+        "station": station,
+        "price": price,
+        "images": images,
+        "tags": tags,
+        "nutrition": nutrition.toJson(),
+      };
 }
 
 class Nutrition {
@@ -152,27 +146,27 @@ class Nutrition {
         allergens = json["allergens"];
 
   Map<String, dynamic> toJson() => {
-    "servingSize": servingSize,
-    "calories": calories,
-    "totalFat": totalFat,
-    "totalFat_DV": totalFatDv,
-    "saturatedFat": saturatedFat,
-    "saturatedFat_DV": saturatedFatDv,
-    "transFat": transFat,
-    "transFat_DV": transFatDv,
-    "cholesterol": cholesterol,
-    "cholesterol_DV": cholesterolDv,
-    "sodium": sodium,
-    "sodium_DV": sodiumDv,
-    "totalCarbohydrate": totalCarbohydrate,
-    "totalCarbohhdrate_DV": totalCarbohydrateDv,
-    "dietaryFiber": dietaryFiber,
-    "dietaryFiber_DV": dietaryFiberDv,
-    "sugar": sugar,
-    "sugar_DV": sugarDv,
-    "protein": protein,
-    "protein_DV": proteinDv,
-    "ingredients": ingredients,
-    "allergens": allergens,
-  };
+        "servingSize": servingSize,
+        "calories": calories,
+        "totalFat": totalFat,
+        "totalFat_DV": totalFatDv,
+        "saturatedFat": saturatedFat,
+        "saturatedFat_DV": saturatedFatDv,
+        "transFat": transFat,
+        "transFat_DV": transFatDv,
+        "cholesterol": cholesterol,
+        "cholesterol_DV": cholesterolDv,
+        "sodium": sodium,
+        "sodium_DV": sodiumDv,
+        "totalCarbohydrate": totalCarbohydrate,
+        "totalCarbohhdrate_DV": totalCarbohydrateDv,
+        "dietaryFiber": dietaryFiber,
+        "dietaryFiber_DV": dietaryFiberDv,
+        "sugar": sugar,
+        "sugar_DV": sugarDv,
+        "protein": protein,
+        "protein_DV": proteinDv,
+        "ingredients": ingredients,
+        "allergens": allergens,
+      };
 }

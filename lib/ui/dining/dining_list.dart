@@ -1,12 +1,12 @@
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/app_styles.dart';
-import 'package:campus_mobile/core/models/dining.dart'
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/dining.dart'
     as dining_model;
-import 'package:campus_mobile/core/providers/dining.dart';
-import 'package:campus_mobile/ui/common/container_view.dart';
-import 'package:campus_mobile/ui/common/directions_helper.dart';
-import 'package:campus_mobile/ui/common/time_range_widget.dart';
-import 'package:campus_mobile/ui/dining/payment_filter_button.dart';
+import 'package:campus_mobile_experimental/core/providers/dining.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
+import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
+import 'package:campus_mobile_experimental/ui/dining/payment_filter_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

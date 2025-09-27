@@ -1,9 +1,9 @@
-import 'package:campus_mobile/app_constants.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_styles.dart';
-import '../common/container_view.dart';
-import '../../core/providers/dining.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/core/providers/dining.dart';
 
 /// View for dining payment filter settings
 /// This displays a list of filter types with on/off switches to toggle
@@ -46,10 +46,8 @@ class DiningFilterView extends StatelessWidget {
     );
   }
 
-
   // Creates a list of tiles containing filter types with switches
-  List<Widget> createList(BuildContext context, List<String> typesAvailable,
-      DiningDataProvider diningProvider) {
+  List<Widget> createList(BuildContext context, List<String> typesAvailable, DiningDataProvider diningProvider) {
     List<Widget> filterTypesList = [];
     // For each filter type available, create a ListTile with a switch
     // ```type``` is the filter type's name (i.e. "Triton Cash")
@@ -76,7 +74,8 @@ class DiningFilterView extends StatelessWidget {
               scale: 0.9,
               child: Switch.adaptive(
                 // Each filter type's switch is 'on' or 'off' based on the filter type's state
-                value: diningProvider.diningFilterTypeStates[type]!, // Remember that ```type``` is a string key (i.e. "Triton Cash")
+                value: diningProvider
+                    .diningFilterTypeStates[type]!, // Remember that ```type``` is a string key (i.e. "Triton Cash")
                 onChanged: (_) {
                   // On changed, this calls the provider function that "toggles" the filter type's state
                   // i.e. if "Triton Cash" was on (true), it makes it off (false).

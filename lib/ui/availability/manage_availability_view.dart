@@ -1,7 +1,7 @@
-import 'package:campus_mobile/core/models/availability.dart';
-import 'package:campus_mobile/core/providers/availability.dart';
-import 'package:campus_mobile/ui/common/container_view.dart';
-import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/availability.dart';
+import 'package:campus_mobile_experimental/core/providers/availability.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

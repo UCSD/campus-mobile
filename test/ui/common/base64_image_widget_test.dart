@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:campus_mobile/ui/common/base64_image_widget.dart';
+import 'package:campus_mobile_experimental/ui/common/base64_image_widget.dart';
 import 'package:flutter/material.dart';
 
 void main() {

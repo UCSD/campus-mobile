@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/core/models/location.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 

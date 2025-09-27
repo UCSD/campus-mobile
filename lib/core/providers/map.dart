@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:campus_mobile/core/models/location.dart';
-import 'package:campus_mobile/core/models/map.dart';
-import 'package:campus_mobile/core/services/map.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:campus_mobile_experimental/core/models/map.dart';
+import 'package:campus_mobile_experimental/core/services/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 

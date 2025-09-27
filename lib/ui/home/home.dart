@@ -1,32 +1,30 @@
-// ignore_for_file: unused_import
 import 'dart:async';
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/app_styles.dart';
-import 'package:campus_mobile/core/models/cards.dart';
-import 'package:campus_mobile/core/models/notices.dart';
-import 'package:campus_mobile/core/providers/bottom_nav.dart';
-import 'package:campus_mobile/core/providers/cards.dart';
-import 'package:campus_mobile/core/providers/connectivity.dart';
-import 'package:campus_mobile/core/providers/map.dart';
-import 'package:campus_mobile/core/providers/notices.dart';
-import 'package:campus_mobile/main.dart';
-import 'package:campus_mobile/ui/availability/availability_card.dart';
-import 'package:campus_mobile/ui/classes/classes_card.dart';
-import 'package:campus_mobile/ui/common/webview_container.dart';
-import 'package:campus_mobile/ui/dining/dining_card.dart';
-import 'package:campus_mobile/ui/employee_id/employee_id_card.dart';
-import 'package:campus_mobile/ui/events/events_card.dart';
-import 'package:campus_mobile/ui/finals/finals_card.dart';
-import 'package:campus_mobile/ui/mystudentchart/mystudentchart_card.dart';
-import 'package:campus_mobile/ui/myucsdchart/myucsdchart_card.dart';
-import 'package:campus_mobile/ui/navigator/bottom.dart';
-import 'package:campus_mobile/ui/navigator/top.dart';
-import 'package:campus_mobile/ui/news/news_card.dart';
-import 'package:campus_mobile/ui/notices/notices_card.dart';
-import 'package:campus_mobile/ui/parking/parking_card.dart';
-import 'package:campus_mobile/ui/shuttle/shuttle_card.dart';
-import 'package:campus_mobile/ui/student_id/student_id_card.dart';
-import 'package:campus_mobile/ui/wifi/wifi_card.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/notices.dart';
+import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/core/providers/connectivity.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/core/providers/notices.dart';
+import 'package:campus_mobile_experimental/main.dart';
+import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
+import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
+import 'package:campus_mobile_experimental/ui/common/webview_container.dart';
+import 'package:campus_mobile_experimental/ui/dining/dining_card.dart';
+import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart';
+import 'package:campus_mobile_experimental/ui/events/events_card.dart';
+import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
+import 'package:campus_mobile_experimental/ui/mystudentchart/mystudentchart_card.dart';
+import 'package:campus_mobile_experimental/ui/myucsdchart/myucsdchart_card.dart';
+import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
+import 'package:campus_mobile_experimental/ui/navigator/top.dart';
+import 'package:campus_mobile_experimental/ui/news/news_card.dart';
+import 'package:campus_mobile_experimental/ui/notices/notices_card.dart';
+import 'package:campus_mobile_experimental/ui/parking/parking_card.dart';
+import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
+import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
+import 'package:campus_mobile_experimental/ui/wifi/wifi_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_links/app_links.dart';
@@ -70,8 +68,7 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, covariant MeasureSizeRenderObject renderObject) {
+  void updateRenderObject(BuildContext context, covariant MeasureSizeRenderObject renderObject) {
     renderObject.onChange = onChange;
   }
 }
@@ -134,12 +131,9 @@ class _HomeState extends State<Home> {
   }
 
   void executeQuery(String query) {
-    context.read<MapsDataProvider>()
-        .searchBarController
-        .text = query;
+    context.read<MapsDataProvider>().searchBarController.text = query;
     context.read<MapsDataProvider>().fetchLocations();
-    context.read<BottomNavigationBarProvider>()
-        .currentIndex = NavigatorConstants.MapTab;
+    context.read<BottomNavigationBarProvider>().currentIndex = NavigatorConstants.MapTab;
     context.read<CustomAppBar>().changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
   }
@@ -152,8 +146,7 @@ class _HomeState extends State<Home> {
       padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
         controller: _controller,
-        padding: const EdgeInsets.only(
-            top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
+        padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
         children: createList(),
       ),
     );
@@ -166,7 +159,7 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> getNoticesCardsList(List<NoticesModel> notices) =>
-    notices.map((notice) => NoticesCard(notice: notice)).whereType<NoticesCard>().toList();
+      notices.map((notice) => NoticesCard(notice: notice)).whereType<NoticesCard>().toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
   static const _cardCtors = {
@@ -199,8 +192,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-  List<Widget> getOrderedCardsList(List<String> order)
-  {
+  List<Widget> getOrderedCardsList(List<String> order) {
     final orderedCards = <Widget>[];
     final webCards = context.read<CardsDataProvider>().webCards;
 
@@ -211,8 +203,7 @@ class _HomeState extends State<Home> {
         if (cardCtor != null) {
           orderedCards.add(cardCtor());
         }
-      }
-      else {
+      } else {
         final card = webCards[cardName]!;
         orderedCards.add(
           WebViewContainer(

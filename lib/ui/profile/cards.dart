@@ -1,10 +1,9 @@
 import 'dart:async';
-
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/app_styles.dart';
-import 'package:campus_mobile/core/providers/cards.dart';
-import 'package:campus_mobile/ui/common/alert_dialog_widget.dart';
-import 'package:campus_mobile/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/providers/cards.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +33,7 @@ class _CardsViewState extends State<CardsView> {
         header: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: Text("Hold and drag to reorder",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+              textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ),
         children: createList(),
         onReorder: (int oldIndex, int newIndex) {
@@ -81,9 +79,7 @@ class _CardsViewState extends State<CardsView> {
             margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
             child: ListTile(
               leading: Icon(Icons.drag_handle,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? linkTextColorDark
-                      : linkTextColorLight),
+                  color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
               title: Text(_cardsDataProvider.availableCards[card]!.titleText,
                   style: Theme.of(context).textTheme.bodyMedium),
               trailing: Transform.scale(
@@ -93,8 +89,7 @@ class _CardsViewState extends State<CardsView> {
                   onChanged: (_) {
                     _cardsDataProvider.toggleCard(card);
                   },
-                  activeColor:
-                      toggleActiveColor, // Ensure this is a solid color
+                  activeColor: toggleActiveColor, // Ensure this is a solid color
                   thumbColor: WidgetStateProperty.resolveWith((states) {
                     if (states.contains(WidgetState.selected)) {
                       return Colors.white;
@@ -108,8 +103,7 @@ class _CardsViewState extends State<CardsView> {
         );
       } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
-        FirebaseCrashlytics.instance.recordError(
-            e, StackTrace.fromString(e.toString()),
+        FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
             reason: "Profile/Cards: Failed to load Cards page", fatal: false);
 
         _cardsDataProvider.changeInternetStatus(true);

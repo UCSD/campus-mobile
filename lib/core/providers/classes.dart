@@ -1,7 +1,7 @@
-import 'package:campus_mobile/core/models/classes.dart';
-import 'package:campus_mobile/core/models/term.dart';
-import 'package:campus_mobile/core/providers/user.dart';
-import 'package:campus_mobile/core/services/classes.dart';
+import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/models/term.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/classes.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

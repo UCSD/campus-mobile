@@ -1,14 +1,11 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final studentIdNameModel = studentIdNameModelFromJson(jsonString);
+StudentIdNameModel studentIdNameModelFromJson(String str) => StudentIdNameModel.fromJson(json.decode(str));
 
-import 'dart:convert';
-
-StudentIdNameModel studentIdNameModelFromJson(String str) =>
-    StudentIdNameModel.fromJson(json.decode(str));
-
-String studentIdNameModelToJson(StudentIdNameModel data) =>
-    json.encode(data.toJson());
+String studentIdNameModelToJson(StudentIdNameModel data) => json.encode(data.toJson());
 
 class StudentIdNameModel {
   String studentId;
@@ -37,7 +34,7 @@ class StudentIdNameModel {
         lastUpdatedBy: json["lastUpdatedBy"],
         internalId: json["internalId"],
         lastUpdatedDate: json["lastUpdatedDate"],
-  );
+      );
 
   Map<String, dynamic> toJson() => {
         "studentId": studentId,
@@ -47,5 +44,5 @@ class StudentIdNameModel {
         "lastUpdatedBy": lastUpdatedBy,
         "internalId": internalId,
         "lastUpdatedDate": lastUpdatedDate,
-  };
+      };
 }

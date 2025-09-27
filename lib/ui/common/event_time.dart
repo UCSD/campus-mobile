@@ -1,4 +1,4 @@
-import 'package:campus_mobile/core/models/events.dart';
+import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

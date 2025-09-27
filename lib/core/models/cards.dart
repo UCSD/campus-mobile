@@ -1,24 +1,21 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final cardsModel = cardsModelFromJson(jsonString);
-
-import 'dart:convert';
-
 Map<String, CardsModel> cardsModelFromJson(String str) =>
-    Map.from(json.decode(str))
-        .map((k, v) => MapEntry<String, CardsModel>(k, CardsModel.fromJson(v)));
+    Map.from(json.decode(str)).map((k, v) => MapEntry<String, CardsModel>(k, CardsModel.fromJson(v)));
 
-String cardsModelToJson(Map<String, CardsModel> data) => json.encode(
-    Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
+String cardsModelToJson(Map<String, CardsModel> data) =>
+    json.encode(Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
 
 class CardsModel {
-  CardsModel({
-    required this.cardActive,
-    required this.initialURL,
-    required this.isWebCard,
-    required this.requireAuth,
-    required this.titleText
-  });
+  CardsModel(
+      {required this.cardActive,
+      required this.initialURL,
+      required this.isWebCard,
+      required this.requireAuth,
+      required this.titleText});
 
   bool cardActive;
   String initialURL;

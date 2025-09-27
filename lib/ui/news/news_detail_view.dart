@@ -1,9 +1,9 @@
-import 'package:campus_mobile/core/models/news.dart';
-import 'package:campus_mobile/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/core/models/news.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class NewsDetailView extends StatelessWidget {
   const NewsDetailView({Key? key, required this.data}) : super(key: key);
@@ -20,13 +20,11 @@ class NewsDetailView extends StatelessWidget {
               image: DecorationImage(
                 fit: BoxFit.cover,
                 image: data.image.isEmpty
-                    ? const AssetImage('assets/images/UCSDMobile_banner.png')
-                as ImageProvider
+                    ? const AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
                     : NetworkImage(data.image),
               ),
             ),
           ),
-
           Container(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -42,26 +40,22 @@ class NewsDetailView extends StatelessWidget {
               ],
             ),
           ),
-
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: data.description.isNotEmpty
                 ? Text(
-              data.description,
-              style: const TextStyle(
-                fontSize: 16,
-                height: 1.4,
-                fontWeight: FontWeight.w400,
-              ),
-            )
+                    data.description,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      height: 1.4,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
                 : Container(),
           ),
-
           Container(
             padding: const EdgeInsets.only(left: 15, top: 20, right: 248, bottom: 20),
-            child: data.link.isNotEmpty
-                ? ContinueReadingButton(link: data.link)
-                : Container(),
+            child: data.link.isNotEmpty ? ContinueReadingButton(link: data.link) : Container(),
           ),
         ],
       ),
@@ -85,9 +79,7 @@ class NewsDateContainer extends StatelessWidget {
           parts[0].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -95,9 +87,7 @@ class NewsDateContainer extends StatelessWidget {
           parts[1].toUpperCase(),
           style: TextStyle(
             fontSize: 20,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -105,9 +95,7 @@ class NewsDateContainer extends StatelessWidget {
           parts[2].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -129,9 +117,7 @@ class NewsTitle extends StatelessWidget {
         style: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,
-          color: Theme.of(context).brightness == Brightness.light
-              ? lightPrimaryColor
-              : Colors.white,
+          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
         ),
       ),
     );

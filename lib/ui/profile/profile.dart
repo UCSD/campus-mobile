@@ -1,15 +1,15 @@
 import 'dart:async';
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/app_styles.dart';
-import 'package:campus_mobile/core/providers/bottom_nav.dart';
-import 'package:campus_mobile/core/providers/map.dart';
-import 'package:campus_mobile/ui/common/build_info.dart';
-import 'package:campus_mobile/ui/profile/login.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/ui/common/build_info.dart';
+import 'package:campus_mobile_experimental/ui/profile/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_links/app_links.dart';
-import '../../core/providers/user.dart';
-import '../../core/utils/webview.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/utils/webview.dart';
 
 class Profile extends StatelessWidget {
   /// deep links are received by this method
@@ -43,7 +43,6 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final _userDataProvider = Provider.of<UserDataProvider>(context);
     final isLoggedIn = _userDataProvider.isLoggedIn;
 
@@ -65,19 +64,14 @@ class Profile extends StatelessWidget {
                 ListTile(
                   title: Text(
                     'SETTINGS & SUPPORT',
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? titleMediumDark
-                        : titleMediumLight,
+                    style: Theme.of(context).brightness == Brightness.dark ? titleMediumDark : titleMediumLight,
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.drag_handle,
-                      color: Theme.of(context).iconTheme.color, size: 30.0),
+                  leading: Icon(Icons.drag_handle, color: Theme.of(context).iconTheme.color, size: 30.0),
                   title: Text(
                     'Card Settings',
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? linkTextDark
-                        : linkTextLight,
+                    style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, RoutePaths.CardsView);
@@ -88,15 +82,12 @@ class Profile extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? darkPrimaryColor
-                            : lightPrimaryColor,
+                        color: Theme.of(context).brightness == Brightness.dark ? darkPrimaryColor : lightPrimaryColor,
                         width: 3.0, // Set the border width
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(
-                          1.0), // Adjust the padding as needed
+                      padding: const EdgeInsets.all(1.0), // Adjust the padding as needed
                       child: Icon(
                         Icons.question_mark,
                         color: Theme.of(context).iconTheme.color,
@@ -105,32 +96,24 @@ class Profile extends StatelessWidget {
                   ),
                   title: Text(
                     'Get Mobile App Support',
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? linkTextDark
-                        : linkTextLight,
+                    style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
                   ),
                   onTap: handleFeedbackTap,
                 ),
                 ListTile(
-                  leading: Icon(Icons.lock,
-                      color: Theme.of(context).iconTheme.color, size: 30.0),
+                  leading: Icon(Icons.lock, color: Theme.of(context).iconTheme.color, size: 30.0),
                   title: Text(
                     'View Privacy Policy',
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? linkTextDark
-                        : linkTextLight,
+                    style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
                   ),
                   onTap: handlePrivacyTap,
                 ),
-                if(isLoggedIn)
+                if (isLoggedIn)
                   ListTile(
-                    leading: Icon(Icons.warning_amber_rounded,
-                        color: Theme.of(context).iconTheme.color, size: 36.0),
+                    leading: Icon(Icons.warning_amber_rounded, color: Theme.of(context).iconTheme.color, size: 36.0),
                     title: Text(
                       'Report a Campus Facility Issue',
-                      style: Theme.of(context).brightness == Brightness.dark
-                          ? linkTextDark
-                          : linkTextLight,
+                      style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
                     ),
                     onTap: handleReportTap,
                   ),
@@ -157,7 +140,7 @@ class Profile extends StatelessWidget {
     openLink(privacyUrl);
   }
 
-  Future<void>handleReportTap() async {
+  Future<void> handleReportTap() async {
     const reportUrl = "https://experience.arcgis.com/experience/91b8f66d6fa547f481c2a1cb6af252d0";
     openLink(reportUrl);
   }

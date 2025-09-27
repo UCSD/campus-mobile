@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final messages = messagesFromJson(jsonString);
-
-import 'dart:convert';
-
 Messages messagesFromJson(String str) => Messages.fromJson(json.decode(str));
 
 String messagesToJson(Messages data) => json.encode(data.toJson());
@@ -15,14 +14,10 @@ class Messages {
   Messages({required this.messages, this.next});
 
   Messages.fromJson(Map<String, dynamic> json)
-      : messages = List<MessageElement>.from(
-                      json["messages"].map((x) => MessageElement.fromJson(x))),
+      : messages = List<MessageElement>.from(json["messages"].map((x) => MessageElement.fromJson(x))),
         next = json["next"];
 
-  Map<String, dynamic> toJson() => {
-        "messages": List<dynamic>.from(messages.map((x) => x.toJson())),
-        "next": next
-      };
+  Map<String, dynamic> toJson() => {"messages": List<dynamic>.from(messages.map((x) => x.toJson())), "next": next};
 }
 
 class MessageElement {
@@ -50,7 +45,7 @@ class MessageElement {
   Map<String, dynamic> toJson() => {
         "sender": sender,
         "message": message.toJson(),
-        "messageId": messageId ,
+        "messageId": messageId,
         "audience": audience.toJson(),
         "timestamp": timestamp,
       };
@@ -64,15 +59,12 @@ class Audience {
   List<String>? topics; // this is a direct message if it's null
 
   Audience.fromJson(Map<String, dynamic> json)
-    : topics = json["topics"] != null ? List<String>.from(json["topics"].map((x) => x)) : null;
+      : topics = json["topics"] != null ? List<String>.from(json["topics"].map((x) => x)) : null;
 
-  Map<String, dynamic> toJson() => {
-        "topics": topics != null ? List<dynamic>.from(topics!.map((x) => x)) : null
-      };
+  Map<String, dynamic> toJson() => {"topics": topics != null ? List<dynamic>.from(topics!.map((x) => x)) : null};
 }
 
 class Message {
-
   String message;
   String title;
   Data data;

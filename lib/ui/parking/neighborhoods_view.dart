@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:campus_mobile/ui/common/container_view.dart';
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class NeighborhoodsView extends StatefulWidget {
   @override

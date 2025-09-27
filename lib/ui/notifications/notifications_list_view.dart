@@ -1,19 +1,19 @@
 import 'dart:async';
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/app_styles.dart';
-import 'package:campus_mobile/core/models/notifications.dart';
-import 'package:campus_mobile/core/providers/bottom_nav.dart';
-import 'package:campus_mobile/core/providers/map.dart';
-import 'package:campus_mobile/core/providers/messages.dart';
-import 'package:campus_mobile/core/providers/notifications_freefood.dart';
-import 'package:campus_mobile/ui/notifications/notifications_freefood.dart';
-import 'package:campus_mobile/ui/notifications/notifications_filter.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/notifications.dart';
+import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
+import 'package:campus_mobile_experimental/core/providers/map.dart';
+import 'package:campus_mobile_experimental/core/providers/messages.dart';
+import 'package:campus_mobile_experimental/core/providers/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_freefood.dart';
+import 'package:campus_mobile_experimental/ui/notifications/notifications_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:app_links/app_links.dart';
-import '../navigator/bottom.dart';
+import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 
 /// TODO: make this not global. Probably put into Widget as stateful variable...
 var hideListView = false;
@@ -46,8 +46,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       child: RefreshIndicator(
         child: buildListView(context),
         onRefresh: () {
-          return Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(true);
+          return Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
         },
         color: Theme.of(context).colorScheme.secondary,
       ),
@@ -63,8 +62,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         if (Provider.of<MessagesDataProvider>(context).isLoading) {
           // empty notifications view until they load in
         } else {
-          itemBuilder =
-              (BuildContext context, int index) => _buildNoMessagesText();
+          itemBuilder = (BuildContext context, int index) => _buildNoMessagesText();
           itemCount = 1;
         }
       } else {
@@ -73,8 +71,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       }
     }
     if (itemCount == 0) {
-      itemBuilder =
-          (BuildContext context, int index) => _buildMessage(context, index);
+      itemBuilder = (BuildContext context, int index) => _buildMessage(context, index);
       itemCount = Provider.of<MessagesDataProvider>(context).messages.length;
     }
     return Padding(
@@ -83,13 +80,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         padding: EdgeInsets.only(top: 8),
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: itemBuilder!,
-        controller: Provider.of<MessagesDataProvider>(context, listen: false)
-            .notificationScrollController,
+        controller: Provider.of<MessagesDataProvider>(context, listen: false).notificationScrollController,
         itemCount: itemCount,
         separatorBuilder: (BuildContext context, int index) => Divider(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? listTileDividerColorDark
-              : listTileDividerColorLight,
+          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
         ),
       ),
     );
@@ -144,10 +138,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   }
 
   Widget _buildMessage(BuildContext context, int index) {
-    MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages[index];
-    FreeFoodDataProvider freefoodProvider =
-        Provider.of<FreeFoodDataProvider>(context);
+    MessageElement data = Provider.of<MessagesDataProvider>(context).messages[index];
+    FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
 
     String messageType = data.audience.topics?[0] ?? "DM";
     return ListView(
@@ -174,9 +166,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(data.message.title,
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? headlineMediumDark2
-                        : headlineMediumLight2),
+                    style:
+                        Theme.of(context).brightness == Brightness.dark ? headlineMediumDark2 : headlineMediumLight2),
               ),
             ],
           ),
@@ -196,10 +187,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                       }
                     },
                     options: LinkifyOptions(humanize: false),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 16,
-                        height: 1.41,
-                        fontWeight: FontWeight.w400)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400)),
                 freefoodProvider.isFreeFood(data.messageId)
                     ? FreeFoodNotification(messageId: data.messageId)
                     : Container(),
@@ -212,10 +203,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               Padding(
                 padding: const EdgeInsets.only(top: 6.0),
                 child: Text(_readTimestamp(data.timestamp),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 12,
-                        height: 1.41,
-                        fontWeight: FontWeight.w700)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700)),
               ),
             ],
           ),

@@ -1,6 +1,5 @@
 import 'dart:core';
-
-import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';

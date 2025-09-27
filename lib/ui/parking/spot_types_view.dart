@@ -1,13 +1,13 @@
-import 'package:campus_mobile/core/models/spot_types.dart';
-import 'package:campus_mobile/core/providers/parking.dart';
-import 'package:campus_mobile/ui/common/HexColor.dart';
-import 'package:campus_mobile/ui/common/container_view.dart';
-import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/spot_types.dart';
+import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_mobile/app_constants.dart';
-import '../common/alert_dialog_widget.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 
 class SpotTypesView extends StatefulWidget {
   @override
@@ -46,17 +46,13 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       );
 
   List<Widget> createList(BuildContext context) {
-    var selectedSpots = Provider.of<ParkingDataProvider>(context)
-        .spotTypesState
-        .values
-        .where((selected) => selected == true)
-        .length;
+    var selectedSpots =
+        Provider.of<ParkingDataProvider>(context).spotTypesState.values.where((selected) => selected == true).length;
 
     List<Widget> list = [];
 
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
-      var isSelected = Provider.of<ParkingDataProvider>(context)
-          .spotTypesState[data.spotKey]!;
+      var isSelected = Provider.of<ParkingDataProvider>(context).spotTypesState[data.spotKey]!;
 
       var iconColor = HexColor(data.logoBackgroundColor);
       var textColor = HexColor(data.logoTextColor);
@@ -74,11 +70,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
               child: Align(
                   alignment: Alignment.center,
                   child: data.logoText.startsWith('icon - ')
-                      ? Icon(
-                          ParkingConstants.stringToIconData[data.logoText] ??
-                              Icons.error,
-                          size: 25.0,
-                          color: textColor)
+                      ? Icon(ParkingConstants.stringToIconData[data.logoText] ?? Icons.error,
+                          size: 25.0, color: textColor)
                       : (data.logoText.isNotEmpty
                           ? Text(
                               data.logoText,
@@ -116,8 +109,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                   );
                   return;
                 }
-                spotTypesDataProvider.toggleSpotSelection(
-                    data.spotKey, selectedSpots);
+                spotTypesDataProvider.toggleSpotSelection(data.spotKey, selectedSpots);
               },
               activeColor: toggleActiveColor,
               trackColor: Colors.grey.shade400,

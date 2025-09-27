@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:campus_mobile/app_networking.dart';
-import 'package:campus_mobile/core/models/classes.dart';
-import 'package:campus_mobile/core/models/term.dart';
+import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/models/term.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ClassScheduleService {

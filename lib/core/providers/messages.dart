@@ -1,9 +1,9 @@
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/core/models/notifications.dart';
-import 'package:campus_mobile/core/providers/user.dart';
-import 'package:campus_mobile/core/services/messages.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/notifications.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/messages.dart';
 import 'package:flutter/material.dart';
-import '../../ui/navigator/bottom.dart';
+import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 
 // MESSAGES API UNIX TIMESTAMPS IN MILLISECONDS NOT SECONDS
 var notificationScrollController = ScrollController();
@@ -15,7 +15,7 @@ class MessagesDataProvider extends ChangeNotifier {
       var triggerFetchMoreSize = 0.9 * notificationScrollController.position.maxScrollExtent;
 
       if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
-        if (!_isLoading&& _hasMoreMessagesToLoad) fetchMessages(false);
+        if (!_isLoading && _hasMoreMessagesToLoad) fetchMessages(false);
       }
       setNotificationsScrollOffset(notificationScrollController.offset);
     });
@@ -39,13 +39,14 @@ class MessagesDataProvider extends ChangeNotifier {
 
   //Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
     try {
       if (clearMessages) _clearMessages();
       return userDataProvider != null && userDataProvider!.isLoggedIn
-        ? await retrieveMoreMyMessages()
-        : await retrieveMoreTopicMessages();
+          ? await retrieveMoreMyMessages()
+          : await retrieveMoreTopicMessages();
     } finally {
       _isLoading = false;
     }
@@ -58,14 +59,14 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   Future<bool> retrieveMoreMyMessages() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
     int returnedTimestamp;
     int timestamp = _previousTimestamp;
     Map<String, String> headers = {
       "accept": "application/json",
-      "Authorization":
-          "Bearer " + userDataProvider!.authenticationModel.accessToken!,
+      "Authorization": "Bearer " + userDataProvider!.authenticationModel.accessToken!,
     };
 
     if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
@@ -85,12 +86,12 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   Future<bool> retrieveMoreTopicMessages() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
     int returnedTimestamp;
 
-    if (await _messageService.fetchTopicData(
-        _previousTimestamp, userDataProvider!.subscribedTopics!)) {
+    if (await _messageService.fetchTopicData(_previousTimestamp, userDataProvider!.subscribedTopics!)) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp);
       makeOrderedMessagesList();
@@ -112,8 +113,7 @@ class MessagesDataProvider extends ChangeNotifier {
 
   void makeOrderedMessagesList() {
     Map<String, MessageElement> uniqueMessages = Map<String, MessageElement>();
-    uniqueMessages = Map.fromIterable(_messages,
-        key: (message) => message.messageId, value: (message) => message);
+    uniqueMessages = Map.fromIterable(_messages, key: (message) => message.messageId, value: (message) => message);
     _messages.clear();
     uniqueMessages.forEach((k, v) => _messages.add(v));
     _messages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
@@ -121,8 +121,7 @@ class MessagesDataProvider extends ChangeNotifier {
 
   void updateMessages(List<MessageElement> newMessages) {
     _messages.addAll(newMessages);
-    _statusText = _messages.isEmpty ? NotificationsConstants.statusNoMessages
-        : NotificationsConstants.statusNone;
+    _statusText = _messages.isEmpty ? NotificationsConstants.statusNoMessages : NotificationsConstants.statusNone;
   }
 
   /// SIMPLE GETTERS

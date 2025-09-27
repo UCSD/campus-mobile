@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/app_networking.dart';
-import 'package:campus_mobile/core/models/location.dart';
-import 'package:campus_mobile/core/models/speed_test.dart';
-import 'package:campus_mobile/core/providers/user.dart';
-import 'package:campus_mobile/core/services/speed_test.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:campus_mobile_experimental/core/models/speed_test.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/speed_test.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

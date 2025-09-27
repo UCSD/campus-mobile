@@ -1,8 +1,8 @@
 import 'dart:math';
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/core/models/dining.dart';
-import 'package:campus_mobile/core/models/location.dart';
-import 'package:campus_mobile/core/services/dining.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/models/dining.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:campus_mobile_experimental/core/services/dining.dart';
 import 'package:flutter/material.dart';
 
 enum Meal { breakfast, lunch, dinner }

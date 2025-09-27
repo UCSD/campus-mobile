@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:campus_mobile/app_constants.dart';
-import 'package:campus_mobile/app_provider.dart';
-import 'package:campus_mobile/app_router.dart' as campusMobileRouter;
-import 'package:campus_mobile/app_styles.dart';
-import 'package:campus_mobile/core/models/authentication.dart';
-import 'package:campus_mobile/core/models/user_profile.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
+import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/core/models/authentication.dart';
+import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';

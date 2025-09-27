@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final newsModel = newsModelFromJson(jsonString);
-
-import 'dart:convert';
-
 NewsModel newsModelFromJson(String str) => NewsModel.fromJson(json.decode(str));
 
 String newsModelToJson(NewsModel data) => json.encode(data.toJson());
@@ -15,8 +14,7 @@ class NewsModel {
     List<Item>? items,
   }) : items = items ?? [];
 
-  NewsModel.fromJson(Map<String, dynamic> json)
-      : items = List<Item>.from(json["items"].map((x) => Item.fromJson(x)));
+  NewsModel.fromJson(Map<String, dynamic> json) : items = List<Item>.from(json["items"].map((x) => Item.fromJson(x)));
 
   Map<String, dynamic> toJson() => {
         "items": List<dynamic>.from(items.map((x) => x.toJson())),

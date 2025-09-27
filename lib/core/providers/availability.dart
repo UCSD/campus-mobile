@@ -1,6 +1,6 @@
-import 'package:campus_mobile/core/models/availability.dart';
-import 'package:campus_mobile/core/providers/user.dart';
-import 'package:campus_mobile/core/services/availability.dart';
+import 'package:campus_mobile_experimental/core/models/availability.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/availability.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityDataProvider extends ChangeNotifier {

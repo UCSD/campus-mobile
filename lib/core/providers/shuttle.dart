@@ -1,10 +1,9 @@
 import 'dart:math' as Math;
-
-import 'package:campus_mobile/core/models/location.dart';
-import 'package:campus_mobile/core/models/shuttle_arrival.dart';
-import 'package:campus_mobile/core/models/shuttle_stop.dart';
-import 'package:campus_mobile/core/providers/user.dart';
-import 'package:campus_mobile/core/services/shuttle.dart';
+import 'package:campus_mobile_experimental/core/models/location.dart';
+import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
+import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
+import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle.dart';
 import 'package:flutter/material.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {
@@ -26,7 +25,8 @@ class ShuttleDataProvider extends ChangeNotifier {
   var _shuttleService = ShuttleService();
 
   void fetchStops(bool reloading) async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
 
     /// create new map of shuttles/stops to display
@@ -97,9 +97,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   Future<void> calculateClosestStop() async {
     // make sure we have users location before we do any calculations
-    if (_userCoords == null ||
-        _userCoords!.lon == null ||
-        _userCoords!.lat == null) {
+    if (_userCoords == null || _userCoords!.lon == null || _userCoords!.lat == null) {
       return;
     }
 
@@ -118,18 +116,14 @@ class ShuttleDataProvider extends ChangeNotifier {
     var dLat = deg2rad(lat2 - lat1)!; // deg2rad below
     var dLon = deg2rad(lon2 - lon1)!;
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(lat1)!) *
-            Math.cos(deg2rad(lat2)!) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
+        Math.cos(deg2rad(lat1)!) * Math.cos(deg2rad(lat2)!) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c; // Distance in km
     return d;
   }
 
   Future<void> getArrivalInformation() async {
-    if (_closestStop != null)
-      arrivalsToRender[_closestStop!.id] = await fetchArrivalInformation(_closestStop!.id);
+    if (_closestStop != null) arrivalsToRender[_closestStop!.id] = await fetchArrivalInformation(_closestStop!.id);
 
     for (ShuttleStopModel stop in stopsToRender) {
       arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
@@ -147,6 +141,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   set userCoords(Coordinates value) {
     _userCoords = value;
   }
+
   double? deg2rad(deg) => deg * (Math.pi / 180);
 
   /// SIMPLE GETTERS
@@ -162,6 +157,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       }
     return stopsToRenderList;
   }
+
   Map<int, ShuttleStopModel> get stopsNotSelected {
     var output = new Map<int, ShuttleStopModel>.from(fetchedStops!);
     for (ShuttleStopModel? stop in stopsToRender) {

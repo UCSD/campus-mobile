@@ -1,12 +1,11 @@
-import 'package:campus_mobile/core/providers/parking.dart';
-import 'package:campus_mobile/ui/common/container_view.dart';
-import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../app_constants.dart';
-import '../common/alert_dialog_widget.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 
 class NeighborhoodLotsView extends StatefulWidget {
   final List<String> args;
@@ -36,9 +35,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             "Parking Lots",
-            style: Theme.of(context).brightness == Brightness.dark
-                ? textSubheaderDark
-                : textSubheaderLight,
+            style: Theme.of(context).brightness == Brightness.dark ? textSubheaderDark : textSubheaderLight,
           ),
         ),
       ),
@@ -101,9 +98,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
         children: ListTile.divideTiles(
           tiles: list,
           context: context,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? listTileDividerColorDark
-              : listTileDividerColorLight,
+          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
         ).toList(),
       ),
     );

@@ -1,7 +1,6 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'user_profile.dart';
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
@@ -53,7 +52,5 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UserProfileModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is UserProfileModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

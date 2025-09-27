@@ -1,4 +1,4 @@
-import 'package:campus_mobile/app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

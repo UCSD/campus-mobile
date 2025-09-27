@@ -1,8 +1,8 @@
-import 'package:campus_mobile/core/models/classes.dart';
-import 'package:campus_mobile/core/providers/classes.dart';
+import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class UpcomingCoursesList extends StatelessWidget {
   @override
@@ -17,15 +17,17 @@ class UpcomingCoursesList extends StatelessWidget {
     // Builds Today's Schedule using buildTile
     List<Widget> listOfCourses = List.generate(
       data.length * 2 - 1, // Adjust length to account for dividers
-          (int index) {
-        if (index.isEven) { // Show a tile at even indexes
+      (int index) {
+        if (index.isEven) {
+          // Show a tile at even indexes
           int itemIndex = index ~/ 2; // Convert index back to original data index
           return buildTile(itemIndex, selectedCourse, data[itemIndex], context);
         } else {
           ///////////////// Horizontal Division ///////////////////
-          return Divider(color: listTileDividerColorDark,
-              thickness: 0.7,
-              endIndent: 16, // right padding
+          return Divider(
+            color: listTileDividerColorDark,
+            thickness: 0.7,
+            endIndent: 16, // right padding
           );
         }
       },
@@ -39,9 +41,7 @@ class UpcomingCoursesList extends StatelessWidget {
             'Today\'s Schedule',
             style: TextStyle(
               fontSize: 22.0,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : darkPrimaryColor2,
+              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -52,7 +52,6 @@ class UpcomingCoursesList extends StatelessWidget {
         ),
       ],
     );
-
   }
 
   Widget buildTile(int index, int? selectedCourse, SectionData data, BuildContext context) {
@@ -60,9 +59,8 @@ class UpcomingCoursesList extends StatelessWidget {
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.symmetric(horizontal: 0),
-      onTap: () => Provider.of<ClassScheduleDataProvider>(context, listen: false)
-          .selectCourse(index),
-        title: Column(
+      onTap: () => Provider.of<ClassScheduleDataProvider>(context, listen: false).selectCourse(index),
+      title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Heading 3 i.e. "CSE 141L"
@@ -73,9 +71,11 @@ class UpcomingCoursesList extends StatelessWidget {
               fontFamily: 'Refrigerator Deluxe',
               fontWeight: FontWeight.w900,
               letterSpacing: 1.2,
-              color: isSelected ? toggleActiveColor
+              color: isSelected
+                  ? toggleActiveColor
                   : Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor : darkPrimaryColor2,
+                      ? lightPrimaryColor
+                      : darkPrimaryColor2,
             ),
           ),
           SizedBox(height: 5),
@@ -84,9 +84,11 @@ class UpcomingCoursesList extends StatelessWidget {
             '${data.days} @ ${getStartTime(data.time!)}',
             style: TextStyle(
               fontSize: 16,
-              color: isSelected ? toggleActiveColor
+              color: isSelected
+                  ? toggleActiveColor
                   : Theme.of(context).brightness == Brightness.light
-                  ? descriptiveTextColorLight : descriptiveTextColorDark,
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
               fontWeight: FontWeight.w400,
             ),
           ),
