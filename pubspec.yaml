@@ -1,4 +1,4 @@
-name: campus_mobile_experimental
+name: campus_mobile
 description: Mobile app platform for campus.
 version: 1.0.0+1
 publish_to: none
@@ -23,7 +23,7 @@ dependencies:
   flutter_linkify: 6.0.0
   flutter_local_notifications: 17.2.3
   flutter_secure_storage: ^9.2.4
-  flutter_sticky_header: ^0.7.0
+  flutter_sticky_header: ^0.8.0
   get: 4.7.2
   google_maps_flutter: 2.10.1
   hive: 2.2.3
@@ -48,6 +48,7 @@ dependencies:
   device_info_plus: ^11.1.0
 dependency_overrides:
   google_maps_flutter_ios: 2.13.1 # To fix the tooltips bug in Google Maps
+  value_layout_builder: ^0.5.0 # Fix Flutter 3.32.0 compatibility
 dev_dependencies:
   build_runner: 2.4.13
   flutter_test:
