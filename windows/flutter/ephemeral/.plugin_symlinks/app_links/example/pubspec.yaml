@@ -1,0 +1,31 @@
+name: app_links_example
+description: Demonstrates how to use the app_links plugin.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: ">=2.17.0 <4.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  app_links:
+    path: ../
+
+  ffi: ^2.1.0
+  win32: ^5.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  # linter rules (https://pub.dev/packages/flutter_lints)
+  flutter_lints: ^2.0.1
+
+# The following section is specific to Flutter.
+flutter:
+  uses-material-design: true
