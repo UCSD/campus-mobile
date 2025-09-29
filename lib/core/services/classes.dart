@@ -42,9 +42,6 @@ class ClassScheduleService {
 
       /// parse data
       _grData = classScheduleModelFromJson(_response);
-
-      print("=====================================");
-      _grData.data?.forEach((course) => print(course.courseCode));
       return true;
     } catch (e) {
       _error = e.toString();

@@ -49,7 +49,6 @@ class ClassScheduleDataProvider extends ChangeNotifier
   var _classScheduleService = ClassScheduleService();
 
   void fetchData() async {
-    print("Inside fetchData of ClassScheduleDataProvider");
     if (!_isLoading) {
       _isLoading = true; _error = null;
       notifyListeners();
@@ -64,15 +63,8 @@ class ClassScheduleDataProvider extends ChangeNotifier
         _classScheduleModel = ClassScheduleModel();
 
         /// fetch grad courses
-        print("Fetching grad courses...");
-        if (await _classScheduleService.fetchGRCourses(
-            headers, _academicTermModel.termCode!)) {
-          print("Before");
-          print(_classScheduleService);
-          print("After");
+        if (await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!)) {
           _classScheduleModel = _classScheduleService.grData;
-
-          print(_classScheduleModel.data?.length);
           _error = null;
         } else {
           _error = _classScheduleService.error.toString();
@@ -97,7 +89,6 @@ class ClassScheduleDataProvider extends ChangeNotifier
           }
         }
 
-        //////////////////////////////////////////////////////////////
         /// remove all old classes
         _enrolledClasses = {
           'MO': [],
