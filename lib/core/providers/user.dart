@@ -141,11 +141,21 @@ class UserDataProvider extends ChangeNotifier {
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
-        if (_userProfileModel.classifications!.student!) {
-          cardsDataProvider.showAllStudentCards();
-        } else if (_userProfileModel.classifications!.staff!) {
-          cardsDataProvider.showAllStaffCards();
+        try {
+          if (_userProfileModel.classifications!.student!) {
+            cardsDataProvider.showAllStudentCards();
+
+            cardsDataProvider.cardStates['finals'] = true;
+            cardsDataProvider.cardStates['schedule'] = true;
+            await cardsDataProvider.updateCardStates();
+            await cardsDataProvider.updateCardOrder();
+          } else if (_userProfileModel.classifications!.staff!) {
+            cardsDataProvider.showAllStaffCards();
+          }
+        } catch (e) {
+          print('Error activating authenticated cards after login: $e');
         }
+
         _isLoading = false;
         notifyListeners();
         return true;
