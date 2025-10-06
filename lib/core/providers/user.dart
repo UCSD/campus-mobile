@@ -186,11 +186,11 @@ class UserDataProvider extends ChangeNotifier {
         // _cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
         cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
 
-        if (_userProfileModel.classifications?.student == true) {
-          cardsDataProvider.showAllStudentCards();
-        } else if (_userProfileModel.classifications?.staff == true) {
-          cardsDataProvider.showAllStaffCards();
-        }
+        // if (_userProfileModel.classifications?.student == true) {
+        //   cardsDataProvider.showAllStudentCards();
+        // } else if (_userProfileModel.classifications?.staff == true) {
+        //   cardsDataProvider.showAllStaffCards();
+        // }
         _subscribeToPushNotificationTopics(List<String>.from(userProfileModel.subscribedTopics!));
         _pushNotificationDataProvider.registerDevice(_authenticationService.data!.accessToken);
         await analytics.logEvent(name: 'loggedIn');
