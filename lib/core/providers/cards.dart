@@ -13,10 +13,11 @@ class CardsDataProvider extends ChangeNotifier {
         .forEach((card) => _cardStates[card] = true);
 
     /// temporary fix that prevents the student cards from causing issues on launch
-    // _cardOrder.removeWhere((element) => _studentCards.contains(element));
-    // _cardStates.removeWhere((key, value) => _studentCards.contains(key));
-    // _cardOrder.removeWhere((element) => _staffCards.contains(element));
-    // _cardStates.removeWhere((key, value) => _staffCards.contains(key));
+    _cardOrder.removeWhere((element) => _studentCards.contains(element));
+    _cardStates.removeWhere((key, value) => _studentCards.contains(key));
+    _cardOrder.removeWhere((element) => _staffCards.contains(element));
+    _cardStates.removeWhere((key, value) => _staffCards.contains(key));
+    _cardStates.removeWhere((key, value) => _staffCards.contains(key));
   }
 
   /// STATES
@@ -178,6 +179,7 @@ class CardsDataProvider extends ChangeNotifier {
       _deactivateAllCards();
     }
     for (String activeCard in _cardStateBox.get(DataPersistence.cardStates)) {
+      print("Activating card from disk: $activeCard");
       _cardStates[activeCard] = true;
     }
 
@@ -219,6 +221,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void showAllStudentCards() {
+    print("Showing all student cards");
     var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
@@ -234,6 +237,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void deactivateStudentCards() {
+    print("Deactivating student cards");
     for (String card in _studentCards) {
       _cardOrder.remove(card);
       _cardStates[card] = false;

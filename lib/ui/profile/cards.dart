@@ -106,6 +106,7 @@ class _CardsViewState extends State<CardsView> {
             ),
           ),
         );
+        print('loaded $card in profile');
       } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
         FirebaseCrashlytics.instance.recordError(

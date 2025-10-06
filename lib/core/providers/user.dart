@@ -141,21 +141,12 @@ class UserDataProvider extends ChangeNotifier {
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
-        try {
-          if (_userProfileModel.classifications!.student!) {
-            cardsDataProvider.showAllStudentCards();
+        if (_userProfileModel.classifications!.student!) {
+          cardsDataProvider.showAllStudentCards();
 
-            cardsDataProvider.cardStates['finals'] = true;
-            cardsDataProvider.cardStates['schedule'] = true;
-            await cardsDataProvider.updateCardStates();
-            await cardsDataProvider.updateCardOrder();
-          } else if (_userProfileModel.classifications!.staff!) {
-            cardsDataProvider.showAllStaffCards();
-          }
-        } catch (e) {
-          print('Error activating authenticated cards after login: $e');
+        } else if (_userProfileModel.classifications!.staff!) {
+          cardsDataProvider.showAllStaffCards();
         }
-
         _isLoading = false;
         notifyListeners();
         return true;
@@ -191,8 +182,15 @@ class UserDataProvider extends ChangeNotifier {
       if (await _authenticationService.silentLogin(base64EncodedWithEncryptedPassword)) {
         await updateAuthenticationModel(_authenticationService.data!);
         await fetchUserProfile();
-        var _cardsDataProvider = CardsDataProvider();
-        _cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
+        // var _cardsDataProvider = CardsDataProvider();
+        // _cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
+        cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
+
+        if (_userProfileModel.classifications?.student == true) {
+          cardsDataProvider.showAllStudentCards();
+        } else if (_userProfileModel.classifications?.staff == true) {
+          cardsDataProvider.showAllStaffCards();
+        }
         _subscribeToPushNotificationTopics(List<String>.from(userProfileModel.subscribedTopics!));
         _pushNotificationDataProvider.registerDevice(_authenticationService.data!.accessToken);
         await analytics.logEvent(name: 'loggedIn');
