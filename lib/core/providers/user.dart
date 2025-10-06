@@ -141,12 +141,18 @@ class UserDataProvider extends ChangeNotifier {
       _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
-
+        //
+        // if (_userProfileModel.classifications!.student!) {
+        //   cardsDataProvider.showAllStudentCards();
+        //
+        // } else if (_userProfileModel.classifications!.staff!) {
+        //   cardsDataProvider.showAllStaffCards();
+        // }
         if (_userProfileModel.classifications!.student!) {
-          cardsDataProvider.showAllStudentCards();
-
-        } else if (_userProfileModel.classifications!.staff!) {
-          cardsDataProvider.showAllStaffCards();
+          cardsDataProvider.cardStates.putIfAbsent('student_id', () => true);
+          cardsDataProvider.cardStates.putIfAbsent('finals', () => true);
+          cardsDataProvider.cardStates.putIfAbsent('schedule', () => true);
+          await cardsDataProvider.updateCardStates();
         }
 
         _isLoading = false;
@@ -193,6 +199,8 @@ class UserDataProvider extends ChangeNotifier {
         // } else if (_userProfileModel.classifications?.staff == true) {
         //   cardsDataProvider.showAllStaffCards();
         // }
+
+
         _subscribeToPushNotificationTopics(List<String>.from(userProfileModel.subscribedTopics!));
         _pushNotificationDataProvider.registerDevice(_authenticationService.data!.accessToken);
         await analytics.logEvent(name: 'loggedIn');
