@@ -140,14 +140,15 @@ class UserDataProvider extends ChangeNotifier {
     if (username.isNotEmpty && password.isNotEmpty) {
       _encryptAndSaveCredentials(username, password);
 
-      if (_userProfileModel.classifications!.student!) {
-        cardsDataProvider.showAllStudentCards();
-
-      } else if (_userProfileModel.classifications!.staff!) {
-        cardsDataProvider.showAllStaffCards();
-      }
-
       if (await silentLogin()) {
+
+        if (_userProfileModel.classifications!.student!) {
+          cardsDataProvider.showAllStudentCards();
+
+        } else if (_userProfileModel.classifications!.staff!) {
+          cardsDataProvider.showAllStaffCards();
+        }
+
         _isLoading = false;
         notifyListeners();
         return true;
