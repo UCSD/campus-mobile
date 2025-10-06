@@ -13,11 +13,11 @@ class CardsDataProvider extends ChangeNotifier {
         .forEach((card) => _cardStates[card] = true);
 
     /// temporary fix that prevents the student cards from causing issues on launch
-    _cardOrder.removeWhere((element) => _studentCards.contains(element));
-    _cardStates.removeWhere((key, value) => _studentCards.contains(key));
-    _cardOrder.removeWhere((element) => _staffCards.contains(element));
-    _cardStates.removeWhere((key, value) => _staffCards.contains(key));
-    _cardStates.removeWhere((key, value) => _staffCards.contains(key));
+    // _cardOrder.removeWhere((element) => _studentCards.contains(element));
+    // _cardStates.removeWhere((key, value) => _studentCards.contains(key));
+    // _cardOrder.removeWhere((element) => _staffCards.contains(element));
+    // _cardStates.removeWhere((key, value) => _staffCards.contains(key));
+    // _cardStates.removeWhere((key, value) => _staffCards.contains(key));
   }
 
   /// STATES
@@ -215,6 +215,10 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
+
+    _cardStates['student_id'] = true;
+    _cardStates['finals'] = true;
+    _cardStates['schedule'] = true;
 
     updateCardOrder();
     updateCardStates();
