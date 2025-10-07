@@ -143,7 +143,8 @@ List<SingleChildWidget> dependentServices = [
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.student ??
                     false)) {
-              cardsDataProvider.activateStudentCards();
+              cardsDataProvider
+                  .activateStudentCardsForSilentLogin(); // Respect user preferences
             } else {
               cardsDataProvider.deactivateStudentCards();
             }
@@ -152,7 +153,8 @@ List<SingleChildWidget> dependentServices = [
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.staff ??
                     false)) {
-              cardsDataProvider.activateStaffCards();
+              cardsDataProvider
+                  .activateStaffCardsForSilentLogin(); // Respect user preferences
             } else {
               cardsDataProvider.deactivateStaffCards();
             }

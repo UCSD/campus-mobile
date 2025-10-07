@@ -25,8 +25,11 @@ class CardsDataProvider extends ChangeNotifier {
   DateTime? _lastUpdated;
   String? _error;
   Map<String, bool> _cardStates = {};
+  Map<String, bool> _userToggledCards =
+      {}; // Track which cards user has explicitly toggled
   late Box _cardOrderBox;
   late Box _cardStateBox;
+  late Box _userToggledBox;
 
   /// MODELS
   late Map<String, CardsModel> _availableCards;
@@ -131,7 +134,8 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   Future<void> loadSavedData() async {
-    await Future.wait([_loadCardOrder(), _loadCardStates()]);
+    await Future.wait(
+        [_loadCardOrder(), _loadCardStates(), _loadUserToggledCards()]);
   }
 
   /// Update the [_cardOrder] stored in state
@@ -196,6 +200,39 @@ class CardsDataProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  /// Load [_userToggledCards] from persistent storage
+  /// Will create persistent storage if no data is found
+  Future _loadUserToggledCards() async {
+    // Check if box is already open, if not then open it
+    if (!Hive.isBoxOpen('userToggledCards')) {
+      _userToggledBox = await Hive.openBox('userToggledCards');
+    } else {
+      _userToggledBox = Hive.box('userToggledCards');
+    }
+
+    // Load the toggled cards map from storage
+    Map<dynamic, dynamic>? savedToggles =
+        _userToggledBox.get('userToggledCards');
+    if (savedToggles != null) {
+      _userToggledCards = Map<String, bool>.from(savedToggles);
+    }
+
+    notifyListeners();
+  }
+
+  /// Update the [_userToggledCards] stored on disk
+  Future _updateUserToggledCards() async {
+    // Check if box is already open, if not then open it
+    if (!Hive.isBoxOpen('userToggledCards')) {
+      _userToggledBox = await Hive.openBox('userToggledCards');
+    } else {
+      _userToggledBox = Hive.box('userToggledCards');
+    }
+
+    // Save the toggled cards map to storage
+    _userToggledBox.put('userToggledCards', _userToggledCards);
   }
 
   /// Update the [_cardStates] stored on disk
@@ -267,6 +304,27 @@ class CardsDataProvider extends ChangeNotifier {
     updateCardStates();
   }
 
+  void activateStudentCardsForSilentLogin() {
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _studentCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
+
+    // Only show these cards if user hasn't explicitly toggled them off
+    for (String card in _studentCards) {
+      // If user has never toggled this card, default to true
+      // If user has toggled it, respect their last choice
+      if (!_userToggledCards.containsKey(card)) {
+        _cardStates[card] = true; // Default to visible for new users
+      }
+      // If user has toggled it before, keep their preference (don't override)
+    }
+
+    updateCardOrder();
+    updateCardStates();
+  }
+
   void deactivateStudentCards() {
     for (String card in _studentCards) {
       _cardOrder.remove(card);
@@ -282,6 +340,27 @@ class CardsDataProvider extends ChangeNotifier {
 
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
+    updateCardOrder();
+    updateCardStates();
+  }
+
+  void activateStaffCardsForSilentLogin() {
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _staffCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
+
+    // Only show these cards if user hasn't explicitly toggled them off
+    for (String card in _staffCards) {
+      // If user has never toggled this card, default to true
+      // If user has toggled it, respect their last choice
+      if (!_userToggledCards.containsKey(card)) {
+        _cardStates[card] = true; // Default to visible for new users
+      }
+      // If user has toggled it before, keep their preference (don't override)
+    }
+
     updateCardOrder();
     updateCardStates();
   }
@@ -316,6 +395,10 @@ class CardsDataProvider extends ChangeNotifier {
 
       // Toggle the card state
       _cardStates[card] = !_cardStates[card]!;
+
+      // Mark this card as explicitly toggled by user
+      _userToggledCards[card] = true;
+      _updateUserToggledCards(); // Save to storage
 
       // Update states in persistent storage
       updateCardStates();
