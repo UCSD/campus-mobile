@@ -87,24 +87,44 @@ class CardsDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
 
       if (_availableCards.isNotEmpty) {
-        _cardOrder.clear();
+        // Only clear and rebuild order if user doesn't have a custom order
+        if (!_hasUserCustomOrder) {
+          print("DEBUG: No custom order, rebuilding default order");
+          _cardOrder.clear();
 
-        // add new cards to the top of the list
-        _availableCards.forEach((card, model) {
-          if (_studentCards.contains(model) || _staffCards.contains(model))
-            return;
+          // add new cards to the top of the list
+          _availableCards.forEach((card, model) {
+            if (_studentCards.contains(model) || _staffCards.contains(model))
+              return;
 
-          // add active webcards
-          if (model.isWebCard) _webCards[card] = model;
+            // add active webcards
+            if (model.isWebCard) _webCards[card] = model;
 
-          if (!_cardOrder.contains(model) && model.cardActive)
-            _cardOrder.add(card);
+            if (!_cardOrder.contains(model) && model.cardActive)
+              _cardOrder.add(card);
 
-          // keep all new cards activated by default
-          _cardStates.putIfAbsent(card, () => true);
-        });
+            // keep all new cards activated by default
+            _cardStates.putIfAbsent(card, () => true);
+          });
+        } else {
+          // User has custom order - just add any new web cards and ensure they're in available cards
+          print("DEBUG: User has custom order, preserving: $_cardOrder");
+          _availableCards.forEach((card, model) {
+            // add active webcards
+            if (model.isWebCard) _webCards[card] = model;
 
-        updateCardOrder();
+            // Add new cards to user's order if they're not already there
+            if (!_cardOrder.contains(card) && model.cardActive && 
+                !_studentCards.contains(card) && !_staffCards.contains(card)) {
+              _cardOrder.add(card);
+            }
+
+            // keep all new cards activated by default
+            _cardStates.putIfAbsent(card, () => true);
+          });
+        }
+
+        updateCardOrder(isUserReorder: false); // System update, not user reorder
         updateCardStates();
       }
     } else {
@@ -154,6 +174,7 @@ class CardsDataProvider extends ChangeNotifier {
     if (isUserReorder) {
       _hasUserCustomOrder = true;
       _userOrderedCards = List<String>.from(_cardOrder);
+      print("DEBUG: Saving user custom order: $_userOrderedCards");
       _updateUserOrderedCards(); // Save user's custom order
     }
 
@@ -268,8 +289,10 @@ class CardsDataProvider extends ChangeNotifier {
       _hasUserCustomOrder = true;
       // Use user's custom order instead of default order
       _cardOrder = List<String>.from(_userOrderedCards);
+      print("DEBUG: Loaded user custom order: $_userOrderedCards");
     } else {
       _hasUserCustomOrder = false;
+      print("DEBUG: No user custom order found, using default");
     }
 
     notifyListeners();
