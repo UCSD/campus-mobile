@@ -43,7 +43,7 @@ class _CardsViewState extends State<CardsView> {
           var order = _cardsDataProvider.cardOrder;
           order.insert(newIndex, order.removeAt(oldIndex));
           setState(() {
-            _cardsDataProvider.updateCardOrder();
+            _cardsDataProvider.updateCardOrder(isUserReorder: true); // Mark as user reorder
           });
         });
 

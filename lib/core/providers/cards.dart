@@ -27,9 +27,12 @@ class CardsDataProvider extends ChangeNotifier {
   Map<String, bool> _cardStates = {};
   Map<String, bool> _userToggledCards =
       {}; // Track which cards user has explicitly toggled
+  List<String> _userOrderedCards = []; // Track user's custom card order
+  bool _hasUserCustomOrder = false; // Track if user has reordered cards
   late Box _cardOrderBox;
   late Box _cardStateBox;
   late Box _userToggledBox;
+  late Box _userOrderBox;
 
   /// MODELS
   late Map<String, CardsModel> _availableCards;
@@ -134,14 +137,25 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   Future<void> loadSavedData() async {
-    await Future.wait(
-        [_loadCardOrder(), _loadCardStates(), _loadUserToggledCards()]);
+    await Future.wait([
+      _loadCardOrder(),
+      _loadCardStates(),
+      _loadUserToggledCards(),
+      _loadUserOrderedCards()
+    ]);
   }
 
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
-  Future updateCardOrder() async {
+  Future updateCardOrder({bool isUserReorder = false}) async {
     if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
+
+    // If this is a user-initiated reorder, save it as user preference
+    if (isUserReorder) {
+      _hasUserCustomOrder = true;
+      _userOrderedCards = List<String>.from(_cardOrder);
+      _updateUserOrderedCards(); // Save user's custom order
+    }
 
     // Check if box is already open, if not then open it
     if (!Hive.isBoxOpen(DataPersistence.cardOrder)) {
@@ -235,6 +249,46 @@ class CardsDataProvider extends ChangeNotifier {
     _userToggledBox.put('userToggledCards', _userToggledCards);
   }
 
+  /// Load [_userOrderedCards] from persistent storage
+  /// Will create persistent storage if no data is found
+  Future _loadUserOrderedCards() async {
+    // Check if box is already open, if not then open it
+    if (!Hive.isBoxOpen('userOrderedCards')) {
+      _userOrderBox = await Hive.openBox('userOrderedCards');
+    } else {
+      _userOrderBox = Hive.box('userOrderedCards');
+    }
+
+    // Load the user's custom order from storage
+    List<dynamic>? savedOrder = _userOrderBox.get('userOrderedCards');
+    bool? hasCustomOrder = _userOrderBox.get('hasUserCustomOrder');
+    
+    if (savedOrder != null && hasCustomOrder == true) {
+      _userOrderedCards = List<String>.from(savedOrder);
+      _hasUserCustomOrder = true;
+      // Use user's custom order instead of default order
+      _cardOrder = List<String>.from(_userOrderedCards);
+    } else {
+      _hasUserCustomOrder = false;
+    }
+
+    notifyListeners();
+  }
+
+  /// Update the [_userOrderedCards] stored on disk
+  Future _updateUserOrderedCards() async {
+    // Check if box is already open, if not then open it
+    if (!Hive.isBoxOpen('userOrderedCards')) {
+      _userOrderBox = await Hive.openBox('userOrderedCards');
+    } else {
+      _userOrderBox = Hive.box('userOrderedCards');
+    }
+
+    // Save the user's custom order to storage
+    _userOrderBox.put('userOrderedCards', _userOrderedCards);
+    _userOrderBox.put('hasUserCustomOrder', _hasUserCustomOrder);
+  }
+
   /// Update the [_cardStates] stored on disk
   Future updateCardStates() async {
     if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
@@ -305,11 +359,22 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void activateStudentCardsForSilentLogin() {
-    var index = _cardOrder.indexOf('MyStudentChart') + 1;
-    _cardOrder.insertAll(index, _studentCards.toList());
+    // Only modify order if user hasn't created a custom order
+    if (!_hasUserCustomOrder) {
+      var index = _cardOrder.indexOf('MyStudentChart') + 1;
+      _cardOrder.insertAll(index, _studentCards.toList());
 
-    // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder.toSet().toList());
+      // TODO: test w/o this
+      _cardOrder = List.from(_cardOrder.toSet().toList());
+    } else {
+      // User has custom order - just ensure student cards are in the list if missing
+      for (String card in _studentCards) {
+        if (!_cardOrder.contains(card)) {
+          // Add missing cards at the end, but don't reorder existing ones
+          _cardOrder.add(card);
+        }
+      }
+    }
 
     // Only show these cards if user hasn't explicitly toggled them off
     for (String card in _studentCards) {
@@ -321,7 +386,7 @@ class CardsDataProvider extends ChangeNotifier {
       // If user has toggled it before, keep their preference (don't override)
     }
 
-    updateCardOrder();
+    updateCardOrder(); // Don't pass isUserReorder=true since this is system activation
     updateCardStates();
   }
 
@@ -345,11 +410,22 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void activateStaffCardsForSilentLogin() {
-    var index = _cardOrder.indexOf('MyStudentChart') + 1;
-    _cardOrder.insertAll(index, _staffCards.toList());
+    // Only modify order if user hasn't created a custom order
+    if (!_hasUserCustomOrder) {
+      var index = _cardOrder.indexOf('MyStudentChart') + 1;
+      _cardOrder.insertAll(index, _staffCards.toList());
 
-    // TODO: test w/o this
-    _cardOrder = List.from(_cardOrder.toSet().toList());
+      // TODO: test w/o this
+      _cardOrder = List.from(_cardOrder.toSet().toList());
+    } else {
+      // User has custom order - just ensure staff cards are in the list if missing
+      for (String card in _staffCards) {
+        if (!_cardOrder.contains(card)) {
+          // Add missing cards at the end, but don't reorder existing ones
+          _cardOrder.add(card);
+        }
+      }
+    }
 
     // Only show these cards if user hasn't explicitly toggled them off
     for (String card in _staffCards) {
@@ -361,7 +437,7 @@ class CardsDataProvider extends ChangeNotifier {
       // If user has toggled it before, keep their preference (don't override)
     }
 
-    updateCardOrder();
+    updateCardOrder(); // Don't pass isUserReorder=true since this is system activation
     updateCardStates();
   }
 
@@ -425,4 +501,5 @@ class CardsDataProvider extends ChangeNotifier {
   Map<String, bool> get cardStates => _cardStates;
   Map<String, CardsModel?> get webCards => _webCards;
   Map<String, CardsModel> get availableCards => _availableCards;
+  bool get hasUserCustomOrder => _hasUserCustomOrder; // New getter
 }
