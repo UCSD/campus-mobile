@@ -90,7 +90,7 @@ class UserDataProvider extends ChangeNotifier {
 
       // Only attempt silent login if the token is expired or invalid
       if (!_authenticationModel.isLoggedIn(_lastUpdated)) {
-        await silentLogin();
+        await silentLogin(isFromManualLogin: false);
       }
     }
   }
@@ -158,9 +158,10 @@ class UserDataProvider extends ChangeNotifier {
     if (username.isNotEmpty && password.isNotEmpty) {
       _encryptAndSaveCredentials(username, password);
 
-      if (await silentLogin()) {
+      if (await silentLogin(isFromManualLogin: true)) {
+        // Only activate cards during manual login, not silent login
         if (_userProfileModel.classifications!.student!) {
-          cardsDataProvider.showAllStudentCards();
+          cardsDataProvider.activateStudentCardsForManualLogin();
         } else if (_userProfileModel.classifications!.staff!) {
           cardsDataProvider.showAllStaffCards();
         }
@@ -198,7 +199,7 @@ class UserDataProvider extends ChangeNotifier {
 
   /// Logs user in with saved credentials on device
   /// If this login mechanism fails then the user is logged out
-  Future<bool> silentLogin() async {
+  Future<bool> silentLogin({bool isFromManualLogin = false}) async {
     _isInSilentLogin = true;
     notifyListeners();
 

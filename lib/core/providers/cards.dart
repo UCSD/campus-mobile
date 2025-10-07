@@ -214,6 +214,18 @@ class CardsDataProvider extends ChangeNotifier {
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
 
+    updateCardOrder();
+    updateCardStates();
+  }
+
+  void activateStudentCardsForManualLogin() {
+    var index = _cardOrder.indexOf('MyStudentChart') + 1;
+    _cardOrder.insertAll(index, _studentCards.toList());
+
+    // TODO: test w/o this
+    _cardOrder = List.from(_cardOrder.toSet().toList());
+
+    // These lines ONLY execute during manual login, not silent login
     _cardStates['student_id'] = true;
     _cardStates['finals'] = true;
     _cardStates['schedule'] = true;
