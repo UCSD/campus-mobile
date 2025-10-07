@@ -214,6 +214,10 @@ class CardsDataProvider extends ChangeNotifier {
     // TODO: test w/o this
     _cardOrder = List.from(_cardOrder.toSet().toList());
 
+    _cardStates['student_id'] = true;
+    _cardStates['finals'] = true;
+    _cardStates['schedule'] = true;
+
     updateCardOrder();
     updateCardStates();
   }
