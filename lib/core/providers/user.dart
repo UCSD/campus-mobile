@@ -148,12 +148,12 @@ class UserDataProvider extends ChangeNotifier {
         // } else if (_userProfileModel.classifications!.staff!) {
         //   cardsDataProvider.showAllStaffCards();
         // }
-        if (_userProfileModel.classifications!.student!) {
-          cardsDataProvider.cardStates.putIfAbsent('student_id', () => true);
-          cardsDataProvider.cardStates.putIfAbsent('finals', () => true);
-          cardsDataProvider.cardStates.putIfAbsent('schedule', () => true);
-          await cardsDataProvider.updateCardStates();
-        }
+        // if (_userProfileModel.classifications!.student!) {
+        //   cardsDataProvider.cardStates.putIfAbsent('student_id', () => true);
+        //   cardsDataProvider.cardStates.putIfAbsent('finals', () => true);
+        //   cardsDataProvider.cardStates.putIfAbsent('schedule', () => true);
+        //   await cardsDataProvider.updateCardStates();
+        // }
 
         _isLoading = false;
         notifyListeners();
