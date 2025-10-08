@@ -25,10 +25,9 @@ class CardsDataProvider extends ChangeNotifier {
   DateTime? _lastUpdated;
   String? _error;
   Map<String, bool> _cardStates = {};
-  Map<String, bool> _userToggledCards =
-      {}; // Track which cards user has explicitly toggled
-  List<String> _userOrderedCards = []; // Track user's custom card order
-  bool _hasUserCustomOrder = false; // Track if user has reordered cards
+  Map<String, bool> _userToggledCards = {}; // Track what the user has manually toggled
+  List<String> _userOrderedCards = []; // Also track user's custom card order
+  bool _hasUserCustomOrder = false; // Flag to check if the user has reordered the cards
   late Box _cardOrderBox;
   late Box _cardStateBox;
   late Box _userToggledBox;
@@ -87,38 +86,32 @@ class CardsDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
 
       if (_availableCards.isNotEmpty) {
-        // Only clear and rebuild order if user doesn't have a custom order
+        // If the user doesn't have a custom order, use the app order
         if (!_hasUserCustomOrder) {
-          print("DEBUG: No custom order, rebuilding default order");
+          // print("DEBUG: No custom order, rebuilding default order");
           _cardOrder.clear();
 
           // add new cards to the top of the list
           _availableCards.forEach((card, model) {
-            if (_studentCards.contains(model) || _staffCards.contains(model))
-              return;
-
-            // add active webcards
+            if (_studentCards.contains(model) || _staffCards.contains(model)) return;
+            // add active web cards
             if (model.isWebCard) _webCards[card] = model;
-
-            if (!_cardOrder.contains(model) && model.cardActive)
-              _cardOrder.add(card);
-
+            // Add new cards to user's order if they're not already there
+            if (!_cardOrder.contains(model) && model.cardActive) _cardOrder.add(card);
             // keep all new cards activated by default
             _cardStates.putIfAbsent(card, () => true);
           });
         } else {
           // User has custom order - just add any new web cards and ensure they're in available cards
-          print("DEBUG: User has custom order, preserving: $_cardOrder");
+          // print("DEBUG: User has custom order, preserving: $_cardOrder");
           _availableCards.forEach((card, model) {
-            // add active webcards
+            // add active web cards
             if (model.isWebCard) _webCards[card] = model;
-
             // Add new cards to user's order if they're not already there
             if (!_cardOrder.contains(card) && model.cardActive && 
                 !_studentCards.contains(card) && !_staffCards.contains(card)) {
               _cardOrder.add(card);
             }
-
             // keep all new cards activated by default
             _cardStates.putIfAbsent(card, () => true);
           });
@@ -156,6 +149,7 @@ class CardsDataProvider extends ChangeNotifier {
     });
   }
 
+  /// Load saved data from disk or create new persistent storage if none exists
   Future<void> loadSavedData() async {
     await Future.wait([
       _loadCardOrder(),
@@ -174,7 +168,7 @@ class CardsDataProvider extends ChangeNotifier {
     if (isUserReorder) {
       _hasUserCustomOrder = true;
       _userOrderedCards = List<String>.from(_cardOrder);
-      print("DEBUG: Saving user custom order: $_userOrderedCards");
+      // print("DEBUG: Saving user custom order: $_userOrderedCards");
       _updateUserOrderedCards(); // Save user's custom order
     }
 
@@ -247,13 +241,9 @@ class CardsDataProvider extends ChangeNotifier {
       _userToggledBox = Hive.box('userToggledCards');
     }
 
-    // Load the toggled cards map from storage
-    Map<dynamic, dynamic>? savedToggles =
-        _userToggledBox.get('userToggledCards');
-    if (savedToggles != null) {
-      _userToggledCards = Map<String, bool>.from(savedToggles);
-    }
-
+    // Load the toggled cards map from disk
+    Map<dynamic, dynamic>? savedToggles = _userToggledBox.get('userToggledCards');
+    if (savedToggles != null) _userToggledCards = Map<String, bool>.from(savedToggles);
     notifyListeners();
   }
 
@@ -289,10 +279,10 @@ class CardsDataProvider extends ChangeNotifier {
       _hasUserCustomOrder = true;
       // Use user's custom order instead of default order
       _cardOrder = List<String>.from(_userOrderedCards);
-      print("DEBUG: Loaded user custom order: $_userOrderedCards");
+      // print("DEBUG: Loaded user custom order: $_userOrderedCards");
     } else {
       _hasUserCustomOrder = false;
-      print("DEBUG: No user custom order found, using default");
+      // print("DEBUG: No user custom order found, using default");
     }
 
     notifyListeners();
@@ -403,9 +393,7 @@ class CardsDataProvider extends ChangeNotifier {
     for (String card in _studentCards) {
       // If user has never toggled this card, default to true
       // If user has toggled it, respect their last choice
-      if (!_userToggledCards.containsKey(card)) {
-        _cardStates[card] = true; // Default to visible for new users
-      }
+      if (!_userToggledCards.containsKey(card)) _cardStates[card] = true; // Default to visible for new users
       // If user has toggled it before, keep their preference (don't override)
     }
 
@@ -443,10 +431,8 @@ class CardsDataProvider extends ChangeNotifier {
     } else {
       // User has custom order - just ensure staff cards are in the list if missing
       for (String card in _staffCards) {
-        if (!_cardOrder.contains(card)) {
-          // Add missing cards at the end, but don't reorder existing ones
-          _cardOrder.add(card);
-        }
+        // Add missing cards at the end, but don't reorder existing ones
+        if (!_cardOrder.contains(card)) _cardOrder.add(card);
       }
     }
 
@@ -454,9 +440,7 @@ class CardsDataProvider extends ChangeNotifier {
     for (String card in _staffCards) {
       // If user has never toggled this card, default to true
       // If user has toggled it, respect their last choice
-      if (!_userToggledCards.containsKey(card)) {
-        _cardStates[card] = true; // Default to visible for new users
-      }
+      if (!_userToggledCards.containsKey(card)) _cardStates[card] = true; // Default to visible for new users
       // If user has toggled it before, keep their preference (don't override)
     }
 
@@ -489,8 +473,7 @@ class CardsDataProvider extends ChangeNotifier {
 
   void toggleCard(String card) {
     try {
-      if (_availableCards[card]!.isWebCard && _cardStates[card]!)
-        resetCardHeight(card);
+      if (_availableCards[card]!.isWebCard && _cardStates[card]!) resetCardHeight(card);
 
       // Toggle the card state
       _cardStates[card] = !_cardStates[card]!;
@@ -524,5 +507,5 @@ class CardsDataProvider extends ChangeNotifier {
   Map<String, bool> get cardStates => _cardStates;
   Map<String, CardsModel?> get webCards => _webCards;
   Map<String, CardsModel> get availableCards => _availableCards;
-  bool get hasUserCustomOrder => _hasUserCustomOrder; // New getter
+  bool get hasUserCustomOrder => _hasUserCustomOrder;
 }

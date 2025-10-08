@@ -141,20 +141,18 @@ List<SingleChildWidget> dependentServices = [
 
             // Student card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel.classifications?.student ??
-                    false)) {
-              cardsDataProvider
-                  .activateStudentCardsForSilentLogin(); // Respect user preferences
+                (userDataProvider.userProfileModel.classifications?.student ?? false)) {
+              // Respect user preferences
+              cardsDataProvider.activateStudentCardsForSilentLogin();
             } else {
               cardsDataProvider.deactivateStudentCards();
             }
 
             // Staff card activation
             if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel.classifications?.staff ??
-                    false)) {
-              cardsDataProvider
-                  .activateStaffCardsForSilentLogin(); // Respect user preferences
+                (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
+              // Respect user preferences
+              cardsDataProvider.activateStaffCardsForSilentLogin();
             } else {
               cardsDataProvider.deactivateStaffCards();
             }

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -43,7 +42,7 @@ class _CardsViewState extends State<CardsView> {
           var order = _cardsDataProvider.cardOrder;
           order.insert(newIndex, order.removeAt(oldIndex));
           setState(() {
-            _cardsDataProvider.updateCardOrder(isUserReorder: true); // Mark as user reorder
+            _cardsDataProvider.updateCardOrder(isUserReorder: true);
           });
         });
 
