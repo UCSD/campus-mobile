@@ -25,9 +25,11 @@ class CardsDataProvider extends ChangeNotifier {
   DateTime? _lastUpdated;
   String? _error;
   Map<String, bool> _cardStates = {};
-  Map<String, bool> _userToggledCards = {}; // Track what the user has manually toggled
+  Map<String, bool> _userToggledCards =
+      {}; // Track what the user has manually toggled
   List<String> _userOrderedCards = []; // Also track user's custom card order
-  bool _hasUserCustomOrder = false; // Flag to check if the user has reordered the cards
+  bool _hasUserCustomOrder =
+      false; // Flag to check if the user has reordered the cards
   late Box _cardOrderBox;
   late Box _cardStateBox;
   late Box _userToggledBox;
@@ -93,11 +95,13 @@ class CardsDataProvider extends ChangeNotifier {
 
           // add new cards to the top of the list
           _availableCards.forEach((card, model) {
-            if (_studentCards.contains(model) || _staffCards.contains(model)) return;
+            if (_studentCards.contains(model) || _staffCards.contains(model))
+              return;
             // add active web cards
             if (model.isWebCard) _webCards[card] = model;
             // Add new cards to user's order if they're not already there
-            if (!_cardOrder.contains(model) && model.cardActive) _cardOrder.add(card);
+            if (!_cardOrder.contains(model) && model.cardActive)
+              _cardOrder.add(card);
             // keep all new cards activated by default
             _cardStates.putIfAbsent(card, () => true);
           });
@@ -108,8 +112,10 @@ class CardsDataProvider extends ChangeNotifier {
             // add active web cards
             if (model.isWebCard) _webCards[card] = model;
             // Add new cards to user's order if they're not already there
-            if (!_cardOrder.contains(card) && model.cardActive && 
-                !_studentCards.contains(card) && !_staffCards.contains(card)) {
+            if (!_cardOrder.contains(card) &&
+                model.cardActive &&
+                !_studentCards.contains(card) &&
+                !_staffCards.contains(card)) {
               _cardOrder.add(card);
             }
             // keep all new cards activated by default
@@ -117,7 +123,8 @@ class CardsDataProvider extends ChangeNotifier {
           });
         }
 
-        updateCardOrder(isUserReorder: false); // System update, not user reorder
+        updateCardOrder(
+            isUserReorder: false); // System update, not user reorder
         updateCardStates();
       }
     } else {
@@ -242,8 +249,10 @@ class CardsDataProvider extends ChangeNotifier {
     }
 
     // Load the toggled cards map from disk
-    Map<dynamic, dynamic>? savedToggles = _userToggledBox.get('userToggledCards');
-    if (savedToggles != null) _userToggledCards = Map<String, bool>.from(savedToggles);
+    Map<dynamic, dynamic>? savedToggles =
+        _userToggledBox.get('userToggledCards');
+    if (savedToggles != null)
+      _userToggledCards = Map<String, bool>.from(savedToggles);
     notifyListeners();
   }
 
@@ -273,7 +282,7 @@ class CardsDataProvider extends ChangeNotifier {
     // Load the user's custom order from storage
     List<dynamic>? savedOrder = _userOrderBox.get('userOrderedCards');
     bool? hasCustomOrder = _userOrderBox.get('hasUserCustomOrder');
-    
+
     if (savedOrder != null && hasCustomOrder == true) {
       _userOrderedCards = List<String>.from(savedOrder);
       _hasUserCustomOrder = true;
@@ -392,9 +401,14 @@ class CardsDataProvider extends ChangeNotifier {
     // Only show these cards if user hasn't explicitly toggled them off
     for (String card in _studentCards) {
       // If user has never toggled this card, default to true
-      // If user has toggled it, respect their last choice
-      if (!_userToggledCards.containsKey(card)) _cardStates[card] = true; // Default to visible for new users
-      // If user has toggled it before, keep their preference (don't override)
+      if (!_userToggledCards.containsKey(card)) {
+        _cardStates[card] = true; // Default to visible for new users
+        // print("DEBUG: activateStudentCardsForSilentLogin() - $card set to default true (new user)");
+      } else {
+        // User has explicitly set this card's state - restore their preference
+        _cardStates[card] = _userToggledCards[card]!;
+        // print("DEBUG: activateStudentCardsForSilentLogin() - $card restored to user preference: ${_userToggledCards[card]}");
+      }
     }
 
     updateCardOrder(); // Don't pass isUserReorder=true since this is system activation
@@ -439,9 +453,16 @@ class CardsDataProvider extends ChangeNotifier {
     // Only show these cards if user hasn't explicitly toggled them off
     for (String card in _staffCards) {
       // If user has never toggled this card, default to true
-      // If user has toggled it, respect their last choice
-      if (!_userToggledCards.containsKey(card)) _cardStates[card] = true; // Default to visible for new users
-      // If user has toggled it before, keep their preference (don't override)
+      if (!_userToggledCards.containsKey(card)) {
+        _cardStates[card] = true; // Default to visible for new users
+        print(
+            "DEBUG: activateStaffCardsForSilentLogin() - $card set to default true (new user)");
+      } else {
+        // User has explicitly set this card's state - restore their preference
+        _cardStates[card] = _userToggledCards[card]!;
+        print(
+            "DEBUG: activateStaffCardsForSilentLogin() - $card restored to user preference: ${_userToggledCards[card]}");
+      }
     }
 
     updateCardOrder(); // Don't pass isUserReorder=true since this is system activation
@@ -473,13 +494,16 @@ class CardsDataProvider extends ChangeNotifier {
 
   void toggleCard(String card) {
     try {
-      if (_availableCards[card]!.isWebCard && _cardStates[card]!) resetCardHeight(card);
+      if (_availableCards[card]!.isWebCard && _cardStates[card]!)
+        resetCardHeight(card);
 
       // Toggle the card state
       _cardStates[card] = !_cardStates[card]!;
+      // print("DEBUG: toggleCard() - $card toggled to ${_cardStates[card]}");
 
-      // Mark this card as explicitly toggled by user
-      _userToggledCards[card] = true;
+      // Store the actual state the user set (true or false)
+      _userToggledCards[card] = _cardStates[card]!;
+      // print("DEBUG: toggleCard() - Saved user preference for $card: ${_userToggledCards[card]}");
       _updateUserToggledCards(); // Save to storage
 
       // Update states in persistent storage
