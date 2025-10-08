@@ -48,9 +48,20 @@ class UserDataProvider extends ChangeNotifier {
 
     await box.put('AuthenticationModel', model);
     _lastUpdated = DateTime.now(); // Only set this when we get a NEW token
-    await timestampBox.put(
-        'LastUpdatedTimestamp', _lastUpdated); // Save the timestamp
-    // print("DEBUG: Saved new token with timestamp: $_lastUpdated");
+    await timestampBox.put('LastUpdatedTimestamp', _lastUpdated); // Save the timestamp
+
+    // Log token expiration info
+    if (model.expiration != null) {
+      print("\x1B[33mDEBUG: Raw expiration value from server: ${model.expiration}\x1B[0m");
+
+      // The expiration is a Unix timestamp (absolute time), not a duration
+      DateTime expiresAt = DateTime.fromMillisecondsSinceEpoch(model.expiration! * 1000);
+      Duration timeUntilExpiration = expiresAt.difference(DateTime.now());
+      double expirationMinutes = timeUntilExpiration.inMinutes.toDouble();
+
+      print("\x1B[33mDEBUG: New token received - expires in ${expirationMinutes.toStringAsFixed(1)} minutes\x1B[0m");
+      print("\x1B[33mDEBUG: Token will expire at: $expiresAt\x1B[0m");
+    }
   }
 
   /// Update the [UserProfileModel] stored in state

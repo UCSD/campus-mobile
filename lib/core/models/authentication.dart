@@ -3,9 +3,7 @@
 //     final authenticationModel = authenticationModelFromJson(jsonString);
 
 import 'dart:convert';
-
 import 'package:hive/hive.dart';
-
 part 'authentication.g.dart';
 
 AuthenticationModel authenticationModelFromJson(String str) =>
@@ -64,9 +62,12 @@ class AuthenticationModel extends HiveObject {
       return false;
     }
 
-    /// User has expiration and accessToken
-    if (DateTime.now()
-        .isBefore(lastUpdated.add(Duration(seconds: expiration!)))) {
+    /// The expiration is a Unix timestamp (absolute time when token expires)
+    DateTime expirationDateTime =
+        DateTime.fromMillisecondsSinceEpoch(expiration! * 1000);
+
+    /// Check if current time is before expiration time
+    if (DateTime.now().isBefore(expirationDateTime)) {
       /// Current datetime < expiration datetime - isLoggedIn TRUE
       return true;
     } else {
