@@ -2,7 +2,7 @@ import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class UpcomingCoursesList extends StatelessWidget {
   @override
@@ -14,6 +14,13 @@ class UpcomingCoursesList extends StatelessWidget {
 
   // Right Hand Side of Classes Card //
   Widget buildListOfCourses(BuildContext context, List<SectionData> data, int? selectedCourse) {
+    // Check if you have classes today
+    bool hasClassesToday = data.any((section) {
+      // data.days could be e.g. "TU"
+      final daysList = section.days!.split(' ');
+      return daysList.contains(getTodayAbbreviationHelper());
+    });
+
     // Builds Today's Schedule using buildTile
     List<Widget> listOfCourses = List.generate(
       data.length * 2 - 1, // Adjust length to account for dividers
@@ -36,7 +43,7 @@ class UpcomingCoursesList extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 8, bottom: 4),
           child: Text(
-            'Today\'s Schedule',
+            hasClassesToday ? "Today's Schedule" : "Upcoming Schedule",
             style: TextStyle(
               fontSize: 22.0,
               color: Theme.of(context).brightness == Brightness.light
@@ -101,6 +108,21 @@ class UpcomingCoursesList extends StatelessWidget {
   String getStartTime(String time) {
     List<String> times = time.split("-");
     return times[0];
+  }
+
+  // Helper function to get today's day abbreviation
+  String getTodayAbbreviationHelper() {
+    final weekday = DateTime.now().weekday;
+    const daysMap = {
+      1: 'MO',
+      2: 'TU',
+      3: 'WE',
+      4: 'TH',
+      5: 'FR',
+      6: 'SA',
+      7: 'SU',
+    };
+    return daysMap[weekday]!;
   }
 
   // TimeOfDay stringToTimeOfDay(String tod) {

@@ -30,7 +30,7 @@ class StudentIdDataProvider extends ChangeNotifier {
 
     /// Verify that user is logged in
     if (_userDataProvider.isLoggedIn) {
-      /// Initialize header
+      // Initialize header
       final Map<String, String> header = {
         'Authorization':
         'Bearer ${_userDataProvider.authenticationModel.accessToken}'
@@ -40,42 +40,39 @@ class StudentIdDataProvider extends ChangeNotifier {
       if (await _studentIdService.fetchStudentIdName(header)) {
         _studentIdNameModel = _studentIdService.studentIdNameModel;
       } else {
-        /// Error Handling
+        // Error Handling
         _error = _studentIdService.error;
         _isLoading = false;
         notifyListeners();
-        /// Short Circuit
+        // Short Circuit
         return;
       }
 
-      /// Fetch Photo
+      /// Fetch Photo or add a placeholder if error (so that students can still see their ID)
       if (await _studentIdService.fetchStudentIdPhoto(header)) {
         _studentIdPhotoModel = _studentIdService.studentIdPhotoModel;
       } else {
-        /// Error Handling
-        _error = _studentIdService.error;
-        _isLoading = false;
-        notifyListeners();
-        /// Short Circuit
-        return;
+        _studentIdPhotoModel = _studentIdPhotoModel = StudentIdPhotoModel(
+            photoUrl: "https://recstaff.ucsd.edu/_images/triton-graphic/Trident_Blue.png",
+            studentId: _studentIdNameModel.studentId);
       }
 
-      // Fetch Profile
+      /// Fetch Profile
       if (await _studentIdService.fetchStudentIdProfile(header)) {
         _studentIdProfileModel = _studentIdService.studentIdProfileModel;
       } else {
-        /// Error Handling
+        // Error Handling
         _error = _studentIdService.error;
         _isLoading = false;
         notifyListeners();
-        /// Short Circuit
+        // Short Circuit
         return;
       }
     } else {
       _error = 'User not logged in';
       _isLoading = false;
       notifyListeners();
-      /// Short Circuit
+      // Short Circuit
       return;
     }
     _isLoading = false;
