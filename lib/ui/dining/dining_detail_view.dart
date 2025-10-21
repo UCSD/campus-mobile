@@ -323,7 +323,7 @@ Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
       child: Text('Visit Website'),
       onPressed: () {
         try {
-          launch(model.url!, forceSafariVC: true);
+          launchUrl(Uri.parse(model.url!), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
           // an error occurred, do nothing
         }

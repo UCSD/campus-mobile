@@ -10,23 +10,32 @@ class DirectionsHelper {
     if (Platform.isIOS) {
       // On iOS, try Apple Maps native app first
       final appleMapsUrl = dotenv.get('APPLE_MAPS_URL') + '$lat,$lon&dirflg=w';
-      if (await canLaunch(appleMapsUrl)) {
-        await launch(appleMapsUrl);
+      if (await canLaunchUrl(appleMapsUrl as Uri)) {
+        await launchUrl(
+          appleMapsUrl as Uri,
+          mode: LaunchMode.externalApplication,
+        );
         return;
       }
     }
     
     // Try Google Maps app URL scheme (works on both iOS and Android)
     final googleMapsAppUrl = dotenv.get('GOOGLE_MAPS_APP_URL') + '$lat,$lon&directionsmode=walking';
-    if (await canLaunch(googleMapsAppUrl)) {
-      await launch(googleMapsAppUrl);
+    if (await canLaunchUrl(googleMapsAppUrl as Uri)) {
+      await launchUrl(
+        googleMapsAppUrl as Uri,
+        mode: LaunchMode.externalApplication,
+      );
       return;
     }
     
     // Fall back to Google Maps web
     final googleMapsWebUrl = dotenv.get('GOOGLE_MAPS_WEB_URL') + '$lat,$lon';
-    if (await canLaunch(googleMapsWebUrl)) {
-      await launch(googleMapsWebUrl, forceSafariVC: true);
+    if (await canLaunchUrl(googleMapsWebUrl as Uri)) {
+      await launchUrl(
+        googleMapsWebUrl as Uri,
+        mode: LaunchMode.externalApplication,
+      );
     } else {
       // If all else fails, show an error
       debugPrint('Failed to open directions: No map apps available');

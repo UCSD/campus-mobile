@@ -181,7 +181,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                     text: data.message.message,
                     onOpen: (link) async {
                       try {
-                        await launch(link.url, forceSafariVC: true);
+                        launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
                       } catch (e) {
                         // an error occurred, do nothing
                       }

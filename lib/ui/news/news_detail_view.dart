@@ -138,7 +138,7 @@ class ContinueReadingButton extends StatelessWidget {
       ),
       onPressed: () async {
         try {
-          await launch(link, forceSafariVC: true);
+          launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Could not open.')),

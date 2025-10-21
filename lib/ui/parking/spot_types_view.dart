@@ -111,8 +111,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                 }
                 spotTypesDataProvider.toggleSpotSelection(data.spotKey, selectedSpots);
               },
-              activeColor: toggleActiveColor,
-              trackColor: Colors.grey.shade400,
+              activeTrackColor: toggleActiveColor,
+              inactiveTrackColor: Colors.grey.shade400,
             ),
           ),
         ),

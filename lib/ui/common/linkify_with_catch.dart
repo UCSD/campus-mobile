@@ -26,7 +26,7 @@ class LinkifyWithCatch extends StatelessWidget {
     return Linkify(
       onOpen: (link) async {
         try {
-          await launch(link.url, forceSafariVC: true);
+          launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Could not open.'),
