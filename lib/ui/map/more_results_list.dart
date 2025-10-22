@@ -33,9 +33,7 @@ class MoreResultsList extends StatelessWidget {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: Provider.of<MapsDataProvider>(context)
-                          .mapSearchModels
-                          .length,
+                      itemCount: Provider.of<MapsDataProvider>(context).mapSearchModels.length,
                       itemBuilder: (BuildContext cntxt, int index) {
                         return ListTile(
                           title: Text(
@@ -48,8 +46,7 @@ class MoreResultsList extends StatelessWidget {
                                         .mapSearchModels[index]
                                         .distance !=
                                     null
-                                ? Provider.of<MapsDataProvider>(cntxt,
-                                            listen: false)
+                                ? Provider.of<MapsDataProvider>(cntxt, listen: false)
                                         .mapSearchModels[index]
                                         .distance!
                                         .toStringAsFixed(1) +
@@ -58,8 +55,7 @@ class MoreResultsList extends StatelessWidget {
                             style: TextStyle(color: Colors.blue[600]),
                           ),
                           onTap: () {
-                            Provider.of<MapsDataProvider>(cntxt, listen: false)
-                                .addMarker(index);
+                            Provider.of<MapsDataProvider>(cntxt, listen: false).addMarker(index);
                             Navigator.pop(cntxt);
                           },
                         );
@@ -71,8 +67,7 @@ class MoreResultsList extends StatelessWidget {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor:
-                actionButtonBackgroundColor,
+            backgroundColor: actionButtonBackgroundColor,
             padding: EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

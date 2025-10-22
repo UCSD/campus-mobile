@@ -43,22 +43,19 @@ class _ParkingCardState extends State<ParkingCard> {
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(context),
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       actionButtons: [
         ActionButton(
             buttonText: 'MANAGE SPOTS',
             onPressed: () {
-              if (!_parkingDataProvider.isLoading &&
-                  _parkingDataProvider.error == null) {
+              if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null) {
                 Navigator.pushNamed(context, RoutePaths.SpotTypesView);
               }
             }),
         ActionLink(
             buttonText: 'MANAGE LOTS',
             onPressed: () {
-              if (!_parkingDataProvider.isLoading &&
-                  _parkingDataProvider.error == null) {
+              if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null) {
                 Navigator.pushNamed(context, RoutePaths.ManageParkingView);
               }
             }),

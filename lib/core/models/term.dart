@@ -3,7 +3,8 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final academicTermModel = academicTermModelFromJson(jsonString);
-AcademicTermModel academicTermModelFromJson(String str) => AcademicTermModel.fromJson(json.decode(str));
+AcademicTermModel academicTermModelFromJson(String str) =>
+    AcademicTermModel.fromJson(json.decode(str));
 
 String academicTermModelToJson(AcademicTermModel data) => json.encode(data.toJson());
 

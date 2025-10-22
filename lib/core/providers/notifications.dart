@@ -15,7 +15,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 class PushNotificationDataProvider extends ChangeNotifier {
-  PushNotificationDataProvider() { initState(); }
+  PushNotificationDataProvider() {
+    initState();
+  }
 
   /// Context as Global Variable
   late BuildContext context;
@@ -28,7 +30,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// MODELS
   var _topicsModel = <TopicsModel>[];
   Map<String, dynamic> _deviceData = {};
- 
+
   /// SERVICES
   var _notificationService = NotificationService();
   var deviceInfoPlugin = DeviceInfoPlugin();
@@ -59,28 +61,28 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   /// Configures the [_fcm] object to receive push notifications
   Future<void> initPlatformState(BuildContext context) async {
     try {
       /// Initialize flutter notification settings
       this.context = context;
-      const initializationSettingsAndroid = AndroidInitializationSettings("@drawable/ic_notif_round");
+      const initializationSettingsAndroid =
+          AndroidInitializationSettings("@drawable/ic_notif_round");
       final initializationSettingsIOS = DarwinInitializationSettings();
       final initializationSettings = InitializationSettings(
-              android: initializationSettingsAndroid,
-              iOS: initializationSettingsIOS);
+          android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onDidReceiveNotificationResponse: selectNotification);
 
       RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
       if (initialMessage != null) {
-        await Provider.of<MessagesDataProvider>(context, listen: false)
-            .fetchMessages(true);
+        await Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
 
         /// switch to the notifications tab
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.NotificationsTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+            NavigatorConstants.NotificationsTab;
       }
 
       /// Foreground messaging
@@ -101,8 +103,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
           Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
 
           /// Set tab bar index to the Notifications tab
-          Provider.of<BottomNavigationBarProvider>(context, listen: false)
-              .currentIndex = NavigatorConstants.NotificationsTab;
+          Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+              NavigatorConstants.NotificationsTab;
 
           /// Navigate to Notifications tab
           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -115,38 +117,35 @@ class PushNotificationDataProvider extends ChangeNotifier {
   }
 
   /// Handles notification when selected
-  void selectNotification(NotificationResponse details)
-  {
+  void selectNotification(NotificationResponse details) {
     /// Fetch in-app messages
     Provider.of<MessagesDataProvider>(this.context, listen: false).fetchMessages(true);
 
     /// Navigate to Notifications tab
-    Navigator.of(this.context).pushNamedAndRemoveUntil(
-        RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
+    Navigator.of(this.context)
+        .pushNamedAndRemoveUntil(RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
 
     /// Set tab bar index to the Notifications tab
-    Provider.of<BottomNavigationBarProvider>(this.context, listen: false)
-        .currentIndex = NavigatorConstants.NotificationsTab;
-    Provider.of<CustomAppBar>(context, listen: false)
-        .changeTitle("Notifications");
+    Provider.of<BottomNavigationBarProvider>(this.context, listen: false).currentIndex =
+        NavigatorConstants.NotificationsTab;
+    Provider.of<CustomAppBar>(context, listen: false).changeTitle("Notifications");
   }
 
   /// Displays the notification
   showNotification(RemoteMessage message) async {
     const androidPlatformChannelSpecifics = AndroidNotificationDetails(
-            'your channel id', 'your channel name',
-            icon: '@drawable/ic_notif_round',
-            largeIcon: const DrawableResourceAndroidBitmap('@drawable/app_icon'),
-            importance: Importance.max,
-            priority: Priority.high,
-            showWhen: false);
+        'your channel id', 'your channel name',
+        icon: '@drawable/ic_notif_round',
+        largeIcon: const DrawableResourceAndroidBitmap('@drawable/app_icon'),
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: false);
     const DarwinNotificationDetails();
     const platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: DarwinNotificationDetails());
+        android: androidPlatformChannelSpecifics, iOS: DarwinNotificationDetails());
     //This is where you put info from firebase
-    await flutterLocalNotificationsPlugin.show(0, message.notification!.title,
-        message.notification!.body, platformChannelSpecifics,
+    await flutterLocalNotificationsPlugin.show(
+        0, message.notification!.title, message.notification!.body, platformChannelSpecifics,
         payload: 'This is the payload');
   }
 
@@ -158,8 +157,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
     if (await _notificationService.fetchTopics()) {
       for (TopicsModel model in _notificationService.topicsModel) {
         for (Topic topic in model.topics!) {
-          newTopics[topic.topicId] =
-              _topicSubscriptionState[topic.topicId] ?? false;
+          newTopics[topic.topicId] = _topicSubscriptionState[topic.topicId] ?? false;
         }
       }
       _topicSubscriptionState = newTopics;
@@ -228,11 +226,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } else {
       // Get the token for this device
       String? fcmToken = await _fcm.getToken();
-      if (fcmToken != null && fcmToken.isNotEmpty &&
-          (accessToken?.isNotEmpty ?? false)) {
-        Map<String, String> headers = {
-          'Authorization': 'Bearer ' + accessToken!
-        };
+      if (fcmToken != null && fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
+        Map<String, String> headers = {'Authorization': 'Bearer ' + accessToken!};
         Map<String, String> body = {'deviceId': deviceId, 'token': fcmToken};
         if ((await _notificationService.postPushToken(headers, body))) {
           return true;
@@ -250,8 +245,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// Unregisters device from receiving push notifications
   Future<bool> unregisterDevice(String? accessToken) async {
     String? fcmToken = await _fcm.getToken();
-    if (fcmToken != null && fcmToken.isNotEmpty &&
-        (accessToken?.isNotEmpty ?? false)) {
+    if (fcmToken != null && fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
       Map<String, String> headers = {'Authorization': 'Bearer ' + accessToken!};
       if ((await _notificationService.deletePushToken(headers, fcmToken))) {
         return true;

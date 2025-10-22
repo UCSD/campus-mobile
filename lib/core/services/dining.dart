@@ -5,7 +5,9 @@ import 'package:campus_mobile_experimental/core/models/dining_menu.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DiningService {
-  DiningService() { fetchData(); }
+  DiningService() {
+    fetchData();
+  }
 
   /// STATES
   bool _isLoading = false;
@@ -20,7 +22,8 @@ class DiningService {
   DiningMenuItemsModel? _menuData;
 
   Future<bool> fetchData() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(

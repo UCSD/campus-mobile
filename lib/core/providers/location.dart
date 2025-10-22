@@ -24,7 +24,6 @@ class LocationDataProvider extends ChangeNotifier {
   }
 
   _init() async {
-
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -60,11 +59,9 @@ class LocationDataProvider extends ChangeNotifier {
   }
 
   void _enableListener() {
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position? position) {
+    Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) {
       if (position == null) error = ErrorConstants.locationFailed;
-      _locationController
-          .add(Coordinates(lat: position?.latitude, lon: position?.longitude));
+      _locationController.add(Coordinates(lat: position?.latitude, lon: position?.longitude));
     });
   }
 

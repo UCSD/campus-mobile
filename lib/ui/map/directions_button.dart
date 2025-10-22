@@ -20,24 +20,15 @@ class DirectionsButton extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       onPressed: () {
-        if (Provider.of<MapsDataProvider>(context, listen: false)
-                    .coordinates!
-                    .lat ==
-                null ||
-            Provider.of<MapsDataProvider>(context, listen: false)
-                    .coordinates!
-                    .lon ==
-                null) {
+        if (Provider.of<MapsDataProvider>(context, listen: false).coordinates!.lat == null ||
+            Provider.of<MapsDataProvider>(context, listen: false).coordinates!.lon == null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                'Please turn your location on in order to use this feature.'),
+            content: Text('Please turn your location on in order to use this feature.'),
             duration: Duration(seconds: 3),
           ));
         } else {
           String locationQuery =
-              Provider.of<MapsDataProvider>(context, listen: false)
-                  .searchBarController
-                  .text;
+              Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text;
           if (locationQuery.isNotEmpty) {
             getDirections(context);
           } else {
@@ -49,11 +40,8 @@ class DirectionsButton extends StatelessWidget {
   }
 
   Future<void> getDirections(BuildContext context) async {
-    LatLng currentPin = Provider.of<MapsDataProvider>(context, listen: false)
-        .markers
-        .values
-        .toList()[0]
-        .position;
+    LatLng currentPin =
+        Provider.of<MapsDataProvider>(context, listen: false).markers.values.toList()[0].position;
     double lat = currentPin.latitude;
     double lon = currentPin.longitude;
 

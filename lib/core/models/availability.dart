@@ -3,7 +3,8 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final availabilityStatus = availabilityStatusFromJson(jsonString);
-AvailabilityStatus availabilityStatusFromJson(String str) => AvailabilityStatus.fromJson(json.decode(str));
+AvailabilityStatus availabilityStatusFromJson(String str) =>
+    AvailabilityStatus.fromJson(json.decode(str));
 
 String availabilityStatusToJson(AvailabilityStatus data) => json.encode(data.toJson());
 
@@ -39,10 +40,11 @@ class AvailabilityStatus {
               int maxPageIndex = (baseSubLocations.length / 3).ceil();
               for (int i = 0; i < baseSubLocations.length; i += 3) {
                 index++;
-                List<SubLocations> curSubList =
-                    baseSubLocations.sublist(i, i + 3 > baseSubLocations.length ? baseSubLocations.length : i + 3);
+                List<SubLocations> curSubList = baseSubLocations.sublist(
+                    i, i + 3 > baseSubLocations.length ? baseSubLocations.length : i + 3);
                 String curName = baseName + " ($curPageIndex/$maxPageIndex)";
-                returnList.insert(index, AvailabilityModel(id: baseId, name: curName, subLocations: curSubList));
+                returnList.insert(
+                    index, AvailabilityModel(id: baseId, name: curName, subLocations: curSubList));
                 curPageIndex++;
               }
             }
@@ -73,7 +75,8 @@ class AvailabilityModel {
   factory AvailabilityModel.fromJson(Map<String, dynamic> json) => AvailabilityModel(
         id: json["id"]!,
         name: json["name"]!,
-        subLocations: List<SubLocations>.from(json["childCounts"]!.map((x) => SubLocations.fromJson(x))),
+        subLocations:
+            List<SubLocations>.from(json["childCounts"]!.map((x) => SubLocations.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -85,7 +88,11 @@ class AvailabilityModel {
 
 class SubLocations {
   SubLocations(
-      {required this.id, required this.name, required this.percentage, required this.isActive, required this.floors});
+      {required this.id,
+      required this.name,
+      required this.percentage,
+      required this.isActive,
+      required this.floors});
 
   int id;
   String name;
@@ -105,7 +112,12 @@ class SubLocations {
 }
 
 class Floor {
-  Floor({required this.id, required this.name, required this.count, required this.percentage, required this.isActive});
+  Floor(
+      {required this.id,
+      required this.name,
+      required this.count,
+      required this.percentage,
+      required this.isActive});
 
   int id;
   String name;

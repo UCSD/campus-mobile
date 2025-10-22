@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 class FreeFoodDataProvider extends ChangeNotifier {
-  FreeFoodDataProvider() { initializeValues(); }
+  FreeFoodDataProvider() {
+    initializeValues();
+  }
 
   /// STATES
   bool _isLoading = false;
@@ -41,12 +43,11 @@ class FreeFoodDataProvider extends ChangeNotifier {
   void parseMessages() {
     // initializeValues();
     List<MessageElement> messages = _messageDataProvider.messages;
-    messages.where((msg) => msg.audience.topics != null)
-        .forEach((m) async {
-          if (m.audience.topics!.contains("freeFood")) {
-            fetchCount(m.messageId);
-            fetchMaxCount(m.messageId);
-          }
+    messages.where((msg) => msg.audience.topics != null).forEach((m) async {
+      if (m.audience.topics!.contains("freeFood")) {
+        fetchCount(m.messageId);
+        fetchMaxCount(m.messageId);
+      }
     });
   }
 
@@ -68,7 +69,8 @@ class FreeFoodDataProvider extends ChangeNotifier {
   }
 
   Future<void> fetchCount(String id) async {
-    _isLoading = true; _curId = id;
+    _isLoading = true;
+    _curId = id;
     notifyListeners();
 
     if (await _freeFoodService.fetchData(id)) {
@@ -82,12 +84,14 @@ class FreeFoodDataProvider extends ChangeNotifier {
       }
       removeId(id);
     }
-    _isLoading = false; _curId = null;
+    _isLoading = false;
+    _curId = null;
     notifyListeners();
   }
 
   Future<void> fetchMaxCount(String id) async {
-    _isLoading = true; _curId = id;
+    _isLoading = true;
+    _curId = id;
     notifyListeners();
 
     if (await _freeFoodService.fetchMaxCount(id)) {
@@ -96,13 +100,16 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _messageToMaxCount[id] = _freeFoodModel.body.maxCount;
     } else {
       _error = _freeFoodService.error;
-      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken))
-        if (await _freeFoodService.getNewToken()) await fetchMaxCount(id);
+      if (_error != null &&
+          _error!
+              .contains(ErrorConstants.invalidBearerToken)) if (await _freeFoodService
+          .getNewToken()) await fetchMaxCount(id);
 
       removeId(id);
     }
 
-    _isLoading = false; _curId = null;
+    _isLoading = false;
+    _curId = null;
     notifyListeners();
   }
 
@@ -119,7 +126,8 @@ class FreeFoodDataProvider extends ChangeNotifier {
   }
 
   Future<void> updateCount(String id, Map<String, dynamic> body) async {
-    _isLoading = true; _curId = id;
+    _isLoading = true;
+    _curId = id;
     notifyListeners();
     await updateRegisteredEvents(_registeredEvents);
 
@@ -134,7 +142,8 @@ class FreeFoodDataProvider extends ChangeNotifier {
       removeId(id);
     }
 
-    _isLoading = false; _curId = null;
+    _isLoading = false;
+    _curId = null;
     fetchCount(id);
     notifyListeners();
   }

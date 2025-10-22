@@ -9,6 +9,7 @@ class AuthenticationService {
   String? _error;
   AuthenticationModel? _data;
   DateTime? _lastUpdated;
+
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
 
@@ -51,7 +52,7 @@ class AuthenticationService {
       /// fetch data
       /// MODIFIED TO USE EXPONENTIAL RETRY
       var response = await NetworkHelper.authorizedPost(
-        dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
+          dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
 
       /// check to see if response has an error
       if (response['errorMessage'] != null) throw (response['errorMessage']);

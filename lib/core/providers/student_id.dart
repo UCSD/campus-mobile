@@ -25,15 +25,15 @@ class StudentIdDataProvider extends ChangeNotifier {
 
   // Fetch Information From Models
   void fetchData() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
 
     /// Verify that user is logged in
     if (_userDataProvider.isLoggedIn) {
       /// Initialize header
       final Map<String, String> header = {
-        'Authorization':
-        'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+        'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
       };
 
       /// Fetch Name
@@ -44,6 +44,7 @@ class StudentIdDataProvider extends ChangeNotifier {
         _error = _studentIdService.error;
         _isLoading = false;
         notifyListeners();
+
         /// Short Circuit
         return;
       }
@@ -56,6 +57,7 @@ class StudentIdDataProvider extends ChangeNotifier {
         _error = _studentIdService.error;
         _isLoading = false;
         notifyListeners();
+
         /// Short Circuit
         return;
       }
@@ -68,6 +70,7 @@ class StudentIdDataProvider extends ChangeNotifier {
         _error = _studentIdService.error;
         _isLoading = false;
         notifyListeners();
+
         /// Short Circuit
         return;
       }
@@ -75,6 +78,7 @@ class StudentIdDataProvider extends ChangeNotifier {
       _error = 'User not logged in';
       _isLoading = false;
       notifyListeners();
+
       /// Short Circuit
       return;
     }

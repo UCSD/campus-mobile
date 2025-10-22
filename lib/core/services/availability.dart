@@ -25,8 +25,8 @@ class AvailabilityService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('AVAILABILITY_API_ENDPOINT'), headers);
+      String _response =
+          await NetworkHelper.authorizedFetch(dotenv.get('AVAILABILITY_API_ENDPOINT'), headers);
 
       /// parse data
       final data = availabilityStatusFromJson(_response);

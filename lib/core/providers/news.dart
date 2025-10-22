@@ -15,7 +15,8 @@ class NewsDataProvider extends ChangeNotifier {
   var _newsService = NewsService();
 
   void fetchNews() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
     if (await _newsService.fetchData()) {
       _newsModels = _newsService.newsModels;

@@ -17,12 +17,12 @@ class FreeFoodService {
   late FreeFoodModel _data;
 
   Future<bool> fetchData(String id) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       var _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' +
-              id + '/rsvpCount', headers);
+          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpCount', headers);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
@@ -44,10 +44,10 @@ class FreeFoodService {
   }
 
   Future<bool> fetchMaxCount(String id) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
-      String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') +
-          'events/' + id + '/rsvpLimit';
+      String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpLimit';
 
       /// fetch data
       var _response = await NetworkHelper.authorizedFetch(_url, headers);
@@ -72,7 +72,8 @@ class FreeFoodService {
   }
 
   Future<bool> updateCount(String id, Map<String, dynamic> body) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id;
 

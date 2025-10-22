@@ -9,8 +9,7 @@ import 'package:hive/hive.dart';
 
 class CardsDataProvider extends ChangeNotifier {
   CardsDataProvider() {
-    CardTitleConstants.titleMap.keys
-        .forEach((card) => _cardStates[card] = true);
+    CardTitleConstants.titleMap.keys.forEach((card) => _cardStates[card] = true);
 
     /// temporary fix that prevents the student cards from causing issues on launch
     _cardOrder.removeWhere((element) => _studentCards.contains(element));
@@ -85,14 +84,12 @@ class CardsDataProvider extends ChangeNotifier {
 
         // add new cards to the top of the list
         _availableCards.forEach((card, model) {
-          if (_studentCards.contains(model) || _staffCards.contains(model))
-            return;
+          if (_studentCards.contains(model) || _staffCards.contains(model)) return;
 
           // add active webcards
           if (model.isWebCard) _webCards[card] = model;
 
-          if (!_cardOrder.contains(model) && model.cardActive)
-            _cardOrder.add(card);
+          if (!_cardOrder.contains(model) && model.cardActive) _cardOrder.add(card);
 
           // keep all new cards activated by default
           _cardStates.putIfAbsent(card, () => true);
@@ -188,8 +185,7 @@ class CardsDataProvider extends ChangeNotifier {
   Future updateCardStates() async {
     if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
 
-    var activeCards =
-        _cardStates.keys.where((card) => _cardStates[card]!).toList();
+    var activeCards = _cardStates.keys.where((card) => _cardStates[card]!).toList();
 
     // checks if box is open, creates one if not
     _cardStateBox = await Hive.openBox(DataPersistence.cardStates);
@@ -277,8 +273,7 @@ class CardsDataProvider extends ChangeNotifier {
 
   void toggleCard(String card) {
     try {
-      if (_availableCards[card]!.isWebCard && _cardStates[card]!)
-        resetCardHeight(card);
+      if (_availableCards[card]!.isWebCard && _cardStates[card]!) resetCardHeight(card);
 
       // Toggle the card state
       _cardStates[card] = !_cardStates[card]!;

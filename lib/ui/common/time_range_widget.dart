@@ -49,12 +49,16 @@ String? formattedTimeRange(String? theHours) {
   try {
     final now = DateTime.now();
     final startTime = DateTime(
-      now.year, now.month, now.day,
+      now.year,
+      now.month,
+      now.day,
       int.parse(match.group(1)!),
       int.parse(match.group(2)!),
     );
     final endTime = DateTime(
-      now.year, now.month, now.day,
+      now.year,
+      now.month,
+      now.day,
       int.parse(match.group(3)!),
       int.parse(match.group(4)!),
     );

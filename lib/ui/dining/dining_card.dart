@@ -15,19 +15,16 @@ class DiningCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
-      reload: () => Provider.of<DiningDataProvider>(context, listen: false)
-          .fetchDiningLocations(),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      reload: () => Provider.of<DiningDataProvider>(context, listen: false).fetchDiningLocations(),
       isLoading: Provider.of<DiningDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<DiningDataProvider>(context).error,
-      child: () => buildDiningCard(
-          Provider.of<DiningDataProvider>(context).diningModels),
+      child: () => buildDiningCard(Provider.of<DiningDataProvider>(context).diningModels),
       actionButtons: [
         ActionButton(
-           buttonText: 'VIEW ALL DINING OPTIONS',
-           onPressed: () {
+            buttonText: 'VIEW ALL DINING OPTIONS',
+            onPressed: () {
               // Only navigate if not loading and no error
               final provider = Provider.of<DiningDataProvider>(context, listen: false);
               if (!provider.isLoading && provider.error == null) {
@@ -38,7 +35,7 @@ class DiningCard extends StatelessWidget {
     );
   }
 
- Widget buildDiningCard(List<DiningModel> data) {
+  Widget buildDiningCard(List<DiningModel> data) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
       child: DiningList(listSize: data.length >= 3 ? 3 : data.length),

@@ -6,7 +6,8 @@ import 'dart:convert';
 List<EventModel> eventModelFromJson(String str) =>
     List<EventModel>.from(json.decode(str).map((x) => EventModel.fromJson(x)));
 
-String eventModelToJson(List<EventModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String eventModelToJson(List<EventModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class EventModel {
   EventModel({

@@ -18,7 +18,7 @@ class DirectionsHelper {
         return;
       }
     }
-    
+
     // Try Google Maps app URL scheme (works on both iOS and Android)
     final googleMapsAppUrl = dotenv.get('GOOGLE_MAPS_APP_URL') + '$lat,$lon&directionsmode=walking';
     if (await canLaunchUrl(googleMapsAppUrl as Uri)) {
@@ -28,7 +28,7 @@ class DirectionsHelper {
       );
       return;
     }
-    
+
     // Fall back to Google Maps web
     final googleMapsWebUrl = dotenv.get('GOOGLE_MAPS_WEB_URL') + '$lat,$lon';
     if (await canLaunchUrl(googleMapsWebUrl as Uri)) {

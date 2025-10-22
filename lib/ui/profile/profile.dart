@@ -26,7 +26,8 @@ class Profile extends StatelessWidget {
       var query = uri.queryParameters['query']!;
       Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+          NavigatorConstants.MapTab;
     }
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
@@ -35,7 +36,8 @@ class Profile extends StatelessWidget {
         var query = uri!.queryParameters['query']!;
         Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+            NavigatorConstants.MapTab;
         _sub?.cancel();
       }
     });
@@ -64,14 +66,19 @@ class Profile extends StatelessWidget {
                 ListTile(
                   title: Text(
                     'SETTINGS & SUPPORT',
-                    style: Theme.of(context).brightness == Brightness.dark ? titleMediumDark : titleMediumLight,
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? titleMediumDark
+                        : titleMediumLight,
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.drag_handle, color: Theme.of(context).iconTheme.color, size: 30.0),
+                  leading:
+                      Icon(Icons.drag_handle, color: Theme.of(context).iconTheme.color, size: 30.0),
                   title: Text(
                     'Card Settings',
-                    style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? linkTextDark
+                        : linkTextLight,
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, RoutePaths.CardsView);
@@ -82,7 +89,9 @@ class Profile extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Theme.of(context).brightness == Brightness.dark ? darkPrimaryColor : lightPrimaryColor,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? darkPrimaryColor
+                            : lightPrimaryColor,
                         width: 3.0, // Set the border width
                       ),
                     ),
@@ -96,7 +105,9 @@ class Profile extends StatelessWidget {
                   ),
                   title: Text(
                     'Get Mobile App Support',
-                    style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? linkTextDark
+                        : linkTextLight,
                   ),
                   onTap: handleFeedbackTap,
                 ),
@@ -104,16 +115,21 @@ class Profile extends StatelessWidget {
                   leading: Icon(Icons.lock, color: Theme.of(context).iconTheme.color, size: 30.0),
                   title: Text(
                     'View Privacy Policy',
-                    style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? linkTextDark
+                        : linkTextLight,
                   ),
                   onTap: handlePrivacyTap,
                 ),
                 if (isLoggedIn)
                   ListTile(
-                    leading: Icon(Icons.warning_amber_rounded, color: Theme.of(context).iconTheme.color, size: 36.0),
+                    leading: Icon(Icons.warning_amber_rounded,
+                        color: Theme.of(context).iconTheme.color, size: 36.0),
                     title: Text(
                       'Report a Campus Facility Issue',
-                      style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
+                      style: Theme.of(context).brightness == Brightness.dark
+                          ? linkTextDark
+                          : linkTextLight,
                     ),
                     onTap: handleReportTap,
                   ),

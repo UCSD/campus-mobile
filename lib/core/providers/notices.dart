@@ -15,7 +15,8 @@ class NoticesDataProvider extends ChangeNotifier {
   final _noticesService = NoticesService();
 
   void fetchNotices() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
     if (await _noticesService.fetchData()) {
       _noticesModel = _noticesService.noticesModel;

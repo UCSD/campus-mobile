@@ -13,7 +13,8 @@ class NoticesService {
   List<NoticesModel> _noticesModel = [];
 
   Future<bool> fetchData() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.fetchData(dotenv.get('NOTICES_ENDPOINT'));

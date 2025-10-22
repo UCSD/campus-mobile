@@ -3,7 +3,8 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final classScheduleModel = classScheduleModelFromJson(jsonString);
-ClassScheduleModel classScheduleModelFromJson(String str) => ClassScheduleModel.fromJson(json.decode(str));
+ClassScheduleModel classScheduleModelFromJson(String str) =>
+    ClassScheduleModel.fromJson(json.decode(str));
 
 String classScheduleModelToJson(ClassScheduleModel data) => json.encode(data.toJson());
 
@@ -17,7 +18,9 @@ class ClassScheduleModel {
   });
   factory ClassScheduleModel.fromJson(Map<String, dynamic> json) => ClassScheduleModel(
         metadata: json["metadata"] == null ? null : Metadata.fromJson(json["metadata"]),
-        data: json["data"] == null ? null : List<ClassData>.from(json["data"].map((x) => ClassData.fromJson(x))),
+        data: json["data"] == null
+            ? null
+            : List<ClassData>.from(json["data"].map((x) => ClassData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -80,7 +83,8 @@ class ClassData {
         "course_title": courseTitle == null ? null : courseTitle,
         "enrollment_status": enrollmentStatus == null ? null : enrollmentStatus,
         "repeat_code": repeatCode == null ? null : repeatCode,
-        "section_data": sectionData == null ? null : List<dynamic>.from(sectionData!.map((x) => x.toJson())),
+        "section_data":
+            sectionData == null ? null : List<dynamic>.from(sectionData!.map((x) => x.toJson())),
       };
 }
 

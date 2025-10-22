@@ -15,7 +15,8 @@ class UserProfileService {
   late UserProfileModel _userProfileModel;
 
   Future<bool> downloadUserProfile(Map<String, String> headers) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       _userProfileModel = userProfileModelFromJson(
           await NetworkHelper.authorizedFetch(_endpoint + '/profile', headers));
@@ -29,7 +30,8 @@ class UserProfileService {
   }
 
   Future<bool> uploadUserProfile(Map<String, String> headers, Map<String, dynamic> body) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       final response = await NetworkHelper.authorizedPost(
           _endpoint + '/profile', headers, createAttributeValueJson(body));
