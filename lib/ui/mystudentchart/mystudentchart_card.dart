@@ -28,7 +28,7 @@ class MyStudentChartCard extends StatelessWidget {
               launchUrl(
                   Uri.parse(
                       'https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN'),
-                  mode: LaunchMode.inAppWebView);
+                  mode: LaunchMode.inAppBrowserView);
             } catch (e) {
               // an error occurred, do nothing
             }
