@@ -6,7 +6,8 @@ import 'dart:convert';
 List<ParkingModel> parkingModelFromJson(String str) =>
     List<ParkingModel>.from(json.decode(str).map((x) => ParkingModel.fromJson(x)));
 
-String parkingModelToJson(List<ParkingModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String parkingModelToJson(List<ParkingModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ParkingModel {
   String neighborhood;

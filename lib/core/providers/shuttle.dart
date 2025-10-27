@@ -40,7 +40,8 @@ class ShuttleDataProvider extends ChangeNotifier {
       fetchedStops = newMapOfStops;
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      if (userDataProvider != null && !reloading) reorderStops(userDataProvider!.userProfileModel.selectedStops);
+      if (userDataProvider != null && !reloading)
+        reorderStops(userDataProvider!.userProfileModel.selectedStops);
 
       // get closest stop to current user
       await calculateClosestStop();
@@ -103,8 +104,10 @@ class ShuttleDataProvider extends ChangeNotifier {
 
     for (ShuttleStopModel shuttleStop in _shuttleService.data) {
       double stopLat = shuttleStop.lat, stopLong = shuttleStop.lon;
-      if (getHaversineDistance(_userCoords!.lat, _userCoords!.lon, stopLat, stopLong) < closestDistance) {
-        closestDistance = getHaversineDistance(_userCoords!.lat, _userCoords!.lon, stopLat, stopLong);
+      if (getHaversineDistance(_userCoords!.lat, _userCoords!.lon, stopLat, stopLong) <
+          closestDistance) {
+        closestDistance =
+            getHaversineDistance(_userCoords!.lat, _userCoords!.lon, stopLat, stopLong);
         _closestStop = shuttleStop;
       }
     }
@@ -116,14 +119,18 @@ class ShuttleDataProvider extends ChangeNotifier {
     var dLat = deg2rad(lat2 - lat1)!; // deg2rad below
     var dLon = deg2rad(lon2 - lon1)!;
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(lat1)!) * Math.cos(deg2rad(lat2)!) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        Math.cos(deg2rad(lat1)!) *
+            Math.cos(deg2rad(lat2)!) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c; // Distance in km
     return d;
   }
 
   Future<void> getArrivalInformation() async {
-    if (_closestStop != null) arrivalsToRender[_closestStop!.id] = await fetchArrivalInformation(_closestStop!.id);
+    if (_closestStop != null)
+      arrivalsToRender[_closestStop!.id] = await fetchArrivalInformation(_closestStop!.id);
 
     for (ShuttleStopModel stop in stopsToRender) {
       arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);

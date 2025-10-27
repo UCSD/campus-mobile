@@ -72,10 +72,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
-      reload: () =>
-          Provider.of<StudentIdDataProvider>(context, listen: false).fetchData(),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      reload: () => Provider.of<StudentIdDataProvider>(context, listen: false).fetchData(),
       isLoading: Provider.of<StudentIdDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<StudentIdDataProvider>(context).error,
@@ -120,9 +118,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 children: <Widget>[
                   _buildName(nameModel),
                   SizedBox(height: ScalingUtility.verticalSafeBlock * 0.5),
-
                   _buildClassificationTitle(profileModel),
-
                   SizedBox(
                     width: 201,
                     child: Divider(
@@ -131,13 +127,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
                           : listTileDividerColorLight,
                       thickness: 1,
                       height: 10,
-                      ),
+                    ),
                   ),
-
                   _buildMajorName(profileModel),
                   SizedBox(height: ScalingUtility.verticalSafeBlock * 0.5),
                   _buildCollegeName(profileModel),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -145,7 +139,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       _buildBarcodeNumber(profileModel),
                     ],
                   )
-                  
                 ],
               ),
             ),
@@ -223,8 +216,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
             child: Row(
               children: <Widget>[
                 Padding(
-                  padding:
-                      EdgeInsets.all(ScalingUtility.verticalSafeBlock * 7.5),
+                  padding: EdgeInsets.all(ScalingUtility.verticalSafeBlock * 7.5),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -383,22 +375,22 @@ class _StudentIdCardState extends State<StudentIdCard> {
   //   }
   // }
 
-  double letterSpacing() => MediaQuery.of(context).orientation ==
-          Orientation.landscape
+  double letterSpacing() => MediaQuery.of(context).orientation == Orientation.landscape
       ? SizeConfig.safeBlockHorizontal * 1
       : SizeConfig.safeBlockHorizontal * 3;
 
-  double getRotatedPopUpFontSize() =>
-      MediaQuery.of(context).orientation == Orientation.landscape
-          ? SizeConfig.safeBlockHorizontal * 2
-          : SizeConfig.safeBlockHorizontal * 4;
+  double getRotatedPopUpFontSize() => MediaQuery.of(context).orientation == Orientation.landscape
+      ? SizeConfig.safeBlockHorizontal * 2
+      : SizeConfig.safeBlockHorizontal * 4;
 
   /// Determine the font size for user's textFields
   double getFontSize(String input, String textField) {
     /// Base font size
     var base = ScalingUtility.horizontalSafeBlock * 3.5;
+
     /// If threshold is passed, shrink text
     if (input.length >= 21) return (base - (0.175 * (input.length - 18)));
+
     /// The name should be larger than subheadings
     if (textField == "name") base = ScalingUtility.horizontalSafeBlock * 5;
     return base;
@@ -407,6 +399,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   double tabletFontSize(String input, String textField) {
     /// Base font size
     var base = letterSpacingForTablet();
+
     /// If threshold is passed, shrink text
     if (input.length >= 21) return (base - (0.1725 * (input.length - 18)));
 
@@ -421,14 +414,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
   /// Determine the padding for a border around barcode
   EdgeInsets addBorder(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark
-        ? EdgeInsets.all(5)
-        : EdgeInsets.all(0);
+    return currentTheme.brightness == Brightness.dark ? EdgeInsets.all(5) : EdgeInsets.all(0);
   }
 
   /// Determine the padding for the text to realign
-  double realignText(ThemeData currentTheme) =>
-      currentTheme.brightness == Brightness.dark ? 7 : 0;
+  double realignText(ThemeData currentTheme) => currentTheme.brightness == Brightness.dark ? 7 : 0;
 
   // /// Determine the color of hint above the barcode
   // Color decideColor(ThemeData currentTheme) {
@@ -493,8 +483,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
         ),
       );
 
-  Widget _buildBarcode(StudentIdProfileModel profileModel) =>
-    TextButton(
+  Widget _buildBarcode(StudentIdProfileModel profileModel) => TextButton(
         style: TextButton.styleFrom(
           padding: EdgeInsets.all(0),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -529,13 +518,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
     return Padding(
       padding: const EdgeInsets.only(top: 6.0),
       //child: Center(
-        child: Text(
-          profileModel.barcode.toString(),
-          style: TextStyle(
-            fontSize: ScalingUtility.horizontalSafeBlock * 3,
-            letterSpacing: ScalingUtility.horizontalSafeBlock * 1.5,
-          ),
+      child: Text(
+        profileModel.barcode.toString(),
+        style: TextStyle(
+          fontSize: ScalingUtility.horizontalSafeBlock * 3,
+          letterSpacing: ScalingUtility.horizontalSafeBlock * 1.5,
         ),
+      ),
       //),
     );
   }
@@ -552,12 +541,10 @@ class ScalingUtility {
     _queryData = MediaQuery.of(context);
 
     /// Calculate blocks accounting for notches and home bar
-    horizontalSafeBlock = (_queryData.size.width -
-            (_queryData.padding.left + _queryData.padding.right)) /
-        100;
-    verticalSafeBlock = (_queryData.size.height -
-            (_queryData.padding.top + _queryData.padding.bottom)) /
-        100;
+    horizontalSafeBlock =
+        (_queryData.size.width - (_queryData.padding.left + _queryData.padding.right)) / 100;
+    verticalSafeBlock =
+        (_queryData.size.height - (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 
@@ -580,10 +567,8 @@ class SizeConfig {
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
-    _safeAreaHorizontal =
-        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
-    _safeAreaVertical =
-        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
+    _safeAreaHorizontal = _mediaQueryData.padding.left + _mediaQueryData.padding.right;
+    _safeAreaVertical = _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }

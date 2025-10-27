@@ -43,5 +43,7 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AuthenticationModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is AuthenticationModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

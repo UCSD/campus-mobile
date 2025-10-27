@@ -12,9 +12,8 @@ class EventsCardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading? Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary))
+    return Provider.of<EventsDataProvider>(context).isLoading
+        ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
         : buildEventsList(Provider.of<EventsDataProvider>(context).eventsModels, context);
   }
 
@@ -30,7 +29,8 @@ class EventsCardList extends StatelessWidget {
     if (size > listOfEvents.length) size = listOfEvents.length;
 
     for (var i = 0; i < size; i++) {
-      eventTiles.add(EventTile(data: listOfEvents[i])); // get event model and then create a tile from it
+      eventTiles
+          .add(EventTile(data: listOfEvents[i])); // get event model and then create a tile from it
       eventTiles.add(const SizedBox(width: 9)); // spacer between tiles
     }
 

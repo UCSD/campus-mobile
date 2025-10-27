@@ -22,8 +22,7 @@ class Maps extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
-          ..showSnackBar(
-              SnackBar(content: Text('No results found for your search.')));
+          ..showSnackBar(SnackBar(content: Text('No results found for your search.')));
       });
     }
     return Container();
@@ -38,9 +37,7 @@ class Maps extends StatelessWidget {
       right: width * 0.05,
       child: Column(
         children: [
-          MyLocationButton(
-              mapController:
-                  Provider.of<MapsDataProvider>(context).mapController),
+          MyLocationButton(mapController: Provider.of<MapsDataProvider>(context).mapController),
           SizedBox(height: 10),
           DirectionsButton(),
         ],
@@ -59,7 +56,8 @@ class Maps extends StatelessWidget {
       var query = uri.queryParameters['query']!;
       Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+          NavigatorConstants.MapTab;
     }
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
@@ -68,7 +66,8 @@ class Maps extends StatelessWidget {
         var query = uri!.queryParameters['query']!;
         Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+            NavigatorConstants.MapTab;
         _sub?.cancel();
       }
     });
@@ -80,15 +79,13 @@ class Maps extends StatelessWidget {
     return Stack(
       children: <Widget>[
         GoogleMap(
-          markers: Set<Marker>.of(
-              Provider.of<MapsDataProvider>(context).markers.values),
+          markers: Set<Marker>.of(Provider.of<MapsDataProvider>(context).markers.values),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           mapToolbarEnabled: false,
           zoomControlsEnabled: false,
           onMapCreated: (controller) {
-            Provider.of<MapsDataProvider>(context, listen: false)
-                .mapController = controller;
+            Provider.of<MapsDataProvider>(context, listen: false).mapController = controller;
           },
           initialCameraPosition: CameraPosition(
             target: const LatLng(32.8801, -117.2341),

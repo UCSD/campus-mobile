@@ -3,7 +3,8 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final diningMenuItemsModel = diningMenuItemsModelFromJson(jsonString);
-DiningMenuItemsModel diningMenuItemsModelFromJson(String str) => DiningMenuItemsModel.fromJson(json.decode(str));
+DiningMenuItemsModel diningMenuItemsModelFromJson(String str) =>
+    DiningMenuItemsModel.fromJson(json.decode(str));
 
 String diningMenuItemsModelToJson(DiningMenuItemsModel data) => json.encode(data.toJson());
 
@@ -26,7 +27,8 @@ class DiningMenuItemsModel {
         disclaimerEmail = json["disclaimerEmail"];
 
   Map<String, dynamic> toJson() => {
-        "menuitems": menuItems!.isNotEmpty ? List<dynamic>.from(menuItems!.map((x) => x.toJson())) : null,
+        "menuitems":
+            menuItems!.isNotEmpty ? List<dynamic>.from(menuItems!.map((x) => x.toJson())) : null,
         "disclaimer": disclaimer,
         "disclaimerEmail": disclaimerEmail,
       };

@@ -16,11 +16,13 @@ class ClassScheduleService {
   AcademicTermModel? _academicTermModel;
 
   Future<bool> fetchUNCourses(Map<String, String> headers, String term) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=UN&term_code=' + term, headers);
+          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=UN&term_code=' + term,
+          headers);
 
       /// parse data
       _unData = classScheduleModelFromJson(_response);
@@ -34,11 +36,13 @@ class ClassScheduleService {
   }
 
   Future<bool> fetchGRCourses(Map<String, String> headers, String term) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=GR&term_code=' + term, headers);
+          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=GR&term_code=' + term,
+          headers);
 
       /// parse data
       _grData = classScheduleModelFromJson(_response);
@@ -52,7 +56,8 @@ class ClassScheduleService {
   }
 
   Future<bool> fetchAcademicTerm() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       String _response = await NetworkHelper.fetchData(dotenv.get('ACADEMIC_TERM_API_ENDPOINT'));
       _academicTermModel = academicTermModelFromJson(_response);

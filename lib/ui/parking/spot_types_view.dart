@@ -46,8 +46,11 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       );
 
   List<Widget> createList(BuildContext context) {
-    var selectedSpots =
-        Provider.of<ParkingDataProvider>(context).spotTypesState.values.where((selected) => selected == true).length;
+    var selectedSpots = Provider.of<ParkingDataProvider>(context)
+        .spotTypesState
+        .values
+        .where((selected) => selected == true)
+        .length;
 
     List<Widget> list = [];
 

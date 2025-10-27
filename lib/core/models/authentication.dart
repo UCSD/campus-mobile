@@ -5,7 +5,8 @@ part 'authentication.g.dart';
 // To parse this JSON data, do
 //
 //     final authenticationModel = authenticationModelFromJson(jsonString);
-AuthenticationModel authenticationModelFromJson(String str) => AuthenticationModel.fromJson(json.decode(str));
+AuthenticationModel authenticationModelFromJson(String str) =>
+    AuthenticationModel.fromJson(json.decode(str));
 
 String authenticationModelToJson(AuthenticationModel data) => json.encode(data.toJson());
 

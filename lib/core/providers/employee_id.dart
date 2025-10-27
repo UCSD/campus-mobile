@@ -19,18 +19,19 @@ class EmployeeIdDataProvider extends ChangeNotifier {
   var _employeeIdService = EmployeeIdService();
 
   void fetchData() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
 
     final Map<String, String> header = {
-      'Authorization':
-      'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+      'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
     };
 
     /// Verify that user is logged in
     if (_userDataProvider.isLoggedIn && await _employeeIdService.fetchEmployeeIdProfile(header))
       _employeeIdModel = _employeeIdService.employeeIdModel; // Fetch Profile
-    else _error = _employeeIdService.error.toString();
+    else
+      _error = _employeeIdService.error.toString();
 
     _isLoading = false;
     notifyListeners();

@@ -41,8 +41,8 @@ class ParkingDataProvider extends ChangeNotifier {
 
     if (await _parkingService.fetchParkingLotData()) {
       if (_userDataProvider.userProfileModel.selectedParkingLots!.isNotEmpty) {
-        _parkingViewState = _userDataProvider
-            .userProfileModel.selectedParkingLots! as Map<String, bool>;
+        _parkingViewState =
+            _userDataProvider.userProfileModel.selectedParkingLots! as Map<String, bool>;
       } else {
         for (ParkingModel model in _parkingService.data!) {
           if (ParkingDefaults.defaultLots.contains(model.locationId))
@@ -54,10 +54,9 @@ class ParkingDataProvider extends ChangeNotifier {
 
       for (ParkingModel model in _parkingService.data!) {
         newMapOfLots[model.locationName] = model;
-        newMapOfLotStates[model.locationName] =
-            (_parkingViewState[model.locationName] == null
-                ? false
-                : _parkingViewState[model.locationName])!;
+        newMapOfLotStates[model.locationName] = (_parkingViewState[model.locationName] == null
+            ? false
+            : _parkingViewState[model.locationName])!;
       }
 
       /// replace old list of lots with new one
@@ -97,8 +96,7 @@ class ParkingDataProvider extends ChangeNotifier {
       /// this block of code is to ensure we remove any unsupported spot types
       Map<String, bool> newMapOfSpotTypes = Map<String, bool>();
       for (Spot spot in _spotTypeModel.spots!) {
-        newMapOfSpotTypes[spot.spotKey] =
-            _selectedSpotTypesState[spot.spotKey] ?? false;
+        newMapOfSpotTypes[spot.spotKey] = _selectedSpotTypesState[spot.spotKey] ?? false;
       }
       _selectedSpotTypesState = newMapOfSpotTypes;
 
@@ -132,8 +130,7 @@ class ParkingDataProvider extends ChangeNotifier {
       }
 
       // Update user profile with selected lots
-      _userDataProvider.userProfileModel.selectedParkingLots =
-          _parkingViewState;
+      _userDataProvider.userProfileModel.selectedParkingLots = _parkingViewState;
       _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
 
       // Notify listeners immediately
@@ -165,8 +162,7 @@ class ParkingDataProvider extends ChangeNotifier {
       }
 
       // Update user profile with selected spots
-      _userDataProvider.userProfileModel.selectedParkingSpots =
-          _selectedSpotTypesState;
+      _userDataProvider.userProfileModel.selectedParkingSpots = _selectedSpotTypesState;
       _userDataProvider.postUserProfile(_userDataProvider.userProfileModel);
 
       // Notify listeners immediately
@@ -192,8 +188,7 @@ class ParkingDataProvider extends ChangeNotifier {
             _parkingModels[locationId]!.availability[spot]['Open'] != "") {
           totalAndOpenSpots["Open"] = totalAndOpenSpots["Open"]! +
               (_parkingModels[locationId]!.availability[spot]['Open'] is String
-                  ? int.parse(
-                      _parkingModels[locationId]!.availability[spot]['Open'])
+                  ? int.parse(_parkingModels[locationId]!.availability[spot]['Open'])
                   : _parkingModels[locationId]!.availability[spot]['Open']);
         }
 
@@ -201,8 +196,7 @@ class ParkingDataProvider extends ChangeNotifier {
             _parkingModels[locationId]!.availability[spot]['Total'] != "") {
           totalAndOpenSpots["Total"] = totalAndOpenSpots["Total"]! +
               (_parkingModels[locationId]!.availability[spot]['Total'] is String
-                  ? int.parse(
-                      _parkingModels[locationId]!.availability[spot]['Total'])
+                  ? int.parse(_parkingModels[locationId]!.availability[spot]['Total'])
                   : _parkingModels[locationId]!.availability[spot]['Total']);
         }
       }

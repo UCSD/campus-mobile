@@ -35,7 +35,9 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             "Parking Lots",
-            style: Theme.of(context).brightness == Brightness.dark ? textSubheaderDark : textSubheaderLight,
+            style: Theme.of(context).brightness == Brightness.dark
+                ? textSubheaderDark
+                : textSubheaderLight,
           ),
         ),
       ),
@@ -98,7 +100,9 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
         children: ListTile.divideTiles(
           tiles: list,
           context: context,
-          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? listTileDividerColorDark
+              : listTileDividerColorLight,
         ).toList(),
       ),
     );

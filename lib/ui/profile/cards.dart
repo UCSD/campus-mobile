@@ -79,7 +79,9 @@ class _CardsViewState extends State<CardsView> {
             margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
             child: ListTile(
               leading: Icon(Icons.drag_handle,
-                  color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? linkTextColorDark
+                      : linkTextColorLight),
               title: Text(_cardsDataProvider.availableCards[card]!.titleText,
                   style: Theme.of(context).textTheme.bodyMedium),
               trailing: Transform.scale(

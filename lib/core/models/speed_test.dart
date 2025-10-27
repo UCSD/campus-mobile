@@ -46,8 +46,8 @@ class SpeedTestModel {
       this.downloadSpeed,
       this.uploadSpeed});
 
-  factory SpeedTestModel.fromJson(
-      WifiInfo? wifiInfo, Map<String, dynamic>? downloadJson, Map<String, dynamic>? uploadJson, bool isUCSDWifi) {
+  factory SpeedTestModel.fromJson(WifiInfo? wifiInfo, Map<String, dynamic>? downloadJson,
+      Map<String, dynamic>? uploadJson, bool isUCSDWifi) {
     if (wifiInfo == null) {
       return SpeedTestModel(isUCSDWifi: false);
     }
@@ -69,12 +69,15 @@ class SpeedTestModel {
         channel: wifiInfo.channel == null ? "" : wifiInfo.channel,
         latitude: 0.0,
         longitude: 0.0,
-        timeStamp: DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch).toString(),
+        timeStamp:
+            DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch).toString(),
         downloadSpeed: 0.0,
         uploadSpeed: 0.0);
   }
 }
 
-SpeedTestModel speedTestModelFromJson(WifiInfo? wifiInfo, String downloadUrl, String uploadUrl, bool isUCSDWifi) {
-  return SpeedTestModel.fromJson(wifiInfo, json.decode(downloadUrl), json.decode(uploadUrl), isUCSDWifi);
+SpeedTestModel speedTestModelFromJson(
+    WifiInfo? wifiInfo, String downloadUrl, String uploadUrl, bool isUCSDWifi) {
+  return SpeedTestModel.fromJson(
+      wifiInfo, json.decode(downloadUrl), json.decode(uploadUrl), isUCSDWifi);
 }

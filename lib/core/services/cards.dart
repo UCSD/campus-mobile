@@ -16,7 +16,8 @@ class CardsService {
   late Map<String, CardsModel> _cardsModel;
 
   Future<bool> fetchCards(String? ucsdAffiliation) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     if (ucsdAffiliation == null) ucsdAffiliation = "";
 
     /// API Manager Service

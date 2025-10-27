@@ -28,12 +28,16 @@ class ClassList extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 if (key == 'MI') {
-                  return buildMidterm(
-                      Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index));
+                  return buildMidterm(Provider.of<ClassScheduleDataProvider>(context)
+                      .enrolledClasses[key]!
+                      .elementAt(index));
                 }
-                return buildClass(
-                    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index));
-              }, childCount: Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.length),
+                return buildClass(Provider.of<ClassScheduleDataProvider>(context)
+                    .enrolledClasses[key]!
+                    .elementAt(index));
+              },
+                  childCount:
+                      Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.length),
             ),
           ));
         }
@@ -66,7 +70,9 @@ class ClassList extends StatelessWidget {
   Widget buildWeekDayHeader(BuildContext context, String weekday) {
     weekday = abbrevToFullWeekday(weekday);
     return Container(
-      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : descriptiveTextColorLight,
+      color: Theme.of(context).brightness == Brightness.light
+          ? lightPrimaryColor
+          : descriptiveTextColorLight,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Text(
@@ -158,7 +164,10 @@ class ClassList extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Row(children: [
-                      Text(abbrevToFullWeekday(sectionData.days) + ", " + formatDate(sectionData.date)! + ' from '),
+                      Text(abbrevToFullWeekday(sectionData.days) +
+                          ", " +
+                          formatDate(sectionData.date)! +
+                          ' from '),
                       TimeRangeWidget(
                         time: sectionData.time!,
                       )
