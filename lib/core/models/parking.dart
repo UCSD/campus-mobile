@@ -44,9 +44,10 @@ class ParkingModel {
         locationProvider = json["LocationProvider"],
         availability = json["Availability"] as Map<String, dynamic>,
         lastUpdated = json["lastUpdated"] == null
-            ? null : DateTime.parse(json["LastUpdated"]),
-        availabilityType = json["AvailabilityType"] == null
-            ? null : json["AvailabilityType"];
+            ? null
+            : DateTime.parse(json["LastUpdated"]),
+        availabilityType =
+            json["AvailabilityType"] == null ? null : json["AvailabilityType"];
 
   Map<String, dynamic> toJson() => {
         "Neighborhood": neighborhood,

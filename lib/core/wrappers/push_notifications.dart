@@ -7,14 +7,16 @@ class PushNotificationWrapper extends StatefulWidget {
   final Widget child;
 
   @override
-  _PushNotificationWrapperState createState() => _PushNotificationWrapperState();
+  _PushNotificationWrapperState createState() =>
+      _PushNotificationWrapperState();
 }
 
 class _PushNotificationWrapperState extends State<PushNotificationWrapper> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Provider.of<PushNotificationDataProvider>(context).initPlatformState(context);
+    Provider.of<PushNotificationDataProvider>(context)
+        .initPlatformState(context);
   }
 
   @override

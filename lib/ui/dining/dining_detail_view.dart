@@ -32,16 +32,17 @@ class _DiningDetailViewState extends State<DiningDetailView> {
     final detailWidgets = buildDetailView(context, widget.data);
     return ContainerView(
       child: ListView.separated(
-          itemCount: detailWidgets.length,
-          separatorBuilder: (context, index) => SizedBox(height: 8),
-          padding: const EdgeInsets.all(16),
-          itemBuilder: (context, index) => detailWidgets[index],
+        itemCount: detailWidgets.length,
+        separatorBuilder: (context, index) => SizedBox(height: 8),
+        padding: const EdgeInsets.all(16),
+        itemBuilder: (context, index) => detailWidgets[index],
       ),
     );
   }
 
   // Contains all the widgets that make up the Dining detail view.
-  List<Widget> buildDetailView(BuildContext context, prefix0.DiningModel diningModel) {
+  List<Widget> buildDetailView(
+      BuildContext context, prefix0.DiningModel diningModel) {
     // Get availability for all dining halls
     List<AvailabilityModel?> availabilityModels = _availabilityDataProvider
         .availabilityModels
@@ -65,7 +66,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
                   decoration: Theme.of(context).brightness == Brightness.dark
                       ? BoxDecoration(
                           color: lightTextColor,
-                    borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8),
                         )
                       : null,
                   child: Image.network(
@@ -136,7 +137,8 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
       // Vendor Location
-      Text('Location',
+      Text(
+        'Location',
         style: Theme.of(context).textTheme.titleMedium,
       ),
       Transform.translate(
@@ -163,7 +165,8 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       SizedBox(height: 14),
-      Text("Hours",
+      Text(
+        "Hours",
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.titleMedium,
       ),
@@ -199,7 +202,8 @@ class _DiningDetailViewState extends State<DiningDetailView> {
     }
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text("Special Hours",
+        Text(
+          "Special Hours",
           style: Theme.of(context).textTheme.titleMedium,
         ),
         SizedBox(height: 10),
@@ -224,30 +228,30 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   //  (maybe the API updates automatically, and when fetched, the old promotion will be null
   //  so we don't really have to code an expiration. Only time will tell...
   Widget buildSpecialsField(BuildContext context, prefix0.DiningModel model) {
-      return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Specials",
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            SizedBox(height: 8),
-            Text(
-              model.specials?.specialTitle ?? '',
-              style: TextStyle(
-                fontSize: 17,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? descriptiveTextColorLight
-                    : descriptiveTextColorDark,
-                fontWeight: FontWeight.w700
-              ),
-            ),
-            SizedBox(height: 4),
-            Text(
-              model.specials?.specialDescription ?? '',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
-        );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Specials",
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        SizedBox(height: 8),
+        Text(
+          model.specials?.specialTitle ?? '',
+          style: TextStyle(
+              fontSize: 17,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? descriptiveTextColorLight
+                  : descriptiveTextColorDark,
+              fontWeight: FontWeight.w700),
+        ),
+        SizedBox(height: 4),
+        Text(
+          model.specials?.specialDescription ?? '',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
   }
 
   ///////////// Payment Options Section /////////////
@@ -260,7 +264,8 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Payment Options",
+          Text(
+            "Payment Options",
             style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(height: 10),
@@ -282,7 +287,8 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
     return TextButton(
       child: Row(
         children: <Widget>[
-          Text('Get Directions',
+          Text(
+            'Get Directions',
             style: linkTextDark.copyWith(
               fontSize: 18.0,
               color: Theme.of(context).brightness == Brightness.light
@@ -318,7 +324,8 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
       ),
       onPressed: () async {
         try {
-          await DirectionsHelper.openDirections(model.coordinates!.lat!, model.coordinates!.lon!);
+          await DirectionsHelper.openDirections(
+              model.coordinates!.lat!, model.coordinates!.lon!);
         } catch (e) {
           // an error occurred, do nothing
           debugPrint('Error opening directions: $e');
@@ -387,7 +394,8 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
 }
 
 class HoursOfDay extends StatelessWidget {
-  const HoursOfDay({Key? key, required this.day, required this.model}) : super(key: key);
+  const HoursOfDay({Key? key, required this.day, required this.model})
+      : super(key: key);
   final int day;
   final prefix0.DiningModel model;
 
@@ -396,7 +404,9 @@ class HoursOfDay extends StatelessWidget {
     // Extract the hours for the given day from the model
     var result = extractDayHours(day, model);
     var theDay = result['day'];
-    var hoursText = (result['hours'] == "Invalid Date-Invalid Date") ? "Unknown Hours" : result['hours'];
+    var hoursText = (result['hours'] == "Invalid Date-Invalid Date")
+        ? "Unknown Hours"
+        : result['hours'];
     // Determine the hours' text style
     // final TextStyle hoursTextStyle = day == DateTime.now().weekday
     //     ? TextStyle(
@@ -406,13 +416,12 @@ class HoursOfDay extends StatelessWidget {
     //             ? lightPrimaryColor
     //             : darkPrimaryColor2)
     //     : Theme.of(context).textTheme.bodySmall!;
-    final TextStyle hoursTextStyle = day == DateTime.now().weekday ?
-
-    Theme.of(context).textTheme.bodySmall!.copyWith(
-        fontWeight: FontWeight.w700,
-        color: Theme.of(context).brightness == Brightness.light
-            ? lightPrimaryColor
-            : darkPrimaryColor2)
+    final TextStyle hoursTextStyle = day == DateTime.now().weekday
+        ? Theme.of(context).textTheme.bodySmall!.copyWith(
+            fontWeight: FontWeight.w700,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : darkPrimaryColor2)
         : Theme.of(context).textTheme.bodySmall!;
 
     // Check if this is the current day
@@ -446,13 +455,14 @@ class HoursOfDay extends StatelessWidget {
                 Text(
                   '$theDay',
                   style: isToday
-                    ? Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).brightness == Brightness.light
-                                      ? lightPrimaryColor
-                                      : darkPrimaryColor2)
+                      ? Theme.of(context).textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : darkPrimaryColor2)
                       : Theme.of(context).textTheme.bodySmall,
-                  ),
+                ),
               ],
             ),
           ),

@@ -45,7 +45,8 @@ class SpeedTestService {
   }
 
   Future<bool> fetchSignedUrls() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       await NetworkHelper.getNewToken(headers);
       // Get download & upload urls
@@ -56,7 +57,8 @@ class SpeedTestService {
 
       /// parse data
       await fetchNetworkDiagnostics().then((WifiInfo? data) {
-        _speedTestModel = speedTestModelFromJson(data, _downloadResponse!, _uploadResponse!, data != null);
+        _speedTestModel = speedTestModelFromJson(
+            data, _downloadResponse!, _uploadResponse!, data != null);
       });
       return true;
     } catch (exception) {
@@ -72,7 +74,8 @@ class SpeedTestService {
   Future<WifiInfo?> fetchNetworkDiagnostics() async {
     _isLoading = true;
     // Check connected to wifi
-    if (!(await _connectivity.checkConnectivity()).contains(ConnectivityResult.wifi)) {
+    if (!(await _connectivity.checkConnectivity())
+        .contains(ConnectivityResult.wifi)) {
       _isLoading = false;
       return null;
     }

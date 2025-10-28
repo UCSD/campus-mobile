@@ -230,8 +230,7 @@ class SpeedTestProvider extends ChangeNotifier {
       }
       // Send to offload API
       try {
-        NetworkHelper
-            .authorizedPost(
+        NetworkHelper.authorizedPost(
                 mobileLoggerApiWifi, offloadDataHeader, json.encode(log))
             .then((value) {
           return value;
@@ -334,7 +333,8 @@ class SpeedTestProvider extends ChangeNotifier {
   /// SIMPLE SETTERS
   /// This setter is only used in provider to supply an updated Coordinates object
   set coordinates(Coordinates value) => _coordinates = value;
-  set userDataProvider(UserDataProvider userDataProvider) => _userDataProvider = userDataProvider;
+  set userDataProvider(UserDataProvider userDataProvider) =>
+      _userDataProvider = userDataProvider;
   set speed(double? lastSpeed) => _speedDownload = lastSpeed;
   double _convertToMbps(double speed) => speed / 125000;
 

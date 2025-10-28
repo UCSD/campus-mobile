@@ -25,7 +25,7 @@ class AvailabilityStatus {
       AvailabilityStatus(
         status: json["status"]!,
         // TODO: rewrite this to be shorter! Functional style iterators?...
-        data: ((){
+        data: (() {
           List<AvailabilityModel> returnList = List<AvailabilityModel>.from(
               json["data"]!.map((x) => AvailabilityModel.fromJson(x)));
 
@@ -36,16 +36,24 @@ class AvailabilityStatus {
             if (returnList[index].subLocations.length > 3) {
               String baseName = returnList[index].name;
               int baseId = returnList[index].id;
-              List<SubLocations> baseSubLocations = returnList[index].subLocations;
+              List<SubLocations> baseSubLocations =
+                  returnList[index].subLocations;
               returnList.removeAt(index);
               index--;
               int curPageIndex = 1;
               int maxPageIndex = (baseSubLocations.length / 3).ceil();
               for (int i = 0; i < baseSubLocations.length; i += 3) {
                 index++;
-                List<SubLocations> curSubList = baseSubLocations.sublist(i, i + 3 > baseSubLocations.length ? baseSubLocations.length : i + 3);
+                List<SubLocations> curSubList = baseSubLocations.sublist(
+                    i,
+                    i + 3 > baseSubLocations.length
+                        ? baseSubLocations.length
+                        : i + 3);
                 String curName = baseName + " ($curPageIndex/$maxPageIndex)";
-                returnList.insert(index, AvailabilityModel(id: baseId, name: curName, subLocations: curSubList));
+                returnList.insert(
+                    index,
+                    AvailabilityModel(
+                        id: baseId, name: curName, subLocations: curSubList));
                 curPageIndex++;
               }
             }
@@ -56,10 +64,10 @@ class AvailabilityStatus {
       );
 
   Map<String, dynamic> toJson() => {
-    "status": status,
-    "data": List<dynamic>.from(data.map((x) => x.toJson())),
-    "timestamp": timestamp.toIso8601String(),
-  };
+        "status": status,
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "timestamp": timestamp.toIso8601String(),
+      };
 }
 
 class AvailabilityModel {
@@ -78,25 +86,23 @@ class AvailabilityModel {
         id: json["id"]!,
         name: json["name"]!,
         subLocations: List<SubLocations>.from(
-            json["childCounts"]!.map((x) => SubLocations.fromJson(x))
-        ),
+            json["childCounts"]!.map((x) => SubLocations.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "childCounts": List<dynamic>.from(subLocations.map((x) => x.toJson())),
-  };
+        "id": id,
+        "name": name,
+        "childCounts": List<dynamic>.from(subLocations.map((x) => x.toJson())),
+      };
 }
 
 class SubLocations {
-  SubLocations({
-    required this.id,
-    required this.name,
-    required this.percentage,
-    required this.isActive,
-    required this.floors
-  });
+  SubLocations(
+      {required this.id,
+      required this.name,
+      required this.percentage,
+      required this.isActive,
+      required this.floors});
 
   int id;
   String name;
@@ -109,28 +115,25 @@ class SubLocations {
       name: json["name"]!,
       percentage: json["percentage"]!.toDouble(),
       isActive: json["isActive"]!,
-      floors: List<Floor>.from(
-          json["childCounts"]!.map((x) => Floor.fromJson(x))
-      )
-  );
+      floors:
+          List<Floor>.from(json["childCounts"]!.map((x) => Floor.fromJson(x))));
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "percentage": percentage,
-    "isActive": isActive,
-    "floors": floors
-  };
+        "id": id,
+        "name": name,
+        "percentage": percentage,
+        "isActive": isActive,
+        "floors": floors
+      };
 }
 
 class Floor {
-  Floor({
-    required this.id,
-    required this.name,
-    required this.count,
-    required this.percentage,
-    required this.isActive
-  });
+  Floor(
+      {required this.id,
+      required this.name,
+      required this.count,
+      required this.percentage,
+      required this.isActive});
 
   int id;
   String name;
@@ -139,17 +142,17 @@ class Floor {
   bool isActive;
 
   factory Floor.fromJson(Map<String, dynamic> json) => Floor(
-    id: json["id"]!,
-    name: json["name"]!,
-    count: json["count"]!,
-    percentage: json["percentage"]!.toDouble(),
-    isActive: json["isActive"]!,
-  );
+        id: json["id"]!,
+        name: json["name"]!,
+        count: json["count"]!,
+        percentage: json["percentage"]!.toDouble(),
+        isActive: json["isActive"]!,
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "percentage": percentage,
-    "isActive": isActive,
-  };
+        "id": id,
+        "name": name,
+        "percentage": percentage,
+        "isActive": isActive,
+      };
 }

@@ -18,10 +18,12 @@ class NewsService {
   NewsModel _newsModels = NewsModel();
 
   Future<bool> fetchData() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
-      String _response = await (NetworkHelper.authorizedFetch(dotenv.get('NEWS_ENDPOINT'), headers));
+      String _response = await (NetworkHelper.authorizedFetch(
+          dotenv.get('NEWS_ENDPOINT'), headers));
 
       /// parse data
       _newsModels = newsModelFromJson(_response);

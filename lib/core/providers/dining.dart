@@ -25,7 +25,8 @@ class DiningDataProvider extends ChangeNotifier {
 
   /// MODELS
   Map<String, DiningModel> _diningModels = {}; // Source of truth
-  Map<String, DiningModel> _filteredDiningModels = {}; // Used for displaying filtered results
+  Map<String, DiningModel> _filteredDiningModels =
+      {}; // Used for displaying filtered results
 
   /// SERVICES
   var _diningService = DiningService();
