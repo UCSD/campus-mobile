@@ -151,12 +151,10 @@ class _HomeState extends State<Home> {
   }
 
   void executeQuery(String query) {
-    context.read<MapsDataProvider>()
-        .searchBarController
-        .text = query;
+    context.read<MapsDataProvider>().searchBarController.text = query;
     context.read<MapsDataProvider>().fetchLocations();
-    context.read<BottomNavigationBarProvider>()
-        .currentIndex = NavigatorConstants.MapTab;
+    context.read<BottomNavigationBarProvider>().currentIndex =
+        NavigatorConstants.MapTab;
     context.read<CustomAppBar>().changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
   }
@@ -167,7 +165,8 @@ class _HomeState extends State<Home> {
     initUniLinks();
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
+      padding:
+          const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
         controller: _controller,
         padding: const EdgeInsets.only(
@@ -178,13 +177,17 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList() {
-    final orderedCards = getOrderedCardsList(context.watch<CardsDataProvider>().cardOrder);
-    final noticesCards = getNoticesCardsList(context.watch<NoticesDataProvider>().noticesModel);
+    final orderedCards =
+        getOrderedCardsList(context.watch<CardsDataProvider>().cardOrder);
+    final noticesCards =
+        getNoticesCardsList(context.watch<NoticesDataProvider>().noticesModel);
     return [...noticesCards, ...orderedCards];
   }
 
-  List<Widget> getNoticesCardsList(List<NoticesModel> notices) =>
-    notices.map((notice) => NoticesCard(notice: notice)).whereType<NoticesCard>().toList();
+  List<Widget> getNoticesCardsList(List<NoticesModel> notices) => notices
+      .map((notice) => NoticesCard(notice: notice))
+      .whereType<NoticesCard>()
+      .toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
   static const _cardCtors = {
@@ -203,8 +206,7 @@ class _HomeState extends State<Home> {
     'shuttle': ShuttleCard.new
   };
 
-  List<Widget> getOrderedCardsList(List<String> order)
-  {
+  List<Widget> getOrderedCardsList(List<String> order) {
     final orderedCards = <Widget>[];
     final webCards = context.read<CardsDataProvider>().webCards;
 
@@ -212,8 +214,7 @@ class _HomeState extends State<Home> {
       /// TODO: if-branches logic here theoretically could be simplified
       if (!webCards.containsKey(cardName)) {
         final cardCtor = _cardCtors[cardName];
-        if (cardCtor != null)
-          orderedCards.add(cardCtor());
+        if (cardCtor != null) orderedCards.add(cardCtor());
       } else {
         // dynamically insert webCards into the list
         orderedCards.add(StatefulBuilder(
@@ -226,7 +227,8 @@ class _HomeState extends State<Home> {
               MeasureSize(
                 onChange: (Size size) {
                   setNewCardHeight(cardName, size.height);
-                  webViewCardNotLoaded[cardName] = (size.height != webViewCardHeights[cardName]);
+                  webViewCardNotLoaded[cardName] =
+                      (size.height != webViewCardHeights[cardName]);
                   setState(() {});
                 },
                 child: Align(
@@ -258,7 +260,8 @@ class _HomeState extends State<Home> {
                               color: Theme.of(context).cardColor,
                               child: Center(
                                 child: CircularProgressIndicator(
-                                  color: Theme.of(context).colorScheme.secondary,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                               ),
                             ),

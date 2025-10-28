@@ -33,7 +33,8 @@ class DiningFilterView extends StatelessWidget {
               child: ListView(
                 children: ListTile.divideTiles(
                   context: context,
-                  tiles: createList(context, DiningConstants.payment_filter_types, diningProvider),
+                  tiles: createList(context,
+                      DiningConstants.payment_filter_types, diningProvider),
                   color: Theme.of(context).brightness == Brightness.dark
                       ? listTileDividerColorDark
                       : listTileDividerColorLight,
@@ -45,7 +46,6 @@ class DiningFilterView extends StatelessWidget {
       ),
     );
   }
-
 
   // Creates a list of tiles containing filter types with switches
   List<Widget> createList(BuildContext context, List<String> typesAvailable,
@@ -76,7 +76,8 @@ class DiningFilterView extends StatelessWidget {
               scale: 0.9,
               child: Switch.adaptive(
                 // Each filter type's switch is 'on' or 'off' based on the filter type's state
-                value: diningProvider.diningFilterTypeStates[type]!, // Remember that ```type``` is a string key (i.e. "Triton Cash")
+                value: diningProvider.diningFilterTypeStates[
+                    type]!, // Remember that ```type``` is a string key (i.e. "Triton Cash")
                 onChanged: (_) {
                   // On changed, this calls the provider function that "toggles" the filter type's state
                   // i.e. if "Triton Cash" was on (true), it makes it off (false).

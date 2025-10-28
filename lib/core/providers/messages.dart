@@ -12,10 +12,11 @@ class MessagesDataProvider extends ChangeNotifier {
   MessagesDataProvider() {
     /// DEFAULT STATES
     notificationScrollController.addListener(() {
-      var triggerFetchMoreSize = 0.9 * notificationScrollController.position.maxScrollExtent;
+      var triggerFetchMoreSize =
+          0.9 * notificationScrollController.position.maxScrollExtent;
 
       if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
-        if (!_isLoading&& _hasMoreMessagesToLoad) fetchMessages(false);
+        if (!_isLoading && _hasMoreMessagesToLoad) fetchMessages(false);
       }
       setNotificationsScrollOffset(notificationScrollController.offset);
     });
@@ -39,13 +40,14 @@ class MessagesDataProvider extends ChangeNotifier {
 
   //Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
     try {
       if (clearMessages) _clearMessages();
       return userDataProvider != null && userDataProvider!.isLoggedIn
-        ? await retrieveMoreMyMessages()
-        : await retrieveMoreTopicMessages();
+          ? await retrieveMoreMyMessages()
+          : await retrieveMoreTopicMessages();
     } finally {
       _isLoading = false;
     }
@@ -58,7 +60,8 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   Future<bool> retrieveMoreMyMessages() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
     int returnedTimestamp;
     int timestamp = _previousTimestamp;
@@ -74,7 +77,8 @@ class MessagesDataProvider extends ChangeNotifier {
       makeOrderedMessagesList();
       returnedTimestamp = _messageService.messagingModels.next ?? 0;
       // checks if we have no more messages to paginate through
-      _hasMoreMessagesToLoad = !(_previousTimestamp == returnedTimestamp || returnedTimestamp == 0);
+      _hasMoreMessagesToLoad =
+          !(_previousTimestamp == returnedTimestamp || returnedTimestamp == 0);
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
       _isLoading = false;
@@ -85,7 +89,8 @@ class MessagesDataProvider extends ChangeNotifier {
   }
 
   Future<bool> retrieveMoreTopicMessages() async {
-    _isLoading = true; _error = null;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
     int returnedTimestamp;
 
@@ -96,7 +101,8 @@ class MessagesDataProvider extends ChangeNotifier {
       makeOrderedMessagesList();
       returnedTimestamp = _messageService.messagingModels.next ?? 0;
       // checks if we have no more messages to paginate through
-      _hasMoreMessagesToLoad = !(_previousTimestamp == returnedTimestamp || returnedTimestamp == 0);
+      _hasMoreMessagesToLoad =
+          !(_previousTimestamp == returnedTimestamp || returnedTimestamp == 0);
       _lastUpdated = DateTime.now();
       _previousTimestamp = returnedTimestamp;
       _isLoading = false;
@@ -121,7 +127,8 @@ class MessagesDataProvider extends ChangeNotifier {
 
   void updateMessages(List<MessageElement> newMessages) {
     _messages.addAll(newMessages);
-    _statusText = _messages.isEmpty ? NotificationsConstants.statusNoMessages
+    _statusText = _messages.isEmpty
+        ? NotificationsConstants.statusNoMessages
         : NotificationsConstants.statusNone;
   }
 

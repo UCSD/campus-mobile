@@ -30,11 +30,9 @@ class NewsCard extends StatelessWidget {
     List<Widget> actionButtons = [];
     actionButtons.add(ActionButton(
         buttonText: 'VIEW MORE NEWS STORIES',
-        onPressed: () =>
-            Navigator.pushNamed(context, RoutePaths.NewsViewAll)));
+        onPressed: () => Navigator.pushNamed(context, RoutePaths.NewsViewAll)));
     return actionButtons;
   }
-
 
   @override
   Widget build(BuildContext context) {

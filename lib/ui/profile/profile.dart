@@ -37,7 +37,6 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final _userDataProvider = Provider.of<UserDataProvider>(context);
     final isLoggedIn = _userDataProvider.isLoggedIn;
 
@@ -116,7 +115,7 @@ class Profile extends StatelessWidget {
                   ),
                   onTap: handlePrivacyTap,
                 ),
-                if(isLoggedIn)
+                if (isLoggedIn)
                   ListTile(
                     leading: Icon(Icons.warning_amber_rounded,
                         color: Theme.of(context).iconTheme.color, size: 36.0),
@@ -151,8 +150,9 @@ class Profile extends StatelessWidget {
     openLink(privacyUrl);
   }
 
-  Future<void>handleReportTap() async {
-    const reportUrl = "https://experience.arcgis.com/experience/91b8f66d6fa547f481c2a1cb6af252d0";
+  Future<void> handleReportTap() async {
+    const reportUrl =
+        "https://experience.arcgis.com/experience/91b8f66d6fa547f481c2a1cb6af252d0";
     openLink(reportUrl);
   }
 }

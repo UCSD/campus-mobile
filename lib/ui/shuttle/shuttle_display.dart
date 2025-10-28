@@ -74,9 +74,12 @@ class ShuttleDisplay extends StatelessWidget {
                     : arrivingShuttles![0].routeColor);
                 // Calculate luminance to determine the color of "?"
                 final double luminance = circleColor.computeLuminance();
-                final Color textColor = luminance > 0.5 ? Colors.black : Colors.white;
+                final Color textColor =
+                    luminance > 0.5 ? Colors.black : Colors.white;
                 return Text(
-                  arrivingShuttles!.isEmpty ? "?" : arrivingShuttles![0].routeName[0],
+                  arrivingShuttles!.isEmpty
+                      ? "?"
+                      : arrivingShuttles![0].routeName[0],
                   style: TextStyle(
                     fontSize: 50,
                     color: textColor,
@@ -93,7 +96,8 @@ class ShuttleDisplay extends StatelessWidget {
                 : titleMediumDark),
         SizedBox(width: 8),
         Expanded(
-          child: Text(stop.name,
+          child: Text(
+            stop.name,
             textAlign: TextAlign.start,
             style: Theme.of(context).brightness == Brightness.light
                 ? titleMediumLight
@@ -113,7 +117,8 @@ class ShuttleDisplay extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(width: 16),
-          Text("No arrivals found.",
+          Text(
+            "No arrivals found.",
             style: TextStyle(
                 fontSize: 23.0,
                 fontWeight: FontWeight.w700,
@@ -217,7 +222,7 @@ class ShuttleDisplay extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
-         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 8.0),
           child: CircleAvatar(
             minRadius: 20,
             backgroundColor: HexColor(shuttle.routeColor),
@@ -237,10 +242,7 @@ class ShuttleDisplay extends StatelessWidget {
             maxLines: 1,
           ),
         ),
-        Expanded(
-            flex: 1,
-            child: Container()
-        ),
+        Expanded(flex: 1, child: Container()),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(

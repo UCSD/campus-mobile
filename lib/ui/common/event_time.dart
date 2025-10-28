@@ -96,11 +96,12 @@ class EventTileDateTime extends StatelessWidget {
   Widget build(BuildContext context) {
     try {
       // Separate dates from times
-      var startMonthDayYear = DateFormat.yMMMMd('en_US').format(data.startDate.toLocal());
-      var endMonthDayYear = DateFormat.yMMMMd('en_US').format(data.endDate.toLocal());
+      var startMonthDayYear =
+          DateFormat.yMMMMd('en_US').format(data.startDate.toLocal());
+      var endMonthDayYear =
+          DateFormat.yMMMMd('en_US').format(data.endDate.toLocal());
       var startTime = DateFormat.jm().format(data.startDate.toLocal());
       var endTime = DateFormat.jm().format(data.endDate.toLocal());
-
 
       // Mark any special types of events
       var sameDay = (startMonthDayYear == endMonthDayYear);
@@ -119,8 +120,10 @@ class EventTileDateTime extends StatelessWidget {
             endMonthDayYear.indexOf(',') + 2, endMonthDayYear.length);
         if (startYear == endYear) {
           // if the same year, check if the same month
-          var startMonth = startMonthDayYear.substring(0, startMonthDayYear.indexOf(' '));
-          var endMonth = endMonthDayYear.substring(0, endMonthDayYear.indexOf(' '));
+          var startMonth =
+              startMonthDayYear.substring(0, startMonthDayYear.indexOf(' '));
+          var endMonth =
+              endMonthDayYear.substring(0, endMonthDayYear.indexOf(' '));
           if (startMonth == endMonth) {
             // if different date in the same month and year
             var startDay = startMonthDayYear.substring(
@@ -134,8 +137,10 @@ class EventTileDateTime extends StatelessWidget {
             ); // Ex. September 11 - 26, 2021
           } else {
             // if different month in the same year
-            var startMonthDay = startMonthDayYear.substring(0, startMonthDayYear.indexOf(','));
-            var endMonthDay = endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
+            var startMonthDay =
+                startMonthDayYear.substring(0, startMonthDayYear.indexOf(','));
+            var endMonthDay =
+                endMonthDayYear.substring(0, endMonthDayYear.indexOf(','));
             date = Text(
               startMonthDay + ' - ' + endMonthDay + ', ' + startYear,
               style: TextStyle(fontSize: 12),

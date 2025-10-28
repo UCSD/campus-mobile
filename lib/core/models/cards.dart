@@ -12,13 +12,12 @@ String cardsModelToJson(Map<String, CardsModel> data) => json.encode(
     Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
 
 class CardsModel {
-  CardsModel({
-    required this.cardActive,
-    required this.initialURL,
-    required this.isWebCard,
-    required this.requireAuth,
-    required this.titleText
-  });
+  CardsModel(
+      {required this.cardActive,
+      required this.initialURL,
+      required this.isWebCard,
+      required this.requireAuth,
+      required this.titleText});
 
   bool cardActive;
   String initialURL;

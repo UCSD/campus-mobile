@@ -29,7 +29,8 @@ class StudentIdNameModel {
     this.lastUpdatedDate = '',
   });
 
-  factory StudentIdNameModel.fromJson(Map<String, dynamic> json) => StudentIdNameModel(
+  factory StudentIdNameModel.fromJson(Map<String, dynamic> json) =>
+      StudentIdNameModel(
         studentId: json["studentId"],
         firstName: json["firstName"],
         middleName: json["middleName"],
@@ -37,7 +38,7 @@ class StudentIdNameModel {
         lastUpdatedBy: json["lastUpdatedBy"],
         internalId: json["internalId"],
         lastUpdatedDate: json["lastUpdatedDate"],
-  );
+      );
 
   Map<String, dynamic> toJson() => {
         "studentId": studentId,
@@ -47,5 +48,5 @@ class StudentIdNameModel {
         "lastUpdatedBy": lastUpdatedBy,
         "internalId": internalId,
         "lastUpdatedDate": lastUpdatedDate,
-  };
+      };
 }

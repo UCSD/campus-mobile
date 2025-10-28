@@ -4,7 +4,9 @@ import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ParkingService {
-  ParkingService() { fetchParkingLotData(); }
+  ParkingService() {
+    fetchParkingLotData();
+  }
 
   /// STATES
   bool _isLoading = false;
@@ -18,7 +20,8 @@ class ParkingService {
   List<ParkingModel>? _data;
 
   Future<bool> fetchParkingLotData() async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await (NetworkHelper.authorizedFetch(
@@ -31,7 +34,8 @@ class ParkingService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) return await fetchParkingLotData();
+        if (await NetworkHelper.getNewToken(headers))
+          return await fetchParkingLotData();
       }
       _error = e.toString();
       return false;

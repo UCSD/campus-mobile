@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+
 class ClassList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -85,8 +86,8 @@ class ClassList extends StatelessWidget {
         child: Text(
           weekday,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.white,
-          ),
+                color: Colors.white,
+              ),
         ),
       ),
     );

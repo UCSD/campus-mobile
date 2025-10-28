@@ -21,12 +21,11 @@ class NewsDetailView extends StatelessWidget {
                 fit: BoxFit.cover,
                 image: data.image.isEmpty
                     ? const AssetImage('assets/images/UCSDMobile_banner.png')
-                as ImageProvider
+                        as ImageProvider
                     : NetworkImage(data.image),
               ),
             ),
           ),
-
           Container(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -42,23 +41,22 @@ class NewsDetailView extends StatelessWidget {
               ],
             ),
           ),
-
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: data.description.isNotEmpty
                 ? Text(
-              data.description,
-              style: const TextStyle(
-                fontSize: 16,
-                height: 1.4,
-                fontWeight: FontWeight.w400,
-              ),
-            )
+                    data.description,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      height: 1.4,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
                 : Container(),
           ),
-
           Container(
-            padding: const EdgeInsets.only(left: 15, top: 20, right: 248, bottom: 20),
+            padding: const EdgeInsets.only(
+                left: 15, top: 20, right: 248, bottom: 20),
             child: data.link.isNotEmpty
                 ? ContinueReadingButton(link: data.link)
                 : Container(),

@@ -14,19 +14,12 @@ class StudentIdPhotoModel {
   String studentId;
   String photoUrl;
 
-  StudentIdPhotoModel({
-    this.studentId = '',
-    this.photoUrl = ''
-  });
+  StudentIdPhotoModel({this.studentId = '', this.photoUrl = ''});
 
   factory StudentIdPhotoModel.fromJson(Map<String, dynamic> json) =>
       StudentIdPhotoModel(
-        studentId: json["studentId"],
-        photoUrl: json["photoUrl"]
-      );
+          studentId: json["studentId"], photoUrl: json["photoUrl"]);
 
-  Map<String, dynamic> toJson() => {
-        "studentId": studentId,
-        "photoUrl": photoUrl
-  };
+  Map<String, dynamic> toJson() =>
+      {"studentId": studentId, "photoUrl": photoUrl};
 }

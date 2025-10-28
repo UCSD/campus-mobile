@@ -19,11 +19,13 @@ class RoutePaths {
   static const String EventDetailView = 'events/event_detail_view';
   static const String LinksViewAll = 'links/links_list';
   static const String ClassScheduleViewAll = 'class/classList';
-  static const String ManageAvailabilityView = 'availability/manage_locations_view';
+  static const String ManageAvailabilityView =
+      'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
   static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
   static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
-  static const String DiningViewAllDiningOptions = 'dining/view_all_dining_options';
+  static const String DiningViewAllDiningOptions =
+      'dining/view_all_dining_options';
   static const String DiningOptionDetailView = 'dining/option_detail_view';
   static const String DiningPaymentFilterView = "dining/payment_filter_view";
   // static const String DiningNutritionView = 'dining/dining_nutrition_view';
