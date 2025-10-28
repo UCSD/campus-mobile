@@ -58,8 +58,8 @@ class FinalsCard extends StatelessWidget {
     }
   }
 
-  Widget buildFinalsCard(Map<String, List<SectionData>> finalsData, DateTime lastUpdated,
-      String? nextDayWithClasses, BuildContext context) {
+  Widget buildFinalsCard(Map<String, List<SectionData>> finalsData, DateTime lastUpdated, String? nextDayWithClasses,
+      BuildContext context) {
     try {
       var finalsCount = 0, i = 1;
       // Iterate through the map and count the number Finals
@@ -119,8 +119,8 @@ class FinalsCard extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.only(left: 12, top: 32, bottom: 48),
             child: Container(
-              child: Text(
-                  "Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
+              child:
+                  Text("Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
             ),
           ),
         ),
@@ -135,9 +135,7 @@ class FinalsCard extends StatelessWidget {
       style: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.w500,
-        color: Theme.of(context).brightness == Brightness.light
-            ? lightPrimaryColor
-            : darkPrimaryColor2,
+        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
       ),
     );
   }
@@ -150,9 +148,7 @@ class FinalsCard extends StatelessWidget {
           fontFamily: 'Refrigerator Deluxe',
           fontWeight: FontWeight.w900,
           letterSpacing: 1.1,
-          color: Theme.of(context).brightness == Brightness.light
-              ? lightPrimaryColor
-              : darkPrimaryColor2,
+          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
         ));
   }
 
@@ -162,9 +158,7 @@ class FinalsCard extends StatelessWidget {
       time ?? 'TBA', // TBA if time is null or empty
       style: TextStyle(
         fontSize: 16,
-        color: Theme.of(context).brightness == Brightness.light
-            ? descriptiveTextColorLight
-            : descriptiveTextColorDark,
+        color: Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -175,9 +169,8 @@ class FinalsCard extends StatelessWidget {
     return Text(title,
         style: TextStyle(
             fontSize: 18.0,
-            color: Theme.of(context).brightness == Brightness.light
-                ? descriptiveTextColorLight
-                : descriptiveTextColorDark,
+            color:
+                Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
             fontWeight: FontWeight.w400));
   }
 

@@ -16,7 +16,8 @@ class NoticesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+      margin: EdgeInsets.only(
+          top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
       elevation: 4,
       shadowColor: Colors.black,
       shape: RoundedRectangleBorder(

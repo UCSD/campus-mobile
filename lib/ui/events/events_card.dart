@@ -16,19 +16,24 @@ class EventsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
-      reload: () => Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard(cardId),
+      reload: () =>
+          Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
       isLoading: Provider.of<EventsDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<EventsDataProvider>(context).error,
-      child: () => buildEventsCardList(Provider.of<EventsDataProvider>(context).eventsModels),
+      child: () => buildEventsCardList(
+          Provider.of<EventsDataProvider>(context).eventsModels),
       actionButtons: [
         ActionButton(
             buttonText: "VIEW ALL EVENTS",
-            onPressed: () => Navigator.pushNamed(context, RoutePaths.EventsViewAll))
+            onPressed: () =>
+                Navigator.pushNamed(context, RoutePaths.EventsViewAll))
       ],
     );
   }
 
-  Widget buildEventsCardList(List<EventModel>? data) => EventsCardList(listSize: 6);
+  Widget buildEventsCardList(List<EventModel>? data) =>
+      EventsCardList(listSize: 6);
 }

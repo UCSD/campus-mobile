@@ -28,10 +28,10 @@ class Base64ImageWidget extends StatelessWidget {
     try {
       // Clean the base64 string (remove any whitespace)
       String cleanBase64 = base64String!.trim();
-
+      
       // Decode the base64 string
       Uint8List bytes = base64Decode(cleanBase64);
-
+      
       // Return the decoded image
       return Image.memory(
         bytes,

@@ -52,9 +52,7 @@ class EventDetailView extends StatelessWidget {
               Icon(
                 Icons.location_on_sharp,
                 size: 36,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? lightPrimaryColor
-                    : Colors.white,
+                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
               ),
               SizedBox(width: 5),
               Expanded(
@@ -64,9 +62,7 @@ class EventDetailView extends StatelessWidget {
                         looseUrl: true,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Theme.of(context).brightness == Brightness.light
-                              ? lightPrimaryColor
-                              : Colors.white,
+                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
                           fontWeight: FontWeight.w400,
                         ),
                       )
@@ -82,9 +78,7 @@ class EventDetailView extends StatelessWidget {
                         DateFormat.jm().format(data.endDate.toLocal()),
                 style: TextStyle(
                   fontSize: 16,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? lightPrimaryColor
-                      : Colors.white,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -108,9 +102,7 @@ class EventDetailView extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
           // "GO TO EVENT PAGE" Button
-          child: data.link != null && data.link!.isNotEmpty
-              ? GoToEventPageButton(link: data.link!)
-              : Container(),
+          child: data.link != null && data.link!.isNotEmpty ? GoToEventPageButton(link: data.link!) : Container(),
         )
       ],
     );
@@ -171,27 +163,21 @@ class EventDateContainer extends StatelessWidget {
         Text(date.split(' ')[0].toUpperCase(),
             style: TextStyle(
               fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : Colors.white,
+              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
               fontWeight: FontWeight.w400,
             )),
         // Day
         Text(date.split(' ')[1].toUpperCase(),
             style: TextStyle(
               fontSize: 20,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : Colors.white,
+              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
               fontWeight: FontWeight.w500,
             )),
         // Year
         Text(date.split(' ')[2].toUpperCase(),
             style: TextStyle(
               fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : Colors.white,
+              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
               fontWeight: FontWeight.w400,
             )),
       ],
@@ -217,9 +203,7 @@ class EventTitle extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : Colors.white,
+              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             ),
           ),
         ),
@@ -249,8 +233,7 @@ class GoToEventPageButton extends StatelessWidget {
             try {
               await launch(link, forceSafariVC: true);
             } catch (e) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('Could not open.')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.')));
             }
           },
           child: FittedBox(

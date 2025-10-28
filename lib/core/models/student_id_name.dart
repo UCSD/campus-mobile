@@ -3,8 +3,7 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final studentIdNameModel = studentIdNameModelFromJson(jsonString);
-StudentIdNameModel studentIdNameModelFromJson(String str) =>
-    StudentIdNameModel.fromJson(json.decode(str));
+StudentIdNameModel studentIdNameModelFromJson(String str) => StudentIdNameModel.fromJson(json.decode(str));
 
 String studentIdNameModelToJson(StudentIdNameModel data) => json.encode(data.toJson());
 

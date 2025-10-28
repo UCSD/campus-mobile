@@ -32,9 +32,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
         title: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Text("Parking Structures",
-              style: Theme.of(context).brightness == Brightness.dark
-                  ? textSubheaderDark
-                  : textSubheaderLight),
+              style: Theme.of(context).brightness == Brightness.dark ? textSubheaderDark : textSubheaderLight),
         ),
       ),
     );

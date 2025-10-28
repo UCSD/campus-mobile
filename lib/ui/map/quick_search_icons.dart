@@ -21,9 +21,11 @@ class QuickSearchIcons extends StatelessWidget {
               icon: Icons.local_parking,
               text: 'Parking',
               onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text =
-                    'Parking';
-                Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .searchBarController
+                    .text = 'Parking';
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .fetchLocations();
                 Navigator.pop(context);
               },
             ),
@@ -31,9 +33,11 @@ class QuickSearchIcons extends StatelessWidget {
               icon: Icons.coronavirus_outlined,
               text: 'COVID Tests',
               onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text =
-                    'COVID Test Kits';
-                Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .searchBarController
+                    .text = 'COVID Test Kits';
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .fetchLocations();
                 Navigator.pop(context);
               },
             ),
@@ -41,9 +45,11 @@ class QuickSearchIcons extends StatelessWidget {
               icon: Icons.local_drink,
               text: 'Hydration',
               onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text =
-                    'Hydration';
-                Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .searchBarController
+                    .text = 'Hydration';
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .fetchLocations();
                 Navigator.pop(context);
               },
             ),
@@ -51,9 +57,11 @@ class QuickSearchIcons extends StatelessWidget {
               icon: Icons.local_atm,
               text: 'ATM',
               onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text =
-                    'ATM';
-                Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .searchBarController
+                    .text = 'ATM';
+                Provider.of<MapsDataProvider>(context, listen: false)
+                    .fetchLocations();
                 Navigator.pop(context);
               },
             ),

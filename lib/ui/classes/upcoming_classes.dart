@@ -41,9 +41,7 @@ class UpcomingCoursesList extends StatelessWidget {
             'Today\'s Schedule',
             style: TextStyle(
               fontSize: 22.0,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : darkPrimaryColor2,
+              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -61,8 +59,7 @@ class UpcomingCoursesList extends StatelessWidget {
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.symmetric(horizontal: 0),
-      onTap: () =>
-          Provider.of<ClassScheduleDataProvider>(context, listen: false).selectCourse(index),
+      onTap: () => Provider.of<ClassScheduleDataProvider>(context, listen: false).selectCourse(index),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

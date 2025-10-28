@@ -75,8 +75,7 @@ class NetworkHelper {
 
   // method for implementing exponential backoff for silentLogin
   // mimicking existing code from React Native versions of campus-mobile
-  static Future<dynamic> authorizedPublicPost(
-      String url, Map<String, String> headers, dynamic body) async {
+  static Future<dynamic> authorizedPublicPost(String url, Map<String, String> headers, dynamic body) async {
     int retries = 0;
     int waitTime = 0;
     try {
@@ -110,8 +109,7 @@ class NetworkHelper {
     throw new Exception(ErrorConstants.silentLoginFailed);
   }
 
-  static Future<dynamic> authorizedPost(
-      String url, Map<String, String>? headers, dynamic body) async {
+  static Future<dynamic> authorizedPost(String url, Map<String, String>? headers, dynamic body) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -140,8 +138,7 @@ class NetworkHelper {
     }
   }
 
-  static Future<dynamic> authorizedPut(
-      String url, Map<String, String> headers, dynamic body) async {
+  static Future<dynamic> authorizedPut(String url, Map<String, String> headers, dynamic body) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -199,8 +196,7 @@ class NetworkHelper {
       "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
     };
     try {
-      var response =
-          await authorizedPost(tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
+      var response = await authorizedPost(tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
       headers["Authorization"] = "Bearer " + response["access_token"];
       return true;
     } catch (e) {

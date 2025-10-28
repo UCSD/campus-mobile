@@ -25,20 +25,17 @@ class EmployeeIdModel {
   dynamic classificationType;
 
   factory EmployeeIdModel.fromJson(Map<String, dynamic> json) => EmployeeIdModel(
-        employeePreferredDisplayName: json["Employee Preferred Display Name"] == null
-            ? ""
-            : json["Employee Preferred Display Name"],
+        employeePreferredDisplayName:
+            json["Employee Preferred Display Name"] == null ? "" : json["Employee Preferred Display Name"],
         employeeId: json["Employee ID"] == null ? "" : json["Employee ID"],
         department: json["Department"] == null ? "" : json["Department"],
         barcode: json["Barcode"] == null ? "" : json["Barcode"],
         photo: json["Photo"], // Keep null as null for proper base64 handling
-        classificationType:
-            json["Classification Type"] == null ? "Employee" : json["Classification Type"],
+        classificationType: json["Classification Type"] == null ? "Employee" : json["Classification Type"],
       );
 
   Map<String, dynamic> toJson() => {
-        "Employee Preferred Display Name":
-            employeePreferredDisplayName == null ? "" : employeePreferredDisplayName,
+        "Employee Preferred Display Name": employeePreferredDisplayName == null ? "" : employeePreferredDisplayName,
         "Employee ID": employeeId == null ? "" : employeeId,
         "Department": department == null ? "" : department,
         "Barcode": barcode == null ? "" : barcode,

@@ -20,8 +20,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   var _availabilityService = AvailabilityService();
 
   void fetchAvailability() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
 
     /// creating  new map ensures we remove all unsupported lots
@@ -42,8 +41,9 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
-          _locationViewState[curName] =
-              userDataProvider.userProfileModel.selectedOccuspaceLocations!.contains(curName);
+          _locationViewState[curName] = userDataProvider
+              .userProfileModel.selectedOccuspaceLocations!
+              .contains(curName);
         }
       }
 
@@ -53,15 +53,16 @@ class AvailabilityDataProvider extends ChangeNotifier {
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       reorderLocations(userDataProvider.userProfileModel.selectedOccuspaceLocations);
       _lastUpdated = DateTime.now();
-    } else {
-      _error = _availabilityService.error;
-    }
-    _isLoading = false;
-    notifyListeners();
+      } else {
+        _error = _availabilityService.error;
+      }
+      _isLoading = false;
+      notifyListeners();
   }
 
   List<AvailabilityModel?> makeOrderedList(List<String?>? order) {
-    if (order == null) return _availabilityModels.values.toList();
+    if (order == null)
+      return _availabilityModels.values.toList();
 
     /// create an empty list that will be returned
     List<AvailabilityModel?> orderedListOfLots = [];
@@ -111,7 +112,6 @@ class AvailabilityDataProvider extends ChangeNotifier {
   Map<String?, bool> get locationViewState => _locationViewState;
   List<AvailabilityModel?> get availabilityModels =>
       makeOrderedList(userDataProvider.userProfileModel.selectedOccuspaceLocations);
-
   /// get all locations
   List<String> locations() => _availabilityModels.values.map((model) => model.name).toList();
 }

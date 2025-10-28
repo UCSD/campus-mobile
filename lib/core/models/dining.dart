@@ -7,8 +7,7 @@ import 'package:campus_mobile_experimental/core/models/location.dart';
 List<DiningModel> diningModelFromJson(String str) =>
     List<DiningModel>.from(json.decode(str).map((x) => DiningModel.fromJson(x)));
 
-String diningModelToJson(List<DiningModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String diningModelToJson(List<DiningModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class DiningModel {
   String address;
@@ -65,9 +64,7 @@ class DiningModel {
         persistentMenu = json["persistentMenu"],
         paymentOptions = List<String>.from(json["paymentOptions"].map((x) => x)),
         paymentFilterTypes = json["paymentFilterTypes"],
-        images = json["images"] == null
-            ? null
-            : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+        images = json["images"] == null ? null : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
         coordinates = json["coords"] == null ? null : Coordinates.fromJson(json["coords"]),
         regularHours = RegularHours.fromJson(json["regularHours"]),
         specialHours = (json["specialHours"] == null || json["specialHours"].isEmpty)
@@ -129,10 +126,8 @@ class Image {
 
 enum Meals { BREAKFAST_LUNCH_DINNER, LUNCH_DINNER }
 
-final mealsValues = EnumValues({
-  "breakfast, lunch, dinner": Meals.BREAKFAST_LUNCH_DINNER,
-  "lunch, dinner": Meals.LUNCH_DINNER
-});
+final mealsValues =
+    EnumValues({"breakfast, lunch, dinner": Meals.BREAKFAST_LUNCH_DINNER, "lunch, dinner": Meals.LUNCH_DINNER});
 
 class RegularHours {
   // ALL CONFIRMED OPTIONAL
@@ -235,8 +230,7 @@ class PromoDates {
   });
 
   PromoDates.fromJson(Map<String, dynamic> json)
-      : startDate =
-            json["startDate"] is String ? int.tryParse(json["startDate"]) : json["startDate"],
+      : startDate = json["startDate"] is String ? int.tryParse(json["startDate"]) : json["startDate"],
         endDate = json["endDate"] is String ? int.tryParse(json["endDate"]) : json["endDate"];
 
   Map<String, dynamic> toJson() => {

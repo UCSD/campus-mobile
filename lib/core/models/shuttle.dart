@@ -2,14 +2,12 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 
-List<ShuttleModel>? shuttleModelFromJson(String str) =>
-    json.decode(str).map((x) => ShuttleModel.fromJson(x));
+List<ShuttleModel>? shuttleModelFromJson(String str) => json.decode(str).map((x) => ShuttleModel.fromJson(x));
 
 //    List<ShuttleModel>.from(
 //        json.decode(str).map((x) => ShuttleModel.fromJson(x)));
 
-String shuttleModelToJson(List<ShuttleModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String shuttleModelToJson(List<ShuttleModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ShuttleModel {
   int? displayOrder;

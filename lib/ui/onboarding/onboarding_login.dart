@@ -47,7 +47,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               body: _userDataProvider.isLoading
                   ? const Center(
                       child: const CircularProgressIndicator(
-                        valueColor: const AlwaysStoppedAnimation<Color>(darkAccentColor),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                            darkAccentColor),
                       ),
                     )
                   : SingleChildScrollView(
@@ -55,8 +56,10 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                         height: _screenHeight,
                         decoration: const BoxDecoration(
                           image: const DecorationImage(
-                            image: const AssetImage("assets/images/login-background.png"),
-                            fit: BoxFit.cover, // Ensure the image covers the entire screen
+                            image: const AssetImage(
+                                "assets/images/login-background.png"),
+                            fit: BoxFit
+                                .cover, // Ensure the image covers the entire screen
                           ),
                         ),
                         child: SafeArea(child: _buildLoginWidget()),
@@ -66,7 +69,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   Widget _buildLoginWidget() => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center, // Align items at the top
-          crossAxisAlignment: CrossAxisAlignment.center, // Center items horizontally
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // Center items horizontally
           children: <Widget>[
             const Spacer(flex: 3),
 
@@ -134,7 +138,9 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * ((1 - 0.74444444) / 2) + 6),
+                      left: MediaQuery.of(context).size.width *
+                              ((1 - 0.74444444) / 2) +
+                          6),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFFCD00), // Yellow Button
@@ -151,7 +157,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     ),
                     child: Semantics(
                       button: true,
-                      hint: 'press to login with your information inputted in above textfields',
+                      hint:
+                          'press to login with your information inputted in above textfields',
                       child: const Text(
                         'SIGN IN',
                         style: const TextStyle(
@@ -171,8 +178,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                                     _passwordTextFieldController.text)
                                 .then((isLoggedIn) async {
                               if (isLoggedIn) {
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, RoutePaths.OnboardingInitial, (_) => false);
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    RoutePaths.OnboardingInitial, (_) => false);
                               } else {
                                 showAlertDialog(context);
                               }
@@ -186,10 +193,13 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
 
                 Padding(
                   padding: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width * ((1 - 0.74444444) / 2) + 6),
+                      right: MediaQuery.of(context).size.width *
+                              ((1 - 0.74444444) / 2) +
+                          6),
                   child: GestureDetector(
                     child: Semantics(
-                      hint: 'press to be redirected to the UCSD Password reset page',
+                      hint:
+                          'press to be redirected to the UCSD Password reset page',
                       child: const Text(
                         'Forgot Password?',
                         style: const TextStyle(
@@ -233,7 +243,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             // Skip This Step
             GestureDetector(
               child: Semantics(
-                hint: 'press to skip the login process and use this app as a visitor',
+                hint:
+                    'press to skip the login process and use this app as a visitor',
                 child: const Text(
                   "SKIP THIS STEP",
                   style: const TextStyle(
@@ -258,12 +269,14 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
       );
 
   // TODO: change the font for the password field (it's a lighter gray than what is currently there)
-  static Widget _buildInputField(InputDecoration decoration, TextEditingController controller,
+  static Widget _buildInputField(
+          InputDecoration decoration, TextEditingController controller,
           {TextInputType? keyboardType, bool obscureText = false}) =>
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Container(
-            decoration: const BoxDecoration(color: Colors.white, boxShadow: const [
+            decoration:
+                const BoxDecoration(color: Colors.white, boxShadow: const [
               const BoxShadow(
                   color: Colors.black26,
                   blurRadius: 5,
@@ -276,7 +289,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   style: const TextStyle(
                       fontFamily: 'Brix Sans',
                       textBaseline: TextBaseline.alphabetic,
-                      color: const Color(0xFF182B49), // Fixed color format with full opacity
+                      color: const Color(
+                          0xFF182B49), // Fixed color format with full opacity
                       fontWeight: FontWeight.w400,
                       fontSize: 18.0,
                       height: 1.277, // line height: 23px

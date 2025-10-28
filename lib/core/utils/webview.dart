@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-void reloadWebView(String url, WebViewController controller) =>
-    controller.loadRequest(Uri.parse(url));
+void reloadWebView(String url, WebViewController controller) => controller.loadRequest(Uri.parse(url));
 
 void openLink(String url) async {
   try {

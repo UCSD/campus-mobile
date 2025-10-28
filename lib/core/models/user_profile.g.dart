@@ -52,7 +52,5 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UserProfileModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is UserProfileModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

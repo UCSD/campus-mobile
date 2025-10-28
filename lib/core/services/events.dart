@@ -24,8 +24,8 @@ class EventsService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await NetworkHelper.authorizedFetch(dotenv.get('EVENTS_ENDPOINT'), headers);
+      String _response = await NetworkHelper.authorizedFetch(
+          dotenv.get('EVENTS_ENDPOINT'), headers);
 
       /// parse data
       final data = eventModelFromJson(_response);

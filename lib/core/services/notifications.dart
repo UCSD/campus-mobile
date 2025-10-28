@@ -13,10 +13,11 @@ class NotificationService {
   late List<TopicsModel> _topicsModel = [];
 
   Future<bool> fetchTopics() async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
-      String? response = await NetworkHelper.fetchData(dotenv.get('NOTIFICATIONS_TOPICS_ENDPOINT'));
+      String? response = await NetworkHelper.fetchData(
+          dotenv.get('NOTIFICATIONS_TOPICS_ENDPOINT')
+      );
       if (response != null) {
         _topicsModel = topicsModelFromJson(response);
         return true;

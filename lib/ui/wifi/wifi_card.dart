@@ -126,9 +126,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Icon(
             Icons.wifi_sharp,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
             size: 38,
           ),
           SizedBox(width: 10),
@@ -163,9 +161,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                     setState(() {
                       cardState = TestStatus.running;
                     });
-                    _speedTestProvider
-                        .speedTest()
-                        .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
+                    _speedTestProvider.speedTest().timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
                   }
                 }),
             // REPORT ISSUE
@@ -225,8 +221,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                 style: TextStyle(color: Colors.grey),
               ),
               direction: Axis.horizontal,
-              value:
-                  (_speedTestProvider.percentDownloaded + _speedTestProvider.percentUploaded) / 2,
+              value: (_speedTestProvider.percentDownloaded + _speedTestProvider.percentUploaded) / 2,
               valueColor: AlwaysStoppedAnimation(lightPrimaryColor)),
         ),
       ],
@@ -283,9 +278,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.w700,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? lightPrimaryColor
-                          : darkPrimaryColor2,
+                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
                     ),
                   ))
             ],
@@ -318,9 +311,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.w700,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? lightPrimaryColor
-                          : darkPrimaryColor2,
+                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
                     ),
                   ))
             ],
@@ -342,9 +333,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                     cardState = TestStatus.running;
                     _speedTestProvider.resetSpeedTest();
                   });
-                  _speedTestProvider
-                      .speedTest()
-                      .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
+                  _speedTestProvider.speedTest().timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
                   // setState(() {
                   //   timedOut = false;
                   //   cardState = TestStatus.initial;
@@ -467,10 +456,8 @@ class ScalingUtility {
     _queryData = MediaQuery.of(context);
 
     /// Calculate blocks accounting for notches and home bar
-    horizontalSafeBlock =
-        (_queryData.size.width - (_queryData.padding.left + _queryData.padding.right)) / 100;
-    verticalSafeBlock =
-        (_queryData.size.height - (_queryData.padding.top + _queryData.padding.bottom)) / 100;
+    horizontalSafeBlock = (_queryData.size.width - (_queryData.padding.left + _queryData.padding.right)) / 100;
+    verticalSafeBlock = (_queryData.size.height - (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 

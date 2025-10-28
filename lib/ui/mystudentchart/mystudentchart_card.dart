@@ -13,7 +13,8 @@ class MyStudentChartCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard(cardId),
       reload: () => null,
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId]!,

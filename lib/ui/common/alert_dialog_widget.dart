@@ -65,7 +65,8 @@ class AlertDialogWidget extends StatelessWidget {
         contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 20),
         backgroundColor: errorAlertDialogLightTheme.colorScheme.surface,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: errorAlertDialogLightTheme.colorScheme.primary),
+          side:
+              BorderSide(color: errorAlertDialogLightTheme.colorScheme.primary),
           borderRadius: BorderRadius.all(Radius.circular(5.0)),
         ),
         title: Row(

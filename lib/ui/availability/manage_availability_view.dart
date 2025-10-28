@@ -25,7 +25,8 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
       header: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Text("Hold and drag to reorder",
-            textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall),
       ),
       children: createList(context),
       onReorder: _onReorder,
@@ -34,7 +35,8 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
 
   void _onReorder(int oldIndex, int newIndex) {
     final multiPager = RegExp(r' \((\d+)/(\d+)\)$');
-    List<AvailabilityModel?> newOrder = _availabilityDataProvider.availabilityModels;
+    List<AvailabilityModel?> newOrder =
+        _availabilityDataProvider.availabilityModels;
     List<AvailabilityModel?> extraPages = [];
 
     // -----Must remove pages after head of multi pagers and reinsert later to avoid reordering errors-----
@@ -63,12 +65,14 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
       RegExpMatch? match = multiPager.firstMatch(orderedLocationNames[index]!);
       if (match != null) {
         if (match.group(1) == "1") {
-          String baseName = orderedLocationNames[index]!.replaceRange(match.start, match.end, '');
+          String baseName = orderedLocationNames[index]!
+              .replaceRange(match.start, match.end, '');
           var curPageIndex = 2;
           var maxPageIndex = int.parse(match.group(2)!);
           while (curPageIndex <= maxPageIndex) {
             index++;
-            orderedLocationNames.insert(index, baseName + " ($curPageIndex/$maxPageIndex)");
+            orderedLocationNames.insert(
+                index, baseName + " ($curPageIndex/$maxPageIndex)");
             curPageIndex++;
           }
         } else {
@@ -84,11 +88,13 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     List<Widget> list = [];
     Set<String> existingKeys = {};
     final multiPager = RegExp(r' \(\d+/\d+\)$');
-    for (AvailabilityModel? model in _availabilityDataProvider.availabilityModels) {
+    for (AvailabilityModel? model
+        in _availabilityDataProvider.availabilityModels) {
       if (model != null) {
         var curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
-        if (match != null) curName = curName.replaceRange(match.start, match.end, '');
+        if (match != null)
+          curName = curName.replaceRange(match.start, match.end, '');
         if (existingKeys.contains(curName)) continue;
         existingKeys.add(curName);
         list.add(Card(
@@ -109,7 +115,8 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
             trailing: Transform.scale(
               scale: 0.9, // Adjust the scale as needed
               child: Switch.adaptive(
-                value: Provider.of<AvailabilityDataProvider>(context).locationViewState[curName]!,
+                value: Provider.of<AvailabilityDataProvider>(context)
+                    .locationViewState[curName]!,
                 // activeColor: Theme.of(context).buttonColor,
                 activeColor: toggleActiveColor,
                 thumbColor: WidgetStateProperty.resolveWith((states) {

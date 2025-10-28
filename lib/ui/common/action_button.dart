@@ -15,7 +15,8 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll<Color>(actionButtonBackgroundColor),
+        backgroundColor:
+            WidgetStatePropertyAll<Color>(actionButtonBackgroundColor),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),

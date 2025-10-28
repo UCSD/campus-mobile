@@ -9,11 +9,12 @@ class BarcodeService {
   String? _error;
 
   Future<bool> uploadResults(Map<String, String> headers, Map<String, dynamic> body) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
-      final response =
-          await NetworkHelper.authorizedPost(dotenv.get('BARCODE_SERVICE_ENDPOINT'), headers, body);
+      final response = await NetworkHelper.authorizedPost(
+          dotenv.get('BARCODE_SERVICE_ENDPOINT'),
+          headers, body
+      );
       if (response != null && validateUploadResults(body, response))
         return true;
       else

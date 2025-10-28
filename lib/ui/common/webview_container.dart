@@ -91,13 +91,11 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
               final newHeight = double.tryParse(message.message);
               if (newHeight != null && newHeight > 0) {
                 final validatedHeight = validateHeight(context, newHeight);
-                print(
-                    'WebView height: requested=${newHeight.toInt()}px, validated=${validatedHeight.toInt()}px');
+                print('WebView height: requested=${newHeight.toInt()}px, validated=${validatedHeight.toInt()}px');
                 setState(() {
                   _contentHeight = validatedHeight;
                   if (widget.onWidgetSizeChange != null) {
-                    widget.onWidgetSizeChange!(
-                        Size(MediaQuery.of(context).size.width, _contentHeight));
+                    widget.onWidgetSizeChange!(Size(MediaQuery.of(context).size.width, _contentHeight));
                   }
                 });
               }
@@ -119,8 +117,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
               // Perform heavy operations asynchronously to avoid blocking UI
               Future.microtask(() {
                 final mapsProvider = Provider.of<MapsDataProvider>(context, listen: false);
-                final navProvider =
-                    Provider.of<BottomNavigationBarProvider>(context, listen: false);
+                final navProvider = Provider.of<BottomNavigationBarProvider>(context, listen: false);
                 final appBarProvider = Provider.of<CustomAppBar>(context, listen: false);
 
                 mapsProvider.searchBarController.text = message.message;
@@ -192,8 +189,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
             width: 0.5,
           ),
         ),
-        color:
-            Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
+        color: Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -209,8 +205,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
             buildBody(context),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child:
-                  widget.actionButtons != null ? Row(children: widget.actionButtons!) : Container(),
+              child: widget.actionButtons != null ? Row(children: widget.actionButtons!) : Container(),
             ),
           ],
         ),

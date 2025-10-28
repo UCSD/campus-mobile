@@ -13,8 +13,7 @@ class ScannerMessageService {
   ScannerMessageModel _scannerMessageModel = ScannerMessageModel();
 
   Future<bool> fetchData(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
+    _error = null; _isLoading = true;
     try {
       /// fetch data
       String _response =

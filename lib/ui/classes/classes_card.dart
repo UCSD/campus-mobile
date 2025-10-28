@@ -46,8 +46,8 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildClassScheduleCard(BuildContext context, List<SectionData> courseData,
-      int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
+  Widget buildClassScheduleCard(BuildContext context, List<SectionData> courseData, int selectedCourse,
+      DateTime lastUpdated, String nextDayWithClasses) {
     try {
       final section = courseData[selectedCourse];
       return Padding(
@@ -67,9 +67,8 @@ class ClassScheduleCard extends StatelessWidget {
                         'Next Class',
                         style: TextStyle(
                           fontSize: 22.0,
-                          color: Theme.of(context).brightness == Brightness.light
-                              ? lightPrimaryColor
-                              : darkPrimaryColor2,
+                          color:
+                              Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -147,9 +146,7 @@ class ClassScheduleCard extends StatelessWidget {
             fontSize: 17.0,
             fontFamily: 'Refrigerator Deluxe',
             letterSpacing: 1.2,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
             fontWeight: FontWeight.w900));
   }
 
@@ -161,9 +158,8 @@ class ClassScheduleCard extends StatelessWidget {
         classType,
         style: TextStyle(
           fontSize: 17,
-          color: Theme.of(context).brightness == Brightness.light
-              ? descriptiveTextColorLight
-              : descriptiveTextColorDark,
+          color:
+              Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -178,9 +174,7 @@ class ClassScheduleCard extends StatelessWidget {
         children: <Widget>[
           Icon(
             Icons.access_time,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
             size: 34,
           ),
           SizedBox(width: 10),
@@ -201,9 +195,7 @@ class ClassScheduleCard extends StatelessWidget {
               Text((day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
                   style: TextStyle(
                       fontSize: 15,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? lightPrimaryColor
-                          : darkPrimaryColor2,
+                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
                       fontWeight: FontWeight.w700))
             ],
           ),
@@ -219,9 +211,7 @@ class ClassScheduleCard extends StatelessWidget {
         children: <Widget>[
           Icon(
             Icons.location_city,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
             size: 34,
           ),
           SizedBox(width: 10),
@@ -244,9 +234,7 @@ class ClassScheduleCard extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 15,
                     letterSpacing: 0.8,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? lightPrimaryColor
-                        : darkPrimaryColor2,
+                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
                     fontWeight: FontWeight.w700),
               ),
             ],
@@ -262,9 +250,7 @@ class ClassScheduleCard extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Icon(Icons.check_box_outlined,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : darkPrimaryColor2,
+              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
               size: 34),
           SizedBox(width: 10),
           Column(
@@ -285,9 +271,7 @@ class ClassScheduleCard extends StatelessWidget {
                 gradeEvaluation,
                 style: TextStyle(
                     fontSize: 16,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? lightPrimaryColor
-                        : darkPrimaryColor2,
+                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
                     fontWeight: FontWeight.w700),
               ),
             ],

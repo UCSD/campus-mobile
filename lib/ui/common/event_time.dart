@@ -59,8 +59,11 @@ class EventDateTime extends StatelessWidget {
 
       if (sameDay) {
         if (!unspecifiedTime) {
-          return Text(
-              startMonthDay + ', ' + startTime + ' - ' + endTime); // ex: Jan. 1, 8:00 AM - 12:00 PM
+          return Text(startMonthDay +
+              ', ' +
+              startTime +
+              ' - ' +
+              endTime); // ex: Jan. 1, 8:00 AM - 12:00 PM
         } else {
           return Text(startMonthDay); // ex: Jan. 1
         }
@@ -74,7 +77,8 @@ class EventDateTime extends StatelessWidget {
               ', ' +
               endTime); // ex: Jan. 1, 8:00 AM - Jan. 2, 12:00 PM
         } else {
-          return Text(startMonthDay + ' - ' + endMonthDay); // ex: Jan. 1 - Jan. 2
+          return Text(
+              startMonthDay + ' - ' + endMonthDay); // ex: Jan. 1 - Jan. 2
         }
       }
     } catch (e) {
@@ -97,6 +101,7 @@ class EventTileDateTime extends StatelessWidget {
       var startTime = DateFormat.jm().format(data.startDate.toLocal());
       var endTime = DateFormat.jm().format(data.endDate.toLocal());
 
+
       // Mark any special types of events
       var sameDay = (startMonthDayYear == endMonthDayYear);
       var unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
@@ -110,8 +115,8 @@ class EventTileDateTime extends StatelessWidget {
         // if not the same date, check if the same year
         var startYear = startMonthDayYear.substring(
             startMonthDayYear.indexOf(',') + 2, startMonthDayYear.length);
-        var endYear =
-            endMonthDayYear.substring(endMonthDayYear.indexOf(',') + 2, endMonthDayYear.length);
+        var endYear = endMonthDayYear.substring(
+            endMonthDayYear.indexOf(',') + 2, endMonthDayYear.length);
         if (startYear == endYear) {
           // if the same year, check if the same month
           var startMonth = startMonthDayYear.substring(0, startMonthDayYear.indexOf(' '));
@@ -119,7 +124,8 @@ class EventTileDateTime extends StatelessWidget {
           if (startMonth == endMonth) {
             // if different date in the same month and year
             var startDay = startMonthDayYear.substring(
-                startMonthDayYear.indexOf(' ') + 1, startMonthDayYear.indexOf(','));
+                startMonthDayYear.indexOf(' ') + 1,
+                startMonthDayYear.indexOf(','));
             var endDay = endMonthDayYear.substring(
                 endMonthDayYear.indexOf(' ') + 1, endMonthDayYear.indexOf(','));
             date = Text(

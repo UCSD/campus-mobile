@@ -38,33 +38,29 @@ class _ShuttleCardState extends State<ShuttleCard> {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
-      reload: () {
-        setState(() {
-          _currentPage = 0;
-        });
-        Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(true);
-      },
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard(cardId),
+     reload: () {
+            setState(() {_currentPage = 0;});
+            Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(true);
+          },
       isLoading: _shuttleCardDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _shuttleCardDataProvider.error,
-      child: () => buildShuttleCard(
-          _shuttleCardDataProvider.stopsToRender, _shuttleCardDataProvider.arrivalsToRender),
+      child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender,
+          _shuttleCardDataProvider.arrivalsToRender),
       actionButtons: [
         ActionLink(
             buttonText: 'MANAGE SHUTTLE STOPS',
             onPressed: () {
-              setState(() {
-                _currentPage = 0;
-              });
-              Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
-            }),
+                  setState(() {_currentPage = 0;});
+                  Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+                }),
       ],
     );
   }
 
-  Widget buildShuttleCard(
-      List<ShuttleStopModel> stopsToRender, Map<int, List<ArrivingShuttle>> arrivalsToRender) {
+  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender, Map<int, List<ArrivingShuttle>> arrivalsToRender) {
     List<Widget> renderList = [];
     try {
       // Initialize first shuttle display with arrival information
@@ -87,7 +83,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
       for (var i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
-            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.stopsToRender[i].id]));
+            arrivingShuttles: arrivalsToRender[
+                _shuttleCardDataProvider.stopsToRender[i].id]));
       }
       return Column(
         children: <Widget>[

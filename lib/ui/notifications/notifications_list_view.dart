@@ -80,13 +80,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         padding: EdgeInsets.only(top: 8),
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: itemBuilder!,
-        controller:
-            Provider.of<MessagesDataProvider>(context, listen: false).notificationScrollController,
+        controller: Provider.of<MessagesDataProvider>(context, listen: false).notificationScrollController,
         itemCount: itemCount,
         separatorBuilder: (BuildContext context, int index) => Divider(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? listTileDividerColorDark
-              : listTileDividerColorLight,
+          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
         ),
       ),
     );
@@ -125,8 +122,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       var query = uri.queryParameters['query']!;
       Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
-          NavigatorConstants.MapTab;
+      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
     }
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
@@ -135,8 +131,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         var query = uri!.queryParameters['query']!;
         Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
-            NavigatorConstants.MapTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
         _sub?.cancel();
       }
     });
@@ -171,9 +166,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(data.message.title,
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? headlineMediumDark2
-                        : headlineMediumLight2),
+                    style:
+                        Theme.of(context).brightness == Brightness.dark ? headlineMediumDark2 : headlineMediumLight2),
               ),
             ],
           ),

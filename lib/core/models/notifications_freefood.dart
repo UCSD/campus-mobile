@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-FreeFoodModel freeFoodModelFromJson(String str) => FreeFoodModel.fromJson(json.decode(str));
+FreeFoodModel freeFoodModelFromJson(String str) =>
+    FreeFoodModel.fromJson(json.decode(str));
 
 String freeFoodModelToJson(FreeFoodModel data) => json.encode(data.toJson());
 

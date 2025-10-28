@@ -3,8 +3,7 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final studentIdProfileModel = studentIdProfileModelFromJson(jsonString);
-StudentIdProfileModel studentIdProfileModelFromJson(String str) =>
-    StudentIdProfileModel.fromJson(json.decode(str));
+StudentIdProfileModel studentIdProfileModelFromJson(String str) => StudentIdProfileModel.fromJson(json.decode(str));
 
 String studentIdProfileModelToJson(StudentIdProfileModel data) => json.encode(data.toJson());
 
@@ -37,14 +36,11 @@ class StudentIdProfileModel {
   factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) => StudentIdProfileModel(
       studentPid: json["Student_PID"],
       termYear: json["Term_Year"],
-      studentLevelCurrent:
-          json["Student_Level_Current"] == null ? "" : json["Student_Level_Current"],
+      studentLevelCurrent: json["Student_Level_Current"] == null ? "" : json["Student_Level_Current"],
       collegeCurrent: json["College_Current"] == null ? "" : json["College_Current"],
-      ugPrimaryMajorCurrent:
-          json["UG_Primary_Major_Current"] == null ? "" : json["UG_Primary_Major_Current"],
-      graduatePrimaryMajorCurrent: json["Graduate_Primary_Major_Current"] == null
-          ? ""
-          : json["Graduate_Primary_Major_Current"],
+      ugPrimaryMajorCurrent: json["UG_Primary_Major_Current"] == null ? "" : json["UG_Primary_Major_Current"],
+      graduatePrimaryMajorCurrent:
+          json["Graduate_Primary_Major_Current"] == null ? "" : json["Graduate_Primary_Major_Current"],
       athleteCurrentCount: json["Athlete_Current_Count"],
       cardNumber: json["Card_Number"],
       barcode: json["Barcode"],

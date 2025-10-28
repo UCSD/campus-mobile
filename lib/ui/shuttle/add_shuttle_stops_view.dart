@@ -30,7 +30,8 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
             child: Container(
                 height: 32,
                 width: 32,
-                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
+                child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.secondary)),
           ),
         )),
       ]);

@@ -21,8 +21,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
   void initState() {
     super.initState();
     _foregroundPageController.addListener(() {
-      _backgroundPageController
-          .jumpTo(_foregroundPageController.page! * MediaQuery.of(context).size.width);
+      _backgroundPageController.jumpTo(_foregroundPageController.page! * MediaQuery.of(context).size.width);
     });
   }
 
@@ -31,8 +30,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
         dotsCount: 5,
         position: currentIndex.toDouble(),
         decorator: const DotsDecorator(
-            activeColor: const Color(0xFF00619B),
-            activeSize: const Size(16.0, 16.0) // Bigger active dot
+            activeColor: const Color(0xFF00619B), activeSize: const Size(16.0, 16.0) // Bigger active dot
             ),
       );
 
@@ -128,8 +126,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
         height: _screenHeight,
         heroImage: const AssetImage('assets/images/onboarding/hero-5-notifications.png'),
         heading: "YOU'RE ALL SET.                ",
-        description:
-            "We recommend turning on push notifications to receive campus and safety alerts.",
+        description: "We recommend turning on push notifications to receive campus and safety alerts.",
       );
 
   Widget buildGoToTheAppButton() => GestureDetector(

@@ -15,8 +15,7 @@ class EventsDataProvider extends ChangeNotifier {
   var _eventsService = EventsService();
 
   void fetchEvents() async {
-    _isLoading = true;
-    _error = null;
+    _isLoading = true; _error = null;
     notifyListeners();
     if (await _eventsService.fetchData()) {
       _eventsModels = _eventsService.eventsModels!;

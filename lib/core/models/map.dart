@@ -6,8 +6,7 @@ import 'dart:convert';
 List<MapSearchModel> mapSearchModelFromJson(String str) =>
     List<MapSearchModel>.from(json.decode(str).map((x) => MapSearchModel.fromJson(x)));
 
-String mapSearchModelToJson(List<MapSearchModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String mapSearchModelToJson(List<MapSearchModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class MapSearchModel {
   String? title;
