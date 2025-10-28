@@ -17,7 +17,9 @@ class EventDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider.of<EventsDataProvider>(context).isLoading
-        ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
+        ? Center(
+            child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary))
         : ContainerView(child: buildDetailView(context));
   }
 
@@ -52,7 +54,9 @@ class EventDetailView extends StatelessWidget {
               Icon(
                 Icons.location_on_sharp,
                 size: 36,
-                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? lightPrimaryColor
+                    : Colors.white,
               ),
               SizedBox(width: 5),
               Expanded(
@@ -62,7 +66,10 @@ class EventDetailView extends StatelessWidget {
                         looseUrl: true,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
                           fontWeight: FontWeight.w400,
                         ),
                       )
@@ -71,14 +78,17 @@ class EventDetailView extends StatelessWidget {
               SizedBox(width: 5),
               // Event Time
               Text(
-                data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
+                data.startDate.toLocal().hour == 0 &&
+                        data.endDate.toLocal().hour == 23
                     ? '    All day     '
                     : DateFormat.jm().format(data.startDate.toLocal()) +
                         ' - ' +
                         DateFormat.jm().format(data.endDate.toLocal()),
                 style: TextStyle(
                   fontSize: 16,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? lightPrimaryColor
+                      : Colors.white,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -94,7 +104,10 @@ class EventDetailView extends StatelessWidget {
                 data.description != null && data.description!.isNotEmpty
                     ? Text(
                         data.description!,
-                        style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
+                        style: TextStyle(
+                            fontSize: 16,
+                            height: 1.4,
+                            fontWeight: FontWeight.w400),
                       )
                     : Container(),
               ],
@@ -102,7 +115,9 @@ class EventDetailView extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
           // "GO TO EVENT PAGE" Button
-          child: data.link != null && data.link!.isNotEmpty ? GoToEventPageButton(link: data.link!) : Container(),
+          child: data.link != null && data.link!.isNotEmpty
+              ? GoToEventPageButton(link: data.link!)
+              : Container(),
         )
       ],
     );
@@ -141,7 +156,8 @@ class EventImage extends StatelessWidget {
         image: DecorationImage(
           fit: BoxFit.cover, // Ensure the image fills the container
           image: (imageUrl.isEmpty)
-              ? AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
+              ? AssetImage('assets/images/UCSDMobile_banner.png')
+                  as ImageProvider
               : NetworkImage(imageUrl),
         ),
       ),
@@ -163,21 +179,27 @@ class EventDateContainer extends StatelessWidget {
         Text(date.split(' ')[0].toUpperCase(),
             style: TextStyle(
               fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : Colors.white,
               fontWeight: FontWeight.w400,
             )),
         // Day
         Text(date.split(' ')[1].toUpperCase(),
             style: TextStyle(
               fontSize: 20,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : Colors.white,
               fontWeight: FontWeight.w500,
             )),
         // Year
         Text(date.split(' ')[2].toUpperCase(),
             style: TextStyle(
               fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : Colors.white,
               fontWeight: FontWeight.w400,
             )),
       ],
@@ -203,7 +225,9 @@ class EventTitle extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : Colors.white,
             ),
           ),
         ),
@@ -227,19 +251,22 @@ class GoToEventPageButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: actionButtonBackgroundColor,
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           onPressed: () async {
             try {
               await launch(link, forceSafariVC: true);
             } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.')));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('Could not open.')));
             }
           },
           child: FittedBox(
             child: Row(
               children: [
-                Text('GO TO EVENT PAGE', style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
+                Text('GO TO EVENT PAGE',
+                    style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
                 SizedBox(width: 4),
                 Icon(Icons.open_in_new, size: 18, color: lightPrimaryColor),
               ],

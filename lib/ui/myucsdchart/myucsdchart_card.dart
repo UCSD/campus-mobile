@@ -25,7 +25,8 @@ class MyUCSDChartCard extends StatelessWidget {
           buttonText: 'LOG IN TO MyUCSDChart',
           onPressed: () {
             try {
-              const url = 'https://myucsdchart.ucsd.edu/UCSD/Authentication/Login';
+              const url =
+                  'https://myucsdchart.ucsd.edu/UCSD/Authentication/Login';
               launchUrl(Uri.parse(url), mode: LaunchMode.inAppBrowserView);
             } catch (e) {
               // an error occurred, do nothing

@@ -57,18 +57,24 @@ class Maps extends StatelessWidget {
     if (initialLink != null && initialLink.contains("deeplinking.searchmap")) {
       var uri = Uri.dataFromString(initialLink);
       var query = uri.queryParameters['query']!;
-      Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
+      Provider.of<MapsDataProvider>(context, listen: false)
+          .searchBarController
+          .text = query;
       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+      Provider.of<BottomNavigationBarProvider>(context, listen: false)
+          .currentIndex = NavigatorConstants.MapTab;
     }
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
       String? link = uri?.toString();
       if (link != null && link.contains("deeplinking.searchmap")) {
         var query = uri!.queryParameters['query']!;
-        Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
+        Provider.of<MapsDataProvider>(context, listen: false)
+            .searchBarController
+            .text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false)
+            .currentIndex = NavigatorConstants.MapTab;
         _sub?.cancel();
       }
     });

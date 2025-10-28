@@ -3,9 +3,11 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final classScheduleModel = classScheduleModelFromJson(jsonString);
-ClassScheduleModel classScheduleModelFromJson(String str) => ClassScheduleModel.fromJson(json.decode(str));
+ClassScheduleModel classScheduleModelFromJson(String str) =>
+    ClassScheduleModel.fromJson(json.decode(str));
 
-String classScheduleModelToJson(ClassScheduleModel data) => json.encode(data.toJson());
+String classScheduleModelToJson(ClassScheduleModel data) =>
+    json.encode(data.toJson());
 
 class ClassScheduleModel {
   Metadata? metadata;
@@ -15,14 +17,22 @@ class ClassScheduleModel {
     this.metadata,
     this.data,
   });
-  factory ClassScheduleModel.fromJson(Map<String, dynamic> json) => ClassScheduleModel(
-        metadata: json["metadata"] == null ? null : Metadata.fromJson(json["metadata"]),
-        data: json["data"] == null ? null : List<ClassData>.from(json["data"].map((x) => ClassData.fromJson(x))),
+  factory ClassScheduleModel.fromJson(Map<String, dynamic> json) =>
+      ClassScheduleModel(
+        metadata: json["metadata"] == null
+            ? null
+            : Metadata.fromJson(json["metadata"]),
+        data: json["data"] == null
+            ? null
+            : List<ClassData>.from(
+                json["data"].map((x) => ClassData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "metadata": metadata == null ? null : metadata!.toJson(),
-        "data": data == null ? null : List<dynamic>.from(data!.map((x) => x.toJson())),
+        "data": data == null
+            ? null
+            : List<dynamic>.from(data!.map((x) => x.toJson())),
       };
 }
 
@@ -62,11 +72,14 @@ class ClassData {
         gradeOption: json["grade_option"] == null ? null : json["grade_option"],
         grade: json["grade"] == null ? null : json["grade"],
         courseTitle: json["course_title"] == null ? null : json["course_title"],
-        enrollmentStatus: json["enrollment_status"] == null ? null : json["enrollment_status"],
+        enrollmentStatus: json["enrollment_status"] == null
+            ? null
+            : json["enrollment_status"],
         repeatCode: json["repeat_code"] == null ? null : json["repeat_code"],
         sectionData: json["section_data"] == null
             ? null
-            : List<SectionData>.from(json["section_data"].map((x) => SectionData.fromJson(x))),
+            : List<SectionData>.from(
+                json["section_data"].map((x) => SectionData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -80,7 +93,9 @@ class ClassData {
         "course_title": courseTitle == null ? null : courseTitle,
         "enrollment_status": enrollmentStatus == null ? null : enrollmentStatus,
         "repeat_code": repeatCode == null ? null : repeatCode,
-        "section_data": sectionData == null ? null : List<dynamic>.from(sectionData!.map((x) => x.toJson())),
+        "section_data": sectionData == null
+            ? null
+            : List<dynamic>.from(sectionData!.map((x) => x.toJson())),
       };
 }
 

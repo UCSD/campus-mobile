@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 
 class ShuttleDisplay extends StatelessWidget {
-  ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles}) : super(key: key);
+  ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles})
+      : super(key: key);
 
   /// STATES
   final List<ArrivingShuttle>? arrivingShuttles;
@@ -21,7 +22,10 @@ class ShuttleDisplay extends StatelessWidget {
         height: 200.0,
         child: Center(
           child: Container(
-              height: 32, width: 32, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
+              height: 32,
+              width: 32,
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary)),
         ),
       );
     } else {
@@ -58,18 +62,23 @@ class ShuttleDisplay extends StatelessWidget {
           ),
           child: CircleAvatar(
             minRadius: 40,
-            backgroundColor:
-                HexColor(arrivingShuttles!.isEmpty ? noArrivalsFoundColor : arrivingShuttles![0].routeColor),
+            backgroundColor: HexColor(arrivingShuttles!.isEmpty
+                ? noArrivalsFoundColor
+                : arrivingShuttles![0].routeColor),
             foregroundColor: Colors.black,
             child: Builder(
               builder: (context) {
-                Color circleColor =
-                    HexColor(arrivingShuttles!.isEmpty ? noArrivalsFoundColor : arrivingShuttles![0].routeColor);
+                Color circleColor = HexColor(arrivingShuttles!.isEmpty
+                    ? noArrivalsFoundColor
+                    : arrivingShuttles![0].routeColor);
                 // Calculate luminance to determine the color of "?"
                 final double luminance = circleColor.computeLuminance();
-                final Color textColor = luminance > 0.5 ? Colors.black : Colors.white;
+                final Color textColor =
+                    luminance > 0.5 ? Colors.black : Colors.white;
                 return Text(
-                  arrivingShuttles!.isEmpty ? "?" : arrivingShuttles![0].routeName[0],
+                  arrivingShuttles!.isEmpty
+                      ? "?"
+                      : arrivingShuttles![0].routeName[0],
                   style: TextStyle(
                     fontSize: 50,
                     color: textColor,
@@ -80,13 +89,18 @@ class ShuttleDisplay extends StatelessWidget {
           ),
         ),
         SizedBox(width: 16),
-        Text("@", style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark),
+        Text("@",
+            style: Theme.of(context).brightness == Brightness.light
+                ? titleMediumLight
+                : titleMediumDark),
         SizedBox(width: 8),
         Expanded(
           child: Text(
             stop.name,
             textAlign: TextAlign.start,
-            style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
+            style: Theme.of(context).brightness == Brightness.light
+                ? titleMediumLight
+                : titleMediumDark,
             overflow: TextOverflow.visible, // optional, default wraps
             softWrap: true, // optional, default true
           ),
@@ -163,7 +177,9 @@ class ShuttleDisplay extends StatelessWidget {
     var minutesToArrival = arrivingShuttles![0].secondsToArrival ~/ 60;
     return Text(
       "$minutesToArrival minutes",
-      style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
+      style: Theme.of(context).brightness == Brightness.light
+          ? titleMediumLight
+          : titleMediumDark,
     );
   }
 
@@ -178,7 +194,9 @@ class ShuttleDisplay extends StatelessWidget {
           child: Text(
             "Next Arrivals",
             textAlign: TextAlign.left,
-            style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
+            style: Theme.of(context).brightness == Brightness.light
+                ? titleMediumLight
+                : titleMediumDark,
           ),
         ),
       ],
@@ -228,7 +246,9 @@ class ShuttleDisplay extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             "$minutesToArrival min",
-            style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
+            style: Theme.of(context).brightness == Brightness.light
+                ? titleMediumLight
+                : titleMediumDark,
           ),
         ),
       ],

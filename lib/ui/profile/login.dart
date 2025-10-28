@@ -202,29 +202,29 @@ class _LoginState extends State<Login> {
                     onPressed: _userDataProvider.isLoading
                         ? null
                         : () {
-                      _userDataProvider
-                          .manualLogin(_emailTextFieldController.text,
-                          _passwordTextFieldController.text)
-                          .then((isLoggedIn) {
-                        if (!isLoggedIn) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialogWidget(
-                                type: MessageTypeConstants.ERROR,
-                                icon: Icons.block_flipped,
-                                title: LoginConstants.loginFailedTitle,
-                                description:
-                                LoginConstants.loginFailedDesc,
-                                onClose: () {
-                                  Navigator.of(context).pop();
-                                },
-                              );
-                            },
-                          );
-                        }
-                      });
-                    },
+                            _userDataProvider
+                                .manualLogin(_emailTextFieldController.text,
+                                    _passwordTextFieldController.text)
+                                .then((isLoggedIn) {
+                              if (!isLoggedIn) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialogWidget(
+                                      type: MessageTypeConstants.ERROR,
+                                      icon: Icons.block_flipped,
+                                      title: LoginConstants.loginFailedTitle,
+                                      description:
+                                          LoginConstants.loginFailedDesc,
+                                      onClose: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                );
+                              }
+                            });
+                          },
                   ),
                 ),
               ),
@@ -292,15 +292,15 @@ class _LoginState extends State<Login> {
               textAlign: TextAlign.left,
               style: Theme.of(context).brightness == Brightness.dark
                   ? TextStyle(
-                  color: linkTextColorDark,
-                  fontFamily: 'Brix Sans',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18.0)
+                      color: linkTextColorDark,
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0)
                   : TextStyle(
-                  color: linkTextColorLight,
-                  fontFamily: 'Brix Sans',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18.0),
+                      color: linkTextColorLight,
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0),
             ),
             flex: 7,
           ),

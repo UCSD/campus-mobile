@@ -41,9 +41,11 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   }
 
   // Contains all the widgets that make up the Dining detail view.
-  List<Widget> buildDetailView(BuildContext context, prefix0.DiningModel diningModel) {
+  List<Widget> buildDetailView(
+      BuildContext context, prefix0.DiningModel diningModel) {
     // Get availability for all dining halls
-    List<AvailabilityModel?> availabilityModels = _availabilityDataProvider.availabilityModels
+    List<AvailabilityModel?> availabilityModels = _availabilityDataProvider
+        .availabilityModels
         .where((m) => m != null && m.name.contains("Dining Halls"))
         .toList();
     var busynessDiningHallModelOne = availabilityModels.firstWhere(
@@ -75,7 +77,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
                 )
               : Icon(Icons.restaurant,
                   size: 56,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? lightPrimaryColor
+                      : darkPrimaryColor2),
           SizedBox(width: 8),
           Flexible(
             child: Column(
@@ -106,25 +110,30 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       ),
       // Availability Bars if applicable (Canyon Vista, Club Med, Pines, 64 Degrees, Cafe Ventanas)
       if ((busynessDiningHallModelOne != null &&
-              busynessDiningHallModelOne.subLocations
-                  .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name))) ||
+              busynessDiningHallModelOne.subLocations.any((child) =>
+                  child.name.contains(diningModel.name) ||
+                  diningModel.name.contains(child.name))) ||
           (busynessDiningHallModelTwo != null &&
-              busynessDiningHallModelTwo.subLocations
-                  .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name))))
+              busynessDiningHallModelTwo.subLocations.any((child) =>
+                  child.name.contains(diningModel.name) ||
+                  diningModel.name.contains(child.name))))
         DiningBusynessBar(
           diningModel: diningModel,
           busynessDiningHallModel: (busynessDiningHallModelOne != null &&
-                  busynessDiningHallModelOne.subLocations
-                      .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name)))
+                  busynessDiningHallModelOne.subLocations.any((child) =>
+                      child.name.contains(diningModel.name) ||
+                      diningModel.name.contains(child.name)))
               ? busynessDiningHallModelOne
               : busynessDiningHallModelTwo!,
         ),
       // Vendor hours
       buildHours(context, diningModel),
       // Vendor Special Hours
-      if (diningModel.specialHours != null) buildSpecialHours(context, diningModel),
+      if (diningModel.specialHours != null)
+        buildSpecialHours(context, diningModel),
       // Specials Field
-      if (specials?.specialTitle?.isNotEmpty == true) buildSpecialsField(context, diningModel),
+      if (specials?.specialTitle?.isNotEmpty == true)
+        buildSpecialsField(context, diningModel),
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
       // Vendor Location
@@ -175,16 +184,21 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   Widget buildDivider(BuildContext context) {
     return Divider(
       height: 10,
-      color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? listTileDividerColorDark
+          : listTileDividerColorLight,
     );
   }
 
   ///////////// Special Hours Section /////////////
   Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model) {
     var specialHoursDuration = "";
-    if (model.specialHours?.specialHoursValidFrom != null && model.specialHours?.specialHoursValidTo != null) {
-      specialHoursDuration =
-          model.specialHours!.specialHoursValidFrom! + " to " + model.specialHours!.specialHoursValidTo! + "\n";
+    if (model.specialHours?.specialHoursValidFrom != null &&
+        model.specialHours?.specialHoursValidTo != null) {
+      specialHoursDuration = model.specialHours!.specialHoursValidFrom! +
+          " to " +
+          model.specialHours!.specialHoursValidTo! +
+          "\n";
     }
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -267,7 +281,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
 
 ///////////// Location Section /////////////
 Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
-  if (model.coordinates != null && model.coordinates!.lat != null && model.coordinates!.lon != null) {
+  if (model.coordinates != null &&
+      model.coordinates!.lat != null &&
+      model.coordinates!.lon != null) {
     return TextButton(
       child: Row(
         children: <Widget>[
@@ -275,7 +291,9 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
             'Get Directions',
             style: linkTextDark.copyWith(
               fontSize: 18.0,
-              color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? linkColorLight
+                  : linkColorDark,
             ),
           ),
           SizedBox(width: 6),
@@ -283,14 +301,21 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
             children: <Widget>[
               Icon(
                 Icons.directions_walk,
-                color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? linkColorLight
+                    : linkColorDark,
                 size: 32,
               ),
               model.distance != null
-                  ? Text(num.parse(model.distance!.toStringAsFixed(1)).toString() + ' mi',
+                  ? Text(
+                      num.parse(model.distance!.toStringAsFixed(1)).toString() +
+                          ' mi',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontSize: 18.0,
-                            color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? linkColorLight
+                                    : linkColorDark,
                           ))
                   : Text('--', style: TextStyle(color: linkColorLight)),
             ],
@@ -299,7 +324,8 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
       ),
       onPressed: () async {
         try {
-          await DirectionsHelper.openDirections(model.coordinates!.lat!, model.coordinates!.lon!);
+          await DirectionsHelper.openDirections(
+              model.coordinates!.lat!, model.coordinates!.lon!);
         } catch (e) {
           // an error occurred, do nothing
           debugPrint('Error opening directions: $e');
@@ -312,7 +338,8 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
   } else {
     return Padding(
         padding: const EdgeInsets.only(top: 12.0),
-        child: Text('Directions not available.', style: Theme.of(context).textTheme.bodySmall));
+        child: Text('Directions not available.',
+            style: Theme.of(context).textTheme.bodySmall));
   }
 }
 
@@ -367,7 +394,8 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
 }
 
 class HoursOfDay extends StatelessWidget {
-  const HoursOfDay({Key? key, required this.day, required this.model}) : super(key: key);
+  const HoursOfDay({Key? key, required this.day, required this.model})
+      : super(key: key);
   final int day;
   final prefix0.DiningModel model;
 
@@ -376,7 +404,9 @@ class HoursOfDay extends StatelessWidget {
     // Extract the hours for the given day from the model
     var result = extractDayHours(day, model);
     var theDay = result['day'];
-    var hoursText = (result['hours'] == "Invalid Date-Invalid Date") ? "Unknown Hours" : result['hours'];
+    var hoursText = (result['hours'] == "Invalid Date-Invalid Date")
+        ? "Unknown Hours"
+        : result['hours'];
     // Determine the hours' text style
     // final TextStyle hoursTextStyle = day == DateTime.now().weekday
     //     ? TextStyle(
@@ -389,7 +419,9 @@ class HoursOfDay extends StatelessWidget {
     final TextStyle hoursTextStyle = day == DateTime.now().weekday
         ? Theme.of(context).textTheme.bodySmall!.copyWith(
             fontWeight: FontWeight.w700,
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2)
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : darkPrimaryColor2)
         : Theme.of(context).textTheme.bodySmall!;
 
     // Check if this is the current day
@@ -426,7 +458,9 @@ class HoursOfDay extends StatelessWidget {
                       ? Theme.of(context).textTheme.bodySmall!.copyWith(
                           fontWeight: FontWeight.w700,
                           color:
-                              Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2)
+                              Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : darkPrimaryColor2)
                       : Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -458,38 +492,46 @@ Map<String, String> extractDayHours(int day, prefix0.DiningModel? model) {
   switch (day) {
     case 1:
       theDay = 'Monday';
-      theHours = model!.regularHours.mon == null ? 'Closed' : model.regularHours.mon;
+      theHours =
+          model!.regularHours.mon == null ? 'Closed' : model.regularHours.mon;
       break;
     case 2:
       theDay = 'Tuesday';
-      theHours = model!.regularHours.tue == null ? 'Closed' : model.regularHours.tue;
+      theHours =
+          model!.regularHours.tue == null ? 'Closed' : model.regularHours.tue;
       break;
     case 3:
       theDay = 'Wednesday';
-      theHours = model!.regularHours.wed == null ? 'Closed' : model.regularHours.wed;
+      theHours =
+          model!.regularHours.wed == null ? 'Closed' : model.regularHours.wed;
       break;
     case 4:
       theDay = 'Thursday';
-      theHours = model!.regularHours.thu == null ? 'Closed' : model.regularHours.thu;
+      theHours =
+          model!.regularHours.thu == null ? 'Closed' : model.regularHours.thu;
       break;
     case 5:
       theDay = 'Friday';
-      theHours = model!.regularHours.fri == null ? 'Closed' : model.regularHours.fri;
+      theHours =
+          model!.regularHours.fri == null ? 'Closed' : model.regularHours.fri;
       break;
     case 6:
       theDay = 'Saturday';
-      theHours = model!.regularHours.sat == null ? 'Closed' : model.regularHours.sat;
+      theHours =
+          model!.regularHours.sat == null ? 'Closed' : model.regularHours.sat;
       break;
     case 7:
       theDay = 'Sunday';
-      theHours = model!.regularHours.sun == null ? 'Closed' : model.regularHours.sun;
+      theHours =
+          model!.regularHours.sun == null ? 'Closed' : model.regularHours.sun;
       break;
   }
 
   /*As of 05/05/2020, API may return 'Closed-Closed' as a value. If it does, correct it to look right.*/
   if (theHours == 'Closed-Closed') theHours = 'Closed';
   // Determine the hours' text
-  final String hoursText = (theHours != null && theHours.contains('Closed')) || theHours == 'Open 24/7'
+  final String hoursText = (theHours != null && theHours.contains('Closed')) ||
+          theHours == 'Open 24/7'
       ? theHours!
       : (formattedTimeRange(theHours) ?? theHours!);
 
@@ -546,7 +588,8 @@ class GreenDot extends StatelessWidget {
         }
 
         // Determine if current time is within the range
-        if (currentTimeInMinutes >= startTime && currentTimeInMinutes < adjustedEndTime) {
+        if (currentTimeInMinutes >= startTime &&
+            currentTimeInMinutes < adjustedEndTime) {
           return Colors.green;
         } else {
           return Colors.red;

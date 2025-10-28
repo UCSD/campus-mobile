@@ -247,7 +247,7 @@ class DiningList extends StatelessWidget {
       dining_model.DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        foregroundColor: linkColorLight, 
+        foregroundColor: linkColorLight,
       ),
       onPressed: () async {
         try {

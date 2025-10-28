@@ -20,7 +20,8 @@ class StudentIdService {
 
   //Removed term (not used)
   Future<bool> fetchStudentIdName(Map<String, String> headers) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
@@ -39,7 +40,8 @@ class StudentIdService {
 
   // Removed term (not used)
   Future<bool> fetchStudentIdPhoto(Map<String, String> headers) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
@@ -58,7 +60,8 @@ class StudentIdService {
 
   /// Removed term (not used)
   Future<bool> fetchStudentIdProfile(Map<String, String> headers) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(

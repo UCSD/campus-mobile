@@ -3,10 +3,11 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final parkingModel = parkingModelFromJson(jsonString);
-List<ParkingModel> parkingModelFromJson(String str) =>
-    List<ParkingModel>.from(json.decode(str).map((x) => ParkingModel.fromJson(x)));
+List<ParkingModel> parkingModelFromJson(String str) => List<ParkingModel>.from(
+    json.decode(str).map((x) => ParkingModel.fromJson(x)));
 
-String parkingModelToJson(List<ParkingModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String parkingModelToJson(List<ParkingModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ParkingModel {
   String neighborhood;
@@ -41,8 +42,11 @@ class ParkingModel {
         locationContext = json["LocationContext"],
         locationProvider = json["LocationProvider"],
         availability = json["Availability"] as Map<String, dynamic>,
-        lastUpdated = json["lastUpdated"] == null ? null : DateTime.parse(json["LastUpdated"]),
-        availabilityType = json["AvailabilityType"] == null ? null : json["AvailabilityType"];
+        lastUpdated = json["lastUpdated"] == null
+            ? null
+            : DateTime.parse(json["LastUpdated"]),
+        availabilityType =
+            json["AvailabilityType"] == null ? null : json["AvailabilityType"];
 
   Map<String, dynamic> toJson() => {
         "Neighborhood": neighborhood,

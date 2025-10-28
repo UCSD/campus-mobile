@@ -99,7 +99,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                   flex: 4,
                   child: Base64ImageWidget(
                     base64String: employeeIdModel!.photo,
-                    placeholderAssetPath: 'assets/images/staff_id_placeholder.png',
+                    placeholderAssetPath:
+                        'assets/images/staff_id_placeholder.png',
                     fit: BoxFit.fill,
                   ),
                 ),

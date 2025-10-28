@@ -45,7 +45,8 @@ class WebViewContainer extends StatefulWidget {
   _WebViewContainerState createState() => _WebViewContainerState();
 }
 
-class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepAliveClientMixin {
+class _WebViewContainerState extends State<WebViewContainer>
+    with AutomaticKeepAliveClientMixin {
   /// STATES
   bool active = false;
   double _contentHeight = cardContentMinHeight;
@@ -67,7 +68,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
   @override
   void initState() {
     super.initState();
-    hide = () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(widget.cardId);
+    hide = () => Provider.of<CardsDataProvider>(context, listen: false)
+        .toggleCard(widget.cardId);
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       //open link
@@ -91,11 +93,13 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
               final newHeight = double.tryParse(message.message);
               if (newHeight != null && newHeight > 0) {
                 final validatedHeight = validateHeight(context, newHeight);
-                print('WebView height: requested=${newHeight.toInt()}px, validated=${validatedHeight.toInt()}px');
+                print(
+                    'WebView height: requested=${newHeight.toInt()}px, validated=${validatedHeight.toInt()}px');
                 setState(() {
                   _contentHeight = validatedHeight;
                   if (widget.onWidgetSizeChange != null) {
-                    widget.onWidgetSizeChange!(Size(MediaQuery.of(context).size.width, _contentHeight));
+                    widget.onWidgetSizeChange!(Size(
+                        MediaQuery.of(context).size.width, _contentHeight));
                   }
                 });
               }
@@ -116,9 +120,13 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
               // Check if widget is still mounted
               // Perform heavy operations asynchronously to avoid blocking UI
               Future.microtask(() {
-                final mapsProvider = Provider.of<MapsDataProvider>(context, listen: false);
-                final navProvider = Provider.of<BottomNavigationBarProvider>(context, listen: false);
-                final appBarProvider = Provider.of<CustomAppBar>(context, listen: false);
+                final mapsProvider =
+                    Provider.of<MapsDataProvider>(context, listen: false);
+                final navProvider = Provider.of<BottomNavigationBarProvider>(
+                    context,
+                    listen: false);
+                final appBarProvider =
+                    Provider.of<CustomAppBar>(context, listen: false);
 
                 mapsProvider.searchBarController.text = message.message;
                 mapsProvider.fetchLocations();
@@ -133,7 +141,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
       ..addJavaScriptChannel(
         'RefreshToken',
         onMessageReceived: (JavaScriptMessage message) async {
-          if (!Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
+          if (!Provider.of<UserDataProvider>(context, listen: false)
+              .isLoggedIn) {
             if (await _userDataProvider.silentLogin()) {
               _webViewController.reload();
             }
@@ -178,7 +187,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
 
     if (active) {
       return Card(
-        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+        margin: EdgeInsets.only(
+            top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         elevation: 4,
         shadowColor: Colors.black,
         semanticContainer: false,
@@ -189,12 +199,15 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
             width: 0.5,
           ),
         ),
-        color: Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? darkPrimaryBgColor
+            : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
-              contentPadding: EdgeInsets.only(top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
+              contentPadding: EdgeInsets.only(
+                  top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
                 widget.titleText,
@@ -205,7 +218,9 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
             buildBody(context),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: widget.actionButtons != null ? Row(children: widget.actionButtons!) : Container(),
+              child: widget.actionButtons != null
+                  ? Row(children: widget.actionButtons!)
+                  : Container(),
             ),
           ],
         ),
@@ -271,7 +286,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
         offset: Offset(6, -3),
         child: Icon(Icons.more_vert, color: dotsUnselectedColor),
       ),
-      onChanged: (String? selectedMenuItem) => onMenuItemPressed(selectedMenuItem),
+      onChanged: (String? selectedMenuItem) =>
+          onMenuItemPressed(selectedMenuItem),
     );
   }
 

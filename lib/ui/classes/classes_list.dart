@@ -20,20 +20,32 @@ class ClassList extends StatelessWidget {
     Provider.of<ClassScheduleDataProvider>(context)
         .enrolledClasses
         .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
-    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses.keys.forEach(
+    Provider.of<ClassScheduleDataProvider>(context)
+        .enrolledClasses
+        .keys
+        .forEach(
       (key) {
-        if (Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.isNotEmpty) {
+        if (Provider.of<ClassScheduleDataProvider>(context)
+            .enrolledClasses[key]!
+            .isNotEmpty) {
           list.add(SliverStickyHeader(
             header: buildWeekDayHeader(context, key),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 if (key == 'MI') {
                   return buildMidterm(
-                      Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index));
+                      Provider.of<ClassScheduleDataProvider>(context)
+                          .enrolledClasses[key]!
+                          .elementAt(index));
                 }
                 return buildClass(
-                    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index));
-              }, childCount: Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.length),
+                    Provider.of<ClassScheduleDataProvider>(context)
+                        .enrolledClasses[key]!
+                        .elementAt(index));
+              },
+                  childCount: Provider.of<ClassScheduleDataProvider>(context)
+                      .enrolledClasses[key]!
+                      .length),
             ),
           ));
         }
@@ -66,7 +78,9 @@ class ClassList extends StatelessWidget {
   Widget buildWeekDayHeader(BuildContext context, String weekday) {
     weekday = abbrevToFullWeekday(weekday);
     return Container(
-      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : descriptiveTextColorLight,
+      color: Theme.of(context).brightness == Brightness.light
+          ? lightPrimaryColor
+          : descriptiveTextColorLight,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Text(
@@ -89,13 +103,15 @@ class ClassList extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     sectionData.subjectCode! + ' ' + sectionData.courseCode!,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
                   Text(
                     sectionData.courseTitle!,
                     style: TextStyle(fontSize: 17.0),
                   ),
-                  Text(sectionData.instructorName!, style: TextStyle(fontSize: 17.0)),
+                  Text(sectionData.instructorName!,
+                      style: TextStyle(fontSize: 17.0)),
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Row(children: [
@@ -147,7 +163,8 @@ class ClassList extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     sectionData.subjectCode! + ' ' + sectionData.courseCode!,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
                   Text(
                     sectionData.courseTitle!,
@@ -158,7 +175,10 @@ class ClassList extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Row(children: [
-                      Text(abbrevToFullWeekday(sectionData.days) + ", " + formatDate(sectionData.date)! + ' from '),
+                      Text(abbrevToFullWeekday(sectionData.days) +
+                          ", " +
+                          formatDate(sectionData.date)! +
+                          ' from '),
                       TimeRangeWidget(
                         time: sectionData.time!,
                       )

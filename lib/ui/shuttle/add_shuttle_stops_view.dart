@@ -44,7 +44,8 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
     }
   }
 
-  Widget buildAllLocationsList(BuildContext context) => ListView(children: createList(context));
+  Widget buildAllLocationsList(BuildContext context) =>
+      ListView(children: createList(context));
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];

@@ -16,18 +16,22 @@ class CardsService {
   late Map<String, CardsModel> _cardsModel;
 
   Future<bool> fetchCards(String? ucsdAffiliation) async {
-    _error = null; _isLoading = true;
+    _error = null;
+    _isLoading = true;
     if (ucsdAffiliation == null) ucsdAffiliation = "";
 
     /// API Manager Service
     try {
-      String cardListEndpoint = dotenv.get('CARD_LIST_ENDPOINT') + ucsdAffiliation;
-      String _response = await NetworkHelper.authorizedFetch(cardListEndpoint, headers);
+      String cardListEndpoint =
+          dotenv.get('CARD_LIST_ENDPOINT') + ucsdAffiliation;
+      String _response =
+          await NetworkHelper.authorizedFetch(cardListEndpoint, headers);
       _cardsModel = cardsModelFromJson(_response);
       return true;
     } catch (e) {
       if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) return await fetchCards(ucsdAffiliation);
+        if (await NetworkHelper.getNewToken(headers))
+          return await fetchCards(ucsdAffiliation);
       }
       _error = e.toString();
       return false;

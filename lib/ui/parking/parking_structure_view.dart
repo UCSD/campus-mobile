@@ -23,7 +23,8 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
   }
 
   Widget structureList(BuildContext context) {
-    List<String> structures = Provider.of<ParkingDataProvider>(context).getStructures();
+    List<String> structures =
+        Provider.of<ParkingDataProvider>(context).getStructures();
 
     List<Widget> listTiles = [];
     listTiles.add(
@@ -32,7 +33,9 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
         title: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Text("Parking Structures",
-              style: Theme.of(context).brightness == Brightness.dark ? textSubheaderDark : textSubheaderLight),
+              style: Theme.of(context).brightness == Brightness.dark
+                  ? textSubheaderDark
+                  : textSubheaderLight),
         ),
       ),
     );
@@ -43,7 +46,8 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
     });
 
     for (var structureName in structures) {
-      bool structureState = parkingDataProvider.parkingViewState[structureName]!;
+      bool structureState =
+          parkingDataProvider.parkingViewState[structureName]!;
       listTiles.add(
         ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),

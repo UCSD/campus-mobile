@@ -14,10 +14,14 @@ class Messages {
   Messages({required this.messages, this.next});
 
   Messages.fromJson(Map<String, dynamic> json)
-      : messages = List<MessageElement>.from(json["messages"].map((x) => MessageElement.fromJson(x))),
+      : messages = List<MessageElement>.from(
+            json["messages"].map((x) => MessageElement.fromJson(x))),
         next = json["next"];
 
-  Map<String, dynamic> toJson() => {"messages": List<dynamic>.from(messages.map((x) => x.toJson())), "next": next};
+  Map<String, dynamic> toJson() => {
+        "messages": List<dynamic>.from(messages.map((x) => x.toJson())),
+        "next": next
+      };
 }
 
 class MessageElement {
@@ -59,9 +63,14 @@ class Audience {
   List<String>? topics; // this is a direct message if it's null
 
   Audience.fromJson(Map<String, dynamic> json)
-      : topics = json["topics"] != null ? List<String>.from(json["topics"].map((x) => x)) : null;
+      : topics = json["topics"] != null
+            ? List<String>.from(json["topics"].map((x) => x))
+            : null;
 
-  Map<String, dynamic> toJson() => {"topics": topics != null ? List<dynamic>.from(topics!.map((x) => x)) : null};
+  Map<String, dynamic> toJson() => {
+        "topics":
+            topics != null ? List<dynamic>.from(topics!.map((x) => x)) : null
+      };
 }
 
 class Message {

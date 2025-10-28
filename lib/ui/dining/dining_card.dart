@@ -26,19 +26,21 @@ class DiningCard extends StatelessWidget {
           Provider.of<DiningDataProvider>(context).diningModels),
       actionButtons: [
         ActionButton(
-           buttonText: 'VIEW ALL DINING OPTIONS',
-           onPressed: () {
+            buttonText: 'VIEW ALL DINING OPTIONS',
+            onPressed: () {
               // Only navigate if not loading and no error
-              final provider = Provider.of<DiningDataProvider>(context, listen: false);
+              final provider =
+                  Provider.of<DiningDataProvider>(context, listen: false);
               if (!provider.isLoading && provider.error == null) {
-                Navigator.pushNamed(context, RoutePaths.DiningViewAllDiningOptions);
+                Navigator.pushNamed(
+                    context, RoutePaths.DiningViewAllDiningOptions);
               }
             })
       ],
     );
   }
 
- Widget buildDiningCard(List<DiningModel> data) {
+  Widget buildDiningCard(List<DiningModel> data) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
       child: DiningList(listSize: data.length >= 3 ? 3 : data.length),

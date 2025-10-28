@@ -40,10 +40,13 @@ class _ShuttleCardState extends State<ShuttleCard> {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),
-     reload: () {
-            setState(() {_currentPage = 0;});
-            Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(true);
-          },
+      reload: () {
+        setState(() {
+          _currentPage = 0;
+        });
+        Provider.of<ShuttleDataProvider>(context, listen: false)
+            .fetchStops(true);
+      },
       isLoading: _shuttleCardDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _shuttleCardDataProvider.error,
@@ -53,14 +56,17 @@ class _ShuttleCardState extends State<ShuttleCard> {
         ActionLink(
             buttonText: 'MANAGE SHUTTLE STOPS',
             onPressed: () {
-                  setState(() {_currentPage = 0;});
-                  Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
-                }),
+              setState(() {
+                _currentPage = 0;
+              });
+              Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+            }),
       ],
     );
   }
 
-  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender, Map<int, List<ArrivingShuttle>> arrivalsToRender) {
+  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
+      Map<int, List<ArrivingShuttle>> arrivalsToRender) {
     List<Widget> renderList = [];
     try {
       // Initialize first shuttle display with arrival information

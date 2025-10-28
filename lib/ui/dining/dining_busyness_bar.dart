@@ -37,8 +37,9 @@ class DiningBusynessBar extends StatelessWidget {
 
     // Only display the subLocation where subLocation.name == diningModel.name
     final matchingSubLocation = busynessDiningHallModel.subLocations
-        .where(
-            (subLocation) => diningModel.name.contains(subLocation.name) || subLocation.name.contains(diningModel.name))
+        .where((subLocation) =>
+            diningModel.name.contains(subLocation.name) ||
+            subLocation.name.contains(diningModel.name))
         .toList();
 
     if (matchingSubLocation.isEmpty) {
@@ -58,7 +59,9 @@ class DiningBusynessBar extends StatelessWidget {
         children: [
           Text(
             '${(100 * percentAvailability(subLocation)).toInt()}% Busy',
-            style: Theme.of(context).brightness == Brightness.light ? textSmallMoreInfoLight : textSmallMoreInfoDark,
+            style: Theme.of(context).brightness == Brightness.light
+                ? textSmallMoreInfoLight
+                : textSmallMoreInfoDark,
           ),
           SizedBox(width: 12),
           Expanded(
@@ -67,8 +70,9 @@ class DiningBusynessBar extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(BORDER_RADIUS),
                 child: LinearProgressIndicator(
-                  value:
-                      (percentAvailability(subLocation) <= 0.01) ? 0.01 : percentAvailability(subLocation).toDouble(),
+                  value: (percentAvailability(subLocation) <= 0.01)
+                      ? 0.01
+                      : percentAvailability(subLocation).toDouble(),
                   backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
                   valueColor: AlwaysStoppedAnimation<Color>(
                     setIndicatorColor(percentAvailability(subLocation)),
@@ -88,7 +92,9 @@ class DiningBusynessBar extends StatelessWidget {
         children: ListTile.divideTiles(
           tiles: locations,
           context: context,
-          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? listTileDividerColorDark
+              : listTileDividerColorLight,
         ).toList(),
       ),
     );

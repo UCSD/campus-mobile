@@ -47,7 +47,10 @@ class SpeedTestModel {
       this.uploadSpeed});
 
   factory SpeedTestModel.fromJson(
-      WifiInfo? wifiInfo, Map<String, dynamic>? downloadJson, Map<String, dynamic>? uploadJson, bool isUCSDWifi) {
+      WifiInfo? wifiInfo,
+      Map<String, dynamic>? downloadJson,
+      Map<String, dynamic>? uploadJson,
+      bool isUCSDWifi) {
     if (wifiInfo == null) {
       return SpeedTestModel(isUCSDWifi: false);
     }
@@ -61,20 +64,26 @@ class SpeedTestModel {
         ipAddress: wifiInfo.ipAddress == null ? "" : wifiInfo.ipAddress,
         macAddress: wifiInfo.macAddress == null ? "" : wifiInfo.macAddress,
         linkSpeed: wifiInfo.linkSpeed == null ? "" : wifiInfo.linkSpeed,
-        signalStrength: wifiInfo.signalStrength == null ? "" : wifiInfo.signalStrength,
+        signalStrength:
+            wifiInfo.signalStrength == null ? "" : wifiInfo.signalStrength,
         frequency: wifiInfo.frequency == null ? "" : wifiInfo.frequency,
         networkID: wifiInfo.networkId == null ? "" : wifiInfo.networkId,
-        isHiddenSSID: wifiInfo.isHiddenSSID == null ? "" : wifiInfo.isHiddenSSID,
+        isHiddenSSID:
+            wifiInfo.isHiddenSSID == null ? "" : wifiInfo.isHiddenSSID,
         routerIP: wifiInfo.routerIp == null ? "" : wifiInfo.routerIp,
         channel: wifiInfo.channel == null ? "" : wifiInfo.channel,
         latitude: 0.0,
         longitude: 0.0,
-        timeStamp: DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch).toString(),
+        timeStamp: DateTime.fromMillisecondsSinceEpoch(
+                DateTime.now().millisecondsSinceEpoch)
+            .toString(),
         downloadSpeed: 0.0,
         uploadSpeed: 0.0);
   }
 }
 
-SpeedTestModel speedTestModelFromJson(WifiInfo? wifiInfo, String downloadUrl, String uploadUrl, bool isUCSDWifi) {
-  return SpeedTestModel.fromJson(wifiInfo, json.decode(downloadUrl), json.decode(uploadUrl), isUCSDWifi);
+SpeedTestModel speedTestModelFromJson(
+    WifiInfo? wifiInfo, String downloadUrl, String uploadUrl, bool isUCSDWifi) {
+  return SpeedTestModel.fromJson(
+      wifiInfo, json.decode(downloadUrl), json.decode(uploadUrl), isUCSDWifi);
 }

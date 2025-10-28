@@ -143,7 +143,10 @@ class NewsList extends StatelessWidget {
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16.0, height: 1.42),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(fontSize: 16.0, height: 1.42),
                     ),
                   ],
                 ),
