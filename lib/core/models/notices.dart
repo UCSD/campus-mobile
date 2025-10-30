@@ -10,8 +10,7 @@ List<NoticesModel> noticesModelFromJson(String str) => List<NoticesModel>.from(
 String noticesModelToJson(List<NoticesModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class NoticesModel
-{
+class NoticesModel {
   String title;
   String imageUrl;
   String link;

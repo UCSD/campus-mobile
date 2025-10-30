@@ -24,7 +24,6 @@ class LocationDataProvider extends ChangeNotifier {
   }
 
   _init() async {
-
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {

@@ -23,40 +23,40 @@ class StudentIdProfileModel {
   String classificationType;
   int issueNumber;
 
-  StudentIdProfileModel({
-    this.studentPid = '',
-    this.termYear = '',
-    this.studentLevelCurrent = '',
-    this.collegeCurrent = '',
-    this.ugPrimaryMajorCurrent = '',
-    this.graduatePrimaryMajorCurrent = '',
-    this.athleteCurrentCount = 0,
-    this.cardNumber = '',
-    this.barcode = '',
-    this.classificationType = '',
-    this.issueNumber = 0
-  });
+  StudentIdProfileModel(
+      {this.studentPid = '',
+      this.termYear = '',
+      this.studentLevelCurrent = '',
+      this.collegeCurrent = '',
+      this.ugPrimaryMajorCurrent = '',
+      this.graduatePrimaryMajorCurrent = '',
+      this.athleteCurrentCount = 0,
+      this.cardNumber = '',
+      this.barcode = '',
+      this.classificationType = '',
+      this.issueNumber = 0});
 
   factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) =>
       StudentIdProfileModel(
-        studentPid: json["Student_PID"],
-        termYear: json["Term_Year"],
-        studentLevelCurrent: json["Student_Level_Current"] == null ? "" : json["Student_Level_Current"],
-        collegeCurrent:
-            json["College_Current"] == null ? "" : json["College_Current"],
-        ugPrimaryMajorCurrent: json["UG_Primary_Major_Current"] == null
-            ? ""
-            : json["UG_Primary_Major_Current"],
-        graduatePrimaryMajorCurrent:
-            json["Graduate_Primary_Major_Current"] == null
-                ? ""
-                : json["Graduate_Primary_Major_Current"],
-        athleteCurrentCount: json["Athlete_Current_Count"],
-        cardNumber: json["Card_Number"],
-        barcode: json["Barcode"],
-        classificationType: json["Classification_Type"],
-        issueNumber: json["Issue_Number"]
-      );
+          studentPid: json["Student_PID"],
+          termYear: json["Term_Year"],
+          studentLevelCurrent: json["Student_Level_Current"] == null
+              ? ""
+              : json["Student_Level_Current"],
+          collegeCurrent:
+              json["College_Current"] == null ? "" : json["College_Current"],
+          ugPrimaryMajorCurrent: json["UG_Primary_Major_Current"] == null
+              ? ""
+              : json["UG_Primary_Major_Current"],
+          graduatePrimaryMajorCurrent:
+              json["Graduate_Primary_Major_Current"] == null
+                  ? ""
+                  : json["Graduate_Primary_Major_Current"],
+          athleteCurrentCount: json["Athlete_Current_Count"],
+          cardNumber: json["Card_Number"],
+          barcode: json["Barcode"],
+          classificationType: json["Classification_Type"],
+          issueNumber: json["Issue_Number"]);
 
   Map<String, dynamic> toJson() => {
         "Student_PID": studentPid,
@@ -70,5 +70,5 @@ class StudentIdProfileModel {
         "Barcode": barcode,
         "Classification_Type": classificationType,
         "Issue_Number": issueNumber
-  };
+      };
 }

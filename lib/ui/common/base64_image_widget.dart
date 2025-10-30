@@ -21,17 +21,19 @@ class Base64ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Check if base64String is valid and not empty
-    if (base64String == null || base64String!.isEmpty || base64String!.trim().isEmpty) {
+    if (base64String == null ||
+        base64String!.isEmpty ||
+        base64String!.trim().isEmpty) {
       return _buildPlaceholder();
     }
 
     try {
       // Clean the base64 string (remove any whitespace)
       String cleanBase64 = base64String!.trim();
-      
+
       // Decode the base64 string
       Uint8List bytes = base64Decode(cleanBase64);
-      
+
       // Return the decoded image
       return Image.memory(
         bytes,

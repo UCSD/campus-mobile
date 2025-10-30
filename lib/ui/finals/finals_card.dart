@@ -16,12 +16,15 @@ class FinalsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
+          .toggleCard(cardId),
       reload: () {
-        if (Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading) {
+        if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
+            .isLoading) {
           return null;
         } else {
-          Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
+          Provider.of<ClassScheduleDataProvider>(context, listen: false)
+              .fetchData();
         }
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
@@ -80,7 +83,8 @@ class FinalsCard extends StatelessWidget {
                 // CSE 127  19:00 - 21:59
                 Row(
                   children: [
-                    buildClassCode(context, data.subjectCode! + ' ' + data.courseCode!),
+                    buildClassCode(
+                        context, data.subjectCode! + ' ' + data.courseCode!),
                     SizedBox(width: 10), // 10 logical pixels
                     buildTimeRow(context, data.time),
                   ],
@@ -92,7 +96,7 @@ class FinalsCard extends StatelessWidget {
                 // WLH 2005
                 buildLocationRow(context, data.building! + ' ' + data.room!),
                 ///////////////// Horizontal Division ///////////////////
-                if(i < finalsCount)
+                if (i < finalsCount)
                   Divider(color: listTileDividerColorLight, thickness: 0.7),
               ],
             ),
@@ -112,13 +116,14 @@ class FinalsCard extends StatelessWidget {
         shrinkWrap: true,
       );
     } catch (e) {
-      FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
+      FirebaseCrashlytics.instance.recordError(
+          e, StackTrace.fromString(e.toString()),
           reason: "Finals Card: Failed to build card content.", fatal: false);
       return Container(
         width: double.infinity,
         child: Center(
           child: Padding(
-            padding: EdgeInsets.only(left: 12,top: 32, bottom: 48),
+            padding: EdgeInsets.only(left: 12, top: 32, bottom: 48),
             child: Container(
               child: Text(
                   "Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
@@ -145,18 +150,16 @@ class FinalsCard extends StatelessWidget {
 
   // Heading 3 i.e. "CSE 140"
   Widget buildClassCode(BuildContext context, String className) {
-    return Text(
-      className,
-      style: TextStyle(
+    return Text(className,
+        style: TextStyle(
           fontSize: 18.0,
           fontFamily: 'Refrigerator Deluxe',
           fontWeight: FontWeight.w900,
           letterSpacing: 1.1,
-        color: Theme.of(context).brightness == Brightness.light
-            ? lightPrimaryColor
-            : darkPrimaryColor2,
-      )
-    );
+          color: Theme.of(context).brightness == Brightness.light
+              ? lightPrimaryColor
+              : darkPrimaryColor2,
+        ));
   }
 
   // Small body text i.e. 15:00 - 17:59 (24hr format)
@@ -173,19 +176,15 @@ class FinalsCard extends StatelessWidget {
     );
   }
 
-
   // Medium Body text i.e. "Intro to Computer Security"
   Widget buildClassTitle(BuildContext context, String title) {
-    return Text(
-        title,
-      style: TextStyle(
-          fontSize: 18.0,
-          color: Theme.of(context).brightness == Brightness.light
-              ? descriptiveTextColorLight
-              : descriptiveTextColorDark,
-          fontWeight: FontWeight.w400
-      )
-    );
+    return Text(title,
+        style: TextStyle(
+            fontSize: 18.0,
+            color: Theme.of(context).brightness == Brightness.light
+                ? descriptiveTextColorLight
+                : descriptiveTextColorDark,
+            fontWeight: FontWeight.w400));
   }
 
   // Medium Body Text i.e. "WLH 2005"
@@ -202,9 +201,7 @@ class FinalsCard extends StatelessWidget {
                       color: Theme.of(context).brightness == Brightness.light
                           ? descriptiveTextColorLight
                           : descriptiveTextColorDark,
-                      fontWeight: FontWeight.w400
-                  )
-              ),
+                      fontWeight: FontWeight.w400)),
             ],
           ),
         ),

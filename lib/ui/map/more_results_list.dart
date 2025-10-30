@@ -25,7 +25,8 @@ class MoreResultsList extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       'More Results',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Divider(
@@ -71,8 +72,7 @@ class MoreResultsList extends StatelessWidget {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor:
-                actionButtonBackgroundColor,
+            backgroundColor: actionButtonBackgroundColor,
             padding: EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
