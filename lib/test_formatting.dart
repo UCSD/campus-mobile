@@ -6,7 +6,8 @@ class TestFormatting {
         "This is an extremely long string that definitely exceeds the 100 character limit that we have set for our formatting standards and should be wrapped automatically if our formatting is working correctly";
     // Short line
     print(
-        "Hello, this is another line that goes beyond the 100 character limit to test the formatting rules applied in this Dart file.");
+      "Hello, this is another line that goes beyond the 100 character limit to test the formatting rules applied in this Dart file.",
+    );
 
     // Another long line for testing
     Map<String, dynamic> testMap = {
