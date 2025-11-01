@@ -10,8 +10,7 @@ class OnboardingSlides extends StatefulWidget {
   _OnboardingSlidesState createState() => _OnboardingSlidesState();
 }
 
-class _OnboardingSlidesState extends State<OnboardingSlides>
-    with TickerProviderStateMixin {
+class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProviderStateMixin {
   var currentIndex = 0;
   final _foregroundPageController = PageController();
   final _backgroundPageController = PageController();
@@ -22,8 +21,8 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
   void initState() {
     super.initState();
     _foregroundPageController.addListener(() {
-      _backgroundPageController.jumpTo(
-          _foregroundPageController.page! * MediaQuery.of(context).size.width);
+      _backgroundPageController
+          .jumpTo(_foregroundPageController.page! * MediaQuery.of(context).size.width);
     });
   }
 
@@ -95,18 +94,15 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
   Widget buildPage1() => OnboardingSlideTemplate(
         width: _screenWidth,
         height: _screenHeight,
-        heroImage:
-            const AssetImage('assets/images/onboarding/hero-1-campus-life.png'),
+        heroImage: const AssetImage('assets/images/onboarding/hero-1-campus-life.png'),
         heading: "ONE-STOP ACCESS\nTO CAMPUS LIFE.        ",
-        description:
-            "Keep up to date with amazing events and stay connected to campus news.",
+        description: "Keep up to date with amazing events and stay connected to campus news.",
       );
 
   Widget buildPage2() => OnboardingSlideTemplate(
         width: _screenWidth,
         height: _screenHeight,
-        heroImage:
-            const AssetImage('assets/images/onboarding/hero-2-schedule.png'),
+        heroImage: const AssetImage('assets/images/onboarding/hero-2-schedule.png'),
         heading: "YOUR SCHEDULE\nON THE GO.                        ",
         description: "View your classes and finals schedule whenever you need.",
       );
@@ -114,8 +110,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
   Widget buildPage3() => OnboardingSlideTemplate(
         width: _screenWidth,
         height: _screenHeight,
-        heroImage:
-            const AssetImage('assets/images/onboarding/hero-3-parking.png'),
+        heroImage: const AssetImage('assets/images/onboarding/hero-3-parking.png'),
         heading: "PARKING\nMADE EASIER.            ",
         description: "Keep an eye on parking lot capacity to plan your day.",
       );
@@ -123,18 +118,15 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
   Widget buildPage4() => OnboardingSlideTemplate(
         width: _screenWidth,
         height: _screenHeight,
-        heroImage:
-            const AssetImage('assets/images/onboarding/hero-4-busyness.png'),
+        heroImage: const AssetImage('assets/images/onboarding/hero-4-busyness.png'),
         heading: "SPEND LESS\nTIME WAITING.             ",
-        description:
-            "Easily see how busy campus locations are before you arrive.",
+        description: "Easily see how busy campus locations are before you arrive.",
       );
 
   Widget buildPage5() => OnboardingSlideTemplate(
         width: _screenWidth,
         height: _screenHeight,
-        heroImage: const AssetImage(
-            'assets/images/onboarding/hero-5-notifications.png'),
+        heroImage: const AssetImage('assets/images/onboarding/hero-5-notifications.png'),
         heading: "YOU'RE ALL SET.                ",
         description:
             "We recommend turning on push notifications to receive campus and safety alerts.",
@@ -155,8 +147,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides>
           ),
         ),
         onTap: () async {
-          Navigator.pushNamedAndRemoveUntil(
-              context, RoutePaths.BottomNavigationBar, (_) => false);
+          Navigator.pushNamedAndRemoveUntil(context, RoutePaths.BottomNavigationBar, (_) => false);
           final prefs = await SharedPreferences.getInstance();
           prefs.setBool('showOnboardingScreen', false);
         },

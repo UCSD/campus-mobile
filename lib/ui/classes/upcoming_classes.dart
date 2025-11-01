@@ -7,24 +7,20 @@ import '../../app_styles.dart';
 class UpcomingCoursesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<SectionData> data =
-        Provider.of<ClassScheduleDataProvider>(context).upcomingCourses;
-    int? selectedCourseIndex =
-        Provider.of<ClassScheduleDataProvider>(context).selectedCourse;
+    List<SectionData> data = Provider.of<ClassScheduleDataProvider>(context).upcomingCourses;
+    int? selectedCourseIndex = Provider.of<ClassScheduleDataProvider>(context).selectedCourse;
     return buildListOfCourses(context, data, selectedCourseIndex);
   }
 
   // Right Hand Side of Classes Card //
-  Widget buildListOfCourses(
-      BuildContext context, List<SectionData> data, int? selectedCourse) {
+  Widget buildListOfCourses(BuildContext context, List<SectionData> data, int? selectedCourse) {
     // Builds Today's Schedule using buildTile
     List<Widget> listOfCourses = List.generate(
       data.length * 2 - 1, // Adjust length to account for dividers
       (int index) {
         if (index.isEven) {
           // Show a tile at even indexes
-          int itemIndex =
-              index ~/ 2; // Convert index back to original data index
+          int itemIndex = index ~/ 2; // Convert index back to original data index
           return buildTile(itemIndex, selectedCourse, data[itemIndex], context);
         } else {
           ///////////////// Horizontal Division ///////////////////
@@ -60,15 +56,13 @@ class UpcomingCoursesList extends StatelessWidget {
     );
   }
 
-  Widget buildTile(
-      int index, int? selectedCourse, SectionData data, BuildContext context) {
+  Widget buildTile(int index, int? selectedCourse, SectionData data, BuildContext context) {
     bool isSelected = index == selectedCourse;
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.symmetric(horizontal: 0),
       onTap: () =>
-          Provider.of<ClassScheduleDataProvider>(context, listen: false)
-              .selectCourse(index),
+          Provider.of<ClassScheduleDataProvider>(context, listen: false).selectCourse(index),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

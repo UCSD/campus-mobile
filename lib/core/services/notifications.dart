@@ -16,8 +16,7 @@ class NotificationService {
     _error = null;
     _isLoading = true;
     try {
-      String? response = await NetworkHelper.fetchData(
-          dotenv.get('NOTIFICATIONS_TOPICS_ENDPOINT'));
+      String? response = await NetworkHelper.fetchData(dotenv.get('NOTIFICATIONS_TOPICS_ENDPOINT'));
       if (response != null) {
         _topicsModel = topicsModelFromJson(response);
         return true;
@@ -49,8 +48,7 @@ class NotificationService {
     }
   }
 
-  Future<bool> deletePushToken(
-      Map<String, String> headers, String token) async {
+  Future<bool> deletePushToken(Map<String, String> headers, String token) async {
     token = Uri.encodeComponent(token);
     try {
       String? response = await NetworkHelper.authorizedDelete(

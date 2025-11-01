@@ -46,8 +46,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       child: RefreshIndicator(
         child: buildListView(context),
         onRefresh: () {
-          return Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(true);
+          return Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
         },
         color: Theme.of(context).colorScheme.secondary,
       ),
@@ -63,8 +62,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         if (Provider.of<MessagesDataProvider>(context).isLoading) {
           // empty notifications view until they load in
         } else {
-          itemBuilder =
-              (BuildContext context, int index) => _buildNoMessagesText();
+          itemBuilder = (BuildContext context, int index) => _buildNoMessagesText();
           itemCount = 1;
         }
       } else {
@@ -73,8 +71,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       }
     }
     if (itemCount == 0) {
-      itemBuilder =
-          (BuildContext context, int index) => _buildMessage(context, index);
+      itemBuilder = (BuildContext context, int index) => _buildMessage(context, index);
       itemCount = Provider.of<MessagesDataProvider>(context).messages.length;
     }
     return Padding(
@@ -83,8 +80,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         padding: EdgeInsets.only(top: 8),
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: itemBuilder!,
-        controller: Provider.of<MessagesDataProvider>(context, listen: false)
-            .notificationScrollController,
+        controller:
+            Provider.of<MessagesDataProvider>(context, listen: false).notificationScrollController,
         itemCount: itemCount,
         separatorBuilder: (BuildContext context, int index) => Divider(
           color: Theme.of(context).brightness == Brightness.dark
@@ -128,12 +125,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         var uri = Uri.dataFromString(link);
         var query = uri.queryParameters['query']!;
         // redirect query to maps tab and search with query
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text = query;
+        Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.MapTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+            NavigatorConstants.MapTab;
         // received deeplink, cancel stream to prevent memory leaks
         _sub.cancel();
       }
@@ -141,10 +136,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   }
 
   Widget _buildMessage(BuildContext context, int index) {
-    MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages[index];
-    FreeFoodDataProvider freefoodProvider =
-        Provider.of<FreeFoodDataProvider>(context);
+    MessageElement data = Provider.of<MessagesDataProvider>(context).messages[index];
+    FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
 
     String messageType = data.audience.topics?[0] ?? "DM";
     return ListView(
@@ -193,10 +186,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                       }
                     },
                     options: LinkifyOptions(humanize: false),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 16,
-                        height: 1.41,
-                        fontWeight: FontWeight.w400)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400)),
                 freefoodProvider.isFreeFood(data.messageId)
                     ? FreeFoodNotification(messageId: data.messageId)
                     : Container(),
@@ -209,10 +202,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               Padding(
                 padding: const EdgeInsets.only(top: 6.0),
                 child: Text(_readTimestamp(data.timestamp),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 12,
-                        height: 1.41,
-                        fontWeight: FontWeight.w700)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700)),
               ),
             ],
           ),

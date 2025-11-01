@@ -7,8 +7,7 @@ import 'dart:convert';
 AcademicTermModel academicTermModelFromJson(String str) =>
     AcademicTermModel.fromJson(json.decode(str));
 
-String academicTermModelToJson(AcademicTermModel data) =>
-    json.encode(data.toJson());
+String academicTermModelToJson(AcademicTermModel data) => json.encode(data.toJson());
 
 class AcademicTermModel {
   String? termName;
@@ -19,8 +18,7 @@ class AcademicTermModel {
     this.termCode,
   });
 
-  factory AcademicTermModel.fromJson(Map<String, dynamic> json) =>
-      AcademicTermModel(
+  factory AcademicTermModel.fromJson(Map<String, dynamic> json) => AcademicTermModel(
         termName: json["term_name"],
         termCode: json["term_code"],
       );

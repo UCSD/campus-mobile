@@ -7,8 +7,7 @@ import 'dart:convert';
 StudentIdProfileModel studentIdProfileModelFromJson(String str) =>
     StudentIdProfileModel.fromJson(json.decode(str));
 
-String studentIdProfileModelToJson(StudentIdProfileModel data) =>
-    json.encode(data.toJson());
+String studentIdProfileModelToJson(StudentIdProfileModel data) => json.encode(data.toJson());
 
 class StudentIdProfileModel {
   String studentPid;
@@ -36,27 +35,22 @@ class StudentIdProfileModel {
       this.classificationType = '',
       this.issueNumber = 0});
 
-  factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) =>
-      StudentIdProfileModel(
-          studentPid: json["Student_PID"],
-          termYear: json["Term_Year"],
-          studentLevelCurrent: json["Student_Level_Current"] == null
-              ? ""
-              : json["Student_Level_Current"],
-          collegeCurrent:
-              json["College_Current"] == null ? "" : json["College_Current"],
-          ugPrimaryMajorCurrent: json["UG_Primary_Major_Current"] == null
-              ? ""
-              : json["UG_Primary_Major_Current"],
-          graduatePrimaryMajorCurrent:
-              json["Graduate_Primary_Major_Current"] == null
-                  ? ""
-                  : json["Graduate_Primary_Major_Current"],
-          athleteCurrentCount: json["Athlete_Current_Count"],
-          cardNumber: json["Card_Number"],
-          barcode: json["Barcode"],
-          classificationType: json["Classification_Type"],
-          issueNumber: json["Issue_Number"]);
+  factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) => StudentIdProfileModel(
+      studentPid: json["Student_PID"],
+      termYear: json["Term_Year"],
+      studentLevelCurrent:
+          json["Student_Level_Current"] == null ? "" : json["Student_Level_Current"],
+      collegeCurrent: json["College_Current"] == null ? "" : json["College_Current"],
+      ugPrimaryMajorCurrent:
+          json["UG_Primary_Major_Current"] == null ? "" : json["UG_Primary_Major_Current"],
+      graduatePrimaryMajorCurrent: json["Graduate_Primary_Major_Current"] == null
+          ? ""
+          : json["Graduate_Primary_Major_Current"],
+      athleteCurrentCount: json["Athlete_Current_Count"],
+      cardNumber: json["Card_Number"],
+      barcode: json["Barcode"],
+      classificationType: json["Classification_Type"],
+      issueNumber: json["Issue_Number"]);
 
   Map<String, dynamic> toJson() => {
         "Student_PID": studentPid,

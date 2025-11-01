@@ -17,9 +17,7 @@ class EventDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider.of<EventsDataProvider>(context).isLoading
-        ? Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary))
+        ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
         : ContainerView(child: buildDetailView(context));
   }
 
@@ -66,10 +64,9 @@ class EventDetailView extends StatelessWidget {
                         looseUrl: true,
                         style: TextStyle(
                           fontSize: 16,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? lightPrimaryColor
-                                  : Colors.white,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : Colors.white,
                           fontWeight: FontWeight.w400,
                         ),
                       )
@@ -78,8 +75,7 @@ class EventDetailView extends StatelessWidget {
               SizedBox(width: 5),
               // Event Time
               Text(
-                data.startDate.toLocal().hour == 0 &&
-                        data.endDate.toLocal().hour == 23
+                data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
                     ? '    All day     '
                     : DateFormat.jm().format(data.startDate.toLocal()) +
                         ' - ' +
@@ -104,10 +100,7 @@ class EventDetailView extends StatelessWidget {
                 data.description != null && data.description!.isNotEmpty
                     ? Text(
                         data.description!,
-                        style: TextStyle(
-                            fontSize: 16,
-                            height: 1.4,
-                            fontWeight: FontWeight.w400),
+                        style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
                       )
                     : Container(),
               ],
@@ -156,8 +149,7 @@ class EventImage extends StatelessWidget {
         image: DecorationImage(
           fit: BoxFit.cover, // Ensure the image fills the container
           image: (imageUrl.isEmpty)
-              ? AssetImage('assets/images/UCSDMobile_banner.png')
-                  as ImageProvider
+              ? AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
               : NetworkImage(imageUrl),
         ),
       ),
@@ -251,8 +243,7 @@ class GoToEventPageButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: actionButtonBackgroundColor,
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           onPressed: () async {
             try {
@@ -265,8 +256,7 @@ class GoToEventPageButton extends StatelessWidget {
           child: FittedBox(
             child: Row(
               children: [
-                Text('GO TO EVENT PAGE',
-                    style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
+                Text('GO TO EVENT PAGE', style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
                 SizedBox(width: 4),
                 Icon(Icons.open_in_new, size: 18, color: lightPrimaryColor),
               ],

@@ -7,8 +7,7 @@ import 'dart:convert';
 StudentIdNameModel studentIdNameModelFromJson(String str) =>
     StudentIdNameModel.fromJson(json.decode(str));
 
-String studentIdNameModelToJson(StudentIdNameModel data) =>
-    json.encode(data.toJson());
+String studentIdNameModelToJson(StudentIdNameModel data) => json.encode(data.toJson());
 
 class StudentIdNameModel {
   String studentId;
@@ -29,8 +28,7 @@ class StudentIdNameModel {
     this.lastUpdatedDate = '',
   });
 
-  factory StudentIdNameModel.fromJson(Map<String, dynamic> json) =>
-      StudentIdNameModel(
+  factory StudentIdNameModel.fromJson(Map<String, dynamic> json) => StudentIdNameModel(
         studentId: json["studentId"],
         firstName: json["firstName"],
         middleName: json["middleName"],

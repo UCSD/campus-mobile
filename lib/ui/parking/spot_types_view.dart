@@ -55,8 +55,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
     List<Widget> list = [];
 
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
-      var isSelected = Provider.of<ParkingDataProvider>(context)
-          .spotTypesState[data.spotKey]!;
+      var isSelected = Provider.of<ParkingDataProvider>(context).spotTypesState[data.spotKey]!;
 
       var iconColor = HexColor(data.logoBackgroundColor);
       var textColor = HexColor(data.logoTextColor);
@@ -74,11 +73,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
               child: Align(
                   alignment: Alignment.center,
                   child: data.logoText.startsWith('icon - ')
-                      ? Icon(
-                          ParkingConstants.stringToIconData[data.logoText] ??
-                              Icons.error,
-                          size: 25.0,
-                          color: textColor)
+                      ? Icon(ParkingConstants.stringToIconData[data.logoText] ?? Icons.error,
+                          size: 25.0, color: textColor)
                       : (data.logoText.isNotEmpty
                           ? Text(
                               data.logoText,
@@ -116,8 +112,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                   );
                   return;
                 }
-                spotTypesDataProvider.toggleSpotSelection(
-                    data.spotKey, selectedSpots);
+                spotTypesDataProvider.toggleSpotSelection(data.spotKey, selectedSpots);
               },
               activeColor: toggleActiveColor,
               trackColor: Colors.grey.shade400,

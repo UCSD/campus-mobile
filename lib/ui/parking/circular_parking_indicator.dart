@@ -34,9 +34,7 @@ class CircularParkingIndicators extends StatelessWidget {
     List<Widget> listOfCircularParkingInfo = [];
     List<String> selectedSpots = [];
 
-    Provider.of<ParkingDataProvider>(context)
-        .spotTypesState
-        .forEach((key, value) {
+    Provider.of<ParkingDataProvider>(context).spotTypesState.forEach((key, value) {
       if (value && selectedSpots.length < 4) selectedSpots.add(key);
     });
     for (String spot in selectedSpots) {
@@ -53,8 +51,7 @@ class CircularParkingIndicators extends StatelessWidget {
     );
   }
 
-  Widget buildCircularParkingInfo(
-      Spot? spotType, dynamic locationData, BuildContext context) {
+  Widget buildCircularParkingInfo(Spot? spotType, dynamic locationData, BuildContext context) {
     int open, total;
     if (locationData != null) {
       open = locationData["Open"] is String
@@ -91,8 +88,7 @@ class CircularParkingIndicators extends StatelessWidget {
                             center: Text(
                               (open / total).isNaN
                                   ? "N/A"
-                                  : ((open / total) * 100).round().toString() +
-                                      "%",
+                                  : ((open / total) * 100).round().toString() + "%",
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                             circularStrokeCap: CircularStrokeCap.round,
@@ -108,12 +104,10 @@ class CircularParkingIndicators extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: spotType != null
                       ? CircleAvatar(
-                          backgroundColor:
-                              colorFromHex(spotType.logoBackgroundColor),
+                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText.startsWith('icon - ')
                               ? Icon(
-                                  ParkingConstants.stringToIconData[
-                                          spotType.logoText] ??
+                                  ParkingConstants.stringToIconData[spotType.logoText] ??
                                       Icons.error,
                                   size: 25.0,
                                   color: colorFromHex(spotType.logoTextColor))
@@ -121,8 +115,7 @@ class CircularParkingIndicators extends StatelessWidget {
                                   ? Text(
                                       spotType.logoText,
                                       style: TextStyle(
-                                        color: colorFromHex(
-                                            spotType.logoTextColor),
+                                        color: colorFromHex(spotType.logoTextColor),
                                         fontFamily: 'Brix Sans',
                                         fontSize: 28,
                                         fontWeight: FontWeight.w700,
@@ -167,12 +160,10 @@ class CircularParkingIndicators extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: spotType != null
                       ? CircleAvatar(
-                          backgroundColor:
-                              colorFromHex(spotType.logoBackgroundColor),
+                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText.startsWith('icon - ')
                               ? Icon(
-                                  ParkingConstants.stringToIconData[
-                                          spotType.logoText] ??
+                                  ParkingConstants.stringToIconData[spotType.logoText] ??
                                       Icons.error,
                                   size: 25.0,
                                   color: colorFromHex(spotType.logoTextColor))
@@ -180,8 +171,7 @@ class CircularParkingIndicators extends StatelessWidget {
                                   ? Text(
                                       spotType.logoText,
                                       style: TextStyle(
-                                        color: colorFromHex(
-                                            spotType.logoTextColor),
+                                        color: colorFromHex(spotType.logoTextColor),
                                         fontFamily: 'Brix Sans',
                                         fontWeight: FontWeight.w700,
                                         fontSize: 28,

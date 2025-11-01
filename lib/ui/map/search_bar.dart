@@ -38,8 +38,7 @@ class MapSearchBar extends StatelessWidget {
                 Navigator.pop(context);
               },
               autofocus: true,
-              controller:
-                  Provider.of<MapsDataProvider>(context).searchBarController,
+              controller: Provider.of<MapsDataProvider>(context).searchBarController,
               style: TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -48,19 +47,14 @@ class MapSearchBar extends StatelessWidget {
               ),
             ),
           ),
-          Provider.of<MapsDataProvider>(context)
-                  .searchBarController
-                  .text
-                  .isNotEmpty
+          Provider.of<MapsDataProvider>(context).searchBarController.text.isNotEmpty
               ? IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
                     Provider.of<MapsDataProvider>(context, listen: false)
                         .searchBarController
                         .clear();
-                    Provider.of<MapsDataProvider>(context, listen: false)
-                        .markers
-                        .clear();
+                    Provider.of<MapsDataProvider>(context, listen: false).markers.clear();
                   },
                 )
               : Container(height: 0)

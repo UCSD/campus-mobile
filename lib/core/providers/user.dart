@@ -74,8 +74,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Load [AuthenticationModel] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadSavedAuthenticationModel() async {
-    var authBox =
-        await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
+    var authBox = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
     AuthenticationModel temp = AuthenticationModel.fromJson({});
     //check to see if we have added the authentication model into the box already
     if (authBox.get('AuthenticationModel') == null) {
@@ -92,8 +91,7 @@ class UserDataProvider extends ChangeNotifier {
   Future _loadSavedUserProfile() async {
     var userBox = await Hive.openBox<UserProfileModel?>('UserProfileModel');
     // Create new user from temp profile
-    UserProfileModel tempUserProfile =
-        await _createNewUser(UserProfileModel.fromJson({}));
+    UserProfileModel tempUserProfile = await _createNewUser(UserProfileModel.fromJson({}));
     if (userBox.get('UserProfileModel') == null)
       await userBox.put('UserProfileModel', tempUserProfile);
     tempUserProfile = userBox.get('UserProfileModel')!;
@@ -108,12 +106,10 @@ class UserDataProvider extends ChangeNotifier {
       storage.write(key: 'encrypted_password', value: encryptedPassword);
 
   /// Get encrypted password that has been saved to device
-  Future<String?> _getEncryptedPasswordFromDevice() =>
-      storage.read(key: 'encrypted_password');
+  Future<String?> _getEncryptedPasswordFromDevice() => storage.read(key: 'encrypted_password');
 
   /// Save username to device
-  void _saveUsernameToDevice(String username) =>
-      storage.write(key: 'username', value: username);
+  void _saveUsernameToDevice(String username) => storage.write(key: 'username', value: username);
 
   /// Get username from device
   Future<String?> getUsernameFromDevice() => storage.read(key: 'username');
@@ -189,17 +185,13 @@ class UserDataProvider extends ChangeNotifier {
       resetAllCardHeights();
       resetNotificationsScrollOffset();
 
-      if (await _authenticationService
-          .silentLogin(base64EncodedWithEncryptedPassword)) {
+      if (await _authenticationService.silentLogin(base64EncodedWithEncryptedPassword)) {
         await updateAuthenticationModel(_authenticationService.data!);
         await fetchUserProfile();
         var _cardsDataProvider = CardsDataProvider();
-        _cardsDataProvider
-            .updateAvailableCards(_userProfileModel.ucsdaffiliation);
-        _subscribeToPushNotificationTopics(
-            List<String>.from(userProfileModel.subscribedTopics!));
-        _pushNotificationDataProvider
-            .registerDevice(_authenticationService.data!.accessToken);
+        _cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
+        _subscribeToPushNotificationTopics(List<String>.from(userProfileModel.subscribedTopics!));
+        _pushNotificationDataProvider.registerDevice(_authenticationService.data!.accessToken);
         await analytics.logEvent(name: 'loggedIn');
         _isInSilentLogin = false;
         notifyListeners();
@@ -221,8 +213,7 @@ class UserDataProvider extends ChangeNotifier {
     resetHomeScrollOffset();
     resetAllCardHeights();
     resetNotificationsScrollOffset();
-    _pushNotificationDataProvider
-        .unregisterDevice(_authenticationModel.accessToken);
+    _pushNotificationDataProvider.unregisterDevice(_authenticationModel.accessToken);
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
     updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
     _deletePasswordFromDevice();
@@ -274,23 +265,17 @@ class UserDataProvider extends ChangeNotifier {
           newModel.username = await getUsernameFromDevice();
           newModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
           newModel.pid = _authenticationModel.pid;
-          List<String> castSubscriptions =
-              newModel.subscribedTopics!.cast<String>();
+          List<String> castSubscriptions = newModel.subscribedTopics!.cast<String>();
           newModel.subscribedTopics = castSubscriptions.toSet().toList();
           final studentPattern = RegExp('[BGJMU]');
           final staffPattern = RegExp('[E]');
 
           if ((newModel.ucsdaffiliation ?? "").contains(studentPattern)) {
-            newModel
-              ..classifications =
-                  Classifications.fromJson({'student': true, 'staff': false});
+            newModel..classifications = Classifications.fromJson({'student': true, 'staff': false});
           } else if ((newModel.ucsdaffiliation ?? "").contains(staffPattern)) {
-            newModel
-              ..classifications =
-                  Classifications.fromJson({'staff': true, 'student': false});
+            newModel..classifications = Classifications.fromJson({'staff': true, 'student': false});
           } else {
-            newModel.classifications =
-                Classifications.fromJson({'student': false, 'staff': false});
+            newModel.classifications = Classifications.fromJson({'student': false, 'staff': false});
           }
           await updateUserProfileModel(newModel);
           _pushNotificationDataProvider
@@ -334,19 +319,14 @@ class UserDataProvider extends ChangeNotifier {
 
       if ((profile.ucsdaffiliation ?? "").contains(studentPattern)) {
         profile
-          ..classifications =
-              Classifications.fromJson({'student': true, 'staff': false})
-          ..subscribedTopics!
-              .addAll(_pushNotificationDataProvider.studentTopics());
+          ..classifications = Classifications.fromJson({'student': true, 'staff': false})
+          ..subscribedTopics!.addAll(_pushNotificationDataProvider.studentTopics());
       } else if ((profile.ucsdaffiliation ?? "").contains(staffPattern)) {
         profile
-          ..classifications =
-              Classifications.fromJson({'staff': true, 'student': false})
-          ..subscribedTopics!
-              .addAll(_pushNotificationDataProvider.staffTopics());
+          ..classifications = Classifications.fromJson({'staff': true, 'student': false})
+          ..subscribedTopics!.addAll(_pushNotificationDataProvider.staffTopics());
       } else {
-        profile.classifications =
-            Classifications.fromJson({'student': false, 'staff': false});
+        profile.classifications = Classifications.fromJson({'student': false, 'staff': false});
       }
     } catch (e) {
       print(e.toString());
@@ -373,8 +353,7 @@ class UserDataProvider extends ChangeNotifier {
       /// we only want to push data that is not null
       var tempJson = Map<String, dynamic>();
       for (var key in profile.toJson().keys) {
-        if (profile.toJson()[key] != null)
-          tempJson[key] = profile.toJson()[key];
+        if (profile.toJson()[key] != null) tempJson[key] = profile.toJson()[key];
       }
       if (await _userProfileService.uploadUserProfile(headers, tempJson)) {
         _error = null;

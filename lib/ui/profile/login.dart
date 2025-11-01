@@ -42,24 +42,20 @@ class _LoginState extends State<Login> {
     return Container(
         constraints: BoxConstraints(maxWidth: 100, maxHeight: 100),
         child: Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary)));
+            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)));
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'LOGGED IN AS:',
-              style: Theme.of(context).brightness == Brightness.dark
-                  ? titleMediumDark
-                  : titleMediumLight,
-            ),
-            buildUserProfileTile(context),
-          ]),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+        Text(
+          'LOGGED IN AS:',
+          style:
+              Theme.of(context).brightness == Brightness.dark ? titleMediumDark : titleMediumLight,
+        ),
+        buildUserProfileTile(context),
+      ]),
     );
   }
 
@@ -137,8 +133,7 @@ class _LoginState extends State<Login> {
               ),
               border: OutlineInputBorder(),
               focusedBorder: new OutlineInputBorder(
-                borderSide: new BorderSide(
-                    color: Theme.of(context).colorScheme.secondary),
+                borderSide: new BorderSide(color: Theme.of(context).colorScheme.secondary),
               ),
               labelText: 'UCSD Email',
               labelStyle: TextStyle(
@@ -171,8 +166,7 @@ class _LoginState extends State<Login> {
               ),
               border: OutlineInputBorder(),
               focusedBorder: new OutlineInputBorder(
-                borderSide: new BorderSide(
-                    color: Theme.of(context).colorScheme.secondary),
+                borderSide: new BorderSide(color: Theme.of(context).colorScheme.secondary),
               ),
               labelText: 'Password',
               labelStyle: TextStyle(
@@ -215,8 +209,7 @@ class _LoginState extends State<Login> {
                                       type: MessageTypeConstants.ERROR,
                                       icon: Icons.block_flipped,
                                       title: LoginConstants.loginFailedTitle,
-                                      description:
-                                          LoginConstants.loginFailedDesc,
+                                      description: LoginConstants.loginFailedDesc,
                                       onClose: () {
                                         Navigator.of(context).pop();
                                       },
@@ -322,8 +315,8 @@ class _LoginState extends State<Login> {
       ),
       content: Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height *
-              0.6, // Set max height to 60% of screen height
+          maxHeight:
+              MediaQuery.of(context).size.height * 0.6, // Set max height to 60% of screen height
         ),
         child: SingleChildScrollView(
           child: Row(

@@ -16,15 +16,12 @@ class FinalsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {
-        if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
-            .isLoading) {
+        if (Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading) {
           return null;
         } else {
-          Provider.of<ClassScheduleDataProvider>(context, listen: false)
-              .fetchData();
+          Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
         }
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
@@ -61,8 +58,8 @@ class FinalsCard extends StatelessWidget {
     }
   }
 
-  Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
-      DateTime lastUpdated, String? nextDayWithClasses, BuildContext context) {
+  Widget buildFinalsCard(Map<String, List<SectionData>> finalsData, DateTime lastUpdated,
+      String? nextDayWithClasses, BuildContext context) {
     try {
       var finalsCount = 0, i = 1;
       // Iterate through the map and count the number Finals
@@ -83,8 +80,7 @@ class FinalsCard extends StatelessWidget {
                 // CSE 127  19:00 - 21:59
                 Row(
                   children: [
-                    buildClassCode(
-                        context, data.subjectCode! + ' ' + data.courseCode!),
+                    buildClassCode(context, data.subjectCode! + ' ' + data.courseCode!),
                     SizedBox(width: 10), // 10 logical pixels
                     buildTimeRow(context, data.time),
                   ],
@@ -96,8 +92,7 @@ class FinalsCard extends StatelessWidget {
                 // WLH 2005
                 buildLocationRow(context, data.building! + ' ' + data.room!),
                 ///////////////// Horizontal Division ///////////////////
-                if (i < finalsCount)
-                  Divider(color: listTileDividerColorLight, thickness: 0.7),
+                if (i < finalsCount) Divider(color: listTileDividerColorLight, thickness: 0.7),
               ],
             ),
           ));
@@ -116,8 +111,7 @@ class FinalsCard extends StatelessWidget {
         shrinkWrap: true,
       );
     } catch (e) {
-      FirebaseCrashlytics.instance.recordError(
-          e, StackTrace.fromString(e.toString()),
+      FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
           reason: "Finals Card: Failed to build card content.", fatal: false);
       return Container(
         width: double.infinity,

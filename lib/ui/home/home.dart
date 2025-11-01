@@ -70,8 +70,7 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, covariant MeasureSizeRenderObject renderObject) {
+  void updateRenderObject(BuildContext context, covariant MeasureSizeRenderObject renderObject) {
     renderObject.onChange = onChange;
   }
 }
@@ -92,8 +91,7 @@ void resetAllCardLoadedStates() {
 }
 
 void setNewCardHeight(String card, double height) {
-  if (!webViewCardHeights.containsKey(card) ||
-      height > webViewCardHeights[card]!) {
+  if (!webViewCardHeights.containsKey(card) || height > webViewCardHeights[card]!) {
     webViewCardNotLoaded[card] = false;
     webViewCardHeights[card] = height;
   }
@@ -153,8 +151,7 @@ class _HomeState extends State<Home> {
   void executeQuery(String query) {
     context.read<MapsDataProvider>().searchBarController.text = query;
     context.read<MapsDataProvider>().fetchLocations();
-    context.read<BottomNavigationBarProvider>().currentIndex =
-        NavigatorConstants.MapTab;
+    context.read<BottomNavigationBarProvider>().currentIndex = NavigatorConstants.MapTab;
     context.read<CustomAppBar>().changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
   }
@@ -165,29 +162,23 @@ class _HomeState extends State<Home> {
     initUniLinks();
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return Padding(
-      padding:
-          const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
+      padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
         controller: _controller,
-        padding: const EdgeInsets.only(
-            top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
+        padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
         children: createList(),
       ),
     );
   }
 
   List<Widget> createList() {
-    final orderedCards =
-        getOrderedCardsList(context.watch<CardsDataProvider>().cardOrder);
-    final noticesCards =
-        getNoticesCardsList(context.watch<NoticesDataProvider>().noticesModel);
+    final orderedCards = getOrderedCardsList(context.watch<CardsDataProvider>().cardOrder);
+    final noticesCards = getNoticesCardsList(context.watch<NoticesDataProvider>().noticesModel);
     return [...noticesCards, ...orderedCards];
   }
 
-  List<Widget> getNoticesCardsList(List<NoticesModel> notices) => notices
-      .map((notice) => NoticesCard(notice: notice))
-      .whereType<NoticesCard>()
-      .toList();
+  List<Widget> getNoticesCardsList(List<NoticesModel> notices) =>
+      notices.map((notice) => NoticesCard(notice: notice)).whereType<NoticesCard>().toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
   static const _cardCtors = {
@@ -227,8 +218,7 @@ class _HomeState extends State<Home> {
               MeasureSize(
                 onChange: (Size size) {
                   setNewCardHeight(cardName, size.height);
-                  webViewCardNotLoaded[cardName] =
-                      (size.height != webViewCardHeights[cardName]);
+                  webViewCardNotLoaded[cardName] = (size.height != webViewCardHeights[cardName]);
                   setState(() {});
                 },
                 child: Align(
@@ -243,8 +233,7 @@ class _HomeState extends State<Home> {
               ),
               ConstrainedBox(
                 constraints: BoxConstraints(
-                    minHeight: webViewCardHeights[currentCard] ?? 0.0,
-                    minWidth: 400.0),
+                    minHeight: webViewCardHeights[currentCard] ?? 0.0, minWidth: 400.0),
                 child: Builder(builder: (BuildContext context) {
                   final currentCard = cardName;
                   return Visibility(
@@ -260,8 +249,7 @@ class _HomeState extends State<Home> {
                               color: Theme.of(context).cardColor,
                               child: Center(
                                 child: CircularProgressIndicator(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.secondary,
                                 ),
                               ),
                             ),
