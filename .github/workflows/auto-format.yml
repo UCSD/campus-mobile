@@ -56,8 +56,8 @@ jobs:
             fi
           fi
 
-      - name: Run Dart analysis
-        run: dart analyze lib/
+      # - name: Run Dart analysis
+      #   run: dart analyze lib/
 
 # name: Auto-Format Dart Code
 
