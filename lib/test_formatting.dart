@@ -3,8 +3,7 @@ class TestFormatting {
   void testMethod() {
     // This is a very long line that should exceed 100 characters to test whether it gets automatically wrapped when we save the file
     String veryLongString =
-        "This is an extremely long string that definitely exceeds the 100 character limit that we ha"
-        "ve set for our formatting standards and should be wrapped automatically if our formatting is working correctly";
+        "This is an extremely long string that definitely exceeds the 100 character limit that we have set for our formatting standards and should be wrapped automatically if our formatting is working correctly";
     // Short line
     print("Hello");
 
