@@ -29,12 +29,7 @@ class BottomTabBar extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar> {
-  var currentTab = [
-    Home(),
-    prefix0.Maps(),
-    NotificationsListView(),
-    Profile(),
-  ];
+  var currentTab = [Home(), prefix0.Maps(), NotificationsListView(), Profile()];
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +38,13 @@ class _BottomTabBarState extends State<BottomTabBar> {
 
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      backgroundColor:
-          provider.currentIndex == 0 ? lightPrimaryColor : theme.scaffoldBackgroundColor,
+      backgroundColor: provider.currentIndex == 0
+          ? lightPrimaryColor
+          : theme.scaffoldBackgroundColor,
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50), child: Provider.of<CustomAppBar>(context).appBar),
+        preferredSize: Size.fromHeight(50),
+        child: Provider.of<CustomAppBar>(context).appBar,
+      ),
       body: PushNotificationWrapper(child: currentTab[provider.currentIndex]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -76,8 +74,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
                 break;
               case NavigatorConstants.NotificationsTab:
                 resetAllCardLoadedStates();
-                Provider.of<CustomAppBar>(context, listen: false)
-                    .changeTitle("Notifications", done: false, notification: true);
+                Provider.of<CustomAppBar>(
+                  context,
+                  listen: false,
+                ).changeTitle("Notifications", done: false, notification: true);
                 break;
               case NavigatorConstants.ProfileTab:
                 resetAllCardLoadedStates();
@@ -116,7 +116,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
     );
   }
 
-// Build bottom navigator icons
+  // Build bottom navigator icons
   Widget _buildIcon(IconData icon, bool isSelected, ThemeData theme, {double size = 34}) {
     return Container(
       height: 34,

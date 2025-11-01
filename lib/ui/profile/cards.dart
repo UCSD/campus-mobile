@@ -31,39 +31,45 @@ class _CardsViewState extends State<CardsView> {
 
   Widget buildCardsList() {
     var tempView = ReorderableListView(
-        header: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Text("Hold and drag to reorder",
-              textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
+      header: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Text(
+          "Hold and drag to reorder",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        children: createList(),
-        onReorder: (int oldIndex, int newIndex) {
-          if (newIndex > oldIndex) newIndex -= 1;
-          var order = _cardsDataProvider.cardOrder;
-          order.insert(newIndex, order.removeAt(oldIndex));
-          setState(() {
-            _cardsDataProvider.updateCardOrder();
-          });
+      ),
+      children: createList(),
+      onReorder: (int oldIndex, int newIndex) {
+        if (newIndex > oldIndex) newIndex -= 1;
+        var order = _cardsDataProvider.cardOrder;
+        order.insert(newIndex, order.removeAt(oldIndex));
+        setState(() {
+          _cardsDataProvider.updateCardOrder();
         });
+      },
+    );
 
     if (_cardsDataProvider.noInternet) {
       Future.delayed(
-          Duration.zero,
-          () => {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialogWidget(
-                        type: MessageTypeConstants.ERROR,
-                        icon: Icons.block_flipped,
-                        title: 'No Internet',
-                        description: 'Cards requires an internet connection.',
-                        onClose: () {
-                          Navigator.of(context).pop();
-                        },
-                      );
-                    }),
-              });
+        Duration.zero,
+        () => {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogWidget(
+                type: MessageTypeConstants.ERROR,
+                icon: Icons.block_flipped,
+                title: 'No Internet',
+                description: 'Cards requires an internet connection.',
+                onClose: () {
+                  Navigator.of(context).pop();
+                },
+              );
+            },
+          ),
+        },
+      );
     }
 
     return tempView;
@@ -79,12 +85,16 @@ class _CardsViewState extends State<CardsView> {
             elevation: 2.0,
             margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
             child: ListTile(
-              leading: Icon(Icons.drag_handle,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? linkTextColorDark
-                      : linkTextColorLight),
-              title: Text(_cardsDataProvider.availableCards[card]!.titleText,
-                  style: Theme.of(context).textTheme.bodyMedium),
+              leading: Icon(
+                Icons.drag_handle,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? linkTextColorDark
+                    : linkTextColorLight,
+              ),
+              title: Text(
+                _cardsDataProvider.availableCards[card]!.titleText,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               trailing: Transform.scale(
                 scale: 0.9, // Adjust the scale as needed
                 child: Switch.adaptive(
@@ -106,8 +116,12 @@ class _CardsViewState extends State<CardsView> {
         );
       } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
-        FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
-            reason: "Profile/Cards: Failed to load Cards page", fatal: false);
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          StackTrace.fromString(e.toString()),
+          reason: "Profile/Cards: Failed to load Cards page",
+          fatal: false,
+        );
 
         _cardsDataProvider.changeInternetStatus(true);
       }

@@ -6,29 +6,28 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class DirectionsButton extends StatelessWidget {
-  const DirectionsButton({
-    Key? key,
-  }) : super(key: key);
+  const DirectionsButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
       heroTag: "directions",
-      child: Icon(
-        Icons.directions_walk,
-        color: Colors.lightBlue,
-      ),
+      child: Icon(Icons.directions_walk, color: Colors.lightBlue),
       backgroundColor: Colors.white,
       onPressed: () {
         if (Provider.of<MapsDataProvider>(context, listen: false).coordinates!.lat == null ||
             Provider.of<MapsDataProvider>(context, listen: false).coordinates!.lon == null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Please turn your location on in order to use this feature.'),
-            duration: Duration(seconds: 3),
-          ));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Please turn your location on in order to use this feature.'),
+              duration: Duration(seconds: 3),
+            ),
+          );
         } else {
-          String locationQuery =
-              Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text;
+          String locationQuery = Provider.of<MapsDataProvider>(
+            context,
+            listen: false,
+          ).searchBarController.text;
           if (locationQuery.isNotEmpty) {
             getDirections(context);
           } else {
@@ -40,8 +39,10 @@ class DirectionsButton extends StatelessWidget {
   }
 
   Future<void> getDirections(BuildContext context) async {
-    LatLng currentPin =
-        Provider.of<MapsDataProvider>(context, listen: false).markers.values.toList()[0].position;
+    LatLng currentPin = Provider.of<MapsDataProvider>(
+      context,
+      listen: false,
+    ).markers.values.toList()[0].position;
     double lat = currentPin.latitude;
     double lon = currentPin.longitude;
 

@@ -22,9 +22,7 @@ class EventTile extends StatelessWidget {
     // Show loading indicator while data is loading
     if (Provider.of<EventsDataProvider>(context).isLoading) {
       return Center(
-        child: CircularProgressIndicator(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
+        child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary),
       );
     }
     return _buildEventTile(context);
@@ -36,17 +34,9 @@ class EventTile extends StatelessWidget {
       //height: 300,
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            RoutePaths.EventDetailView,
-            arguments: data,
-          );
+          Navigator.pushNamed(context, RoutePaths.EventDetailView, arguments: data);
         },
-        child: Column(
-          children: [
-            _eventDetailsCard(context),
-          ],
-        ),
+        child: Column(children: [_eventDetailsCard(context)]),
       ),
     );
   }
@@ -83,8 +73,9 @@ class EventTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 child: Row(
-                  mainAxisAlignment:
-                      hasTime ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center,
+                  mainAxisAlignment: hasTime
+                      ? MainAxisAlignment.spaceEvenly
+                      : MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
@@ -100,17 +91,17 @@ class EventTile extends StatelessWidget {
                           fit: BoxFit.scaleDown,
                           alignment: Alignment.centerRight,
                           child: isAllDay
-                              ? Text('All day',
+                              ? Text(
+                                  'All day',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Theme.of(context).brightness == Brightness.light
                                         ? lightPrimaryColor
                                         : Colors.white,
                                     fontWeight: FontWeight.w400,
-                                  ))
-                              : TileTime(
-                                  time: '$startTime - $endTime',
-                                ),
+                                  ),
+                                )
+                              : TileTime(time: '$startTime - $endTime'),
                         ),
                       ),
                   ],
@@ -140,7 +131,8 @@ Widget _eventImageLoader(String? url) {
             height: 150,
             width: EventTile.tileWidth,
             fit: BoxFit.cover,
-          ))
+          ),
+        )
       : ClipRRect(
           borderRadius: BorderRadius.only(
             topLeft: EventTile.cornerRadius,
@@ -162,7 +154,8 @@ Widget _eventImageLoader(String? url) {
             height: 150,
             width: EventTile.tileWidth,
             fit: BoxFit.cover,
-          ));
+          ),
+        );
 }
 
 class TileTitle extends StatelessWidget {
@@ -212,29 +205,26 @@ class TileTime extends StatelessWidget {
     );
 
     return Padding(
-        padding: const EdgeInsets.only(right: 8, left: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (startTime != endTime)
-              Row(
-                children: [
-                  // Start Time
-                  Text(
-                    startTime,
-                    textAlign: TextAlign.right,
-                    style: style,
-                  ),
-                  Text(" - ", style: style), // Separator
-                ],
-              ),
-            Text(
-              endTime, // End Time
-              textAlign: TextAlign.right,
-              style: style,
+      padding: const EdgeInsets.only(right: 8, left: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (startTime != endTime)
+            Row(
+              children: [
+                // Start Time
+                Text(startTime, textAlign: TextAlign.right, style: style),
+                Text(" - ", style: style), // Separator
+              ],
             ),
-          ],
-        ));
+          Text(
+            endTime, // End Time
+            textAlign: TextAlign.right,
+            style: style,
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -280,7 +270,7 @@ class StartEndDateContainer extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
             Padding(
@@ -327,9 +317,9 @@ class StartEndDateContainer extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
-            )
+            ),
           ]
           // If it's a single date, display it normally
           else ...[
@@ -361,7 +351,7 @@ class StartEndDateContainer extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ],
       ),

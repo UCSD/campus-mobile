@@ -17,8 +17,7 @@ class NetworkHelper {
   static const int SSO_REFRESH_MAX_RETRIES = 3;
   static const int SSO_REFRESH_RETRY_INCREMENT = 5000;
   static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
-  static final DEFAULT_TIMEOUT =
-      Duration(milliseconds: int.parse(dotenv.get('DEFAULT_TIMEOUT')));
+  static final DEFAULT_TIMEOUT = Duration(milliseconds: int.parse(dotenv.get('DEFAULT_TIMEOUT')));
 
   static Future<dynamic> fetchData(String url) async {
     Dio dio = new Dio();
@@ -37,16 +36,13 @@ class NetworkHelper {
     }
   }
 
-  static Future<dynamic> authorizedFetch(
-      String url, Map<String, String> headers) async {
+  static Future<dynamic> authorizedFetch(String url, Map<String, String> headers) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
     dio.options.responseType = ResponseType.plain;
     dio.options.headers = headers;
-    final _response = await dio.get(
-      url,
-    );
+    final _response = await dio.get(url);
     if (_response.statusCode == 200) {
       // If server returns an OK response, return the body
       return _response.data;
@@ -64,9 +60,7 @@ class NetworkHelper {
       content: const Text(LoginConstants.silentLoginFailedDesc),
       actions: [
         TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: ucLabelColor,
-          ),
+          style: TextButton.styleFrom(foregroundColor: ucLabelColor),
           onPressed: () {
             Get.back(closeOverlays: true);
           },
@@ -79,7 +73,10 @@ class NetworkHelper {
   // method for implementing exponential backoff for silentLogin
   // mimicking existing code from React Native versions of campus-mobile
   static Future<dynamic> authorizedPublicPost(
-      String url, Map<String, String> headers, dynamic body) async {
+    String url,
+    Map<String, String> headers,
+    dynamic body,
+  ) async {
     int retries = 0;
     int waitTime = 0;
     try {
@@ -114,7 +111,10 @@ class NetworkHelper {
   }
 
   static Future<dynamic> authorizedPost(
-      String url, Map<String, String>? headers, dynamic body) async {
+    String url,
+    Map<String, String>? headers,
+    dynamic body,
+  ) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -128,8 +128,7 @@ class NetworkHelper {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPostErrors + message);
     } else if (_response.statusCode == 401) {
-      throw Exception(ErrorConstants.authorizedPostErrors +
-          ErrorConstants.invalidBearerToken);
+      throw Exception(ErrorConstants.authorizedPostErrors + ErrorConstants.invalidBearerToken);
     } else if (_response.statusCode == 404) {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPostErrors + message);
@@ -145,7 +144,10 @@ class NetworkHelper {
   }
 
   static Future<dynamic> authorizedPut(
-      String url, Map<String, String> headers, dynamic body) async {
+    String url,
+    Map<String, String> headers,
+    dynamic body,
+  ) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -160,8 +162,7 @@ class NetworkHelper {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPutErrors + message);
     } else if (_response.statusCode == 401) {
-      throw Exception(ErrorConstants.authorizedPutErrors +
-          ErrorConstants.invalidBearerToken);
+      throw Exception(ErrorConstants.authorizedPutErrors + ErrorConstants.invalidBearerToken);
     } else if (_response.statusCode == 404) {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPutErrors + message);
@@ -173,8 +174,7 @@ class NetworkHelper {
     }
   }
 
-  static Future<dynamic> authorizedDelete(
-      String url, Map<String, String> headers) async {
+  static Future<dynamic> authorizedDelete(String url, Map<String, String> headers) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -202,11 +202,14 @@ class NetworkHelper {
     final String tokenEndpoint = dotenv.get('NEW_TOKEN_ENDPOINT');
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
-      "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
+      "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY'),
     };
     try {
       var response = await authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
+        tokenEndpoint,
+        tokenHeaders,
+        "grant_type=client_credentials",
+      );
       headers["Authorization"] = "Bearer " + response["access_token"];
       return true;
     } catch (e) {

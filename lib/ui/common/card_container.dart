@@ -16,8 +16,8 @@ class CardContainer extends StatelessWidget {
     this.actionButtons,
     this.footer,
     this.hideMenu = false,
-  })  : active = active ?? false,
-        super(key: key);
+  }) : active = active ?? false,
+       super(key: key);
 
   /// required parameters
   final String titleText;
@@ -43,23 +43,18 @@ class CardContainer extends StatelessWidget {
         semanticContainer: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
-          side: BorderSide(
-            color: dotsUnselectedColor,
-            width: 0.5,
-          ),
+          side: BorderSide(color: dotsUnselectedColor, width: 0.5),
         ),
-        color:
-            Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? darkPrimaryBgColor
+            : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.only(top: 0.0, right: 8.0, bottom: 0.0, left: 8.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-              title: Text(
-                titleText,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              title: Text(titleText, style: Theme.of(context).textTheme.titleLarge),
               trailing: buildMenu(),
             ),
             buildBody(context),
@@ -95,10 +90,7 @@ class CardContainer extends StatelessWidget {
         } else {
           customErrorText = 'No finals found.';
         }
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 42.0),
-          child: Text(customErrorText),
-        );
+        return Padding(padding: const EdgeInsets.only(bottom: 42.0), child: Text(customErrorText));
       } else if (titleText == 'CLASSES') {
         var customErrorText = '';
         if (errorText!.contains('Exception')) {
@@ -117,11 +109,10 @@ class CardContainer extends StatelessWidget {
         constraints: BoxConstraints(minHeight: cardContentMinHeight),
         child: Center(
           child: Container(
-              height: 32,
-              width: 32,
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary,
-              )),
+            height: 32,
+            width: 32,
+            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary),
+          ),
         ),
       );
     } else if (titleText == "BUSYNESS") {
@@ -149,10 +140,7 @@ class CardContainer extends StatelessWidget {
         child: child(),
       );
     } else {
-      return Container(
-        width: double.infinity,
-        child: child(),
-      );
+      return Container(width: double.infinity, child: child());
     }
   }
 
@@ -163,12 +151,10 @@ class CardContainer extends StatelessWidget {
       buttonPadding: const EdgeInsets.all(0),
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildMenuOptions(
-          {
-            CardMenuOptionConstants.reloadCard: reload,
-            CardMenuOptionConstants.hideCard: hide,
-          },
-        ),
+        buildMenuOptions({
+          CardMenuOptionConstants.reloadCard: reload,
+          CardMenuOptionConstants.hideCard: hide,
+        }),
       ],
     );
   }

@@ -65,7 +65,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
     // check if this webCard needs an auth token
     if (widget.requireAuth) {
       _userDataProvider = Provider.of<UserDataProvider>(context);
-      webCardUrl = widget.initialUrl +
+      webCardUrl =
+          widget.initialUrl +
           "?expiration=${_userDataProvider.authenticationModel.expiration}#${_userDataProvider.authenticationModel.accessToken}";
     } else {
       webCardUrl = widget.initialUrl;
@@ -81,30 +82,26 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
         semanticContainer: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
-          side: BorderSide(
-            color: dotsUnselectedColor,
-            width: 0.5,
-          ),
+          side: BorderSide(color: dotsUnselectedColor, width: 0.5),
         ),
-        color:
-            Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? darkPrimaryBgColor
+            : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.only(top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-              title: Text(
-                widget.titleText,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              title: Text(widget.titleText, style: Theme.of(context).textTheme.titleLarge),
               trailing: buildMenu(),
             ),
             buildBody(context),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child:
-                  widget.actionButtons != null ? Row(children: widget.actionButtons!) : Container(),
+              child: widget.actionButtons != null
+                  ? Row(children: widget.actionButtons!)
+                  : Container(),
             ),
           ],
         ),
@@ -135,7 +132,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
             _heightChannel(context),
             _mapChannel(context),
             _refreshTokenChannel(context),
-            _permanentRedirect(context)
+            _permanentRedirect(context),
           ].toSet(),
         ),
       ),

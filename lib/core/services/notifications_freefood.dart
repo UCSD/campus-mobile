@@ -9,9 +9,7 @@ class FreeFoodService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   late FreeFoodModel _data;
@@ -22,7 +20,9 @@ class FreeFoodService {
     try {
       /// fetch data
       var _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpCount', headers);
+        dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpCount',
+        headers,
+      );
 
       /// parse data
       final data = freeFoodModelFromJson(_response);

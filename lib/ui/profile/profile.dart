@@ -62,8 +62,11 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  leading:
-                      Icon(Icons.drag_handle, color: Theme.of(context).iconTheme.color, size: 30.0),
+                  leading: Icon(
+                    Icons.drag_handle,
+                    color: Theme.of(context).iconTheme.color,
+                    size: 30.0,
+                  ),
                   title: Text(
                     'Card Settings',
                     style: Theme.of(context).brightness == Brightness.dark
@@ -87,10 +90,7 @@ class Profile extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(1.0), // Adjust the padding as needed
-                      child: Icon(
-                        Icons.question_mark,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
+                      child: Icon(Icons.question_mark, color: Theme.of(context).iconTheme.color),
                     ),
                   ),
                   title: Text(
@@ -113,8 +113,11 @@ class Profile extends StatelessWidget {
                 ),
                 if (isLoggedIn)
                   ListTile(
-                    leading: Icon(Icons.warning_amber_rounded,
-                        color: Theme.of(context).iconTheme.color, size: 36.0),
+                    leading: Icon(
+                      Icons.warning_amber_rounded,
+                      color: Theme.of(context).iconTheme.color,
+                      size: 36.0,
+                    ),
                     title: Text(
                       'Report a Campus Facility Issue',
                       style: Theme.of(context).brightness == Brightness.dark

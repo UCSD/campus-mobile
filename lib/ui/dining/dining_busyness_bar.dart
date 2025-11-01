@@ -16,11 +16,7 @@ class DiningBusynessBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        buildAvailabilityBars(context),
-      ],
-    );
+    return Column(children: <Widget>[buildAvailabilityBars(context)]);
   }
 
   Widget buildAvailabilityBars(BuildContext context) {
@@ -28,18 +24,17 @@ class DiningBusynessBar extends StatelessWidget {
       return Container(
         alignment: Alignment.center,
         padding: EdgeInsets.only(top: DATA_UNAVAILABLE_TOP_PADDING),
-        child: Text(
-          "Data Unavailable",
-          style: TextStyle(fontSize: LOCATION_FONT_SIZE),
-        ),
+        child: Text("Data Unavailable", style: TextStyle(fontSize: LOCATION_FONT_SIZE)),
       );
     }
 
     // Only display the subLocation where subLocation.name == diningModel.name
     final matchingSubLocation = busynessDiningHallModel.subLocations
-        .where((subLocation) =>
-            diningModel.name.contains(subLocation.name) ||
-            subLocation.name.contains(diningModel.name))
+        .where(
+          (subLocation) =>
+              diningModel.name.contains(subLocation.name) ||
+              subLocation.name.contains(diningModel.name),
+        )
         .toList();
 
     if (matchingSubLocation.isEmpty) {

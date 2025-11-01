@@ -17,20 +17,19 @@ class NewsCard extends StatelessWidget {
       print(e);
       return Container(
         width: double.infinity,
-        child: Center(
-          child: Container(
-            child: Text('An error occurred, please try again.'),
-          ),
-        ),
+        child: Center(child: Container(child: Text('An error occurred, please try again.'))),
       );
     }
   }
 
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
-    actionButtons.add(ActionButton(
+    actionButtons.add(
+      ActionButton(
         buttonText: 'VIEW MORE NEWS STORIES',
-        onPressed: () => Navigator.pushNamed(context, RoutePaths.NewsViewAll)));
+        onPressed: () => Navigator.pushNamed(context, RoutePaths.NewsViewAll),
+      ),
+    );
     return actionButtons;
   }
 

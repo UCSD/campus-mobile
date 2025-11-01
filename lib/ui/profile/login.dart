@@ -40,22 +40,28 @@ class _LoginState extends State<Login> {
     }
 
     return Container(
-        constraints: BoxConstraints(maxWidth: 100, maxHeight: 100),
-        child: Center(
-            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)));
+      constraints: BoxConstraints(maxWidth: 100, maxHeight: 100),
+      child: Center(
+        child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary),
+      ),
+    );
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-        Text(
-          'LOGGED IN AS:',
-          style:
-              Theme.of(context).brightness == Brightness.dark ? titleMediumDark : titleMediumLight,
-        ),
-        buildUserProfileTile(context),
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'LOGGED IN AS:',
+            style: Theme.of(context).brightness == Brightness.dark
+                ? titleMediumDark
+                : titleMediumLight,
+          ),
+          buildUserProfileTile(context),
+        ],
+      ),
     );
   }
 
@@ -78,10 +84,7 @@ class _LoginState extends State<Login> {
 
   Widget buildUserProfileTile(BuildContext context) {
     return ListTile(
-      leading: Icon(
-        Icons.check_circle,
-        color: Colors.green,
-      ),
+      leading: Icon(Icons.check_circle, color: Colors.green),
       title: Transform.translate(
         offset: Offset(-24, 0),
         child: Text(
@@ -92,13 +95,8 @@ class _LoginState extends State<Login> {
         ),
       ),
       trailing: TextButton(
-        style: TextButton.styleFrom(
-          foregroundColor: Theme.of(context).colorScheme.background,
-        ),
-        child: Text(
-          'LOG OUT',
-          style: TextStyle(decoration: TextDecoration.underline),
-        ),
+        style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.background),
+        child: Text('LOG OUT', style: TextStyle(decoration: TextDecoration.underline)),
         onPressed: () => executeLogout(),
       ),
     );
@@ -116,29 +114,23 @@ class _LoginState extends State<Login> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            'SINGLE SIGN-ON',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('SINGLE SIGN-ON', style: Theme.of(context).textTheme.titleMedium),
           SizedBox(height: 10),
           TextField(
             style: TextStyle(
-                fontFamily: 'Brix Sans',
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF737373)),
+              fontFamily: 'Brix Sans',
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF737373),
+            ),
             decoration: InputDecoration(
               hintText: 'UCSD Email',
-              hintStyle: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+              hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
               border: OutlineInputBorder(),
               focusedBorder: new OutlineInputBorder(
                 borderSide: new BorderSide(color: Theme.of(context).colorScheme.secondary),
               ),
               labelText: 'UCSD Email',
-              labelStyle: TextStyle(
-                color: ucLabelColor,
-              ),
+              labelStyle: TextStyle(color: ucLabelColor),
             ),
             keyboardType: TextInputType.emailAddress,
             controller: _emailTextFieldController,
@@ -146,14 +138,13 @@ class _LoginState extends State<Login> {
           SizedBox(height: 10),
           TextField(
             style: TextStyle(
-                fontFamily: 'Brix Sans',
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF737373)),
+              fontFamily: 'Brix Sans',
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF737373),
+            ),
             decoration: InputDecoration(
               hintText: 'Password',
-              hintStyle: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+              hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
               suffixIcon: IconButton(
                 icon: Icon(
                   // Based on passwordObscured state choose the icon
@@ -169,9 +160,7 @@ class _LoginState extends State<Login> {
                 borderSide: new BorderSide(color: Theme.of(context).colorScheme.secondary),
               ),
               labelText: 'Password',
-              labelStyle: TextStyle(
-                color: ucLabelColor,
-              ),
+              labelStyle: TextStyle(color: ucLabelColor),
             ),
             obscureText: _passwordObscured,
             controller: _passwordTextFieldController,
@@ -183,41 +172,42 @@ class _LoginState extends State<Login> {
                 child: SizedBox(
                   height: 41,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: actionButtonBackgroundColor,
-                    ),
+                    style: ElevatedButton.styleFrom(backgroundColor: actionButtonBackgroundColor),
                     child: Text(
                       'Sign In',
                       style: TextStyle(
-                          fontFamily: 'Brix Sans',
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: Theme.of(context).textTheme.labelLarge!.color),
+                        fontFamily: 'Brix Sans',
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).textTheme.labelLarge!.color,
+                      ),
                     ),
                     onPressed: _userDataProvider.isLoading
                         ? null
                         : () {
                             _userDataProvider
-                                .manualLogin(_emailTextFieldController.text,
-                                    _passwordTextFieldController.text)
+                                .manualLogin(
+                                  _emailTextFieldController.text,
+                                  _passwordTextFieldController.text,
+                                )
                                 .then((isLoggedIn) {
-                              if (!isLoggedIn) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialogWidget(
-                                      type: MessageTypeConstants.ERROR,
-                                      icon: Icons.block_flipped,
-                                      title: LoginConstants.loginFailedTitle,
-                                      description: LoginConstants.loginFailedDesc,
-                                      onClose: () {
-                                        Navigator.of(context).pop();
+                                  if (!isLoggedIn) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialogWidget(
+                                          type: MessageTypeConstants.ERROR,
+                                          icon: Icons.block_flipped,
+                                          title: LoginConstants.loginFailedTitle,
+                                          description: LoginConstants.loginFailedDesc,
+                                          onClose: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
                                       },
                                     );
-                                  },
-                                );
-                              }
-                            });
+                                  }
+                                });
                           },
                   ),
                 ),
@@ -228,11 +218,12 @@ class _LoginState extends State<Login> {
                   child: Text(
                     'Forgot password?',
                     style: TextStyle(
-                        fontFamily: 'Brix Sans',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 17,
-                        decoration: TextDecoration.underline,
-                        color: Theme.of(context).textTheme.labelLarge!.color),
+                      fontFamily: 'Brix Sans',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17,
+                      decoration: TextDecoration.underline,
+                      color: Theme.of(context).textTheme.labelLarge!.color,
+                    ),
                     textAlign: TextAlign.right,
                   ),
                   onTap: () async {
@@ -274,10 +265,12 @@ class _LoginState extends State<Login> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Icon(Icons.info_outline,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? linkTextColorDark
-                    : linkTextColorLight),
+            child: Icon(
+              Icons.info_outline,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? linkTextColorDark
+                  : linkTextColorLight,
+            ),
             flex: 1,
           ),
           Expanded(
@@ -289,21 +282,25 @@ class _LoginState extends State<Login> {
                       color: linkTextColorDark,
                       fontFamily: 'Brix Sans',
                       fontWeight: FontWeight.w700,
-                      fontSize: 18.0)
+                      fontSize: 18.0,
+                    )
                   : TextStyle(
                       color: linkTextColorLight,
                       fontFamily: 'Brix Sans',
                       fontWeight: FontWeight.w700,
-                      fontSize: 18.0),
+                      fontSize: 18.0,
+                    ),
             ),
             flex: 7,
           ),
           Expanded(
             child: IconButton(
-              icon: Icon(Icons.close,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? linkTextColorDark
-                      : linkTextColorLight),
+              icon: Icon(
+                Icons.close,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? linkTextColorDark
+                    : linkTextColorLight,
+              ),
               alignment: Alignment.topRight,
               onPressed: () {
                 Navigator.of(context).pop();
@@ -322,10 +319,7 @@ class _LoginState extends State<Login> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
+              Expanded(flex: 1, child: Container()),
               Expanded(
                 flex: 6,
                 child: Column(
@@ -335,18 +329,16 @@ class _LoginState extends State<Login> {
                       LoginConstants.loginFailedDesc,
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                          color: linkTextColorLight,
-                          fontFamily: 'Source Sans Pro',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12.0),
+                        color: linkTextColorLight,
+                        fontFamily: 'Source Sans Pro',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12.0,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
+              Expanded(flex: 1, child: Container()),
             ],
           ),
         ),

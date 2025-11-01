@@ -10,18 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DiningList extends StatelessWidget {
-  const DiningList({
-    Key? key,
-    this.listSize,
-  }) : super(key: key);
+  const DiningList({Key? key, this.listSize}) : super(key: key);
 
   final listSize;
 
   @override
   Widget build(BuildContext context) {
     // Using Provider's filteredDiningModels so that the list respects the filters
-    List<dining_model.DiningModel> data =
-        Provider.of<DiningDataProvider>(context).filteredDiningModels;
+    List<dining_model.DiningModel> data = Provider.of<DiningDataProvider>(
+      context,
+    ).filteredDiningModels;
     if (data.isEmpty) {
       return ContainerView(
         child: ListView(
@@ -59,12 +57,12 @@ class DiningList extends StatelessWidget {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             children: ListTile.divideTiles(
-                    tiles: diningTiles,
-                    context: context,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? listTileDividerColorDark
-                        : listTileDividerColorLight)
-                .toList(),
+              tiles: diningTiles,
+              context: context,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? listTileDividerColorDark
+                  : listTileDividerColorLight,
+            ).toList(),
           )
         : Stack(
             children: [
@@ -81,11 +79,7 @@ class DiningList extends StatelessWidget {
                   ).toList(),
                 ),
               ),
-              Positioned(
-                bottom: 24,
-                right: 24,
-                child: PaymentFilterButton(),
-              ),
+              Positioned(bottom: 24, right: 24, child: PaymentFilterButton()),
             ],
           );
   }
@@ -107,59 +101,86 @@ class DiningList extends StatelessWidget {
         if (hours.mon != null)
           dayHours = hours.mon;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
+          return textClosed(
+            context,
+            nextOpenDay: findNextOpenDay(hours),
+            nextOpenTime: findNextOpenTime(hours),
+          );
         break;
       case 2:
         if (hours.tue != null)
           dayHours = hours.tue;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
+          return textClosed(
+            context,
+            nextOpenDay: findNextOpenDay(hours),
+            nextOpenTime: findNextOpenTime(hours),
+          );
         break;
       case 3:
         if (hours.wed != null)
           dayHours = hours.wed;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
+          return textClosed(
+            context,
+            nextOpenDay: findNextOpenDay(hours),
+            nextOpenTime: findNextOpenTime(hours),
+          );
         break;
       case 4:
         if (hours.thu != null)
           dayHours = hours.thu;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
+          return textClosed(
+            context,
+            nextOpenDay: findNextOpenDay(hours),
+            nextOpenTime: findNextOpenTime(hours),
+          );
         break;
       case 5:
         if (hours.fri != null)
           dayHours = hours.fri;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
+          return textClosed(
+            context,
+            nextOpenDay: findNextOpenDay(hours),
+            nextOpenTime: findNextOpenTime(hours),
+          );
         break;
       case 6:
         if (hours.sat != null)
           dayHours = hours.sat;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
+          return textClosed(
+            context,
+            nextOpenDay: findNextOpenDay(hours),
+            nextOpenTime: findNextOpenTime(hours),
+          );
         break;
       case 7:
         if (hours.sun != null)
           dayHours = hours.sun;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
+          return textClosed(
+            context,
+            nextOpenDay: findNextOpenDay(hours),
+            nextOpenTime: findNextOpenTime(hours),
+          );
         break;
       default:
-        return textClosed(context,
-            nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
+        return textClosed(
+          context,
+          nextOpenDay: findNextOpenDay(hours),
+          nextOpenTime: findNextOpenTime(hours),
+        );
     }
     if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
       if (dayHours == 'Closed-Closed')
-        return textClosed(context,
-            nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
+        return textClosed(
+          context,
+          nextOpenDay: findNextOpenDay(hours),
+          nextOpenTime: findNextOpenTime(hours),
+        );
       if (dayHours == 'Invalid Date-Invalid Date')
         return Text("Unknown hours", style: Theme.of(context).textTheme.bodySmall);
 
@@ -169,11 +190,12 @@ class DiningList extends StatelessWidget {
     return Text(
       formattedTimeRange(dayHours) ?? dayHours,
       style: TextStyle(
-          fontSize: 17.0,
-          fontWeight: FontWeight.w400,
-          color: Theme.of(context).brightness == Brightness.light
-              ? descriptiveTextColorLight
-              : descriptiveTextColorDark),
+        fontSize: 17.0,
+        fontWeight: FontWeight.w400,
+        color: Theme.of(context).brightness == Brightness.light
+            ? descriptiveTextColorLight
+            : descriptiveTextColorDark,
+      ),
     );
   }
 
@@ -188,22 +210,17 @@ class DiningList extends StatelessWidget {
         child: data.vendorLogo != null
             ? Container(
                 decoration: Theme.of(context).brightness == Brightness.dark
-                    ? BoxDecoration(
-                        color: lightTextColor,
-                        borderRadius: BorderRadius.circular(8),
-                      )
+                    ? BoxDecoration(color: lightTextColor, borderRadius: BorderRadius.circular(8))
                     : null,
-                child: Image.network(
-                  data.vendorLogo!,
-                  width: 48,
-                  height: 48,
-                ),
+                child: Image.network(data.vendorLogo!, width: 48, height: 48),
               )
-            : Icon(Icons.restaurant,
+            : Icon(
+                Icons.restaurant,
                 size: 32,
                 color: Theme.of(context).brightness == Brightness.light
                     ? lightPrimaryColor
-                    : darkPrimaryColor2),
+                    : darkPrimaryColor2,
+              ),
       ),
       // Vendor Name
       title: Text(
@@ -230,9 +247,7 @@ class DiningList extends StatelessWidget {
   // Builds the Right side of the ListTile containing the icon and distance
   Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
     return TextButton(
-      style: TextButton.styleFrom(
-        foregroundColor: linkColorLight,
-      ),
+      style: TextButton.styleFrom(foregroundColor: linkColorLight),
       onPressed: () async {
         try {
           await DirectionsHelper.openDirections(data.coordinates!.lat!, data.coordinates!.lon!);
@@ -243,20 +258,23 @@ class DiningList extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.directions_walk,
-              size: 28,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? linkColorLight
-                  : linkColorDark),
+          Icon(
+            Icons.directions_walk,
+            size: 28,
+            color: Theme.of(context).brightness == Brightness.light
+                ? linkColorLight
+                : linkColorDark,
+          ),
           Text(
             data.distance != null
                 ? (num.parse(data.distance!.toStringAsFixed(1)).toString() + ' mi')
                 : '--',
             style: TextStyle(
-                fontSize: 13,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? linkColorLight
-                    : linkColorDark),
+              fontSize: 13,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? linkColorLight
+                  : linkColorDark,
+            ),
           ),
         ],
       ),

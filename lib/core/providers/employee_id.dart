@@ -24,7 +24,7 @@ class EmployeeIdDataProvider extends ChangeNotifier {
     notifyListeners();
 
     final Map<String, String> header = {
-      'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+      'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}',
     };
 
     /// Verify that user is logged in

@@ -43,8 +43,9 @@ class MapsDataProvider extends ChangeNotifier {
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
       position: LatLng(_mapSearchModels[listIndex].mkrLat!, _mapSearchModels[listIndex].mkrLong!),
       infoWindow: InfoWindow(
-          title: _mapSearchModels[listIndex].title,
-          snippet: _mapSearchModels[listIndex].description),
+        title: _mapSearchModels[listIndex].title,
+        snippet: _mapSearchModels[listIndex].description,
+      ),
     );
     _markers.clear();
     _markers[marker.markerId] = marker;
@@ -58,11 +59,11 @@ class MapsDataProvider extends ChangeNotifier {
       _mapController!
           .animateCamera(CameraUpdate.newLatLng(_markers.values.toList()[0].position))
           .then((_) async {
-        await Future.delayed(Duration(seconds: 1));
-        try {
-          _mapController!.showMarkerInfoWindow(_markers.values.toList()[0].markerId);
-        } catch (e) {}
-      });
+            await Future.delayed(Duration(seconds: 1));
+            try {
+              _mapController!.showMarkerInfoWindow(_markers.values.toList()[0].markerId);
+            } catch (e) {}
+          });
     }
   }
 

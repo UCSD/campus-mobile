@@ -69,7 +69,7 @@ class DiningDataProvider extends ChangeNotifier {
             .any((type) => _diningFilterTypeStates[type] == true))
           // Add it to _filteredDiningModels as a key-value pair
           // Key: diningModel.name, Value: the whole diningModel
-          diningModel.name: diningModel
+          diningModel.name: diningModel,
     };
   }
 
@@ -107,8 +107,12 @@ class DiningDataProvider extends ChangeNotifier {
     if (_coordinates != null && _coordinates!.lat != null && _coordinates!.lon != null) {
       for (DiningModel model in _diningModels.values.toList()) {
         if (model.coordinates != null) {
-          var distance = calculateDistance(_coordinates!.lat!, _coordinates!.lon!,
-              model.coordinates!.lat!, model.coordinates!.lon!);
+          var distance = calculateDistance(
+            _coordinates!.lat!,
+            _coordinates!.lon!,
+            model.coordinates!.lat!,
+            model.coordinates!.lon!,
+          );
           model.distance = distance.toDouble();
         } else {
           model.distance = null;

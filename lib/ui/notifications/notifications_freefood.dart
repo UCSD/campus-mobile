@@ -6,10 +6,7 @@ class FreeFoodNotification extends StatefulWidget {
   /// required parameters
   final String? messageId;
 
-  const FreeFoodNotification({
-    Key? key,
-    required this.messageId,
-  }) : super(key: key);
+  const FreeFoodNotification({Key? key, required this.messageId}) : super(key: key);
 
   @override
   _CheckBoxButtonState createState() => _CheckBoxButtonState(messageId);
@@ -53,95 +50,100 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
     var isOverCount = _freeFoodDataProvider.isOverCount(messageId!);
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
     var currCount = _freeFoodDataProvider.count(messageId!);
-    var countText =
-        currCount == 1 ? '$currCount student is going' : '$currCount students are going';
+    var countText = currCount == 1
+        ? '$currCount student is going'
+        : '$currCount students are going';
 
     return Container(
-        margin: EdgeInsets.only(top: 8.0),
-        child: Row(
-          children: <Widget>[
-            Container(
-              height: 30,
-              width: 170,
-              child: AnimatedCrossFade(
-                duration: Duration(milliseconds: 300),
-                crossFadeState: isOverCount ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                firstChild: Column(
-                  children: <Widget>[
-                    Text(countText, style: TextStyle(fontSize: 10, color: Colors.red)),
-                    Container(
-                        margin: EdgeInsets.only(top: 2.0),
-                        child: Row(
-                          children: <Widget>[
-                            Icon(Icons.report, color: Colors.grey, size: 15),
-                            Text("There may not be enough food", style: TextStyle(fontSize: 12))
-                          ],
-                        )),
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                ),
-                secondChild: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(countText, style: TextStyle(fontSize: 12, color: Colors.green)),
-                ),
+      margin: EdgeInsets.only(top: 8.0),
+      child: Row(
+        children: <Widget>[
+          Container(
+            height: 30,
+            width: 170,
+            child: AnimatedCrossFade(
+              duration: Duration(milliseconds: 300),
+              crossFadeState: isOverCount ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+              firstChild: Column(
+                children: <Widget>[
+                  Text(countText, style: TextStyle(fontSize: 10, color: Colors.red)),
+                  Container(
+                    margin: EdgeInsets.only(top: 2.0),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.report, color: Colors.grey, size: 15),
+                        Text("There may not be enough food", style: TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              secondChild: Align(
+                alignment: Alignment.topLeft,
+                child: Text(countText, style: TextStyle(fontSize: 12, color: Colors.green)),
               ),
             ),
-            _checkBoxButton()
-          ],
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        ));
+          ),
+          _checkBoxButton(),
+        ],
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      ),
+    );
   }
 
   Widget _checkBoxButton() {
     return Container(
-        height: 23,
-        width: 100,
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 1.0,
-            color: _borderColor,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(2.0),
-          ),
-        ),
-        margin: EdgeInsets.only(right: 10.0),
-        child: _isLoading
-            ? Center(
-                child: Container(
-                    height: 12,
-                    width: 12,
-                    child: CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.secondary,
-                      strokeWidth: 1.5,
-                    )))
-            : Material(
-                color: _buttonColor,
-                child: InkWell(
-                  onTap: () {
-                    _toggleGoing();
-                  },
-                  child: Center(
-                      child: Row(
+      height: 23,
+      width: 100,
+      decoration: BoxDecoration(
+        border: Border.all(width: 1.0, color: _borderColor),
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+      margin: EdgeInsets.only(right: 10.0),
+      child: _isLoading
+          ? Center(
+              child: Container(
+                height: 12,
+                width: 12,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.secondary,
+                  strokeWidth: 1.5,
+                ),
+              ),
+            )
+          : Material(
+              color: _buttonColor,
+              child: InkWell(
+                onTap: () {
+                  _toggleGoing();
+                },
+                child: Center(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       SizedBox(
-                          height: 10.0,
-                          width: 8.0,
-                          child: Transform.scale(
-                              scale: 0.5,
-                              child: Checkbox(
-                                checkColor: Colors.green,
-                                activeColor: Colors.white,
-                                value: _isGoing,
-                                onChanged: (bool? val) {
-                                  _toggleGoing();
-                                },
-                              ))),
+                        height: 10.0,
+                        width: 8.0,
+                        child: Transform.scale(
+                          scale: 0.5,
+                          child: Checkbox(
+                            checkColor: Colors.green,
+                            activeColor: Colors.white,
+                            value: _isGoing,
+                            onChanged: (bool? val) {
+                              _toggleGoing();
+                            },
+                          ),
+                        ),
+                      ),
                       Text("I'm Going!", style: TextStyle(color: _textColor, fontSize: 12)),
                     ],
-                  )),
-                )));
+                  ),
+                ),
+              ),
+            ),
+    );
   }
 
   void _toggleGoing() {

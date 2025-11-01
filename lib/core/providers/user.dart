@@ -97,7 +97,8 @@ class UserDataProvider extends ChangeNotifier {
     tempUserProfile = userBox.get('UserProfileModel')!;
     _userProfileModel = tempUserProfile;
     _subscribeToPushNotificationTopics(
-        _userProfileModel.subscribedTopics!.whereType<String>().toList());
+      _userProfileModel.subscribedTopics!.whereType<String>().toList(),
+    );
     notifyListeners();
   }
 
@@ -126,8 +127,9 @@ class UserDataProvider extends ChangeNotifier {
     final rsaParser = RSAKeyParser();
     final pc.RSAPublicKey publicKey = rsaParser.parse(pkString) as RSAPublicKey;
     var cipher = OAEPEncoding(pc.AsymmetricBlockCipher('RSA'));
-    pc.AsymmetricKeyParameter<pc.RSAPublicKey> keyParametersPublic =
-        new pc.PublicKeyParameter(publicKey);
+    pc.AsymmetricKeyParameter<pc.RSAPublicKey> keyParametersPublic = new pc.PublicKeyParameter(
+      publicKey,
+    );
     cipher.init(true, keyParametersPublic);
     Uint8List output = cipher.process(utf8.encode(password));
     var base64EncodedText = base64.encode(output);
@@ -179,8 +181,9 @@ class UserDataProvider extends ChangeNotifier {
 
     /// Allow silentLogin if username, pw are set, and the user is not logged in
     if (username != null && encryptedPassword != null) {
-      final String base64EncodedWithEncryptedPassword =
-          base64.encode(utf8.encode(username + ':' + encryptedPassword));
+      final String base64EncodedWithEncryptedPassword = base64.encode(
+        utf8.encode(username + ':' + encryptedPassword),
+      );
       resetHomeScrollOffset();
       resetAllCardHeights();
       resetNotificationsScrollOffset();
@@ -252,7 +255,7 @@ class UserDataProvider extends ChangeNotifier {
     if (isLoggedIn) {
       /// we fetch the user data now
       final Map<String, String> headers = {
-        'Authorization': 'Bearer ' + _authenticationModel.accessToken!
+        'Authorization': 'Bearer ' + _authenticationModel.accessToken!,
       };
       if (await _userProfileService.downloadUserProfile(headers)) {
         /// if the user profile has no ucsd affiliation then we know the user is new
@@ -278,8 +281,9 @@ class UserDataProvider extends ChangeNotifier {
             newModel.classifications = Classifications.fromJson({'student': false, 'staff': false});
           }
           await updateUserProfileModel(newModel);
-          _pushNotificationDataProvider
-              .subscribeToTopics(newModel.subscribedTopics!.cast<String>());
+          _pushNotificationDataProvider.subscribeToTopics(
+            newModel.subscribedTopics!.cast<String>(),
+          );
         }
       } else {
         _error = _userProfileService.error;
@@ -347,7 +351,7 @@ class UserDataProvider extends ChangeNotifier {
     /// check if user is logged in
     if (_authenticationModel.isLoggedIn(_authenticationService.lastUpdated)) {
       final Map<String, String> headers = {
-        'Authorization': "Bearer " + _authenticationModel.accessToken!
+        'Authorization': "Bearer " + _authenticationModel.accessToken!,
       };
 
       /// we only want to push data that is not null

@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MapSearchBar extends StatelessWidget {
-  const MapSearchBar({
-    Key? key,
-  }) : super(key: key);
+  const MapSearchBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +25,15 @@ class MapSearchBar extends StatelessWidget {
               textInputAction: TextInputAction.search,
               onChanged: (text) {},
               onSubmitted: (text) {
-                if (Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text
-                    .isNotEmpty) {
+                if (Provider.of<MapsDataProvider>(
+                  context,
+                  listen: false,
+                ).searchBarController.text.isNotEmpty) {
                   // Don't fetch on empty text field
-                  Provider.of<MapsDataProvider>(context, listen: false)
-                      .fetchLocations(); // Text doesn't need to be sent over because it's already in the controller
+                  Provider.of<MapsDataProvider>(
+                    context,
+                    listen: false,
+                  ).fetchLocations(); // Text doesn't need to be sent over because it's already in the controller
                 }
                 Navigator.pop(context);
               },
@@ -51,13 +51,14 @@ class MapSearchBar extends StatelessWidget {
               ? IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
-                    Provider.of<MapsDataProvider>(context, listen: false)
-                        .searchBarController
-                        .clear();
+                    Provider.of<MapsDataProvider>(
+                      context,
+                      listen: false,
+                    ).searchBarController.clear();
                     Provider.of<MapsDataProvider>(context, listen: false).markers.clear();
                   },
                 )
-              : Container(height: 0)
+              : Container(height: 0),
         ],
       ),
     );

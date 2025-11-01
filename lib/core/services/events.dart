@@ -12,9 +12,7 @@ class EventsService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   late List<EventModel> _data;
@@ -24,8 +22,10 @@ class EventsService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await NetworkHelper.authorizedFetch(dotenv.get('EVENTS_ENDPOINT'), headers);
+      String _response = await NetworkHelper.authorizedFetch(
+        dotenv.get('EVENTS_ENDPOINT'),
+        headers,
+      );
 
       /// parse data
       final data = eventModelFromJson(_response);

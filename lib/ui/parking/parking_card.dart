@@ -46,19 +46,21 @@ class _ParkingCardState extends State<ParkingCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       actionButtons: [
         ActionButton(
-            buttonText: 'MANAGE SPOTS',
-            onPressed: () {
-              if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null) {
-                Navigator.pushNamed(context, RoutePaths.SpotTypesView);
-              }
-            }),
+          buttonText: 'MANAGE SPOTS',
+          onPressed: () {
+            if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null) {
+              Navigator.pushNamed(context, RoutePaths.SpotTypesView);
+            }
+          },
+        ),
         ActionLink(
-            buttonText: 'MANAGE LOTS',
-            onPressed: () {
-              if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null) {
-                Navigator.pushNamed(context, RoutePaths.ManageParkingView);
-              }
-            }),
+          buttonText: 'MANAGE LOTS',
+          onPressed: () {
+            if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null) {
+              Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+            }
+          },
+        ),
       ],
     );
   }
@@ -77,16 +79,10 @@ class _ParkingCardState extends State<ParkingCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "No Lots to Display",
-              style: TextStyle(fontSize: 24),
-            ),
+            Text("No Lots to Display", style: TextStyle(fontSize: 24)),
             Padding(
               padding: const EdgeInsets.only(top: 5),
-              child: Text(
-                "Add a Lot via 'Manage Lots'",
-                style: TextStyle(fontSize: 14),
-              ),
+              child: Text("Add a Lot via 'Manage Lots'", style: TextStyle(fontSize: 14)),
             ),
           ],
         ));
@@ -127,11 +123,7 @@ class _ParkingCardState extends State<ParkingCard> {
       print(e);
       return Container(
         width: double.infinity,
-        child: Center(
-          child: Container(
-            child: Text('An error occurred, please try again.'),
-          ),
-        ),
+        child: Center(child: Container(child: Text('An error occurred, please try again.'))),
       );
     }
   }

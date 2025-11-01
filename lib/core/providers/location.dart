@@ -11,10 +11,7 @@ class LocationDataProvider extends ChangeNotifier {
   late LocationPermission permission = LocationPermission.denied;
 
   /// SERVICES
-  final locationSettings = LocationSettings(
-    accuracy: LocationAccuracy.high,
-    distanceFilter: 100,
-  );
+  final locationSettings = LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100);
   var _locationController = StreamController<Coordinates>.broadcast();
 
   LocationDataProvider() {
@@ -49,7 +46,8 @@ class LocationDataProvider extends ChangeNotifier {
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
       return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+        'Location permissions are permanently denied, we cannot request permissions.',
+      );
     }
 
     // When we reach here, permissions are granted and we can

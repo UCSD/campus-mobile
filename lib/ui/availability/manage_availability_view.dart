@@ -15,17 +15,18 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
   @override
   Widget build(BuildContext context) {
     _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
-    return ContainerView(
-      child: buildLocationsList(context),
-    );
+    return ContainerView(child: buildLocationsList(context));
   }
 
   Widget buildLocationsList(BuildContext context) {
     return ReorderableListView(
       header: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Text("Hold and drag to reorder",
-            textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
+        child: Text(
+          "Hold and drag to reorder",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ),
       children: createList(context),
       onReorder: _onReorder,
@@ -91,40 +92,39 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
         if (match != null) curName = curName.replaceRange(match.start, match.end, '');
         if (existingKeys.contains(curName)) continue;
         existingKeys.add(curName);
-        list.add(Card(
-          key: Key(curName),
-          elevation: 2.0,
-          margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
-          child: ListTile(
-            title: Text(
-              curName,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            leading: Icon(
-              Icons.drag_handle,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? linkTextColorDark
-                  : linkTextColorLight,
-            ),
-            trailing: Transform.scale(
-              scale: 0.9, // Adjust the scale as needed
-              child: Switch.adaptive(
-                value: Provider.of<AvailabilityDataProvider>(context).locationViewState[curName]!,
-                // activeColor: Theme.of(context).buttonColor,
-                activeColor: toggleActiveColor,
-                thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.white;
-                  }
-                  return null;
-                }),
-                onChanged: (_) {
-                  _availabilityDataProvider.toggleLocation(curName);
-                },
+        list.add(
+          Card(
+            key: Key(curName),
+            elevation: 2.0,
+            margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
+            child: ListTile(
+              title: Text(curName, style: Theme.of(context).textTheme.bodyMedium),
+              leading: Icon(
+                Icons.drag_handle,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? linkTextColorDark
+                    : linkTextColorLight,
+              ),
+              trailing: Transform.scale(
+                scale: 0.9, // Adjust the scale as needed
+                child: Switch.adaptive(
+                  value: Provider.of<AvailabilityDataProvider>(context).locationViewState[curName]!,
+                  // activeColor: Theme.of(context).buttonColor,
+                  activeColor: toggleActiveColor,
+                  thumbColor: WidgetStateProperty.resolveWith((states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return Colors.white;
+                    }
+                    return null;
+                  }),
+                  onChanged: (_) {
+                    _availabilityDataProvider.toggleLocation(curName);
+                  },
+                ),
               ),
             ),
           ),
-        ));
+        );
       }
     }
     return list;

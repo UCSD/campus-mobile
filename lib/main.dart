@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
-import 'package:campus_mobile_experimental/app_router.dart'
-    as campusMobileRouter;
+import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
@@ -32,8 +31,7 @@ void main() async {
     final mapsImplementation = GoogleMapsFlutterPlatform.instance;
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
-      await mapsImplementation
-          .initializeWithRenderer(AndroidMapRenderer.latest);
+      await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
     }
 
     // dotenv loading
@@ -79,8 +77,7 @@ Future<void> clearSecuredStorage() async {
 Future<void> clearHiveStorage() async {
   await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
-  await (await Hive.openBox(DataPersistence.AuthenticationModel))
-      .deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.AuthenticationModel)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.UserProfileModel)).deleteFromDisk();
 }
 
@@ -104,14 +101,14 @@ class CampusMobile extends StatelessWidget {
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        background: lightButtonColor,
-        brightness: Brightness.light,
-      ),
+      colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: ColorPrimary,
+      ).copyWith(background: lightButtonColor, brightness: Brightness.light),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          unselectedItemColor: unselectedIconLightColor,
-          selectedItemColor: Colors.white,
-          backgroundColor: bottomTabBarColorLight),
+        unselectedItemColor: unselectedIconLightColor,
+        selectedItemColor: Colors.white,
+        backgroundColor: bottomTabBarColorLight,
+      ),
     );
 
     final darkTheme = ThemeData(
@@ -132,14 +129,14 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        background: darkButtonColor,
-        brightness: Brightness.dark,
-      ),
+      colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: ColorPrimary,
+      ).copyWith(background: darkButtonColor, brightness: Brightness.dark),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          unselectedItemColor: unselectedIconDarkColor,
-          selectedItemColor: Colors.white,
-          backgroundColor: bottomTabBarColorDark),
+        unselectedItemColor: unselectedIconDarkColor,
+        selectedItemColor: Colors.white,
+        backgroundColor: bottomTabBarColorDark,
+      ),
     );
 
     return MultiProvider(
@@ -148,12 +145,10 @@ class CampusMobile extends StatelessWidget {
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
         theme: lightTheme.copyWith(
-          colorScheme:
-              lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
+          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
-          colorScheme:
-              darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+          colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
         themeMode: ThemeMode.system,
         initialRoute: showOnboardingScreen
@@ -162,11 +157,7 @@ class CampusMobile extends StatelessWidget {
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
         builder: (context, child) {
-          return SafeArea(
-            top: false,
-            bottom: Platform.isAndroid,
-            child: child!,
-          );
+          return SafeArea(top: false, bottom: Platform.isAndroid, child: child!);
         },
       ),
     );

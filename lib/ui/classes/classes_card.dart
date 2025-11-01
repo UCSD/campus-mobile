@@ -46,8 +46,13 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildClassScheduleCard(BuildContext context, List<SectionData> courseData,
-      int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
+  Widget buildClassScheduleCard(
+    BuildContext context,
+    List<SectionData> courseData,
+    int selectedCourse,
+    DateTime lastUpdated,
+    String nextDayWithClasses,
+  ) {
     try {
       final section = courseData[selectedCourse];
       return Padding(
@@ -101,10 +106,7 @@ class ClassScheduleCard extends StatelessWidget {
             // Vertical Divider
             SizedBox(
               height: 276,
-              child: VerticalDivider(
-                color: listTileDividerColorDark,
-                thickness: 0.7,
-              ),
+              child: VerticalDivider(color: listTileDividerColorDark, thickness: 0.7),
             ),
             // Right-hand side of the card //
             Flexible(
@@ -112,9 +114,7 @@ class ClassScheduleCard extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start, // Aligns content to the top
                 crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
-                children: [
-                  UpcomingCoursesList(),
-                ],
+                children: [UpcomingCoursesList()],
               ),
             ),
           ],
@@ -142,15 +142,18 @@ class ClassScheduleCard extends StatelessWidget {
 
   // Heading 3 i.e. "CSE 141L"
   Widget buildClassCode(BuildContext context, String className) {
-    return Text(className,
-        style: TextStyle(
-            fontSize: 17.0,
-            fontFamily: 'Refrigerator Deluxe',
-            letterSpacing: 1.2,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2,
-            fontWeight: FontWeight.w900));
+    return Text(
+      className,
+      style: TextStyle(
+        fontSize: 17.0,
+        fontFamily: 'Refrigerator Deluxe',
+        letterSpacing: 1.2,
+        color: Theme.of(context).brightness == Brightness.light
+            ? lightPrimaryColor
+            : darkPrimaryColor2,
+        fontWeight: FontWeight.w900,
+      ),
+    );
   }
 
   // Small body text i.e. "Laboratory"
@@ -198,13 +201,16 @@ class ClassScheduleCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              Text((day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? lightPrimaryColor
-                          : darkPrimaryColor2,
-                      fontWeight: FontWeight.w700))
+              Text(
+                (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? lightPrimaryColor
+                      : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ],
           ),
         ],
@@ -242,12 +248,13 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                 location,
                 style: TextStyle(
-                    fontSize: 15,
-                    letterSpacing: 0.8,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? lightPrimaryColor
-                        : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700),
+                  fontSize: 15,
+                  letterSpacing: 0.8,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? lightPrimaryColor
+                      : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -261,11 +268,13 @@ class ClassScheduleCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
-          Icon(Icons.check_box_outlined,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : darkPrimaryColor2,
-              size: 34),
+          Icon(
+            Icons.check_box_outlined,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : darkPrimaryColor2,
+            size: 34,
+          ),
           SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,11 +293,12 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                 gradeEvaluation,
                 style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? lightPrimaryColor
-                        : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700),
+                  fontSize: 16,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? lightPrimaryColor
+                      : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),

@@ -10,9 +10,7 @@ class NewsService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   NewsModel _newsModels = NewsModel();
@@ -22,8 +20,10 @@ class NewsService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await (NetworkHelper.authorizedFetch(dotenv.get('NEWS_ENDPOINT'), headers));
+      String _response = await (NetworkHelper.authorizedFetch(
+        dotenv.get('NEWS_ENDPOINT'),
+        headers,
+      ));
 
       /// parse data
       _newsModels = newsModelFromJson(_response);

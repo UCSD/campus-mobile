@@ -45,70 +45,92 @@ class Router {
       case RoutePaths.OnboardingLogin:
         return MaterialPageRoute(builder: (_) => OnboardingLogin());
       case RoutePaths.Home:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(null);
-          return Home();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(null);
+            return Home();
+          },
+        );
       case RoutePaths.Map:
         return MaterialPageRoute(builder: (_) => prefix0.Maps());
       case RoutePaths.MapSearch:
         return MaterialPageRoute(builder: (_) => MapSearchView());
       case RoutePaths.Notifications:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return NotificationsListView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return NotificationsListView();
+          },
+        );
       case RoutePaths.Profile:
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NewsViewAll:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return NewsList();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return NewsList();
+          },
+        );
       case RoutePaths.EventsViewAll:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
-          return EventsCardList();
-        });
+        return MaterialPageRoute(
+          builder: (context) {
+            Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+            return EventsCardList();
+          },
+        );
       case RoutePaths.NewsDetailView:
         Item newsItem = settings.arguments as Item;
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return NewsDetailView(data: newsItem);
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return NewsDetailView(data: newsItem);
+          },
+        );
       case RoutePaths.EventDetailView:
         EventModel data = settings.arguments as EventModel;
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return EventDetailView(data: data);
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return EventDetailView(data: data);
+          },
+        );
       case RoutePaths.EventsAll:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
-          return EventsAll();
-        });
+        return MaterialPageRoute(
+          builder: (context) {
+            Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+            return EventsAll();
+          },
+        );
       case RoutePaths.ManageAvailabilityView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ManageAvailabilityView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return ManageAvailabilityView();
+          },
+        );
       case RoutePaths.AvailabilityDetailedView:
         SubLocations subLocation = settings.arguments as SubLocations;
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return AvailabilityDetailedView(subLocation: subLocation);
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return AvailabilityDetailedView(subLocation: subLocation);
+          },
+        );
       case RoutePaths.DiningViewAllDiningOptions:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return DiningList();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return DiningList();
+          },
+        );
       case RoutePaths.DiningOptionDetailView:
         DiningModel data = settings.arguments as DiningModel;
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return DiningDetailView(data: data);
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return DiningDetailView(data: data);
+          },
+        );
       case RoutePaths.DiningPaymentFilterView:
         // Don't Change the app bar title for this view
         return MaterialPageRoute(builder: (_) => DiningFilterView());
@@ -125,61 +147,83 @@ class Router {
       //             disclaimerEmail: disclaimerEmail,
       //           ));
       case RoutePaths.ManageParkingView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ManageParkingView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return ManageParkingView();
+          },
+        );
       case RoutePaths.SpotTypesView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return SpotTypesView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return SpotTypesView();
+          },
+        );
       case RoutePaths.ManageShuttleView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ManageShuttleView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return ManageShuttleView();
+          },
+        );
       case RoutePaths.AddShuttleStopsView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return AddShuttleStopsView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return AddShuttleStopsView();
+          },
+        );
       case RoutePaths.CardsView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return CardsView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return CardsView();
+          },
+        );
       case RoutePaths.NotificationsFilter:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return NotificationsFilterView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return NotificationsFilterView();
+          },
+        );
       case RoutePaths.ClassScheduleViewAll:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
-          return ClassList();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+            return ClassList();
+          },
+        );
       case RoutePaths.ParkingStructureView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
-          return ParkingStructureView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
+            return ParkingStructureView();
+          },
+        );
       case RoutePaths.NeighborhoodsView:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
-          return NeighborhoodsView();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
+            return NeighborhoodsView();
+          },
+        );
       case RoutePaths.NeighborhoodsLotsView:
         List<String> data = settings.arguments as List<String>;
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
-          return NeighborhoodLotsView(data);
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
+            return NeighborhoodLotsView(data);
+          },
+        );
       default:
-        return MaterialPageRoute(builder: (_) {
-          Provider.of<CustomAppBar>(_).changeTitle(null);
-          return Home();
-        });
+        return MaterialPageRoute(
+          builder: (_) {
+            Provider.of<CustomAppBar>(_).changeTitle(null);
+            return Home();
+          },
+        );
     }
   }
 }

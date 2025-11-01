@@ -11,9 +11,7 @@ class ShuttleService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// add state related things for view model here
   /// add any type of data manipulation here so it can be accessed via provider
@@ -26,8 +24,10 @@ class ShuttleService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await (NetworkHelper.authorizedFetch(dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
+      String _response = await (NetworkHelper.authorizedFetch(
+        dotenv.get('SHUTTLE_API_ENDPOINT'),
+        headers,
+      ));
 
       /// parse data
       var data = shuttleStopModelFromJson(_response);
@@ -52,7 +52,9 @@ class ShuttleService {
     try {
       /// fetch data
       String _response = await (NetworkHelper.authorizedFetch(
-          dotenv.get('SHUTTLE_API_ENDPOINT') + "/$stopId/arrivals", headers));
+        dotenv.get('SHUTTLE_API_ENDPOINT') + "/$stopId/arrivals",
+        headers,
+      ));
 
       /// parse data
       final arrivingData = getArrivingShuttles(_response);

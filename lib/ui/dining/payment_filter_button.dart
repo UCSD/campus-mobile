@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 
 class PaymentFilterButton extends StatelessWidget {
-  const PaymentFilterButton({
-    Key? key,
-  }) : super(key: key);
+  const PaymentFilterButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +16,9 @@ class PaymentFilterButton extends StatelessWidget {
         width: 32,
         height: 32,
       ),
-      backgroundColor:
-          Theme.of(context).brightness == Brightness.light ? ColorPrimary : Colors.white,
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? ColorPrimary
+          : Colors.white,
       onPressed: () {
         Navigator.pushNamed(context, RoutePaths.DiningPaymentFilterView);
       },

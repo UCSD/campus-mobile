@@ -46,8 +46,9 @@ class EventDetailView extends StatelessWidget {
           ),
         ),
         Container(
-            padding: const EdgeInsets.only(left: 17.0),
-            child: Row(children: [
+          padding: const EdgeInsets.only(left: 17.0),
+          child: Row(
+            children: [
               // Event Location
               Icon(
                 Icons.location_on_sharp,
@@ -78,8 +79,8 @@ class EventDetailView extends StatelessWidget {
                 data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
                     ? '    All day     '
                     : DateFormat.jm().format(data.startDate.toLocal()) +
-                        ' - ' +
-                        DateFormat.jm().format(data.endDate.toLocal()),
+                          ' - ' +
+                          DateFormat.jm().format(data.endDate.toLocal()),
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).brightness == Brightness.light
@@ -89,29 +90,32 @@ class EventDetailView extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16),
-            ])),
+            ],
+          ),
+        ),
         Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                ///////////////// Horizontal Division ///////////////////
-                Divider(color: listTileDividerColorDark, thickness: 0.6),
-                // Event Description
-                data.description != null && data.description!.isNotEmpty
-                    ? Text(
-                        data.description!,
-                        style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
-                      )
-                    : Container(),
-              ],
-            )),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              ///////////////// Horizontal Division ///////////////////
+              Divider(color: listTileDividerColorDark, thickness: 0.6),
+              // Event Description
+              data.description != null && data.description!.isNotEmpty
+                  ? Text(
+                      data.description!,
+                      style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
+                    )
+                  : Container(),
+            ],
+          ),
+        ),
         Container(
           padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
           // "GO TO EVENT PAGE" Button
           child: data.link != null && data.link!.isNotEmpty
               ? GoToEventPageButton(link: data.link!)
               : Container(),
-        )
+        ),
       ],
     );
   }
@@ -168,32 +172,38 @@ class EventDateContainer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Month
-        Text(date.split(' ')[0].toUpperCase(),
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : Colors.white,
-              fontWeight: FontWeight.w400,
-            )),
+        Text(
+          date.split(' ')[0].toUpperCase(),
+          style: TextStyle(
+            fontSize: 18,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : Colors.white,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
         // Day
-        Text(date.split(' ')[1].toUpperCase(),
-            style: TextStyle(
-              fontSize: 20,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : Colors.white,
-              fontWeight: FontWeight.w500,
-            )),
+        Text(
+          date.split(' ')[1].toUpperCase(),
+          style: TextStyle(
+            fontSize: 20,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         // Year
-        Text(date.split(' ')[2].toUpperCase(),
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? lightPrimaryColor
-                  : Colors.white,
-              fontWeight: FontWeight.w400,
-            )),
+        Text(
+          date.split(' ')[2].toUpperCase(),
+          style: TextStyle(
+            fontSize: 18,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : Colors.white,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
       ],
     );
   }
@@ -249,8 +259,9 @@ class GoToEventPageButton extends StatelessWidget {
             try {
               await launch(link, forceSafariVC: true);
             } catch (e) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('Could not open.')));
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Could not open.')));
             }
           },
           child: FittedBox(

@@ -30,13 +30,9 @@ class NewsDetailView extends StatelessWidget {
             child: Row(
               children: [
                 // Mimics StartDateContainer from events_detail_view.dart
-                NewsDateContainer(
-                  date: DateFormat("MMM d y").format(data.date.toLocal()),
-                ),
+                NewsDateContainer(date: DateFormat("MMM d y").format(data.date.toLocal())),
                 // Title on the right
-                Expanded(
-                  child: NewsTitle(title: data.title),
-                ),
+                Expanded(child: NewsTitle(title: data.title)),
               ],
             ),
           ),
@@ -45,11 +41,7 @@ class NewsDetailView extends StatelessWidget {
             child: data.description.isNotEmpty
                 ? Text(
                     data.description,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      height: 1.4,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    style: const TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
                   )
                 : Container(),
           ),
@@ -79,8 +71,9 @@ class NewsDateContainer extends StatelessWidget {
           parts[0].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color:
-                Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -88,8 +81,9 @@ class NewsDateContainer extends StatelessWidget {
           parts[1].toUpperCase(),
           style: TextStyle(
             fontSize: 20,
-            color:
-                Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : Colors.white,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -97,8 +91,9 @@ class NewsDateContainer extends StatelessWidget {
           parts[2].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color:
-                Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+            color: Theme.of(context).brightness == Brightness.light
+                ? lightPrimaryColor
+                : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -120,8 +115,9 @@ class NewsTitle extends StatelessWidget {
         style: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,
-          color:
-              Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+          color: Theme.of(context).brightness == Brightness.light
+              ? lightPrimaryColor
+              : Colors.white,
         ),
       ),
     );
@@ -144,18 +140,15 @@ class ContinueReadingButton extends StatelessWidget {
         try {
           await launch(link, forceSafariVC: true);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Could not open.')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Could not open.')));
         }
       },
       child: FittedBox(
         child: Row(
           children: [
-            Text(
-              'FULL STORY',
-              style: TextStyle(fontSize: 18, color: lightPrimaryColor),
-            ),
+            Text('FULL STORY', style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
             const SizedBox(width: 4),
             Icon(Icons.open_in_new, size: 18, color: lightPrimaryColor),
           ],

@@ -22,10 +22,7 @@ class DiningFilterView extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Text(
-              'Dining Payment Filters',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            child: Text('Dining Payment Filters', style: Theme.of(context).textTheme.titleMedium),
           ),
           Expanded(
             child: Padding(
@@ -48,7 +45,10 @@ class DiningFilterView extends StatelessWidget {
 
   // Creates a list of tiles containing filter types with switches
   List<Widget> createList(
-      BuildContext context, List<String> typesAvailable, DiningDataProvider diningProvider) {
+    BuildContext context,
+    List<String> typesAvailable,
+    DiningDataProvider diningProvider,
+  ) {
     List<Widget> filterTypesList = [];
     // For each filter type available, create a ListTile with a switch
     // ```type``` is the filter type's name (i.e. "Triton Cash")
@@ -75,8 +75,8 @@ class DiningFilterView extends StatelessWidget {
               scale: 0.9,
               child: Switch.adaptive(
                 // Each filter type's switch is 'on' or 'off' based on the filter type's state
-                value: diningProvider.diningFilterTypeStates[
-                    type]!, // Remember that ```type``` is a string key (i.e. "Triton Cash")
+                value: diningProvider
+                    .diningFilterTypeStates[type]!, // Remember that ```type``` is a string key (i.e. "Triton Cash")
                 onChanged: (_) {
                   // On changed, this calls the provider function that "toggles" the filter type's state
                   // i.e. if "Triton Cash" was on (true), it makes it off (false).

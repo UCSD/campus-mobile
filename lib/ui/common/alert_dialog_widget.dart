@@ -72,10 +72,7 @@ class AlertDialogWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Icon(
-                icon,
-                color: errorAlertDialogLightTheme.colorScheme.primary,
-              ),
+              child: Icon(icon, color: errorAlertDialogLightTheme.colorScheme.primary),
               flex: 1,
             ),
             Expanded(
@@ -93,10 +90,7 @@ class AlertDialogWidget extends StatelessWidget {
             ),
             Expanded(
               child: IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: errorAlertDialogLightTheme.colorScheme.primary,
-                ),
+                icon: Icon(Icons.close, color: errorAlertDialogLightTheme.colorScheme.primary),
                 alignment: Alignment.topRight,
                 onPressed: onClose,
               ),
@@ -105,17 +99,12 @@ class AlertDialogWidget extends StatelessWidget {
           ],
         ),
         content: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.6,
-          ),
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.6),
           child: SingleChildScrollView(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(),
-                ),
+                Expanded(flex: 1, child: Container()),
                 Expanded(
                   flex: 6,
                   child: Column(
@@ -134,10 +123,7 @@ class AlertDialogWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: Container(),
-                ),
+                Expanded(flex: 1, child: Container()),
               ],
             ),
           ),

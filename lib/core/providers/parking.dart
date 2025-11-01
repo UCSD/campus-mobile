@@ -113,7 +113,7 @@ class ParkingDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-// add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
+  // add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
   void toggleLot(String location, int numSelected) {
     try {
       selectedLots = numSelected;
@@ -186,7 +186,8 @@ class ParkingDataProvider extends ChangeNotifier {
       for (dynamic spot in _parkingModels[locationId]!.availability.keys) {
         if (_parkingModels[locationId]!.availability[spot]['Open'] != null &&
             _parkingModels[locationId]!.availability[spot]['Open'] != "") {
-          totalAndOpenSpots["Open"] = totalAndOpenSpots["Open"]! +
+          totalAndOpenSpots["Open"] =
+              totalAndOpenSpots["Open"]! +
               (_parkingModels[locationId]!.availability[spot]['Open'] is String
                   ? int.parse(_parkingModels[locationId]!.availability[spot]['Open'])
                   : _parkingModels[locationId]!.availability[spot]['Open']);
@@ -194,7 +195,8 @@ class ParkingDataProvider extends ChangeNotifier {
 
         if (_parkingModels[locationId]!.availability[spot]['Total'] != null &&
             _parkingModels[locationId]!.availability[spot]['Total'] != "") {
-          totalAndOpenSpots["Total"] = totalAndOpenSpots["Total"]! +
+          totalAndOpenSpots["Total"] =
+              totalAndOpenSpots["Total"]! +
               (_parkingModels[locationId]!.availability[spot]['Total'] is String
                   ? int.parse(_parkingModels[locationId]!.availability[spot]['Total'])
                   : _parkingModels[locationId]!.availability[spot]['Total']);

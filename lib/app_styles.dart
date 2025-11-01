@@ -41,15 +41,9 @@ const Color systemErrorBackground = Color(0xFFF8E8E6);
 /* END Global Themes Configured in main.dart */
 
 /* START Other Styles */
-final descriptiveTextSmallLight = TextStyle(
-  fontSize: 16.0,
-  color: descriptiveTextColorLight,
-);
+final descriptiveTextSmallLight = TextStyle(fontSize: 16.0, color: descriptiveTextColorLight);
 
-final descriptiveTextSmallDark = TextStyle(
-  fontSize: 16.0,
-  color: descriptiveTextColorDark,
-);
+final descriptiveTextSmallDark = TextStyle(fontSize: 16.0, color: descriptiveTextColorDark);
 
 const headerStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
@@ -64,84 +58,96 @@ const subHeaderStyle = TextStyle(
 );
 
 final textButtonSmallLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    color: linkTextColorLight,
-    decoration: TextDecoration.underline);
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  color: linkTextColorLight,
+  decoration: TextDecoration.underline,
+);
 
 final textButtonSmallDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    color: linkTextColorDark,
-    decoration: TextDecoration.underline);
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  color: linkTextColorDark,
+  decoration: TextDecoration.underline,
+);
 
 const titleSmallLight = TextStyle(
-    fontFamily: 'Refrigerator Deluxe',
-    fontSize: 18.0,
-    letterSpacing: 0.8,
-    fontWeight: FontWeight.w900,
-    color: lightPrimaryColor);
+  fontFamily: 'Refrigerator Deluxe',
+  fontSize: 18.0,
+  letterSpacing: 0.8,
+  fontWeight: FontWeight.w900,
+  color: lightPrimaryColor,
+);
 
 const titleSmallDark = TextStyle(
-    fontFamily: 'Refrigerator Deluxe',
-    fontSize: 18.0,
-    letterSpacing: 0.8,
-    fontWeight: FontWeight.w900,
-    color: Color(0xFFF5F0E6));
+  fontFamily: 'Refrigerator Deluxe',
+  fontSize: 18.0,
+  letterSpacing: 0.8,
+  fontWeight: FontWeight.w900,
+  color: Color(0xFFF5F0E6),
+);
 
 const titleMediumLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w700,
-    color: lightPrimaryColor);
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  fontWeight: FontWeight.w700,
+  color: lightPrimaryColor,
+);
 
 const titleMediumDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w700,
-    color: Colors.white);
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  fontWeight: FontWeight.w700,
+  color: Colors.white,
+);
 
 const headlineMediumLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 20.0,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-    decoration: TextDecoration.underline,
-    color: linkColorLight);
+  fontFamily: 'Brix Sans',
+  fontSize: 20.0,
+  fontWeight: FontWeight.w700,
+  height: 1.2,
+  decoration: TextDecoration.underline,
+  color: linkColorLight,
+);
 
 const headlineMediumDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 20.0,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-    decoration: TextDecoration.underline,
-    color: linkColorDark);
+  fontFamily: 'Brix Sans',
+  fontSize: 20.0,
+  fontWeight: FontWeight.w700,
+  height: 1.2,
+  decoration: TextDecoration.underline,
+  color: linkColorDark,
+);
 
 const headlineMediumLight2 = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 20.0,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-    color: lightPrimaryColor);
+  fontFamily: 'Brix Sans',
+  fontSize: 20.0,
+  fontWeight: FontWeight.w700,
+  height: 1.2,
+  color: lightPrimaryColor,
+);
 
 const headlineMediumDark2 = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 20.0,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-    color: darkPrimaryColor2);
+  fontFamily: 'Brix Sans',
+  fontSize: 20.0,
+  fontWeight: FontWeight.w700,
+  height: 1.2,
+  color: darkPrimaryColor2,
+);
 
 const bodyMediumLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w500,
-    color: descriptiveTextColorLight);
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  fontWeight: FontWeight.w500,
+  color: descriptiveTextColorLight,
+);
 
 const bodyMediumDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w500,
-    color: descriptiveTextColorDark);
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  fontWeight: FontWeight.w500,
+  color: descriptiveTextColorDark,
+);
 
 const appBarTitleStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
@@ -151,10 +157,11 @@ const appBarTitleStyle = TextStyle(
 );
 
 const cardTitleStyleLight = TextStyle(
-    fontFamily: 'Refrigerator Deluxe',
-    fontSize: 28,
-    fontWeight: FontWeight.w900,
-    color: lightPrimaryColor);
+  fontFamily: 'Refrigerator Deluxe',
+  fontSize: 28,
+  fontWeight: FontWeight.w900,
+  color: lightPrimaryColor,
+);
 
 const cardTitleStyleDark = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
@@ -180,18 +187,20 @@ const TextStyle labelLargeStyleDark = TextStyle(
 );
 
 const labelMediumStyleLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w400,
-    height: 1.0,
-    color: descriptiveTextColorLight);
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  fontWeight: FontWeight.w400,
+  height: 1.0,
+  color: descriptiveTextColorLight,
+);
 
 const labelMediumStyleDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w400,
-    height: 1.0,
-    color: descriptiveTextColorDark);
+  fontFamily: 'Brix Sans',
+  fontSize: 22.0,
+  fontWeight: FontWeight.w400,
+  height: 1.0,
+  color: descriptiveTextColorDark,
+);
 
 const TextStyle notificationsTitleLight = TextStyle(
   color: linkTextColorLight,
@@ -220,10 +229,16 @@ const TextStyle textSubheaderDark = TextStyle(
 );
 
 const textSmallMoreInfoLight = TextStyle(
-    fontSize: 15.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
+  fontSize: 15.0,
+  fontWeight: FontWeight.w700,
+  color: lightPrimaryColor,
+);
 
 const textSmallMoreInfoDark = TextStyle(
-    fontSize: 15.0, fontWeight: FontWeight.w700, color: darkPrimaryColor2);
+  fontSize: 15.0,
+  fontWeight: FontWeight.w700,
+  color: darkPrimaryColor2,
+);
 
 // New custom styles for heading2
 const TextStyle heading2StyleLight = TextStyle(
@@ -241,16 +256,18 @@ const TextStyle heading2StyleDark = TextStyle(
 );
 
 const TextStyle linkTextDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontWeight: FontWeight.w400,
-    decoration: TextDecoration.underline,
-    color: linkColorDark);
+  fontFamily: 'Brix Sans',
+  fontWeight: FontWeight.w400,
+  decoration: TextDecoration.underline,
+  color: linkColorDark,
+);
 
 const TextStyle linkTextLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontWeight: FontWeight.w400,
-    decoration: TextDecoration.underline,
-    color: linkColorLight);
+  fontFamily: 'Brix Sans',
+  fontWeight: FontWeight.w400,
+  decoration: TextDecoration.underline,
+  color: linkColorLight,
+);
 
 const Color toggleActiveColor = Color(0xFF109B00);
 
@@ -268,37 +285,31 @@ const cardContentMaxHeight = 568.0;
 const webViewMinHeight = 20.0;
 
 /// App Theme
-const MaterialColor ColorPrimary = MaterialColor(
-  0xFF182B49,
-  <int, Color>{
-    50: Color(0xFF182B49),
-    100: Color(0xFF182B49),
-    200: Color(0xFF182B49),
-    300: Color(0xFF182B49),
-    400: Color(0xFF182B49),
-    500: Color(0xFF182B49),
-    600: Color(0xFF182B49),
-    700: Color(0xFF182B49),
-    800: Color(0xFF182B49),
-    900: Color(0xFF182B49),
-  },
-);
+const MaterialColor ColorPrimary = MaterialColor(0xFF182B49, <int, Color>{
+  50: Color(0xFF182B49),
+  100: Color(0xFF182B49),
+  200: Color(0xFF182B49),
+  300: Color(0xFF182B49),
+  400: Color(0xFF182B49),
+  500: Color(0xFF182B49),
+  600: Color(0xFF182B49),
+  700: Color(0xFF182B49),
+  800: Color(0xFF182B49),
+  900: Color(0xFF182B49),
+});
 
-const MaterialColor ColorSecondary = MaterialColor(
-  0xFF006A96,
-  <int, Color>{
-    50: Color(0xFF006A96),
-    100: Color(0xFF006A96),
-    200: Color(0xFF006A96),
-    300: Color(0xFF006A96),
-    400: Color(0xFF006A96),
-    500: Color(0xFF006A96),
-    600: Color(0xFF006A96),
-    700: Color(0xFF006A96),
-    800: Color(0xFF006A96),
-    900: Color(0xFF006A96),
-  },
-);
+const MaterialColor ColorSecondary = MaterialColor(0xFF006A96, <int, Color>{
+  50: Color(0xFF006A96),
+  100: Color(0xFF006A96),
+  200: Color(0xFF006A96),
+  300: Color(0xFF006A96),
+  400: Color(0xFF006A96),
+  500: Color(0xFF006A96),
+  600: Color(0xFF006A96),
+  700: Color(0xFF006A96),
+  800: Color(0xFF006A96),
+  900: Color(0xFF006A96),
+});
 
 // Color for the top App Bar on light theme
 const AppBarTheme lightAppBarTheme = AppBarTheme(color: ColorPrimary);
@@ -364,10 +375,8 @@ const Color c2 = Color.fromARGB(255, 0, 255, 0);
 const Color c3 = Color.fromARGB(255, 0, 0, 255);
 
 // List Tile Theme Data
-const lightListTileTheme =
-    ListTileThemeData(selectedColor: const Color(0xFF00629B));
-const darkListTileTheme =
-    ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
+const lightListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00629B));
+const darkListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
 
 // New Onboarding Screen Colors
 const lightOnboardingScreen = Color.fromARGB(255, 245, 240, 228);
@@ -382,5 +391,4 @@ const List<double> grayscaleInvertMatrix = [
 
 // Dining logo border and shadow colors for dark mode
 const Color darkLogoBorderColor = Color(0xFF444444); // subtle dark border
-const Color darkLogoShadowColor =
-    Colors.white; // use white for shadow in dark mode
+const Color darkLogoShadowColor = Colors.white; // use white for shadow in dark mode

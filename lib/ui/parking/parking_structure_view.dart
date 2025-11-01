@@ -32,10 +32,12 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
         title: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Text("Parking Structures",
-              style: Theme.of(context).brightness == Brightness.dark
-                  ? textSubheaderDark
-                  : textSubheaderLight),
+          child: Text(
+            "Parking Structures",
+            style: Theme.of(context).brightness == Brightness.dark
+                ? textSubheaderDark
+                : textSubheaderLight,
+          ),
         ),
       ),
     );
@@ -52,10 +54,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
           title: Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Text(
-              structureName,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            child: Text(structureName, style: Theme.of(context).textTheme.bodyMedium),
           ),
           trailing: Transform.scale(
             scale: 0.9,
@@ -107,7 +106,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
                 height: 0,
               ),
             ),
-        ]
+        ],
       ],
     );
   }

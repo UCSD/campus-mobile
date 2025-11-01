@@ -10,9 +10,7 @@ class AvailabilityService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   late List<AvailabilityModel> _data;
@@ -25,8 +23,10 @@ class AvailabilityService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await NetworkHelper.authorizedFetch(dotenv.get('AVAILABILITY_API_ENDPOINT'), headers);
+      String _response = await NetworkHelper.authorizedFetch(
+        dotenv.get('AVAILABILITY_API_ENDPOINT'),
+        headers,
+      );
 
       /// parse data
       final data = availabilityStatusFromJson(_response);

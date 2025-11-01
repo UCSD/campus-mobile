@@ -62,22 +62,17 @@ class _DiningDetailViewState extends State<DiningDetailView> {
           diningModel.vendorLogo != null
               ? Container(
                   decoration: Theme.of(context).brightness == Brightness.dark
-                      ? BoxDecoration(
-                          color: lightTextColor,
-                          borderRadius: BorderRadius.circular(8),
-                        )
+                      ? BoxDecoration(color: lightTextColor, borderRadius: BorderRadius.circular(8))
                       : null,
-                  child: Image.network(
-                    diningModel.vendorLogo!,
-                    width: 80,
-                    height: 80,
-                  ),
+                  child: Image.network(diningModel.vendorLogo!, width: 80, height: 80),
                 )
-              : Icon(Icons.restaurant,
+              : Icon(
+                  Icons.restaurant,
                   size: 56,
                   color: Theme.of(context).brightness == Brightness.light
                       ? lightPrimaryColor
-                      : darkPrimaryColor2),
+                      : darkPrimaryColor2,
+                ),
           SizedBox(width: 8),
           Flexible(
             child: Column(
@@ -108,18 +103,24 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       ),
       // Availability Bars if applicable (Canyon Vista, Club Med, Pines, 64 Degrees, Cafe Ventanas)
       if ((busynessDiningHallModelOne != null &&
-              busynessDiningHallModelOne.subLocations.any((child) =>
-                  child.name.contains(diningModel.name) ||
-                  diningModel.name.contains(child.name))) ||
+              busynessDiningHallModelOne.subLocations.any(
+                (child) =>
+                    child.name.contains(diningModel.name) || diningModel.name.contains(child.name),
+              )) ||
           (busynessDiningHallModelTwo != null &&
-              busynessDiningHallModelTwo.subLocations.any((child) =>
-                  child.name.contains(diningModel.name) || diningModel.name.contains(child.name))))
+              busynessDiningHallModelTwo.subLocations.any(
+                (child) =>
+                    child.name.contains(diningModel.name) || diningModel.name.contains(child.name),
+              )))
         DiningBusynessBar(
           diningModel: diningModel,
-          busynessDiningHallModel: (busynessDiningHallModelOne != null &&
-                  busynessDiningHallModelOne.subLocations.any((child) =>
-                      child.name.contains(diningModel.name) ||
-                      diningModel.name.contains(child.name)))
+          busynessDiningHallModel:
+              (busynessDiningHallModelOne != null &&
+                  busynessDiningHallModelOne.subLocations.any(
+                    (child) =>
+                        child.name.contains(diningModel.name) ||
+                        diningModel.name.contains(child.name),
+                  ))
               ? busynessDiningHallModelOne
               : busynessDiningHallModelTwo!,
         ),
@@ -132,10 +133,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
       // Vendor Location
-      Text(
-        'Location',
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
+      Text('Location', style: Theme.of(context).textTheme.titleMedium),
       Transform.translate(
         offset: const Offset(0, -15),
         child: buildDirectionsButton(context, diningModel),
@@ -158,22 +156,19 @@ class _DiningDetailViewState extends State<DiningDetailView> {
 
   ///////////// Hours Section /////////////
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SizedBox(height: 14),
-      Text(
-        "Hours",
-        textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      SizedBox(height: 8),
-      ...List.generate(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 14),
+        Text("Hours", textAlign: TextAlign.start, style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8),
+        ...List.generate(
           7,
-          (i) => [
-                HoursOfDay(day: i + 1, model: model),
-                if (i < 6) buildDivider(context),
-              ]).expand((widgetPair) => widgetPair).toList(),
-      SizedBox(height: 16),
-    ]);
+          (i) => [HoursOfDay(day: i + 1, model: model), if (i < 6) buildDivider(context)],
+        ).expand((widgetPair) => widgetPair).toList(),
+        SizedBox(height: 16),
+      ],
+    );
   }
 
   Widget buildDivider(BuildContext context) {
@@ -190,31 +185,26 @@ class _DiningDetailViewState extends State<DiningDetailView> {
     var specialHoursDuration = "";
     if (model.specialHours?.specialHoursValidFrom != null &&
         model.specialHours?.specialHoursValidTo != null) {
-      specialHoursDuration = model.specialHours!.specialHoursValidFrom! +
+      specialHoursDuration =
+          model.specialHours!.specialHoursValidFrom! +
           " to " +
           model.specialHours!.specialHoursValidTo! +
           "\n";
     }
     return Container(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(
-          "Special Hours",
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        SizedBox(height: 10),
-        Text(
-          model.specialHours!.specialHoursEvent,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        Text(
-          model.specialHours!.specialHoursEventDetails,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        Text(
-          specialHoursDuration,
-          style: Theme.of(context).textTheme.bodySmall,
-        )
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Special Hours", style: Theme.of(context).textTheme.titleMedium),
+          SizedBox(height: 10),
+          Text(model.specialHours!.specialHoursEvent, style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            model.specialHours!.specialHoursEventDetails,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          Text(specialHoursDuration, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
     );
   }
 
@@ -226,19 +216,17 @@ class _DiningDetailViewState extends State<DiningDetailView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Specials",
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text("Specials", style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         Text(
           model.specials?.specialTitle ?? '',
           style: TextStyle(
-              fontSize: 17,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? descriptiveTextColorLight
-                  : descriptiveTextColorDark,
-              fontWeight: FontWeight.w700),
+            fontSize: 17,
+            color: Theme.of(context).brightness == Brightness.light
+                ? descriptiveTextColorLight
+                : descriptiveTextColorDark,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         SizedBox(height: 4),
         Text(
@@ -259,15 +247,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Payment Options",
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text("Payment Options", style: Theme.of(context).textTheme.titleMedium),
           SizedBox(height: 10),
-          Text(
-            options,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          Text(options, style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
     );
@@ -286,8 +268,9 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
             'Get Directions',
             style: linkTextDark.copyWith(
               fontSize: 18.0,
-              color:
-                  Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? linkColorLight
+                  : linkColorDark,
             ),
           ),
           SizedBox(width: 6),
@@ -301,13 +284,15 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
                 size: 32,
               ),
               model.distance != null
-                  ? Text(num.parse(model.distance!.toStringAsFixed(1)).toString() + ' mi',
+                  ? Text(
+                      num.parse(model.distance!.toStringAsFixed(1)).toString() + ' mi',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 18.0,
-                            color: Theme.of(context).brightness == Brightness.light
-                                ? linkColorLight
-                                : linkColorDark,
-                          ))
+                        fontSize: 18.0,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? linkColorLight
+                            : linkColorDark,
+                      ),
+                    )
                   : Text('--', style: TextStyle(color: linkColorLight)),
             ],
           ),
@@ -321,14 +306,13 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
           debugPrint('Error opening directions: $e');
         }
       },
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.all(0.0),
-      ),
+      style: TextButton.styleFrom(padding: EdgeInsets.all(0.0)),
     );
   } else {
     return Padding(
-        padding: const EdgeInsets.only(top: 12.0),
-        child: Text('Directions not available.', style: Theme.of(context).textTheme.bodySmall));
+      padding: const EdgeInsets.only(top: 12.0),
+      child: Text('Directions not available.', style: Theme.of(context).textTheme.bodySmall),
+    );
   }
 }
 
@@ -358,11 +342,7 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
   if (model.menuWebsite != null && model.menuWebsite!.isNotEmpty) {
     return TextButton(
       child: Row(
-        children: [
-          Text('View Menu'),
-          SizedBox(width: 5),
-          Icon(Icons.open_in_new, size: 16),
-        ],
+        children: [Text('View Menu'), SizedBox(width: 5), Icon(Icons.open_in_new, size: 16)],
       ),
       onPressed: () {
         try {
@@ -392,8 +372,9 @@ class HoursOfDay extends StatelessWidget {
     // Extract the hours for the given day from the model
     var result = extractDayHours(day, model);
     var theDay = result['day'];
-    var hoursText =
-        (result['hours'] == "Invalid Date-Invalid Date") ? "Unknown Hours" : result['hours'];
+    var hoursText = (result['hours'] == "Invalid Date-Invalid Date")
+        ? "Unknown Hours"
+        : result['hours'];
     // Determine the hours' text style
     // final TextStyle hoursTextStyle = day == DateTime.now().weekday
     //     ? TextStyle(
@@ -408,66 +389,66 @@ class HoursOfDay extends StatelessWidget {
             fontWeight: FontWeight.w700,
             color: Theme.of(context).brightness == Brightness.light
                 ? lightPrimaryColor
-                : darkPrimaryColor2)
+                : darkPrimaryColor2,
+          )
         : Theme.of(context).textTheme.bodySmall!;
 
     // Check if this is the current day
     final bool isToday = day == DateTime.now().weekday;
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Flexible(
-            flex: 3,
-            child: Row(
-              children: [
-                // Show the green dot for today
-                if (isToday) ...[
-                  SizedBox(
-                    width: 0,
-                    height: 0,
-                    child: OverflowBox(
-                      maxWidth: 10, //enough width and height to hold the dot
-                      maxHeight: 10,
-                      alignment: Alignment.centerLeft,
-                      child: Transform.translate(
-                        offset: const Offset(-11.5, 0),
-                        child: GreenDot(currHours: hoursText!),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Flexible(
+              flex: 3,
+              child: Row(
+                children: [
+                  // Show the green dot for today
+                  if (isToday) ...[
+                    SizedBox(
+                      width: 0,
+                      height: 0,
+                      child: OverflowBox(
+                        maxWidth: 10, //enough width and height to hold the dot
+                        maxHeight: 10,
+                        alignment: Alignment.centerLeft,
+                        child: Transform.translate(
+                          offset: const Offset(-11.5, 0),
+                          child: GreenDot(currHours: hoursText!),
+                        ),
                       ),
                     ),
+                    // SizedBox(width: 2),
+                  ],
+                  // "Monday" - Bold if today is Monday.
+                  Text(
+                    '$theDay',
+                    style: isToday
+                        ? Theme.of(context).textTheme.bodySmall!.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : darkPrimaryColor2,
+                          )
+                        : Theme.of(context).textTheme.bodySmall,
                   ),
-                  // SizedBox(width: 2),
                 ],
-                // "Monday" - Bold if today is Monday.
-                Text(
-                  '$theDay',
-                  style: isToday
-                      ? Theme.of(context).textTheme.bodySmall!.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: Theme.of(context).brightness == Brightness.light
-                              ? lightPrimaryColor
-                              : darkPrimaryColor2)
-                      : Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
+              ),
             ),
-          ),
-          // Display the hours text i.e. 9:30 AM - 4:30 PM (using the finals above)
-          Flexible(
-            flex: 5,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  hoursText!,
-                  style: hoursTextStyle,
-                ),
-              ],
+            // Display the hours text i.e. 9:30 AM - 4:30 PM (using the finals above)
+            Flexible(
+              flex: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [Text(hoursText!, style: hoursTextStyle)],
+              ),
             ),
-          )
-        ],
-      ),
-    ]);
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -511,8 +492,8 @@ Map<String, String> extractDayHours(int day, prefix0.DiningModel? model) {
   // Determine the hours' text
   final String hoursText =
       (theHours != null && theHours.contains('Closed')) || theHours == 'Open 24/7'
-          ? theHours!
-          : (formattedTimeRange(theHours) ?? theHours!);
+      ? theHours!
+      : (formattedTimeRange(theHours) ?? theHours!);
 
   return {'day': theDay, 'hours': hoursText};
 }
@@ -525,10 +506,7 @@ class GreenDot extends StatelessWidget {
     return Container(
       width: 7,
       height: 7,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: _determineColor(),
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: _determineColor()),
     );
   }
 

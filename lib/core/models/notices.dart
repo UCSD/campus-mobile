@@ -15,17 +15,16 @@ class NoticesModel {
   String imageUrl;
   String link;
 
-  NoticesModel({
-    required this.title,
-    required this.imageUrl,
-    required this.link,
-  });
+  NoticesModel({required this.title, required this.imageUrl, required this.link});
 
   NoticesModel.fromJson(Map<String, dynamic> json)
-      : title = json[noticeTitleKey],
-        imageUrl = json[noticeBannerImageKey],
-        link = json[noticeBannerLinkKey];
+    : title = json[noticeTitleKey],
+      imageUrl = json[noticeBannerImageKey],
+      link = json[noticeBannerLinkKey];
 
-  Map<String, dynamic> toJson() =>
-      {noticeTitleKey: title, noticeBannerImageKey: imageUrl, noticeBannerLinkKey: link};
+  Map<String, dynamic> toJson() => {
+    noticeTitleKey: title,
+    noticeBannerImageKey: imageUrl,
+    noticeBannerLinkKey: link,
+  };
 }

@@ -60,19 +60,16 @@ class EventDateTime extends StatelessWidget {
       if (sameDay) {
         if (!unspecifiedTime) {
           return Text(
-              startMonthDay + ', ' + startTime + ' - ' + endTime); // ex: Jan. 1, 8:00 AM - 12:00 PM
+            startMonthDay + ', ' + startTime + ' - ' + endTime,
+          ); // ex: Jan. 1, 8:00 AM - 12:00 PM
         } else {
           return Text(startMonthDay); // ex: Jan. 1
         }
       } else {
         if (!unspecifiedTime) {
-          return Text(startMonthDay +
-              ', ' +
-              startTime +
-              ' - ' +
-              endMonthDay +
-              ', ' +
-              endTime); // ex: Jan. 1, 8:00 AM - Jan. 2, 12:00 PM
+          return Text(
+            startMonthDay + ', ' + startTime + ' - ' + endMonthDay + ', ' + endTime,
+          ); // ex: Jan. 1, 8:00 AM - Jan. 2, 12:00 PM
         } else {
           return Text(startMonthDay + ' - ' + endMonthDay); // ex: Jan. 1 - Jan. 2
         }
@@ -102,16 +99,17 @@ class EventTileDateTime extends StatelessWidget {
       var unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
       Widget date, time;
       if (sameDay) {
-        date = Text(
-          startMonthDayYear,
-          style: TextStyle(fontSize: 12),
-        ); // Ex. June 11, 2021
+        date = Text(startMonthDayYear, style: TextStyle(fontSize: 12)); // Ex. June 11, 2021
       } else {
         // if not the same date, check if the same year
         var startYear = startMonthDayYear.substring(
-            startMonthDayYear.indexOf(',') + 2, startMonthDayYear.length);
-        var endYear =
-            endMonthDayYear.substring(endMonthDayYear.indexOf(',') + 2, endMonthDayYear.length);
+          startMonthDayYear.indexOf(',') + 2,
+          startMonthDayYear.length,
+        );
+        var endYear = endMonthDayYear.substring(
+          endMonthDayYear.indexOf(',') + 2,
+          endMonthDayYear.length,
+        );
         if (startYear == endYear) {
           // if the same year, check if the same month
           var startMonth = startMonthDayYear.substring(0, startMonthDayYear.indexOf(' '));
@@ -119,9 +117,13 @@ class EventTileDateTime extends StatelessWidget {
           if (startMonth == endMonth) {
             // if different date in the same month and year
             var startDay = startMonthDayYear.substring(
-                startMonthDayYear.indexOf(' ') + 1, startMonthDayYear.indexOf(','));
+              startMonthDayYear.indexOf(' ') + 1,
+              startMonthDayYear.indexOf(','),
+            );
             var endDay = endMonthDayYear.substring(
-                endMonthDayYear.indexOf(' ') + 1, endMonthDayYear.indexOf(','));
+              endMonthDayYear.indexOf(' ') + 1,
+              endMonthDayYear.indexOf(','),
+            );
             date = Text(
               startMonth + ' ' + startDay + ' - ' + endDay + ', ' + startYear,
               style: TextStyle(fontSize: 12),
@@ -144,25 +146,17 @@ class EventTileDateTime extends StatelessWidget {
       }
 
       if (unspecifiedTime) {
-        time = Text(
-          '',
-          style: TextStyle(fontSize: 12),
-        );
+        time = Text('', style: TextStyle(fontSize: 12));
       } else {
-        time = Text(
-          startTime + ' - ' + endTime,
-          style: TextStyle(fontSize: 12),
-        );
+        time = Text(startTime + ' - ' + endTime, style: TextStyle(fontSize: 12));
       }
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           date,
-          Padding(
-            padding: EdgeInsets.only(bottom: 5),
-          ),
-          time
+          Padding(padding: EdgeInsets.only(bottom: 5)),
+          time,
         ],
       );
     } catch (e) {

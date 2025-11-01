@@ -40,15 +40,8 @@ class MyUCSDChartCard extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Container(
-            child: Image.asset(
-              'assets/images/MyChartLogo.png',
-              fit: BoxFit.contain,
-              height: 32,
-            ),
-            padding: EdgeInsets.only(
-              left: 16,
-              right: 8,
-            ),
+            child: Image.asset('assets/images/MyChartLogo.png', fit: BoxFit.contain, height: 32),
+            padding: EdgeInsets.only(left: 16, right: 8),
           ),
           Flexible(
             child: Text(
@@ -56,7 +49,7 @@ class MyUCSDChartCard extends StatelessWidget {
               textAlign: TextAlign.left,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-          )
+          ),
         ],
       ),
     );

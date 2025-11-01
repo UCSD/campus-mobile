@@ -24,8 +24,9 @@ class EventsCard extends StatelessWidget {
       child: () => buildEventsCardList(Provider.of<EventsDataProvider>(context).eventsModels),
       actionButtons: [
         ActionButton(
-            buttonText: "VIEW ALL EVENTS",
-            onPressed: () => Navigator.pushNamed(context, RoutePaths.EventsViewAll))
+          buttonText: "VIEW ALL EVENTS",
+          onPressed: () => Navigator.pushNamed(context, RoutePaths.EventsViewAll),
+        ),
       ],
     );
   }

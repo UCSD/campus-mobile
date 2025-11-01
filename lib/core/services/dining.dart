@@ -13,9 +13,7 @@ class DiningService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   List<DiningModel>? _data = [];
@@ -27,7 +25,9 @@ class DiningService {
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('DINING_BASE_ENDPOINT') + '/locations', headers);
+        dotenv.get('DINING_BASE_ENDPOINT') + '/locations',
+        headers,
+      );
 
       /// parse data
       final data = diningModelFromJson(_response);

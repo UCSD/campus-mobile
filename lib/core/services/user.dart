@@ -19,7 +19,8 @@ class UserProfileService {
     _isLoading = true;
     try {
       _userProfileModel = userProfileModelFromJson(
-          await NetworkHelper.authorizedFetch(_endpoint + '/profile', headers));
+        await NetworkHelper.authorizedFetch(_endpoint + '/profile', headers),
+      );
       return true;
     } catch (e) {
       _error = e.toString();
@@ -34,7 +35,10 @@ class UserProfileService {
     _isLoading = true;
     try {
       final response = await NetworkHelper.authorizedPost(
-          _endpoint + '/profile', headers, createAttributeValueJson(body));
+        _endpoint + '/profile',
+        headers,
+        createAttributeValueJson(body),
+      );
       return response.toString() == 'Success' ? true : throw response.toString();
     } catch (e) {
       _error = e.toString();

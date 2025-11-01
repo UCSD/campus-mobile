@@ -57,18 +57,10 @@ class CardsDataProvider extends ChangeNotifier {
   ];
 
   // Native student cards
-  static const List<String> _studentCards = [
-    'finals',
-    'schedule',
-    'student_id',
-  ];
+  static const List<String> _studentCards = ['finals', 'schedule', 'student_id'];
 
   // Native staff cards
-  static const List<String> _staffCards = [
-    'MyUCSDChart',
-    'staff_info',
-    'employee_id',
-  ];
+  static const List<String> _staffCards = ['MyUCSDChart', 'staff_info', 'employee_id'];
 
   void updateAvailableCards(String? ucsdAffiliation) async {
     _isLoading = true;
@@ -169,8 +161,10 @@ class CardsDataProvider extends ChangeNotifier {
     // if no data was found then create the data and save it
     // by default all cards will be on
     if (_cardStateBox.get(DataPersistence.cardStates) == null) {
-      await _cardStateBox.put(DataPersistence.cardStates,
-          _cardStates.keys.where((card) => _cardStates[card]!).toList());
+      await _cardStateBox.put(
+        DataPersistence.cardStates,
+        _cardStates.keys.where((card) => _cardStates[card]!).toList(),
+      );
     } else {
       _deactivateAllCards();
     }

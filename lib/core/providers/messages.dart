@@ -92,7 +92,9 @@ class MessagesDataProvider extends ChangeNotifier {
     int returnedTimestamp;
 
     if (await _messageService.fetchTopicData(
-        _previousTimestamp, userDataProvider!.subscribedTopics!)) {
+      _previousTimestamp,
+      userDataProvider!.subscribedTopics!,
+    )) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp);
       makeOrderedMessagesList();
@@ -114,8 +116,11 @@ class MessagesDataProvider extends ChangeNotifier {
 
   void makeOrderedMessagesList() {
     Map<String, MessageElement> uniqueMessages = Map<String, MessageElement>();
-    uniqueMessages = Map.fromIterable(_messages,
-        key: (message) => message.messageId, value: (message) => message);
+    uniqueMessages = Map.fromIterable(
+      _messages,
+      key: (message) => message.messageId,
+      value: (message) => message,
+    );
     _messages.clear();
     uniqueMessages.forEach((k, v) => _messages.add(v));
     _messages.sort((a, b) => b.timestamp.compareTo(a.timestamp));

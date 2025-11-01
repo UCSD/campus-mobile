@@ -39,11 +39,12 @@ class AvailabilityDataProvider extends ChangeNotifier {
         /// show all locations by default
         if (userDataProvider.userProfileModel.selectedOccuspaceLocations!.isEmpty)
           _locationViewState[curName] = true;
-
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
-          _locationViewState[curName] =
-              userDataProvider.userProfileModel.selectedOccuspaceLocations!.contains(curName);
+          _locationViewState[curName] = userDataProvider
+              .userProfileModel
+              .selectedOccuspaceLocations!
+              .contains(curName);
         }
       }
 

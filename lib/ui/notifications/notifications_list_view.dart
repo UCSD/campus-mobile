@@ -29,9 +29,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     super.initState();
     hideListView = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<MessagesDataProvider>(context, listen: false)
-          .notificationScrollController
-          .jumpTo(getNotificationsScrollOffset());
+      Provider.of<MessagesDataProvider>(
+        context,
+        listen: false,
+      ).notificationScrollController.jumpTo(getNotificationsScrollOffset());
       setState(() {
         hideListView = false;
       });
@@ -80,8 +81,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         padding: EdgeInsets.only(top: 8),
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: itemBuilder!,
-        controller:
-            Provider.of<MessagesDataProvider>(context, listen: false).notificationScrollController,
+        controller: Provider.of<MessagesDataProvider>(
+          context,
+          listen: false,
+        ).notificationScrollController,
         itemCount: itemCount,
         separatorBuilder: (BuildContext context, int index) => Divider(
           color: Theme.of(context).brightness == Brightness.dark
@@ -95,22 +98,14 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   static Widget _buildErrorText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(NotificationsConstants.statusFetchProblem),
-      ],
+      children: <Widget>[Text(NotificationsConstants.statusFetchProblem)],
     );
   }
 
   static Widget _buildNoMessagesText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Flexible(
-          child: Text(
-            NotificationsConstants.statusNoMessages,
-          ),
-        ),
-      ],
+      children: <Widget>[Flexible(child: Text(NotificationsConstants.statusNoMessages))],
     );
   }
 
@@ -154,8 +149,11 @@ class _NotificationsListViewState extends State<NotificationsListView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(NotificationsFilterView.chooseIcons(messageType),
-                  color: Theme.of(context).iconTheme.color, size: 30),
+              Icon(
+                NotificationsFilterView.chooseIcons(messageType),
+                color: Theme.of(context).iconTheme.color,
+                size: 30,
+              ),
             ],
           ),
           title: Column(
@@ -163,10 +161,12 @@ class _NotificationsListViewState extends State<NotificationsListView> {
             children: [
               Align(
                 alignment: Alignment.topLeft,
-                child: Text(data.message.title,
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? headlineMediumDark2
-                        : headlineMediumLight2),
+                child: Text(
+                  data.message.title,
+                  style: Theme.of(context).brightness == Brightness.dark
+                      ? headlineMediumDark2
+                      : headlineMediumLight2,
+                ),
               ),
             ],
           ),
@@ -177,19 +177,21 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Linkify(
-                    text: data.message.message,
-                    onOpen: (link) async {
-                      try {
-                        await launch(link.url, forceSafariVC: true);
-                      } catch (e) {
-                        // an error occurred, do nothing
-                      }
-                    },
-                    options: LinkifyOptions(humanize: false),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400)),
+                  text: data.message.message,
+                  onOpen: (link) async {
+                    try {
+                      await launch(link.url, forceSafariVC: true);
+                    } catch (e) {
+                      // an error occurred, do nothing
+                    }
+                  },
+                  options: LinkifyOptions(humanize: false),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 16,
+                    height: 1.41,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
                 freefoodProvider.isFreeFood(data.messageId)
                     ? FreeFoodNotification(messageId: data.messageId)
                     : Container(),
@@ -201,11 +203,14 @@ class _NotificationsListViewState extends State<NotificationsListView> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 6.0),
-                child: Text(_readTimestamp(data.timestamp),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700)),
+                child: Text(
+                  _readTimestamp(data.timestamp),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 12,
+                    height: 1.41,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ],
           ),

@@ -50,22 +50,27 @@ class _ShuttleCardState extends State<ShuttleCard> {
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _shuttleCardDataProvider.error,
       child: () => buildShuttleCard(
-          _shuttleCardDataProvider.stopsToRender, _shuttleCardDataProvider.arrivalsToRender),
+        _shuttleCardDataProvider.stopsToRender,
+        _shuttleCardDataProvider.arrivalsToRender,
+      ),
       actionButtons: [
         ActionLink(
-            buttonText: 'MANAGE SHUTTLE STOPS',
-            onPressed: () {
-              setState(() {
-                _currentPage = 0;
-              });
-              Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
-            }),
+          buttonText: 'MANAGE SHUTTLE STOPS',
+          onPressed: () {
+            setState(() {
+              _currentPage = 0;
+            });
+            Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+          },
+        ),
       ],
     );
   }
 
   Widget buildShuttleCard(
-      List<ShuttleStopModel> stopsToRender, Map<int, List<ArrivingShuttle>> arrivalsToRender) {
+    List<ShuttleStopModel> stopsToRender,
+    Map<int, List<ArrivingShuttle>> arrivalsToRender,
+  ) {
     List<Widget> renderList = [];
     try {
       // Initialize first shuttle display with arrival information
@@ -86,9 +91,12 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
       // Display all the shuttle stops with their respective arrivals
       for (var i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
-        renderList.add(ShuttleDisplay(
+        renderList.add(
+          ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
-            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.stopsToRender[i].id]));
+            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.stopsToRender[i].id],
+          ),
+        );
       }
       return Column(
         children: <Widget>[
@@ -114,34 +122,32 @@ class _ShuttleCardState extends State<ShuttleCard> {
               activeSize: const Size(22.0, 22.0),
               size: const Size(10.0, 10.0),
             ),
-          )
+          ),
         ],
       );
     } catch (e) {
       return Container(
         width: double.infinity,
-        child: Center(
-          child: Text('An error occurred, please try again. ${e.toString()}'),
-        ),
+        child: Center(child: Text('An error occurred, please try again. ${e.toString()}')),
       );
     }
   }
 
   List<Widget> buildActionButtons() {
     List<Widget> actionButtons = [];
-    actionButtons.add(TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.background,
+    actionButtons.add(
+      TextButton(
+        style: TextButton.styleFrom(
+          // primary: Theme.of(context).buttonColor,
+          foregroundColor: Theme.of(context).colorScheme.background,
+        ),
+        child: Text('Manage Shuttle Stops'),
+        onPressed: () {
+          if (!_shuttleCardDataProvider.isLoading)
+            Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+        },
       ),
-      child: Text(
-        'Manage Shuttle Stops',
-      ),
-      onPressed: () {
-        if (!_shuttleCardDataProvider.isLoading)
-          Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
-      },
-    ));
+    );
     return actionButtons;
   }
 }

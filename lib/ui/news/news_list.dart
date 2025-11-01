@@ -18,15 +18,10 @@ class NewsList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Provider.of<NewsDataProvider>(context).isLoading) {
       return Center(
-        child: CircularProgressIndicator(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
+        child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary),
       );
     }
-    return buildNewsList(
-      context,
-      Provider.of<NewsDataProvider>(context).newsModels,
-    );
+    return buildNewsList(context, Provider.of<NewsDataProvider>(context).newsModels);
   }
 
   Widget buildNewsList(BuildContext context, NewsModel data) {
@@ -76,11 +71,7 @@ class NewsList extends StatelessWidget {
   Widget buildNewsTile(Item newsItem, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
-          context,
-          RoutePaths.NewsDetailView,
-          arguments: newsItem,
-        );
+        Navigator.pushNamed(context, RoutePaths.NewsDetailView, arguments: newsItem);
       },
       child: Container(
         padding: EdgeInsets.all(8.0),
@@ -91,11 +82,7 @@ class NewsList extends StatelessWidget {
               Container(
                 width: 140,
                 margin: EdgeInsets.only(right: 8.0),
-                child: ImageLoader(
-                  url: newsItem.image,
-                  fullSize: true,
-                  fit: BoxFit.cover,
-                ),
+                child: ImageLoader(url: newsItem.image, fullSize: true, fit: BoxFit.cover),
               ),
               Expanded(
                 child: Column(
@@ -118,14 +105,16 @@ class NewsList extends StatelessWidget {
                           TextSpan(
                             text: ' - ',
                             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                                height: 1.42, fontSize: 16.0, decoration: TextDecoration.none),
+                              height: 1.42,
+                              fontSize: 16.0,
+                              decoration: TextDecoration.none,
+                            ),
                           ),
                           TextSpan(
                             text: newsItem.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium!
-                                .copyWith(height: 1.42, fontSize: 18.0),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineMedium!.copyWith(height: 1.42, fontSize: 18.0),
                           ),
                         ],
                       ),
@@ -136,10 +125,9 @@ class NewsList extends StatelessWidget {
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(fontSize: 16.0, height: 1.42),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(fontSize: 16.0, height: 1.42),
                     ),
                   ],
                 ),

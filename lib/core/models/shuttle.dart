@@ -24,20 +24,22 @@ class ShuttleModel {
   Color? color;
   List<ShuttleStopModel>? stops = [];
 
-  ShuttleModel(
-      {this.displayOrder,
-      this.url,
-      this.customerRouteId,
-      this.id,
-      this.name,
-      this.shortName,
-      this.description,
-      this.routeType,
-      this.color,
-      this.stops});
+  ShuttleModel({
+    this.displayOrder,
+    this.url,
+    this.customerRouteId,
+    this.id,
+    this.name,
+    this.shortName,
+    this.description,
+    this.routeType,
+    this.color,
+    this.stops,
+  });
 
   ShuttleModel.fromJson(Map<String, dynamic> json) {
-    json.forEach((key, value) => ShuttleModel(
+    json.forEach(
+      (key, value) => ShuttleModel(
         displayOrder: value["displayOrder"] == null ? null : value["displayOrder"],
         url: value["url"] == null ? null : value["lon"],
         customerRouteId: value["customerRouteId"] == null ? null : value["customerRouteId"],
@@ -49,20 +51,22 @@ class ShuttleModel {
         color: value["color"] == null ? null : HexColor(value["color"]),
         stops: value["stops"] == null
             ? null
-            : value["stops"]
-                .entries
-                .map((entry) {
-                  return (ShuttleStopModel.fromJson(entry.value));
-                })
-                .toList()
-                .cast<ShuttleStopModel>()));
+            : value["stops"].entries
+                  .map((entry) {
+                    return (ShuttleStopModel.fromJson(entry.value));
+                  })
+                  .toList()
+                  .cast<ShuttleStopModel>(),
+      ),
+    );
   }
 
   List<ShuttleModel> getListOfShuttles(String str) {
     Map<String, dynamic> list = json.decode(str);
     List<ShuttleModel> ret = [];
     list.forEach((key, value) {
-      ret.add(ShuttleModel(
+      ret.add(
+        ShuttleModel(
           displayOrder: value["displayOrder"] == null ? null : value["displayOrder"],
           url: value["url"] == null ? null : value["lon"],
           customerRouteId: value["customerRouteId"] == null ? null : value["customerRouteId"],
@@ -74,29 +78,30 @@ class ShuttleModel {
           color: value["color"] == null ? null : HexColor(value["color"]),
           stops: value["stops"] == null
               ? null
-              : value["stops"]
-                  .entries
-                  .map((entry) {
-                    return (ShuttleStopModel.fromJson(entry.value));
-                  })
-                  .toList()
-                  .cast<ShuttleStopModel>()));
+              : value["stops"].entries
+                    .map((entry) {
+                      return (ShuttleStopModel.fromJson(entry.value));
+                    })
+                    .toList()
+                    .cast<ShuttleStopModel>(),
+        ),
+      );
     });
     return ret;
   }
 
   Map<String, dynamic> toJson() => {
-        "displayOrder": displayOrder == null ? null : displayOrder,
-        "url": url == null ? null : url,
-        "customerRouteId": customerRouteId == null ? null : customerRouteId,
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "shortName": shortName == null ? null : shortName,
-        "description": description == null ? null : description,
-        "routeType": routeType == null ? null : routeType,
-        "color": color == null ? null : '#${color!.value.toRadixString(16)}',
-        "stops": stops == null ? null : List<dynamic>.from(stops!.map((x) => x.toJson()))
-      };
+    "displayOrder": displayOrder == null ? null : displayOrder,
+    "url": url == null ? null : url,
+    "customerRouteId": customerRouteId == null ? null : customerRouteId,
+    "id": id == null ? null : id,
+    "name": name == null ? null : name,
+    "shortName": shortName == null ? null : shortName,
+    "description": description == null ? null : description,
+    "routeType": routeType == null ? null : routeType,
+    "color": color == null ? null : '#${color!.value.toRadixString(16)}',
+    "stops": stops == null ? null : List<dynamic>.from(stops!.map((x) => x.toJson())),
+  };
 }
 
 class HexColor extends Color {

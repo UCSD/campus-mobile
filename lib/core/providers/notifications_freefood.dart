@@ -100,10 +100,8 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _messageToMaxCount[id] = _freeFoodModel.body.maxCount;
     } else {
       _error = _freeFoodService.error;
-      if (_error != null &&
-          _error!
-              .contains(ErrorConstants.invalidBearerToken)) if (await _freeFoodService
-          .getNewToken()) await fetchMaxCount(id);
+      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken))
+        if (await _freeFoodService.getNewToken()) await fetchMaxCount(id);
 
       removeId(id);
     }

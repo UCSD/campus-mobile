@@ -39,11 +39,7 @@ class NotificationsFilterView extends StatelessWidget {
             contentPadding: EdgeInsets.all(0),
             visualDensity: VisualDensity.compact,
             key: Key(topic!),
-            leading: Icon(
-              chooseIcons(topic),
-              color: Theme.of(context).iconTheme.color,
-              size: 30,
-            ),
+            leading: Icon(chooseIcons(topic), color: Theme.of(context).iconTheme.color, size: 30),
             title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: Text(
@@ -54,8 +50,9 @@ class NotificationsFilterView extends StatelessWidget {
             trailing: Transform.scale(
               scale: 0.9,
               child: Switch.adaptive(
-                value: Provider.of<PushNotificationDataProvider>(context)
-                    .topicSubscriptionState[topic]!,
+                value: Provider.of<PushNotificationDataProvider>(
+                  context,
+                ).topicSubscriptionState[topic]!,
                 onChanged: (_) {
                   Provider.of<UserDataProvider>(context, listen: false).toggleNotifications(topic);
                 },

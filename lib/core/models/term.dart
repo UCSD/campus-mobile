@@ -13,18 +13,10 @@ class AcademicTermModel {
   String? termName;
   String? termCode;
 
-  AcademicTermModel({
-    this.termName,
-    this.termCode,
-  });
+  AcademicTermModel({this.termName, this.termCode});
 
-  factory AcademicTermModel.fromJson(Map<String, dynamic> json) => AcademicTermModel(
-        termName: json["term_name"],
-        termCode: json["term_code"],
-      );
+  factory AcademicTermModel.fromJson(Map<String, dynamic> json) =>
+      AcademicTermModel(termName: json["term_name"], termCode: json["term_code"]);
 
-  Map<String, dynamic> toJson() => {
-        "term_name": termName,
-        "term_code": termCode,
-      };
+  Map<String, dynamic> toJson() => {"term_name": termName, "term_code": termCode};
 }

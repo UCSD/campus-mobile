@@ -12,9 +12,7 @@ class ParkingService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   List<ParkingModel>? _data;
@@ -25,7 +23,9 @@ class ParkingService {
     try {
       /// fetch data
       String _response = await (NetworkHelper.authorizedFetch(
-          dotenv.get('PARKING_SERVICE_API_ENDPOINT') + "/status", headers));
+        dotenv.get('PARKING_SERVICE_API_ENDPOINT') + "/status",
+        headers,
+      ));
 
       /// parse data
       _data = parkingModelFromJson(_response);

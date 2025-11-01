@@ -17,7 +17,9 @@ class MessageService {
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_MESSAGES_API_ENDPOINT') + timestamp.toString(), authHeaders);
+        dotenv.get('MY_MESSAGES_API_ENDPOINT') + timestamp.toString(),
+        authHeaders,
+      );
 
       /// parse data
       final data = messagesFromJson(_response);
@@ -39,7 +41,8 @@ class MessageService {
     try {
       /// fetch data
       String _response = await NetworkHelper.fetchData(
-          dotenv.get('TOPICS_API_ENDPOINT') + topicsEndpoint + timestampEndpoint);
+        dotenv.get('TOPICS_API_ENDPOINT') + topicsEndpoint + timestampEndpoint,
+      );
 
       /// parse data
       final data = messagesFromJson(_response);

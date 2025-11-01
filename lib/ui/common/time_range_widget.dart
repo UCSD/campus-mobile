@@ -7,10 +7,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 /// be cautious of the spacing, it must be exactly as shown above
 /// The TimeRangeWidget will build a Text Widget that displays 5:01 PM - 8:20 PM
 class TimeRangeWidget extends StatelessWidget {
-  const TimeRangeWidget({
-    Key? key,
-    required this.time,
-  }) : super(key: key);
+  const TimeRangeWidget({Key? key, required this.time}) : super(key: key);
 
   final String time;
 

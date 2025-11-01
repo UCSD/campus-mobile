@@ -5,10 +5,7 @@ import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
 
 class NoticesCard extends StatelessWidget {
-  const NoticesCard({
-    Key? key,
-    required this.notice,
-  }) : super(key: key);
+  const NoticesCard({Key? key, required this.notice}) : super(key: key);
 
   /// MODELS
   final NoticesModel notice;
@@ -19,13 +16,8 @@ class NoticesCard extends StatelessWidget {
       margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
       elevation: 4,
       shadowColor: Colors.black,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.0),
-        child: buildBannerView(notice),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      child: ClipRRect(borderRadius: BorderRadius.circular(12.0), child: buildBannerView(notice)),
     );
   }
 
@@ -36,13 +28,11 @@ class NoticesCard extends StatelessWidget {
       image: true,
       button: true,
       child: GestureDetector(
-          onTap: () {
-            openLink(notice.link);
-          },
-          child: ImageLoader(
-            url: notice.imageUrl,
-            fullSize: true,
-          )),
+        onTap: () {
+          openLink(notice.link);
+        },
+        child: ImageLoader(url: notice.imageUrl, fullSize: true),
+      ),
     );
   }
 }

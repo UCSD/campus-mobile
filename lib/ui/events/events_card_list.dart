@@ -29,8 +29,9 @@ class EventsCardList extends StatelessWidget {
     if (size > listOfEvents.length) size = listOfEvents.length;
 
     for (var i = 0; i < size; i++) {
-      eventTiles
-          .add(EventTile(data: listOfEvents[i])); // get event model and then create a tile from it
+      eventTiles.add(
+        EventTile(data: listOfEvents[i]),
+      ); // get event model and then create a tile from it
       eventTiles.add(const SizedBox(width: 9)); // spacer between tiles
     }
 
@@ -38,10 +39,7 @@ class EventsCardList extends StatelessWidget {
       return SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: eventTiles,
-        ),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: eventTiles),
       );
     } else {
       return ContainerView(

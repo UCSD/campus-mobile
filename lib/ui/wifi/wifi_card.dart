@@ -111,7 +111,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
         TestStatus.finished => finishedState(),
         TestStatus.unavailable => unavailableState(),
         TestStatus.simulated => simulatedState(),
-        _ => initialState(context) // Default State (Initial)
+        _ => initialState(context), // Default State (Initial)
       },
     );
   }
@@ -123,29 +123,32 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         // Wifi icon + Description
-        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Icon(
-            Icons.wifi_sharp,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2,
-            size: 38,
-          ),
-          SizedBox(width: 10),
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Text(
-              "Help identify campus WiFi issues.",
-              style: TextStyle(
-                fontSize: 22,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? descriptiveTextColorLight
-                    : descriptiveTextColorDark,
-                fontWeight: FontWeight.w400,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.wifi_sharp,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : darkPrimaryColor2,
+              size: 38,
+            ),
+            SizedBox(width: 10),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                "Help identify campus WiFi issues.",
+                style: TextStyle(
+                  fontSize: 22,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
-          )
-        ]),
+          ],
+        ),
         SizedBox(height: 50),
         // TEST SPEED and REPORT ISSUE buttons
         Row(
@@ -153,21 +156,23 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           children: [
             // TEST SPEED
             ActionButton(
-                buttonText: 'TEST SPEED',
-                onPressed: () {
-                  if (_speedTestProvider.onSimulator!) {
-                    setState(() {
-                      cardState = TestStatus.simulated;
-                    });
-                  } else {
-                    setState(() {
-                      cardState = TestStatus.running;
-                    });
-                    _speedTestProvider
-                        .speedTest()
-                        .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
-                  }
-                }),
+              buttonText: 'TEST SPEED',
+              onPressed: () {
+                if (_speedTestProvider.onSimulator!) {
+                  setState(() {
+                    cardState = TestStatus.simulated;
+                  });
+                } else {
+                  setState(() {
+                    cardState = TestStatus.running;
+                  });
+                  _speedTestProvider.speedTest().timeout(
+                    const Duration(seconds: 1),
+                    onTimeout: _onTimeout,
+                  );
+                }
+              },
+            ),
             // REPORT ISSUE
             ActionLink(
               buttonText: 'REPORT ISSUE',
@@ -175,20 +180,22 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                   ? () {
                       _speedTestProvider.reportIssue();
                       showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialogWidget(
-                                type: MessageTypeConstants.ERROR,
-                                icon: Icons.block_flipped,
-                                title: WifiConstants.wifiIssueFailedTitle,
-                                description: WifiConstants.wifiIssueFailedDesc,
-                                onClose: () {
-                                  Navigator.of(context).pop();
-                                });
-                          });
+                        context: context,
+                        builder: (context) {
+                          return AlertDialogWidget(
+                            type: MessageTypeConstants.ERROR,
+                            icon: Icons.block_flipped,
+                            title: WifiConstants.wifiIssueFailedTitle,
+                            description: WifiConstants.wifiIssueFailedDesc,
+                            onClose: () {
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        },
+                      );
                     }
                   : () {},
-            )
+            ),
           ],
         ),
       ],
@@ -200,34 +207,34 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     return Column(
       children: [
         Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-            child: RichText(
-                text: TextSpan(children: [
-              TextSpan(
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
                   text: "Testing... ",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 36,
-                  )),
-              WidgetSpan(
-                child: Icon(Icons.wifi, size: 36),
-              ),
-            ]))),
+                  style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 36),
+                ),
+                WidgetSpan(child: Icon(Icons.wifi, size: 36)),
+              ],
+            ),
+          ),
+        ),
         Container(
           height: 40,
           child: LiquidLinearProgressIndicator(
-              backgroundColor: Colors.white,
-              // Defaults to the current Theme's backgroundColor.
-              borderColor: Colors.black,
-              borderWidth: 0.5,
-              center: Text(
-                "${((_speedTestProvider.percentDownloaded * 100) / 2 + (_speedTestProvider.percentUploaded * 100) / 2).toStringAsPrecision(6).substring(0, 5)} %",
-                style: TextStyle(color: Colors.grey),
-              ),
-              direction: Axis.horizontal,
-              value:
-                  (_speedTestProvider.percentDownloaded + _speedTestProvider.percentUploaded) / 2,
-              valueColor: AlwaysStoppedAnimation(lightPrimaryColor)),
+            backgroundColor: Colors.white,
+            // Defaults to the current Theme's backgroundColor.
+            borderColor: Colors.black,
+            borderWidth: 0.5,
+            center: Text(
+              "${((_speedTestProvider.percentDownloaded * 100) / 2 + (_speedTestProvider.percentUploaded * 100) / 2).toStringAsPrecision(6).substring(0, 5)} %",
+              style: TextStyle(color: Colors.grey),
+            ),
+            direction: Axis.horizontal,
+            value: (_speedTestProvider.percentDownloaded + _speedTestProvider.percentUploaded) / 2,
+            valueColor: AlwaysStoppedAnimation(lightPrimaryColor),
+          ),
         ),
       ],
     );
@@ -277,17 +284,18 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
               ),
               // Download Speed in Mbps
               Expanded(
-                  flex: 4,
-                  child: Text(
-                    downloadSpeed,
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? lightPrimaryColor
-                          : darkPrimaryColor2,
-                    ),
-                  ))
+                flex: 4,
+                child: Text(
+                  downloadSpeed,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? lightPrimaryColor
+                        : darkPrimaryColor2,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -312,17 +320,18 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                 ),
               ),
               Expanded(
-                  flex: 4,
-                  child: Text(
-                    downloadSpeed,
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? lightPrimaryColor
-                          : darkPrimaryColor2,
-                    ),
-                  ))
+                flex: 4,
+                child: Text(
+                  downloadSpeed,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? lightPrimaryColor
+                        : darkPrimaryColor2,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -335,44 +344,49 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             // TODO: This brings you back to the initial state, but that requires two "TEST SPEED" Button clicks.
             // TODO: For the UI people, do you want 1 click? or 2 clicks but the first one indicating to "Reset"
             ActionButton(
-                buttonText: 'TEST SPEED',
-                onPressed: () {
-                  setState(() {
-                    timedOut = false;
-                    cardState = TestStatus.running;
-                    _speedTestProvider.resetSpeedTest();
-                  });
-                  _speedTestProvider
-                      .speedTest()
-                      .timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
-                  // setState(() {
-                  //   timedOut = false;
-                  //   cardState = TestStatus.initial;
-                  //   _speedTestProvider.resetSpeedTest();
-                  // });
-                }),
+              buttonText: 'TEST SPEED',
+              onPressed: () {
+                setState(() {
+                  timedOut = false;
+                  cardState = TestStatus.running;
+                  _speedTestProvider.resetSpeedTest();
+                });
+                _speedTestProvider.speedTest().timeout(
+                  const Duration(seconds: 1),
+                  onTimeout: _onTimeout,
+                );
+                // setState(() {
+                //   timedOut = false;
+                //   cardState = TestStatus.initial;
+                //   _speedTestProvider.resetSpeedTest();
+                // });
+              },
+            ),
             SizedBox(width: 10),
             // REPORT ISSUE
             ActionLink(
               buttonText: 'REPORT ISSUE',
-              onPressed: _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED?
+              onPressed:
+                  _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED?
                   ? () {
                       _speedTestProvider.reportIssue();
                       showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialogWidget(
-                                type: MessageTypeConstants.SUCCESS,
-                                icon: Icons.check_circle_outline_sharp,
-                                title: WifiConstants.wifiIssueSuccessTitle,
-                                description: WifiConstants.wifiIssueSuccessDesc,
-                                onClose: () {
-                                  Navigator.of(context).pop();
-                                });
-                          });
+                        context: context,
+                        builder: (context) {
+                          return AlertDialogWidget(
+                            type: MessageTypeConstants.SUCCESS,
+                            icon: Icons.check_circle_outline_sharp,
+                            title: WifiConstants.wifiIssueSuccessTitle,
+                            description: WifiConstants.wifiIssueSuccessDesc,
+                            onClose: () {
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        },
+                      );
                     }
                   : () {},
-            )
+            ),
           ],
         ),
       ],
@@ -387,9 +401,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
           child: Text(
             "Connect to a UCSD Network",
-            style: TextStyle(
-              fontSize: 25,
-            ),
+            style: TextStyle(fontSize: 25),
             textAlign: TextAlign.center,
           ),
         ),
@@ -415,20 +427,14 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     }
   }
 
-////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
   ////////////// SIMULATED STATE ////////////
   Column simulatedState() {
     return Column(
       children: [
         Padding(
           padding: EdgeInsets.only(left: 8, right: 8, top: 8),
-          child: Text(
-            "Sorry",
-            style: TextStyle(
-              fontSize: 25,
-            ),
-            textAlign: TextAlign.center,
-          ),
+          child: Text("Sorry", style: TextStyle(fontSize: 25), textAlign: TextAlign.center),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
@@ -437,7 +443,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             style: TextStyle(fontSize: 13),
             textAlign: TextAlign.center,
           ),
-        )
+        ),
       ],
     );
   }

@@ -13,13 +13,13 @@ class LinkifyWithCatch extends StatelessWidget {
   final TextAlign textAlign;
   final bool looseUrl;
 
-  const LinkifyWithCatch(
-      {Key? key,
-      required this.text,
-      this.style,
-      this.textAlign = TextAlign.start,
-      this.looseUrl = false})
-      : super(key: key);
+  const LinkifyWithCatch({
+    Key? key,
+    required this.text,
+    this.style,
+    this.textAlign = TextAlign.start,
+    this.looseUrl = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +28,7 @@ class LinkifyWithCatch extends StatelessWidget {
         try {
           await launch(link.url, forceSafariVC: true);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Could not open.'),
-          ));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.')));
         }
       },
       options: LinkifyOptions(humanize: false, looseUrl: looseUrl),

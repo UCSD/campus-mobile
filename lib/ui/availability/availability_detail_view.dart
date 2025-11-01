@@ -10,22 +10,23 @@ class AvailabilityDetailedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContainerView(
-      child: buildLocationsList(context, subLocation),
-    );
+    return ContainerView(child: buildLocationsList(context, subLocation));
   }
 
   Widget buildLocationsList(BuildContext context, SubLocations subLocation) {
     List<Widget> list = [];
-    list.add(ListTile(
-      title: Text(
-        "${subLocation.name}",
-        style: TextStyle(
+    list.add(
+      ListTile(
+        title: Text(
+          "${subLocation.name}",
+          style: TextStyle(
             color: Theme.of(context).colorScheme.secondary,
             fontSize: 24,
-            fontWeight: FontWeight.bold),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-    ));
+    );
 
     List<Widget> floorTiles = [];
     for (int i = 0; i < subLocation.floors.length; i++) {
@@ -35,15 +36,16 @@ class AvailabilityDetailedView extends StatelessWidget {
           title: Text(
             "${floor.name}",
             style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary, fontSize: LOCATION_FONT_SIZE),
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: LOCATION_FONT_SIZE,
+            ),
           ),
           subtitle: Column(
             children: <Widget>[
               Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    (100 * percentAvailability(floor)).toInt().toString() + '% Busy',
-                  )),
+                alignment: Alignment.centerLeft,
+                child: Text((100 * percentAvailability(floor)).toInt().toString() + '% Busy'),
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
@@ -55,9 +57,7 @@ class AvailabilityDetailedView extends StatelessWidget {
                       value: percentAvailability(floor) as double?,
                       backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        setIndicatorColor(
-                          percentAvailability(floor),
-                        ),
+                        setIndicatorColor(percentAvailability(floor)),
                       ),
                     ),
                   ),
@@ -81,10 +81,7 @@ class AvailabilityDetailedView extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: ListView(
-        physics: BouncingScrollPhysics(),
-        children: list,
-      ),
+      child: ListView(physics: BouncingScrollPhysics(), children: list),
     );
   }
 

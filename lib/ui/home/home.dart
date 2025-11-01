@@ -58,11 +58,8 @@ class MeasureSizeRenderObject extends RenderProxyBox {
 class MeasureSize extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChange onChange;
 
-  const MeasureSize({
-    Key? key,
-    required this.onChange,
-    required Widget child,
-  }) : super(key: key, child: child);
+  const MeasureSize({Key? key, required this.onChange, required Widget child})
+    : super(key: key, child: child);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -104,17 +101,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final _controller = ScrollController(
-    initialScrollOffset: getHomeScrollOffset(),
-  );
+  final _controller = ScrollController(initialScrollOffset: getHomeScrollOffset());
   InternetConnectivityProvider? _connectivityProvider;
 
   _HomeState() : super() {
-    _controller.addListener(
-      () {
-        setHomeScrollOffset(_controller.offset);
-      },
-    );
+    _controller.addListener(() {
+      setHomeScrollOffset(_controller.offset);
+    });
   }
 
   Future<Null> initUniLinks() async {
@@ -194,7 +187,7 @@ class _HomeState extends State<Home> {
     'employee_id': EmployeeIdCard.new,
     'parking': ParkingCard.new,
     'speed_test': WiFiCard.new,
-    'shuttle': ShuttleCard.new
+    'shuttle': ShuttleCard.new,
   };
 
   List<Widget> getOrderedCardsList(List<String> order) {
@@ -208,64 +201,69 @@ class _HomeState extends State<Home> {
         if (cardCtor != null) orderedCards.add(cardCtor());
       } else {
         // dynamically insert webCards into the list
-        orderedCards.add(StatefulBuilder(
-          builder: (context, setState) {
-            var currentCard = cardName;
-            if (webViewCardNotLoaded[currentCard] == null) {
-              webViewCardNotLoaded[currentCard] = true;
-            }
-            return Stack(children: <Widget>[
-              MeasureSize(
-                onChange: (Size size) {
-                  setNewCardHeight(cardName, size.height);
-                  webViewCardNotLoaded[cardName] = (size.height != webViewCardHeights[cardName]);
-                  setState(() {});
-                },
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: WebViewContainer(
-                    titleText: webCards[currentCard]!.titleText,
-                    initialUrl: webCards[currentCard]!.initialURL,
-                    cardId: currentCard,
-                    requireAuth: webCards[currentCard]!.requireAuth,
-                  ),
-                ),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                    minHeight: webViewCardHeights[currentCard] ?? 0.0, minWidth: 400.0),
-                child: Builder(builder: (BuildContext context) {
-                  final currentCard = cardName;
-                  return Visibility(
-                    visible: webViewCardNotLoaded[currentCard]!,
-                    child: IntrinsicHeight(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Expanded(
-                            child: Container(
-                              color: Theme.of(context).cardColor,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: Theme.of(context).colorScheme.secondary,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          )
-                        ],
+        orderedCards.add(
+          StatefulBuilder(
+            builder: (context, setState) {
+              var currentCard = cardName;
+              if (webViewCardNotLoaded[currentCard] == null) {
+                webViewCardNotLoaded[currentCard] = true;
+              }
+              return Stack(
+                children: <Widget>[
+                  MeasureSize(
+                    onChange: (Size size) {
+                      setNewCardHeight(cardName, size.height);
+                      webViewCardNotLoaded[cardName] =
+                          (size.height != webViewCardHeights[cardName]);
+                      setState(() {});
+                    },
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: WebViewContainer(
+                        titleText: webCards[currentCard]!.titleText,
+                        initialUrl: webCards[currentCard]!.initialURL,
+                        cardId: currentCard,
+                        requireAuth: webCards[currentCard]!.requireAuth,
                       ),
                     ),
-                  );
-                }),
-              ),
-            ]);
-          },
-        ));
+                  ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: webViewCardHeights[currentCard] ?? 0.0,
+                      minWidth: 400.0,
+                    ),
+                    child: Builder(
+                      builder: (BuildContext context) {
+                        final currentCard = cardName;
+                        return Visibility(
+                          visible: webViewCardNotLoaded[currentCard]!,
+                          child: IntrinsicHeight(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 50),
+                                Expanded(
+                                  child: Container(
+                                    color: Theme.of(context).cardColor,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: Theme.of(context).colorScheme.secondary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
       }
     }
     return orderedCards;

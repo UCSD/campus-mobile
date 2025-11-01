@@ -25,8 +25,9 @@ class MyStudentChartCard extends StatelessWidget {
           onPressed: () {
             try {
               launch(
-                  'https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN',
-                  forceSafariVC: true);
+                'https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN',
+                forceSafariVC: true,
+              );
             } catch (e) {
               // an error occurred, do nothing
             }
@@ -42,15 +43,8 @@ class MyStudentChartCard extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Container(
-            child: Image.asset(
-              'assets/images/MyChartLogo.png',
-              fit: BoxFit.contain,
-              height: 32,
-            ),
-            padding: EdgeInsets.only(
-              left: 16,
-              right: 8,
-            ),
+            child: Image.asset('assets/images/MyChartLogo.png', fit: BoxFit.contain, height: 32),
+            padding: EdgeInsets.only(left: 16, right: 8),
           ),
           Flexible(
             child: Text(
@@ -58,7 +52,7 @@ class MyStudentChartCard extends StatelessWidget {
               textAlign: TextAlign.left,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-          )
+          ),
         ],
       ),
     );

@@ -44,8 +44,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       child: () => buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
       actionButtons: [
         ActionLink(
-            buttonText: 'MANAGE LOCATIONS',
-            onPressed: () => Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView))
+          buttonText: 'MANAGE LOCATIONS',
+          onPressed: () => Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView),
+        ),
       ],
     );
   }
@@ -76,14 +77,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
             Container(
               child: Text(
                 "No Location to Display",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: LOCATION_FONT_SIZE,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: LOCATION_FONT_SIZE),
               ),
-              padding: EdgeInsets.only(
-                bottom: TITLE_BOTTOM_PADDING,
-              ),
+              padding: EdgeInsets.only(bottom: TITLE_BOTTOM_PADDING),
             ),
             Text("Add Locations via 'Manage Locations'"),
           ],
@@ -125,7 +121,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
