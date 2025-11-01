@@ -2,6 +2,7 @@ name: Auto-Format Dart Code
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [ experimental, main ]
     paths:
       - '**.dart'
@@ -10,13 +11,15 @@ on:
     paths:
       - '**.dart'
 
+permissions:
+  contents: write
+
 jobs:
   auto-format:
     name: Auto-Format Dart Code
     runs-on: ubuntu-latest
 
-    # Only run on pull requests to avoid infinite loops
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
 
     steps:
     - name: Checkout code
@@ -73,7 +76,8 @@ jobs:
                        -m "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
 
             # Push changes back to the PR branch
-            git push origin HEAD:${{ github.head_ref }}
+            branch="${{ github.head_ref || github.ref_name }}"
+            git push origin HEAD:$branch
 
             echo "Formatting complete. Changes committed and pushed to PR."
             echo "Summary:"

@@ -51,5 +51,3 @@ fi
 echo "Running: $CMD format ${MODE} --line-length ${LINE_LENGTH} lib"
 # shellcheck disable=SC2086
 $CMD format ${MODE} --line-length "$LINE_LENGTH" lib
-
-exit 0
