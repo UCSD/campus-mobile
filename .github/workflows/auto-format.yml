@@ -1,0 +1,111 @@
+name: Auto-Format Dart Code
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ experimental, main ]
+    paths:
+      - '**.dart'
+  push:
+    branches: [ experimental, main ]
+    paths:
+      - '**.dart'
+
+permissions:
+  contents: write
+
+jobs:
+  auto-format:
+    name: Auto-Format Dart Code
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        # Fetch the full history to allow pushing commits
+        fetch-depth: 0
+        # Use a token that can push to the PR branch
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.32.0'
+        cache: true
+
+    - name: Get dependencies
+      run: flutter pub get
+
+    - name: Check and auto-fix Dart formatting
+      run: |
+        echo "Checking Dart code formatting..."
+
+        # Configure git
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # Check if formatting is needed
+        if ./scripts/format-files.sh 100 check; then
+          echo "All Dart files are properly formatted."
+          exit 0
+        else
+          echo "Formatting issues detected. Auto-formatting files..."
+
+          # Format all files
+          ./scripts/format-files.sh 100
+
+          # Check if there are changes to commit
+          if git diff --quiet; then
+            echo "No changes needed after formatting"
+            exit 0
+          else
+            echo "Committing formatting changes..."
+
+            # Add changed files
+            git add lib/**/*.dart
+
+            # Commit the changes
+            git commit -m "Auto-formatted code to 100-character line length" \
+                       -m "This commit was automatically created by GitHub Actions to ensure consistent code formatting across the project." \
+                       -m "- Applied dart format with --line-length 100" \
+                       -m "- All Dart files in lib/ directory formatted" \
+                       -m "- No functional changes, formatting only" \
+                       -m "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
+
+            # Push changes back to the PR branch
+            branch="${{ github.head_ref || github.ref_name }}"
+            git push origin HEAD:$branch
+
+            echo "Formatting complete. Changes committed and pushed to PR."
+            echo "Summary:"
+            git log --oneline -1
+          fi
+        fi
+
+    - name: Run Dart analysis
+      run: dart analyze lib/
+
+    - name: Comment on PR (if formatted)
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          // Check if we made any commits
+          const { data: commits } = await github.rest.repos.listCommits({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: context.payload.pull_request.head.sha,
+            per_page: 1
+          });
+
+          if (commits[0] && commits[0].commit.message.includes('Auto-formatted code to 100-character line length')) {
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '**Auto-formatted your Dart code!**\n\nI found some formatting issues and automatically fixed them for you. The code now follows the 100-character line length standard.\n\n All files are now properly formatted\n Line length: 100 characters\n Applied via `dart format --line-length 100`\n\nNo further action needed - your code is ready to go!'
+            });
+          }
