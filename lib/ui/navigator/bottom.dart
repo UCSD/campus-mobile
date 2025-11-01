@@ -38,9 +38,8 @@ class _BottomTabBarState extends State<BottomTabBar> {
 
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      backgroundColor: provider.currentIndex == 0
-          ? lightPrimaryColor
-          : theme.scaffoldBackgroundColor,
+      backgroundColor:
+          provider.currentIndex == 0 ? lightPrimaryColor : theme.scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50),
         child: Provider.of<CustomAppBar>(context).appBar,

@@ -17,19 +17,18 @@ class DiningMenuItemsModel {
   DiningMenuItemsModel({this.menuItems, this.disclaimer, this.disclaimerEmail});
 
   DiningMenuItemsModel.fromJson(Map<String, dynamic> json)
-    : menuItems = json["menuitems"] != null
-          ? List<DiningMenuItem>.from(json["menuitems"].map((x) => DiningMenuItem.fromJson(x)))
-          : [],
-      disclaimer = json["disclaimer"],
-      disclaimerEmail = json["disclaimerEmail"];
+      : menuItems = json["menuitems"] != null
+            ? List<DiningMenuItem>.from(json["menuitems"].map((x) => DiningMenuItem.fromJson(x)))
+            : [],
+        disclaimer = json["disclaimer"],
+        disclaimerEmail = json["disclaimerEmail"];
 
   Map<String, dynamic> toJson() => {
-    "menuitems": menuItems!.isNotEmpty
-        ? List<dynamic>.from(menuItems!.map((x) => x.toJson()))
-        : null,
-    "disclaimer": disclaimer,
-    "disclaimerEmail": disclaimerEmail,
-  };
+        "menuitems":
+            menuItems!.isNotEmpty ? List<dynamic>.from(menuItems!.map((x) => x.toJson())) : null,
+        "disclaimer": disclaimer,
+        "disclaimerEmail": disclaimerEmail,
+      };
 }
 
 class DiningMenuItem {
@@ -53,23 +52,23 @@ class DiningMenuItem {
   });
 
   DiningMenuItem.fromJson(Map<String, dynamic> json)
-    : name = json["name"],
-      itemId = json["itemID"],
-      station = json["station"],
-      price = json["price"],
-      images = json["images"],
-      tags = json["tags"],
-      nutrition = Nutrition.fromJson(json["nutrition"]);
+      : name = json["name"],
+        itemId = json["itemID"],
+        station = json["station"],
+        price = json["price"],
+        images = json["images"],
+        tags = json["tags"],
+        nutrition = Nutrition.fromJson(json["nutrition"]);
 
   Map<String, dynamic> toJson() => {
-    "name": name,
-    "itemID": itemId,
-    "station": station,
-    "price": price,
-    "images": images,
-    "tags": tags,
-    "nutrition": nutrition.toJson(),
-  };
+        "name": name,
+        "itemID": itemId,
+        "station": station,
+        "price": price,
+        "images": images,
+        "tags": tags,
+        "nutrition": nutrition.toJson(),
+      };
 }
 
 class Nutrition {
@@ -122,51 +121,51 @@ class Nutrition {
   });
 
   Nutrition.fromJson(Map<String, dynamic> json)
-    : servingSize = json["servingSize"],
-      calories = json["calories"],
-      totalFat = json["totalFat"],
-      totalFatDv = json["totalFat_DV"],
-      saturatedFat = json["saturatedFat"],
-      saturatedFatDv = json["saturatedFat_DV"],
-      transFat = json["transFat"],
-      transFatDv = json["transFat_DV"],
-      cholesterol = json["cholesterol"],
-      cholesterolDv = json["cholesterol_DV"],
-      sodium = json["sodium"],
-      sodiumDv = json["sodium_DV"],
-      totalCarbohydrate = json["totalCarbohydrate"],
-      totalCarbohydrateDv = json["totalCarbohhdrate_DV"],
-      dietaryFiber = json["dietaryFiber"],
-      dietaryFiberDv = json["dietaryFiber_DV"],
-      sugar = json["sugars"],
-      sugarDv = json["sugars_DV"],
-      protein = json["protein"],
-      proteinDv = json["protein_DV"],
-      ingredients = json["ingredients"],
-      allergens = json["allergens"];
+      : servingSize = json["servingSize"],
+        calories = json["calories"],
+        totalFat = json["totalFat"],
+        totalFatDv = json["totalFat_DV"],
+        saturatedFat = json["saturatedFat"],
+        saturatedFatDv = json["saturatedFat_DV"],
+        transFat = json["transFat"],
+        transFatDv = json["transFat_DV"],
+        cholesterol = json["cholesterol"],
+        cholesterolDv = json["cholesterol_DV"],
+        sodium = json["sodium"],
+        sodiumDv = json["sodium_DV"],
+        totalCarbohydrate = json["totalCarbohydrate"],
+        totalCarbohydrateDv = json["totalCarbohhdrate_DV"],
+        dietaryFiber = json["dietaryFiber"],
+        dietaryFiberDv = json["dietaryFiber_DV"],
+        sugar = json["sugars"],
+        sugarDv = json["sugars_DV"],
+        protein = json["protein"],
+        proteinDv = json["protein_DV"],
+        ingredients = json["ingredients"],
+        allergens = json["allergens"];
 
   Map<String, dynamic> toJson() => {
-    "servingSize": servingSize,
-    "calories": calories,
-    "totalFat": totalFat,
-    "totalFat_DV": totalFatDv,
-    "saturatedFat": saturatedFat,
-    "saturatedFat_DV": saturatedFatDv,
-    "transFat": transFat,
-    "transFat_DV": transFatDv,
-    "cholesterol": cholesterol,
-    "cholesterol_DV": cholesterolDv,
-    "sodium": sodium,
-    "sodium_DV": sodiumDv,
-    "totalCarbohydrate": totalCarbohydrate,
-    "totalCarbohhdrate_DV": totalCarbohydrateDv,
-    "dietaryFiber": dietaryFiber,
-    "dietaryFiber_DV": dietaryFiberDv,
-    "sugar": sugar,
-    "sugar_DV": sugarDv,
-    "protein": protein,
-    "protein_DV": proteinDv,
-    "ingredients": ingredients,
-    "allergens": allergens,
-  };
+        "servingSize": servingSize,
+        "calories": calories,
+        "totalFat": totalFat,
+        "totalFat_DV": totalFatDv,
+        "saturatedFat": saturatedFat,
+        "saturatedFat_DV": saturatedFatDv,
+        "transFat": transFat,
+        "transFat_DV": transFatDv,
+        "cholesterol": cholesterol,
+        "cholesterol_DV": cholesterolDv,
+        "sodium": sodium,
+        "sodium_DV": sodiumDv,
+        "totalCarbohydrate": totalCarbohydrate,
+        "totalCarbohhdrate_DV": totalCarbohydrateDv,
+        "dietaryFiber": dietaryFiber,
+        "dietaryFiber_DV": dietaryFiberDv,
+        "sugar": sugar,
+        "sugar_DV": sugarDv,
+        "protein": protein,
+        "protein_DV": proteinDv,
+        "ingredients": ingredients,
+        "allergens": allergens,
+      };
 }

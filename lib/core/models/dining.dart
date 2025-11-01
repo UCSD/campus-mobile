@@ -56,50 +56,50 @@ class DiningModel {
   });
 
   DiningModel.fromJson(Map<String, dynamic> json)
-    : id = json["id"],
-      name = json["name"],
-      description = json["description"],
-      location = json["location"],
-      address = json["address"],
-      tel = json["tel"],
-      meals = json["meals"] == null ? null : mealsValues.map[json["meals"]],
-      persistentMenu = json["persistentMenu"],
-      paymentOptions = List<String>.from(json["paymentOptions"].map((x) => x)),
-      paymentFilterTypes = json["paymentFilterTypes"],
-      images = json["images"] == null
-          ? null
-          : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
-      coordinates = json["coords"] == null ? null : Coordinates.fromJson(json["coords"]),
-      regularHours = RegularHours.fromJson(json["regularHours"]),
-      specialHours = (json["specialHours"] == null || json["specialHours"].isEmpty)
-          ? null
-          : SpecialHour.fromJson(json["specialHours"]),
-      vendorLogo = json["vendorLogo"],
-      url = json["url"],
-      menuWebsite = json["menuWebsite"],
-      specials = json["specials"] == null ? null : Specials.fromJson(json["specials"]);
+      : id = json["id"],
+        name = json["name"],
+        description = json["description"],
+        location = json["location"],
+        address = json["address"],
+        tel = json["tel"],
+        meals = json["meals"] == null ? null : mealsValues.map[json["meals"]],
+        persistentMenu = json["persistentMenu"],
+        paymentOptions = List<String>.from(json["paymentOptions"].map((x) => x)),
+        paymentFilterTypes = json["paymentFilterTypes"],
+        images = json["images"] == null
+            ? null
+            : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+        coordinates = json["coords"] == null ? null : Coordinates.fromJson(json["coords"]),
+        regularHours = RegularHours.fromJson(json["regularHours"]),
+        specialHours = (json["specialHours"] == null || json["specialHours"].isEmpty)
+            ? null
+            : SpecialHour.fromJson(json["specialHours"]),
+        vendorLogo = json["vendorLogo"],
+        url = json["url"],
+        menuWebsite = json["menuWebsite"],
+        specials = json["specials"] == null ? null : Specials.fromJson(json["specials"]);
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "description": description,
-    "location": location,
-    "address": address,
-    "tel": tel,
-    "meals": meals == null ? null : mealsValues.reverse[meals!],
-    "persistentMenu": persistentMenu,
-    "paymentOptions": List<dynamic>.from(paymentOptions.map((x) => x)),
-    "paymentFilterTypes": paymentFilterTypes,
-    "images": images == null ? null : List<dynamic>.from(images!.map((x) => x.toJson())),
-    "coords": coordinates == null ? null : coordinates!.toJson(),
-    "regularHours": regularHours.toJson(),
-    "specialHours": specialHours?.toJson(),
-    "url": url,
-    "vendorLogo": vendorLogo,
-    "menuWebsite": menuWebsite,
-    "distance": distance,
-    "specials": specials?.toJson(),
-  };
+        "id": id,
+        "name": name,
+        "description": description,
+        "location": location,
+        "address": address,
+        "tel": tel,
+        "meals": meals == null ? null : mealsValues.reverse[meals!],
+        "persistentMenu": persistentMenu,
+        "paymentOptions": List<dynamic>.from(paymentOptions.map((x) => x)),
+        "paymentFilterTypes": paymentFilterTypes,
+        "images": images == null ? null : List<dynamic>.from(images!.map((x) => x.toJson())),
+        "coords": coordinates == null ? null : coordinates!.toJson(),
+        "regularHours": regularHours.toJson(),
+        "specialHours": specialHours?.toJson(),
+        "url": url,
+        "vendorLogo": vendorLogo,
+        "menuWebsite": menuWebsite,
+        "distance": distance,
+        "specials": specials?.toJson(),
+      };
 }
 
 class Image {
@@ -113,9 +113,9 @@ class Image {
   Image({this.small, this.large, this.caption});
 
   Image.fromJson(Map<String, dynamic> json)
-    : small = json["small"],
-      large = json["large"],
-      caption = json["caption"];
+      : small = json["small"],
+        large = json["large"],
+        caption = json["caption"];
 
   Map<String, dynamic> toJson() => {"small": small, "large": large, "caption": caption};
 }
@@ -140,23 +140,23 @@ class RegularHours {
   RegularHours({this.mon, this.tue, this.wed, this.thu, this.fri, this.sat, this.sun});
 
   RegularHours.fromJson(Map<String, dynamic> json)
-    : mon = json["mon"],
-      tue = json["tue"],
-      wed = json["wed"],
-      thu = json["thu"],
-      fri = json["fri"],
-      sat = json["sat"],
-      sun = json["sun"];
+      : mon = json["mon"],
+        tue = json["tue"],
+        wed = json["wed"],
+        thu = json["thu"],
+        fri = json["fri"],
+        sat = json["sat"],
+        sun = json["sun"];
 
   Map<String, dynamic> toJson() => {
-    "mon": mon,
-    "tue": tue,
-    "wed": wed,
-    "thu": thu,
-    "fri": fri,
-    "sat": sat,
-    "sun": sun,
-  };
+        "mon": mon,
+        "tue": tue,
+        "wed": wed,
+        "thu": thu,
+        "fri": fri,
+        "sat": sat,
+        "sun": sun,
+      };
 }
 
 class SpecialHour {
@@ -175,17 +175,17 @@ class SpecialHour {
   });
 
   SpecialHour.fromJson(Map<String, dynamic> json)
-    : specialHoursEvent = json["specialHoursEvent"],
-      specialHoursEventDetails = json["specialHoursEventDetails"],
-      specialHoursValidFrom = json["specialHoursValidFrom"],
-      specialHoursValidTo = json["specialHoursValidTo"];
+      : specialHoursEvent = json["specialHoursEvent"],
+        specialHoursEventDetails = json["specialHoursEventDetails"],
+        specialHoursValidFrom = json["specialHoursValidFrom"],
+        specialHoursValidTo = json["specialHoursValidTo"];
 
   Map<String, dynamic> toJson() => {
-    "specialHoursEvent": specialHoursEvent,
-    "specialHoursEventDetails": specialHoursEventDetails,
-    "specialHoursValidFrom": specialHoursValidFrom,
-    "specialHoursValidTo": specialHoursValidTo,
-  };
+        "specialHoursEvent": specialHoursEvent,
+        "specialHoursEventDetails": specialHoursEventDetails,
+        "specialHoursValidFrom": specialHoursValidFrom,
+        "specialHoursValidTo": specialHoursValidTo,
+      };
 }
 
 class Specials {
@@ -196,15 +196,15 @@ class Specials {
   Specials({this.specialDescription, this.specialTitle, this.promoDates});
 
   Specials.fromJson(Map<String, dynamic> json)
-    : specialDescription = json["specialDescription"],
-      specialTitle = json["specialTitle"],
-      promoDates = json["promoDates"] == null ? null : PromoDates.fromJson(json["promoDates"]);
+      : specialDescription = json["specialDescription"],
+        specialTitle = json["specialTitle"],
+        promoDates = json["promoDates"] == null ? null : PromoDates.fromJson(json["promoDates"]);
 
   Map<String, dynamic> toJson() => {
-    "specialDescription": specialDescription,
-    "specialTitle": specialTitle,
-    "promoDates": promoDates?.toJson(),
-  };
+        "specialDescription": specialDescription,
+        "specialTitle": specialTitle,
+        "promoDates": promoDates?.toJson(),
+      };
 }
 
 class PromoDates {
@@ -214,8 +214,9 @@ class PromoDates {
   PromoDates({this.startDate, this.endDate});
 
   PromoDates.fromJson(Map<String, dynamic> json)
-    : startDate = json["startDate"] is String ? int.tryParse(json["startDate"]) : json["startDate"],
-      endDate = json["endDate"] is String ? int.tryParse(json["endDate"]) : json["endDate"];
+      : startDate =
+            json["startDate"] is String ? int.tryParse(json["startDate"]) : json["startDate"],
+        endDate = json["endDate"] is String ? int.tryParse(json["endDate"]) : json["endDate"];
 
   Map<String, dynamic> toJson() => {"startDate": startDate, "endDate": endDate};
 }

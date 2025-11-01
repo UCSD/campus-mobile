@@ -41,32 +41,32 @@ class MapSearchModel {
   });
 
   factory MapSearchModel.fromJson(Map<String, dynamic> json) => MapSearchModel(
-    title: json["title"] == null ? null : json["title"],
-    mkrEnabled: json["mkrEnabled"] == null ? null : json["mkrEnabled"],
-    mkrRegion: json["mkrRegion"] == null ? null : json["mkrRegion"],
-    location: json["location"] == null ? null : json["location"],
-    description: json["description"] == null ? null : json["description"],
-    mkrGroupid: json["mkrGroupid"] == null ? null : json["mkrGroupid"],
-    score: json["score"],
-    mkrLong: json["mkrLong"] == null ? null : json["mkrLong"].toDouble(),
-    mkrLat: json["mkrLat"] == null ? null : json["mkrLat"].toDouble(),
-    access: json["access"] == null ? null : json["access"],
-    url: json["url"] == null ? null : json["url"],
-    mkrMarkerid: json["mkrMarkerid"] == null ? null : json["mkrMarkerid"],
-  );
+        title: json["title"] == null ? null : json["title"],
+        mkrEnabled: json["mkrEnabled"] == null ? null : json["mkrEnabled"],
+        mkrRegion: json["mkrRegion"] == null ? null : json["mkrRegion"],
+        location: json["location"] == null ? null : json["location"],
+        description: json["description"] == null ? null : json["description"],
+        mkrGroupid: json["mkrGroupid"] == null ? null : json["mkrGroupid"],
+        score: json["score"],
+        mkrLong: json["mkrLong"] == null ? null : json["mkrLong"].toDouble(),
+        mkrLat: json["mkrLat"] == null ? null : json["mkrLat"].toDouble(),
+        access: json["access"] == null ? null : json["access"],
+        url: json["url"] == null ? null : json["url"],
+        mkrMarkerid: json["mkrMarkerid"] == null ? null : json["mkrMarkerid"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "title": title == null ? null : title,
-    "mkrEnabled": mkrEnabled == null ? null : mkrEnabled,
-    "mkrRegion": mkrRegion == null ? null : mkrRegion,
-    "location": location == null ? null : location,
-    "description": description == null ? null : description,
-    "mkrGroupid": mkrGroupid == null ? null : mkrGroupid,
-    "score": score,
-    "mkrLong": mkrLong == null ? null : mkrLong,
-    "mkrLat": mkrLat == null ? null : mkrLat,
-    "access": access == null ? null : access,
-    "url": url == null ? null : url,
-    "mkrMarkerid": mkrMarkerid == null ? null : mkrMarkerid,
-  };
+        "title": title == null ? null : title,
+        "mkrEnabled": mkrEnabled == null ? null : mkrEnabled,
+        "mkrRegion": mkrRegion == null ? null : mkrRegion,
+        "location": location == null ? null : location,
+        "description": description == null ? null : description,
+        "mkrGroupid": mkrGroupid == null ? null : mkrGroupid,
+        "score": score,
+        "mkrLong": mkrLong == null ? null : mkrLong,
+        "mkrLat": mkrLat == null ? null : mkrLat,
+        "access": access == null ? null : access,
+        "url": url == null ? null : url,
+        "mkrMarkerid": mkrMarkerid == null ? null : mkrMarkerid,
+      };
 }

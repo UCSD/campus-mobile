@@ -398,68 +398,68 @@ class _StudentIdCardState extends State<StudentIdCard> {
   // }
 
   Container _buildName(StudentIdNameModel nameModel) => Container(
-    padding: EdgeInsets.only(right: ScalingUtility.horizontalSafeBlock * cardMargin),
-    child: FittedBox(
-      child: Text(
-        '${nameModel.firstName} ${nameModel.lastName}',
-        style: TextStyle(
-          fontFamily: 'Brix Sans',
-          fontWeight: FontWeight.w400,
-          fontSize: getFontSize('${nameModel.firstName} ${nameModel.lastName}', "name"),
+        padding: EdgeInsets.only(right: ScalingUtility.horizontalSafeBlock * cardMargin),
+        child: FittedBox(
+          child: Text(
+            '${nameModel.firstName} ${nameModel.lastName}',
+            style: TextStyle(
+              fontFamily: 'Brix Sans',
+              fontWeight: FontWeight.w400,
+              fontSize: getFontSize('${nameModel.firstName} ${nameModel.lastName}', "name"),
+            ),
+            textAlign: TextAlign.left,
+            softWrap: true,
+            maxLines: 1,
+          ),
         ),
-        textAlign: TextAlign.left,
-        softWrap: true,
-        maxLines: 1,
-      ),
-    ),
-  );
+      );
 
   Container _buildCollegeName(StudentIdProfileModel profileModel) => Container(
-    padding: EdgeInsets.only(right: ScalingUtility.horizontalSafeBlock * cardMargin),
-    child: Text(
-      profileModel.collegeCurrent,
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w400),
-      textAlign: TextAlign.left,
-      softWrap: false,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    ),
-  );
+        padding: EdgeInsets.only(right: ScalingUtility.horizontalSafeBlock * cardMargin),
+        child: Text(
+          profileModel.collegeCurrent,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w400),
+          textAlign: TextAlign.left,
+          softWrap: false,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
 
   Container _buildMajorName(StudentIdProfileModel profileModel) => Container(
-    padding: EdgeInsets.only(right: ScalingUtility.horizontalSafeBlock * cardMargin),
-    child: Text(
-      profileModel.graduatePrimaryMajorCurrent != ""
-          ? profileModel.graduatePrimaryMajorCurrent
-          : profileModel.ugPrimaryMajorCurrent,
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700),
-      textAlign: TextAlign.left,
-      softWrap: false,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    ),
-  );
+        padding: EdgeInsets.only(right: ScalingUtility.horizontalSafeBlock * cardMargin),
+        child: Text(
+          profileModel.graduatePrimaryMajorCurrent != ""
+              ? profileModel.graduatePrimaryMajorCurrent
+              : profileModel.ugPrimaryMajorCurrent,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700),
+          textAlign: TextAlign.left,
+          softWrap: false,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
 
   Widget _buildBarcode(StudentIdProfileModel profileModel) => TextButton(
-    style: TextButton.styleFrom(
-      padding: EdgeInsets.all(0),
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    ),
-    child: returnBarcodeContainer(profileModel.barcode.toString(), false, context),
-    onPressed: () {
-      createAlertDialog(
-        context,
-        returnBarcodeContainer(profileModel.barcode.toString(), true, context),
-        profileModel.toString(),
-        true,
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.all(0),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        child: returnBarcodeContainer(profileModel.barcode.toString(), false, context),
+        onPressed: () {
+          createAlertDialog(
+            context,
+            returnBarcodeContainer(profileModel.barcode.toString(), true, context),
+            profileModel.toString(),
+            true,
+          );
+        },
       );
-    },
-  );
 
   Widget _buildClassificationTitle(StudentIdProfileModel profileModel) => Text(
-    profileModel.classificationType,
-    style: TextStyle(fontSize: ScalingUtility.horizontalSafeBlock * 4.0),
-  );
+        profileModel.classificationType,
+        style: TextStyle(fontSize: ScalingUtility.horizontalSafeBlock * 4.0),
+      );
 
   Widget _buildBarcodeNumber(StudentIdProfileModel profileModel) {
     return Padding(

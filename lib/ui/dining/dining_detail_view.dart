@@ -114,8 +114,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
               )))
         DiningBusynessBar(
           diningModel: diningModel,
-          busynessDiningHallModel:
-              (busynessDiningHallModelOne != null &&
+          busynessDiningHallModel: (busynessDiningHallModelOne != null &&
                   busynessDiningHallModelOne.subLocations.any(
                     (child) =>
                         child.name.contains(diningModel.name) ||
@@ -185,8 +184,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
     var specialHoursDuration = "";
     if (model.specialHours?.specialHoursValidFrom != null &&
         model.specialHours?.specialHoursValidTo != null) {
-      specialHoursDuration =
-          model.specialHours!.specialHoursValidFrom! +
+      specialHoursDuration = model.specialHours!.specialHoursValidFrom! +
           " to " +
           model.specialHours!.specialHoursValidTo! +
           "\n";
@@ -268,9 +266,8 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
             'Get Directions',
             style: linkTextDark.copyWith(
               fontSize: 18.0,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? linkColorLight
-                  : linkColorDark,
+              color:
+                  Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
             ),
           ),
           SizedBox(width: 6),
@@ -287,11 +284,11 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
                   ? Text(
                       num.parse(model.distance!.toStringAsFixed(1)).toString() + ' mi',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 18.0,
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? linkColorLight
-                            : linkColorDark,
-                      ),
+                            fontSize: 18.0,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? linkColorLight
+                                : linkColorDark,
+                          ),
                     )
                   : Text('--', style: TextStyle(color: linkColorLight)),
             ],
@@ -372,9 +369,8 @@ class HoursOfDay extends StatelessWidget {
     // Extract the hours for the given day from the model
     var result = extractDayHours(day, model);
     var theDay = result['day'];
-    var hoursText = (result['hours'] == "Invalid Date-Invalid Date")
-        ? "Unknown Hours"
-        : result['hours'];
+    var hoursText =
+        (result['hours'] == "Invalid Date-Invalid Date") ? "Unknown Hours" : result['hours'];
     // Determine the hours' text style
     // final TextStyle hoursTextStyle = day == DateTime.now().weekday
     //     ? TextStyle(
@@ -386,11 +382,11 @@ class HoursOfDay extends StatelessWidget {
     //     : Theme.of(context).textTheme.bodySmall!;
     final TextStyle hoursTextStyle = day == DateTime.now().weekday
         ? Theme.of(context).textTheme.bodySmall!.copyWith(
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2,
-          )
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? lightPrimaryColor
+                  : darkPrimaryColor2,
+            )
         : Theme.of(context).textTheme.bodySmall!;
 
     // Check if this is the current day
@@ -427,11 +423,11 @@ class HoursOfDay extends StatelessWidget {
                     '$theDay',
                     style: isToday
                         ? Theme.of(context).textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: Theme.of(context).brightness == Brightness.light
-                                ? lightPrimaryColor
-                                : darkPrimaryColor2,
-                          )
+                              fontWeight: FontWeight.w700,
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : darkPrimaryColor2,
+                            )
                         : Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -492,8 +488,8 @@ Map<String, String> extractDayHours(int day, prefix0.DiningModel? model) {
   // Determine the hours' text
   final String hoursText =
       (theHours != null && theHours.contains('Closed')) || theHours == 'Open 24/7'
-      ? theHours!
-      : (formattedTimeRange(theHours) ?? theHours!);
+          ? theHours!
+          : (formattedTimeRange(theHours) ?? theHours!);
 
   return {'day': theDay, 'hours': hoursText};
 }

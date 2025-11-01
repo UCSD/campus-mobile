@@ -261,9 +261,8 @@ class DiningList extends StatelessWidget {
           Icon(
             Icons.directions_walk,
             size: 28,
-            color: Theme.of(context).brightness == Brightness.light
-                ? linkColorLight
-                : linkColorDark,
+            color:
+                Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
           ),
           Text(
             data.distance != null
@@ -271,9 +270,8 @@ class DiningList extends StatelessWidget {
                 : '--',
             style: TextStyle(
               fontSize: 13,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? linkColorLight
-                  : linkColorDark,
+              color:
+                  Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
             ),
           ),
         ],

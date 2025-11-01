@@ -11,10 +11,10 @@ class ScannerMessageModel {
   String? collectionTime;
 
   factory ScannerMessageModel.fromJson(Map<String, dynamic> json) => ScannerMessageModel(
-    collectionTime: json["Collection Date/Time"] == null ? "" : json["Collection Date/Time"],
-  );
+        collectionTime: json["Collection Date/Time"] == null ? "" : json["Collection Date/Time"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "Collection Date/Time": collectionTime == null ? "" : collectionTime,
-  };
+        "Collection Date/Time": collectionTime == null ? "" : collectionTime,
+      };
 }

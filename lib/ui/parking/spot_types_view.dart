@@ -24,26 +24,26 @@ class _SpotTypesViewState extends State<SpotTypesView> {
   }
 
   Widget createListWidget(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    child: ListView(
-      children: [
-        for (int i = 0; i < createList(context).length; i++) ...[
-          createList(context)[i],
-          if (i != createList(context).length - 1)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Divider(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? listTileDividerColorDark
-                    : listTileDividerColorLight,
-                thickness: 1,
-                height: 0,
-              ),
-            ),
-        ],
-      ],
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: ListView(
+          children: [
+            for (int i = 0; i < createList(context).length; i++) ...[
+              createList(context)[i],
+              if (i != createList(context).length - 1)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Divider(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? listTileDividerColorDark
+                        : listTileDividerColorLight,
+                    thickness: 1,
+                    height: 0,
+                  ),
+                ),
+            ],
+          ],
+        ),
+      );
 
   List<Widget> createList(BuildContext context) {
     var selectedSpots = Provider.of<ParkingDataProvider>(
@@ -74,16 +74,16 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                       color: textColor,
                     )
                   : (data.logoText.isNotEmpty
-                        ? Text(
-                            data.logoText,
-                            style: TextStyle(
-                              color: textColor,
-                              fontFamily: 'Brix Sans',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 28,
-                            ),
-                          )
-                        : SizedBox.shrink()),
+                      ? Text(
+                          data.logoText,
+                          style: TextStyle(
+                            color: textColor,
+                            fontFamily: 'Brix Sans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 28,
+                          ),
+                        )
+                      : SizedBox.shrink()),
             ),
           ),
           title: Text(data.name, style: Theme.of(context).textTheme.bodyMedium),

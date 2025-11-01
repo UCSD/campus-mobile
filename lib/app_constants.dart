@@ -150,8 +150,7 @@ class NavigatorConstants {
 }
 
 class NotificationsConstants {
-  static const statusNoMessages =
-      'You have no notifications.\n' +
+  static const statusNoMessages = 'You have no notifications.\n' +
       'It looks like you\'ve unsubscribed from all topics.\n\n' +
       'You can re-subscribe to specific topics via the Notifications Filter.';
   static const statusFetchProblem =
