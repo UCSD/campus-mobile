@@ -167,9 +167,9 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                     cardState = TestStatus.running;
                   });
                   _speedTestProvider.speedTest().timeout(
-                    const Duration(seconds: 1),
-                    onTimeout: _onTimeout,
-                  );
+                        const Duration(seconds: 1),
+                        onTimeout: _onTimeout,
+                      );
                 }
               },
             ),
@@ -352,9 +352,9 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                   _speedTestProvider.resetSpeedTest();
                 });
                 _speedTestProvider.speedTest().timeout(
-                  const Duration(seconds: 1),
-                  onTimeout: _onTimeout,
-                );
+                      const Duration(seconds: 1),
+                      onTimeout: _onTimeout,
+                    );
                 // setState(() {
                 //   timedOut = false;
                 //   cardState = TestStatus.initial;
@@ -366,8 +366,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             // REPORT ISSUE
             ActionLink(
               buttonText: 'REPORT ISSUE',
-              onPressed:
-                  _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED?
+              onPressed: _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED?
                   ? () {
                       _speedTestProvider.reportIssue();
                       showDialog(

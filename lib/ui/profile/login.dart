@@ -187,27 +187,27 @@ class _LoginState extends State<Login> {
                         : () {
                             _userDataProvider
                                 .manualLogin(
-                                  _emailTextFieldController.text,
-                                  _passwordTextFieldController.text,
-                                )
+                              _emailTextFieldController.text,
+                              _passwordTextFieldController.text,
+                            )
                                 .then((isLoggedIn) {
-                                  if (!isLoggedIn) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialogWidget(
-                                          type: MessageTypeConstants.ERROR,
-                                          icon: Icons.block_flipped,
-                                          title: LoginConstants.loginFailedTitle,
-                                          description: LoginConstants.loginFailedDesc,
-                                          onClose: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        );
+                              if (!isLoggedIn) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialogWidget(
+                                      type: MessageTypeConstants.ERROR,
+                                      icon: Icons.block_flipped,
+                                      title: LoginConstants.loginFailedTitle,
+                                      description: LoginConstants.loginFailedDesc,
+                                      onClose: () {
+                                        Navigator.of(context).pop();
                                       },
                                     );
-                                  }
-                                });
+                                  },
+                                );
+                              }
+                            });
                           },
                   ),
                 ),

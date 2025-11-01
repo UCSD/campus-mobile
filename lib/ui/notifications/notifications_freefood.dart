@@ -50,9 +50,8 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
     var isOverCount = _freeFoodDataProvider.isOverCount(messageId!);
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
     var currCount = _freeFoodDataProvider.count(messageId!);
-    var countText = currCount == 1
-        ? '$currCount student is going'
-        : '$currCount students are going';
+    var countText =
+        currCount == 1 ? '$currCount student is going' : '$currCount students are going';
 
     return Container(
       margin: EdgeInsets.only(top: 8.0),

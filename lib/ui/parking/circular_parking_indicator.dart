@@ -110,16 +110,16 @@ class CircularParkingIndicators extends StatelessWidget {
                                   color: colorFromHex(spotType.logoTextColor),
                                 )
                               : (spotType.logoText.isNotEmpty
-                                    ? Text(
-                                        spotType.logoText,
-                                        style: TextStyle(
-                                          color: colorFromHex(spotType.logoTextColor),
-                                          fontFamily: 'Brix Sans',
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      )
-                                    : SizedBox.shrink()),
+                                  ? Text(
+                                      spotType.logoText,
+                                      style: TextStyle(
+                                        color: colorFromHex(spotType.logoTextColor),
+                                        fontFamily: 'Brix Sans',
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    )
+                                  : SizedBox.shrink()),
                         )
                       : Container(),
                 ),
@@ -165,16 +165,16 @@ class CircularParkingIndicators extends StatelessWidget {
                                   color: colorFromHex(spotType.logoTextColor),
                                 )
                               : (spotType.logoText.isNotEmpty
-                                    ? Text(
-                                        spotType.logoText,
-                                        style: TextStyle(
-                                          color: colorFromHex(spotType.logoTextColor),
-                                          fontFamily: 'Brix Sans',
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 28,
-                                        ),
-                                      )
-                                    : SizedBox.shrink()),
+                                  ? Text(
+                                      spotType.logoText,
+                                      style: TextStyle(
+                                        color: colorFromHex(spotType.logoTextColor),
+                                        fontFamily: 'Brix Sans',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 28,
+                                      ),
+                                    )
+                                  : SizedBox.shrink()),
                         )
                       : Container(),
                 ),

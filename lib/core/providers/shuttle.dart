@@ -123,8 +123,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1)!; // deg2rad below
     var dLon = deg2rad(lon2 - lon1)!;
-    var a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(deg2rad(lat1)!) *
             Math.cos(deg2rad(lat2)!) *
             Math.sin(dLon / 2) *

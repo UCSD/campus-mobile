@@ -79,8 +79,8 @@ class EventDetailView extends StatelessWidget {
                 data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
                     ? '    All day     '
                     : DateFormat.jm().format(data.startDate.toLocal()) +
-                          ' - ' +
-                          DateFormat.jm().format(data.endDate.toLocal()),
+                        ' - ' +
+                        DateFormat.jm().format(data.endDate.toLocal()),
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).brightness == Brightness.light
@@ -176,9 +176,8 @@ class EventDateContainer extends StatelessWidget {
           date.split(' ')[0].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color:
+                Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -187,9 +186,8 @@ class EventDateContainer extends StatelessWidget {
           date.split(' ')[1].toUpperCase(),
           style: TextStyle(
             fontSize: 20,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color:
+                Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -198,9 +196,8 @@ class EventDateContainer extends StatelessWidget {
           date.split(' ')[2].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color:
+                Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),

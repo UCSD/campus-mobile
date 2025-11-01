@@ -61,11 +61,11 @@ class AvailabilityDisplay extends StatelessWidget {
                           subLocation.name,
                           style: subLocation.floors.isNotEmpty
                               ? (Theme.of(context).brightness == Brightness.dark
-                                    ? textButtonSmallDark
-                                    : textButtonSmallLight)
+                                  ? textButtonSmallDark
+                                  : textButtonSmallLight)
                               : (Theme.of(context).brightness == Brightness.dark
-                                    ? descriptiveTextSmallDark.copyWith(fontSize: 22.0)
-                                    : descriptiveTextSmallLight.copyWith(fontSize: 22.0)),
+                                  ? descriptiveTextSmallDark.copyWith(fontSize: 22.0)
+                                  : descriptiveTextSmallLight.copyWith(fontSize: 22.0)),
                         ),
                         SizedBox(height: 4),
                         Text(

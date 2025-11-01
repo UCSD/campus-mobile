@@ -23,8 +23,8 @@ class Body {
   Body({required this.count, required this.maxCount});
 
   Body.fromJson(Map<String, dynamic> json)
-    : count = json["count"] ?? 0,
-      maxCount = json["maxCount"] ?? 0;
+      : count = json["count"] ?? 0,
+        maxCount = json["maxCount"] ?? 0;
 
   Map<String, dynamic> toJson() => {"count": count, "maxCount": maxCount};
 }

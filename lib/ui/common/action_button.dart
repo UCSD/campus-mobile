@@ -6,7 +6,7 @@ class ActionButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const ActionButton({Key? key, required this.buttonText, required this.onPressed})
-    : super(key: key);
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

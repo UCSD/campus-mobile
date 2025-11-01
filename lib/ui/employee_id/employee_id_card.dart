@@ -26,8 +26,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     ScalingUtility().getCurrentMeasurements(context);
 
     EmployeeIdModel? employeeModel = Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
-    isValidId =
-        employeeModel != null &&
+    isValidId = employeeModel != null &&
         (employeeModel.barcode != null) &&
         (employeeModel.employeePreferredDisplayName != null && employeeModel.employeeId != null);
 

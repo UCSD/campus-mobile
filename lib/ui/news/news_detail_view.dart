@@ -71,9 +71,8 @@ class NewsDateContainer extends StatelessWidget {
           parts[0].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color:
+                Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -81,9 +80,8 @@ class NewsDateContainer extends StatelessWidget {
           parts[1].toUpperCase(),
           style: TextStyle(
             fontSize: 20,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color:
+                Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -91,9 +89,8 @@ class NewsDateContainer extends StatelessWidget {
           parts[2].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color:
+                Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -115,9 +112,8 @@ class NewsTitle extends StatelessWidget {
         style: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,
-          color: Theme.of(context).brightness == Brightness.light
-              ? lightPrimaryColor
-              : Colors.white,
+          color:
+              Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
         ),
       ),
     );

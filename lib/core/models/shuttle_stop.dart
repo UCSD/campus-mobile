@@ -22,10 +22,10 @@ class ShuttleStopModel {
   ShuttleStopModel({required this.lat, required this.lon, required this.id, required this.name});
 
   ShuttleStopModel.fromJson(Map<String, dynamic> json)
-    : lat = json["lat"].toDouble(),
-      lon = json["lon"].toDouble(),
-      id = json["id"],
-      name = json["name"];
+      : lat = json["lat"].toDouble(),
+        lon = json["lon"].toDouble(),
+        id = json["id"],
+        name = json["name"];
 
   Map<String, dynamic> toJson() => {"lat": lat, "lon": lon, "id": id, "name": name};
 }

@@ -65,8 +65,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
     // check if this webCard needs an auth token
     if (widget.requireAuth) {
       _userDataProvider = Provider.of<UserDataProvider>(context);
-      webCardUrl =
-          widget.initialUrl +
+      webCardUrl = widget.initialUrl +
           "?expiration=${_userDataProvider.authenticationModel.expiration}#${_userDataProvider.authenticationModel.accessToken}";
     } else {
       webCardUrl = widget.initialUrl;
@@ -84,9 +83,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(color: dotsUnselectedColor, width: 0.5),
         ),
-        color: Theme.of(context).brightness == Brightness.dark
-            ? darkPrimaryBgColor
-            : lightAccentColor,
+        color:
+            Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -99,9 +97,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
             buildBody(context),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: widget.actionButtons != null
-                  ? Row(children: widget.actionButtons!)
-                  : Container(),
+              child:
+                  widget.actionButtons != null ? Row(children: widget.actionButtons!) : Container(),
             ),
           ],
         ),

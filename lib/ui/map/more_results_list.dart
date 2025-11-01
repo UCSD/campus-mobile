@@ -45,10 +45,10 @@ class MoreResultsList extends StatelessWidget {
                                     ).mapSearchModels[index].distance !=
                                     null
                                 ? Provider.of<MapsDataProvider>(
-                                        cntxt,
-                                        listen: false,
-                                      ).mapSearchModels[index].distance!.toStringAsFixed(1) +
-                                      ' mi'
+                                      cntxt,
+                                      listen: false,
+                                    ).mapSearchModels[index].distance!.toStringAsFixed(1) +
+                                    ' mi'
                                 : '--',
                             style: TextStyle(color: Colors.blue[600]),
                           ),

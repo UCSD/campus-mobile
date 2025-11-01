@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 
 class MyLocationButton extends StatelessWidget {
   const MyLocationButton({Key? key, required GoogleMapController? mapController})
-    : _mapController = mapController,
-      super(key: key);
+      : _mapController = mapController,
+        super(key: key);
 
   final GoogleMapController? _mapController;
 

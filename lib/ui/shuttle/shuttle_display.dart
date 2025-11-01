@@ -87,9 +87,8 @@ class ShuttleDisplay extends StatelessWidget {
         SizedBox(width: 16),
         Text(
           "@",
-          style: Theme.of(context).brightness == Brightness.light
-              ? titleMediumLight
-              : titleMediumDark,
+          style:
+              Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
         ),
         SizedBox(width: 8),
         Expanded(

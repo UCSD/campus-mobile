@@ -75,8 +75,8 @@ class DiningFilterView extends StatelessWidget {
               scale: 0.9,
               child: Switch.adaptive(
                 // Each filter type's switch is 'on' or 'off' based on the filter type's state
-                value: diningProvider
-                    .diningFilterTypeStates[type]!, // Remember that ```type``` is a string key (i.e. "Triton Cash")
+                value: diningProvider.diningFilterTypeStates[
+                    type]!, // Remember that ```type``` is a string key (i.e. "Triton Cash")
                 onChanged: (_) {
                   // On changed, this calls the provider function that "toggles" the filter type's state
                   // i.e. if "Triton Cash" was on (true), it makes it off (false).

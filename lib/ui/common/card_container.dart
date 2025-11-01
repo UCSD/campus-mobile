@@ -16,8 +16,8 @@ class CardContainer extends StatelessWidget {
     this.actionButtons,
     this.footer,
     this.hideMenu = false,
-  }) : active = active ?? false,
-       super(key: key);
+  })  : active = active ?? false,
+        super(key: key);
 
   /// required parameters
   final String titleText;
@@ -45,9 +45,8 @@ class CardContainer extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(color: dotsUnselectedColor, width: 0.5),
         ),
-        color: Theme.of(context).brightness == Brightness.dark
-            ? darkPrimaryBgColor
-            : lightAccentColor,
+        color:
+            Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[

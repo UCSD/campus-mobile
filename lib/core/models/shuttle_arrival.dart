@@ -35,10 +35,10 @@ class ArrivingShuttle {
   }
 
   Map<String, dynamic> toJson() => {
-    "routeId": routeId,
-    "routeName": routeName,
-    "routeStopId": routeStopId,
-    "routeColor": routeColor,
-    "secondsToArrival": secondsToArrival,
-  };
+        "routeId": routeId,
+        "routeName": routeName,
+        "routeStopId": routeStopId,
+        "routeColor": routeColor,
+        "secondsToArrival": secondsToArrival,
+      };
 }

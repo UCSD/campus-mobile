@@ -59,11 +59,11 @@ class MapsDataProvider extends ChangeNotifier {
       _mapController!
           .animateCamera(CameraUpdate.newLatLng(_markers.values.toList()[0].position))
           .then((_) async {
-            await Future.delayed(Duration(seconds: 1));
-            try {
-              _mapController!.showMarkerInfoWindow(_markers.values.toList()[0].markerId);
-            } catch (e) {}
-          });
+        await Future.delayed(Duration(seconds: 1));
+        try {
+          _mapController!.showMarkerInfoWindow(_markers.values.toList()[0].markerId);
+        } catch (e) {}
+      });
     }
   }
 

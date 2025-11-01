@@ -187,10 +187,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                   },
                   options: LinkifyOptions(humanize: false),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 16,
-                    height: 1.41,
-                    fontWeight: FontWeight.w400,
-                  ),
+                        fontSize: 16,
+                        height: 1.41,
+                        fontWeight: FontWeight.w400,
+                      ),
                 ),
                 freefoodProvider.isFreeFood(data.messageId)
                     ? FreeFoodNotification(messageId: data.messageId)
@@ -206,10 +206,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                 child: Text(
                   _readTimestamp(data.timestamp),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 12,
-                    height: 1.41,
-                    fontWeight: FontWeight.w700,
-                  ),
+                        fontSize: 12,
+                        height: 1.41,
+                        fontWeight: FontWeight.w700,
+                      ),
                 ),
               ),
             ],
