@@ -7,9 +7,9 @@ import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:provider/provider.dart';
-import '../common/action_button.dart';
-import '../common/action_link.dart';
-import '../common/alert_dialog_widget.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
+import 'package:campus_mobile_experimental/ui/common/action_link.dart';
+import 'package:campus_mobile_experimental/ui/common/alert_dialog_widget.dart';
 
 class WiFiCard extends StatefulWidget {
   @override

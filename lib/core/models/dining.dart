@@ -4,7 +4,6 @@ import 'package:campus_mobile_experimental/core/models/location.dart';
 // To parse this JSON data, do
 //
 //     final diningModel = diningModelFromJson(jsonString);
-
 List<DiningModel> diningModelFromJson(String str) => List<DiningModel>.from(
     json.decode(str).map((x) => DiningModel.fromJson(x)));
 

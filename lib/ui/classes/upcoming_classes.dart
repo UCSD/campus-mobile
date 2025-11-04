@@ -2,7 +2,7 @@ import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class UpcomingCoursesList extends StatelessWidget {
   @override

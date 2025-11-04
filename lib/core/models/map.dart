@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final mapSearchModel = mapSearchModelFromJson(jsonString);
-
-import 'dart:convert';
-
 List<MapSearchModel> mapSearchModelFromJson(String str) =>
     List<MapSearchModel>.from(
         json.decode(str).map((x) => MapSearchModel.fromJson(x)));

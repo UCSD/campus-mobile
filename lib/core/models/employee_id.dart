@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final employeeIdModel = employeeIdModelFromJson(jsonString);
-
-import 'dart:convert';
-
 EmployeeIdModel employeeIdModelFromJson(String str) =>
     EmployeeIdModel.fromJson(json.decode(str));
 

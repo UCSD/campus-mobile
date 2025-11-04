@@ -1,13 +1,10 @@
+import 'dart:convert';
+import 'package:hive/hive.dart';
+part 'authentication.g.dart';
+
 // To parse this JSON data, do
 //
 //     final authenticationModel = authenticationModelFromJson(jsonString);
-
-import 'dart:convert';
-
-import 'package:hive/hive.dart';
-
-part 'authentication.g.dart';
-
 AuthenticationModel authenticationModelFromJson(String str) =>
     AuthenticationModel.fromJson(json.decode(str));
 

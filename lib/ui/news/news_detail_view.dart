@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class NewsDetailView extends StatelessWidget {
   const NewsDetailView({Key? key, required this.data}) : super(key: key);
@@ -150,7 +150,7 @@ class ContinueReadingButton extends StatelessWidget {
       ),
       onPressed: () async {
         try {
-          await launch(link, forceSafariVC: true);
+          launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Could not open.')),

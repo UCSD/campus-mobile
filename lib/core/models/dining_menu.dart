@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final diningMenuItemsModel = diningMenuItemsModelFromJson(jsonString);
-
-import 'dart:convert';
-
 DiningMenuItemsModel diningMenuItemsModelFromJson(String str) =>
     DiningMenuItemsModel.fromJson(json.decode(str));
 

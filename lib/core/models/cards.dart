@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final cardsModel = cardsModelFromJson(jsonString);
-
-import 'dart:convert';
-
 Map<String, CardsModel> cardsModelFromJson(String str) =>
     Map.from(json.decode(str))
         .map((k, v) => MapEntry<String, CardsModel>(k, CardsModel.fromJson(v)));

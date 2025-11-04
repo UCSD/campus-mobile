@@ -1,13 +1,10 @@
+import 'dart:convert';
+import 'package:hive/hive.dart';
+part 'user_profile.g.dart';
+
 // To parse this JSON data, do
 //
 //     final userProfileModel = userProfileModelFromJson(jsonString);
-
-import 'dart:convert';
-
-import 'package:hive/hive.dart';
-
-part 'user_profile.g.dart';
-
 UserProfileModel userProfileModelFromJson(String str) =>
     UserProfileModel.fromJson(json.decode(str));
 

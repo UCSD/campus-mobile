@@ -7,7 +7,7 @@ import 'package:campus_mobile_experimental/ui/common/last_updated_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 const cardId = 'finals';
 

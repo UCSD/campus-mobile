@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final availabilityStatus = availabilityStatusFromJson(jsonString);
-
-import 'dart:convert';
-
 AvailabilityStatus availabilityStatusFromJson(String str) =>
     AvailabilityStatus.fromJson(json.decode(str));
 

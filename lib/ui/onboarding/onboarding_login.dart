@@ -215,7 +215,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                         /// TODO: Update link to redirect to password reset
                         String link =
                             'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                        await launch(link, forceSafariVC: true);
+                        await launchUrl(Uri.parse(link),
+                            mode: LaunchMode.inAppBrowserView);
                       } catch (e) {
                         // an error occurred, do nothing
                       }

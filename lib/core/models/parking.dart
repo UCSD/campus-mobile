@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final parkingModel = parkingModelFromJson(jsonString);
-
-import 'dart:convert';
-
 List<ParkingModel> parkingModelFromJson(String str) => List<ParkingModel>.from(
     json.decode(str).map((x) => ParkingModel.fromJson(x)));
 

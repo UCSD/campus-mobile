@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ui';
-
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 
 List<ShuttleModel>? shuttleModelFromJson(String str) =>

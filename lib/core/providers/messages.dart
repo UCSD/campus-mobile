@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/messages.dart';
 import 'package:flutter/material.dart';
-import '../../ui/navigator/bottom.dart';
+import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 
 // MESSAGES API UNIX TIMESTAMPS IN MILLISECONDS NOT SECONDS
 var notificationScrollController = ScrollController();

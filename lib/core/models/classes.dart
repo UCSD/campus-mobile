@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final classScheduleModel = classScheduleModelFromJson(jsonString);
-
-import 'dart:convert';
-
 ClassScheduleModel classScheduleModelFromJson(String str) =>
     ClassScheduleModel.fromJson(json.decode(str));
 

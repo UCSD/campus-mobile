@@ -29,6 +29,29 @@
 .pub/
 build/
 
+# Generated dart files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+*.config.dart
+*.gr.dart
+
+# Test coverage
+coverage/
+test/coverage/
+lcov.info
+
+# Flutter version management
+.flutter-version
+
+# Additional dart tool cache
+**/.dart_tool/package_config.json
+**/.dart_tool/package_config_subset
+
+# Web related
+**/web/main.dart.js
+**/web/main.dart.js.map
+
 # Codemagic
 app-config*.js
 sp-config*.json
@@ -44,6 +67,10 @@ node_modules/
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 **/android/**/build/
+**/android/app/.cxx/
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
 *.keystore
 !gradle-wrapper.jar
 android/.project
@@ -78,10 +105,16 @@ android/app/google-services.json
 **/ios/Flutter/app.zip
 **/ios/Flutter/flutter_assets/
 **/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/ephemeral/
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 **/ios/Runner/GoogleService-Info.plist
 **/ios/**/build/
+
+# fvm related
+.fvm/flutter_sdk
+.fvm/
+.fvmrc
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3

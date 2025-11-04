@@ -1,9 +1,9 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_styles.dart';
-import '../common/container_view.dart';
-import '../../core/providers/dining.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/ui/common/container_view.dart';
+import 'package:campus_mobile_experimental/core/providers/dining.dart';
 
 /// View for dining payment filter settings
 /// This displays a list of filter types with on/off switches to toggle

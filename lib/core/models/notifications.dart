@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final messages = messagesFromJson(jsonString);
-
-import 'dart:convert';
-
 Messages messagesFromJson(String str) => Messages.fromJson(json.decode(str));
 
 String messagesToJson(Messages data) => json.encode(data.toJson());

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:async';
 
 class WebViewContainer extends StatefulWidget {
   const WebViewContainer({
@@ -21,6 +22,9 @@ class WebViewContainer extends StatefulWidget {
     this.overFlowMenu,
     this.actionButtons,
     this.hideMenu = false,
+    this.isLoaded = true,
+    this.onPageFinished,
+    this.onWidgetSizeChange,
   }) : super(key: key);
 
   /// required parameters
@@ -33,6 +37,9 @@ class WebViewContainer extends StatefulWidget {
   final Map<String, Function>? overFlowMenu;
   final bool hideMenu;
   final List<Widget>? actionButtons;
+  final bool isLoaded;
+  final VoidCallback? onPageFinished;
+  final Function(Size)? onWidgetSizeChange;
 
   @override
   _WebViewContainerState createState() => _WebViewContainerState();
@@ -45,18 +52,121 @@ class _WebViewContainerState extends State<WebViewContainer>
   double _contentHeight = cardContentMinHeight;
   late Function hide;
   late String webCardUrl;
+  String? _lastLoadedUrl;
+
+  /// PERFORMANCE OPTIMIZATION TIMERS
+  Timer? _heightUpdateTimer;
+  Timer? _mapSearchTimer;
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
   /// SERVICES
-  WebViewController? _webViewController;
+  // WebViewController? _webViewController;
+  late WebViewController _webViewController;
 
   @override
   void initState() {
     super.initState();
     hide = () => Provider.of<CardsDataProvider>(context, listen: false)
         .toggleCard(widget.cardId);
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      //open link
+      ..addJavaScriptChannel(
+        'OpenLink',
+        onMessageReceived: (JavaScriptMessage m) {
+          openLink(m.message);
+        },
+      )
+      //set height (with debouncing for performance)
+      ..addJavaScriptChannel(
+        'SetHeight',
+        onMessageReceived: (JavaScriptMessage message) {
+          // Cancel any existing timer to avoid multiple rapid updates
+          _heightUpdateTimer?.cancel();
+
+          // Wait 16ms (one frame at 60fps) before updating to batch rapid changes
+          _heightUpdateTimer = Timer(Duration(milliseconds: 16), () {
+            if (mounted) {
+              // Check if widget is still mounted
+              final newHeight = double.tryParse(message.message);
+              if (newHeight != null && newHeight > 0) {
+                final validatedHeight = validateHeight(context, newHeight);
+                print(
+                    'WebView height: requested=${newHeight.toInt()}px, validated=${validatedHeight.toInt()}px');
+                setState(() {
+                  _contentHeight = validatedHeight;
+                  if (widget.onWidgetSizeChange != null) {
+                    widget.onWidgetSizeChange!(Size(
+                        MediaQuery.of(context).size.width, _contentHeight));
+                  }
+                });
+              }
+            }
+          });
+        },
+      )
+      // channel for performing a map search based on given query (with debouncing)
+      ..addJavaScriptChannel(
+        'MapSearch',
+        onMessageReceived: (JavaScriptMessage message) {
+          // Cancel any existing timer to avoid multiple rapid searches
+          _mapSearchTimer?.cancel();
+
+          // Wait 300ms before executing search to avoid excessive API calls
+          _mapSearchTimer = Timer(Duration(milliseconds: 300), () {
+            if (mounted) {
+              // Check if widget is still mounted
+              // Perform heavy operations asynchronously to avoid blocking UI
+              Future.microtask(() {
+                final mapsProvider =
+                    Provider.of<MapsDataProvider>(context, listen: false);
+                final navProvider = Provider.of<BottomNavigationBarProvider>(
+                    context,
+                    listen: false);
+                final appBarProvider =
+                    Provider.of<CustomAppBar>(context, listen: false);
+
+                mapsProvider.searchBarController.text = message.message;
+                mapsProvider.fetchLocations();
+                navProvider.currentIndex = NavigatorConstants.MapTab;
+                appBarProvider.changeTitle("Maps");
+              });
+            }
+          });
+        },
+      )
+      //refresh token
+      ..addJavaScriptChannel(
+        'RefreshToken',
+        onMessageReceived: (JavaScriptMessage message) async {
+          if (!Provider.of<UserDataProvider>(context, listen: false)
+              .isLoggedIn) {
+            if (await _userDataProvider.silentLogin()) {
+              _webViewController.reload();
+            }
+          }
+        },
+      )
+      // javascript channel for redirecting the user to a new webcard URL
+      ..addJavaScriptChannel(
+        'Redirect',
+        onMessageReceived: (JavaScriptMessage message) async {
+          webCardUrl = message.message;
+          _webViewController.loadRequest(Uri.parse(webCardUrl));
+        },
+      )
+      // navigation delegate for page finished
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (url) {
+            if (widget.onPageFinished != null) {
+              widget.onPageFinished!();
+            }
+          },
+        ),
+      );
   }
 
   @override
@@ -122,27 +232,19 @@ class _WebViewContainerState extends State<WebViewContainer>
   // builds the actual webview widget
   Widget buildBody(context) {
     print('webview_container:buildBody: ' + webCardUrl);
+    if (_lastLoadedUrl != webCardUrl) {
+      _webViewController.loadRequest(Uri.parse(webCardUrl));
+      _lastLoadedUrl = webCardUrl;
+    }
     return ClipRRect(
       borderRadius: BorderRadius.only(
         bottomLeft: Radius.circular(12.0),
         bottomRight: Radius.circular(12.0),
       ),
-      child: Container(
+      child: SizedBox(
         height: _contentHeight,
-        child: WebView(
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: webCardUrl,
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
-          },
-          navigationDelegate: null,
-          javascriptChannels: <JavascriptChannel>[
-            _linksChannel(context),
-            _heightChannel(context),
-            _mapChannel(context),
-            _refreshTokenChannel(context),
-            _permanentRedirect(context)
-          ].toSet(),
+        child: WebViewWidget(
+          controller: _webViewController,
         ),
       ),
     );
@@ -155,7 +257,7 @@ class _WebViewContainerState extends State<WebViewContainer>
       mainAxisSize: MainAxisSize.min,
       children: [
         buildMenuOptions({
-          CardMenuOptionConstants.reloadCard: _webViewController?.reload,
+          CardMenuOptionConstants.reloadCard: _webViewController.reload,
           CardMenuOptionConstants.hideCard: hide,
         }),
       ],
@@ -192,7 +294,8 @@ class _WebViewContainerState extends State<WebViewContainer>
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
       case CardMenuOptionConstants.reloadCard:
-        _webViewController?.loadUrl(webCardUrl);
+        // _webViewController?.loadUrl(webCardUrl);
+        _webViewController.loadRequest(Uri.parse(webCardUrl));
         resetCardHeight(widget.cardId);
         break;
       case CardMenuOptionConstants.hideCard:
@@ -204,78 +307,21 @@ class _WebViewContainerState extends State<WebViewContainer>
     }
   }
 
-  // channel for opening links
-  JavascriptChannel _linksChannel(BuildContext context) {
-    return JavascriptChannel(
-      name: 'OpenLink',
-      onMessageReceived: (JavascriptMessage message) {
-        openLink(message.message);
-      },
-    );
-  }
-
-  // channel for dynamically setting the height of the card
-  JavascriptChannel _heightChannel(BuildContext context) {
-    return JavascriptChannel(
-      name: 'SetHeight',
-      onMessageReceived: (JavascriptMessage message) {
-        setState(() {
-          _contentHeight =
-              validateHeight(context, double.tryParse(message.message));
-        });
-      },
-    );
-  }
-
-  // channel for performing a map search based on given query
-  JavascriptChannel _mapChannel(BuildContext context) {
-    return JavascriptChannel(
-      name: 'MapSearch',
-      onMessageReceived: (JavascriptMessage message) {
-        // navigate to map and search with message.message
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text = message.message;
-        Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.MapTab;
-        Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
-        // Navigator.pushNamed(context, RoutePaths.Map);
-      },
-    );
-  }
-
-  JavascriptChannel _refreshTokenChannel(BuildContext context) {
-    return JavascriptChannel(
-      name: 'RefreshToken',
-      onMessageReceived: (JavascriptMessage message) async {
-        if (!Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-          if (await _userDataProvider.silentLogin()) {
-            _webViewController?.reload();
-          }
-        }
-      },
-    );
-  }
-
-  // javascript channel for redirecting the user to a new webcard URL
-  JavascriptChannel _permanentRedirect(BuildContext context) {
-    return JavascriptChannel(
-      name: 'Redirect',
-      onMessageReceived: (JavascriptMessage message) async {
-        webCardUrl = message.message;
-        _webViewController!.loadUrl(message.message);
-      },
-    );
-  }
-
   // this function checks to see if the current url of the state is different
   // to the webViewController's url, and loads in the new url if so
   void checkWebURL() async {
-    String? currentUrl = await _webViewController?.currentUrl();
-    if (_webViewController != null && webCardUrl != currentUrl) {
-      _webViewController?.loadUrl(webCardUrl);
+    String? currentUrl = await _webViewController.currentUrl();
+    if (webCardUrl != currentUrl) {
+      _webViewController.loadRequest(Uri.parse(webCardUrl));
     }
+  }
+
+  @override
+  void dispose() {
+    // Cancel any pending timers to prevent memory leaks
+    _heightUpdateTimer?.cancel();
+    _mapSearchTimer?.cancel();
+    super.dispose();
   }
 
   /// SIMPLE GETTERS

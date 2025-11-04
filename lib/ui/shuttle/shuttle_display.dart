@@ -2,8 +2,7 @@ import 'package:campus_mobile_experimental/core/models/shuttle.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:flutter/material.dart';
-
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class ShuttleDisplay extends StatelessWidget {
   ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles})
@@ -54,7 +53,7 @@ class ShuttleDisplay extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 spreadRadius: 1,
                 blurRadius: 5,
                 offset: Offset(0, 6), // shadow only at the bottom

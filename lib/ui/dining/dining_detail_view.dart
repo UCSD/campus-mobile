@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
-import '../../core/models/availability.dart';
-import '../../core/providers/availability.dart';
+import 'package:campus_mobile_experimental/core/models/availability.dart';
+import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'dining_busyness_bar.dart';
 
 class DiningDetailView extends StatefulWidget {
@@ -350,7 +350,7 @@ Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
       child: Text('Visit Website'),
       onPressed: () {
         try {
-          launch(model.url!, forceSafariVC: true);
+          launchUrl(Uri.parse(model.url!), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
           // an error occurred, do nothing
         }

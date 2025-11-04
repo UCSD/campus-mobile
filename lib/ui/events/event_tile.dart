@@ -4,7 +4,7 @@ import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../app_styles.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);

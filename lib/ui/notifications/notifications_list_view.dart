@@ -11,9 +11,9 @@ import 'package:campus_mobile_experimental/ui/notifications/notifications_filter
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:provider/provider.dart';
-import 'package:uni_links2/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../navigator/bottom.dart';
+import 'package:app_links/app_links.dart';
+import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 
 /// TODO: make this not global. Probably put into Widget as stateful variable...
 var hideListView = false;
@@ -118,24 +118,33 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   }
 
   Future<Null> initUniLinks(BuildContext context) async {
-    // deep links are received by this method
-    // the specific host needs to be added in AndroidManifest.xml and Info.plist
-    // currently, this method handles executing custom map query
-    late StreamSubscription _sub;
-    _sub = linkStream.listen((String? link) async {
-      // handling for map query
-      if (link!.contains("deeplinking.searchmap")) {
-        var uri = Uri.dataFromString(link);
-        var query = uri.queryParameters['query']!;
-        // redirect query to maps tab and search with query
+    final appLinks = AppLinks();
+    StreamSubscription? _sub;
+
+    Uri? initialUri = await appLinks.getInitialAppLink();
+    String? initialLink = initialUri?.toString();
+    if (initialLink != null && initialLink.contains("deeplinking.searchmap")) {
+      var uri = Uri.dataFromString(initialLink);
+      var query = uri.queryParameters['query']!;
+      Provider.of<MapsDataProvider>(context, listen: false)
+          .searchBarController
+          .text = query;
+      Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
+      Provider.of<BottomNavigationBarProvider>(context, listen: false)
+          .currentIndex = NavigatorConstants.MapTab;
+    }
+
+    _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
+      String? link = uri?.toString();
+      if (link != null && link.contains("deeplinking.searchmap")) {
+        var query = uri!.queryParameters['query']!;
         Provider.of<MapsDataProvider>(context, listen: false)
             .searchBarController
             .text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
         Provider.of<BottomNavigationBarProvider>(context, listen: false)
             .currentIndex = NavigatorConstants.MapTab;
-        // received deeplink, cancel stream to prevent memory leaks
-        _sub.cancel();
+        _sub?.cancel();
       }
     });
   }
@@ -187,7 +196,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                     text: data.message.message,
                     onOpen: (link) async {
                       try {
-                        await launch(link.url, forceSafariVC: true);
+                        launchUrl(Uri.parse(link.url),
+                            mode: LaunchMode.inAppBrowserView);
                       } catch (e) {
                         // an error occurred, do nothing
                       }

@@ -11,12 +11,12 @@ import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/pointycastle.dart' as pc;
-import '../../ui/home/home.dart';
+import 'package:campus_mobile_experimental/ui/home/home.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserDataProvider extends ChangeNotifier {
   /// STATES
@@ -37,7 +37,15 @@ class UserDataProvider extends ChangeNotifier {
   /// SERVICES
   var _authenticationService = AuthenticationService();
   var _userProfileService = UserProfileService();
-  var storage = FlutterSecureStorage();
+  // var storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage(
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.first_unlock_this_device,
+    ),
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
+    ),
+  );
 
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
@@ -77,7 +85,7 @@ class UserDataProvider extends ChangeNotifier {
     var authBox =
         await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
     AuthenticationModel temp = AuthenticationModel.fromJson({});
-    //check to see if we have added the authentication model into the box already
+    // Check to see if we have added the authentication model into the box already
     if (authBox.get('AuthenticationModel') == null) {
       await authBox.put('AuthenticationModel', temp);
       temp = authBox.get('AuthenticationModel')!;
@@ -104,16 +112,18 @@ class UserDataProvider extends ChangeNotifier {
   }
 
   /// Save encrypted password to device
-  void _saveEncryptedPasswordToDevice(String encryptedPassword) =>
-      storage.write(key: 'encrypted_password', value: encryptedPassword);
+  // void _saveEncryptedPasswordToDevice(String encryptedPassword) => storage.write(key: 'encrypted_password', value: encryptedPassword);
+  Future<void> _saveEncryptedPasswordToDevice(String encryptedPassword) async =>
+      await storage.write(key: 'encrypted_password', value: encryptedPassword);
 
   /// Get encrypted password that has been saved to device
   Future<String?> _getEncryptedPasswordFromDevice() =>
       storage.read(key: 'encrypted_password');
 
   /// Save username to device
-  void _saveUsernameToDevice(String username) =>
-      storage.write(key: 'username', value: username);
+  // void _saveUsernameToDevice(String username) => storage.write(key: 'username', value: username);
+  Future<void> _saveUsernameToDevice(String username) async =>
+      await storage.write(key: 'username', value: username);
 
   /// Get username from device
   Future<String?> getUsernameFromDevice() => storage.read(key: 'username');
@@ -125,7 +135,8 @@ class UserDataProvider extends ChangeNotifier {
   void _deletePasswordFromDevice() => storage.delete(key: 'password');
 
   /// Encrypt given username and password and store on device
-  void _encryptAndSaveCredentials(String username, String password) {
+  Future<void> _encryptAndSaveCredentials(
+      String username, String password) async {
     final pkString = dotenv.get('USER_CREDENTIALS_PUBLIC_KEY');
     final rsaParser = RSAKeyParser();
     final pc.RSAPublicKey publicKey = rsaParser.parse(pkString) as RSAPublicKey;
@@ -135,8 +146,8 @@ class UserDataProvider extends ChangeNotifier {
     cipher.init(true, keyParametersPublic);
     Uint8List output = cipher.process(utf8.encode(password));
     var base64EncodedText = base64.encode(output);
-    _saveUsernameToDevice(username);
-    _saveEncryptedPasswordToDevice(base64EncodedText);
+    await _saveUsernameToDevice(username);
+    await _saveEncryptedPasswordToDevice(base64EncodedText);
   }
 
   /// Authenticate a user given an username and password
@@ -148,7 +159,7 @@ class UserDataProvider extends ChangeNotifier {
     notifyListeners();
 
     if (username.isNotEmpty && password.isNotEmpty) {
-      _encryptAndSaveCredentials(username, password);
+      await _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
         if (_userProfileModel.classifications!.student!) {
@@ -263,6 +274,7 @@ class UserDataProvider extends ChangeNotifier {
       final Map<String, String> headers = {
         'Authorization': 'Bearer ' + _authenticationModel.accessToken!
       };
+
       if (await _userProfileService.downloadUserProfile(headers)) {
         /// if the user profile has no ucsd affiliation then we know the user is new
         /// so create a new profile and upload to DB using [postUserProfile]

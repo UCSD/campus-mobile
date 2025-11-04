@@ -25,9 +25,10 @@ class MyStudentChartCard extends StatelessWidget {
           buttonText: 'LOG IN TO MyStudentChart',
           onPressed: () {
             try {
-              launch(
-                  'https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN',
-                  forceSafariVC: true);
+              launchUrl(
+                  Uri.parse(
+                      'https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN'),
+                  mode: LaunchMode.inAppBrowserView);
             } catch (e) {
               // an error occurred, do nothing
             }

@@ -2,7 +2,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:flutter/material.dart';
-import '../../core/models/dining.dart';
+import 'package:campus_mobile_experimental/core/models/dining.dart';
 
 class DiningBusynessBar extends StatelessWidget {
   const DiningBusynessBar({

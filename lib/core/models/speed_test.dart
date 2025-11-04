@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:wifi_connection/WifiInfo.dart';
 
 class SpeedTestModel {

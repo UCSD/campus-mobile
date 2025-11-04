@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final newsModel = newsModelFromJson(jsonString);
-
-import 'dart:convert';
-
 NewsModel newsModelFromJson(String str) => NewsModel.fromJson(json.decode(str));
 
 String newsModelToJson(NewsModel data) => json.encode(data.toJson());

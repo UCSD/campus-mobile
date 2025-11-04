@@ -10,7 +10,6 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 var showOnboardingScreen = true;
 var isFirstRunFlag = false;
@@ -71,6 +71,7 @@ Future<void> initializeApp() async {
 }
 
 Future<void> clearSecuredStorage() async {
+  // await StorageService.clearAll();
   FlutterSecureStorage storage = FlutterSecureStorage();
   await storage.deleteAll();
 }
@@ -105,7 +106,7 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        background: lightButtonColor,
+        surface: lightButtonColor,
         brightness: Brightness.light,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -133,7 +134,7 @@ class CampusMobile extends StatelessWidget {
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        background: darkButtonColor,
+        surface: darkButtonColor,
         brightness: Brightness.dark,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(

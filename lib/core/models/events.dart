@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 // To parse this JSON data, do
 //
 //     final eventModel = eventModelFromJson(jsonString);
-
-import 'dart:convert';
-
 List<EventModel> eventModelFromJson(String str) =>
     List<EventModel>.from(json.decode(str).map((x) => EventModel.fromJson(x)));
 
