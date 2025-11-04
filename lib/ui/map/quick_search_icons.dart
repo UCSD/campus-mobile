@@ -30,18 +30,6 @@ class QuickSearchIcons extends StatelessWidget {
               },
             ),
             LabeledIconButton(
-              icon: Icons.coronavirus_outlined,
-              text: 'COVID Tests',
-              onPressed: () {
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .searchBarController
-                    .text = 'COVID Test Kits';
-                Provider.of<MapsDataProvider>(context, listen: false)
-                    .fetchLocations();
-                Navigator.pop(context);
-              },
-            ),
-            LabeledIconButton(
               icon: Icons.local_drink,
               text: 'Hydration',
               onPressed: () {
