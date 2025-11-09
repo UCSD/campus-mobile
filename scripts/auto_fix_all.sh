@@ -30,8 +30,7 @@ if [[ "$DRY_RUN" == "true" ]]; then
     echo "1. Comment spacing fixes"
     echo "2. TODO format fixes"
     echo "3. One-line if brace removal"
-    echo "4. File/directory renaming"
-    echo "5. Dart formatting"
+    echo "4. Dart formatting"
     echo
     exit 0
 fi
@@ -63,16 +62,16 @@ else
 fi
 echo
 
-echo "🔍 4. Fixing file and directory naming..."
-if bash scripts/file_dir_snake_case.sh --fix; then
-    echo "✅ File/directory naming fixes completed"
-    fixes_applied=$((fixes_applied + 1))
-else
-    echo "❌ File/directory naming fixes failed"
-fi
-echo
+# echo "🔍 4. Fixing file and directory naming..."
+# if bash scripts/file_dir_snake_case.sh --fix; then
+#     echo "✅ File/directory naming fixes completed"
+#     fixes_applied=$((fixes_applied + 1))
+# else
+#     echo "❌ File/directory naming fixes failed"
+# fi
+# echo
 
-echo "🎨 5. Running dart format..."
+echo "🔍 4. Running dart format..."
 if bash scripts/dart_format_files.sh; then
     echo "✅ Dart formatting completed"
 else
@@ -81,18 +80,18 @@ fi
 echo
 
 echo "==============================="
-echo "🎯 Auto-fix Summary"
+echo "Auto-fix Summary"
 echo "==============================="
 echo "Fix operations completed: $fixes_applied/4"
 echo
 
 if [[ $fixes_applied -gt 0 ]]; then
-    echo "📊 Changes made - you can now commit them:"
+    echo "Changes made - you can now commit them:"
     echo "  git add -A"
     echo "  git commit -m 'Auto-fix: Code quality improvements'"
     echo
 
-    echo "🔍 Final quality check..."
+    echo "Final quality check..."
     echo
 
     echo "Comment spacing status:"
@@ -107,8 +106,8 @@ if [[ $fixes_applied -gt 0 ]]; then
     bash scripts/no_braces_one_line_if.sh | tail -2
     echo
 
-    echo "File/directory naming status:"
-    bash scripts/file_dir_snake_case.sh | tail -2
+    # echo "File/directory naming status:"
+    # bash scripts/file_dir_snake_case.sh | tail -2
 else
     echo "No fixes were needed or all fixes failed."
 fi
