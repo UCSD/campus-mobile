@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
-import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
+import 'package:campus_mobile_experimental/ui/common/hex_color.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,11 +46,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       );
 
   List<Widget> createList(BuildContext context) {
-    var selectedSpots = Provider.of<ParkingDataProvider>(context)
-        .spotTypesState
-        .values
-        .where((selected) => selected == true)
-        .length;
+    var selectedSpots =
+        Provider.of<ParkingDataProvider>(context).spotTypesState.values.where((selected) => selected == true).length;
 
     List<Widget> list = [];
 
