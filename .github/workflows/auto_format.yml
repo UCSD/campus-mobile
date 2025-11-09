@@ -35,16 +35,16 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           # Run the comprehensive auto-fix script
-          echo "🔧 Running auto_fix_all.sh script..."
+          echo "Running auto_fix_all.sh script..."
           chmod +x ./scripts/auto_fix_all.sh
           ./scripts/auto_fix_all.sh
 
           # Check if there are any changes to commit
           if git diff --quiet && git diff --staged --quiet; then
-            echo "✅ All code is properly formatted and follows style guidelines. Nothing to commit."
+            echo "All code is properly formatted and follows style guidelines. Nothing to commit."
             exit 0
           else
-            echo "� Changes detected. Staging and committing fixes..."
+            echo "Changes detected. Staging and committing fixes..."
 
             # Add all changed files
             git add -A
@@ -64,6 +64,6 @@ jobs:
                        -m "" \
                        -m "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
             git push
-            echo "✅ Code fixes complete. Changes committed and pushed."
+            echo "Code fixes complete. Changes committed and pushed."
             git log --oneline -1
           fi
