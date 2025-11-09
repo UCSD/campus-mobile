@@ -90,16 +90,10 @@ const titleSmallDark = TextStyle(
     color: Color(0xFFF5F0E6));
 
 const titleMediumLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w700,
-    color: lightPrimaryColor);
+    fontFamily: 'Brix Sans', fontSize: 22.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
 
 const titleMediumDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w700,
-    color: Colors.white);
+    fontFamily: 'Brix Sans', fontSize: 22.0, fontWeight: FontWeight.w700, color: Colors.white);
 
 const headlineMediumLight = TextStyle(
     fontFamily: 'Brix Sans',
@@ -219,11 +213,11 @@ const TextStyle textSubheaderDark = TextStyle(
   height: 1.22,
 );
 
-const textSmallMoreInfoLight = TextStyle(
-    fontSize: 15.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
+const textSmallMoreInfoLight =
+    TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
 
-const textSmallMoreInfoDark = TextStyle(
-    fontSize: 15.0, fontWeight: FontWeight.w700, color: darkPrimaryColor2);
+const textSmallMoreInfoDark =
+    TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700, color: darkPrimaryColor2);
 
 // New custom styles for heading2
 const TextStyle heading2StyleLight = TextStyle(
@@ -364,10 +358,8 @@ const Color c2 = Color.fromARGB(255, 0, 255, 0);
 const Color c3 = Color.fromARGB(255, 0, 0, 255);
 
 // List Tile Theme Data
-const lightListTileTheme =
-    ListTileThemeData(selectedColor: const Color(0xFF00629B));
-const darkListTileTheme =
-    ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
+const lightListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00629B));
+const darkListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
 
 // New Onboarding Screen Colors
 const lightOnboardingScreen = Color.fromARGB(255, 245, 240, 228);
@@ -382,5 +374,4 @@ const List<double> grayscaleInvertMatrix = [
 
 // Dining logo border and shadow colors for dark mode
 const Color darkLogoBorderColor = Color(0xFF444444); // subtle dark border
-const Color darkLogoShadowColor =
-    Colors.white; // use white for shadow in dark mode
+const Color darkLogoShadowColor = Colors.white; // use white for shadow in dark mode
