@@ -202,7 +202,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     ),
                     onTap: () async {
                       try {
-                        // TODO: Update link to redirect to password reset
+                        // TODO: Update link to redirect to password reset - November 2025
                         String link =
                             'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
                         await launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);

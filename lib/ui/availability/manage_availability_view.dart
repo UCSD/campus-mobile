@@ -40,9 +40,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     // -----Must remove pages after head of multi pagers and reinsert later to avoid reordering errors-----
     for (AvailabilityModel? item in newOrder) {
       RegExpMatch? match = multiPager.firstMatch(item!.name);
-      if (match != null) {
-        if (match.group(1) != "1") extraPages.add(item);
-      }
+      if (match != null) if (match.group(1) != "1") extraPages.add(item);
     }
     for (AvailabilityModel? item in extraPages) {
       newOrder.remove(item);
