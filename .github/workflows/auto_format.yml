@@ -34,16 +34,24 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # If current code formatting is correct, exit
-          if dart format --set-exit-if-changed --line-length 100 lib; then
+          # Check if formatting is needed (without changing files)
+          if dart format --set-exit-if-changed --dry-run --line-length 100 lib; then
             echo "All Dart files are properly formatted. Nothing to commit."
             exit 0
           else
-            # Auto-format the code and commit the changes
-            echo "Formatting issues detected. Auto-formatting files..."
+            # Format the code and commit the changes
+            echo "🔧 Formatting issues detected. Auto-formatting files..."
             dart format --line-length 100 lib
 
-            git add lib/**/*.dart
+            # Add all Dart files in lib directory
+            git add lib/
+
+            # Check if there are actually changes to commit
+            if git diff --staged --quiet; then
+              echo "No changes to commit after formatting."
+              exit 0
+            fi
+
             git commit -m "Auto-formatted code to 100-character line length [CI]" \
                        -m "This commit ensures consistent Dart formatting." \
                        -m "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
