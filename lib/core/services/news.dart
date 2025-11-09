@@ -29,11 +29,8 @@ class NewsService {
       _newsModels = newsModelFromJson(_response);
       return true;
     } catch (e) {
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) {
-          return await fetchData();
-        }
-      }
+      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers))
+        return await fetchData();
       _error = e.toString();
       return false;
     } finally {

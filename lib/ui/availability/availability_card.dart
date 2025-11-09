@@ -59,9 +59,8 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         String curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
         if (match != null) curName = curName.replaceRange(match.start, match.end, '');
-        if (_availabilityDataProvider.locationViewState[curName]!) {
+        if (_availabilityDataProvider.locationViewState[curName]!)
           locationsList.add(AvailabilityDisplay(model: model));
-        }
       }
     }
 

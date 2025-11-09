@@ -136,11 +136,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
       ..addJavaScriptChannel(
         'RefreshToken',
         onMessageReceived: (JavaScriptMessage message) async {
-          if (!Provider.of<UserDataProvider>(context, listen: false).isLoggedIn) {
-            if (await _userDataProvider.silentLogin()) {
-              _webViewController.reload();
-            }
-          }
+          if (!Provider.of<UserDataProvider>(context, listen: false)
+              .isLoggedIn) if (await _userDataProvider.silentLogin()) _webViewController.reload();
         },
       )
       // javascript channel for redirecting the user to a new webcard URL
@@ -155,9 +152,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (url) {
-            if (widget.onPageFinished != null) {
-              widget.onPageFinished!();
-            }
+            if (widget.onPageFinished != null) widget.onPageFinished!();
           },
         ),
       );
@@ -300,9 +295,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
   // to the webViewController's url, and loads in the new url if so
   void checkWebURL() async {
     String? currentUrl = await _webViewController.currentUrl();
-    if (webCardUrl != currentUrl) {
-      _webViewController.loadRequest(Uri.parse(webCardUrl));
-    }
+    if (webCardUrl != currentUrl) _webViewController.loadRequest(Uri.parse(webCardUrl));
   }
 
   @override

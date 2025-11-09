@@ -181,15 +181,11 @@ class ClassList extends StatelessWidget {
   }
 
   String? formatDate(String? date) {
-    if (date == null) {
-      return null;
-    }
+    if (date == null) return null;
 
     String month = date.substring(5, 7);
     String day = date.substring(8);
-    if (day.startsWith("0")) {
-      day = day.substring(1);
-    }
+    if (day.startsWith("0")) day = day.substring(1);
 
     switch (month) {
       case "01":

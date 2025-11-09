@@ -40,11 +40,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     // -----Must remove pages after head of multi pagers and reinsert later to avoid reordering errors-----
     for (AvailabilityModel? item in newOrder) {
       RegExpMatch? match = multiPager.firstMatch(item!.name);
-      if (match != null) {
-        if (match.group(1) != "1") {
-          extraPages.add(item);
-        }
-      }
+      if (match != null) if (match.group(1) != "1") extraPages.add(item);
     }
     for (AvailabilityModel? item in extraPages) {
       newOrder.remove(item);
@@ -113,9 +109,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
                 // activeColor: Theme.of(context).buttonColor,
                 activeColor: toggleActiveColor,
                 thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.white;
-                  }
+                  if (states.contains(WidgetState.selected)) return Colors.white;
                   return null;
                 }),
                 onChanged: (_) {

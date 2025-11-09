@@ -60,9 +60,7 @@ class NotificationsFilterView extends StatelessWidget {
                   Provider.of<UserDataProvider>(context, listen: false).toggleNotifications(topic);
                 },
                 thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.white;
-                  }
+                  if (states.contains(WidgetState.selected)) return Colors.white;
                   return null;
                 }),
                 activeColor: toggleActiveColor,

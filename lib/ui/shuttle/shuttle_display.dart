@@ -200,9 +200,7 @@ class ShuttleDisplay extends StatelessWidget {
     int count = (arrivingShuttles!.length - 1).clamp(0, 2);
     for (var index = 1; index <= count; index++) {
       arrivalsToRender.add(buildArrivalTime(context, arrivingShuttles![index]));
-      if (index != count) {
-        arrivalsToRender.add(Divider());
-      }
+      if (index != count) arrivalsToRender.add(Divider());
     }
     return Column(children: arrivalsToRender);
   }

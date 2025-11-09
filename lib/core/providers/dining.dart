@@ -95,9 +95,7 @@ class DiningDataProvider extends ChangeNotifier {
     if (_coordinates == null) return _diningModels.values.toList();
     List<DiningModel> orderedListOfLots = _diningModels.values.toList();
     orderedListOfLots.sort((DiningModel a, DiningModel b) {
-      if (a.distance != null && b.distance != null) {
-        return a.distance!.compareTo(b.distance!);
-      }
+      if (a.distance != null && b.distance != null) return a.distance!.compareTo(b.distance!);
       return 0;
     });
     return orderedListOfLots;

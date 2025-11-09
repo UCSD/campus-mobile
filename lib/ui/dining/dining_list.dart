@@ -92,9 +92,8 @@ class DiningList extends StatelessWidget {
 
   Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTime}) {
     String closedText = 'Closed';
-    if (nextOpenDay != null && nextOpenTime != null) {
+    if (nextOpenDay != null && nextOpenTime != null)
       closedText += '. Opens $nextOpenDay at $nextOpenTime.';
-    }
     return Text(closedText, style: Theme.of(context).textTheme.bodySmall);
   }
 
@@ -293,9 +292,8 @@ String? findNextOpenDay(dining_model.RegularHours hours) {
         value = hours.sun;
         break;
     }
-    if (value != null && value != 'Closed-Closed') {
+    if (value != null && value != 'Closed-Closed')
       return days[nextDay][0].toUpperCase() + days[nextDay].substring(1);
-    }
   }
   return null;
 }
@@ -306,9 +304,8 @@ String? findNextOpenTime(dining_model.RegularHours hours) {
   for (int i = 1; i <= 7; i++) {
     int nextDay = (now.weekday + i - 1) % 7;
     String? range = days[nextDay];
-    if (range != null && range != 'Closed-Closed') {
+    if (range != null && range != 'Closed-Closed')
       return formattedTimeRange(range)?.split('-').first.trim();
-    }
   }
   return null;
 }

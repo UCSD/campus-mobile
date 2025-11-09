@@ -252,9 +252,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   ///////////// Payment Options Section /////////////
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions.join(', ');
-    if (options.trim().isEmpty) {
-      return SizedBox.shrink();
-    }
+    if (options.trim().isEmpty) return SizedBox.shrink();
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -544,9 +542,7 @@ class GreenDot extends StatelessWidget {
     if (currHours.contains('-')) {
       try {
         final timeStrings = currHours.split('-');
-        if (timeStrings.length != 2) {
-          return Colors.grey; // Invalid format
-        }
+        if (timeStrings.length != 2) return Colors.grey; // Invalid format
 
         // Parse the start and end times
         final now = TimeOfDay.now();
@@ -562,9 +558,7 @@ class GreenDot extends StatelessWidget {
 
         // Adjust for overnight hours
         int adjustedEndTime = endTime;
-        if (endTime < startTime) {
-          adjustedEndTime += 24 * 60; // Add a day in minutes
-        }
+        if (endTime < startTime) adjustedEndTime += 24 * 60; // Add a day in minutes
 
         // Determine if current time is within the range
         if (currentTimeInMinutes >= startTime && currentTimeInMinutes < adjustedEndTime) {

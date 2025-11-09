@@ -16,7 +16,7 @@ if [[ "$1" == "--dry-run" ]]; then
 fi
 
 echo "==================================="
-echo "🔧 Auto-fixing Code Quality Issues"
+echo "Auto Code Styling Process Started..."
 echo "==================================="
 echo
 
@@ -113,4 +113,4 @@ else
 fi
 
 echo
-echo "✨ Auto-fix process completed!"
+echo "Auto Code Styling Process Completed!"

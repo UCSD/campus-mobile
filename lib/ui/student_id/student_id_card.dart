@@ -60,9 +60,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
     String cardNumber,
     bool rotated,
   ) {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape)
       return returnBarcodeContainer(cardNumber, rotated, context);
-    }
     return image;
   }
 

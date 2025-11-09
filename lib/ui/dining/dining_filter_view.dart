@@ -83,9 +83,7 @@ class DiningFilterView extends StatelessWidget {
                   diningProvider.toggleFilterType(type);
                 },
                 thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.white;
-                  }
+                  if (states.contains(WidgetState.selected)) return Colors.white;
                   return null;
                 }),
                 activeColor: toggleActiveColor,

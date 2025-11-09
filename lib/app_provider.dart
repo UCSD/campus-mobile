@@ -157,9 +157,8 @@ List<SingleChildWidget> dependentServices = [
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider!.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
+    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading)
       classScheduleDataProvider.fetchData();
-    }
     return classScheduleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(create: (_) {
@@ -168,9 +167,8 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, studentIdDataProvider) {
     studentIdDataProvider!.userDataProvider = userDataProvider;
     // Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
+    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading)
       studentIdDataProvider.fetchData();
-    }
     return studentIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, EmployeeIdDataProvider>(create: (_) {
@@ -179,9 +177,8 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, employeeIdDataProvider) {
     employeeIdDataProvider!.userDataProvider = userDataProvider;
     // Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) {
+    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading)
       employeeIdDataProvider.fetchData();
-    }
     return employeeIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(create: (_) {

@@ -48,9 +48,7 @@ class SpeedTestModel {
 
   factory SpeedTestModel.fromJson(WifiInfo? wifiInfo, Map<String, dynamic>? downloadJson,
       Map<String, dynamic>? uploadJson, bool isUCSDWifi) {
-    if (wifiInfo == null) {
-      return SpeedTestModel(isUCSDWifi: false);
-    }
+    if (wifiInfo == null) return SpeedTestModel(isUCSDWifi: false);
     return SpeedTestModel(
         isUCSDWifi: isUCSDWifi,
         uploadUrl: uploadJson!["signed_url"],

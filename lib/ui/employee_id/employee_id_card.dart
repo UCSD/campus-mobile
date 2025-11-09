@@ -317,16 +317,14 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   }
 
   double letterSpacingForTablet() {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape)
       return ScalingUtility.horizontalSafeBlock * 1;
-    }
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
   double fontSizeForTablet() {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape)
       return ScalingUtility.horizontalSafeBlock * 2;
-    }
     return ScalingUtility.horizontalSafeBlock * 4;
   }
 

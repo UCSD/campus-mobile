@@ -14,9 +14,8 @@ class MessagesDataProvider extends ChangeNotifier {
     notificationScrollController.addListener(() {
       var triggerFetchMoreSize = 0.9 * notificationScrollController.position.maxScrollExtent;
 
-      if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
-        if (!_isLoading && _hasMoreMessagesToLoad) fetchMessages(false);
-      }
+      if (notificationScrollController.position.pixels > triggerFetchMoreSize) if (!_isLoading &&
+          _hasMoreMessagesToLoad) fetchMessages(false);
       setNotificationsScrollOffset(notificationScrollController.offset);
     });
   }

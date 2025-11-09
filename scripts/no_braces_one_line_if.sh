@@ -11,121 +11,103 @@ if [[ "$1" == "--fix" ]]; then
 fi
 
 echo "Checking for unnecessary braces in one-line if statements..."
-echo ""
-echo "Checking for multi-line if statements that could be single line..."
 
 violations_found=0
 
-# Process each Dart file
+echo ""
+echo "Checking for multi-line if statements that could be single line..."
+
+# Process each Dart file to find and fix multi-line if statements that should be single line
 while IFS= read -r filepath; do
     if [[ ! -f "$filepath" ]]; then
         continue
     fi
 
-    file_violations=0
+    # Use a simpler approach - read the file into memory and process line by line
+    file_modified=false
+    declare -a file_lines
+    line_num=0
 
-    # First pass - count violations and report them
-    awk '
-    BEGIN {
-        violations = 0
-        line_num = 0
-    }
-    {
-        line_num++
-        # Store current line
-        current_line = $0
+    # Read entire file into array
+    while IFS= read -r line; do
+        line_num=$((line_num + 1))
+        file_lines[$line_num]="$line"
+    done < "$filepath"
 
-        # Check if this is an if statement with opening brace
-        if ($0 ~ /^[[:space:]]*if[[:space:]]*\(.*\)[[:space:]]*{[[:space:]]*$/) {
-            # Read next line
-            if ((getline next_line) > 0) {
-                line_num++
-                # Read third line
-                if ((getline third_line) > 0) {
-                    line_num++
-                    # Check if it matches our pattern
-                    if (third_line ~ /^[[:space:]]*}[[:space:]]*$/ &&
-                        next_line !~ /^[[:space:]]*$/ &&
-                        next_line !~ /^[[:space:]]*\/\//) {
+    # Process lines to find if statements
+    i=1
+    while [[ $i -le $line_num ]]; do
+        current_line="${file_lines[$i]}"
 
-                        print FILENAME ":" (line_num - 2) ": One-line if statement should not use braces"
-                        violations++
-                    }
-                }
-            }
-        }
-    }
-    END {
-        if (violations > 0) exit 1
-        else exit 0
-    }
-    ' "$filepath"
+        # Check for if statement opening: if (...) {
+        if [[ "$current_line" =~ ^[[:space:]]*if[[:space:]]*\(.*\)[[:space:]]*\{[[:space:]]*$ ]]; then
+            next_line_idx=$((i + 1))
+            closing_brace_idx=$((i + 2))
 
-    # Check if violations were found
-    if [[ $? -eq 1 ]]; then
-        file_violations=1
-        violations_found=$((violations_found + 1))
+            # Check if next line exists and is not empty/comment
+            if [[ $next_line_idx -le $line_num && $closing_brace_idx -le $line_num ]]; then
+                next_line="${file_lines[$next_line_idx]}"
+                closing_line="${file_lines[$closing_brace_idx]}"
 
-        if [[ "$MODE" == "fix" ]]; then
-            echo "    Fixing violations in $filepath"
+                # Check if next line is a statement and the line after is just }
+                if [[ ! "$next_line" =~ ^[[:space:]]*$ ]] && \
+                   [[ ! "$next_line" =~ ^[[:space:]]*// ]] && \
+                   [[ "$closing_line" =~ ^[[:space:]]*\}[[:space:]]*$ ]]; then
 
-            # Create backup
-            cp "$filepath" "$filepath.bak"
+                    echo "$filepath:$i: One-line if statement should not use braces"
+                    violations_found=$((violations_found + 1))
 
-            # Second pass - actually fix the file
-            awk '
-            BEGIN { line_num = 0 }
-            {
-                line_num++
-                current_line = $0
+                    if [[ "$MODE" == "fix" ]]; then
+                        echo "    Fixing: Converting multi-line if to single line"
 
-                # Check for if statement with opening brace
-                if ($0 ~ /^[[:space:]]*if[[:space:]]*\(.*\)[[:space:]]*{[[:space:]]*$/) {
-                    # Peek at next two lines
-                    if ((getline next_line) > 0) {
-                        line_num++
-                        if ((getline third_line) > 0) {
-                            line_num++
-                            # Check if it matches our fix pattern
-                            if (third_line ~ /^[[:space:]]*}[[:space:]]*$/ &&
-                                next_line !~ /^[[:space:]]*$/ &&
-                                next_line !~ /^[[:space:]]*\/\//) {
+                        # Extract condition (remove trailing { and spaces)
+                        condition=$(echo "$current_line" | sed 's/[[:space:]]*{[[:space:]]*$//')
 
-                                # Create fixed line
-                                gsub(/[[:space:]]*{[[:space:]]*$/, "", current_line)
-                                gsub(/^[[:space:]]*/, "", next_line)
-                                gsub(/[[:space:]]*$/, "", next_line)
+                        # Extract statement (remove leading/trailing spaces but keep semicolon)
+                        statement=$(echo "$next_line" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
 
-                                fixed_line = current_line " " next_line
-                                print fixed_line
+                        # Create fixed line
+                        fixed_line="$condition $statement"
 
-                                # Skip the closing brace (third_line)
-                                continue
-                            } else {
-                                # Not our pattern, print all three lines
-                                print current_line
-                                print next_line
-                                print third_line
-                            }
-                        } else {
-                            # Only two lines, print both
-                            print current_line
-                            print next_line
-                        }
-                    } else {
-                        # Only one line, print it
-                        print current_line
-                    }
-                } else {
-                    # Regular line, print it
-                    print current_line
-                }
-            }
-            ' "$filepath" > "$filepath.tmp" && mv "$filepath.tmp" "$filepath"
+                        # Mark file as modified
+                        file_modified=true
+
+                        # Replace the three lines with one
+                        file_lines[$i]="$fixed_line"
+                        unset file_lines[$next_line_idx]
+                        unset file_lines[$closing_brace_idx]
+
+                        echo "    Fixed: $fixed_line"
+                    fi
+
+                    # Skip the processed lines
+                    i=$((closing_brace_idx + 1))
+                    continue
+                fi
+            fi
         fi
+
+        i=$((i + 1))
+    done
+
+    # Write back modified file if changes were made
+    if [[ "$file_modified" == "true" ]]; then
+        # Create backup
+        cp "$filepath" "$filepath.bak"
+
+        # Write modified content
+        > "$filepath"  # Clear file
+        for ((j=1; j<=line_num; j++)); do
+            if [[ -n "${file_lines[$j]+x}" ]]; then  # Check if element exists
+                echo "${file_lines[$j]}" >> "$filepath"
+            fi
+        done
     fi
+
+    unset file_lines
 done < <(find lib -type f -name "*.dart")
 
+# Summary
 echo ""
 if [[ $violations_found -gt 0 ]]; then
     if [[ "$MODE" == "fix" ]]; then
@@ -133,7 +115,7 @@ if [[ $violations_found -gt 0 ]]; then
         exit 0
     else
         echo "Found $violations_found violation(s) of one-line if brace convention."
-        echo "Run with --fix to automatically fix them."
+        echo "Run with --fix to see suggestions."
         exit 1
     fi
 else

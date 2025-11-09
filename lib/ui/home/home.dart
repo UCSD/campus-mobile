@@ -197,12 +197,10 @@ class _HomeState extends State<Home> {
     final webCards = context.read<CardsDataProvider>().webCards;
 
     for (String cardName in order) {
-      // TODO: if-branches logic here theoretically could be simplified
+      // TODO: if-branches logic here theoretically could be simplified - November 2025
       if (!webCards.containsKey(cardName)) {
         final cardCtor = _cardCtors[cardName];
-        if (cardCtor != null) {
-          orderedCards.add(cardCtor());
-        }
+        if (cardCtor != null) orderedCards.add(cardCtor());
       } else {
         final card = webCards[cardName]!;
         orderedCards.add(
