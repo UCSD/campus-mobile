@@ -28,34 +28,42 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Auto-format Dart code (if needed)
+      - name: Auto-format and fix Dart code (if needed)
         run: |
-          echo "Checking current code formatting..."
+          echo "Running comprehensive code formatting and fixes..."
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Check if formatting is needed (without changing files)
-          if dart format --set-exit-if-changed --dry-run --line-length 100 lib; then
-            echo "All Dart files are properly formatted. Nothing to commit."
+          # Run the comprehensive auto-fix script
+          echo "🔧 Running auto_fix_all.sh script..."
+          chmod +x ./scripts/auto_fix_all.sh
+          ./scripts/auto_fix_all.sh
+
+          # Check if there are any changes to commit
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "✅ All code is properly formatted and follows style guidelines. Nothing to commit."
             exit 0
           else
-            # Format the code and commit the changes
-            echo "🔧 Formatting issues detected. Auto-formatting files..."
-            dart format --line-length 100 lib
+            echo "� Changes detected. Staging and committing fixes..."
 
-            # Add all Dart files in lib directory
-            git add lib/
+            # Add all changed files
+            git add -A
 
-            # Check if there are actually changes to commit
+            # Double-check there are changes to commit
             if git diff --staged --quiet; then
-              echo "No changes to commit after formatting."
+              echo "No changes to commit after staging."
               exit 0
             fi
 
-            git commit -m "Auto-formatted code to 100-character line length [CI]" \
-                       -m "This commit ensures consistent Dart formatting." \
+            git commit -m "Auto-formatted and fixed code style issues [CI]" \
+                       -m "Applied comprehensive code fixes including:" \
+                       -m "- Dart formatting (100-character line length)" \
+                       -m "- One-line if statement formatting" \
+                       -m "- Trailing whitespace removal" \
+                       -m "- Final newline enforcement" \
+                       -m "" \
                        -m "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
             git push
-            echo "Formatting complete. Changes committed and pushed."
+            echo "✅ Code fixes complete. Changes committed and pushed."
             git log --oneline -1
           fi
