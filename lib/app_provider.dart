@@ -131,17 +131,20 @@ List<SingleChildWidget> dependentServices = [
         cardsDataProvider
           ..loadSavedData().then((_) {
             // Update available cards
-            cardsDataProvider.updateAvailableCards(userDataProvider.authenticationModel.ucsdaffiliation);
+            cardsDataProvider
+                .updateAvailableCards(userDataProvider.authenticationModel.ucsdaffiliation);
 
             // Student card activation
-            if (userDataProvider.isLoggedIn && (userDataProvider.userProfileModel.classifications?.student ?? false)) {
+            if (userDataProvider.isLoggedIn &&
+                (userDataProvider.userProfileModel.classifications?.student ?? false)) {
               cardsDataProvider.activateStudentCards();
             } else {
               cardsDataProvider.deactivateStudentCards();
             }
 
             // Staff card activation
-            if (userDataProvider.isLoggedIn && (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
+            if (userDataProvider.isLoggedIn &&
+                (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
               cardsDataProvider.activateStaffCards();
             } else {
               cardsDataProvider.deactivateStaffCards();
