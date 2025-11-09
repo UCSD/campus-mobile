@@ -46,9 +46,17 @@ while IFS=: read -r filepath line_number line_content; do
         violations_found=$((violations_found + 1))
 
         if [[ "$MODE" == "fix" ]]; then
-            # Show suggestion by adding space after //
+            # Actually fix the file by adding space after //
             fixed_line=$(echo "$line_content" | sed 's|//\([^ /]\)|// \1|g')
-            echo "    Suggestion: $fixed_line"
+            echo "    Fixing: $fixed_line"
+
+            # Use sed to fix the specific line in the file
+            # Escape special characters in the line for sed
+            escaped_line=$(printf '%s\n' "$line_content" | sed 's/[[\.*^$()+?{|]/\\&/g')
+            escaped_fixed=$(printf '%s\n' "$fixed_line" | sed 's/[[\.*^$()+?{|]/\\&/g')
+
+            # Replace the line in the file
+            sed -i.bak "${line_number}s|${escaped_line}|${escaped_fixed}|" "$filepath"
         fi
     fi
 done < "$temp_file"
@@ -65,10 +73,15 @@ echo "Files scanned: $total_files"
 echo "Violations found: $violations_found"
 
 if [[ $violations_found -gt 0 ]]; then
-    echo "Comments should have a space after //"
-    echo "   GOOD: // This is a proper comment"
-    echo "   BAD:  //This comment is missing a space"
-    exit 1
+    if [[ "$MODE" == "fix" ]]; then
+        echo "Fixed $violations_found comment spacing violation(s)."
+        exit 0
+    else
+        echo "Comments should have a space after //"
+        echo "   GOOD: // This is a proper comment"
+        echo "   BAD:  //This comment is missing a space"
+        exit 1
+    fi
 else
     echo "All comments have proper spacing after //"
     exit 0
