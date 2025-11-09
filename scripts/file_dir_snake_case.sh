@@ -76,7 +76,14 @@ while IFS= read -r filepath; do
             violations_found=$((violations_found + 1))
             if [[ "$MODE" == "fix" ]]; then
                 suggested=$(to_snake_case "$filename")
-                echo "    Suggestion: $filename -> $suggested"
+                echo "    Fixing: $filename -> $suggested"
+
+                # Perform the actual rename
+                new_filepath="${filepath%/*}/$suggested"
+                if [[ "$filepath" != "$new_filepath" ]]; then
+                    mv "$filepath" "$new_filepath"
+                    echo "    Renamed: $filepath -> $new_filepath"
+                fi
             fi
         fi
     fi
@@ -93,7 +100,15 @@ while IFS= read -r dirpath; do
             violations_found=$((violations_found + 1))
             if [[ "$MODE" == "fix" ]]; then
                 suggested=$(to_snake_case "$dirname")
-                echo "    Suggestion: $dirname -> $suggested"
+                echo "    Fixing: $dirname -> $suggested"
+
+                # Perform the actual directory rename
+                parent_dir="$(dirname "$dirpath")"
+                new_dirpath="$parent_dir/$suggested"
+                if [[ "$dirpath" != "$new_dirpath" ]]; then
+                    mv "$dirpath" "$new_dirpath"
+                    echo "    Renamed directory: $dirpath -> $new_dirpath"
+                fi
             fi
         fi
     fi
@@ -104,8 +119,13 @@ echo "File and Directory naming check complete."
 echo "Violations found: $violations_found"
 
 if [[ $violations_found -gt 0 ]]; then
-    echo "Files and directories should use snake_case naming convention"
-    exit 1
+    if [[ "$MODE" == "fix" ]]; then
+        echo "Fixed $violations_found file/directory naming violations"
+        exit 0
+    else
+        echo "Files and directories should use snake_case naming convention"
+        exit 1
+    fi
 else
     echo "All files and directories follow snake_case naming convention"
     exit 0

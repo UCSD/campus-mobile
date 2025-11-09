@@ -43,7 +43,12 @@ while IFS= read -r line; do
                 # Extract if condition and statement
                 if_part=$(echo "$line_content" | sed 's/{.*$//')
                 statement=$(echo "$line_content" | sed 's/^.*{//' | sed 's/}[[:space:]]*$//')
-                echo "    Suggestion: ${if_part} ${statement}"
+                fixed_line="${if_part} ${statement}"
+                echo "    Fixing: ${fixed_line}"
+
+                # Create backup and fix the line
+                cp "$filepath" "$filepath.bak"
+                awk -v ln="$line_number" -v new_line="$fixed_line" 'NR==ln {print new_line; next} {print}' "$filepath" > "$filepath.tmp" && mv "$filepath.tmp" "$filepath"
             fi
         fi
     fi
@@ -106,11 +111,14 @@ rm -f "$temp_results"
 # Summary
 echo ""
 if [[ $violations_found -gt 0 ]]; then
-    echo "Found $violations_found violation(s) of one-line if brace convention."
-    if [[ "$MODE" != "fix" ]]; then
+    if [[ "$MODE" == "fix" ]]; then
+        echo "Fixed $violations_found one-line if brace violation(s)."
+        exit 0
+    else
+        echo "Found $violations_found violation(s) of one-line if brace convention."
         echo "Run with --fix to see suggestions."
+        exit 1
     fi
-    exit 1
 else
     echo "No violations found! All if statements follow the convention."
     exit 0

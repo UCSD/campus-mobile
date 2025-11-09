@@ -61,9 +61,13 @@ while IFS=: read -r filepath line_number line_content; do
                 violations_found=$((violations_found + 1))
 
                 if [[ "$MODE" == "fix" ]]; then
-                    # Suggest changing /// to //
+                    # Actually fix changing /// to //
                     fixed_line=$(echo "$line_content" | sed 's|///\(.*TODO\)|//\1|')
-                    echo "    Suggestion: $fixed_line"
+                    echo "    Fixing: $fixed_line"
+
+                    # Create backup and fix the line
+                    cp "$filepath" "$filepath.bak"
+                    awk -v ln="$line_number" -v new_line="$fixed_line" 'NR==ln {print new_line; next} {print}' "$filepath" > "$filepath.tmp" && mv "$filepath.tmp" "$filepath"
                 fi
                 continue
             fi
@@ -75,7 +79,7 @@ while IFS=: read -r filepath line_number line_content; do
                 violations_found=$((violations_found + 1))
 
                 if [[ "$MODE" == "fix" ]]; then
-                    # Suggest adding current date
+                    # Actually add current date
                     suggested_date=$(suggest_date_format)
                     # Try to add date before any existing description
                     if [[ "$line_content" =~ TODO:[[:space:]]* ]]; then
@@ -83,7 +87,11 @@ while IFS=: read -r filepath line_number line_content; do
                     else
                         fixed_line=$(echo "$line_content" | sed "s|TODO\(.*\)|TODO\1 - $suggested_date|")
                     fi
-                    echo "    Suggestion: $fixed_line"
+                    echo "    Fixing: $fixed_line"
+
+                    # Create backup and fix the line
+                    cp "$filepath" "$filepath.bak"
+                    awk -v ln="$line_number" -v new_line="$fixed_line" 'NR==ln {print new_line; next} {print}' "$filepath" > "$filepath.tmp" && mv "$filepath.tmp" "$filepath"
                 fi
             fi
         fi
@@ -102,13 +110,18 @@ echo "Files scanned: $total_files"
 echo "Violations found: $violations_found"
 
 if [[ $violations_found -gt 0 ]]; then
-    echo "TODO comments must use // (not ///) and include month/year date"
-    echo "   GOOD: // TODO: Fix this issue - November 2025"
-    echo "   GOOD: // TODO: Update code Nov 25"
-    echo "   GOOD: // TODO: Refactor - 11/2025"
-    echo "   BAD:  /// TODO: Fix this (wrong slashes)"
-    echo "   BAD:  // TODO: Fix this (missing date)"
-    exit 1
+    if [[ "$MODE" == "fix" ]]; then
+        echo "Fixed $violations_found TODO comment violation(s)."
+        exit 0
+    else
+        echo "TODO comments must use // (not ///) and include month/year date"
+        echo "   GOOD: // TODO: Fix this issue - November 2025"
+        echo "   GOOD: // TODO: Update code Nov 25"
+        echo "   GOOD: // TODO: Refactor - 11/2025"
+        echo "   BAD:  /// TODO: Fix this (wrong slashes)"
+        echo "   BAD:  // TODO: Fix this (missing date)"
+        exit 1
+    fi
 else
     echo "All TODO comments follow proper format"
     exit 0

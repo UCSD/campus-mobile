@@ -50,13 +50,12 @@ while IFS=: read -r filepath line_number line_content; do
             fixed_line=$(echo "$line_content" | sed 's|//\([^ /]\)|// \1|g')
             echo "    Fixing: $fixed_line"
 
-            # Use sed to fix the specific line in the file
-            # Escape special characters in the line for sed
-            escaped_line=$(printf '%s\n' "$line_content" | sed 's/[[\.*^$()+?{|]/\\&/g')
-            escaped_fixed=$(printf '%s\n' "$fixed_line" | sed 's/[[\.*^$()+?{|]/\\&/g')
+            # Use a simpler approach to fix the line
+            # Create backup first
+            cp "$filepath" "$filepath.bak"
 
-            # Replace the line in the file
-            sed -i.bak "${line_number}s|${escaped_line}|${escaped_fixed}|" "$filepath"
+            # Use awk to fix the specific line
+            awk -v ln="$line_number" -v new_line="$fixed_line" 'NR==ln {print new_line; next} {print}' "$filepath" > "$filepath.tmp" && mv "$filepath.tmp" "$filepath"
         fi
     fi
 done < "$temp_file"
