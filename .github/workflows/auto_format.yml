@@ -1,0 +1,53 @@
+name: Auto-Format Dart Code
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: write
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.0'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Auto-format Dart code (if needed)
+        run: |
+          echo "Checking current code formatting..."
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # If current code formatting is correct, exit
+          if dart format --set-exit-if-changed --line-length 100 lib; then
+            echo "All Dart files are properly formatted. Nothing to commit."
+            exit 0
+          else
+            # Auto-format the code and commit the changes
+            echo "Formatting issues detected. Auto-formatting files..."
+            dart format --line-length 100 lib
+
+            git add lib/**/*.dart
+            git commit -m "Auto-formatted code to 100-character line length [CI]" \
+                       -m "This commit ensures consistent Dart formatting." \
+                       -m "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
+            git push
+            echo "Formatting complete. Changes committed and pushed."
+            git log --oneline -1
+          fi
