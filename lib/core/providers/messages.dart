@@ -37,7 +37,7 @@ class MessagesDataProvider extends ChangeNotifier {
   final _messageService = MessageService();
   final notificationScrollController = ScrollController();
 
-  //Fetch messages
+  // Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
     _isLoading = true;
     _error = null;

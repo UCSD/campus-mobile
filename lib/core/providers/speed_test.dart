@@ -13,7 +13,7 @@ import 'package:path_provider/path_provider.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
   SpeedTestProvider() {
-    /// TODO: probably is a bug! Async functions should not be be run in the constructor
+    // TODO: probably is a bug! Async functions should not be be run in the constructor
     init();
   }
 
@@ -208,7 +208,7 @@ class SpeedTestProvider extends ChangeNotifier {
 
     sentSuccessfully = true;
     sendLogs(wiFiLog);
-    return sentSuccessfully; //Due to failed submission or not connected to wifi
+    return sentSuccessfully; // Due to failed submission or not connected to wifi
   }
 
   Future<void> sendLogs(Map? log) async {

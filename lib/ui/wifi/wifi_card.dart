@@ -332,8 +332,8 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TEST SPEED
-            // TODO: This brings you back to the initial state, but that requires two "TEST SPEED" Button clicks.
-            // TODO: For the UI people, do you want 1 click? or 2 clicks but the first one indicating to "Reset"
+            // TODO: This brings you back to the initial state, but that requires two "TEST SPEED" Button clicks. - November 2025
+            // TODO: For the UI people, do you want 1 click? or 2 clicks but the first one indicating to "Reset" - November 2025
             ActionButton(
                 buttonText: 'TEST SPEED',
                 onPressed: () {
@@ -355,23 +355,24 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             // REPORT ISSUE
             ActionLink(
               buttonText: 'REPORT ISSUE',
-              onPressed: _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED?
-                  ? () {
-                      _speedTestProvider.reportIssue();
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialogWidget(
-                                type: MessageTypeConstants.SUCCESS,
-                                icon: Icons.check_circle_outline_sharp,
-                                title: WifiConstants.wifiIssueSuccessTitle,
-                                description: WifiConstants.wifiIssueSuccessDesc,
-                                onClose: () {
-                                  Navigator.of(context).pop();
-                                });
-                          });
-                    }
-                  : () {},
+              onPressed:
+                  _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED? - November 2025
+                      ? () {
+                          _speedTestProvider.reportIssue();
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialogWidget(
+                                    type: MessageTypeConstants.SUCCESS,
+                                    icon: Icons.check_circle_outline_sharp,
+                                    title: WifiConstants.wifiIssueSuccessTitle,
+                                    description: WifiConstants.wifiIssueSuccessDesc,
+                                    onClose: () {
+                                      Navigator.of(context).pop();
+                                    });
+                              });
+                        }
+                      : () {},
             )
           ],
         ),

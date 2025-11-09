@@ -24,7 +24,7 @@ class _ParkingCardState extends State<ParkingCard> {
   final _controller = PageController(viewportFraction: 0.92);
   int _currentPage = 0;
 
-  //if parking data provider changes (e.g in "Manage Spots"), this will be called.
+  // if parking data provider changes (e.g in "Manage Spots"), this will be called.
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();

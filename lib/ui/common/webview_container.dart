@@ -70,14 +70,14 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
     hide = () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(widget.cardId);
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      //open link
+      // open link
       ..addJavaScriptChannel(
         'OpenLink',
         onMessageReceived: (JavaScriptMessage m) {
           openLink(m.message);
         },
       )
-      //set height (with debouncing for performance)
+      // set height (with debouncing for performance)
       ..addJavaScriptChannel(
         'SetHeight',
         onMessageReceived: (JavaScriptMessage message) {
@@ -132,7 +132,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
           });
         },
       )
-      //refresh token
+      // refresh token
       ..addJavaScriptChannel(
         'RefreshToken',
         onMessageReceived: (JavaScriptMessage message) async {

@@ -63,12 +63,12 @@ class ParkingDataProvider extends ChangeNotifier {
       _parkingModels = newMapOfLots;
       _parkingViewState = newMapOfLotStates;
 
-      //Update number of lots selected
+      // Update number of lots selected
       _parkingViewState.forEach((key, value) {
         if (value) selectedLots++;
       });
     } else {
-      /// TODO: determine what error to show to the user
+      // TODO: determine what error to show to the user
       _error = _parkingService.error;
     }
 
@@ -177,7 +177,7 @@ class ParkingDataProvider extends ChangeNotifier {
     }
   }
 
-  /// TODO: rewrite and optimize this!
+  // TODO: rewrite and optimize this!
   /// Returns the total number of spots open at a given location
   /// does not filter based on spot type
   Map<String, num> getApproxNumOfOpenSpots(String locationId) {

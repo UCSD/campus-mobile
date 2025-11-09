@@ -167,7 +167,7 @@ List<SingleChildWidget> dependentServices = [
     return studentIdDataProvider;
   }, update: (_, userDataProvider, studentIdDataProvider) {
     studentIdDataProvider!.userDataProvider = userDataProvider;
-    //Verify that the user is logged in
+    // Verify that the user is logged in
     if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
       studentIdDataProvider.fetchData();
     }
@@ -178,7 +178,7 @@ List<SingleChildWidget> dependentServices = [
     return employeeIdDataProvider;
   }, update: (_, userDataProvider, employeeIdDataProvider) {
     employeeIdDataProvider!.userDataProvider = userDataProvider;
-    //Verify that the user is logged in
+    // Verify that the user is logged in
     if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) {
       employeeIdDataProvider.fetchData();
     }

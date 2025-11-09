@@ -517,7 +517,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   Widget _buildBarcodeNumber(StudentIdProfileModel profileModel) {
     return Padding(
       padding: const EdgeInsets.only(top: 6.0),
-      //child: Center(
+      // child: Center(
       child: Text(
         profileModel.barcode.toString(),
         style: TextStyle(
@@ -530,7 +530,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 }
 
-//Image Scaling
+// Image Scaling
 class ScalingUtility {
   late MediaQueryData _queryData;
   static late double horizontalSafeBlock;

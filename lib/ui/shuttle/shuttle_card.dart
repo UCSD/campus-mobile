@@ -75,7 +75,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
         );
       }
 
-      // TODO: Reuse if you want to show the closest stop, let's say in the "Manage Shuttle Stops" screen, delete if not needed
+      // TODO: Reuse if you want to show the closest stop, let's say in the "Manage Shuttle Stops" screen, delete if not needed - November 2025
       // if (_shuttleCardDataProvider.closestStop != null) {
       //   renderList.add(ShuttleDisplay(
       //       stop: _shuttleCardDataProvider.closestStop!,

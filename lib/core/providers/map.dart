@@ -102,7 +102,7 @@ class MapsDataProvider extends ChangeNotifier {
       }
       _lastUpdated = DateTime.now();
     } else {
-      ///TODO: determine what error to show to the user
+      //TODO: determine what error to show to the user
       _error = _mapSearchService.error;
       _noResults = true;
     }
