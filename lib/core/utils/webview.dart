@@ -16,8 +16,7 @@ void openLink(String url) async {
 }
 
 double validateHeight(context, height) {
-  double maxHeight =
-      MediaQuery.of(context).size.height * 0.6; // Limit to 60% of screen height
+  double maxHeight = MediaQuery.of(context).size.height * 0.6; // Limit to 60% of screen height
   if (height == null || height < cardContentMinHeight) {
     height = cardContentMinHeight;
   } else if (height > maxHeight) {

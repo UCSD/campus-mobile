@@ -24,13 +24,11 @@ class EmployeeIdDataProvider extends ChangeNotifier {
     notifyListeners();
 
     final Map<String, String> header = {
-      'Authorization':
-          'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+      'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
     };
 
     /// Verify that user is logged in
-    if (_userDataProvider.isLoggedIn &&
-        await _employeeIdService.fetchEmployeeIdProfile(header))
+    if (_userDataProvider.isLoggedIn && await _employeeIdService.fetchEmployeeIdProfile(header))
       _employeeIdModel = _employeeIdService.employeeIdModel; // Fetch Profile
     else
       _error = _employeeIdService.error.toString();

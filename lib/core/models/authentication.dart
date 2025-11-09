@@ -8,8 +8,7 @@ part 'authentication.g.dart';
 AuthenticationModel authenticationModelFromJson(String str) =>
     AuthenticationModel.fromJson(json.decode(str));
 
-String authenticationModelToJson(AuthenticationModel data) =>
-    json.encode(data.toJson());
+String authenticationModelToJson(AuthenticationModel data) => json.encode(data.toJson());
 
 @HiveType(typeId: 1)
 class AuthenticationModel extends HiveObject {
@@ -36,8 +35,7 @@ class AuthenticationModel extends HiveObject {
     return AuthenticationModel(
       accessToken: json["access_token"] == null ? null : json["access_token"],
       pid: json["pid"] == null ? null : json["pid"],
-      ucsdaffiliation:
-          json["ucsdaffiliation"] == null ? "" : json["ucsdaffiliation"],
+      ucsdaffiliation: json["ucsdaffiliation"] == null ? "" : json["ucsdaffiliation"],
       expiration: json["expiration"] == null ? 0 : json["expiration"],
     );
   }
@@ -62,8 +60,7 @@ class AuthenticationModel extends HiveObject {
     }
 
     /// User has expiration and accessToken
-    if (DateTime.now()
-        .isBefore(lastUpdated.add(Duration(seconds: expiration!)))) {
+    if (DateTime.now().isBefore(lastUpdated.add(Duration(seconds: expiration!)))) {
       /// Current datetime < expiration datetime - isLoggedIn TRUE
       return true;
     } else {

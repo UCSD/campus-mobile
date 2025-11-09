@@ -21,9 +21,7 @@ class Base64ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Check if base64String is valid and not empty
-    if (base64String == null ||
-        base64String!.isEmpty ||
-        base64String!.trim().isEmpty) {
+    if (base64String == null || base64String!.isEmpty || base64String!.trim().isEmpty) {
       return _buildPlaceholder();
     }
 

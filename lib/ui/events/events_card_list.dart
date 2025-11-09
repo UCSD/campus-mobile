@@ -13,17 +13,12 @@ class EventsCardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider.of<EventsDataProvider>(context).isLoading
-        ? Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary))
-        : buildEventsList(
-            Provider.of<EventsDataProvider>(context).eventsModels, context);
+        ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
+        : buildEventsList(Provider.of<EventsDataProvider>(context).eventsModels, context);
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
-    final List<Widget> eventTiles = [
-      const SizedBox(width: 7.5)
-    ]; // start off with left spacer
+    final List<Widget> eventTiles = [const SizedBox(width: 7.5)]; // start off with left spacer
 
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
@@ -34,9 +29,8 @@ class EventsCardList extends StatelessWidget {
     if (size > listOfEvents.length) size = listOfEvents.length;
 
     for (var i = 0; i < size; i++) {
-      eventTiles.add(EventTile(
-          data: listOfEvents[
-              i])); // get event model and then create a tile from it
+      eventTiles
+          .add(EventTile(data: listOfEvents[i])); // get event model and then create a tile from it
       eventTiles.add(const SizedBox(width: 9)); // spacer between tiles
     }
 

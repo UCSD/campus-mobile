@@ -29,8 +29,7 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
                               height: 25,
                               width: 25,
                               child: CircularProgressIndicator(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary)),
+                                  color: Theme.of(context).colorScheme.secondary)),
                         )
                       : Icon(
                           Icons.search,
@@ -40,8 +39,7 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     enabled: false,
-                    controller: Provider.of<MapsDataProvider>(context)
-                        .searchBarController,
+                    controller: Provider.of<MapsDataProvider>(context).searchBarController,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                       border: InputBorder.none,

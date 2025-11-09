@@ -52,31 +52,26 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       _isLoading = true;
       _error = null;
       notifyListeners();
-      if (await _classScheduleService.fetchAcademicTerm() &&
-          _userDataProvider.isLoggedIn) {
+      if (await _classScheduleService.fetchAcademicTerm() && _userDataProvider.isLoggedIn) {
         _academicTermModel = _classScheduleService.academicTermModel!;
         final Map<String, String> headers = {
-          'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+          'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
         };
 
         /// erase old model
         _classScheduleModel = ClassScheduleModel();
 
         /// fetch grad courses
-        if (await _classScheduleService.fetchGRCourses(
-            headers, _academicTermModel.termCode!)) {
+        if (await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!)) {
           _classScheduleModel = _classScheduleService.grData;
         } else {
           _error = _classScheduleService.error.toString();
         }
 
         /// fetch undergrad courses
-        if (await _classScheduleService.fetchUNCourses(
-            headers, _academicTermModel.termCode!)) {
+        if (await _classScheduleService.fetchUNCourses(headers, _academicTermModel.termCode!)) {
           if (_classScheduleModel.data != null) {
-            _classScheduleModel.data!
-                .addAll(_classScheduleService.unData.data!);
+            _classScheduleModel.data!.addAll(_classScheduleService.unData.data!);
           } else {
             _classScheduleModel = _classScheduleService.unData;
           }
@@ -154,15 +149,13 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         sectionData.subjectCode = classData.subjectCode;
         sectionData.courseCode = classData.courseCode;
         sectionData.courseTitle = classData.courseTitle;
-        sectionData.gradeOption =
-            buildGradeEvaluation(classData.gradeOption ?? "");
+        sectionData.gradeOption = buildGradeEvaluation(classData.gradeOption ?? "");
 
         String day = 'OTHER';
         if (sectionData.days != null) {
           day = sectionData.days!;
 
-          if (sectionData.specialMtgCode != 'FI' &&
-              sectionData.specialMtgCode != 'MI') {
+          if (sectionData.specialMtgCode != 'FI' && sectionData.specialMtgCode != 'MI') {
             _enrolledClasses[day]!.add(sectionData);
           } else if (sectionData.specialMtgCode == 'FI') {
             _finals[day]!.add(sectionData);
@@ -233,11 +226,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     try {
       /// get weekday and return [List<SectionData>] associated with current weekday
       List<SectionData> listToReturn = [];
-      String today = DateFormat('EEEE')
-          .format(DateTime.now())
-          .toString()
-          .toUpperCase()
-          .substring(0, 2);
+      String today =
+          DateFormat('EEEE').format(DateTime.now()).toString().toUpperCase().substring(0, 2);
       nextDayWithClass = DateFormat('EEEE').format(DateTime.now()).toString();
 
       /// if no classes are scheduled for today then find the next day with classes
@@ -248,8 +238,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
             .toString()
             .toUpperCase()
             .substring(0, 2);
-        nextDayWithClass = DateFormat('EEEE')
-            .format(DateTime.now().add(Duration(days: daysToAdd)));
+        nextDayWithClass = DateFormat('EEEE').format(DateTime.now().add(Duration(days: daysToAdd)));
         daysToAdd += 1;
       }
 

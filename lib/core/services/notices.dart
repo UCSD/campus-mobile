@@ -17,8 +17,7 @@ class NoticesService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await NetworkHelper.fetchData(dotenv.get('NOTICES_ENDPOINT'));
+      String _response = await NetworkHelper.fetchData(dotenv.get('NOTICES_ENDPOINT'));
 
       /// parse data
       _noticesModel = noticesModelFromJson(_response);

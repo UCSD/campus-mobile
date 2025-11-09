@@ -35,16 +35,14 @@ class AvailabilityDetailedView extends StatelessWidget {
           title: Text(
             "${floor.name}",
             style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: LOCATION_FONT_SIZE),
+                color: Theme.of(context).colorScheme.secondary, fontSize: LOCATION_FONT_SIZE),
           ),
           subtitle: Column(
             children: <Widget>[
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    (100 * percentAvailability(floor)).toInt().toString() +
-                        '% Busy',
+                    (100 * percentAvailability(floor)).toInt().toString() + '% Busy',
                   )),
               Align(
                 alignment: Alignment.centerLeft,
@@ -90,8 +88,7 @@ class AvailabilityDetailedView extends StatelessWidget {
     );
   }
 
-  num percentAvailability(Floor subLocationFloor) =>
-      subLocationFloor.percentage;
+  num percentAvailability(Floor subLocationFloor) => subLocationFloor.percentage;
 
   setIndicatorColor(num percentage) {
     if (percentage >= .75)
