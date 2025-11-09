@@ -36,19 +36,16 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => _availabilityDataProvider.fetchAvailability(),
       isLoading: _availabilityDataProvider.isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: _availabilityDataProvider.error,
-      child: () =>
-          buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
+      child: () => buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
       actionButtons: [
         ActionLink(
             buttonText: 'MANAGE LOCATIONS',
-            onPressed: () =>
-                Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView))
+            onPressed: () => Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView))
       ],
     );
   }
@@ -61,11 +58,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       if (model != null) {
         String curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
-        if (match != null)
-          curName = curName.replaceRange(match.start, match.end, '');
-        if (_availabilityDataProvider.locationViewState[curName]!) {
+        if (match != null) curName = curName.replaceRange(match.start, match.end, '');
+        if (_availabilityDataProvider.locationViewState[curName]!)
           locationsList.add(AvailabilityDisplay(model: model));
-        }
       }
     }
 

@@ -17,13 +17,12 @@ class NoticesService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await NetworkHelper.fetchData(dotenv.get('NOTICES_ENDPOINT'));
+      String _response = await NetworkHelper.fetchData(dotenv.get('NOTICES_ENDPOINT'));
 
       /// parse data
       _noticesModel = noticesModelFromJson(_response);
 
-      // TODO: remove dummy data and call notices endpoint when available
+      // TODO: remove dummy data and call notices endpoint when available - November 2025
       // _noticesModel = noticesModelFromJson('[{"notice-title": "Coronavirus Information","notice-banner-image": "https://mobile.ucsd.edu/feeds/_resources/media/promo-banners/covid-19-app-20-03-04.png","notice-banner-link": "https://go.ucsd.edu/38nb0Pf"}]');
       return true;
     } catch (e) {

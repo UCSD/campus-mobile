@@ -4,8 +4,8 @@ import 'package:campus_mobile_experimental/core/models/location.dart';
 // To parse this JSON data, do
 //
 //     final diningModel = diningModelFromJson(jsonString);
-List<DiningModel> diningModelFromJson(String str) => List<DiningModel>.from(
-    json.decode(str).map((x) => DiningModel.fromJson(x)));
+List<DiningModel> diningModelFromJson(String str) =>
+    List<DiningModel>.from(json.decode(str).map((x) => DiningModel.fromJson(x)));
 
 String diningModelToJson(List<DiningModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -63,26 +63,20 @@ class DiningModel {
         tel = json["tel"],
         meals = json["meals"] == null ? null : mealsValues.map[json["meals"]],
         persistentMenu = json["persistentMenu"],
-        paymentOptions =
-            List<String>.from(json["paymentOptions"].map((x) => x)),
+        paymentOptions = List<String>.from(json["paymentOptions"].map((x) => x)),
         paymentFilterTypes = json["paymentFilterTypes"],
         images = json["images"] == null
             ? null
             : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
-        coordinates = json["coords"] == null
-            ? null
-            : Coordinates.fromJson(json["coords"]),
+        coordinates = json["coords"] == null ? null : Coordinates.fromJson(json["coords"]),
         regularHours = RegularHours.fromJson(json["regularHours"]),
-        specialHours =
-            (json["specialHours"] == null || json["specialHours"].isEmpty)
-                ? null
-                : SpecialHour.fromJson(json["specialHours"]),
+        specialHours = (json["specialHours"] == null || json["specialHours"].isEmpty)
+            ? null
+            : SpecialHour.fromJson(json["specialHours"]),
         vendorLogo = json["vendorLogo"],
         url = json["url"],
         menuWebsite = json["menuWebsite"],
-        specials = json["specials"] == null
-            ? null
-            : Specials.fromJson(json["specials"]);
+        specials = json["specials"] == null ? null : Specials.fromJson(json["specials"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -95,9 +89,7 @@ class DiningModel {
         "persistentMenu": persistentMenu,
         "paymentOptions": List<dynamic>.from(paymentOptions.map((x) => x)),
         "paymentFilterTypes": paymentFilterTypes,
-        "images": images == null
-            ? null
-            : List<dynamic>.from(images!.map((x) => x.toJson())),
+        "images": images == null ? null : List<dynamic>.from(images!.map((x) => x.toJson())),
         "coords": coordinates == null ? null : coordinates!.toJson(),
         "regularHours": regularHours.toJson(),
         "specialHours": specialHours?.toJson(),
@@ -111,10 +103,10 @@ class DiningModel {
 
 class Image {
   // links to different sizes of the image
-  // TODO: BUG ON SERVER?? There have been images with no images observed in the wild...
+  // TODO: BUG ON SERVER?? There have been images with no images observed in the wild... - November 2025
   String? small;
   String? large;
-  // TODO: no caption is valid JSON response. Should this be empty str rather than null?
+  // TODO: no caption is valid JSON response. Should this be empty str rather than null? - November 2025
   String? caption;
 
   Image({
@@ -186,7 +178,7 @@ class SpecialHour {
   String specialHoursEvent;
   String specialHoursEventDetails;
 
-  // TODO: double check if these can ever be null
+  // TODO: double check if these can ever be null - November 2025
   String? specialHoursValidFrom;
   String? specialHoursValidTo;
 
@@ -224,9 +216,7 @@ class Specials {
   Specials.fromJson(Map<String, dynamic> json)
       : specialDescription = json["specialDescription"],
         specialTitle = json["specialTitle"],
-        promoDates = json["promoDates"] == null
-            ? null
-            : PromoDates.fromJson(json["promoDates"]);
+        promoDates = json["promoDates"] == null ? null : PromoDates.fromJson(json["promoDates"]);
 
   Map<String, dynamic> toJson() => {
         "specialDescription": specialDescription,
@@ -245,12 +235,9 @@ class PromoDates {
   });
 
   PromoDates.fromJson(Map<String, dynamic> json)
-      : startDate = json["startDate"] is String
-            ? int.tryParse(json["startDate"])
-            : json["startDate"],
-        endDate = json["endDate"] is String
-            ? int.tryParse(json["endDate"])
-            : json["endDate"];
+      : startDate =
+            json["startDate"] is String ? int.tryParse(json["startDate"]) : json["startDate"],
+        endDate = json["endDate"] is String ? int.tryParse(json["endDate"]) : json["endDate"];
 
   Map<String, dynamic> toJson() => {
         "startDate": startDate,

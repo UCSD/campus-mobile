@@ -6,8 +6,7 @@ import 'dart:convert';
 AvailabilityStatus availabilityStatusFromJson(String str) =>
     AvailabilityStatus.fromJson(json.decode(str));
 
-String availabilityStatusToJson(AvailabilityStatus data) =>
-    json.encode(data.toJson());
+String availabilityStatusToJson(AvailabilityStatus data) => json.encode(data.toJson());
 
 class AvailabilityStatus {
   AvailabilityStatus({
@@ -20,23 +19,21 @@ class AvailabilityStatus {
   List<AvailabilityModel> data;
   DateTime timestamp;
 
-  factory AvailabilityStatus.fromJson(Map<String, dynamic> json) =>
-      AvailabilityStatus(
+  factory AvailabilityStatus.fromJson(Map<String, dynamic> json) => AvailabilityStatus(
         status: json["status"]!,
-        // TODO: rewrite this to be shorter! Functional style iterators?...
+        // TODO: rewrite this to be shorter! Functional style iterators?... - November 2025
         data: (() {
-          List<AvailabilityModel> returnList = List<AvailabilityModel>.from(
-              json["data"]!.map((x) => AvailabilityModel.fromJson(x)));
+          List<AvailabilityModel> returnList =
+              List<AvailabilityModel>.from(json["data"]!.map((x) => AvailabilityModel.fromJson(x)));
 
-          // TODO: remove this line after the missing Markets data is fixed on the backend
+          // TODO: remove this line after the missing Markets data is fixed on the backend - November 2025
           returnList.removeWhere((model) => model.name == "Markets");
 
           for (int index = 0; index < returnList.length; index++) {
             if (returnList[index].subLocations.length > 3) {
               String baseName = returnList[index].name;
               int baseId = returnList[index].id;
-              List<SubLocations> baseSubLocations =
-                  returnList[index].subLocations;
+              List<SubLocations> baseSubLocations = returnList[index].subLocations;
               returnList.removeAt(index);
               index--;
               int curPageIndex = 1;
@@ -44,15 +41,10 @@ class AvailabilityStatus {
               for (int i = 0; i < baseSubLocations.length; i += 3) {
                 index++;
                 List<SubLocations> curSubList = baseSubLocations.sublist(
-                    i,
-                    i + 3 > baseSubLocations.length
-                        ? baseSubLocations.length
-                        : i + 3);
+                    i, i + 3 > baseSubLocations.length ? baseSubLocations.length : i + 3);
                 String curName = baseName + " ($curPageIndex/$maxPageIndex)";
                 returnList.insert(
-                    index,
-                    AvailabilityModel(
-                        id: baseId, name: curName, subLocations: curSubList));
+                    index, AvailabilityModel(id: baseId, name: curName, subLocations: curSubList));
                 curPageIndex++;
               }
             }
@@ -80,12 +72,11 @@ class AvailabilityModel {
   String name;
   List<SubLocations> subLocations;
 
-  factory AvailabilityModel.fromJson(Map<String, dynamic> json) =>
-      AvailabilityModel(
+  factory AvailabilityModel.fromJson(Map<String, dynamic> json) => AvailabilityModel(
         id: json["id"]!,
         name: json["name"]!,
-        subLocations: List<SubLocations>.from(
-            json["childCounts"]!.map((x) => SubLocations.fromJson(x))),
+        subLocations:
+            List<SubLocations>.from(json["childCounts"]!.map((x) => SubLocations.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -114,16 +105,10 @@ class SubLocations {
       name: json["name"]!,
       percentage: json["percentage"]!.toDouble(),
       isActive: json["isActive"]!,
-      floors:
-          List<Floor>.from(json["childCounts"]!.map((x) => Floor.fromJson(x))));
+      floors: List<Floor>.from(json["childCounts"]!.map((x) => Floor.fromJson(x))));
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "percentage": percentage,
-        "isActive": isActive,
-        "floors": floors
-      };
+  Map<String, dynamic> toJson() =>
+      {"id": id, "name": name, "percentage": percentage, "isActive": isActive, "floors": floors};
 }
 
 class Floor {

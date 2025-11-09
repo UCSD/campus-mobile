@@ -33,8 +33,7 @@ class _CardsViewState extends State<CardsView> {
         header: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: Text("Hold and drag to reorder",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+              textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ),
         children: createList(),
         onReorder: (int oldIndex, int newIndex) {
@@ -92,12 +91,9 @@ class _CardsViewState extends State<CardsView> {
                   onChanged: (_) {
                     _cardsDataProvider.toggleCard(card);
                   },
-                  activeColor:
-                      toggleActiveColor, // Ensure this is a solid color
+                  activeColor: toggleActiveColor, // Ensure this is a solid color
                   thumbColor: WidgetStateProperty.resolveWith((states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return Colors.white;
-                    }
+                    if (states.contains(WidgetState.selected)) return Colors.white;
                     return null;
                   }),
                 ),
@@ -107,8 +103,7 @@ class _CardsViewState extends State<CardsView> {
         );
       } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
-        FirebaseCrashlytics.instance.recordError(
-            e, StackTrace.fromString(e.toString()),
+        FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
             reason: "Profile/Cards: Failed to load Cards page", fatal: false);
 
         _cardsDataProvider.changeInternetStatus(true);

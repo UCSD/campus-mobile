@@ -79,8 +79,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _messageToCount[id] = _freeFoodModel.body.count;
     } else {
       _error = _freeFoodService.error;
-      if (_error != null &&
-          _error!.contains(ErrorConstants.invalidBearerToken)) {
+      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) {
         if (await _freeFoodService.getNewToken()) await fetchCount(id);
       }
       removeId(id);
@@ -102,8 +101,8 @@ class FreeFoodDataProvider extends ChangeNotifier {
     } else {
       _error = _freeFoodService.error;
       if (_error != null &&
-          _error!.contains(
-              ErrorConstants.invalidBearerToken)) if (await _freeFoodService
+          _error!
+              .contains(ErrorConstants.invalidBearerToken)) if (await _freeFoodService
           .getNewToken()) await fetchMaxCount(id);
 
       removeId(id);
@@ -137,8 +136,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
     } else {
       _error = _freeFoodService.error;
-      if (_error != null &&
-          _error!.contains(ErrorConstants.invalidBearerToken)) {
+      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) {
         if (await _freeFoodService.getNewToken()) await updateCount(id, body);
       }
       removeId(id);
@@ -151,8 +149,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   }
 
   /// SIMPLE SETTERS
-  set messageDataProvider(MessagesDataProvider value) =>
-      _messageDataProvider = value;
+  set messageDataProvider(MessagesDataProvider value) => _messageDataProvider = value;
   bool isLoading(String? id) => id == _curId;
 
   /// SIMPLE GETTERS
@@ -163,8 +160,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
   bool isFreeFood(String messageId) => _messageToCount.containsKey(messageId);
   int? count(String messageId) => _messageToCount[messageId];
   bool isOverCount(String messageId) {
-    if (_messageToCount.containsKey(messageId) &&
-        _messageToMaxCount.containsKey(messageId))
+    if (_messageToCount.containsKey(messageId) && _messageToMaxCount.containsKey(messageId))
       return _messageToCount[messageId]! > _messageToMaxCount[messageId]!;
     return false;
   }

@@ -25,9 +25,7 @@ class NotificationsFilterView extends StatelessWidget {
               ).toList(),
             ),
           )
-        : Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary));
+        : Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary));
   }
 
   List<Widget> createList(BuildContext context, List<String?> topicsAvailable) {
@@ -59,13 +57,10 @@ class NotificationsFilterView extends StatelessWidget {
                 value: Provider.of<PushNotificationDataProvider>(context)
                     .topicSubscriptionState[topic]!,
                 onChanged: (_) {
-                  Provider.of<UserDataProvider>(context, listen: false)
-                      .toggleNotifications(topic);
+                  Provider.of<UserDataProvider>(context, listen: false).toggleNotifications(topic);
                 },
                 thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.white;
-                  }
+                  if (states.contains(WidgetState.selected)) return Colors.white;
                   return null;
                 }),
                 activeColor: toggleActiveColor,
@@ -103,8 +98,7 @@ class NotificationsFilterView extends StatelessWidget {
     if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
       return _pushNotificationDataProvider.publicTopics() +
           _pushNotificationDataProvider.studentTopics();
-    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
-        false) {
+    } else if (_userDataProvider.userProfileModel.classifications?.staff ?? false) {
       return _pushNotificationDataProvider.publicTopics() +
           _pushNotificationDataProvider.staffTopics();
     } else {

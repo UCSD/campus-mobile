@@ -32,21 +32,18 @@ class AvailabilityDataProvider extends ChangeNotifier {
       for (AvailabilityModel model in _availabilityService.data) {
         String curName = model.name;
         RegExpMatch? match = RegExp(r' \(\d+/\d+\)$').firstMatch(curName);
-        if (match != null)
-          curName = curName.replaceRange(match.start, match.end, '');
+        if (match != null) curName = curName.replaceRange(match.start, match.end, '');
         newMapOfLots[model.name] = model;
 
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
-        if (userDataProvider
-            .userProfileModel.selectedOccuspaceLocations!.isEmpty)
+        if (userDataProvider.userProfileModel.selectedOccuspaceLocations!.isEmpty)
           _locationViewState[curName] = true;
 
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
-          _locationViewState[curName] = userDataProvider
-              .userProfileModel.selectedOccuspaceLocations!
-              .contains(curName);
+          _locationViewState[curName] =
+              userDataProvider.userProfileModel.selectedOccuspaceLocations!.contains(curName);
         }
       }
 
@@ -54,8 +51,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
       _availabilityModels = newMapOfLots;
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      reorderLocations(
-          userDataProvider.userProfileModel.selectedOccuspaceLocations);
+      reorderLocations(userDataProvider.userProfileModel.selectedOccuspaceLocations);
       _lastUpdated = DateTime.now();
     } else {
       _error = _availabilityService.error;
@@ -113,10 +109,9 @@ class AvailabilityDataProvider extends ChangeNotifier {
   String? get error => _error;
   DateTime? get lastUpdated => _lastUpdated;
   Map<String?, bool> get locationViewState => _locationViewState;
-  List<AvailabilityModel?> get availabilityModels => makeOrderedList(
-      userDataProvider.userProfileModel.selectedOccuspaceLocations);
+  List<AvailabilityModel?> get availabilityModels =>
+      makeOrderedList(userDataProvider.userProfileModel.selectedOccuspaceLocations);
 
   /// get all locations
-  List<String> locations() =>
-      _availabilityModels.values.map((model) => model.name).toList();
+  List<String> locations() => _availabilityModels.values.map((model) => model.name).toList();
 }

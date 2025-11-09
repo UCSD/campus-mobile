@@ -25,8 +25,8 @@ class AvailabilityService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('AVAILABILITY_API_ENDPOINT'), headers);
+      String _response =
+          await NetworkHelper.authorizedFetch(dotenv.get('AVAILABILITY_API_ENDPOINT'), headers);
 
       /// parse data
       final data = availabilityStatusFromJson(_response);
@@ -35,9 +35,8 @@ class AvailabilityService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) return await fetchData();
-      }
+      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers))
+        return await fetchData();
       _error = e.toString();
       return false;
     } finally {

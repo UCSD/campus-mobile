@@ -26,8 +26,8 @@ class ShuttleService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await (NetworkHelper.authorizedFetch(
-          dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
+      String _response =
+          await (NetworkHelper.authorizedFetch(dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
 
       /// parse data
       var data = shuttleStopModelFromJson(_response);
@@ -36,9 +36,8 @@ class ShuttleService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) return await fetchData();
-      }
+      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers))
+        return await fetchData();
       _error = e.toString();
       return false;
     } finally {
@@ -61,8 +60,7 @@ class ShuttleService {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
       if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await getArrivingInformation(stopId);
+        if (await NetworkHelper.getNewToken(headers)) return await getArrivingInformation(stopId);
       }
       _error = e.toString();
       return [];

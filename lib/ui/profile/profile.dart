@@ -24,24 +24,20 @@ class Profile extends StatelessWidget {
     if (initialLink != null && initialLink.contains("deeplinking.searchmap")) {
       var uri = Uri.dataFromString(initialLink);
       var query = uri.queryParameters['query']!;
-      Provider.of<MapsDataProvider>(context, listen: false)
-          .searchBarController
-          .text = query;
+      Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider.of<BottomNavigationBarProvider>(context, listen: false)
-          .currentIndex = NavigatorConstants.MapTab;
+      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+          NavigatorConstants.MapTab;
     }
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
       String? link = uri?.toString();
       if (link != null && link.contains("deeplinking.searchmap")) {
         var query = uri!.queryParameters['query']!;
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text = query;
+        Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.MapTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+            NavigatorConstants.MapTab;
         _sub?.cancel();
       }
     });
@@ -76,8 +72,8 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.drag_handle,
-                      color: Theme.of(context).iconTheme.color, size: 30.0),
+                  leading:
+                      Icon(Icons.drag_handle, color: Theme.of(context).iconTheme.color, size: 30.0),
                   title: Text(
                     'Card Settings',
                     style: Theme.of(context).brightness == Brightness.dark
@@ -100,8 +96,7 @@ class Profile extends StatelessWidget {
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(
-                          1.0), // Adjust the padding as needed
+                      padding: const EdgeInsets.all(1.0), // Adjust the padding as needed
                       child: Icon(
                         Icons.question_mark,
                         color: Theme.of(context).iconTheme.color,
@@ -117,8 +112,7 @@ class Profile extends StatelessWidget {
                   onTap: handleFeedbackTap,
                 ),
                 ListTile(
-                  leading: Icon(Icons.lock,
-                      color: Theme.of(context).iconTheme.color, size: 30.0),
+                  leading: Icon(Icons.lock, color: Theme.of(context).iconTheme.color, size: 30.0),
                   title: Text(
                     'View Privacy Policy',
                     style: Theme.of(context).brightness == Brightness.dark
@@ -163,8 +157,7 @@ class Profile extends StatelessWidget {
   }
 
   Future<void> handleReportTap() async {
-    const reportUrl =
-        "https://experience.arcgis.com/experience/91b8f66d6fa547f481c2a1cb6af252d0";
+    const reportUrl = "https://experience.arcgis.com/experience/91b8f66d6fa547f481c2a1cb6af252d0";
     openLink(reportUrl);
   }
 }
