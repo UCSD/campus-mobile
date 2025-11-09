@@ -73,11 +73,11 @@ echo "Files scanned: $total_files"
 echo "Violations found: $violations_found"
 
 if [[ $violations_found -gt 0 ]]; then
-    echo "❌ Use package imports instead of relative imports"
+    echo "Use package imports instead of relative imports"
     echo "   GOOD: import 'package:$PACKAGE_NAME/core/providers/map.dart';"
     echo "   BAD:  import '../../core/providers/map.dart';"
     exit 1
 else
-    echo "✅ All imports use package import paths"
+    echo "All imports use package import paths"
     exit 0
 fi

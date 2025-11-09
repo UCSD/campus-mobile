@@ -104,9 +104,9 @@ echo "File and Directory naming check complete."
 echo "Violations found: $violations_found"
 
 if [[ $violations_found -gt 0 ]]; then
-    echo "❌ Files and directories should use snake_case naming convention"
+    echo "Files and directories should use snake_case naming convention"
     exit 1
 else
-    echo "✅ All files and directories follow snake_case naming convention"
+    echo "All files and directories follow snake_case naming convention"
     exit 0
 fi

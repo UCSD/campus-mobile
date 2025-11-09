@@ -65,11 +65,11 @@ echo "Files scanned: $total_files"
 echo "Violations found: $violations_found"
 
 if [[ $violations_found -gt 0 ]]; then
-    echo "❌ Comments should have a space after //"
+    echo "Comments should have a space after //"
     echo "   GOOD: // This is a proper comment"
     echo "   BAD:  //This comment is missing a space"
     exit 1
 else
-    echo "✅ All comments have proper spacing after //"
+    echo "All comments have proper spacing after //"
     exit 0
 fi
