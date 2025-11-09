@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # format-files.sh - Format all Dart files under lib/ with configurable line length.
 # Usage:
-#   ./scripts/format-files.sh           -> default LINE_LENGTH=100
-#   ./scripts/format-files.sh 120       -> set LINE_LENGTH to 120
-#   ./scripts/format-files.sh 120 dry   -> dry-run (prints files that would change)
-#   ./scripts/format-files.sh 120 check -> check mode (exits non-zero if changes)
+#   ./scripts/dart_format-files.sh           -> default LINE_LENGTH=100
+#   ./scripts/dart_format-files.sh 120       -> set LINE_LENGTH to 120
+#   ./scripts/dart_format-files.sh 120 dry   -> dry-run (prints files that would change)
+#   ./scripts/dart_format-files.sh 120 check -> check mode (exits non-zero if changes)
 # The script changes to the project root (parent of scripts/) before running.
 
 set -euo pipefail
