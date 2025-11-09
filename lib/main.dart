@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
-import 'package:campus_mobile_experimental/app_router.dart'
-    as campusMobileRouter;
+import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
@@ -32,8 +31,7 @@ void main() async {
     final mapsImplementation = GoogleMapsFlutterPlatform.instance;
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
-      await mapsImplementation
-          .initializeWithRenderer(AndroidMapRenderer.latest);
+      await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
     }
 
     // dotenv loading
@@ -80,8 +78,7 @@ Future<void> clearSecuredStorage() async {
 Future<void> clearHiveStorage() async {
   await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
-  await (await Hive.openBox(DataPersistence.AuthenticationModel))
-      .deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.AuthenticationModel)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.UserProfileModel)).deleteFromDisk();
 }
 
@@ -149,17 +146,14 @@ class CampusMobile extends StatelessWidget {
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
         theme: lightTheme.copyWith(
-          colorScheme:
-              lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
+          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
         ),
         darkTheme: darkTheme.copyWith(
-          colorScheme:
-              darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+          colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
         themeMode: ThemeMode.system,
-        initialRoute: showOnboardingScreen
-            ? RoutePaths.OnboardingLogin
-            : RoutePaths.BottomNavigationBar,
+        initialRoute:
+            showOnboardingScreen ? RoutePaths.OnboardingLogin : RoutePaths.BottomNavigationBar,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
         builder: (context, child) {
