@@ -8,7 +8,7 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-repo_root="$(cd "$script_dir/.." && pwd)"
+repo_root="$(cd "$script_dir/../.." && pwd)"
 cd "$repo_root"
 
 # Defaults
@@ -56,6 +56,9 @@ echo "Checking Dart files for UPPER_SNAKE_CASE static constants..."
 echo "Scanning: lib/"
 echo "Looking for static const variables that should be UPPER_SNAKE_CASE..."
 
+# Create violations array to store detailed information
+violations=()
+
 # Find static const violations
 # Use a temporary file to avoid subshell issues with variable counting
 temp_results=$(mktemp)
@@ -66,23 +69,21 @@ while IFS=: read -r file line_num content; do
   if [[ "$content" =~ static[[:space:]]+const[[:space:]]+([a-zA-Z_][a-zA-Z0-9_]*)[[:space:]]*= ]]; then
     var_name="${BASH_REMATCH[1]}"
     if ! is_upper_snake_case "$var_name"; then
-      echo "  $file:$line_num: Static const '$var_name' should be UPPER_SNAKE_CASE"
+      suggested=$(to_upper_snake_case "$var_name")
+      violation_msg="$file:$line_num: Static const '$var_name' should be UPPER_SNAKE_CASE (suggested: $suggested)"
+      violations+=("$violation_msg")
+      echo "  $violation_msg"
       violations_found=$((violations_found + 1))
-      if [[ "$MODE" == "fix" ]]; then
-        suggested=$(to_upper_snake_case "$var_name")
-        echo "    Suggestion: $var_name -> $suggested"
-      fi
     fi
   # Pattern 2: static const Type variableName (with explicit type)
   elif [[ "$content" =~ static[[:space:]]+const[[:space:]]+[A-Za-z][A-Za-z0-9_\<\>\?,[:space:]]*[[:space:]]+([a-zA-Z_][a-zA-Z0-9_]*)[[:space:]]*= ]]; then
     var_name="${BASH_REMATCH[1]}"
     if ! is_upper_snake_case "$var_name"; then
-      echo "  $file:$line_num: Static const '$var_name' should be UPPER_SNAKE_CASE"
+      suggested=$(to_upper_snake_case "$var_name")
+      violation_msg="$file:$line_num: Static const '$var_name' should be UPPER_SNAKE_CASE (suggested: $suggested)"
+      violations+=("$violation_msg")
+      echo "  $violation_msg"
       violations_found=$((violations_found + 1))
-      if [[ "$MODE" == "fix" ]]; then
-        suggested=$(to_upper_snake_case "$var_name")
-        echo "    Suggestion: $var_name -> $suggested"
-      fi
     fi
   fi
 done < "$temp_results"
@@ -97,6 +98,32 @@ echo ""
 echo "Summary:"
 echo "  Files checked: $total_files"
 echo "  Total violations: $violations_found"
+
+# Export violations for parent script if VIOLATIONS_OUTPUT is set
+if [[ -n "${VIOLATIONS_OUTPUT:-}" ]]; then
+  if [[ $violations_found -gt 0 ]]; then
+    echo "STATIC_CONST_VIOLATIONS_START" >> "$VIOLATIONS_OUTPUT"
+    # Re-process violations to write to file (since array was in subshell)
+    grep -rn --include="*.dart" "static const" lib/ | while IFS=: read -r file line_num content; do
+      # Pattern 1: static const variableName (without explicit type)
+      if [[ "$content" =~ static[[:space:]]+const[[:space:]]+([a-zA-Z_][a-zA-Z0-9_]*)[[:space:]]*= ]]; then
+        var_name="${BASH_REMATCH[1]}"
+        if ! is_upper_snake_case "$var_name"; then
+          suggested=$(to_upper_snake_case "$var_name")
+          echo "$file:$line_num: Static const '$var_name' should be UPPER_SNAKE_CASE (suggested: $suggested)" >> "$VIOLATIONS_OUTPUT"
+        fi
+      # Pattern 2: static const Type variableName (with explicit type)
+      elif [[ "$content" =~ static[[:space:]]+const[[:space:]]+[A-Za-z][A-Za-z0-9_\<\>\?,[:space:]]*[[:space:]]+([a-zA-Z_][a-zA-Z0-9_]*)[[:space:]]*= ]]; then
+        var_name="${BASH_REMATCH[1]}"
+        if ! is_upper_snake_case "$var_name"; then
+          suggested=$(to_upper_snake_case "$var_name")
+          echo "$file:$line_num: Static const '$var_name' should be UPPER_SNAKE_CASE (suggested: $suggested)" >> "$VIOLATIONS_OUTPUT"
+        fi
+      fi
+    done
+    echo "STATIC_CONST_VIOLATIONS_END" >> "$VIOLATIONS_OUTPUT"
+  fi
+fi
 
 if [[ $violations_found -gt 0 ]]; then
   echo ""
@@ -118,4 +145,8 @@ else
   echo "All static constants follow UPPER_SNAKE_CASE naming convention!"
 fi
 
-exit 0
+if [[ $violations_found -gt 0 ]]; then
+  exit 1
+else
+  exit 0
+fi

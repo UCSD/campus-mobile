@@ -64,6 +64,7 @@ to_snake_case() {
 echo "Checking file and directory naming conventions..."
 
 violations_found=0
+violations=()
 
 # Check files
 echo "Checking files in lib/..."
@@ -72,10 +73,13 @@ while IFS= read -r filepath; do
         filename=$(basename "$filepath")
 
         if ! is_snake_case "$filename"; then
-            echo "  $filepath: File '$filename' should be snake_case"
+            suggested=$(to_snake_case "$filename")
+            violation_msg="$filepath: File '$filename' should be snake_case (suggested: $suggested)"
+            violations+=("$violation_msg")
+            echo "  $violation_msg"
             violations_found=$((violations_found + 1))
+
             if [[ "$MODE" == "fix" ]]; then
-                suggested=$(to_snake_case "$filename")
                 echo "    Fixing: $filename -> $suggested"
 
                 # Perform the actual rename
@@ -96,10 +100,13 @@ while IFS= read -r dirpath; do
         dirname=$(basename "$dirpath")
 
         if ! is_snake_case "$dirname"; then
-            echo "  $dirpath/: Directory '$dirname' should be snake_case"
+            suggested=$(to_snake_case "$dirname")
+            violation_msg="$dirpath/: Directory '$dirname' should be snake_case (suggested: $suggested)"
+            violations+=("$violation_msg")
+            echo "  $violation_msg"
             violations_found=$((violations_found + 1))
+
             if [[ "$MODE" == "fix" ]]; then
-                suggested=$(to_snake_case "$dirname")
                 echo "    Fixing: $dirname -> $suggested"
 
                 # Perform the actual directory rename
@@ -117,6 +124,33 @@ done < <(find lib -type d -not -path "lib")
 echo
 echo "File and Directory naming check complete."
 echo "Violations found: $violations_found"
+
+# Export violations for parent script if VIOLATIONS_OUTPUT is set
+if [[ -n "${VIOLATIONS_OUTPUT:-}" ]]; then
+  if [[ $violations_found -gt 0 ]]; then
+    echo "FILE_DIR_NAMING_VIOLATIONS_START" >> "$VIOLATIONS_OUTPUT"
+    # Re-process violations to write to file
+    find lib -type f -name "*.dart" | while IFS= read -r filepath; do
+      if [[ -n "$filepath" ]]; then
+        filename=$(basename "$filepath")
+        if ! is_snake_case "$filename"; then
+          suggested=$(to_snake_case "$filename")
+          echo "$filepath: File '$filename' should be snake_case (suggested: $suggested)" >> "$VIOLATIONS_OUTPUT"
+        fi
+      fi
+    done
+    find lib -type d -not -path "lib" | while IFS= read -r dirpath; do
+      if [[ -n "$dirpath" && "$dirpath" != "lib" ]]; then
+        dirname=$(basename "$dirpath")
+        if ! is_snake_case "$dirname"; then
+          suggested=$(to_snake_case "$dirname")
+          echo "$dirpath/: Directory '$dirname' should be snake_case (suggested: $suggested)" >> "$VIOLATIONS_OUTPUT"
+        fi
+      fi
+    done
+    echo "FILE_DIR_NAMING_VIOLATIONS_END" >> "$VIOLATIONS_OUTPUT"
+  fi
+fi
 
 if [[ $violations_found -gt 0 ]]; then
     if [[ "$MODE" == "fix" ]]; then

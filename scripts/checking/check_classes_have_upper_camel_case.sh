@@ -8,7 +8,7 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-repo_root="$(cd "$script_dir/.." && pwd)"
+repo_root="$(cd "$script_dir/../.." && pwd)"
 cd "$repo_root"
 
 # Defaults
@@ -69,6 +69,9 @@ echo "Checking Dart files for UpperCamelCase class names..."
 echo "Scanning: lib/"
 echo "Looking for class names that should be UpperCamelCase..."
 
+# Create violations array to store detailed information
+violations=()
+
 # Find class declarations and extract class names correctly
 # Use a temporary file to avoid subshell issues with variable counting
 temp_results=$(mktemp)
@@ -81,12 +84,11 @@ while IFS=: read -r file line_num content; do
   if [[ "$content" =~ class[[:space:]]+([a-zA-Z_][a-zA-Z0-9_]*) ]]; then
     class_name="${BASH_REMATCH[1]}"
     if ! is_upper_camel_case "$class_name"; then
-      echo "  $file:$line_num: Class '$class_name' should be UpperCamelCase"
+      suggested=$(to_upper_camel_case "$class_name")
+      violation_msg="$file:$line_num: Class '$class_name' should be UpperCamelCase (suggested: $suggested)"
+      violations+=("$violation_msg")
+      echo "  $violation_msg"
       violations_found=$((violations_found + 1))
-      if [[ "$MODE" == "fix" ]]; then
-        suggested=$(to_upper_camel_case "$class_name")
-        echo "    Suggestion: $class_name -> $suggested"
-      fi
     fi
   fi
 done < "$temp_results"
@@ -99,12 +101,11 @@ while IFS=: read -r file line_num content; do
   if [[ "$content" =~ abstract[[:space:]]+class[[:space:]]+([a-zA-Z_][a-zA-Z0-9_]*) ]]; then
     class_name="${BASH_REMATCH[1]}"
     if ! is_upper_camel_case "$class_name"; then
-      echo "  $file:$line_num: Abstract class '$class_name' should be UpperCamelCase"
+      suggested=$(to_upper_camel_case "$class_name")
+      violation_msg="$file:$line_num: Abstract class '$class_name' should be UpperCamelCase (suggested: $suggested)"
+      violations+=("$violation_msg")
+      echo "  $violation_msg"
       violations_found=$((violations_found + 1))
-      if [[ "$MODE" == "fix" ]]; then
-        suggested=$(to_upper_camel_case "$class_name")
-        echo "    Suggestion: $class_name -> $suggested"
-      fi
     fi
   fi
 done < "$temp_results"
@@ -119,6 +120,33 @@ echo ""
 echo "Summary:"
 echo "  Files checked: $total_files"
 echo "  Total violations: $violations_found"
+
+# Export violations for parent script if VIOLATIONS_OUTPUT is set
+if [[ -n "${VIOLATIONS_OUTPUT:-}" ]]; then
+  if [[ $violations_found -gt 0 ]]; then
+    echo "CLASS_NAMING_VIOLATIONS_START" >> "$VIOLATIONS_OUTPUT"
+    # Re-process violations to write to file
+    grep -rn --include="*.dart" -E "^[[:space:]]*class[[:space:]]+" lib/ 2>/dev/null | while IFS=: read -r file line_num content; do
+      if [[ "$content" =~ class[[:space:]]+([a-zA-Z_][a-zA-Z0-9_]*) ]]; then
+        class_name="${BASH_REMATCH[1]}"
+        if ! is_upper_camel_case "$class_name"; then
+          suggested=$(to_upper_camel_case "$class_name")
+          echo "$file:$line_num: Class '$class_name' should be UpperCamelCase (suggested: $suggested)" >> "$VIOLATIONS_OUTPUT"
+        fi
+      fi
+    done
+    grep -rn --include="*.dart" -E "^[[:space:]]*abstract[[:space:]]+class[[:space:]]+" lib/ 2>/dev/null | while IFS=: read -r file line_num content; do
+      if [[ "$content" =~ abstract[[:space:]]+class[[:space:]]+([a-zA-Z_][a-zA-Z0-9_]*) ]]; then
+        class_name="${BASH_REMATCH[1]}"
+        if ! is_upper_camel_case "$class_name"; then
+          suggested=$(to_upper_camel_case "$class_name")
+          echo "$file:$line_num: Abstract class '$class_name' should be UpperCamelCase (suggested: $suggested)" >> "$VIOLATIONS_OUTPUT"
+        fi
+      fi
+    done
+    echo "CLASS_NAMING_VIOLATIONS_END" >> "$VIOLATIONS_OUTPUT"
+  fi
+fi
 
 if [[ $violations_found -gt 0 ]]; then
   echo ""
@@ -140,4 +168,8 @@ else
   echo "All classes follow UpperCamelCase naming convention!"
 fi
 
-exit 0
+if [[ $violations_found -gt 0 ]]; then
+  exit 1
+else
+  exit 0
+fi
