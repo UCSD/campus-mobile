@@ -334,41 +334,41 @@ jobs:
               if (staticConstViolations.length > 0) {
                 const displayViolations = staticConstViolations.slice(0, 10);
                 const remaining = staticConstViolations.length - displayViolations.length;
-                commentSections.push(`### ❌ Static Constants (UPPER_SNAKE_CASE) - ${staticConstViolations.length} violations
+                commentSections.push(`### Static Constants (UPPER_SNAKE_CASE) - ${staticConstViolations.length} violations
             ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
               }
 
               if (packageImportViolations.length > 0) {
                 const displayViolations = packageImportViolations.slice(0, 10);
                 const remaining = packageImportViolations.length - displayViolations.length;
-                commentSections.push(`### ❌ Package Imports - ${packageImportViolations.length} violations
+                commentSections.push(`### Package Imports - ${packageImportViolations.length} violations
             ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
               }
 
               if (classNamingViolations.length > 0) {
                 const displayViolations = classNamingViolations.slice(0, 10);
                 const remaining = classNamingViolations.length - displayViolations.length;
-                commentSections.push(`### ❌ Class Naming (UpperCamelCase) - ${classNamingViolations.length} violations
+                commentSections.push(`### Class Naming (UpperCamelCase) - ${classNamingViolations.length} violations
             ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
               }
 
               if (fileDirViolations.length > 0) {
                 const displayViolations = fileDirViolations.slice(0, 10);
                 const remaining = fileDirViolations.length - displayViolations.length;
-                commentSections.push(`### ❌ File/Directory Naming (snake_case) - ${fileDirViolations.length} violations
+                commentSections.push(`### File/Directory Naming (snake_case) - ${fileDirViolations.length} violations
             ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
               }
 
               if (variableViolations.length > 0) {
                 const displayViolations = variableViolations.slice(0, 10);
                 const remaining = variableViolations.length - displayViolations.length;
-                commentSections.push(`### ❌ Variable Naming (lowerCamelCase) - ${variableViolations.length} violations
+                commentSections.push(`### Variable Naming (lowerCamelCase) - ${variableViolations.length} violations
             ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
               }
 
               const commentBody = `## 🚨 Code Style Violations Found
 
-            This PR contains **${totalViolations} coding style violations** that must be addressed before merging.
+            This PR contains **${totalViolations} coding style violations** that are dangerous to fix automatically and must be manually addressed before merging.
 
             ${commentSections.join('\n\n')}
 
@@ -425,11 +425,3 @@ jobs:
                 console.error('Failed to create fallback comment:', fallbackError.message);
               }
             }
-
-      - name: Report violations status
-        if: steps.style_check.outputs.style_check_passed == 'false'
-        run: |
-          echo "Code style violations found!"
-          echo "Violations have been reported in the PR comment."
-          echo "Please review and fix the violations before requesting review."
-          echo "The workflow completes successfully to allow branch protection rules to work properly."

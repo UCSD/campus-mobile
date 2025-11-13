@@ -60,11 +60,24 @@ is_lower_camel_case() {
 # Function to convert to lowerCamelCase (basic conversion)
 to_lower_camel_case() {
   local name="$1"
-  # Convert snake_case to camelCase
-  echo "$name" | sed 's/_\([a-z]\)/\U\1/g' | sed 's/^\([A-Z]\)/\l\1/'
-}
 
-violations_found=0
+  # Check if it's UPPER_SNAKE_CASE (all caps with underscores)
+  if [[ "$name" =~ ^[A-Z][A-Z0-9_]*$ ]]; then
+    # Handle UPPER_SNAKE_CASE -> lowerCamelCase
+    local lowercase_name=$(echo "$name" | tr '[:upper:]' '[:lower:]')
+    # Convert snake_case to camelCase
+    local result=$(echo "$lowercase_name" | sed 's/_\([a-z]\)/\U\1/g')
+    echo "$result"
+  # Check if it's PascalCase (starts with uppercase, no underscores)
+  elif [[ "$name" =~ ^[A-Z][a-zA-Z0-9]*$ ]] && [[ ! "$name" =~ _ ]]; then
+    # Handle PascalCase -> lowerCamelCase (just lowercase the first character)
+    echo "$name" | sed 's/^\([A-Z]\)/\l\1/'
+  else
+    # Handle other cases (snake_case, etc.)
+    local result=$(echo "$name" | sed 's/_\([a-z]\)/\U\1/g')
+    echo "$result" | sed 's/^\([A-Z]\)/\l\1/'
+  fi
+}violations_found=0
 total_files=0
 
 echo "Checking Dart files for lowerCamelCase regular variables (excluding static const)..."
