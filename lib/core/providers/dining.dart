@@ -146,9 +146,7 @@ class DiningDataProvider extends ChangeNotifier {
   List<DiningModel> get filteredDiningModels {
     // If all or no filters are selected, then return diningModels (the source of truth)
     if (!_diningFilterTypeStates.values.contains(true) ||
-        _diningFilterTypeStates.values.every((f) => f)) {
-      return diningModels;
-    }
+        _diningFilterTypeStates.values.every((f) => f)) => diningModels;
     // Else, return the updated filtered list
     return _filteredDiningModels.values.toList();
   }

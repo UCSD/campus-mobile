@@ -63,9 +63,7 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   }) : super(key: key, child: child);
 
   @override
-  RenderObject createRenderObject(BuildContext context) {
-    return MeasureSizeRenderObject(onChange);
-  }
+  RenderObject createRenderObject(BuildContext context) => MeasureSizeRenderObject(onChange);
 
   @override
   void updateRenderObject(BuildContext context, covariant MeasureSizeRenderObject renderObject) {
