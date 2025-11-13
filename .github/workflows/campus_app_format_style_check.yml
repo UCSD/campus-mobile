@@ -265,6 +265,7 @@ jobs:
               let classNamingViolations = [];
               let fileDirViolations = [];
               let variableViolations = [];
+              let longConditionsViolations = [];
 
               // Extract static const violations
               const staticMatch = violationsContent.match(/STATIC_CONST_VIOLATIONS_START\n([\s\S]*?)\nSTATIC_CONST_VIOLATIONS_END/);
@@ -301,9 +302,17 @@ jobs:
                 console.log(`Found ${variableViolations.length} variable naming violations`);
               }
 
+              // Extract long conditions violations
+              const longConditionsMatch = violationsContent.match(/LONG_CONDITIONS_VIOLATIONS_START\n([\s\S]*?)\nLONG_CONDITIONS_VIOLATIONS_END/);
+              if (longConditionsMatch) {
+                longConditionsViolations = longConditionsMatch[1].split('\n').filter(line => line.trim());
+                console.log(`Found ${longConditionsViolations.length} long conditions violations`);
+              }
+
               // Count total violations
               const totalViolations = staticConstViolations.length + packageImportViolations.length +
-                                    classNamingViolations.length + fileDirViolations.length + variableViolations.length;
+                                    classNamingViolations.length + fileDirViolations.length +
+                                    variableViolations.length + longConditionsViolations.length;
 
               console.log(`Total violations parsed: ${totalViolations}`);
 
@@ -368,6 +377,13 @@ jobs:
             ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
               }
 
+              if (longConditionsViolations.length > 0) {
+                const displayViolations = longConditionsViolations.slice(0, 10);
+                const remaining = longConditionsViolations.length - displayViolations.length;
+                commentSections.push(`### Long If Conditions - ${longConditionsViolations.length} violations
+            ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
+              }
+
               const commentBody = `## 🚨 Code Style Violations Found
 
             This PR contains **${totalViolations} coding style violations** that are dangerous to fix automatically and must be manually addressed before merging.
@@ -381,6 +397,24 @@ jobs:
             - **Variables/Functions**: Use \`lowerCamelCase\` (e.g., \`userName\`)
             - **Files/Directories**: Use \`snake_case\` (e.g., \`user_profile.dart\`)
             - **Imports**: Use full package paths (e.g., \`package:app_name/path/file.dart\`)
+            - **If Conditions**: Split long/complex conditions into variables for readability
+
+            ### Long If Conditions Example:
+            **BAD:**
+            \`\`\`dart
+            if (userDataProvider.isLoggedIn &&
+                (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
+              // action
+            }
+            \`\`\`
+            **GOOD:**
+            \`\`\`dart
+            var isLoggedIn = userDataProvider.isLoggedIn;
+            var isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
+            if (isLoggedIn && isStaff) {
+              // action
+            }
+            \`\`\`
 
             ## How to Fix
 
