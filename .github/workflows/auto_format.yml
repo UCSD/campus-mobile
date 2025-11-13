@@ -33,8 +33,9 @@ jobs:
         id: format_step
         run: |
           echo "Running comprehensive code formatting and fixes..."
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
 
           # Run the comprehensive auto-fix script
           echo "Running auto_fix_all.sh script..."
@@ -71,6 +72,10 @@ jobs:
               echo "changes_made=false" >> $GITHUB_OUTPUT
               exit 0
             fi
+
+            # Bot is the author of this commit only
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
             git commit -m "Auto-formatted and fixed code style issues [CI]" \
                        -m "Applied comprehensive code fixes including:" \
