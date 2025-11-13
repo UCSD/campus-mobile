@@ -34,9 +34,6 @@ jobs:
         run: |
           echo "Running comprehensive code formatting and fixes..."
 
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-
           # Run the comprehensive auto-fix script
           echo "Running auto_fix_all.sh script..."
           chmod +x ./scripts/auto_fix_all.sh

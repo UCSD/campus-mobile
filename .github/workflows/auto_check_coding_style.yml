@@ -210,7 +210,7 @@ jobs:
 
             ${commentSections.join('\n\n')}
 
-            ## 📋 Style Guidelines
+            ## Style Guidelines
 
             - **Static Constants**: Use \`UPPER_SNAKE_CASE\` (e.g., \`MAX_RETRY_COUNT\`)
             - **Classes**: Use \`UpperCamelCase\` (e.g., \`UserProfile\`)
@@ -218,7 +218,7 @@ jobs:
             - **Files/Directories**: Use \`snake_case\` (e.g., \`user_profile.dart\`)
             - **Imports**: Use full package paths (e.g., \`package:app_name/path/file.dart\`)
 
-            ## 🔧 How to Fix
+            ## How to Fix
 
             1. Review each violation listed above
             2. Apply the suggested corrections
@@ -267,6 +267,6 @@ jobs:
       - name: Fail if violations found
         if: steps.style_check.outputs.style_check_passed == 'false'
         run: |
-          echo "❌ Code style checks failed!"
+          echo "Code style checks failed!"
           echo "Please fix the violations listed in the PR comment and try again."
           exit 1
