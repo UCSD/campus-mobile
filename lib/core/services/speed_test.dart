@@ -29,14 +29,10 @@ class SpeedTestService {
     try {
       if (Platform.isAndroid) {
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        if (!androidInfo.isPhysicalDevice) {
-          return true;
-        }
+        if (!androidInfo.isPhysicalDevice) return true;
       } else if (Platform.isIOS) {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        if (!iosInfo.isPhysicalDevice) {
-          return true;
-        }
+        if (!iosInfo.isPhysicalDevice) return true;
       }
     } catch (exception) {
       print(exception.toString());

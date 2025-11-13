@@ -15,9 +15,7 @@ class MessagesDataProvider extends ChangeNotifier {
       var triggerFetchMoreSize =
           0.9 * notificationScrollController.position.maxScrollExtent;
 
-      if (notificationScrollController.position.pixels > triggerFetchMoreSize) {
-        if (!_isLoading && _hasMoreMessagesToLoad) fetchMessages(false);
-      }
+      if (notificationScrollController.position.pixels > triggerFetchMoreSize) if (!_isLoading && _hasMoreMessagesToLoad) fetchMessages(false);
       setNotificationsScrollOffset(notificationScrollController.offset);
     });
   }
@@ -38,7 +36,7 @@ class MessagesDataProvider extends ChangeNotifier {
   final _messageService = MessageService();
   final notificationScrollController = ScrollController();
 
-  //Fetch messages
+  // Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
     _isLoading = true;
     _error = null;

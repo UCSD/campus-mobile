@@ -129,9 +129,7 @@ class EventDetailView extends StatelessWidget {
     final localEnd = end.toLocal();
 
     // If today is within the event window
-    if (!now.isBefore(localStart) && !now.isAfter(localEnd)) {
-      return now;
-    }
+    if (!now.isBefore(localStart) && !now.isAfter(localEnd)) return now;
 
     // Otherwise, show the earlier of the two future dates
     return localStart.isBefore(localEnd) ? localStart : localEnd;

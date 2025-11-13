@@ -33,7 +33,7 @@ class EventTile extends StatelessWidget {
   Widget _buildEventTile(BuildContext context) {
     return Container(
       width: tileWidth,
-      //height: 300,
+      // height: 300,
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(
