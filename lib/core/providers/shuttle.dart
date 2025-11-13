@@ -98,9 +98,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   Future<void> calculateClosestStop() async {
     // make sure we have users location before we do any calculations
-    if (_userCoords == null || _userCoords!.lon == null || _userCoords!.lat == null) {
-      return;
-    }
+    if (_userCoords == null || _userCoords!.lon == null || _userCoords!.lat == null) return;
 
     for (ShuttleStopModel shuttleStop in _shuttleService.data) {
       double stopLat = shuttleStop.lat, stopLong = shuttleStop.lon;

@@ -27,9 +27,7 @@ class CardsService {
       _cardsModel = cardsModelFromJson(_response);
       return true;
     } catch (e) {
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) return await fetchCards(ucsdAffiliation);
-      }
+      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers)) return await fetchCards(ucsdAffiliation);
       _error = e.toString();
       return false;
     } finally {

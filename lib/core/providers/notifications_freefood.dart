@@ -79,9 +79,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _messageToCount[id] = _freeFoodModel.body.count;
     } else {
       _error = _freeFoodService.error;
-      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) {
-        if (await _freeFoodService.getNewToken()) await fetchCount(id);
-      }
+      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) if (await _freeFoodService.getNewToken()) await fetchCount(id);
       removeId(id);
     }
     _isLoading = false;
@@ -136,9 +134,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
     } else {
       _error = _freeFoodService.error;
-      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) {
-        if (await _freeFoodService.getNewToken()) await updateCount(id, body);
-      }
+      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) if (await _freeFoodService.getNewToken()) await updateCount(id, body);
       removeId(id);
     }
 

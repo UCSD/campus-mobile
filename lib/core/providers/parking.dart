@@ -68,7 +68,7 @@ class ParkingDataProvider extends ChangeNotifier {
         if (value) selectedLots++;
       });
     } else {
-      // TODO: determine what error to show to the user
+      // TODO: determine what error to show to the user - November 2025
       _error = _parkingService.error;
     }
 
@@ -177,7 +177,7 @@ class ParkingDataProvider extends ChangeNotifier {
     }
   }
 
-  // TODO: rewrite and optimize this!
+  // TODO: rewrite and optimize this! - November 2025
   /// Returns the total number of spots open at a given location
   /// does not filter based on spot type
   Map<String, num> getApproxNumOfOpenSpots(String locationId) {
