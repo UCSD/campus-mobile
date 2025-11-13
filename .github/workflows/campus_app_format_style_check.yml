@@ -21,6 +21,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -83,7 +84,7 @@ jobs:
                        -m "- Final newline enforcement" \
                        -m "" \
                        -m "Co-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-            git push
+            git push origin HEAD:${{ github.head_ref }}
             echo "Code fixes complete. Changes committed and pushed."
             git log --oneline -1
 
