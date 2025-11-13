@@ -1,0 +1,69 @@
+name: Auto-Format Dart Code
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: write
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.0'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Auto-format and fix Dart code (if needed)
+        run: |
+          echo "Running comprehensive code formatting and fixes..."
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Run the comprehensive auto-fix script
+          echo "Running auto_fix_all.sh script..."
+          chmod +x ./scripts/auto_fix_all.sh
+          ./scripts/auto_fix_all.sh
+
+          # Check if there are any changes to commit
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "All code is properly formatted and follows style guidelines. Nothing to commit."
+            exit 0
+          else
+            echo "Changes detected. Staging and committing fixes..."
+
+            # Add all changed files
+            git add -A
+
+            # Double-check there are changes to commit
+            if git diff --staged --quiet; then
+              echo "No changes to commit after staging."
+              exit 0
+            fi
+
+            git commit -m "Auto-formatted and fixed code style issues [CI]" \
+                       -m "Applied comprehensive code fixes including:" \
+                       -m "- Dart formatting (100-character line length)" \
+                       -m "- One-line if statement formatting" \
+                       -m "- Trailing whitespace removal" \
+                       -m "- Final newline enforcement" \
+                       -m "" \
+                       -m "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
+            git push
+            echo "Code fixes complete. Changes committed and pushed."
+            git log --oneline -1
+          fi
