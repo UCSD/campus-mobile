@@ -41,7 +41,14 @@ violations=0
 total_violations=0
 
 # Create a temporary file to collect all violations
-violations_file=$(mktemp)
+# Use existing VIOLATIONS_OUTPUT if set, otherwise create a new temp file
+if [[ -n "${VIOLATIONS_OUTPUT:-}" ]]; then
+    violations_file="$VIOLATIONS_OUTPUT"
+    echo "Using existing violations file: $violations_file"
+else
+    violations_file=$(mktemp)
+    echo "Created new violations file: $violations_file"
+fi
 export VIOLATIONS_OUTPUT="$violations_file"
 
 # Array to store check results and violation counts

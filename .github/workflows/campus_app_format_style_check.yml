@@ -189,6 +189,10 @@ jobs:
           rm -f "$violations_file"
           export VIOLATIONS_OUTPUT="$violations_file"
 
+          # Debug: Verify the environment variable is set
+          echo "VIOLATIONS_OUTPUT is set to: $VIOLATIONS_OUTPUT"
+          echo "File exists before script: $(test -f "$violations_file" && echo 'YES' || echo 'NO')"
+
           # Run the style check and capture exit code
           if ./scripts/auto_check_all.sh; then
             echo "style_check_passed=true" >> $GITHUB_OUTPUT
