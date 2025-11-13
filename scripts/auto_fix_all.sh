@@ -65,7 +65,18 @@ else
 fi
 echo
 
-echo "4. Running dart format..."
+# Fourth fix is to ensure all functions that can be one-liners use arrow syntax
+echo "4. Ensuring all functions that can be one-liners use arrow syntax..."
+if bash scripts/styling/one_line_function_fix.sh --fix; then
+    echo "One-line functions have been fixed."
+    fixes_applied=$((fixes_applied + 1))
+else
+    echo "Nothing to fix, moving on..."
+fi
+echo
+
+# Fifth fix is to run dart format
+echo "5. Running dart format..."
 if bash scripts/styling/dart_format_files.sh; then
     echo "Dart formatting completed"
 else
@@ -98,6 +109,10 @@ if [[ $fixes_applied -gt 0 ]]; then
 
     echo "One-line if braces status:"
     bash scripts/no_braces_one_line_if.sh | tail -2
+    echo
+
+    echo "One-line function arrow syntax status:"
+    bash scripts/one_line_function_fix.sh | tail -2
     echo
 
 else
