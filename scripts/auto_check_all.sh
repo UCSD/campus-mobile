@@ -50,7 +50,7 @@ declare -A violation_counts
 
 # First Check - Ensure all static const variables use FULL_UPPER_SNAKE_CASE
 echo "1. Checking static constants have FULL_UPPER_SNAKE_CASE..."
-if bash ./scripts/checking/check_static_const_upper_snake_case.sh; then
+if bash ./scripts/checking/check_static_const_upper_snake_case.sh check; then
     check_results["static_const"]="PASSED"
     violation_counts["static_const"]=0
     echo "✅ All static constants follow UPPER_SNAKE_CASE naming convention!"
@@ -66,7 +66,7 @@ echo
 
 # Second Check - Ensure all package imports contain The/Full/Path
 echo "2. Checking package imports contain The/Full/Path..."
-if bash ./scripts/checking/check_package_imports.sh; then
+if bash ./scripts/checking/check_package_imports.sh check; then
     check_results["package_imports"]="PASSED"
     violation_counts["package_imports"]=0
     echo "✅ All imports use package import paths!"
@@ -81,7 +81,7 @@ echo
 
 # Third Check - Ensure all classes use UpperCamelCase
 echo "3. Checking classes have UpperCamelCase..."
-if bash ./scripts/checking/check_classes_have_upper_camel_case.sh; then
+if bash ./scripts/checking/check_classes_have_upper_camel_case.sh check; then
     check_results["class_naming"]="PASSED"
     violation_counts["class_naming"]=0
     echo "✅ All classes follow UpperCamelCase naming convention!"
@@ -96,7 +96,7 @@ echo
 
 # Fourth Check - Ensure all file and directory names use lower_snake_case
 echo "4. Checking file and directory names have lower_snake_case..."
-if bash ./scripts/checking/check_files_directories_have_snake_case.sh; then
+if bash ./scripts/checking/check_files_directories_have_snake_case.sh check; then
     check_results["file_dir_naming"]="PASSED"
     violation_counts["file_dir_naming"]=0
     echo "✅ All files and directories follow snake_case naming convention!"
@@ -111,7 +111,7 @@ echo
 
 # Fifth Check - Ensure all variable and function names use lowerCamelCase
 echo "5. Checking variable and function names have lowerCamelCase..."
-if bash ./scripts/checking/check_var_func_lower_camel_case.sh; then
+if bash ./scripts/checking/check_var_func_lower_camel_case.sh check; then
     check_results["variable_naming"]="PASSED"
     violation_counts["variable_naming"]=0
     echo "✅ All variables and functions follow lowerCamelCase naming convention!"
