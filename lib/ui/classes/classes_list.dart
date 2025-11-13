@@ -20,32 +20,24 @@ class ClassList extends StatelessWidget {
     Provider.of<ClassScheduleDataProvider>(context)
         .enrolledClasses
         .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
-    Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses
-        .keys
-        .forEach(
+    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses.keys.forEach(
       (key) {
-        if (Provider.of<ClassScheduleDataProvider>(context)
-            .enrolledClasses[key]!
-            .isNotEmpty) {
+        if (Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.isNotEmpty) {
           list.add(SliverStickyHeader(
             header: buildWeekDayHeader(context, key),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 if (key == 'MI') {
-                  return buildMidterm(
-                      Provider.of<ClassScheduleDataProvider>(context)
-                          .enrolledClasses[key]!
-                          .elementAt(index));
-                }
-                return buildClass(
-                    Provider.of<ClassScheduleDataProvider>(context)
-                        .enrolledClasses[key]!
-                        .elementAt(index));
-              },
-                  childCount: Provider.of<ClassScheduleDataProvider>(context)
+                  return buildMidterm(Provider.of<ClassScheduleDataProvider>(context)
                       .enrolledClasses[key]!
-                      .length),
+                      .elementAt(index));
+                }
+                return buildClass(Provider.of<ClassScheduleDataProvider>(context)
+                    .enrolledClasses[key]!
+                    .elementAt(index));
+              },
+                  childCount:
+                      Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.length),
             ),
           ));
         }
@@ -103,15 +95,13 @@ class ClassList extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     sectionData.subjectCode! + ' ' + sectionData.courseCode!,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
                   Text(
                     sectionData.courseTitle!,
                     style: TextStyle(fontSize: 17.0),
                   ),
-                  Text(sectionData.instructorName!,
-                      style: TextStyle(fontSize: 17.0)),
+                  Text(sectionData.instructorName!, style: TextStyle(fontSize: 17.0)),
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Row(children: [
@@ -163,8 +153,7 @@ class ClassList extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     sectionData.subjectCode! + ' ' + sectionData.courseCode!,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
                   Text(
                     sectionData.courseTitle!,
@@ -192,15 +181,11 @@ class ClassList extends StatelessWidget {
   }
 
   String? formatDate(String? date) {
-    if (date == null) {
-      return null;
-    }
+    if (date == null) return null;
 
     String month = date.substring(5, 7);
     String day = date.substring(8);
-    if (day.startsWith("0")) {
-      day = day.substring(1);
-    }
+    if (day.startsWith("0")) day = day.substring(1);
 
     switch (month) {
       case "01":

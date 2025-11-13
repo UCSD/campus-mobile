@@ -18,15 +18,12 @@ class ClassScheduleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {
-        if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
-            .isLoading)
+        if (Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading)
           return null;
         else
-          Provider.of<ClassScheduleDataProvider>(context, listen: false)
-              .fetchData();
+          Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
@@ -49,12 +46,8 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildClassScheduleCard(
-      BuildContext context,
-      List<SectionData> courseData,
-      int selectedCourse,
-      DateTime lastUpdated,
-      String nextDayWithClasses) {
+  Widget buildClassScheduleCard(BuildContext context, List<SectionData> courseData,
+      int selectedCourse, DateTime lastUpdated, String nextDayWithClasses) {
     try {
       final section = courseData[selectedCourse];
       return Padding(
@@ -74,17 +67,15 @@ class ClassScheduleCard extends StatelessWidget {
                         'Next Class',
                         style: TextStyle(
                           fontSize: 22.0,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? lightPrimaryColor
-                                  : darkPrimaryColor2,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : darkPrimaryColor2,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       SizedBox(height: 8),
                       // CSE 141L
-                      buildClassCode(context,
-                          '${section.subjectCode} ${section.courseCode}'),
+                      buildClassCode(context, '${section.subjectCode} ${section.courseCode}'),
                       SizedBox(height: 3),
                       // Laboratory
                       buildClassType(context, section.meetingType!),
@@ -93,8 +84,7 @@ class ClassScheduleCard extends StatelessWidget {
                       buildTimeRow(context, section.days!, section.time),
                       SizedBox(height: 8),
                       // Classroom Location:
-                      buildLocationRow(
-                          context, '${section.building} ${section.room}'),
+                      buildLocationRow(context, '${section.building} ${section.room}'),
                       SizedBox(height: 8),
                       // Evaluation Option:
                       buildGradeEvaluationRow(context, section.gradeOption),
@@ -120,10 +110,8 @@ class ClassScheduleCard extends StatelessWidget {
             Flexible(
               flex: 4, // Adjusts width of Right Hand Side
               child: Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.start, // Aligns content to the top
-                crossAxisAlignment:
-                    CrossAxisAlignment.start, // Align text to the left
+                mainAxisAlignment: MainAxisAlignment.start, // Aligns content to the top
+                crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
                 children: [
                   UpcomingCoursesList(),
                 ],

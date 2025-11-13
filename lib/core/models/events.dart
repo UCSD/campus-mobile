@@ -43,9 +43,7 @@ class EventModel {
         imageThumb = json["imageThumb"],
         link = json["link"],
         id = json["id"],
-        tags = json["tags"] == null
-            ? null
-            : List<String>.from(json["tags"].map((x) => x)),
+        tags = json["tags"] == null ? null : List<String>.from(json["tags"].map((x) => x)),
         location = json["location"];
 
   Map<String, dynamic> toJson() => {

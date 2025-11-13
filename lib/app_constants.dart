@@ -19,13 +19,11 @@ class RoutePaths {
   static const String EventDetailView = 'events/event_detail_view';
   static const String LinksViewAll = 'links/links_list';
   static const String ClassScheduleViewAll = 'class/classList';
-  static const String ManageAvailabilityView =
-      'availability/manage_locations_view';
+  static const String ManageAvailabilityView = 'availability/manage_locations_view';
   static const String ManageParkingView = 'parking/manage_parking_view';
   static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
   static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
-  static const String DiningViewAllDiningOptions =
-      'dining/view_all_dining_options';
+  static const String DiningViewAllDiningOptions = 'dining/view_all_dining_options';
   static const String DiningOptionDetailView = 'dining/option_detail_view';
   static const String DiningPaymentFilterView = "dining/payment_filter_view";
   // static const String DiningNutritionView = 'dining/dining_nutrition_view';
@@ -102,12 +100,9 @@ class ErrorConstants {
   static const authorizedPostErrors = 'Failed to upload data: ';
   static const authorizedPutErrors = 'Failed to update data: ';
   static const invalidBearerToken = 'Invalid bearer token';
-  static const notAcceptable =
-      'DioError [DioErrorType.response]: Http status error [406]';
-  static const duplicateRecord =
-      'DioError [DioErrorType.response]: Http status error [409]';
-  static const invalidMedia =
-      'DioError [DioErrorType.response]: Http status error [415]';
+  static const notAcceptable = 'DioError [DioErrorType.response]: Http status error [406]';
+  static const duplicateRecord = 'DioError [DioErrorType.response]: Http status error [409]';
+  static const invalidMedia = 'DioError [DioErrorType.response]: Http status error [415]';
   static const silentLoginFailed = "Silent login failed";
   static const locationFailed = "Location was not available";
 }
@@ -164,8 +159,7 @@ class NotificationsConstants {
       'It looks like you\'ve unsubscribed from all topics.\n\n' +
       'You can re-subscribe to specific topics via the Notifications Filter.';
   static const statusFetchProblem =
-      'There was a problem fetching your messages.\n\n' +
-          'Please try again soon.';
+      'There was a problem fetching your messages.\n\n' + 'Please try again soon.';
   static const statusFetching = 'Loading your notifications, please wait.';
   static const statusNone = '';
   static const statusNoMoreMessages = 'No more messages.';

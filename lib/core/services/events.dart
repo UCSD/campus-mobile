@@ -24,17 +24,16 @@ class EventsService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('EVENTS_ENDPOINT'), headers);
+      String _response =
+          await NetworkHelper.authorizedFetch(dotenv.get('EVENTS_ENDPOINT'), headers);
 
       /// parse data
       final data = eventModelFromJson(_response);
       _data = data;
       return true;
     } catch (e) {
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) return await fetchData();
-      }
+      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers))
+        return await fetchData();
       _error = e.toString();
       return false;
     } finally {

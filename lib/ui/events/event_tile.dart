@@ -33,7 +33,7 @@ class EventTile extends StatelessWidget {
   Widget _buildEventTile(BuildContext context) {
     return Container(
       width: tileWidth,
-      //height: 300,
+      // height: 300,
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(
@@ -59,8 +59,7 @@ class EventTile extends StatelessWidget {
 
     final startDate = df.format(localStart);
     final endDate = df.format(localEnd);
-    final dateDisplay =
-        startDate == endDate ? startDate : '$startDate - $endDate';
+    final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
     final startTime = DateFormat.jm().format(localStart);
     final endTime = DateFormat.jm().format(localEnd);
 
@@ -82,12 +81,10 @@ class EventTile extends StatelessWidget {
             children: [
               _eventImageLoader(data.imageThumb),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 child: Row(
-                  mainAxisAlignment: hasTime
-                      ? MainAxisAlignment.spaceEvenly
-                      : MainAxisAlignment.center,
+                  mainAxisAlignment:
+                      hasTime ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
@@ -106,8 +103,7 @@ class EventTile extends StatelessWidget {
                               ? Text('All day',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.light
+                                    color: Theme.of(context).brightness == Brightness.light
                                         ? lightPrimaryColor
                                         : Colors.white,
                                     fontWeight: FontWeight.w400,
@@ -158,8 +154,7 @@ Widget _eventImageLoader(String? url) {
                 child: CircularProgressIndicator(
                   color: Theme.of(context).colorScheme.secondary,
                   value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
+                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                       : null,
                 ),
               );
@@ -176,8 +171,7 @@ class TileTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
+      padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
       child: Center(
         // Centers the Text
         child: Text(
@@ -213,9 +207,7 @@ class TileTime extends StatelessWidget {
 
     final style = TextStyle(
       fontSize: 14,
-      color: Theme.of(context).brightness == Brightness.light
-          ? lightPrimaryColor
-          : Colors.white,
+      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
       fontWeight: FontWeight.w400,
     );
 
@@ -269,10 +261,9 @@ class StartEndDateContainer extends StatelessWidget {
                         date.split(' ')[0].toUpperCase(),
                         style: TextStyle(
                           fontSize: 20,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? lightPrimaryColor
-                                  : Colors.white,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : Colors.white,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -281,10 +272,9 @@ class StartEndDateContainer extends StatelessWidget {
                         date.split(' ')[1].toUpperCase(),
                         style: TextStyle(
                           fontSize: 22,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? lightPrimaryColor
-                                  : Colors.white,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : Colors.white,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -310,8 +300,7 @@ class StartEndDateContainer extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding:
-                      EdgeInsets.only(right: 8), // Adjust padding as needed
+                  padding: EdgeInsets.only(right: 8), // Adjust padding as needed
                   child: Column(
                     children: [
                       // End Date Day
@@ -319,10 +308,9 @@ class StartEndDateContainer extends StatelessWidget {
                         date.split(' ')[4].toUpperCase(),
                         style: TextStyle(
                           fontSize: 20,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? lightPrimaryColor
-                                  : Colors.white,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : Colors.white,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -331,10 +319,9 @@ class StartEndDateContainer extends StatelessWidget {
                         date.split(' ')[5].toUpperCase(),
                         style: TextStyle(
                           fontSize: 22,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? lightPrimaryColor
-                                  : Colors.white,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : Colors.white,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -347,8 +334,7 @@ class StartEndDateContainer extends StatelessWidget {
           // If it's a single date, display it normally
           else ...[
             Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 8.0), // Adjust the padding as needed
+              padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the padding as needed
               child: Column(
                 children: [
                   // Month

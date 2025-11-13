@@ -69,8 +69,8 @@
 // }
 //
 // Widget nutrientValues(BuildContext context, {required Map<String, dynamic> nutrientData}) {
-//   //final n = (1.3456).toStringAsFixed(2);
-//   //final s = double.parse("1.2345");
+//   // final n = (1.3456).toStringAsFixed(2);
+//   // final s = double.parse("1.2345");
 //   final nutrientTypes = [
 //     {"nutrient": "totalFat", "name": "Total Fat", "sub": false, "dly": 65.0},
 //     {
