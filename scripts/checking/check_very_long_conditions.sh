@@ -80,7 +80,12 @@ while IFS=: read -r file line_num line_content; do
       fi
 
       if [[ "$should_flag" == true ]]; then
-        echo "$file:$line_num: If condition is too long and should be split into variables" | tee -a "$violations_temp"
+        # Export violation for parent script if needed
+        if [[ -n "${VIOLATIONS_OUTPUT:-}" ]]; then
+          echo "$file:$line_num: If condition is too long and should be split into variables" >> "$violations_temp"
+        else
+          echo "$file:$line_num: If condition is too long and should be split into variables" | tee -a "$violations_temp"
+        fi
 
         # Truncate condition for display
         display_condition="$condition"
@@ -88,11 +93,6 @@ while IFS=: read -r file line_num line_content; do
           display_condition="${display_condition:0:100}..."
         fi
         echo "    Condition: $display_condition"
-
-        # Export violation for parent script if needed
-        if [[ -n "${VIOLATIONS_OUTPUT:-}" ]]; then
-          echo "$file:$line_num: If condition is too long and should be split into variables" >> "$VIOLATIONS_OUTPUT"
-        fi
       fi
     fi
   fi
@@ -102,9 +102,6 @@ done
 violations_found=$(wc -l < "$violations_temp" 2>/dev/null || echo "0")
 total_files=$(find lib -name "*.dart" -type f | wc -l)
 
-# Clean up
-rm -f "$violations_temp"
-
 echo ""
 echo "Summary:"
 echo "  Files checked: $total_files"
@@ -112,13 +109,13 @@ echo "  Total violations: $violations_found"
 
 # Export violations markers for parent script if needed
 if [[ -n "${VIOLATIONS_OUTPUT:-}" && $violations_found -gt 0 ]]; then
-  # Add markers around the violations
-  temp_file=$(mktemp)
-  echo "LONG_CONDITIONS_VIOLATIONS_START" > "$temp_file"
-  cat "$VIOLATIONS_OUTPUT" >> "$temp_file"
-  echo "LONG_CONDITIONS_VIOLATIONS_END" >> "$temp_file"
-  mv "$temp_file" "$VIOLATIONS_OUTPUT"
+  echo "LONG_CONDITIONS_VIOLATIONS_START" >> "$VIOLATIONS_OUTPUT"
+  cat "$violations_temp" >> "$VIOLATIONS_OUTPUT"
+  echo "LONG_CONDITIONS_VIOLATIONS_END" >> "$VIOLATIONS_OUTPUT"
 fi
+
+# Clean up
+rm -f "$violations_temp"
 
 if [[ $violations_found -gt 0 ]]; then
   echo ""
