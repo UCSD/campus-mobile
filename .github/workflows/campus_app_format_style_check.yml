@@ -181,6 +181,9 @@ jobs:
         run: |
           echo "Running coding style checks..."
 
+          # Make script executable
+          chmod +x ./scripts/auto_check_all.sh
+
           # Create a permanent violations file in a location accessible to all steps
           violations_file="/tmp/style_violations.txt"
           rm -f "$violations_file"
