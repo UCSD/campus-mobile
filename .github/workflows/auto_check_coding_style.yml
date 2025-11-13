@@ -36,25 +36,35 @@ jobs:
         run: |
           echo "Running coding style checks..."
 
-          # Create a temporary file to capture output and violations
-          violations_file=$(mktemp)
+          # Create a permanent violations file in a location accessible to all steps
+          violations_file="/tmp/style_violations.txt"
+          rm -f "$violations_file"
           export VIOLATIONS_OUTPUT="$violations_file"
 
           # Run the style check and capture exit code
           if ./scripts/auto_check_all.sh; then
             echo "style_check_passed=true" >> $GITHUB_OUTPUT
             echo "violations_found=false" >> $GITHUB_OUTPUT
+            echo "No violations found - checks passed!"
           else
             echo "style_check_passed=false" >> $GITHUB_OUTPUT
             echo "violations_found=true" >> $GITHUB_OUTPUT
+            echo "violations_file=$violations_file" >> $GITHUB_OUTPUT
 
-            # Save violations to a file that GitHub Actions can read
-            if [[ -f "$violations_file" ]]; then
-              cp "$violations_file" /tmp/style_violations.txt
-              echo "violations_file=/tmp/style_violations.txt" >> $GITHUB_OUTPUT
+            # Verify the violations file was created and has content
+            if [[ -f "$violations_file" && -s "$violations_file" ]]; then
+              echo "Violations file created successfully:"
+              wc -l "$violations_file"
+              echo "Sample violations:"
+              head -3 "$violations_file"
+            else
+              echo "Warning: Violations file was not created or is empty"
+              # Create a minimal violations file to ensure the PR comment step runs
+              echo "VIOLATIONS_DETAILS_START" > "$violations_file"
+              echo "Code style violations detected but details unavailable" >> "$violations_file"
+              echo "VIOLATIONS_DETAILS_END" >> "$violations_file"
             fi
 
-            # Also output a brief summary for the workflow logs
             echo "Code style violations detected. Check will fail."
           fi
 
@@ -71,12 +81,22 @@ jobs:
               // Read violations from the file
               const violationsFile = '${{ steps.style_check.outputs.violations_file }}';
 
+              console.log(`Looking for violations file at: ${violationsFile}`);
+
+              if (!violationsFile) {
+                console.log('No violations file path provided in outputs');
+                return;
+              }
+
               if (!fs.existsSync(violationsFile)) {
-                console.log('No violations file found, skipping comment');
+                console.log(`Violations file does not exist at: ${violationsFile}`);
                 return;
               }
 
               const violationsContent = fs.readFileSync(violationsFile, 'utf8');
+              console.log(`Violations file size: ${violationsContent.length} characters`);
+              console.log('First 200 characters of violations file:');
+              console.log(violationsContent.substring(0, 200));
 
               // Parse violations by sections
               let staticConstViolations = [];
@@ -89,38 +109,63 @@ jobs:
               const staticMatch = violationsContent.match(/STATIC_CONST_VIOLATIONS_START\n([\s\S]*?)\nSTATIC_CONST_VIOLATIONS_END/);
               if (staticMatch) {
                 staticConstViolations = staticMatch[1].split('\n').filter(line => line.trim());
+                console.log(`Found ${staticConstViolations.length} static const violations`);
               }
 
               // Extract package import violations
               const packageMatch = violationsContent.match(/PACKAGE_IMPORT_VIOLATIONS_START\n([\s\S]*?)\nPACKAGE_IMPORT_VIOLATIONS_END/);
               if (packageMatch) {
                 packageImportViolations = packageMatch[1].split('\n').filter(line => line.trim());
+                console.log(`Found ${packageImportViolations.length} package import violations`);
               }
 
               // Extract class naming violations
               const classMatch = violationsContent.match(/CLASS_NAMING_VIOLATIONS_START\n([\s\S]*?)\nCLASS_NAMING_VIOLATIONS_END/);
               if (classMatch) {
                 classNamingViolations = classMatch[1].split('\n').filter(line => line.trim());
+                console.log(`Found ${classNamingViolations.length} class naming violations`);
               }
 
               // Extract file/dir violations
               const fileDirMatch = violationsContent.match(/FILE_DIR_NAMING_VIOLATIONS_START\n([\s\S]*?)\nFILE_DIR_NAMING_VIOLATIONS_END/);
               if (fileDirMatch) {
                 fileDirViolations = fileDirMatch[1].split('\n').filter(line => line.trim());
+                console.log(`Found ${fileDirViolations.length} file/directory violations`);
               }
 
               // Extract variable naming violations
               const variableMatch = violationsContent.match(/VARIABLE_NAMING_VIOLATIONS_START\n([\s\S]*?)\nVARIABLE_NAMING_VIOLATIONS_END/);
               if (variableMatch) {
                 variableViolations = variableMatch[1].split('\n').filter(line => line.trim());
+                console.log(`Found ${variableViolations.length} variable naming violations`);
               }
 
               // Count total violations
               const totalViolations = staticConstViolations.length + packageImportViolations.length +
                                     classNamingViolations.length + fileDirViolations.length + variableViolations.length;
 
+              console.log(`Total violations parsed: ${totalViolations}`);
+
               if (totalViolations === 0) {
-                console.log('No violations found in parsed data');
+                console.log('No violations found in parsed data - checking raw content for any violations');
+                // If no structured violations found, create a basic comment
+                const commentBody = `## 🚨 Code Style Violations Found
+
+            Code style violations were detected, but there was an issue parsing the detailed violation information.
+
+            Please run \`./scripts/auto_check_all.sh\` locally to see the specific violations that need to be fixed.
+
+            ---
+            *This check will continue to fail until all violations are resolved.*`;
+
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number,
+                  body: commentBody
+                });
+
+                console.log('Created basic PR comment due to parsing issues');
                 return;
               }
 
@@ -197,7 +242,29 @@ jobs:
 
             } catch (error) {
               console.error('Error creating PR comment:', error.message);
-              // Don't fail the workflow if commenting fails
+              console.error('Stack trace:', error.stack);
+
+              // Create a fallback comment
+              try {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number,
+                  body: `## 🚨 Code Style Violations Found
+
+            Code style violations were detected, but there was an error processing the violation details.
+
+            **Error**: ${error.message}
+
+            Please run \`./scripts/auto_check_all.sh\` locally to see the specific violations that need to be fixed.
+
+            ---
+            *This check will continue to fail until all violations are resolved.*`
+                });
+                console.log('Created fallback PR comment');
+              } catch (fallbackError) {
+                console.error('Failed to create fallback comment:', fallbackError.message);
+              }
             }
 
       - name: Fail if violations found
