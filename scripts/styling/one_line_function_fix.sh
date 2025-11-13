@@ -60,8 +60,9 @@ while IFS= read -r filepath; do
         current_line="${file_lines[$i]}"
 
         # Check for function declaration ending with ) {
-        # This matches: returnType functionName(...) {
-        if [[ "$current_line" =~ ^[[:space:]]*[a-zA-Z_]+.*[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*\(.*\)[[:space:]]*\{[[:space:]]*$ ]]; then
+        # This should match: returnType functionName(...) { but NOT if (...) {, while (...) {, etc.
+        if [[ "$current_line" =~ ^[[:space:]]*[a-zA-Z_]+.*[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*\(.*\)[[:space:]]*\{[[:space:]]*$ ]] && \
+           [[ ! "$current_line" =~ ^[[:space:]]*(if|while|for|switch|try)[[:space:]]*\( ]]; then
             next_line_idx=$((i + 1))
             closing_brace_idx=$((i + 2))
 
