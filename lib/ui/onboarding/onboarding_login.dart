@@ -109,7 +109,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 child: const FractionallySizedBox(
                   widthFactor: 0.64722222,
                   child: const Text(
-                    // TODO: the font here seems a bit light. Might need to swap that out later
+                    // TODO: the font here seems a bit light. Might need to swap that out later - November 2025
                     "Your personalized gateway to campus life, events, news and more.",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
@@ -212,7 +212,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     ),
                     onTap: () async {
                       try {
-                        /// TODO: Update link to redirect to password reset
+                        // TODO: Update link to redirect to password reset
                         String link =
                             'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
                         await launchUrl(Uri.parse(link),
@@ -269,7 +269,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         ),
       );
 
-  // TODO: change the font for the password field (it's a lighter gray than what is currently there)
+  // TODO: change the font for the password field (it's a lighter gray than what is currently there) - November 2025
   static Widget _buildInputField(
           InputDecoration decoration, TextEditingController controller,
           {TextInputType? keyboardType, bool obscureText = false}) =>

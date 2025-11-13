@@ -146,9 +146,7 @@ class CardContainer extends StatelessWidget {
       );
     } else if (titleText == "PARKING") {
       double _maxHeight = 320;
-      if (MediaQuery.of(context).size.width > 600) {
-        _maxHeight = 800;
-      }
+      if (MediaQuery.of(context).size.width > 600) _maxHeight = 800;
       return Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: 320, maxHeight: _maxHeight),

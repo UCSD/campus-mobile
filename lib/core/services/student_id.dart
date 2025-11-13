@@ -18,7 +18,7 @@ class StudentIdService {
   StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
   StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel();
 
-  //Removed term (not used)
+  // Removed term (not used)
   Future<bool> fetchStudentIdName(Map<String, String> headers) async {
     _error = null;
     _isLoading = true;

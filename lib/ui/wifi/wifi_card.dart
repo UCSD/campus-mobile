@@ -337,8 +337,8 @@ class _WiFiCardState extends State<WiFiCard>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TEST SPEED
-            // TODO: This brings you back to the initial state, but that requires two "TEST SPEED" Button clicks.
-            // TODO: For the UI people, do you want 1 click? or 2 clicks but the first one indicating to "Reset"
+            // TODO: This brings you back to the initial state, but that requires two "TEST SPEED" Button clicks. - November 2025
+            // TODO: For the UI people, do you want 1 click? or 2 clicks but the first one indicating to "Reset" - November 2025
             ActionButton(
                 buttonText: 'TEST SPEED',
                 onPressed: () {
@@ -361,7 +361,7 @@ class _WiFiCardState extends State<WiFiCard>
             ActionLink(
               buttonText: 'REPORT ISSUE',
               onPressed:
-                  _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED?
+                  _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED? - November 2025
                       ? () {
                           _speedTestProvider.reportIssue();
                           showDialog(

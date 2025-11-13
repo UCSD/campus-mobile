@@ -22,7 +22,7 @@ class NoticesDataProvider extends ChangeNotifier {
       _noticesModel = _noticesService.noticesModel;
       _lastUpdated = DateTime.now();
     } else {
-      /// TODO: determine what error to show to the user
+      // TODO: determine what error to show to the user
       _error = _noticesService.error;
     }
     _isLoading = false;

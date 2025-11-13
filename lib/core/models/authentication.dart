@@ -52,14 +52,10 @@ class AuthenticationModel extends HiveObject {
   /// Checks if the token we got back is expired
   bool isLoggedIn(DateTime? lastUpdated) {
     /// User has not logged in previously - isLoggedIn FALSE
-    if (lastUpdated == null) {
-      return false;
-    }
+    if (lastUpdated == null) return false;
 
     /// User has no expiration or accessToken - isLoggedIn FALSE
-    if (expiration == null || accessToken == null) {
-      return false;
-    }
+    if (expiration == null || accessToken == null) return false;
 
     /// User has expiration and accessToken
     if (DateTime.now()
