@@ -118,35 +118,32 @@ fi
 rm -f "$violations_temp"
 
 if [[ $violations_found -gt 0 ]]; then
-  echo ""
+  echo
   echo "Guidelines for if statement conditions:"
   echo "  - BAD:"
   echo "    if (userDataProvider.isLoggedIn &&"
   echo "        (userDataProvider.userProfileModel.classifications?.staff ?? false)) {"
   echo "      // action"
   echo "    }"
-  echo ""
-  echo "  - GOOD:"
+  echo
+  echo "  + GOOD:"
   echo "    var isLoggedIn = userDataProvider.isLoggedIn;"
   echo "    var isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;"
   echo "    if (isLoggedIn && isStaff) {"
   echo "      // action"
   echo "    }"
-  echo ""
+  echo
   echo "Benefits of splitting long conditions:"
   echo "  - Improved readability and maintainability"
   echo "  - Easier debugging and testing"
   echo "  - Better variable naming provides self-documentation"
   echo "  - Reduced cognitive complexity"
-  echo ""
 
   if [[ "$MODE" == "check" ]]; then
     exit 1
   else
     echo "Run with 'check' argument for CI/CD integration."
   fi
-else
-  echo "All if statement conditions are appropriately sized!"
 fi
 
 if [[ $violations_found -gt 0 ]]; then

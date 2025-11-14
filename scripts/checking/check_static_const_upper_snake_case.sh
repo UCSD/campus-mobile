@@ -141,8 +141,6 @@ if [[ $violations_found -gt 0 ]]; then
     echo "Run with 'fix' argument to see suggested corrections."
     echo "Run with 'check' argument for CI/CD integration."
   fi
-else
-  echo "All static constants follow UPPER_SNAKE_CASE naming convention!"
 fi
 
 if [[ $violations_found -gt 0 ]]; then

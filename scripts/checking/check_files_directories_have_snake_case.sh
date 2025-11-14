@@ -161,6 +161,5 @@ if [[ $violations_found -gt 0 ]]; then
         exit 1
     fi
 else
-    echo "All files and directories follow snake_case naming convention"
     exit 0
 fi

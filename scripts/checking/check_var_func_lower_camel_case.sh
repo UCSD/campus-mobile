@@ -112,7 +112,7 @@ rm -f "$temp_results"
 # Count total files processed (approximate)
 total_files=$(find lib -name "*.dart" -type f | wc -l)
 
-echo ""
+echo
 echo "Summary:"
 echo "  Files checked: $total_files"
 echo "  Total violations: $violations_found"
@@ -144,12 +144,11 @@ if [[ -n "${VIOLATIONS_OUTPUT:-}" ]]; then
 fi
 
 if [[ $violations_found -gt 0 ]]; then
-  echo ""
+  echo
   echo "lowerCamelCase guidelines:"
   echo "  - Variables: myVariable, userName, isLoggedIn"
   echo "  - Functions: calculateTotal(), getUserData(), handleClick()"
   echo "  - Private members: _privateVariable, _helperFunction()"
-  echo ""
 
   if [[ "$MODE" == "fix" ]]; then
     echo "Auto-fix mode is experimental and may require manual review."
@@ -160,8 +159,6 @@ if [[ $violations_found -gt 0 ]]; then
     echo "Run with 'fix' argument to see suggested corrections."
     echo "Run with 'check' argument for CI/CD integration."
   fi
-else
-  echo "All variables and functions follow lowerCamelCase naming convention!"
 fi
 
 if [[ $violations_found -gt 0 ]]; then

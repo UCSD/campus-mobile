@@ -19,9 +19,8 @@ if [[ "$1" == "--dry-run" ]]; then
 fi
 
 echo "==================================="
-echo "Auto Checking Code Styling..."
+echo "Checking Current Code Style..."
 echo "==================================="
-echo
 
 if [[ "$DRY_RUN" == "true" ]]; then
     echo "DRY RUN MODE - No changes will be made"
@@ -71,6 +70,7 @@ else
     total_violations=$((total_violations + static_const_violations))
 fi
 echo
+echo "====================================================================="
 
 # Second Check - Ensure all package imports contain The/Full/Path
 echo "2. Checking package imports contain The/Full/Path..."
@@ -86,6 +86,7 @@ else
     total_violations=$((total_violations + package_import_violations))
 fi
 echo
+echo "====================================================================="
 
 # Third Check - Ensure all classes use UpperCamelCase
 echo "3. Checking classes have UpperCamelCase..."
@@ -101,6 +102,7 @@ else
     total_violations=$((total_violations + class_naming_violations))
 fi
 echo
+echo "====================================================================="
 
 # Fourth Check - Ensure all file and directory names use lower_snake_case
 echo "4. Checking file and directory names have lower_snake_case..."
@@ -116,6 +118,7 @@ else
     total_violations=$((total_violations + file_dir_violations))
 fi
 echo
+echo "====================================================================="
 
 # Fifth Check - Ensure all variable and function names use lowerCamelCase
 echo "5. Checking variable and function names have lowerCamelCase..."
@@ -131,6 +134,7 @@ else
     total_violations=$((total_violations + variable_violations))
 fi
 echo
+echo "====================================================================="
 
 # Sixth Check - Ensure no very long if statement conditions
 echo "6. Checking very long if statement conditions..."
@@ -145,13 +149,11 @@ else
     violations=$((violations + 1))
     total_violations=$((total_violations + long_condition_violations))
 fi
-
-echo "==============================="
+echo
+echo "====================================================================="
 echo "Code Style Check Summary"
-echo "==============================="
 echo "Total violation categories: $violations/5"
 echo "Total individual violations: $total_violations"
-echo
 
 if [[ $violations -eq 0 ]]; then
     echo "All checks passed! Your code follows all style guidelines."
@@ -186,8 +188,6 @@ else
     [[ "${check_results[file_dir_naming]}" == "FAILED" ]] && echo "  - File/Directory Naming: ${violation_counts[file_dir_naming]} violations"
     [[ "${check_results[variable_naming]}" == "FAILED" ]] && echo "  - Variable Naming: ${violation_counts[variable_naming]} violations"
     [[ "${check_results[long_conditions]}" == "FAILED" ]] && echo "  - Very Long If Statement Conditions: ${violation_counts[long_conditions]} violations"
-    echo
     echo "Please review the detailed output above and fix the violations before committing."
-    echo
     exit 1
 fi

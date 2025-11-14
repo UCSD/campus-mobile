@@ -100,6 +100,5 @@ if [[ $violations_found -gt 0 ]]; then
     echo "   BAD:  import '../../core/providers/map.dart';"
     exit 1
 else
-    echo "All imports use package import paths"
     exit 0
 fi
