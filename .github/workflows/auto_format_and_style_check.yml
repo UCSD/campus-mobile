@@ -52,15 +52,6 @@ jobs:
 
             if ! git diff --staged --quiet; then
               git commit -m "Auto-formatted and fixed code style issues [CI]" \
-                         -m "Applied comprehensive code fixes including:" \
-                         -m "- Dart formatting (100-character line length)" \
-                         -m "- One-lined applicable if statements" \
-                         -m "- One-line functions converted to arrow syntax" \
-                         -m "- Fixed comment spacing" \
-                         -m "- Added dates to TODO comments if missing" \
-                         -m "- Trailing whitespace removal" \
-                         -m "- Final newline enforcement" \
-                         -m "" \
                          -m "Co-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
               git push origin HEAD:${{ github.head_ref }}
               echo "changes_made=true" >> $GITHUB_OUTPUT
@@ -134,12 +125,12 @@ jobs:
                 // Create a simplified violations comment based on the detected violations
                 commentBody = `## Code Style Violations Found
 
-            This PR contains coding style violations that must be manually addressed before merging.
+            **This PR contains coding style violations that must be manually addressed before merging.**
 
             Based on the automated check, violations were found in the following categories:
-            - Static Constants (UPPER_SNAKE_CASE)
-            - Variable Naming (lowerCamelCase)
-            - Long If Statement Conditions
+            - Static Constants (must be UPPER_SNAKE_CASE)
+            - Variable Naming (must be lowerCamelCase)
+            - Long If Statement Conditions (must be calculated beforehand to keep conditions readable)
 
             ## Style Guidelines
 
@@ -149,16 +140,14 @@ jobs:
             - **Files/Directories**: Use \`snake_case\` (e.g., \`user_profile.dart\`)
             - **Imports**: Use full package paths (e.g., \`package:app_name/path/file.dart\`)
             - **If Conditions**: Split long/complex conditions into variables for readability
-
-            ### Long If Conditions Example:
-            **BAD:**
+            **Bad if condition:**
             \`\`\`dart
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
               // action
             }
             \`\`\`
-            **GOOD:**
+            **Good if condition:**
             \`\`\`dart
             var isLoggedIn = userDataProvider.isLoggedIn;
             var isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
@@ -167,12 +156,12 @@ jobs:
             }
             \`\`\`
 
-            ## How to Fix
+            ## To fix these violations:
 
-            1. Run \`./scripts/auto_check_all.sh\` locally to see detailed violations
-            2. Apply the suggested corrections
-            3. Re-run the script to verify fixes
-            4. Commit your changes
+            1. Run \`./scripts/auto_check_all.sh\` locally to see where these violations are.
+            2. Apply the suggested corrections.
+            3. Re-run the script to verify fixes.
+            4. Commit your changes.
 
             ---
             *This check will continue to fail until all violations are resolved.*`;
