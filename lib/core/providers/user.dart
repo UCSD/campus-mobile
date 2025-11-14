@@ -414,6 +414,6 @@ class UserDataProvider extends ChangeNotifier {
   UserProfileModel get userProfileModel => _userProfileModel;
   AuthenticationModel get authenticationModel => _authenticationModel;
 
-  // TODO: fix this after UserProfileModel's nullability is fixed
+  // TODO: fix this after UserProfileModel's nullability is fixed - November 2025
   List<String?>? get subscribedTopics => _userProfileModel.subscribedTopics;
 }

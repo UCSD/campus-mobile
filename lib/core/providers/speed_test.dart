@@ -13,7 +13,7 @@ import 'package:path_provider/path_provider.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
   SpeedTestProvider() {
-    // TODO: probably is a bug! Async functions should not be be run in the constructor
+    // TODO: probably is a bug! Async functions should not be be run in the constructor - November 2025
     init();
   }
 
