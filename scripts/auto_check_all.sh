@@ -152,7 +152,7 @@ fi
 echo
 echo "====================================================================="
 echo "Code Style Check Summary"
-echo "Total violation categories: $violations/5"
+echo "Total violation categories: $violations/6"
 echo "Total individual violations: $total_violations"
 
 if [[ $violations -eq 0 ]]; then
@@ -168,7 +168,7 @@ else
     # Export detailed violations for the GitHub workflow
     if [[ -s "$violations_file" ]]; then
         echo "VIOLATIONS_DETAILS_START" >> "$violations_file"
-        echo "Total Categories Failed: $violations/5" >> "$violations_file"
+        echo "Total Categories Failed: $violations/6" >> "$violations_file"
         echo "Total Individual Violations: $total_violations" >> "$violations_file"
         echo "Check Results:" >> "$violations_file"
         echo "- Static Constants (UPPER_SNAKE_CASE): ${check_results[static_const]} (${violation_counts[static_const]} violations)" >> "$violations_file"
