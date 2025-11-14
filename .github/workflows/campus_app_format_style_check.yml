@@ -2,127 +2,106 @@ name: Campus App Code Formatting and Style Check
 
 on:
   pull_request:
-    branches:
-      - '**'
+    branches: ['**']
 
 permissions:
   contents: write
   pull-requests: write
 
+env:
+  FLUTTER_VERSION: '3.32.0'
+
 jobs:
-  Auto_Format:
+  format_and_check:
     runs-on: ubuntu-latest
     outputs:
-      changes_made: ${{ steps.format_step.outputs.changes_made }}
-      files_changed: ${{ steps.format_step.outputs.files_changed }}
+      changes_made: ${{ steps.format.outputs.changes_made }}
+      violations_found: ${{ steps.check.outputs.violations_found }}
     steps:
-      - name: Checkout code
+      - name: Setup workspace
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.head_ref }}
 
-      - name: Set up Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.0'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
-      - name: Get dependencies
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Auto format code (if needed)
-        id: format_step
+      - name: Auto format code
+        id: format
         run: |
-          echo "Running comprehensive code formatting and fixes..."
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-          # Run the comprehensive auto-fix script
-          echo "Running auto_fix_all.sh script..."
           chmod +x ./scripts/auto_fix_all.sh
           ./scripts/auto_fix_all.sh
 
-          # Check if there are any changes to commit
           if git diff --quiet && git diff --staged --quiet; then
-            echo "All code is properly formatted and follows style guidelines. Nothing to commit."
             echo "changes_made=false" >> $GITHUB_OUTPUT
-            exit 0
           else
-            echo "Changes detected. Capturing file changes..."
-
-            # Capture the list of changed files
-            changed_files=$(git diff --name-only)
-            echo "Changed files:"
-            echo "$changed_files"
-
-            # Count changes
-            files_changed=$(echo "$changed_files" | wc -l)
-
-            # Capture diff stats
-            diff_stats=$(git diff --stat)
-
-            echo "Changes detected. Staging and committing fixes..."
-
-            # Add all changed files
+            git diff --name-only > /tmp/changed_files.txt
+            git diff --stat > /tmp/diff_stats.txt
             git add -A
 
-            # Double-check there are changes to commit
-            if git diff --staged --quiet; then
-              echo "No changes to commit after staging."
+            if ! git diff --staged --quiet; then
+              git commit -m "Auto-formatted and fixed code style issues [CI]" \
+                         -m "Applied comprehensive code fixes including:" \
+                         -m "- Dart formatting (100-character line length)" \
+                         -m "- One-lined applicable if statements" \
+                         -m "- One-line functions converted to arrow syntax" \
+                         -m "- Fixed comment spacing" \
+                         -m "- Added dates to TODO comments if missing" \
+                         -m "- Trailing whitespace removal" \
+                         -m "- Final newline enforcement" \
+                         -m "" \
+                         -m "Co-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+              git push origin HEAD:${{ github.head_ref }}
+              echo "changes_made=true" >> $GITHUB_OUTPUT
+            else
               echo "changes_made=false" >> $GITHUB_OUTPUT
-              exit 0
             fi
-
-            # Bot is the author of this commit only
-            git commit -m "Auto-formatted and fixed code style issues [CI]" \
-                       -m "Applied comprehensive code fixes including:" \
-                       -m "- Dart formatting (100-character line length)" \
-                       -m "- One-lined applicable if statements" \
-                        -m "- One-line functions converted to arrow syntax" \
-                       -m "- Fixed comment spacing" \
-                       -m "- Added dates to TODO comments if missing" \
-                       -m "- Trailing whitespace removal" \
-                       -m "- Final newline enforcement" \
-                       -m "" \
-                       -m "Co-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-            git push origin HEAD:${{ github.head_ref }}
-            echo "Code fixes complete. Changes committed and pushed."
-            git log --oneline -1
-
-            # Set output variables for the next step
-            echo "changes_made=true" >> $GITHUB_OUTPUT
-            echo "files_changed=$files_changed" >> $GITHUB_OUTPUT
-
-            # Save changed files list to a temp file for the next step
-            echo "$changed_files" > /tmp/changed_files.txt
-
-            # Save diff stats
-            echo "$diff_stats" > /tmp/diff_stats.txt
           fi
 
-      - name: Summary of Changes
-        if: github.event_name == 'pull_request' && steps.format_step.outputs.changes_made == 'true'
+      - name: Check code style violations
+        id: check
+        run: |
+          chmod +x ./scripts/auto_check_all.sh
+          violations_file="/tmp/style_violations.txt"
+          export VIOLATIONS_OUTPUT="$violations_file"
+
+          if ./scripts/auto_check_all.sh; then
+            echo "violations_found=false" >> $GITHUB_OUTPUT
+          else
+            echo "violations_found=true" >> $GITHUB_OUTPUT
+            echo "violations_file=$violations_file" >> $GITHUB_OUTPUT
+
+            if [[ ! -f "$violations_file" || ! -s "$violations_file" ]]; then
+              echo "VIOLATIONS_DETAILS_START" > "$violations_file"
+              echo "Code style violations detected but details unavailable" >> "$violations_file"
+              echo "VIOLATIONS_DETAILS_END" >> "$violations_file"
+            fi
+          fi
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && (steps.format.outputs.changes_made == 'true' || steps.check.outputs.violations_found == 'true')
         uses: actions/github-script@v7
         with:
           script: |
-            const { owner, repo } = context.repo;
-            const issue_number = context.issue.number;
             const fs = require('fs');
+            const { owner, repo, number: issue_number } = context.repo;
 
-            try {
-              // Read the changed files and diff stats
+            function createFormatComment() {
               const changedFiles = fs.readFileSync('/tmp/changed_files.txt', 'utf8').trim().split('\n').filter(f => f);
               const diffStats = fs.readFileSync('/tmp/diff_stats.txt', 'utf8').trim();
-              const filesChanged = '${{ steps.format_step.outputs.files_changed }}';
 
-              // Build the file list for the comment
-              const fileList = changedFiles.length <= 10
-                ? changedFiles.map(file => `  • \`${file}\``).join('\n')
-                : changedFiles.slice(0, 10).map(file => `  • \`${file}\``).join('\n') + `\n  • ... and ${changedFiles.length - 10} more files`;
-
-              const commentBody = `**Auto-formatting Applied**
+              return `**Auto-formatting Applied**
 
             I've automatically applied code formatting and style fixes to this PR.
 
@@ -135,7 +114,7 @@ jobs:
             - Trailing whitespace removal
             - Final newline enforcement
 
-            ## Files Modified (${filesChanged} total):
+            ## Files Modified (${changedFiles.length} total):
             \`\`\`
             ${diffStats}
             \`\`\`
@@ -143,183 +122,25 @@ jobs:
             The changes have been committed and are ready for review. No action needed on your part!
 
             *This comment was automatically generated by the auto-formatting workflow.*`;
-
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number,
-                body: commentBody
-              });
-
-              console.log(`PR comment added successfully for ${filesChanged} changed files`);
-
-            } catch (error) {
-              console.error('Error adding PR comment:', error.message);
             }
 
-  Code_Style_Check:
-    runs-on: ubuntu-latest
-    needs: Auto_Format
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # Fetch the latest changes that might have been pushed by auto-format job
-          ref: ${{ github.head_ref }}
+            function parseViolations(content) {
+              const violations = {};
+              const types = ['STATIC_CONST', 'PACKAGE_IMPORT', 'CLASS_NAMING', 'FILE_DIR_NAMING', 'VARIABLE_NAMING', 'LONG_CONDITIONS'];
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.32.0'
-          cache: true
+              types.forEach(type => {
+                const regex = new RegExp(`${type}_VIOLATIONS_START\\n([\\s\\S]*?)\\n${type}_VIOLATIONS_END`);
+                const match = content.match(regex);
+                violations[type] = match ? match[1].split('\n').filter(line => line.trim()) : [];
+              });
 
-      - name: Get dependencies
-        run: flutter pub get
+              return violations;
+            }
 
-      - name: Check Code Style (for violations)
-        id: style_check
-        run: |
-          echo "Running coding style checks..."
-
-          # Make script executable
-          chmod +x ./scripts/auto_check_all.sh
-
-          # Create a permanent violations file in a location accessible to all steps
-          violations_file="/tmp/style_violations.txt"
-          rm -f "$violations_file"
-          export VIOLATIONS_OUTPUT="$violations_file"
-
-          # Debug: Verify the environment variable is set
-          echo "VIOLATIONS_OUTPUT is set to: $VIOLATIONS_OUTPUT"
-          echo "File exists before script: $(test -f "$violations_file" && echo 'YES' || echo 'NO')"
-
-          # Run the style check and capture exit code
-          if ./scripts/auto_check_all.sh; then
-            echo "style_check_passed=true" >> $GITHUB_OUTPUT
-            echo "violations_found=false" >> $GITHUB_OUTPUT
-            echo "No violations found - checks passed!"
-          else
-            echo "style_check_passed=false" >> $GITHUB_OUTPUT
-            echo "violations_found=true" >> $GITHUB_OUTPUT
-            echo "violations_file=$violations_file" >> $GITHUB_OUTPUT
-
-            # Debug: Show the actual violations file content
-            if [[ -f "$violations_file" ]]; then
-              echo "=== VIOLATIONS FILE CONTENT (for debugging) ==="
-              cat "$violations_file"
-              echo "=== END VIOLATIONS FILE ==="
-            fi
-
-            # Verify the violations file was created and has content
-            if [[ -f "$violations_file" && -s "$violations_file" ]]; then
-              echo "Violations file created successfully:"
-              wc -l "$violations_file"
-              echo "Sample violations:"
-              head -3 "$violations_file"
-            else
-              echo "Warning: Violations file was not created or is empty"
-              # Create a minimal violations file to ensure the PR comment step runs
-              echo "VIOLATIONS_DETAILS_START" > "$violations_file"
-              echo "Code style violations detected but details unavailable" >> "$violations_file"
-              echo "VIOLATIONS_DETAILS_END" >> "$violations_file"
-            fi
-
-            echo "Code style violations detected. Check will fail."
-          fi
-
-      - name: Create PR Comment with Violations
-        if: github.event_name == 'pull_request' && steps.style_check.outputs.violations_found == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const { owner, repo } = context.repo;
-            const issue_number = context.issue.number;
-
-            try {
-              // Read violations from the file
-              const violationsFile = '${{ steps.style_check.outputs.violations_file }}';
-
-              console.log(`Looking for violations file at: ${violationsFile}`);
-
-              if (!violationsFile) {
-                console.log('No violations file path provided in outputs');
-                return;
-              }
-
-              if (!fs.existsSync(violationsFile)) {
-                console.log(`Violations file does not exist at: ${violationsFile}`);
-                return;
-              }
-
-              const violationsContent = fs.readFileSync(violationsFile, 'utf8');
-              console.log(`Violations file size: ${violationsContent.length} characters`);
-              console.log('First 200 characters of violations file:');
-              console.log(violationsContent.substring(0, 200));
-
-              // Parse violations by sections
-              let staticConstViolations = [];
-              let packageImportViolations = [];
-              let classNamingViolations = [];
-              let fileDirViolations = [];
-              let variableViolations = [];
-              let longConditionsViolations = [];
-
-              // Extract static const violations
-              const staticMatch = violationsContent.match(/STATIC_CONST_VIOLATIONS_START\n([\s\S]*?)\nSTATIC_CONST_VIOLATIONS_END/);
-              if (staticMatch) {
-                staticConstViolations = staticMatch[1].split('\n').filter(line => line.trim());
-                console.log(`Found ${staticConstViolations.length} static const violations`);
-              }
-
-              // Extract package import violations
-              const packageMatch = violationsContent.match(/PACKAGE_IMPORT_VIOLATIONS_START\n([\s\S]*?)\nPACKAGE_IMPORT_VIOLATIONS_END/);
-              if (packageMatch) {
-                packageImportViolations = packageMatch[1].split('\n').filter(line => line.trim());
-                console.log(`Found ${packageImportViolations.length} package import violations`);
-              }
-
-              // Extract class naming violations
-              const classMatch = violationsContent.match(/CLASS_NAMING_VIOLATIONS_START\n([\s\S]*?)\nCLASS_NAMING_VIOLATIONS_END/);
-              if (classMatch) {
-                classNamingViolations = classMatch[1].split('\n').filter(line => line.trim());
-                console.log(`Found ${classNamingViolations.length} class naming violations`);
-              }
-
-              // Extract file/dir violations
-              const fileDirMatch = violationsContent.match(/FILE_DIR_NAMING_VIOLATIONS_START\n([\s\S]*?)\nFILE_DIR_NAMING_VIOLATIONS_END/);
-              if (fileDirMatch) {
-                fileDirViolations = fileDirMatch[1].split('\n').filter(line => line.trim());
-                console.log(`Found ${fileDirViolations.length} file/directory violations`);
-              }
-
-              // Extract variable naming violations
-              const variableMatch = violationsContent.match(/VARIABLE_NAMING_VIOLATIONS_START\n([\s\S]*?)\nVARIABLE_NAMING_VIOLATIONS_END/);
-              if (variableMatch) {
-                variableViolations = variableMatch[1].split('\n').filter(line => line.trim());
-                console.log(`Found ${variableViolations.length} variable naming violations`);
-              }
-
-              // Extract long conditions violations
-              const longConditionsMatch = violationsContent.match(/LONG_CONDITIONS_VIOLATIONS_START\n([\s\S]*?)\nLONG_CONDITIONS_VIOLATIONS_END/);
-              if (longConditionsMatch) {
-                longConditionsViolations = longConditionsMatch[1].split('\n').filter(line => line.trim());
-                console.log(`Found ${longConditionsViolations.length} long conditions violations`);
-              }
-
-              // Count total violations
-              const totalViolations = staticConstViolations.length + packageImportViolations.length +
-                                    classNamingViolations.length + fileDirViolations.length +
-                                    variableViolations.length + longConditionsViolations.length;
-
-              console.log(`Total violations parsed: ${totalViolations}`);
-
-              if (totalViolations === 0) {
-                console.log('No violations found in parsed data - checking raw content for any violations');
-                // If no structured violations found, create a basic comment
-                const commentBody = `## 🚨 Code Style Violations Found
+            function createViolationsComment(violations) {
+              const totalCount = Object.values(violations).reduce((sum, arr) => sum + arr.length, 0);
+              if (totalCount === 0) {
+                return `## Code Style Violations Found
 
             Code style violations were detected, but there was an issue parsing the detailed violation information.
 
@@ -327,68 +148,31 @@ jobs:
 
             ---
             *This check will continue to fail until all violations are resolved.*`;
+              }
 
-                await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number,
-                  body: commentBody
+              const sectionMap = {
+                STATIC_CONST: 'Static Constants (UPPER_SNAKE_CASE)',
+                PACKAGE_IMPORT: 'Package Imports',
+                CLASS_NAMING: 'Class Naming (UpperCamelCase)',
+                FILE_DIR_NAMING: 'File/Directory Naming (snake_case)',
+                VARIABLE_NAMING: 'Variable Naming (lowerCamelCase)',
+                LONG_CONDITIONS: 'Long If Conditions'
+              };
+
+              const sections = Object.entries(violations)
+                .filter(([_, items]) => items.length > 0)
+                .map(([type, items]) => {
+                  const display = items.slice(0, 10);
+                  const remaining = items.length - display.length;
+                  return `### ${sectionMap[type]} - ${items.length} violations
+            ${display.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`;
                 });
 
-                console.log('Created basic PR comment due to parsing issues');
-                return;
-              }
+              return `## Code Style Violations Found
 
-              // Build comment sections
-              let commentSections = [];
+            This PR contains **${totalCount} coding style violations** that are dangerous to fix automatically and must be manually addressed before merging.
 
-              if (staticConstViolations.length > 0) {
-                const displayViolations = staticConstViolations.slice(0, 10);
-                const remaining = staticConstViolations.length - displayViolations.length;
-                commentSections.push(`### Static Constants (UPPER_SNAKE_CASE) - ${staticConstViolations.length} violations
-            ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
-              }
-
-              if (packageImportViolations.length > 0) {
-                const displayViolations = packageImportViolations.slice(0, 10);
-                const remaining = packageImportViolations.length - displayViolations.length;
-                commentSections.push(`### Package Imports - ${packageImportViolations.length} violations
-            ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
-              }
-
-              if (classNamingViolations.length > 0) {
-                const displayViolations = classNamingViolations.slice(0, 10);
-                const remaining = classNamingViolations.length - displayViolations.length;
-                commentSections.push(`### Class Naming (UpperCamelCase) - ${classNamingViolations.length} violations
-            ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
-              }
-
-              if (fileDirViolations.length > 0) {
-                const displayViolations = fileDirViolations.slice(0, 10);
-                const remaining = fileDirViolations.length - displayViolations.length;
-                commentSections.push(`### File/Directory Naming (snake_case) - ${fileDirViolations.length} violations
-            ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
-              }
-
-              if (variableViolations.length > 0) {
-                const displayViolations = variableViolations.slice(0, 10);
-                const remaining = variableViolations.length - displayViolations.length;
-                commentSections.push(`### Variable Naming (lowerCamelCase) - ${variableViolations.length} violations
-            ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
-              }
-
-              if (longConditionsViolations.length > 0) {
-                const displayViolations = longConditionsViolations.slice(0, 10);
-                const remaining = longConditionsViolations.length - displayViolations.length;
-                commentSections.push(`### Long If Conditions - ${longConditionsViolations.length} violations
-            ${displayViolations.map(v => `- \`${v}\``).join('\n')}${remaining > 0 ? `\n- ... and ${remaining} more violations` : ''}`);
-              }
-
-              const commentBody = `## 🚨 Code Style Violations Found
-
-            This PR contains **${totalViolations} coding style violations** that are dangerous to fix automatically and must be manually addressed before merging.
-
-            ${commentSections.join('\n\n')}
+            ${sections.join('\n\n')}
 
             ## Style Guidelines
 
@@ -425,39 +209,45 @@ jobs:
 
             ---
             *This check will continue to fail until all violations are resolved.*`;
+            }
 
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number,
-                body: commentBody
-              });
+            try {
+              let commentBody = '';
 
-              console.log(`PR comment added successfully for ${totalViolations} violations detailed`);
+              if ('${{ steps.format.outputs.changes_made }}' === 'true') {
+                commentBody = createFormatComment();
+              } else if ('${{ steps.check.outputs.violations_found }}' === 'true') {
+                const violationsFile = '${{ steps.check.outputs.violations_file }}';
+                if (fs.existsSync(violationsFile)) {
+                  const content = fs.readFileSync(violationsFile, 'utf8');
+                  const violations = parseViolations(content);
+                  commentBody = createViolationsComment(violations);
+                }
+              }
 
+              if (commentBody) {
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number, body: commentBody
+                });
+                console.log('PR comment added successfully');
+              }
             } catch (error) {
               console.error('Error creating PR comment:', error.message);
-              console.error('Stack trace:', error.stack);
 
-              // Create a fallback comment
               try {
                 await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number,
-                  body: `## 🚨 Code Style Violations Found
+                  owner, repo, issue_number,
+                  body: `## Code Style Check Error
 
-            Code style violations were detected, but there was an error processing the violation details.
+            There was an error processing the code style check results.
 
             **Error**: ${error.message}
 
-            Please run \`./scripts/auto_check_all.sh\` locally to see the specific violations that need to be fixed.
-
-            ---
-            *This check will continue to fail until all violations are resolved.*`
+            Please run the scripts locally to see the specific issues.`
                 });
-                console.log('Created fallback PR comment');
               } catch (fallbackError) {
                 console.error('Failed to create fallback comment:', fallbackError.message);
               }
             }
+
+
