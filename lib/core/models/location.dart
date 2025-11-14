@@ -1,4 +1,4 @@
-// TODO: verify lat and lon are never null. It doesn't make rational sense why they could be...
+// TODO: verify lat and lon are never null. It doesn't make rational sense why they could be... - November 2025
 class Coordinates {
   double? lat;
   double? lon;

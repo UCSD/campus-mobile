@@ -35,7 +35,7 @@ class AuthenticationService {
       _lastUpdated = DateTime.now();
       return true;
     } catch (e) {
-      /// TODO: handle errors thrown by the network class for different types of error responses
+      // TODO: handle errors thrown by the network class for different types of error responses
       _error = e.toString();
       return false;
     }
@@ -63,7 +63,7 @@ class AuthenticationService {
       _lastUpdated = DateTime.now();
       return true;
     } catch (e) {
-      /// TODO: handle errors thrown by the network class for different types of error responses
+      // TODO: handle errors thrown by the network class for different types of error responses
       _error = e.toString();
       return false;
     }

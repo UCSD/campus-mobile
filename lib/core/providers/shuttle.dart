@@ -51,7 +51,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO: unused function. If needed, rewrite w/ proper nullability
+  // TODO: unused function. If needed, rewrite w/ proper nullability - November 2025
   // List<ShuttleStopModel?> makeOrderedList(List<int?>? order) {
   //   if (order == null) {
   //     return [];

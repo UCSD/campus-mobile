@@ -59,7 +59,7 @@ Future<void> initializeHive() async {
 Future<void> initializeApp() async {
   final prefs = await SharedPreferences.getInstance();
 
-  // TODO: fix this. We don't need two different persistent flags...
+  // TODO: fix this. We don't need two different persistent flags... - November 2025
   if (prefs.getBool('first_run') ?? true) {
     await clearSecuredStorage();
     await clearHiveStorage();
@@ -76,7 +76,7 @@ Future<void> clearSecuredStorage() async {
   await storage.deleteAll();
 }
 
-// TODO: refactor this to load multiple futures in one statement
+// TODO: refactor this to load multiple futures in one statement - November 2025
 Future<void> clearHiveStorage() async {
   await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
   await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();

@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NetworkHelper {
-  ///TODO: inside each service that file place a switch statement to handle all
-  ///TODO: different errors thrown by the Dio client DioErrorType.RESPONSE
+  //TODO: inside each service that file place a switch statement to handle all
+  //TODO: different errors thrown by the Dio client DioErrorType.RESPONSE
 
   // private constructor to show that this class should not be instantiated
   const NetworkHelper._();
@@ -30,7 +30,7 @@ class NetworkHelper {
       // If server returns an OK response, return the body
       return _response.data;
     } else {
-      ///TODO: log this as a bug because the response was bad
+      //TODO: log this as a bug because the response was bad
       // If that response was not OK, throw an error.
       throw Exception('Failed to fetch data: ' + _response.data);
     }
@@ -50,7 +50,7 @@ class NetworkHelper {
       // If server returns an OK response, return the body
       return _response.data;
     } else {
-      ///TODO: log this as a bug because the response was bad
+      //TODO: log this as a bug because the response was bad
       // If that response was not OK, throw an error.
 
       throw Exception('Failed to fetch data: ' + _response.data);
@@ -184,7 +184,7 @@ class NetworkHelper {
         // If server returns an OK response, return the body
         return _response.data;
       } else {
-        ///TODO: log this as a bug because the response was bad
+        //TODO: log this as a bug because the response was bad
         // If that response was not OK, throw an error.
         throw Exception('Failed to delete data: ' + _response.data);
       }

@@ -7,9 +7,7 @@ import 'package:provider/provider.dart';
 
 class NotificationsFilterView extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return ContainerView(child: buildSettingsList(context, getTopics(context)));
-  }
+  Widget build(BuildContext context) => ContainerView(child: buildSettingsList(context, getTopics(context)));
 
   Widget buildSettingsList(BuildContext context, List<String?>? topicsData) {
     return (topicsData ?? []).isNotEmpty
@@ -63,9 +61,7 @@ class NotificationsFilterView extends StatelessWidget {
                       .toggleNotifications(topic);
                 },
                 thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.white;
-                  }
+                  if (states.contains(WidgetState.selected)) return Colors.white;
                   return null;
                 }),
                 activeColor: toggleActiveColor,

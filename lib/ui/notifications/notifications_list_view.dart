@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:app_links/app_links.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 
-/// TODO: make this not global. Probably put into Widget as stateful variable...
+// TODO: make this not global. Probably put into Widget as stateful variable...
 var hideListView = false;
 
 class NotificationsListView extends StatefulWidget {
@@ -55,7 +55,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   }
 
   Widget buildListView(BuildContext context) {
-    /// TODO: fix this logic up
+    // TODO: fix this logic up
     Widget Function(BuildContext context, int index)? itemBuilder;
     var itemCount = 0;
     if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {

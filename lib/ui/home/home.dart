@@ -63,9 +63,7 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   }) : super(key: key, child: child);
 
   @override
-  RenderObject createRenderObject(BuildContext context) {
-    return MeasureSizeRenderObject(onChange);
-  }
+  RenderObject createRenderObject(BuildContext context) => MeasureSizeRenderObject(onChange);
 
   @override
   void updateRenderObject(
@@ -205,12 +203,10 @@ class _HomeState extends State<Home> {
     final webCards = context.read<CardsDataProvider>().webCards;
 
     for (String cardName in order) {
-      /// TODO: if-branches logic here theoretically could be simplified
+      // TODO: if-branches logic here theoretically could be simplified
       if (!webCards.containsKey(cardName)) {
         final cardCtor = _cardCtors[cardName];
-        if (cardCtor != null) {
-          orderedCards.add(cardCtor());
-        }
+        if (cardCtor != null) orderedCards.add(cardCtor());
       } else {
         final card = webCards[cardName]!;
         orderedCards.add(

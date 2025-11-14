@@ -97,9 +97,7 @@ class DiningDataProvider extends ChangeNotifier {
     if (_coordinates == null) return _diningModels.values.toList();
     List<DiningModel> orderedListOfLots = _diningModels.values.toList();
     orderedListOfLots.sort((DiningModel a, DiningModel b) {
-      if (a.distance != null && b.distance != null) {
-        return a.distance!.compareTo(b.distance!);
-      }
+      if (a.distance != null && b.distance != null) return a.distance!.compareTo(b.distance!);
       return 0;
     });
     return orderedListOfLots;
@@ -148,9 +146,7 @@ class DiningDataProvider extends ChangeNotifier {
   List<DiningModel> get filteredDiningModels {
     // If all or no filters are selected, then return diningModels (the source of truth)
     if (!_diningFilterTypeStates.values.contains(true) ||
-        _diningFilterTypeStates.values.every((f) => f)) {
-      return diningModels;
-    }
+        _diningFilterTypeStates.values.every((f) => f)) => diningModels;
     // Else, return the updated filtered list
     return _filteredDiningModels.values.toList();
   }

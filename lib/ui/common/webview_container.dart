@@ -72,14 +72,14 @@ class _WebViewContainerState extends State<WebViewContainer>
         .toggleCard(widget.cardId);
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      //open link
+      // open link
       ..addJavaScriptChannel(
         'OpenLink',
         onMessageReceived: (JavaScriptMessage m) {
           openLink(m.message);
         },
       )
-      //set height (with debouncing for performance)
+      // set height (with debouncing for performance)
       ..addJavaScriptChannel(
         'SetHeight',
         onMessageReceived: (JavaScriptMessage message) {
@@ -137,15 +137,13 @@ class _WebViewContainerState extends State<WebViewContainer>
           });
         },
       )
-      //refresh token
+      // refresh token
       ..addJavaScriptChannel(
         'RefreshToken',
         onMessageReceived: (JavaScriptMessage message) async {
           if (!Provider.of<UserDataProvider>(context, listen: false)
               .isLoggedIn) {
-            if (await _userDataProvider.silentLogin()) {
-              _webViewController.reload();
-            }
+            if (await _userDataProvider.silentLogin()) _webViewController.reload();
           }
         },
       )
@@ -161,9 +159,7 @@ class _WebViewContainerState extends State<WebViewContainer>
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (url) {
-            if (widget.onPageFinished != null) {
-              widget.onPageFinished!();
-            }
+            if (widget.onPageFinished != null) widget.onPageFinished!();
           },
         ),
       );
@@ -311,9 +307,7 @@ class _WebViewContainerState extends State<WebViewContainer>
   // to the webViewController's url, and loads in the new url if so
   void checkWebURL() async {
     String? currentUrl = await _webViewController.currentUrl();
-    if (webCardUrl != currentUrl) {
-      _webViewController.loadRequest(Uri.parse(webCardUrl));
-    }
+    if (webCardUrl != currentUrl) _webViewController.loadRequest(Uri.parse(webCardUrl));
   }
 
   @override

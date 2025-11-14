@@ -155,9 +155,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
           ],
         ),
       ),
-      // TODO: removed the menu on March 25, 2025
-      //SizedBox(height: 20),
-      //buildMenu(context, model),
+      // TODO: removed the menu on March 25, 2025 - November 2025
+      // SizedBox(height: 20),
+      // buildMenu(context, model),
     ];
   }
 
@@ -224,7 +224,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   }
 
   ///////////// Specials Field /////////////
-  // TODO: Implement the expiration if we decide to go in that direction
+  // TODO: Implement the expiration if we decide to go in that direction - November 2025
   //  (maybe the API updates automatically, and when fetched, the old promotion will be null
   //  so we don't really have to code an expiration. Only time will tell...
   Widget buildSpecialsField(BuildContext context, prefix0.DiningModel model) {
@@ -257,9 +257,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   ///////////// Payment Options Section /////////////
   Widget buildPaymentOptions(BuildContext context, prefix0.DiningModel model) {
     String options = model.paymentOptions.join(', ');
-    if (options.trim().isEmpty) {
-      return SizedBox.shrink();
-    }
+    if (options.trim().isEmpty) return SizedBox.shrink();
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -440,7 +438,7 @@ class HoursOfDay extends StatelessWidget {
                     width: 0,
                     height: 0,
                     child: OverflowBox(
-                      maxWidth: 10, //enough width and height to hold the dot
+                      maxWidth: 10, // enough width and height to hold the dot
                       maxHeight: 10,
                       alignment: Alignment.centerLeft,
                       child: Transform.translate(
@@ -565,9 +563,7 @@ class GreenDot extends StatelessWidget {
     if (currHours.contains('-')) {
       try {
         final timeStrings = currHours.split('-');
-        if (timeStrings.length != 2) {
-          return Colors.grey; // Invalid format
-        }
+        if (timeStrings.length != 2) return Colors.grey; // Invalid format
 
         // Parse the start and end times
         final now = TimeOfDay.now();
@@ -583,9 +579,7 @@ class GreenDot extends StatelessWidget {
 
         // Adjust for overnight hours
         int adjustedEndTime = endTime;
-        if (endTime < startTime) {
-          adjustedEndTime += 24 * 60; // Add a day in minutes
-        }
+        if (endTime < startTime) adjustedEndTime += 24 * 60; // Add a day in minutes
 
         // Determine if current time is within the range
         if (currentTimeInMinutes >= startTime &&

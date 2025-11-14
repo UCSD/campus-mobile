@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 const cardId = 'events';
 
-//edit these files
+// edit these files
 class EventsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

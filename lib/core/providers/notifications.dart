@@ -152,7 +152,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
     const platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: DarwinNotificationDetails());
-    //This is where you put info from firebase
+    // This is where you put info from firebase
     await flutterLocalNotificationsPlugin.show(0, message.notification!.title,
         message.notification!.body, platformChannelSpecifics,
         payload: 'This is the payload');
