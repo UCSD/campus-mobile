@@ -140,15 +140,16 @@ jobs:
             - **Files/Directories**: Use \`snake_case\` (e.g., \`user_profile.dart\`)
             - **Imports**: Use full package paths (e.g., \`package:app_name/path/file.dart\`)
             - **If Conditions**: Split long/complex conditions into variables for readability
-            **Bad if condition:**
             \`\`\`dart
+            // Long if condition
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
               // action
             }
             \`\`\`
-            **Good if condition:**
+
             \`\`\`dart
+            // Refactored long if condition
             var isLoggedIn = userDataProvider.isLoggedIn;
             var isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
             if (isLoggedIn && isStaff) {
