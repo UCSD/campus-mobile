@@ -122,13 +122,21 @@ jobs:
             }
 
             try {
-              let commentBody = '';
+              const formatChanged = '${{ steps.format.outputs.changes_made }}' === 'true';
+              const violationsFound = '${{ steps.check.outputs.violations_found }}' === 'true';
 
-              if ('${{ steps.format.outputs.changes_made }}' === 'true') {
-                commentBody = createFormatComment();
-              } else if ('${{ steps.check.outputs.violations_found }}' === 'true') {
-                // Create a simplified violations comment based on the detected violations
-                commentBody = `## Code Style Violations Found
+              // Create format comment if changes were made
+              if (formatChanged) {
+                const formatComment = createFormatComment();
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number, body: formatComment
+                });
+                console.log('Format comment added successfully');
+              }
+
+              // Create violations comment if violations were found
+              if (violationsFound) {
+                const violationsComment = `## Code Style Violations Found
 
             **This PR contains coding style violations that must be manually addressed before merging.**
 
@@ -171,13 +179,11 @@ jobs:
 
             ---
             *This check will continue to fail until all violations are resolved.*`;
-              }
 
-              if (commentBody) {
                 await github.rest.issues.createComment({
-                  owner, repo, issue_number, body: commentBody
+                  owner, repo, issue_number, body: violationsComment
                 });
-                console.log('PR comment added successfully');
+                console.log('Violations comment added successfully');
               }
             } catch (error) {
               console.error('Error creating PR comment:', error.message);
