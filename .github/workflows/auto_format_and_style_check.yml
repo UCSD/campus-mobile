@@ -63,6 +63,11 @@ jobs:
       - name: Check code style violations
         id: check
         run: |
+          # Ensure we have the latest code if formatting made changes
+          if [[ "${{ steps.format.outputs.changes_made }}" == "true" ]]; then
+            git pull origin ${{ github.head_ref }}
+          fi
+
           chmod +x ./scripts/auto_check_all.sh
           violations_file="/tmp/style_violations.txt"
           export VIOLATIONS_OUTPUT="$violations_file"
