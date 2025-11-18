@@ -111,10 +111,10 @@ class DiningModel {
 
 class Image {
   // links to different sizes of the image
-  // TODO: BUG ON SERVER?? There have been images with no images observed in the wild...
+  // TODO: BUG ON SERVER?? There have been images with no images observed in the wild... - November 2025
   String? small;
   String? large;
-  // TODO: no caption is valid JSON response. Should this be empty str rather than null?
+  // TODO: no caption is valid JSON response. Should this be empty str rather than null? - November 2025
   String? caption;
 
   Image({
@@ -186,7 +186,7 @@ class SpecialHour {
   String specialHoursEvent;
   String specialHoursEventDetails;
 
-  // TODO: double check if these can ever be null
+  // TODO: double check if these can ever be null - November 2025
   String? specialHoursValidFrom;
   String? specialHoursValidTo;
 

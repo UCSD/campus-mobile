@@ -211,7 +211,7 @@ class CardsDataProvider extends ChangeNotifier {
     var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
-    // TODO: test w/o this
+    // TODO: test w/o this - November 2025
     _cardOrder = List.from(_cardOrder.toSet().toList());
 
     updateCardOrder();
@@ -222,7 +222,7 @@ class CardsDataProvider extends ChangeNotifier {
     var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _studentCards.toList());
 
-    // TODO: test w/o this
+    // TODO: test w/o this - November 2025
     _cardOrder = List.from(_cardOrder.toSet().toList());
 
     for (String card in _studentCards) {
@@ -246,7 +246,7 @@ class CardsDataProvider extends ChangeNotifier {
     var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _staffCards.toList());
 
-    // TODO: test w/o this
+    // TODO: test w/o this - November 2025
     _cardOrder = List.from(_cardOrder.toSet().toList());
     updateCardOrder();
     updateCardStates();
@@ -256,7 +256,7 @@ class CardsDataProvider extends ChangeNotifier {
     var index = _cardOrder.indexOf('MyStudentChart') + 1;
     _cardOrder.insertAll(index, _staffCards.toList());
 
-    // TODO: test w/o this
+    // TODO: test w/o this - November 2025
     _cardOrder = List.from(_cardOrder.toSet().toList());
 
     for (String card in _staffCards) {

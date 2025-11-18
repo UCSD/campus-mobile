@@ -37,7 +37,7 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      /// TODO: need to hook up hidden to state using provider
+      // TODO: need to hook up hidden to state using provider
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false)
           .toggleCard(cardId),

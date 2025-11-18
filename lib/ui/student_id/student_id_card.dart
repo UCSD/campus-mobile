@@ -60,9 +60,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
     String cardNumber,
     bool rotated,
   ) {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
-      return returnBarcodeContainer(cardNumber, rotated, context);
-    }
+    if (MediaQuery.of(context).orientation == Orientation.landscape) return returnBarcodeContainer(cardNumber, rotated, context);
     return image;
   }
 
@@ -525,7 +523,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   Widget _buildBarcodeNumber(StudentIdProfileModel profileModel) {
     return Padding(
       padding: const EdgeInsets.only(top: 6.0),
-      //child: Center(
+      // child: Center(
       child: Text(
         profileModel.barcode.toString(),
         style: TextStyle(
@@ -538,7 +536,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 }
 
-//Image Scaling
+// Image Scaling
 class ScalingUtility {
   late MediaQueryData _queryData;
   static late double horizontalSafeBlock;
