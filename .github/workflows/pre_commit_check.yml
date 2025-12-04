@@ -73,8 +73,6 @@ jobs:
               if (violationsFound) {
                 let violationsComment = `## Code Style Violations Found
 
-            **This PR contains coding style violations that must be manually addressed before merging.**`;
-
                 // Try to parse violation details from the file
                 const violationsFile = '${{ steps.check.outputs.violations_file }}';
                 let detailsSection = '';
@@ -109,11 +107,6 @@ jobs:
                       if (totalCategories && totalViolations && failedChecks.length > 0) {
                         detailsSection = `
 
-            ## Violation Summary
-            - **Categories Failed**: ${totalCategories}
-            - **Total Violations**: ${totalViolations}
-
-            ## Failed Checks:
             ${failedChecks.join('\n')}`;
                       }
                     }
@@ -131,18 +124,20 @@ jobs:
 
                 violationsComment += detailsSection + `
 
-            ## Style Guidelines
+            - **Total Violations**: ${totalViolations}
+            - **Total Categories Failed**: ${totalCategories}
 
-            - **Static Constants**: Use \`UPPER_SNAKE_CASE\` (e.g., \`MAX_RETRY_COUNT\`)
-            - **Classes**: Use \`UpperCamelCase\` (e.g., \`UserProfile\`)
-            - **Variables/Functions**: Use \`lowerCamelCase\` (e.g., \`userName\`)
-            - **Files/Directories**: Use \`snake_case\` (e.g., \`user_profile.dart\`)
-            - **Imports**: Use full package paths (e.g., \`package:app_name/path/file.dart\`)
-            - **If Conditions**: Split long/complex conditions into variables for readability
+            ## Here are the formatting rules to follow:
 
-            ### Long If Conditions Example:
+            - **Static Constants** have to use \`UPPER_SNAKE_CASE\` (e.g., \`MAX_RETRY_COUNT\`)
+            - **Classes** have to use \`UpperCamelCase\` (e.g., \`UserProfile\`)
+            - **Variables/Functions** have to use \`lowerCamelCase\` (e.g., \`userName\`)
+            - **Files/Directories** have to use \`snake_case\` (e.g., \`user_profile.dart\`)
+            - **Imports** have to use full package paths (e.g., \`package:app_name/path/file.dart\`)
+            - **If Conditions** have to split long/complex conditions into variables for readability
+
+            ### Example of a long if condition violation:
             \`\`\`dart
-            // BAD: Long if condition
             if (userDataProvider.isLoggedIn &&
                 (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
               // action
@@ -150,7 +145,7 @@ jobs:
             \`\`\`
 
             \`\`\`dart
-            // GOOD: Refactored long if condition
+            // GOOD: split condition into variables for readability
             var isLoggedIn = userDataProvider.isLoggedIn;
             var isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
             if (isLoggedIn && isStaff) {
@@ -158,9 +153,9 @@ jobs:
             }
             \`\`\`
 
-            ## To fix these violations:
+            ## To see more details and fix these violations:
 
-            1. Run \`./scripts/auto_check_all.sh\` locally to see where these violations are.
+            1. Run \`./scripts/auto_check_all.sh\` locally.
             2. Apply the suggested corrections.
             3. Re-run the script to verify fixes.
             4. Commit your changes.
