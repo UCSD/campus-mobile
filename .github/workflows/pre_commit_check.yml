@@ -118,46 +118,38 @@ jobs:
                   detailsSection = `Based on the automated check, violations were found in multiple categories.`;
                 }
 
-            violationsComment += detailsSection + '\n' + `
-
-            - **Total Violations**: ` + totalViolations + `
-            - **Total Categories Failed**: ` + totalCategories + `
-
-            ## Here are the formatting rules to follow:
-
-            - **Static Constants** have to use \`UPPER_SNAKE_CASE\` (e.g., \`MAX_RETRY_COUNT\`)
-            - **Classes** have to use \`UpperCamelCase\` (e.g., \`UserProfile\`)
-            - **Variables/Functions** have to use \`lowerCamelCase\` (e.g., \`userName\`)
-            - **Files/Directories** have to use \`snake_case\` (e.g., \`user_profile.dart\`)
-            - **Imports** have to use full package paths (e.g., \`package:app_name/path/file.dart\`)
-            - **If Conditions** have to split long/complex conditions into variables for readability
-
-            ### Example of a long if condition violation:
-            \`\`\`dart
-            if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
-              // action
-            }
-            \`\`\`
-
-            \`\`\`dart
-            // GOOD: split condition into variables for readability
-            var isLoggedIn = userDataProvider.isLoggedIn;
-            var isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
-            if (isLoggedIn && isStaff) {
-              // action
-            }
-            \`\`\`
-
-            ## To see more details and fix these violations:
-
-            1. Run \`./scripts/auto_check_all.sh\` locally.
-            2. Apply the suggested corrections.
-            3. Re-run the script to verify fixes.
-            4. Commit your changes.
-
-            ---
-            *This check will continue to fail until all violations are resolved.*`;
+            violationsComment += detailsSection + '\n\n' +
+              '- **Total Violations**: ' + totalViolations + '\n' +
+              '- **Total Categories Failed**: ' + totalCategories + '\n\n' +
+              '## Here are the formatting rules to follow:\n\n' +
+              '- **Static Constants** have to use `UPPER_SNAKE_CASE` (e.g., `MAX_RETRY_COUNT`)\n' +
+              '- **Classes** have to use `UpperCamelCase` (e.g., `UserProfile`)\n' +
+              '- **Variables/Functions** have to use `lowerCamelCase` (e.g., `userName`)\n' +
+              '- **Files/Directories** have to use `snake_case` (e.g., `user_profile.dart`)\n' +
+              '- **Imports** have to use full package paths (e.g., `package:app_name/path/file.dart`)\n' +
+              '- **If Conditions** have to split long/complex conditions into variables for readability\n\n' +
+              '### Example of a long if condition violation:\n' +
+              '```dart\n' +
+              'if (userDataProvider.isLoggedIn &&\n' +
+              '    (userDataProvider.userProfileModel.classifications?.staff ?? false)) {\n' +
+              '  // action\n' +
+              '}\n' +
+              '```\n\n' +
+              '```dart\n' +
+              '// GOOD: split condition into variables for readability\n' +
+              'var isLoggedIn = userDataProvider.isLoggedIn;\n' +
+              'var isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;\n' +
+              'if (isLoggedIn && isStaff) {\n' +
+              '  // action\n' +
+              '}\n' +
+              '```\n\n' +
+              '## To see more details and fix these violations:\n\n' +
+              '1. Run `./scripts/auto_check_all.sh` locally.\n' +
+              '2. Apply the suggested corrections.\n' +
+              '3. Re-run the script to verify fixes.\n' +
+              '4. Commit your changes.\n\n' +
+              '---\n' +
+              '*This check will continue to fail until all violations are resolved.*';
 
                 await github.rest.issues.createComment({
                   owner, repo, issue_number, body: violationsComment
@@ -170,13 +162,10 @@ jobs:
               try {
                 await github.rest.issues.createComment({
                   owner, repo, issue_number,
-                  body: `## Code Style Check Error
-
-            There was an error processing the code style check results.
-
-            **Error**: ${error.message}
-
-            Please run the scripts locally to see the specific issues.`
+                  body: '## Code Style Check Error\n\n' +
+                        'There was an error processing the code style check results.\n\n' +
+                        '**Error**: ' + error.message + '\n\n' +
+                        'Please run the scripts locally to see the specific issues.'
                 });
               } catch (fallbackError) {
                 console.error('Failed to create fallback comment:', fallbackError.message);
