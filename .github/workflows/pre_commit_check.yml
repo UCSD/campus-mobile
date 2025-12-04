@@ -118,8 +118,8 @@ jobs:
                 }
 
             violationsComment += detailsSection + '\n\n' +
-              '- **Total Violations**: ' + (totalViolations || 'Unknown') + '\n' +
-              '- **Total Categories Failed**: ' + (totalCategories || 'Unknown') + '\n\n' +
+              '**Total Violations**: ' + (totalViolations || 'Unknown') + '\n' +
+              '**Total Categories Failed**: ' + (totalCategories || 'Unknown') + '\n\n' +
               '## Here are the formatting rules to follow:\n\n' +
               '- **Static Constants** have to use `UPPER_SNAKE_CASE` (e.g., `MAX_RETRY_COUNT`)\n' +
               '- **Classes** have to use `UpperCamelCase` (e.g., `UserProfile`)\n' +
@@ -148,7 +148,7 @@ jobs:
               '3. Re-run the script to verify fixes.\n' +
               '4. Commit your changes.\n\n' +
               '---\n' +
-              '*This check will continue to fail until all violations are resolved.*';
+              '*This comment will continue to appear until all violations are resolved.*';
 
                 await github.rest.issues.createComment({
                   owner, repo, issue_number, body: violationsComment
