@@ -33,7 +33,7 @@ class DiningFilterView extends StatelessWidget {
               child: ListView(
                 children: ListTile.divideTiles(
                   context: context,
-                  tiles: createList(context, DiningConstants.payment_filter_types, diningProvider),
+                  tiles: createList(context, DiningConstants.PAYMENT_FILTER_TYPES, diningProvider),
                   color: Theme.of(context).brightness == Brightness.dark
                       ? listTileDividerColorDark
                       : listTileDividerColorLight,
@@ -51,7 +51,7 @@ class DiningFilterView extends StatelessWidget {
     List<Widget> filterTypesList = [];
     // For each filter type available, create a ListTile with a switch
     // ```type``` is the filter type's name (i.e. "Triton Cash")
-    // See DiningConstants.payment_filter_types for all available filter types
+    // See DiningConstants.PAYMENT_FILTER_TYPES for all available filter types
     for (String type in typesAvailable) {
       filterTypesList.add(
         Padding(

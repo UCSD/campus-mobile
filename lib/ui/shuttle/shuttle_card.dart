@@ -46,7 +46,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
         Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(true);
       },
       isLoading: _shuttleCardDataProvider.isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: _shuttleCardDataProvider.error,
       child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender, _shuttleCardDataProvider.arrivalsToRender),
       actionButtons: [
@@ -56,7 +56,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
               setState(() {
                 _currentPage = 0;
               });
-              Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+              Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
             }),
       ],
     );
@@ -134,7 +134,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
         'Manage Shuttle Stops',
       ),
       onPressed: () {
-        if (!_shuttleCardDataProvider.isLoading) Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+        if (!_shuttleCardDataProvider.isLoading) Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
       },
     ));
     return actionButtons;

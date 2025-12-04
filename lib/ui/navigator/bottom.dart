@@ -64,19 +64,19 @@ class _BottomTabBarState extends State<BottomTabBar> {
           onTap: (index) {
             provider.currentIndex = index;
             switch (index) {
-              case NavigatorConstants.HomeTab:
+              case NavigatorConstants.HOME_TAB:
                 Provider.of<CustomAppBar>(context, listen: false).changeTitle(null);
                 break;
-              case NavigatorConstants.MapTab:
+              case NavigatorConstants.MAP_TAB:
                 resetAllCardLoadedStates();
                 Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
                 break;
-              case NavigatorConstants.NotificationsTab:
+              case NavigatorConstants.NOTIFICATIONS_TAB:
                 resetAllCardLoadedStates();
                 Provider.of<CustomAppBar>(context, listen: false)
                     .changeTitle("Notifications", done: false, notification: true);
                 break;
-              case NavigatorConstants.ProfileTab:
+              case NavigatorConstants.PROFILE_TAB:
                 resetAllCardLoadedStates();
                 Provider.of<CustomAppBar>(context, listen: false).changeTitle("Profile");
                 break;

@@ -198,8 +198,8 @@ class _LoginState extends State<Login> {
                                     return AlertDialogWidget(
                                       type: MessageTypeConstants.ERROR,
                                       icon: Icons.block_flipped,
-                                      title: LoginConstants.loginFailedTitle,
-                                      description: LoginConstants.loginFailedDesc,
+                                      title: LoginConstants.LOGIN_FAILED_TITLE,
+                                      description: LoginConstants.LOGIN_FAILED_DESC,
                                       onClose: () {
                                         Navigator.of(context).pop();
                                       },
@@ -269,7 +269,7 @@ class _LoginState extends State<Login> {
           ),
           Expanded(
             child: Text(
-              LoginConstants.loginFailedTitle,
+              LoginConstants.LOGIN_FAILED_TITLE,
               textAlign: TextAlign.left,
               style: Theme.of(context).brightness == Brightness.dark
                   ? TextStyle(
@@ -310,7 +310,7 @@ class _LoginState extends State<Login> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      LoginConstants.loginFailedDesc,
+                      LoginConstants.LOGIN_FAILED_DESC,
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           color: linkTextColorLight,

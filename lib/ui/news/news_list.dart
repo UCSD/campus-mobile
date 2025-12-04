@@ -78,7 +78,7 @@ class NewsList extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(
           context,
-          RoutePaths.NewsDetailView,
+          RoutePaths.NEWS_DETAIL_VIEW,
           arguments: newsItem,
         );
       },

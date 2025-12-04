@@ -26,7 +26,7 @@ class MessagesDataProvider extends ChangeNotifier {
   DateTime? _lastUpdated;
   int _previousTimestamp = 0;
   String? _error;
-  String _statusText = NotificationsConstants.statusFetching;
+  String _statusText = NotificationsConstants.STATUS_FETCHING;
 
   /// MODELS
   List<MessageElement> _messages = [];
@@ -120,7 +120,7 @@ class MessagesDataProvider extends ChangeNotifier {
 
   void updateMessages(List<MessageElement> newMessages) {
     _messages.addAll(newMessages);
-    _statusText = _messages.isEmpty ? NotificationsConstants.statusNoMessages : NotificationsConstants.statusNone;
+    _statusText = _messages.isEmpty ? NotificationsConstants.STATUS_NO_MESSAGES : NotificationsConstants.STATUS_NONE;
   }
 
   /// SIMPLE GETTERS

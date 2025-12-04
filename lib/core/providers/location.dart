@@ -59,7 +59,7 @@ class LocationDataProvider extends ChangeNotifier {
 
   void _enableListener() {
     Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) {
-      if (position == null) error = ErrorConstants.locationFailed;
+      if (position == null) error = ErrorConstants.LOCATION_FAILED;
       _locationController.add(Coordinates(lat: position?.latitude, lon: position?.longitude));
     });
   }

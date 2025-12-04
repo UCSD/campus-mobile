@@ -93,7 +93,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
           buttonText: 'ADD MORE STOPS',
           onPressed: () {
             if (_shuttleDataProvider.stopsToRender.length < 5) {
-              Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
+              Navigator.pushNamed(context, RoutePaths.ADD_SHUTTLE_STOPS_VIEW);
             } else {
               showDialog(
                   context: context,
@@ -101,8 +101,8 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
                     return AlertDialogWidget(
                       type: MessageTypeConstants.ERROR,
                       icon: Icons.block_flipped,
-                      title: LoginConstants.shuttleMaxTitle,
-                      description: LoginConstants.shuttleMaxDesc,
+                      title: LoginConstants.SHUTTLE_MAX_TITLE,
+                      description: LoginConstants.SHUTTLE_MAX_DESC,
                       onClose: () {
                         Navigator.of(context).pop();
                       },
@@ -126,7 +126,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
     //       backgroundColor: ColorPrimary,
     //       onPressed: () {
     //         if (_shuttleDataProvider.stopsToRender.length < 5) {
-    //           Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
+    //           Navigator.pushNamed(context, RoutePaths.ADD_SHUTTLE_STOPS_VIEW);
     //         } else {
     //           showAlertDialog(context);
     //         }
@@ -158,7 +158,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
           ),
           Expanded(
             child: Text(
-              LoginConstants.shuttleMaxTitle,
+              LoginConstants.SHUTTLE_MAX_TITLE,
               textAlign: TextAlign.left,
               style: Theme.of(context).brightness == Brightness.dark
                   ? TextStyle(
@@ -207,7 +207,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      LoginConstants.shuttleMaxDesc,
+                      LoginConstants.SHUTTLE_MAX_DESC,
                       textAlign: TextAlign.left,
                       style: Theme.of(context).brightness == Brightness.dark
                           ? TextStyle(

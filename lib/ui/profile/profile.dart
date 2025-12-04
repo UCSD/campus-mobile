@@ -26,7 +26,7 @@ class Profile extends StatelessWidget {
       var query = uri.queryParameters['query']!;
       Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
     }
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
@@ -35,7 +35,7 @@ class Profile extends StatelessWidget {
         var query = uri!.queryParameters['query']!;
         Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
         _sub?.cancel();
       }
     });
@@ -74,7 +74,7 @@ class Profile extends StatelessWidget {
                     style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, RoutePaths.CardsView);
+                    Navigator.pushNamed(context, RoutePaths.CARDS_VIEW);
                   },
                 ),
                 ListTile(
@@ -127,7 +127,7 @@ class Profile extends StatelessWidget {
   }
 
   // handleNotificationsTap(BuildContext context) {
-  //   Navigator.pushNamed(context, RoutePaths.NotificationsFilter);
+  //   Navigator.pushNamed(context, RoutePaths.NOTIFICATIONSFilter);
   // }
 
   Future<void> handleFeedbackTap() async {

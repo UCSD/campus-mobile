@@ -25,7 +25,7 @@ class FinalsCard extends StatelessWidget {
         }
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildFinalsCard(
           Provider.of<ClassScheduleDataProvider>(context).finals,

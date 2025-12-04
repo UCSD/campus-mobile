@@ -37,15 +37,21 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
-      reload: () => _availabilityDataProvider.fetchAvailability(),
+      reload: () {
+        setState(() {
+          _currentPage = 0;
+        });
+        _controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        _availabilityDataProvider.fetchAvailability();
+      },
       isLoading: _availabilityDataProvider.isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: _availabilityDataProvider.error,
       child: () => buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
       actionButtons: [
         ActionLink(
             buttonText: 'MANAGE LOCATIONS',
-            onPressed: () => Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView))
+            onPressed: () => Navigator.pushNamed(context, RoutePaths.MANAGE_AVAILABILITY_VIEW))
       ],
     );
   }

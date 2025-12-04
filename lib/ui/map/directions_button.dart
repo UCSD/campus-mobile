@@ -31,7 +31,7 @@ class DirectionsButton extends StatelessWidget {
           if (locationQuery.isNotEmpty) {
             getDirections(context);
           } else {
-            Navigator.pushNamed(context, RoutePaths.MapSearch);
+            Navigator.pushNamed(context, RoutePaths.MAP_SEARCH);
           }
         }
       },

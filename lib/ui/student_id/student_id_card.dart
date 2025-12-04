@@ -17,7 +17,7 @@ class StudentIdCard extends StatefulWidget {
 }
 
 class _StudentIdCardState extends State<StudentIdCard> {
-  static const cardId = "student_id";
+  static const CARD_ID = "student_id";
 
   /// Pop up barcode
   createAlertDialog(
@@ -70,11 +70,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
     ScalingUtility().getCurrentMeasurements(context);
 
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      active: Provider.of<CardsDataProvider>(context).cardStates[CARD_ID],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(CARD_ID),
       reload: () => Provider.of<StudentIdDataProvider>(context, listen: false).fetchData(),
       isLoading: Provider.of<StudentIdDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[CARD_ID]!,
       errorText: Provider.of<StudentIdDataProvider>(context).error,
       child: () => buildCardContent(
         Provider.of<StudentIdDataProvider>(context).studentIdNameModel,

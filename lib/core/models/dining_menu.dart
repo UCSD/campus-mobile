@@ -53,13 +53,13 @@ class DiningMenuItem {
   });
 
   DiningMenuItem.fromJson(Map<String, dynamic> json)
-      : name = json["name"],
+      : name = json["name"] ?? "",
         itemId = json["itemID"],
         station = json["station"],
-        price = json["price"],
+        price = json["price"] ?? "",
         images = json["images"],
-        tags = json["tags"],
-        nutrition = Nutrition.fromJson(json["nutrition"]);
+        tags = json["tags"] ?? "",
+        nutrition = json["nutrition"] != null ? Nutrition.fromJson(json["nutrition"]) : Nutrition();
 
   Map<String, dynamic> toJson() => {
         "name": name,

@@ -18,7 +18,7 @@ class DiningCard extends StatelessWidget {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => Provider.of<DiningDataProvider>(context, listen: false).fetchDiningLocations(),
       isLoading: Provider.of<DiningDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<DiningDataProvider>(context).error,
       child: () => buildDiningCard(Provider.of<DiningDataProvider>(context).diningModels),
       actionButtons: [
@@ -28,7 +28,7 @@ class DiningCard extends StatelessWidget {
               // Only navigate if not loading and no error
               final provider = Provider.of<DiningDataProvider>(context, listen: false);
               if (!provider.isLoading && provider.error == null)
-                Navigator.pushNamed(context, RoutePaths.DiningViewAllDiningOptions);
+                Navigator.pushNamed(context, RoutePaths.DINING_VIEW_ALL_DINING_OPTIONS);
             })
       ],
     );

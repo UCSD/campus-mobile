@@ -76,10 +76,10 @@ Future<void> clearSecuredStorage() async {
 
 // TODO: refactor this to load multiple futures in one statement - December 2025
 Future<void> clearHiveStorage() async {
-  await (await Hive.openBox(DataPersistence.cardStates)).deleteFromDisk();
-  await (await Hive.openBox(DataPersistence.cardOrder)).deleteFromDisk();
-  await (await Hive.openBox(DataPersistence.AuthenticationModel)).deleteFromDisk();
-  await (await Hive.openBox(DataPersistence.UserProfileModel)).deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.CARD_STATES)).deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.CARD_ORDER)).deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.AUTHENTICATION_MODEL)).deleteFromDisk();
+  await (await Hive.openBox(DataPersistence.USER_PROFILE_MODEL)).deleteFromDisk();
 }
 
 class CampusMobile extends StatelessWidget {
@@ -152,7 +152,7 @@ class CampusMobile extends StatelessWidget {
           colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
         ),
         themeMode: ThemeMode.system,
-        initialRoute: showOnboardingScreen ? RoutePaths.OnboardingLogin : RoutePaths.BottomNavigationBar,
+        initialRoute: showOnboardingScreen ? RoutePaths.ONBOARDING_LOGIN : RoutePaths.BOTTOM_NAVIGATION_BAR,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
         builder: (context, child) {

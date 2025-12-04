@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
-import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
+import 'package:campus_mobile_experimental/ui/common/hex_color.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -70,7 +70,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
               child: Align(
                   alignment: Alignment.center,
                   child: data.logoText.startsWith('icon - ')
-                      ? Icon(ParkingConstants.stringToIconData[data.logoText] ?? Icons.error,
+                      ? Icon(ParkingConstants.STRING_TO_ICON_DATA[data.logoText] ?? Icons.error,
                           size: 25.0, color: textColor)
                       : (data.logoText.isNotEmpty
                           ? Text(
@@ -99,8 +99,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                       return AlertDialogWidget(
                         type: MessageTypeConstants.ERROR,
                         icon: Icons.block_flipped,
-                        title: ParkingConstants.spotMaxTitle,
-                        description: ParkingConstants.spotMaxDesc,
+                        title: ParkingConstants.SPOT_MAX_TITLE,
+                        description: ParkingConstants.SPOT_MAX_DESC,
                         onClose: () {
                           Navigator.of(context).pop();
                         },

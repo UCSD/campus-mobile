@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const cardId = 'MyUCSDChart';
+const cardId = 'my_ucsd_chart';
 
 class MyUCSDChartCard extends StatelessWidget {
   @override
@@ -16,7 +16,7 @@ class MyUCSDChartCard extends StatelessWidget {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => null,
       isLoading: false,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: [

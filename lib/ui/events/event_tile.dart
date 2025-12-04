@@ -10,9 +10,9 @@ class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
 
   /// LAYOUT CONSTANTS
-  static const double tileWidth = 190;
-  static const cornerRadius = Radius.circular(5.0);
-  static const sideBorder = BorderSide(width: 0.3);
+  static const double TILE_WIDTH = 190;
+  static const CORNER_RADIUS = Radius.circular(5.0);
+  static const SIDE_BORDER = BorderSide(width: 0.3);
 
   /// MODELS
   final EventModel data;
@@ -32,13 +32,13 @@ class EventTile extends StatelessWidget {
 
   Widget _buildEventTile(BuildContext context) {
     return Container(
-      width: tileWidth,
+      width: TILE_WIDTH,
       // height: 300,
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(
             context,
-            RoutePaths.EventDetailView,
+            RoutePaths.EVENT_DETAIL_VIEW,
             arguments: data,
           );
         },
@@ -67,12 +67,12 @@ class EventTile extends StatelessWidget {
 
     final hasTime = startTime != endTime;
     return SizedBox(
-      width: tileWidth,
+      width: TILE_WIDTH,
       height: 300,
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(width: 0.3),
-          borderRadius: BorderRadius.all(cornerRadius),
+          borderRadius: BorderRadius.all(CORNER_RADIUS),
         ),
         child: Card(
           margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
@@ -131,19 +131,19 @@ Widget _eventImageLoader(String? url) {
   return url?.isEmpty ?? true
       ? ClipRRect(
           borderRadius: BorderRadius.only(
-            topLeft: EventTile.cornerRadius,
-            topRight: EventTile.cornerRadius,
+            topLeft: EventTile.CORNER_RADIUS,
+            topRight: EventTile.CORNER_RADIUS,
           ),
           child: Image.asset(
             'assets/images/UCSDMobile_sharp.png',
             height: 150,
-            width: EventTile.tileWidth,
+            width: EventTile.TILE_WIDTH,
             fit: BoxFit.cover,
           ))
       : ClipRRect(
           borderRadius: BorderRadius.only(
-            topLeft: EventTile.cornerRadius,
-            topRight: EventTile.cornerRadius,
+            topLeft: EventTile.CORNER_RADIUS,
+            topRight: EventTile.CORNER_RADIUS,
           ),
           child: Image.network(
             url!,
@@ -159,7 +159,7 @@ Widget _eventImageLoader(String? url) {
               );
             },
             height: 150,
-            width: EventTile.tileWidth,
+            width: EventTile.TILE_WIDTH,
             fit: BoxFit.cover,
           ));
 }

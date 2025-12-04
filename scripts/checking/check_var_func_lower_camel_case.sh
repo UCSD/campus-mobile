@@ -80,7 +80,9 @@ echo "Looking for non-lowerCamelCase variables (excluding static const)..."
 # Use a temporary file to avoid subshell issues with variable counting
 temp_results=$(mktemp)
 grep -rn --include="*.dart" -E "(var|final|const)[[:space:]]+" lib/ | \
-  grep -v "static const" > "$temp_results"
+  grep -v "static const" | \
+  grep -v "static final" | \
+  grep -v "^[^:]*:[^:]*:[[:space:]]*const[[:space:]]" > "$temp_results"
 
 while IFS=: read -r file line_num content; do
   # Pattern 1: var/final/const variableName (without explicit type)

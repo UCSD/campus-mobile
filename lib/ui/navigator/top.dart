@@ -33,10 +33,10 @@ class CMAppBar extends StatelessWidget {
               onPressed: () {
                 // Set tab bar index to the Home tab
                 Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
-                    NavigatorConstants.HomeTab;
+                    NavigatorConstants.HOME_TAB;
                 // Navigate to Home tab
                 Navigator.of(context)
-                    .pushNamedAndRemoveUntil(RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
+                    .pushNamedAndRemoveUntil(RoutePaths.BOTTOM_NAVIGATION_BAR, (Route<dynamic> route) => false);
                 // change the appBar title to the ucsd logo
                 Provider.of<CustomAppBar>(context, listen: false).changeTitle(CustomAppBar().appBar.title);
               },
@@ -51,7 +51,7 @@ class CMAppBar extends StatelessWidget {
           child: IconButton(
             icon: Icon(Icons.filter_list_outlined),
             onPressed: () {
-              Navigator.pushNamed(context, RoutePaths.NotificationsFilter);
+              Navigator.pushNamed(context, RoutePaths.NOTIFICATIONS_FILTER);
             },
           ),
         ),
@@ -88,7 +88,7 @@ class CustomAppBar extends ChangeNotifier {
 
   changeTitle(String? newTitle, {done = false, notification = false}) {
     // print("\x1B[34m[CustomAppBar] new route is " + (newTitle ?? 'null') + "\x1B[0m, done=$done, notification=$notification");
-    title = RouteTitles.titleMap[newTitle];
+    title = RouteTitles.TITLE_MAP[newTitle];
     doneButton = done;
     notificationsFilterButton = notification;
     makeAppBar();

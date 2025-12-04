@@ -100,7 +100,7 @@ class CircularParkingIndicators extends StatelessWidget {
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText.startsWith('icon - ')
-                              ? Icon(ParkingConstants.stringToIconData[spotType.logoText] ?? Icons.error,
+                              ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
                                   size: 25.0, color: colorFromHex(spotType.logoTextColor))
                               : (spotType.logoText.isNotEmpty
                                   ? Text(
@@ -153,7 +153,7 @@ class CircularParkingIndicators extends StatelessWidget {
                       ? CircleAvatar(
                           backgroundColor: colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText.startsWith('icon - ')
-                              ? Icon(ParkingConstants.stringToIconData[spotType.logoText] ?? Icons.error,
+                              ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
                                   size: 25.0, color: colorFromHex(spotType.logoTextColor))
                               : (spotType.logoText.isNotEmpty
                                   ? Text(

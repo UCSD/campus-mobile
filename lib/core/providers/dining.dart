@@ -10,7 +10,7 @@ enum Meal { breakfast, lunch, dinner }
 class DiningDataProvider extends ChangeNotifier {
   // Set all filter types to true by default
   DiningDataProvider() {
-    DiningConstants.payment_filter_types.forEach((type) => _diningFilterTypeStates[type] = true);
+    DiningConstants.PAYMENT_FILTER_TYPES.forEach((type) => _diningFilterTypeStates[type] = true);
   }
 
   /// STATES

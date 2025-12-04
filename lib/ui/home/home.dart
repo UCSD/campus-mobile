@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
   void executeQuery(String query) {
     context.read<MapsDataProvider>().searchBarController.text = query;
     context.read<MapsDataProvider>().fetchLocations();
-    context.read<BottomNavigationBarProvider>().currentIndex = NavigatorConstants.MapTab;
+    context.read<BottomNavigationBarProvider>().currentIndex = NavigatorConstants.MAP_TAB;
     context.read<CustomAppBar>().changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
   }
@@ -160,15 +160,15 @@ class _HomeState extends State<Home> {
       notices.map((notice) => NoticesCard(notice: notice)).whereType<NoticesCard>().toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
-  static const _cardCtors = {
-    'MyStudentChart': MyStudentChartCard.new,
+  static const _CARD_CTORS = {
+    'my_student_chart': MyStudentChartCard.new,
     'dining': DiningCard.new,
     'news': NewsCard.new,
     'events': EventsCard.new,
     'availability': AvailabilityCard.new,
     'schedule': ClassScheduleCard.new,
     'finals': FinalsCard.new,
-    'MyUCSDChart': MyUCSDChartCard.new,
+    'my_ucsd_chart': MyUCSDChartCard.new,
     'student_id': StudentIdCard.new,
     'employee_id': EmployeeIdCard.new,
     'parking': ParkingCard.new,
@@ -197,7 +197,7 @@ class _HomeState extends State<Home> {
     for (String cardName in order) {
       // TODO: if-branches logic here theoretically could be simplified - December 2025
       if (!webCards.containsKey(cardName)) {
-        final cardCtor = _cardCtors[cardName];
+        final cardCtor = _CARD_CTORS[cardName];
         if (cardCtor != null) orderedCards.add(cardCtor());
       } else {
         final card = webCards[cardName]!;
@@ -205,9 +205,9 @@ class _HomeState extends State<Home> {
           WebViewContainer(
             key: ValueKey(cardName),
             initialUrl: card.initialURL,
-            titleText: card.titleText ?? '',
+            titleText: card.titleText,
             cardId: cardName,
-            requireAuth: card.requireAuth ?? false,
+            requireAuth: card.requireAuth,
             isLoaded: webViewCardNotLoaded[cardName] ?? true,
             onPageFinished: () {
               // Only update if loaded state is not already true

@@ -121,7 +121,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
 
                 mapsProvider.searchBarController.text = message.message;
                 mapsProvider.fetchLocations();
-                navProvider.currentIndex = NavigatorConstants.MapTab;
+                navProvider.currentIndex = NavigatorConstants.MAP_TAB;
                 appBarProvider.changeTitle("Maps");
               });
             }
@@ -236,8 +236,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
       mainAxisSize: MainAxisSize.min,
       children: [
         buildMenuOptions({
-          CardMenuOptionConstants.reloadCard: _webViewController.reload,
-          CardMenuOptionConstants.hideCard: hide,
+          CardMenuOptionConstants.RELOAD_CARD: _webViewController.reload,
+          CardMenuOptionConstants.HIDE_CARD: hide,
         }),
       ],
     );
@@ -271,12 +271,12 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
 
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
-      case CardMenuOptionConstants.reloadCard:
+      case CardMenuOptionConstants.RELOAD_CARD:
         // _webViewController?.loadUrl(webCardUrl);
         _webViewController.loadRequest(Uri.parse(webCardUrl));
         resetCardHeight(widget.cardId);
         break;
-      case CardMenuOptionConstants.hideCard:
+      case CardMenuOptionConstants.HIDE_CARD:
         hide();
         resetCardHeight(widget.cardId);
         break;

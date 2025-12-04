@@ -195,7 +195,7 @@ class UserDataProvider extends ChangeNotifier {
         await updateAuthenticationModel(_authenticationService.data!);
         await fetchUserProfile();
         var _cardsDataProvider = CardsDataProvider();
-        _cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdaffiliation);
+        _cardsDataProvider.updateAvailableCards(_userProfileModel.ucsdAffiliation);
         _subscribeToPushNotificationTopics(List<String>.from(userProfileModel.subscribedTopics!));
         _pushNotificationDataProvider.registerDevice(_authenticationService.data!.accessToken);
         await analytics.logEvent(name: 'loggedIn');
@@ -263,21 +263,21 @@ class UserDataProvider extends ChangeNotifier {
         /// if the user profile has no ucsd affiliation then we know the user is new
         /// so create a new profile and upload to DB using [postUserProfile]
         var newModel = _userProfileService.userProfileModel;
-        if (newModel.ucsdaffiliation == null) {
+        if (newModel.ucsdAffiliation == null) {
           newModel = await _createNewUser(newModel);
           await postUserProfile(newModel);
         } else {
           newModel.username = await getUsernameFromDevice();
-          newModel.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
+          newModel.ucsdAffiliation = _authenticationModel.ucsdaffiliation;
           newModel.pid = _authenticationModel.pid;
           List<String> castSubscriptions = newModel.subscribedTopics!.cast<String>();
           newModel.subscribedTopics = castSubscriptions.toSet().toList();
           final studentPattern = RegExp('[BGJMU]');
           final staffPattern = RegExp('[E]');
 
-          if ((newModel.ucsdaffiliation ?? "").contains(studentPattern)) {
+          if ((newModel.ucsdAffiliation ?? "").contains(studentPattern)) {
             newModel..classifications = Classifications.fromJson({'student': true, 'staff': false});
-          } else if ((newModel.ucsdaffiliation ?? "").contains(staffPattern)) {
+          } else if ((newModel.ucsdAffiliation ?? "").contains(staffPattern)) {
             newModel..classifications = Classifications.fromJson({'staff': true, 'student': false});
           } else {
             newModel.classifications = Classifications.fromJson({'student': false, 'staff': false});
@@ -315,17 +315,17 @@ class UserDataProvider extends ChangeNotifier {
     await _pushNotificationDataProvider.fetchTopicsList();
     try {
       profile.username = await getUsernameFromDevice();
-      profile.ucsdaffiliation = _authenticationModel.ucsdaffiliation;
+      profile.ucsdAffiliation = _authenticationModel.ucsdaffiliation;
       profile.pid = _authenticationModel.pid;
       profile.subscribedTopics = _pushNotificationDataProvider.publicTopics();
       final studentPattern = RegExp('[BGJMU]');
       final staffPattern = RegExp('[E]');
 
-      if ((profile.ucsdaffiliation ?? "").contains(studentPattern)) {
+      if ((profile.ucsdAffiliation ?? "").contains(studentPattern)) {
         profile
           ..classifications = Classifications.fromJson({'student': true, 'staff': false})
           ..subscribedTopics!.addAll(_pushNotificationDataProvider.studentTopics());
-      } else if ((profile.ucsdaffiliation ?? "").contains(staffPattern)) {
+      } else if ((profile.ucsdAffiliation ?? "").contains(staffPattern)) {
         profile
           ..classifications = Classifications.fromJson({'staff': true, 'student': false})
           ..subscribedTopics!.addAll(_pushNotificationDataProvider.staffTopics());

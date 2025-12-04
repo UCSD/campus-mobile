@@ -110,13 +110,13 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   double getHaversineDistance(lat1, lon1, double lat2, double lon2) {
-    var R = 6371; // Radius of the earth in km
+    var r = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1)!; // deg2rad below
     var dLon = deg2rad(lon2 - lon1)!;
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(deg2rad(lat1)!) * Math.cos(deg2rad(lat2)!) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
+    var d = r * c; // Distance in km
     return d;
   }
 
@@ -148,15 +148,17 @@ class ShuttleDataProvider extends ChangeNotifier {
   ShuttleStopModel? get closestStop => _closestStop;
   List<ShuttleStopModel> get stopsToRender {
     var stopsToRenderList = <ShuttleStopModel>[];
-    if (fetchedStops != null)
+    if (fetchedStops != null && userDataProvider?.userProfileModel.selectedStops != null) {
       for (var i = 0; i < userDataProvider!.userProfileModel.selectedStops!.length; i++) {
         int stopID = userDataProvider!.userProfileModel.selectedStops![i]!;
         if (fetchedStops![stopID] != null) stopsToRenderList.add(fetchedStops![stopID]!);
       }
+    }
     return stopsToRenderList;
   }
 
   Map<int, ShuttleStopModel> get stopsNotSelected {
+    if (fetchedStops == null) return <int, ShuttleStopModel>{};
     var output = new Map<int, ShuttleStopModel>.from(fetchedStops!);
     for (ShuttleStopModel? stop in stopsToRender) {
       output.remove(stop!.id);

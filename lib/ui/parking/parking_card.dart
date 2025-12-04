@@ -17,7 +17,7 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  static const cardId = 'parking';
+  static const CARD_ID = 'parking';
 
   late ParkingDataProvider _parkingDataProvider;
 
@@ -35,25 +35,25 @@ class _ParkingCardState extends State<ParkingCard> {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[CARD_ID]!,
       isLoading: _parkingDataProvider.isLoading,
       reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(context),
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      active: Provider.of<CardsDataProvider>(context).cardStates[CARD_ID],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(CARD_ID),
       actionButtons: [
         ActionButton(
             buttonText: 'MANAGE SPOTS',
             onPressed: () {
               if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null)
-                Navigator.pushNamed(context, RoutePaths.SpotTypesView);
+                Navigator.pushNamed(context, RoutePaths.SPOT_TYPES_VIEW);
             }),
         ActionLink(
             buttonText: 'MANAGE LOTS',
             onPressed: () {
               if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null)
-                Navigator.pushNamed(context, RoutePaths.ManageParkingView);
+                Navigator.pushNamed(context, RoutePaths.MANAGE_PARKING_VIEW);
             }),
       ],
     );

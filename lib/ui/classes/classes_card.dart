@@ -26,7 +26,7 @@ class ClassScheduleCard extends StatelessWidget {
           Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildClassScheduleCard(
         context,
@@ -39,7 +39,7 @@ class ClassScheduleCard extends StatelessWidget {
         ActionButton(
           buttonText: 'VIEW ALL CLASSES',
           onPressed: () {
-            Navigator.pushNamed(context, RoutePaths.ClassScheduleViewAll);
+            Navigator.pushNamed(context, RoutePaths.CLASS_SCHEDULE_VIEW_ALL);
           },
         ),
       ],

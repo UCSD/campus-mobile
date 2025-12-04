@@ -144,7 +144,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
           ),
         ),
         onTap: () async {
-          Navigator.pushNamedAndRemoveUntil(context, RoutePaths.BottomNavigationBar, (_) => false);
+          Navigator.pushNamedAndRemoveUntil(context, RoutePaths.BOTTOM_NAVIGATION_BAR, (_) => false);
           final prefs = await SharedPreferences.getInstance();
           prefs.setBool('showOnboardingScreen', false);
         },

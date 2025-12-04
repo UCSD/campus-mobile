@@ -55,15 +55,16 @@ class DiningModel {
 
   DiningModel.fromJson(Map<String, dynamic> json)
       : id = json["id"],
-        name = json["name"],
-        description = json["description"],
-        location = json["location"],
-        address = json["address"],
-        tel = json["tel"],
+        name = json["name"] ?? "",
+        description = json["description"] ?? "",
+        location = json["location"] ?? "",
+        address = json["address"] ?? "",
+        tel = json["tel"] ?? "",
         meals = json["meals"] == null ? null : mealsValues.map[json["meals"]],
         persistentMenu = json["persistentMenu"],
-        paymentOptions = List<String>.from(json["paymentOptions"].map((x) => x)),
-        paymentFilterTypes = json["paymentFilterTypes"],
+        paymentOptions =
+            json["paymentOptions"] == null ? <String>[] : List<String>.from(json["paymentOptions"].map((x) => x ?? "")),
+        paymentFilterTypes = json["paymentFilterTypes"] ?? "",
         images = json["images"] == null ? null : List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
         coordinates = json["coords"] == null ? null : Coordinates.fromJson(json["coords"]),
         regularHours = RegularHours.fromJson(json["regularHours"]),

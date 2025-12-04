@@ -16,7 +16,7 @@ class MapSearchBarPlaceHolder extends StatelessWidget {
           margin: EdgeInsets.all(5),
           child: RawMaterialButton(
             onPressed: () {
-              Navigator.pushNamed(context, RoutePaths.MapSearch);
+              Navigator.pushNamed(context, RoutePaths.MAP_SEARCH);
             },
             child: Row(
               children: <Widget>[

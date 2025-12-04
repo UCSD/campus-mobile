@@ -34,8 +34,8 @@ done
 # Function to check if a name follows UPPER_SNAKE_CASE
 is_upper_snake_case() {
   local name="$1"
-  # UPPER_SNAKE_CASE: starts with uppercase letter, can contain uppercase letters, numbers, and underscores
-  if [[ "$name" =~ ^[A-Z][A-Z0-9_]*$ ]]; then
+  # UPPER_SNAKE_CASE: can start with underscore (for private) or uppercase letter, followed by uppercase letters, numbers, and underscores
+  if [[ "$name" =~ ^(_?[A-Z][A-Z0-9_]*)$ ]]; then
     return 0
   else
     return 1

@@ -55,7 +55,7 @@ class AvailabilityDisplay extends StatelessWidget {
             if (subLocation.floors.isNotEmpty) {
               Navigator.pushNamed(
                 context,
-                RoutePaths.AvailabilityDetailedView,
+                RoutePaths.AVAILABILITY_DETAILED_VIEW,
                 arguments: subLocation,
               );
             }
@@ -103,9 +103,8 @@ class AvailabilityDisplay extends StatelessWidget {
                     ),
                 ],
               ),
-              SizedBox(height: 6),
               SizedBox(
-                height: 12,
+                height: 6,
                 width: double.infinity,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(BORDER_RADIUS),
@@ -125,7 +124,7 @@ class AvailabilityDisplay extends StatelessWidget {
       );
     }).toList();
 
-    return Flexible(
+    return Expanded(
       child: Scrollbar(
         child: ListView(
           physics: NeverScrollableScrollPhysics(),

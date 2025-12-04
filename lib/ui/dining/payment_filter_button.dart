@@ -20,7 +20,7 @@ class PaymentFilterButton extends StatelessWidget {
       ),
       backgroundColor: Theme.of(context).brightness == Brightness.light ? ColorPrimary : Colors.white,
       onPressed: () {
-        Navigator.pushNamed(context, RoutePaths.DiningPaymentFilterView);
+        Navigator.pushNamed(context, RoutePaths.DINING_PAYMENT_FILTER_VIEW);
       },
     );
   }

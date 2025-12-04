@@ -205,7 +205,7 @@ class DiningList extends StatelessWidget {
       trailing: buildIconWithDistance(data, context),
       onTap: () {
         // if (data.id != null) Provider.of<DiningDataProvider>(context, listen: false).fetchDiningMenu(data.id!);
-        Navigator.pushNamed(context, RoutePaths.DiningOptionDetailView, arguments: data);
+        Navigator.pushNamed(context, RoutePaths.DINING_OPTION_DETAIL_VIEW, arguments: data);
       },
     );
   }

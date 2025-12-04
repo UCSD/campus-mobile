@@ -54,7 +54,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           ? Provider.of<SpeedTestProvider>(context, listen: false).init()
           : print("running test..."),
       isLoading: _speedTestProvider.isLoading!,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: _speedTestProvider.error,
       child: () => buildCardContent(context),
     );
@@ -176,8 +176,8 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                             return AlertDialogWidget(
                                 type: MessageTypeConstants.ERROR,
                                 icon: Icons.block_flipped,
-                                title: WifiConstants.wifiIssueFailedTitle,
-                                description: WifiConstants.wifiIssueFailedDesc,
+                                title: WifiConstants.WIFI_ISSUE_FAILED_TITLE,
+                                description: WifiConstants.WIFI_ISSUE_FAILED_DESC,
                                 onClose: () {
                                   Navigator.of(context).pop();
                                 });
@@ -353,8 +353,8 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
                             return AlertDialogWidget(
                                 type: MessageTypeConstants.SUCCESS,
                                 icon: Icons.check_circle_outline_sharp,
-                                title: WifiConstants.wifiIssueSuccessTitle,
-                                description: WifiConstants.wifiIssueSuccessDesc,
+                                title: WifiConstants.WIFI_ISSUE_SUCCESS_TITLE,
+                                description: WifiConstants.WIFI_ISSUE_SUCCESS_DESC,
                                 onClose: () {
                                   Navigator.of(context).pop();
                                 });

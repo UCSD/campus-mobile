@@ -56,7 +56,7 @@ class Maps extends StatelessWidget {
       var query = uri.queryParameters['query']!;
       Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
     }
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
@@ -65,7 +65,7 @@ class Maps extends StatelessWidget {
         var query = uri!.queryParameters['query']!;
         Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MapTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
         _sub?.cancel();
       }
     });

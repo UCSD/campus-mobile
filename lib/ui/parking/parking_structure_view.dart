@@ -68,8 +68,8 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
                       return AlertDialogWidget(
                         type: MessageTypeConstants.ERROR,
                         icon: Icons.block_flipped,
-                        title: ParkingConstants.lotMaxTitle,
-                        description: ParkingConstants.lotMaxDesc,
+                        title: ParkingConstants.LOT_MAX_TITLE,
+                        description: ParkingConstants.LOT_MAX_DESC,
                         onClose: () {
                           Navigator.of(context).pop();
                         },

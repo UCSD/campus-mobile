@@ -44,7 +44,7 @@ class ParkingDataProvider extends ChangeNotifier {
         _parkingViewState = _userDataProvider.userProfileModel.selectedParkingLots! as Map<String, bool>;
       } else {
         for (ParkingModel model in _parkingService.data!) {
-          if (ParkingDefaults.defaultLots.contains(model.locationId))
+          if (ParkingDefaults.DEFAULT_LOTS.contains(model.locationId))
             _parkingViewState[model.locationName] = true;
           else
             _parkingViewState[model.locationName] = false;
@@ -84,7 +84,7 @@ class ParkingDataProvider extends ChangeNotifier {
       } else {
         // Load default spot types
         for (Spot spot in _spotTypeModel.spots!) {
-          if (ParkingDefaults.defaultSpots.contains(spot.spotKey))
+          if (ParkingDefaults.DEFAULT_SPOTS.contains(spot.spotKey))
             _selectedSpotTypesState[spot.spotKey] = true;
           else
             _selectedSpotTypesState[spot.spotKey] = false;

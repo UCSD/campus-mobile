@@ -57,8 +57,8 @@ class NetworkHelper {
 
   static Widget getSilentLoginDialog() {
     return AlertDialog(
-      title: const Text(LoginConstants.silentLoginFailedTitle),
-      content: const Text(LoginConstants.silentLoginFailedDesc),
+      title: const Text(LoginConstants.SILENT_LOGIN_FAILED_TITLE),
+      content: const Text(LoginConstants.SILENT_LOGIN_FAILED_DESC),
       actions: [
         TextButton(
           style: TextButton.styleFrom(
@@ -106,7 +106,7 @@ class NetworkHelper {
     // if here, silent login has failed
     // throw exception to inform caller
     await Get.dialog(getSilentLoginDialog());
-    throw new Exception(ErrorConstants.silentLoginFailed);
+    throw new Exception(ErrorConstants.SILENT_LOGIN_FAILED);
   }
 
   static Future<dynamic> authorizedPost(String url, Map<String, String>? headers, dynamic body) async {
@@ -121,20 +121,20 @@ class NetworkHelper {
     } else if (_response.statusCode == 400) {
       // If that response was not OK, throw an error.
       String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.authorizedPostErrors + message);
+      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + message);
     } else if (_response.statusCode == 401) {
-      throw Exception(ErrorConstants.authorizedPostErrors + ErrorConstants.invalidBearerToken);
+      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + ErrorConstants.INVALID_BEARER_TOKEN);
     } else if (_response.statusCode == 404) {
       String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.authorizedPostErrors + message);
+      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + message);
     } else if (_response.statusCode == 500) {
       String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.authorizedPostErrors + message);
+      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + message);
     } else if (_response.statusCode == 409) {
       String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.duplicateRecord + message);
+      throw Exception(ErrorConstants.DUPLICATE_RECORD + message);
     } else {
-      throw Exception(ErrorConstants.authorizedPostErrors + 'unknown error');
+      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + 'unknown error');
     }
   }
 
@@ -151,17 +151,17 @@ class NetworkHelper {
     } else if (_response.statusCode == 400) {
       // If that response was not OK, throw an error.
       String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.authorizedPutErrors + message);
+      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + message);
     } else if (_response.statusCode == 401) {
-      throw Exception(ErrorConstants.authorizedPutErrors + ErrorConstants.invalidBearerToken);
+      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + ErrorConstants.INVALID_BEARER_TOKEN);
     } else if (_response.statusCode == 404) {
       String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.authorizedPutErrors + message);
+      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + message);
     } else if (_response.statusCode == 500) {
       String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.authorizedPutErrors + message);
+      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + message);
     } else {
-      throw Exception(ErrorConstants.authorizedPutErrors + 'unknown error');
+      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + 'unknown error');
     }
   }
 

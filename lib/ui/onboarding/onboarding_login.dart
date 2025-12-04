@@ -169,7 +169,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                                 .manualLogin(_emailTextFieldController.text, _passwordTextFieldController.text)
                                 .then((isLoggedIn) async {
                               if (isLoggedIn) {
-                                Navigator.pushNamedAndRemoveUntil(context, RoutePaths.OnboardingInitial, (_) => false);
+                                Navigator.pushNamedAndRemoveUntil(context, RoutePaths.ONBOARDING_INITIAL, (_) => false);
                               } else {
                                 showAlertDialog(context);
                               }
@@ -242,7 +242,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                 ),
               ),
               onTap: () async {
-                Navigator.pushNamedAndRemoveUntil(context, RoutePaths.OnboardingInitial, (_) => false);
+                Navigator.pushNamedAndRemoveUntil(context, RoutePaths.ONBOARDING_INITIAL, (_) => false);
               },
             ),
 
@@ -339,8 +339,8 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
       builder: (BuildContext context) => AlertDialogWidget(
         type: MessageTypeConstants.ERROR,
         icon: Icons.error_outline,
-        title: LoginConstants.loginFailedTitle,
-        description: LoginConstants.loginFailedDesc,
+        title: LoginConstants.LOGIN_FAILED_TITLE,
+        description: LoginConstants.LOGIN_FAILED_DESC,
         onClose: () {
           Navigator.of(context).pop(); // Close the dialog
         },

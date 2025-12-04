@@ -78,7 +78,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _messageToCount[id] = _freeFoodModel.body.count;
     } else {
       _error = _freeFoodService.error;
-      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) if (await _freeFoodService
+      if (_error != null && _error!.contains(ErrorConstants.INVALID_BEARER_TOKEN)) if (await _freeFoodService
           .getNewToken()) await fetchCount(id);
       removeId(id);
     }
@@ -98,7 +98,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _messageToMaxCount[id] = _freeFoodModel.body.maxCount;
     } else {
       _error = _freeFoodService.error;
-      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) if (await _freeFoodService
+      if (_error != null && _error!.contains(ErrorConstants.INVALID_BEARER_TOKEN)) if (await _freeFoodService
           .getNewToken()) await fetchMaxCount(id);
 
       removeId(id);
@@ -132,7 +132,7 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
     } else {
       _error = _freeFoodService.error;
-      if (_error != null && _error!.contains(ErrorConstants.invalidBearerToken)) if (await _freeFoodService
+      if (_error != null && _error!.contains(ErrorConstants.INVALID_BEARER_TOKEN)) if (await _freeFoodService
           .getNewToken()) await updateCount(id, body);
       removeId(id);
     }

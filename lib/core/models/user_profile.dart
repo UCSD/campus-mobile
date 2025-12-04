@@ -14,7 +14,7 @@ class UserProfileModel extends HiveObject {
   Classifications? classifications;
   int? latestTimeStamp;
   String? pid;
-  String? ucsdaffiliation;
+  String? ucsdAffiliation;
   String? username;
 
   @HiveField(0)
@@ -41,7 +41,7 @@ class UserProfileModel extends HiveObject {
       this.selectedLots,
       this.selectedOccuspaceLocations,
       this.subscribedTopics,
-      this.ucsdaffiliation,
+      this.ucsdAffiliation,
       this.username,
       this.selectedParkingSpots,
       this.selectedParkingLots,
@@ -59,7 +59,7 @@ class UserProfileModel extends HiveObject {
             : List<String>.from(json["selectedOccuspaceLocations"].map((x) => x)),
         subscribedTopics:
             json["subscribedTopics"] == null ? [] : List<String>.from(json["subscribedTopics"].map((x) => x)),
-        ucsdaffiliation: json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
+        ucsdAffiliation: json["ucsdaffiliation"] == null ? null : json["ucsdaffiliation"],
         username: json["username"] == null ? null : json["username"],
         selectedParkingLots: json["selectedParkingLots"] == null
             ? Map<String, bool>()
@@ -83,7 +83,7 @@ class UserProfileModel extends HiveObject {
         "selectedOccuspaceLocations":
             selectedOccuspaceLocations == null ? null : List<dynamic>.from(selectedOccuspaceLocations!.map((x) => x)),
         "subscribedTopics": subscribedTopics == null ? null : List<dynamic>.from(subscribedTopics!.map((x) => x)),
-        "ucsdaffiliation": ucsdaffiliation == null ? null : ucsdaffiliation,
+        "ucsdaffiliation": ucsdAffiliation == null ? null : ucsdAffiliation,
         "username": username == null ? null : username,
         "selectedParkingLots": selectedParkingLots == null
             ? null

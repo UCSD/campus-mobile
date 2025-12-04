@@ -1,43 +1,43 @@
 import 'package:flutter/material.dart';
 
 class RoutePaths {
-  static const String Home = '/';
-  static const String BottomNavigationBar = 'bottom_navigation_bar';
-  static const String OnboardingInitial = 'onboarding/initial';
-  static const String OnboardingLogin = 'onboarding/login';
-  static const String Map = 'map/map';
-  static const String MapSearch = 'map/map_search';
-  static const String MapLocationList = 'map/map_location_list';
-  static const String Notifications = 'notifications';
-  static const String Profile = 'profile';
-  static const String CardsView = 'profile/cards_view';
-  static const String NotificationsFilter = 'notifications/filter';
-  static const String NewsViewAll = 'news/newslist';
-  static const String EventsViewAll = 'events/eventslist';
-  static const String EventsAll = 'events/events_view_all';
-  static const String NewsDetailView = 'news/news_detail_view';
-  static const String EventDetailView = 'events/event_detail_view';
-  static const String LinksViewAll = 'links/links_list';
-  static const String ClassScheduleViewAll = 'class/classList';
-  static const String ManageAvailabilityView = 'availability/manage_locations_view';
-  static const String ManageParkingView = 'parking/manage_parking_view';
-  static const String ManageShuttleView = 'shuttle/manage_shuttle_view';
-  static const String AddShuttleStopsView = 'shuttle/add_shuttle_stops_view';
-  static const String DiningViewAllDiningOptions = 'dining/view_all_dining_options';
-  static const String DiningOptionDetailView = 'dining/option_detail_view';
-  static const String DiningPaymentFilterView = "dining/payment_filter_view";
-  // static const String DiningNutritionView = 'dining/dining_nutrition_view';
-  static const String Parking = "parking/parking_view";
-  static const String SpotTypesView = "parking/spot_types_view";
-  static const String ParkingStructureView = "parking/parking_structure_view";
-  static const String ParkingLotsView = "parking/parking_lots_view";
-  static const String NeighborhoodsView = "parking/neighborhoods_view";
-  static const String NeighborhoodsLotsView = "parking/neighborhoods_lot_view";
-  static const String AvailabilityDetailedView = "availability/detailed_view";
+  static const String HOME = '/';
+  static const String BOTTOM_NAVIGATION_BAR = 'bottom_navigation_bar';
+  static const String ONBOARDING_INITIAL = 'onboarding/initial';
+  static const String ONBOARDING_LOGIN = 'onboarding/login';
+  static const String MAP = 'map/map';
+  static const String MAP_SEARCH = 'map/map_search';
+  static const String MAP_LOCATION_LIST = 'map/map_location_list';
+  static const String NOTIFICATIONS = 'notifications';
+  static const String PROFILE = 'profile';
+  static const String CARDS_VIEW = 'profile/cards_view';
+  static const String NOTIFICATIONS_FILTER = 'notifications/filter';
+  static const String NEWS_VIEW_ALL = 'news/newslist';
+  static const String EVENTS_VIEW_ALL = 'events/eventslist';
+  static const String EVENTS_ALL = 'events/events_view_all';
+  static const String NEWS_DETAIL_VIEW = 'news/news_detail_view';
+  static const String EVENT_DETAIL_VIEW = 'events/event_detail_view';
+  static const String LINKS_VIEW_ALL = 'links/links_list';
+  static const String CLASS_SCHEDULE_VIEW_ALL = 'class/classList';
+  static const String MANAGE_AVAILABILITY_VIEW = 'availability/manage_locations_view';
+  static const String MANAGE_PARKING_VIEW = 'parking/manage_parking_view';
+  static const String MANAGE_SHUTTLE_VIEW = 'shuttle/manage_shuttle_view';
+  static const String ADD_SHUTTLE_STOPS_VIEW = 'shuttle/add_shuttle_stops_view';
+  static const String DINING_VIEW_ALL_DINING_OPTIONS = 'dining/view_all_dining_options';
+  static const String DINING_OPTION_DETAIL_VIEW = 'dining/option_detail_view';
+  static const String DINING_PAYMENT_FILTER_VIEW = "dining/payment_filter_view";
+  // static const String DINING_NUTRITION_VIEW = 'dining/dining_nutrition_view';
+  static const String PARKING = "parking/parking_view";
+  static const String SPOT_TYPES_VIEW = "parking/spot_types_view";
+  static const String PARKING_STRUCTURE_VIEW = "parking/parking_structure_view";
+  static const String PARKING_LOTS_VIEW = "parking/parking_lots_view";
+  static const String NEIGHBORHOODS_VIEW = "parking/neighborhoods_view";
+  static const String NEIGHBORHOODS_LOTS_VIEW = "parking/neighborhoods_lot_view";
+  static const String AVAILABILITY_DETAILED_VIEW = "availability/detailed_view";
 }
 
 class RouteTitles {
-  static const titleMap = {
+  static const TITLE_MAP = {
     'Maps': 'MAP',
     'MapSearch': 'MAP',
     'MapLocationList': 'MAP',
@@ -68,17 +68,17 @@ class RouteTitles {
 }
 
 class ParkingDefaults {
-  static const defaultLots = [
+  static const DEFAULT_LOTS = [
     "Athena",
     "Gilman",
     "Hopkins",
     "Theatre District",
   ];
-  static const defaultSpots = ["S", "B", "A"];
+  static const DEFAULT_SPOTS = ["S", "B", "A"];
 }
 
 class DiningConstants {
-  static const payment_filter_types = [
+  static const PAYMENT_FILTER_TYPES = [
     "Triton Cash",
     "Dining Dollars",
     "Apple/Google Pay",
@@ -90,44 +90,44 @@ class DiningConstants {
 }
 
 class ButtonText {
-  static const ScanNowFull = 'SCAN YOUR COVID-19 KIT.';
-  static const ScanNow = 'SCAN NOW';
-  static const SignInFull = 'SCAN YOUR COVID-19 KIT.';
-  static const SignIn = 'SIGN IN';
+  static const SCAN_NOW_FULL = 'SCAN YOUR COVID-19 KIT.';
+  static const SCAN_NOW = 'SCAN NOW';
+  static const SIGN_IN_FULL = 'SCAN YOUR COVID-19 KIT.';
+  static const SIGN_IN = 'SIGN IN';
 }
 
 class ErrorConstants {
-  static const authorizedPostErrors = 'Failed to upload data: ';
-  static const authorizedPutErrors = 'Failed to update data: ';
-  static const invalidBearerToken = 'Invalid bearer token';
-  static const notAcceptable = 'DioError [DioErrorType.response]: Http status error [406]';
-  static const duplicateRecord = 'DioError [DioErrorType.response]: Http status error [409]';
-  static const invalidMedia = 'DioError [DioErrorType.response]: Http status error [415]';
-  static const silentLoginFailed = "Silent login failed";
-  static const locationFailed = "Location was not available";
+  static const AUTHORIZED_POST_ERRORS = 'Failed to upload data: ';
+  static const AUTHORIZED_PUT_ERRORS = 'Failed to update data: ';
+  static const INVALID_BEARER_TOKEN = 'Invalid bearer token';
+  static const NOT_ACCEPTABLE = 'DioError [DioErrorType.response]: Http status error [406]';
+  static const DUPLICATE_RECORD = 'DioError [DioErrorType.response]: Http status error [409]';
+  static const INVALID_MEDIA = 'DioError [DioErrorType.response]: Http status error [415]';
+  static const SILENT_LOGIN_FAILED = "Silent login failed";
+  static const LOCATION_FAILED = "Location was not available";
 }
 
 class LoginConstants {
-  static const silentLoginFailedTitle = 'Oops! You\'re not logged in.';
-  static const silentLoginFailedDesc =
+  static const SILENT_LOGIN_FAILED_TITLE = 'Oops! You\'re not logged in.';
+  static const SILENT_LOGIN_FAILED_DESC =
       'The system has logged you out (probably by mistake). Go to Profile to log back in.';
-  static const loginFailedTitle = 'Sorry, unable to sign you in.';
-  static const loginFailedDesc =
+  static const LOGIN_FAILED_TITLE = 'Sorry, unable to sign you in.';
+  static const LOGIN_FAILED_DESC =
       'Be sure you are using the correct credentials; TritonLink login if you are a student, SSO (AD or Active Directory) if you are a Faculty/Staff.';
 
-  static const shuttleMaxTitle = 'Maximum shuttle stops reached';
-  static const shuttleMaxDesc =
+  static const SHUTTLE_MAX_TITLE = 'Maximum shuttle stops reached';
+  static const SHUTTLE_MAX_DESC =
       'The maximum number of shuttle stops allowed is five. Please remove some stops to add more.';
 }
 
 class ParkingConstants {
-  static const spotMaxTitle = 'Maximum parking spots reached';
-  static const spotMaxDesc =
+  static const SPOT_MAX_TITLE = 'Maximum parking spots reached';
+  static const SPOT_MAX_DESC =
       'The maximum number of parking spots allowed is three. Please remove some spots to add more.';
-  static const lotMaxTitle = 'Maximum parking lots reached';
-  static const lotMaxDesc =
+  static const LOT_MAX_TITLE = 'Maximum parking lots reached';
+  static const LOT_MAX_DESC =
       'You have reached the maximum number of lots (10) that can be selected. Please deselect some lots before adding more.';
-  static const Map<String, IconData> stringToIconData = {
+  static const Map<String, IconData> STRING_TO_ICON_DATA = {
     'icon - e03e': Icons.accessible,
     'icon - e486': Icons.group,
   };
@@ -135,33 +135,33 @@ class ParkingConstants {
 
 class WifiConstants {
   // Initial State
-  static const wifiIssueFailedTitle = 'Could not report issue';
-  static const wifiIssueFailedDesc = 'Please run speed test to report issue.';
+  static const WIFI_ISSUE_FAILED_TITLE = 'Could not report issue';
+  static const WIFI_ISSUE_FAILED_DESC = 'Please run speed test to report issue.';
   // Finished State
-  static const wifiIssueSuccessTitle = 'Issue Reported';
-  static const wifiIssueSuccessDesc =
+  static const WIFI_ISSUE_SUCCESS_TITLE = 'Issue Reported';
+  static const WIFI_ISSUE_SUCCESS_DESC =
       'Thank you for helping improve UCSD wireless. Your test results have been sent to IT Services.';
 }
 
 class Plugins {
-  static const FrontCamera = 'FRONT CAMERA';
+  static const FRONT_CAMERA = 'FRONT CAMERA';
 }
 
 class NavigatorConstants {
-  static const HomeTab = 0;
-  static const MapTab = 1;
-  static const NotificationsTab = 2;
-  static const ProfileTab = 3;
+  static const HOME_TAB = 0;
+  static const MAP_TAB = 1;
+  static const NOTIFICATIONS_TAB = 2;
+  static const PROFILE_TAB = 3;
 }
 
 class NotificationsConstants {
-  static const statusNoMessages = 'You have no notifications.\n' +
+  static const STATUS_NO_MESSAGES = 'You have no notifications.\n' +
       'It looks like you\'ve unsubscribed from all topics.\n\n' +
       'You can re-subscribe to specific topics via the Notifications Filter.';
-  static const statusFetchProblem = 'There was a problem fetching your messages.\n\n' + 'Please try again soon.';
-  static const statusFetching = 'Loading your notifications, please wait.';
-  static const statusNone = '';
-  static const statusNoMoreMessages = 'No more messages.';
+  static const STATUS_FETCH_PROBLEM = 'There was a problem fetching your messages.\n\n' + 'Please try again soon.';
+  static const STATUS_FETCHING = 'Loading your notifications, please wait.';
+  static const STATUS_NONE = '';
+  static const STATUS_NO_MORE_MESSAGES = 'No more messages.';
 }
 
 class MessageTypeConstants {
@@ -172,17 +172,17 @@ class MessageTypeConstants {
 }
 
 class DataPersistence {
-  static const cardStates = 'cardStates';
-  static const cardOrder = 'cardOrder';
-  static const AuthenticationModel = 'AuthenticationModel';
-  static const UserProfileModel = 'UserProfileModel';
+  static const CARD_STATES = 'cardStates';
+  static const CARD_ORDER = 'cardOrder';
+  static const AUTHENTICATION_MODEL = 'AuthenticationModel';
+  static const USER_PROFILE_MODEL = 'UserProfileModel';
 }
 
 /// Maps Card IDs to Card titles
 class CardTitleConstants {
-  static const titleMap = {
-    'MyStudentChart': 'MyStudentChart',
-    'MyUCSDChart': 'MyUCSDChart',
+  static const TITLE_MAP = {
+    'my_student_chart': 'MY STUDENT CHART',
+    'my_ucsd_chart': 'MY UCSD CHART',
     'student_id': 'STUDENT ID',
     'speed_test': "TEST WIFI SPEED",
     'employee_id': 'STAFF ID',
@@ -198,11 +198,11 @@ class CardTitleConstants {
 }
 
 class CardMenuOptionConstants {
-  static const reloadCard = 'reload card';
-  static const hideCard = 'hide card';
+  static const RELOAD_CARD = 'reload card';
+  static const HIDE_CARD = 'hide card';
 }
 
 class ConnectivityConstants {
-  static const offlineAlert = 'It appears you are currently offline. Check network status and try again.';
-  static const offlineTitle = 'No Internet';
+  static const OFFLINE_ALERT = 'It appears you are currently offline. Check network status and try again.';
+  static const OFFLINE_TITLE = 'No Internet';
 }

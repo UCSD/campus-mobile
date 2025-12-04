@@ -48,7 +48,7 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
             onTap: () {
               Navigator.pushNamed(
                 context,
-                RoutePaths.NeighborhoodsLotsView,
+                RoutePaths.NEIGHBORHOODS_LOTS_VIEW,
                 arguments: value,
               );
             },

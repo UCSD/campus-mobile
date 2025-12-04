@@ -81,7 +81,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
         /// switch to the notifications tab
         Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
-            NavigatorConstants.NotificationsTab;
+            NavigatorConstants.NOTIFICATIONS_TAB;
       }
 
       /// Foreground messaging
@@ -103,11 +103,11 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
           /// Set tab bar index to the Notifications tab
           Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
-              NavigatorConstants.NotificationsTab;
+              NavigatorConstants.NOTIFICATIONS_TAB;
 
           /// Navigate to Notifications tab
           Navigator.of(context)
-              .pushNamedAndRemoveUntil(RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
+              .pushNamedAndRemoveUntil(RoutePaths.BOTTOM_NAVIGATION_BAR, (Route<dynamic> route) => false);
         },
       );
     } on PlatformException {
@@ -121,11 +121,12 @@ class PushNotificationDataProvider extends ChangeNotifier {
     Provider.of<MessagesDataProvider>(this.context, listen: false).fetchMessages(true);
 
     /// Navigate to Notifications tab
-    Navigator.of(this.context).pushNamedAndRemoveUntil(RoutePaths.BottomNavigationBar, (Route<dynamic> route) => false);
+    Navigator.of(this.context)
+        .pushNamedAndRemoveUntil(RoutePaths.BOTTOM_NAVIGATION_BAR, (Route<dynamic> route) => false);
 
     /// Set tab bar index to the Notifications tab
     Provider.of<BottomNavigationBarProvider>(this.context, listen: false).currentIndex =
-        NavigatorConstants.NotificationsTab;
+        NavigatorConstants.NOTIFICATIONS_TAB;
     Provider.of<CustomAppBar>(context, listen: false).changeTitle("Notifications");
   }
 

@@ -221,7 +221,7 @@ class SpeedTestProvider extends ChangeNotifier {
           return value;
         });
       } catch (exception) {
-        if (exception.toString().contains(ErrorConstants.invalidBearerToken)) {
+        if (exception.toString().contains(ErrorConstants.INVALID_BEARER_TOKEN)) {
           _userDataProvider.silentLogin();
           offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
           NetworkHelper.authorizedPost(mobileLoggerApiWifi, offloadDataHeader, json.encode(log));
@@ -273,7 +273,7 @@ class SpeedTestProvider extends ChangeNotifier {
       try {
         NetworkHelper.authorizedPost(mobileLoggerApiWifiReport, offloadDataHeader, json.encode(wiFiLog));
       } catch (exception) {
-        if (exception.toString().contains(ErrorConstants.invalidBearerToken)) {
+        if (exception.toString().contains(ErrorConstants.INVALID_BEARER_TOKEN)) {
           _userDataProvider.silentLogin();
           offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
           NetworkHelper.authorizedPost(mobileLoggerApiWifiReport, offloadDataHeader, json.encode(wiFiLog));
