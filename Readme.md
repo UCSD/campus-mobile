@@ -62,6 +62,18 @@ git checkout experimental
 git checkout -b experimental
 ```
 
+#### Using the Pre-Commit Hook
+Before you start committing any changes, you can enable the repository's pre-commit hook, which will automatically run our lint/format scripts before each commit.
+
+To enable it:
+
+```shell
+# Install pre-commit hook (one-time on your machine)
+pip install pre-commit # or brew install pre-commit
+
+# Enable the repo's pre-commit hook
+pre-commit install # or python -m pre_commit install
+```
 You are now ready to begin developing your new feature. Commit your code often, using present-tense and concise verbiage explaining the work completed.
 
 Example: Add, commit, and push your new feature:
