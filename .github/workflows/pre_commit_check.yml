@@ -71,7 +71,7 @@ jobs:
               const violationsFound = '${{ steps.check.outputs.violations_found }}' === 'true';
               // Create violations comment if violations were found
               if (violationsFound) {
-                let violationsComment = `## Code Style Violations Found
+                let violationsComment = '## Code Style Violations Found\n\n';
 
                 // Try to parse violation details from the file
                 const violationsFile = '${{ steps.check.outputs.violations_file }}';
@@ -99,13 +99,13 @@ jobs:
                           // Parse lines like "- Static Constants (UPPER_SNAKE_CASE): FAILED (91 violations)"
                           const match = line.match(/- ([^:]+): FAILED \((\d+) violations\)/);
                           if (match) {
-                            failedChecks.push(`- **${match[1]}**: ${match[2]} violations`);
+                            failedChecks.push('- **' + match[1] + '**: ' + match[2] + ' violations');
                           }
                         }
                       });
 
                       if (totalCategories && totalViolations && failedChecks.length > 0) {
-                        detailsSection = `${failedChecks.join('\n')}`;
+                        detailsSection = failedChecks.join('\n');
                       }
                     }
                   } catch (error) {
@@ -115,7 +115,7 @@ jobs:
 
                 // If we couldn't parse details, use a generic message
                 if (!detailsSection) {
-                  detailsSection = `Based on the automated check, violations were found in multiple categories.`;
+                  detailsSection = 'Based on the automated check, violations were found in multiple categories.';
                 }
 
             violationsComment += detailsSection + '\n\n' +
