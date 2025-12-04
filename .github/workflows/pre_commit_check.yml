@@ -26,13 +26,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-         python-version: '3.x'
+          python-version: '3.x'
 
       # 3 - Install our pre-commit
       - name: Install pre-commit
         run: |
-           python -m pip install --upgrade pip
-           pip install pre-commit
+          python -m pip install --upgrade pip
+          pip install pre-commit
 
       # 4 - Run pre-commit. If the script exits with a non-zero code, the GitHub Action will fail the PR.
       - name: Run pre-commit hooks
@@ -46,16 +46,16 @@ jobs:
           export VIOLATIONS_OUTPUT="$violations_file"
 
           if ./scripts/auto_check_all.sh; then
-          echo "violations_found=false" >> $GITHUB_OUTPUT
+            echo "violations_found=false" >> $GITHUB_OUTPUT
           else
-          echo "violations_found=true" >> $GITHUB_OUTPUT
-          echo "violations_file=$violations_file" >> $GITHUB_OUTPUT
+            echo "violations_found=true" >> $GITHUB_OUTPUT
+            echo "violations_file=$violations_file" >> $GITHUB_OUTPUT
 
-          if [[ ! -f "$violations_file" || ! -s "$violations_file" ]]; then
-           echo "VIOLATIONS_DETAILS_START" > "$violations_file"
-           echo "Code style violations detected but details unavailable" >> "$violations_file"
-           echo "VIOLATIONS_DETAILS_END" >> "$violations_file"
-          fi
+            if [[ ! -f "$violations_file" || ! -s "$violations_file" ]]; then
+              echo "VIOLATIONS_DETAILS_START" > "$violations_file"
+              echo "Code style violations detected but details unavailable" >> "$violations_file"
+              echo "VIOLATIONS_DETAILS_END" >> "$violations_file"
+            fi
           fi
 
       - name: Comment on PR
@@ -105,9 +105,7 @@ jobs:
                       });
 
                       if (totalCategories && totalViolations && failedChecks.length > 0) {
-                        detailsSection = `
-
-            ${failedChecks.join('\n')}`;
+                        detailsSection = `${failedChecks.join('\n')}`;
                       }
                     }
                   } catch (error) {
@@ -117,12 +115,10 @@ jobs:
 
                 // If we couldn't parse details, use a generic message
                 if (!detailsSection) {
-                  detailsSection = `
-
-            Based on the automated check, violations were found in multiple categories.`;
+                  detailsSection = `Based on the automated check, violations were found in multiple categories.`;
                 }
 
-                violationsComment += detailsSection + `
+            violationsComment += detailsSection + '\n' + `
 
             - **Total Violations**: ${totalViolations}
             - **Total Categories Failed**: ${totalCategories}
