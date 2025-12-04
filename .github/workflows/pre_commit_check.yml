@@ -120,8 +120,8 @@ jobs:
 
             violationsComment += detailsSection + '\n' + `
 
-            - **Total Violations**: ${totalViolations}
-            - **Total Categories Failed**: ${totalCategories}
+            - **Total Violations**: ` + totalViolations + `
+            - **Total Categories Failed**: ` + totalCategories + `
 
             ## Here are the formatting rules to follow:
 
