@@ -76,6 +76,8 @@ jobs:
                 // Try to parse violation details from the file
                 const violationsFile = '${{ steps.check.outputs.violations_file }}';
                 let detailsSection = '';
+                let totalCategories = '';
+                let totalViolations = '';
 
                 if (fs.existsSync(violationsFile)) {
                   try {
@@ -85,9 +87,6 @@ jobs:
                     if (detailsMatch) {
                       const details = detailsMatch[1];
                       const lines = details.split('\n').filter(line => line.trim());
-
-                      let totalCategories = '';
-                      let totalViolations = '';
                       const failedChecks = [];
 
                       lines.forEach(line => {
@@ -119,8 +118,8 @@ jobs:
                 }
 
             violationsComment += detailsSection + '\n\n' +
-              '- **Total Violations**: ' + totalViolations + '\n' +
-              '- **Total Categories Failed**: ' + totalCategories + '\n\n' +
+              '- **Total Violations**: ' + (totalViolations || 'Unknown') + '\n' +
+              '- **Total Categories Failed**: ' + (totalCategories || 'Unknown') + '\n\n' +
               '## Here are the formatting rules to follow:\n\n' +
               '- **Static Constants** have to use `UPPER_SNAKE_CASE` (e.g., `MAX_RETRY_COUNT`)\n' +
               '- **Classes** have to use `UpperCamelCase` (e.g., `UserProfile`)\n' +
