@@ -13,8 +13,7 @@ class MyStudentChartCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => null,
       isLoading: false,
       titleText: CardTitleConstants.titleMap[cardId]!,
@@ -26,8 +25,7 @@ class MyStudentChartCard extends StatelessWidget {
           onPressed: () {
             try {
               launchUrl(
-                  Uri.parse(
-                      'https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN'),
+                  Uri.parse('https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN'),
                   mode: LaunchMode.inAppBrowserView);
             } catch (e) {
               // an error occurred, do nothing

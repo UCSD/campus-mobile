@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NetworkHelper {
-  ///TODO: inside each service that file place a switch statement to handle all
-  ///TODO: different errors thrown by the Dio client DioErrorType.RESPONSE
+  // TODO: inside each service that file place a switch statement to handle all - December 2025
+  // TODO: different errors thrown by the Dio client DioErrorType.RESPONSE - December 2025
 
   // private constructor to show that this class should not be instantiated
   const NetworkHelper._();
@@ -16,8 +16,7 @@ class NetworkHelper {
   static const int SSO_REFRESH_MAX_RETRIES = 3;
   static const int SSO_REFRESH_RETRY_INCREMENT = 5000;
   static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
-  static final DEFAULT_TIMEOUT =
-      Duration(milliseconds: int.parse(dotenv.get('DEFAULT_TIMEOUT')));
+  static final DEFAULT_TIMEOUT = Duration(milliseconds: int.parse(dotenv.get('DEFAULT_TIMEOUT')));
 
   static Future<dynamic> fetchData(String url) async {
     Dio dio = new Dio();
@@ -30,14 +29,13 @@ class NetworkHelper {
       // If server returns an OK response, return the body
       return _response.data;
     } else {
-      ///TODO: log this as a bug because the response was bad
+      // TODO: log this as a bug because the response was bad - December 2025
       // If that response was not OK, throw an error.
       throw Exception('Failed to fetch data: ' + _response.data);
     }
   }
 
-  static Future<dynamic> authorizedFetch(
-      String url, Map<String, String> headers) async {
+  static Future<dynamic> authorizedFetch(String url, Map<String, String> headers) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -50,7 +48,7 @@ class NetworkHelper {
       // If server returns an OK response, return the body
       return _response.data;
     } else {
-      ///TODO: log this as a bug because the response was bad
+      // TODO: log this as a bug because the response was bad - December 2025
       // If that response was not OK, throw an error.
 
       throw Exception('Failed to fetch data: ' + _response.data);
@@ -77,8 +75,7 @@ class NetworkHelper {
 
   // method for implementing exponential backoff for silentLogin
   // mimicking existing code from React Native versions of campus-mobile
-  static Future<dynamic> authorizedPublicPost(
-      String url, Map<String, String> headers, dynamic body) async {
+  static Future<dynamic> authorizedPublicPost(String url, Map<String, String> headers, dynamic body) async {
     int retries = 0;
     int waitTime = 0;
     try {
@@ -112,8 +109,7 @@ class NetworkHelper {
     throw new Exception(ErrorConstants.silentLoginFailed);
   }
 
-  static Future<dynamic> authorizedPost(
-      String url, Map<String, String>? headers, dynamic body) async {
+  static Future<dynamic> authorizedPost(String url, Map<String, String>? headers, dynamic body) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -127,8 +123,7 @@ class NetworkHelper {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPostErrors + message);
     } else if (_response.statusCode == 401) {
-      throw Exception(ErrorConstants.authorizedPostErrors +
-          ErrorConstants.invalidBearerToken);
+      throw Exception(ErrorConstants.authorizedPostErrors + ErrorConstants.invalidBearerToken);
     } else if (_response.statusCode == 404) {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPostErrors + message);
@@ -143,8 +138,7 @@ class NetworkHelper {
     }
   }
 
-  static Future<dynamic> authorizedPut(
-      String url, Map<String, String> headers, dynamic body) async {
+  static Future<dynamic> authorizedPut(String url, Map<String, String> headers, dynamic body) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -159,8 +153,7 @@ class NetworkHelper {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPutErrors + message);
     } else if (_response.statusCode == 401) {
-      throw Exception(ErrorConstants.authorizedPutErrors +
-          ErrorConstants.invalidBearerToken);
+      throw Exception(ErrorConstants.authorizedPutErrors + ErrorConstants.invalidBearerToken);
     } else if (_response.statusCode == 404) {
       String message = _response.data['message'] ?? '';
       throw Exception(ErrorConstants.authorizedPutErrors + message);
@@ -172,8 +165,7 @@ class NetworkHelper {
     }
   }
 
-  static Future<dynamic> authorizedDelete(
-      String url, Map<String, String> headers) async {
+  static Future<dynamic> authorizedDelete(String url, Map<String, String> headers) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
@@ -184,7 +176,7 @@ class NetworkHelper {
         // If server returns an OK response, return the body
         return _response.data;
       } else {
-        ///TODO: log this as a bug because the response was bad
+        // TODO: log this as a bug because the response was bad - December 2025
         // If that response was not OK, throw an error.
         throw Exception('Failed to delete data: ' + _response.data);
       }
@@ -204,8 +196,7 @@ class NetworkHelper {
       "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
     };
     try {
-      var response = await authorizedPost(
-          tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
+      var response = await authorizedPost(tokenEndpoint, tokenHeaders, "grant_type=client_credentials");
       headers["Authorization"] = "Bearer " + response["access_token"];
       return true;
     } catch (e) {

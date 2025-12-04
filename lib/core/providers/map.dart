@@ -41,11 +41,9 @@ class MapsDataProvider extends ChangeNotifier {
   void addMarker(int listIndex) {
     final Marker marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
-      position: LatLng(_mapSearchModels[listIndex].mkrLat!,
-          _mapSearchModels[listIndex].mkrLong!),
-      infoWindow: InfoWindow(
-          title: _mapSearchModels[listIndex].title,
-          snippet: _mapSearchModels[listIndex].description),
+      position: LatLng(_mapSearchModels[listIndex].mkrLat!, _mapSearchModels[listIndex].mkrLong!),
+      infoWindow:
+          InfoWindow(title: _mapSearchModels[listIndex].title, snippet: _mapSearchModels[listIndex].description),
     );
     _markers.clear();
     _markers[marker.markerId] = marker;
@@ -56,14 +54,10 @@ class MapsDataProvider extends ChangeNotifier {
 
   void updateMapPosition() {
     if (_markers.isNotEmpty && _mapController != null) {
-      _mapController!
-          .animateCamera(
-              CameraUpdate.newLatLng(_markers.values.toList()[0].position))
-          .then((_) async {
+      _mapController!.animateCamera(CameraUpdate.newLatLng(_markers.values.toList()[0].position)).then((_) async {
         await Future.delayed(Duration(seconds: 1));
         try {
-          _mapController!
-              .showMarkerInfoWindow(_markers.values.toList()[0].markerId);
+          _mapController!.showMarkerInfoWindow(_markers.values.toList()[0].markerId);
         } catch (e) {}
       });
     }
@@ -71,9 +65,7 @@ class MapsDataProvider extends ChangeNotifier {
 
   void reorderLocations() {
     _mapSearchModels.sort((MapSearchModel a, MapSearchModel b) {
-      if (a.distance != null && b.distance != null) {
-        return a.distance!.compareTo(b.distance!);
-      }
+      if (a.distance != null && b.distance != null) return a.distance!.compareTo(b.distance!);
       return 0;
     });
   }
@@ -100,13 +92,12 @@ class MapsDataProvider extends ChangeNotifier {
         _searchHistory.add(query); // ...If it is not, add it...
       } else {
         // ...otherwise...
-        _searchHistory
-            .remove(query); // ...reorder search history to put it back on top
+        _searchHistory.remove(query); // ...reorder search history to put it back on top
         _searchHistory.add(query);
       }
       _lastUpdated = DateTime.now();
     } else {
-      ///TODO: determine what error to show to the user
+      // TODO: determine what error to show to the user - December 2025
       _error = _mapSearchService.error;
       _noResults = true;
     }
@@ -115,15 +106,12 @@ class MapsDataProvider extends ChangeNotifier {
   }
 
   void populateDistances() {
-    double? latitude =
-        _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
-    double? longitude =
-        _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
+    double? latitude = _coordinates!.lat != null ? _coordinates!.lat : _defaultLat;
+    double? longitude = _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
     if (_coordinates != null) {
       for (MapSearchModel model in _mapSearchModels) {
         if (model.mkrLat != null && model.mkrLong != null) {
-          var distance = calculateDistance(
-              latitude!, longitude!, model.mkrLat!, model.mkrLong!);
+          var distance = calculateDistance(latitude!, longitude!, model.mkrLat!, model.mkrLong!);
           model.distance = distance as double?;
         }
       }
@@ -133,9 +121,7 @@ class MapsDataProvider extends ChangeNotifier {
   num calculateDistance(double lat1, double lng1, double lat2, double lng2) {
     var p = 0.017453292519943295;
     var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lng2 - lng1) * p)) / 2;
+    var a = 0.5 - c((lat2 - lat1) * p) / 2 + c(lat1 * p) * c(lat2 * p) * (1 - c((lng2 - lng1) * p)) / 2;
     return 12742 * asin(sqrt(a)) * 0.621371;
   }
 

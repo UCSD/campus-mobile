@@ -17,8 +17,7 @@ class ScannerMessageService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('SCANNER_MESSAGE_ENDPOINT'), headers);
+      String _response = await NetworkHelper.authorizedFetch(dotenv.get('SCANNER_MESSAGE_ENDPOINT'), headers);
 
       /// parse data
       _scannerMessageModel = scannerMessageModelFromJson(_response);

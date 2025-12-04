@@ -63,17 +63,11 @@ const subHeaderStyle = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
-final textButtonSmallLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    color: linkTextColorLight,
-    decoration: TextDecoration.underline);
+final textButtonSmallLight =
+    TextStyle(fontFamily: 'Brix Sans', fontSize: 22.0, color: linkTextColorLight, decoration: TextDecoration.underline);
 
-final textButtonSmallDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    color: linkTextColorDark,
-    decoration: TextDecoration.underline);
+final textButtonSmallDark =
+    TextStyle(fontFamily: 'Brix Sans', fontSize: 22.0, color: linkTextColorDark, decoration: TextDecoration.underline);
 
 const titleSmallLight = TextStyle(
     fontFamily: 'Refrigerator Deluxe',
@@ -89,17 +83,11 @@ const titleSmallDark = TextStyle(
     fontWeight: FontWeight.w900,
     color: Color(0xFFF5F0E6));
 
-const titleMediumLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w700,
-    color: lightPrimaryColor);
+const titleMediumLight =
+    TextStyle(fontFamily: 'Brix Sans', fontSize: 22.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
 
-const titleMediumDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w700,
-    color: Colors.white);
+const titleMediumDark =
+    TextStyle(fontFamily: 'Brix Sans', fontSize: 22.0, fontWeight: FontWeight.w700, color: Colors.white);
 
 const headlineMediumLight = TextStyle(
     fontFamily: 'Brix Sans',
@@ -118,30 +106,16 @@ const headlineMediumDark = TextStyle(
     color: linkColorDark);
 
 const headlineMediumLight2 = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 20.0,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-    color: lightPrimaryColor);
+    fontFamily: 'Brix Sans', fontSize: 20.0, fontWeight: FontWeight.w700, height: 1.2, color: lightPrimaryColor);
 
 const headlineMediumDark2 = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 20.0,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-    color: darkPrimaryColor2);
+    fontFamily: 'Brix Sans', fontSize: 20.0, fontWeight: FontWeight.w700, height: 1.2, color: darkPrimaryColor2);
 
-const bodyMediumLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w500,
-    color: descriptiveTextColorLight);
+const bodyMediumLight =
+    TextStyle(fontFamily: 'Brix Sans', fontSize: 22.0, fontWeight: FontWeight.w500, color: descriptiveTextColorLight);
 
-const bodyMediumDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w500,
-    color: descriptiveTextColorDark);
+const bodyMediumDark =
+    TextStyle(fontFamily: 'Brix Sans', fontSize: 22.0, fontWeight: FontWeight.w500, color: descriptiveTextColorDark);
 
 const appBarTitleStyle = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
@@ -150,11 +124,8 @@ const appBarTitleStyle = TextStyle(
   color: Colors.white,
 );
 
-const cardTitleStyleLight = TextStyle(
-    fontFamily: 'Refrigerator Deluxe',
-    fontSize: 28,
-    fontWeight: FontWeight.w900,
-    color: lightPrimaryColor);
+const cardTitleStyleLight =
+    TextStyle(fontFamily: 'Refrigerator Deluxe', fontSize: 28, fontWeight: FontWeight.w900, color: lightPrimaryColor);
 
 const cardTitleStyleDark = TextStyle(
   fontFamily: 'Refrigerator Deluxe',
@@ -187,11 +158,7 @@ const labelMediumStyleLight = TextStyle(
     color: descriptiveTextColorLight);
 
 const labelMediumStyleDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontSize: 22.0,
-    fontWeight: FontWeight.w400,
-    height: 1.0,
-    color: descriptiveTextColorDark);
+    fontFamily: 'Brix Sans', fontSize: 22.0, fontWeight: FontWeight.w400, height: 1.0, color: descriptiveTextColorDark);
 
 const TextStyle notificationsTitleLight = TextStyle(
   color: linkTextColorLight,
@@ -219,11 +186,9 @@ const TextStyle textSubheaderDark = TextStyle(
   height: 1.22,
 );
 
-const textSmallMoreInfoLight = TextStyle(
-    fontSize: 15.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
+const textSmallMoreInfoLight = TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700, color: lightPrimaryColor);
 
-const textSmallMoreInfoDark = TextStyle(
-    fontSize: 15.0, fontWeight: FontWeight.w700, color: darkPrimaryColor2);
+const textSmallMoreInfoDark = TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700, color: darkPrimaryColor2);
 
 // New custom styles for heading2
 const TextStyle heading2StyleLight = TextStyle(
@@ -241,16 +206,10 @@ const TextStyle heading2StyleDark = TextStyle(
 );
 
 const TextStyle linkTextDark = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontWeight: FontWeight.w400,
-    decoration: TextDecoration.underline,
-    color: linkColorDark);
+    fontFamily: 'Brix Sans', fontWeight: FontWeight.w400, decoration: TextDecoration.underline, color: linkColorDark);
 
 const TextStyle linkTextLight = TextStyle(
-    fontFamily: 'Brix Sans',
-    fontWeight: FontWeight.w400,
-    decoration: TextDecoration.underline,
-    color: linkColorLight);
+    fontFamily: 'Brix Sans', fontWeight: FontWeight.w400, decoration: TextDecoration.underline, color: linkColorLight);
 
 const Color toggleActiveColor = Color(0xFF109B00);
 
@@ -364,10 +323,8 @@ const Color c2 = Color.fromARGB(255, 0, 255, 0);
 const Color c3 = Color.fromARGB(255, 0, 0, 255);
 
 // List Tile Theme Data
-const lightListTileTheme =
-    ListTileThemeData(selectedColor: const Color(0xFF00629B));
-const darkListTileTheme =
-    ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
+const lightListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00629B));
+const darkListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
 
 // New Onboarding Screen Colors
 const lightOnboardingScreen = Color.fromARGB(255, 245, 240, 228);
@@ -382,5 +339,4 @@ const List<double> grayscaleInvertMatrix = [
 
 // Dining logo border and shadow colors for dark mode
 const Color darkLogoBorderColor = Color(0xFF444444); // subtle dark border
-const Color darkLogoShadowColor =
-    Colors.white; // use white for shadow in dark mode
+const Color darkLogoShadowColor = Colors.white; // use white for shadow in dark mode

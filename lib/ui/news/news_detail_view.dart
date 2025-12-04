@@ -20,8 +20,7 @@ class NewsDetailView extends StatelessWidget {
               image: DecorationImage(
                 fit: BoxFit.cover,
                 image: data.image.isEmpty
-                    ? const AssetImage('assets/images/UCSDMobile_banner.png')
-                        as ImageProvider
+                    ? const AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
                     : NetworkImage(data.image),
               ),
             ),
@@ -55,11 +54,8 @@ class NewsDetailView extends StatelessWidget {
                 : Container(),
           ),
           Container(
-            padding: const EdgeInsets.only(
-                left: 15, top: 20, right: 248, bottom: 20),
-            child: data.link.isNotEmpty
-                ? ContinueReadingButton(link: data.link)
-                : Container(),
+            padding: const EdgeInsets.only(left: 15, top: 20, right: 248, bottom: 20),
+            child: data.link.isNotEmpty ? ContinueReadingButton(link: data.link) : Container(),
           ),
         ],
       ),
@@ -83,9 +79,7 @@ class NewsDateContainer extends StatelessWidget {
           parts[0].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -93,9 +87,7 @@ class NewsDateContainer extends StatelessWidget {
           parts[1].toUpperCase(),
           style: TextStyle(
             fontSize: 20,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -103,9 +95,7 @@ class NewsDateContainer extends StatelessWidget {
           parts[2].toUpperCase(),
           style: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : Colors.white,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -127,9 +117,7 @@ class NewsTitle extends StatelessWidget {
         style: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,
-          color: Theme.of(context).brightness == Brightness.light
-              ? lightPrimaryColor
-              : Colors.white,
+          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
         ),
       ),
     );

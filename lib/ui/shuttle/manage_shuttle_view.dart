@@ -35,8 +35,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
         header: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: Text("Hold and drag to reorder",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+              textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ),
         children: createList(context),
         onReorder: _onReorder,
@@ -69,12 +68,9 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
           elevation: 2.0,
           margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
           child: ListTile(
-              title: Text(model.name,
-                  style: Theme.of(context).textTheme.bodyMedium),
+              title: Text(model.name, style: Theme.of(context).textTheme.bodyMedium),
               leading: Icon(Icons.drag_handle,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? linkTextColorDark
-                      : linkTextColorLight),
+                  color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
               trailing: IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () async {
@@ -195,8 +191,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
       ),
       content: Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height *
-              0.6, // Set max height to 60% of screen height
+          maxHeight: MediaQuery.of(context).size.height * 0.6, // Set max height to 60% of screen height
         ),
         child: SingleChildScrollView(
           child: Row(

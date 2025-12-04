@@ -1,0 +1,193 @@
+name: Pre-Commit Checks
+
+on:
+  pull_request:
+    branches: ['**']
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  precommit:
+    runs-on: ubuntu-latest
+    outputs:
+      violations_found: ${{ steps.check.outputs.violations_found }}
+    steps:
+      # 1 - Checkout code
+      - name: Setup workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+
+      # 2 - Set up Python (pre-commit requires it)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+         python-version: '3.x'
+
+      # 3 - Install our pre-commit
+      - name: Install pre-commit
+        run: |
+           python -m pip install --upgrade pip
+           pip install pre-commit
+
+      # 4 - Run pre-commit. If the script exits with a non-zero code, the GitHub Action will fail the PR.
+      - name: Run pre-commit hooks
+        run: pre-commit run --all-files
+
+      - name: Check code style violations
+        id: check
+        run: |
+          chmod +x ./scripts/auto_check_all.sh
+          violations_file="/tmp/style_violations.txt"
+          export VIOLATIONS_OUTPUT="$violations_file"
+
+          if ./scripts/auto_check_all.sh; then
+          echo "violations_found=false" >> $GITHUB_OUTPUT
+          else
+          echo "violations_found=true" >> $GITHUB_OUTPUT
+          echo "violations_file=$violations_file" >> $GITHUB_OUTPUT
+
+          if [[ ! -f "$violations_file" || ! -s "$violations_file" ]]; then
+           echo "VIOLATIONS_DETAILS_START" > "$violations_file"
+           echo "Code style violations detected but details unavailable" >> "$violations_file"
+           echo "VIOLATIONS_DETAILS_END" >> "$violations_file"
+          fi
+          fi
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && steps.check.outputs.violations_found == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+
+            try {
+              const violationsFound = '${{ steps.check.outputs.violations_found }}' === 'true';
+              // Create violations comment if violations were found
+              if (violationsFound) {
+                let violationsComment = `## Code Style Violations Found
+
+            **This PR contains coding style violations that must be manually addressed before merging.**`;
+
+                // Try to parse violation details from the file
+                const violationsFile = '${{ steps.check.outputs.violations_file }}';
+                let detailsSection = '';
+
+                if (fs.existsSync(violationsFile)) {
+                  try {
+                    const content = fs.readFileSync(violationsFile, 'utf8');
+                    const detailsMatch = content.match(/VIOLATIONS_DETAILS_START\n([\s\S]*?)\nVIOLATIONS_DETAILS_END/);
+
+                    if (detailsMatch) {
+                      const details = detailsMatch[1];
+                      const lines = details.split('\n').filter(line => line.trim());
+
+                      let totalCategories = '';
+                      let totalViolations = '';
+                      const failedChecks = [];
+
+                      lines.forEach(line => {
+                        if (line.includes('Total Categories Failed:')) {
+                          totalCategories = line.split(': ')[1];
+                        } else if (line.includes('Total Individual Violations:')) {
+                          totalViolations = line.split(': ')[1];
+                        } else if (line.includes('FAILED') && line.includes('violations')) {
+                          // Parse lines like "- Static Constants (UPPER_SNAKE_CASE): FAILED (91 violations)"
+                          const match = line.match(/- ([^:]+): FAILED \((\d+) violations\)/);
+                          if (match) {
+                            failedChecks.push(`- **${match[1]}**: ${match[2]} violations`);
+                          }
+                        }
+                      });
+
+                      if (totalCategories && totalViolations && failedChecks.length > 0) {
+                        detailsSection = `
+
+            ## Violation Summary
+            - **Categories Failed**: ${totalCategories}
+            - **Total Violations**: ${totalViolations}
+
+            ## Failed Checks:
+            ${failedChecks.join('\n')}`;
+                      }
+                    }
+                  } catch (error) {
+                    console.log('Could not parse violation details:', error.message);
+                  }
+                }
+
+                // If we couldn't parse details, use a generic message
+                if (!detailsSection) {
+                  detailsSection = `
+
+            Based on the automated check, violations were found in multiple categories.`;
+                }
+
+                violationsComment += detailsSection + `
+
+            ## Style Guidelines
+
+            - **Static Constants**: Use \`UPPER_SNAKE_CASE\` (e.g., \`MAX_RETRY_COUNT\`)
+            - **Classes**: Use \`UpperCamelCase\` (e.g., \`UserProfile\`)
+            - **Variables/Functions**: Use \`lowerCamelCase\` (e.g., \`userName\`)
+            - **Files/Directories**: Use \`snake_case\` (e.g., \`user_profile.dart\`)
+            - **Imports**: Use full package paths (e.g., \`package:app_name/path/file.dart\`)
+            - **If Conditions**: Split long/complex conditions into variables for readability
+
+            ### Long If Conditions Example:
+            \`\`\`dart
+            // BAD: Long if condition
+            if (userDataProvider.isLoggedIn &&
+                (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
+              // action
+            }
+            \`\`\`
+
+            \`\`\`dart
+            // GOOD: Refactored long if condition
+            var isLoggedIn = userDataProvider.isLoggedIn;
+            var isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
+            if (isLoggedIn && isStaff) {
+              // action
+            }
+            \`\`\`
+
+            ## To fix these violations:
+
+            1. Run \`./scripts/auto_check_all.sh\` locally to see where these violations are.
+            2. Apply the suggested corrections.
+            3. Re-run the script to verify fixes.
+            4. Commit your changes.
+
+            ---
+            *This check will continue to fail until all violations are resolved.*`;
+
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number, body: violationsComment
+                });
+                console.log('Violations comment added successfully');
+              }
+            } catch (error) {
+              console.error('Error creating PR comment:', error.message);
+
+              try {
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number,
+                  body: `## Code Style Check Error
+
+            There was an error processing the code style check results.
+
+            **Error**: ${error.message}
+
+            Please run the scripts locally to see the specific issues.`
+                });
+              } catch (fallbackError) {
+                console.error('Failed to create fallback comment:', fallbackError.message);
+              }
+            }

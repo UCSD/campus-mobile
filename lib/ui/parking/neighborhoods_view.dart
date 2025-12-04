@@ -19,8 +19,7 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
   }
 
   Widget buildNeighborhoodsList(BuildContext context) {
-    Map<String, List<String>> neighborhoods =
-        Provider.of<ParkingDataProvider>(context).getParkingMap();
+    Map<String, List<String>> neighborhoods = Provider.of<ParkingDataProvider>(context).getParkingMap();
 
     List<Widget> listTiles = [];
 
@@ -28,9 +27,7 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
       ListTile(
         title: Text(
           "Neighborhoods",
-          style: Theme.of(context).brightness == Brightness.dark
-              ? textSubheaderDark
-              : textSubheaderLight,
+          style: Theme.of(context).brightness == Brightness.dark ? textSubheaderDark : textSubheaderLight,
         ),
       ),
     );
@@ -68,9 +65,7 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
         children: ListTile.divideTiles(
           tiles: listTiles,
           context: context,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? listTileDividerColorDark
-              : listTileDividerColorLight,
+          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
         ).toList(),
       ),
     );

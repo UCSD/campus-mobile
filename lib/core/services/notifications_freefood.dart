@@ -22,11 +22,7 @@ class FreeFoodService {
     try {
       /// fetch data
       var _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') +
-              'events/' +
-              id +
-              '/rsvpCount',
-          headers);
+          dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpCount', headers);
 
       /// parse data
       final data = freeFoodModelFromJson(_response);
@@ -35,11 +31,7 @@ class FreeFoodService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) {
-          return await fetchData(id);
-        }
-      }
+      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers)) return await fetchData(id);
       _error = e.toString();
       return false;
     } finally {
@@ -51,10 +43,7 @@ class FreeFoodService {
     _error = null;
     _isLoading = true;
     try {
-      String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') +
-          'events/' +
-          id +
-          '/rsvpLimit';
+      String _url = dotenv.get('NOTIFICATIONS_GOING_ENDPOINT') + 'events/' + id + '/rsvpLimit';
 
       /// fetch data
       var _response = await NetworkHelper.authorizedFetch(_url, headers);
@@ -66,11 +55,7 @@ class FreeFoodService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers)) {
-          return await fetchMaxCount(id);
-        }
-      }
+      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers)) return await fetchMaxCount(id);
       _error = e.toString();
       return false;
     } finally {
@@ -90,10 +75,8 @@ class FreeFoodService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.toString().contains("401")) {
-        if (await NetworkHelper.getNewToken(headers))
-          return await updateCount(id, body);
-      }
+      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers))
+        return await updateCount(id, body);
       _error = e.toString();
       return false;
     } finally {

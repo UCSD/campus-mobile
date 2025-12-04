@@ -77,10 +77,8 @@ class AvailabilityDisplay extends StatelessWidget {
                                   ? textButtonSmallDark
                                   : textButtonSmallLight)
                               : (Theme.of(context).brightness == Brightness.dark
-                                  ? descriptiveTextSmallDark.copyWith(
-                                      fontSize: 22.0)
-                                  : descriptiveTextSmallLight.copyWith(
-                                      fontSize: 22.0)),
+                                  ? descriptiveTextSmallDark.copyWith(fontSize: 22.0)
+                                  : descriptiveTextSmallLight.copyWith(fontSize: 22.0)),
                         ),
                         SizedBox(height: 4),
                         Text(
@@ -99,9 +97,7 @@ class AvailabilityDisplay extends StatelessWidget {
                         Icon(
                           Icons.arrow_forward_ios,
                           size: 35,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? linkColorLight
-                              : linkColorDark,
+                          color: Theme.of(context).brightness == Brightness.dark ? linkColorLight : linkColorDark,
                         ),
                       ],
                     ),
@@ -114,9 +110,8 @@ class AvailabilityDisplay extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(BORDER_RADIUS),
                   child: LinearProgressIndicator(
-                    value: (percentAvailability(subLocation) <= 0.01)
-                        ? 0.01
-                        : percentAvailability(subLocation).toDouble(),
+                    value:
+                        (percentAvailability(subLocation) <= 0.01) ? 0.01 : percentAvailability(subLocation).toDouble(),
                     backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
                     valueColor: AlwaysStoppedAnimation<Color>(
                       setIndicatorColor(percentAvailability(subLocation)),
@@ -137,9 +132,8 @@ class AvailabilityDisplay extends StatelessWidget {
           children: ListTile.divideTiles(
             tiles: locations,
             context: context,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? listTileDividerColorDark
-                : listTileDividerColorLight,
+            color:
+                Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
           ).toList(),
         ),
       ),

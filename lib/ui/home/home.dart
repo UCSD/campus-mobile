@@ -63,13 +63,10 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   }) : super(key: key, child: child);
 
   @override
-  RenderObject createRenderObject(BuildContext context) {
-    return MeasureSizeRenderObject(onChange);
-  }
+  RenderObject createRenderObject(BuildContext context) => MeasureSizeRenderObject(onChange);
 
   @override
-  void updateRenderObject(
-      BuildContext context, covariant MeasureSizeRenderObject renderObject) {
+  void updateRenderObject(BuildContext context, covariant MeasureSizeRenderObject renderObject) {
     renderObject.onChange = onChange;
   }
 }
@@ -134,8 +131,7 @@ class _HomeState extends State<Home> {
   void executeQuery(String query) {
     context.read<MapsDataProvider>().searchBarController.text = query;
     context.read<MapsDataProvider>().fetchLocations();
-    context.read<BottomNavigationBarProvider>().currentIndex =
-        NavigatorConstants.MapTab;
+    context.read<BottomNavigationBarProvider>().currentIndex = NavigatorConstants.MapTab;
     context.read<CustomAppBar>().changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
   }
@@ -145,29 +141,23 @@ class _HomeState extends State<Home> {
     // Provider.of<CustomAppBar>(context).changeTitle(null); // reset title to logo (for dining)
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return Padding(
-      padding:
-          const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
+      padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
       child: ListView(
         controller: _controller,
-        padding: const EdgeInsets.only(
-            top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
+        padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
         children: createList(),
       ),
     );
   }
 
   List<Widget> createList() {
-    final orderedCards =
-        getOrderedCardsList(context.watch<CardsDataProvider>().cardOrder);
-    final noticesCards =
-        getNoticesCardsList(context.watch<NoticesDataProvider>().noticesModel);
+    final orderedCards = getOrderedCardsList(context.watch<CardsDataProvider>().cardOrder);
+    final noticesCards = getNoticesCardsList(context.watch<NoticesDataProvider>().noticesModel);
     return [...noticesCards, ...orderedCards];
   }
 
-  List<Widget> getNoticesCardsList(List<NoticesModel> notices) => notices
-      .map((notice) => NoticesCard(notice: notice))
-      .whereType<NoticesCard>()
-      .toList();
+  List<Widget> getNoticesCardsList(List<NoticesModel> notices) =>
+      notices.map((notice) => NoticesCard(notice: notice)).whereType<NoticesCard>().toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
   static const _cardCtors = {
@@ -205,12 +195,10 @@ class _HomeState extends State<Home> {
     final webCards = context.read<CardsDataProvider>().webCards;
 
     for (String cardName in order) {
-      /// TODO: if-branches logic here theoretically could be simplified
+      // TODO: if-branches logic here theoretically could be simplified - December 2025
       if (!webCards.containsKey(cardName)) {
         final cardCtor = _cardCtors[cardName];
-        if (cardCtor != null) {
-          orderedCards.add(cardCtor());
-        }
+        if (cardCtor != null) orderedCards.add(cardCtor());
       } else {
         final card = webCards[cardName]!;
         orderedCards.add(

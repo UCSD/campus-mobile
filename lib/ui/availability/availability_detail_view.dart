@@ -20,10 +20,7 @@ class AvailabilityDetailedView extends StatelessWidget {
     list.add(ListTile(
       title: Text(
         "${subLocation.name}",
-        style: TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-            fontSize: 24,
-            fontWeight: FontWeight.bold),
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 24, fontWeight: FontWeight.bold),
       ),
     ));
 
@@ -34,17 +31,14 @@ class AvailabilityDetailedView extends StatelessWidget {
         ListTile(
           title: Text(
             "${floor.name}",
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: LOCATION_FONT_SIZE),
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: LOCATION_FONT_SIZE),
           ),
           subtitle: Column(
             children: <Widget>[
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    (100 * percentAvailability(floor)).toInt().toString() +
-                        '% Busy',
+                    (100 * percentAvailability(floor)).toInt().toString() + '% Busy',
                   )),
               Align(
                 alignment: Alignment.centerLeft,
@@ -74,9 +68,7 @@ class AvailabilityDetailedView extends StatelessWidget {
     final dividedFloorTiles = ListTile.divideTiles(
       context: context,
       tiles: floorTiles,
-      color: Theme.of(context).brightness == Brightness.dark
-          ? listTileDividerColorDark
-          : listTileDividerColorLight,
+      color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
     ).toList();
 
     list.addAll(dividedFloorTiles);
@@ -90,8 +82,7 @@ class AvailabilityDetailedView extends StatelessWidget {
     );
   }
 
-  num percentAvailability(Floor subLocationFloor) =>
-      subLocationFloor.percentage;
+  num percentAvailability(Floor subLocationFloor) => subLocationFloor.percentage;
 
   setIndicatorColor(num percentage) {
     if (percentage >= .75)

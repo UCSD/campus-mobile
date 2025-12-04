@@ -1,0 +1,20 @@
+repos:
+  - repo: local
+    hooks:
+      - id: run-all-lint-scripts
+        name: Run all lint scripts
+        language: system
+        pass_filenames: false
+        always_run: true
+        verbose: true
+        entry: |
+          bash -c '
+            echo "Running all lint scripts.."
+            bash scripts/auto_fix_all.sh
+            echo
+            echo "[pre-commit] All lint scripts completed."
+          '
+
+# Run the following commands to set up pre-commit locally (one-time only setup):
+# $pip install pre-commit (or $brew install pre-commit)
+# $pre-commit install (or $python -m pre_commit install)

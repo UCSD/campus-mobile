@@ -53,9 +53,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
     var isOverCount = _freeFoodDataProvider.isOverCount(messageId!);
     // print('messageId "' + messageId + '" isOverCount: ' + isOverCount.toString());
     var currCount = _freeFoodDataProvider.count(messageId!);
-    var countText = currCount == 1
-        ? '$currCount student is going'
-        : '$currCount students are going';
+    var countText = currCount == 1 ? '$currCount student is going' : '$currCount students are going';
 
     return Container(
         margin: EdgeInsets.only(top: 8.0),
@@ -66,20 +64,16 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
               width: 170,
               child: AnimatedCrossFade(
                 duration: Duration(milliseconds: 300),
-                crossFadeState: isOverCount
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
+                crossFadeState: isOverCount ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                 firstChild: Column(
                   children: <Widget>[
-                    Text(countText,
-                        style: TextStyle(fontSize: 10, color: Colors.red)),
+                    Text(countText, style: TextStyle(fontSize: 10, color: Colors.red)),
                     Container(
                         margin: EdgeInsets.only(top: 2.0),
                         child: Row(
                           children: <Widget>[
                             Icon(Icons.report, color: Colors.grey, size: 15),
-                            Text("There may not be enough food",
-                                style: TextStyle(fontSize: 12))
+                            Text("There may not be enough food", style: TextStyle(fontSize: 12))
                           ],
                         )),
                   ],
@@ -87,8 +81,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                 ),
                 secondChild: Align(
                   alignment: Alignment.topLeft,
-                  child: Text(countText,
-                      style: TextStyle(fontSize: 12, color: Colors.green)),
+                  child: Text(countText, style: TextStyle(fontSize: 12, color: Colors.green)),
                 ),
               ),
             ),
@@ -144,8 +137,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                                   _toggleGoing();
                                 },
                               ))),
-                      Text("I'm Going!",
-                          style: TextStyle(color: _textColor, fontSize: 12)),
+                      Text("I'm Going!", style: TextStyle(color: _textColor, fontSize: 12)),
                     ],
                   )),
                 )));

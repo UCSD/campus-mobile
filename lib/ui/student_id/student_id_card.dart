@@ -60,9 +60,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
     String cardNumber,
     bool rotated,
   ) {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape)
       return returnBarcodeContainer(cardNumber, rotated, context);
-    }
     return image;
   }
 
@@ -72,10 +71,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
-      reload: () => Provider.of<StudentIdDataProvider>(context, listen: false)
-          .fetchData(),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      reload: () => Provider.of<StudentIdDataProvider>(context, listen: false).fetchData(),
       isLoading: Provider.of<StudentIdDataProvider>(context).isLoading,
       titleText: CardTitleConstants.titleMap[cardId]!,
       errorText: Provider.of<StudentIdDataProvider>(context).error,
@@ -218,8 +215,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
             child: Row(
               children: <Widget>[
                 Padding(
-                  padding:
-                      EdgeInsets.all(ScalingUtility.verticalSafeBlock * 7.5),
+                  padding: EdgeInsets.all(ScalingUtility.verticalSafeBlock * 7.5),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -267,14 +263,12 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   double letterSpacingForTablet() {
-    if (MediaQuery.of(context).orientation == Orientation.landscape)
-      return ScalingUtility.horizontalSafeBlock * 1;
+    if (MediaQuery.of(context).orientation == Orientation.landscape) return ScalingUtility.horizontalSafeBlock * 1;
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
   double fontSizeForTablet() {
-    if (MediaQuery.of(context).orientation == Orientation.landscape)
-      return ScalingUtility.horizontalSafeBlock * 2;
+    if (MediaQuery.of(context).orientation == Orientation.landscape) return ScalingUtility.horizontalSafeBlock * 2;
     return ScalingUtility.horizontalSafeBlock * 4;
   }
 
@@ -378,15 +372,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
   //   }
   // }
 
-  double letterSpacing() =>
-      MediaQuery.of(context).orientation == Orientation.landscape
-          ? SizeConfig.safeBlockHorizontal * 1
-          : SizeConfig.safeBlockHorizontal * 3;
+  double letterSpacing() => MediaQuery.of(context).orientation == Orientation.landscape
+      ? SizeConfig.safeBlockHorizontal * 1
+      : SizeConfig.safeBlockHorizontal * 3;
 
-  double getRotatedPopUpFontSize() =>
-      MediaQuery.of(context).orientation == Orientation.landscape
-          ? SizeConfig.safeBlockHorizontal * 2
-          : SizeConfig.safeBlockHorizontal * 4;
+  double getRotatedPopUpFontSize() => MediaQuery.of(context).orientation == Orientation.landscape
+      ? SizeConfig.safeBlockHorizontal * 2
+      : SizeConfig.safeBlockHorizontal * 4;
 
   /// Determine the font size for user's textFields
   double getFontSize(String input, String textField) {
@@ -418,15 +410,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   /// Determine the padding for a border around barcode
-  EdgeInsets addBorder(ThemeData currentTheme) {
-    return currentTheme.brightness == Brightness.dark
-        ? EdgeInsets.all(5)
-        : EdgeInsets.all(0);
-  }
+  EdgeInsets addBorder(ThemeData currentTheme) =>
+      currentTheme.brightness == Brightness.dark ? EdgeInsets.all(5) : EdgeInsets.all(0);
 
   /// Determine the padding for the text to realign
-  double realignText(ThemeData currentTheme) =>
-      currentTheme.brightness == Brightness.dark ? 7 : 0;
+  double realignText(ThemeData currentTheme) => currentTheme.brightness == Brightness.dark ? 7 : 0;
 
   // /// Determine the color of hint above the barcode
   // Color decideColor(ThemeData currentTheme) {
@@ -525,7 +513,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   Widget _buildBarcodeNumber(StudentIdProfileModel profileModel) {
     return Padding(
       padding: const EdgeInsets.only(top: 6.0),
-      //child: Center(
+      // child: Center(
       child: Text(
         profileModel.barcode.toString(),
         style: TextStyle(
@@ -538,7 +526,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 }
 
-//Image Scaling
+// Image Scaling
 class ScalingUtility {
   late MediaQueryData _queryData;
   static late double horizontalSafeBlock;
@@ -549,12 +537,8 @@ class ScalingUtility {
     _queryData = MediaQuery.of(context);
 
     /// Calculate blocks accounting for notches and home bar
-    horizontalSafeBlock = (_queryData.size.width -
-            (_queryData.padding.left + _queryData.padding.right)) /
-        100;
-    verticalSafeBlock = (_queryData.size.height -
-            (_queryData.padding.top + _queryData.padding.bottom)) /
-        100;
+    horizontalSafeBlock = (_queryData.size.width - (_queryData.padding.left + _queryData.padding.right)) / 100;
+    verticalSafeBlock = (_queryData.size.height - (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 
@@ -577,10 +561,8 @@ class SizeConfig {
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
-    _safeAreaHorizontal =
-        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
-    _safeAreaVertical =
-        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
+    _safeAreaHorizontal = _mediaQueryData.padding.left + _mediaQueryData.padding.right;
+    _safeAreaVertical = _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }

@@ -17,8 +17,7 @@ class EmployeeIdService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_EMPLOYEE_PROFILE_API_ENDPOINT'), headers);
+      String _response = await NetworkHelper.authorizedFetch(dotenv.get('MY_EMPLOYEE_PROFILE_API_ENDPOINT'), headers);
 
       _employeeIdModel = employeeIdModelFromJson(_response);
       return true;
