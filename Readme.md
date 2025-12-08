@@ -8,8 +8,13 @@ https://github.com/UCSD/campus-mobile/pull/2087
 #### Campus Mobile Flutter Version:
 3.32.0
 
+#### Set Up Your IDE to use our `.editorconfig` Settings
+- If using VS Code, install the [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extension.
+- If using Android Studio, EditorConfig support is built-in.
+    - Simply go to File > Settings > Editor > Code Style > Enable EditorConfig Support.
 
-### Clone the Campus Mobile repo
+
+### Clone the Campus Mobile Repository
 ```shell
 git clone https://github.com/UCSD/campus-mobile.git
 ```
@@ -95,7 +100,7 @@ git push -u upstream newfeature
 
 ### Submitting a Pull Request
 
-#### Update your feature branch
+#### Update Your Feature Branch
 From the time you created your new feature branch `newfeature`, to submitting a pull request, it is likely that your branch 
 
 Branch `upstream/experimental` is updated often. Prior to submitting a pull request, update your `newfeature` branch from `upstream/experimental` so that merging it will be a simple process which won't require any conflict resolution work.

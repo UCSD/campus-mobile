@@ -41,15 +41,11 @@ class StudentIdProfileModel {
       ugPrimaryMajorCurrent: json["UG_Primary_Major_Current"] == null ? "" : json["UG_Primary_Major_Current"],
       graduatePrimaryMajorCurrent:
           json["Graduate_Primary_Major_Current"] == null ? "" : json["Graduate_Primary_Major_Current"],
-      athleteCurrentCount: json["Athlete_Current_Count"] is int
-          ? json["Athlete_Current_Count"]
-          : int.tryParse(json["Athlete_Current_Count"]?.toString() ?? "0") ?? 0,
+      athleteCurrentCount: json["Athlete_Current_Count"],
       cardNumber: json["Card_Number"],
       barcode: json["Barcode"],
       classificationType: json["Classification_Type"],
-      issueNumber: json["Issue_Number"] is int
-          ? json["Issue_Number"]
-          : int.tryParse(json["Issue_Number"]?.toString() ?? "0") ?? 0);
+      issueNumber: json["Issue_Number"]);
 
   Map<String, dynamic> toJson() => {
         "Student_PID": studentPid,
