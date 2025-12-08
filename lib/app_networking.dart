@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NetworkHelper {
-  // TODO: inside each service that file place a switch statement to handle all - December 2025
   // TODO: different errors thrown by the Dio client DioErrorType.RESPONSE - December 2025
 
   // private constructor to show that this class should not be instantiated
@@ -115,26 +114,33 @@ class NetworkHelper {
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
     dio.options.headers = headers;
     final _response = await dio.post(url, data: body);
-    if (_response.statusCode == 200 || _response.statusCode == 201) {
+    switch (_response.statusCode) {
       // If server returns an OK response, return the body
-      return _response.data;
-    } else if (_response.statusCode == 400) {
+      case 200:
+      case 201:
+        return _response.data;
       // If that response was not OK, throw an error.
-      String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + message);
-    } else if (_response.statusCode == 401) {
-      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + ErrorConstants.INVALID_BEARER_TOKEN);
-    } else if (_response.statusCode == 404) {
-      String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + message);
-    } else if (_response.statusCode == 500) {
-      String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + message);
-    } else if (_response.statusCode == 409) {
-      String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.DUPLICATE_RECORD + message);
-    } else {
-      throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + 'unknown error');
+      case 400:
+        String message = _response.data['message'] ?? '';
+        throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + message);
+
+      case 401:
+        throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + ErrorConstants.INVALID_BEARER_TOKEN);
+
+      case 404:
+        String message = _response.data['message'] ?? '';
+        throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + message);
+
+      case 409:
+        String message = _response.data['message'] ?? '';
+        throw Exception(ErrorConstants.DUPLICATE_RECORD + message);
+
+      case 500:
+        String message = _response.data['message'] ?? '';
+        throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + message);
+
+      default:
+        throw Exception(ErrorConstants.AUTHORIZED_POST_ERRORS + 'unknown error');
     }
   }
 
@@ -145,23 +151,29 @@ class NetworkHelper {
     dio.options.headers = headers;
     final _response = await dio.put(url, data: body);
 
-    if (_response.statusCode == 200 || _response.statusCode == 201) {
+    switch (_response.statusCode) {
       // If server returns an OK response, return the body
-      return _response.data;
-    } else if (_response.statusCode == 400) {
+      case 200:
+      case 201:
+        return _response.data;
       // If that response was not OK, throw an error.
-      String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + message);
-    } else if (_response.statusCode == 401) {
-      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + ErrorConstants.INVALID_BEARER_TOKEN);
-    } else if (_response.statusCode == 404) {
-      String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + message);
-    } else if (_response.statusCode == 500) {
-      String message = _response.data['message'] ?? '';
-      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + message);
-    } else {
-      throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + 'unknown error');
+      case 400:
+        String message = _response.data['message'] ?? '';
+        throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + message);
+
+      case 401:
+        throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + ErrorConstants.INVALID_BEARER_TOKEN);
+
+      case 404:
+        String message = _response.data['message'] ?? '';
+        throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + message);
+
+      case 500:
+        String message = _response.data['message'] ?? '';
+        throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + message);
+
+      default:
+        throw Exception(ErrorConstants.AUTHORIZED_PUT_ERRORS + 'unknown error');
     }
   }
 

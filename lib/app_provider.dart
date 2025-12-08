@@ -134,14 +134,17 @@ List<SingleChildWidget> dependentServices = [
             cardsDataProvider.updateAvailableCards(userDataProvider.authenticationModel.ucsdaffiliation);
 
             // Student card activation
-            if (userDataProvider.isLoggedIn && (userDataProvider.userProfileModel.classifications?.student ?? false)) {
+            final bool isLoggedIn = userDataProvider.isLoggedIn;
+            final bool isStudent = userDataProvider.userProfileModel.classifications?.student ?? false;
+            if (isLoggedIn && isStudent) {
               cardsDataProvider.activateStudentCards();
             } else {
               cardsDataProvider.deactivateStudentCards();
             }
 
             // Staff card activation
-            if (userDataProvider.isLoggedIn && (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
+            final bool isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
+            if (isLoggedIn && isStaff) {
               cardsDataProvider.activateStaffCards();
             } else {
               cardsDataProvider.deactivateStaffCards();
@@ -154,7 +157,9 @@ List<SingleChildWidget> dependentServices = [
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider!.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) classScheduleDataProvider.fetchData();
+    final bool isLoggedIn = userDataProvider.isLoggedIn;
+    final bool isNotLoading = !classScheduleDataProvider.isLoading;
+    if (isLoggedIn && isNotLoading) classScheduleDataProvider.fetchData();
     return classScheduleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(create: (_) {
