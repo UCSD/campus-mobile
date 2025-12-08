@@ -84,7 +84,9 @@ class CardsDataProvider extends ChangeNotifier {
 
         // add new cards to the top of the list
         _availableCards.forEach((card, model) {
-          if (_STUDENT_CARDS.contains(model) || _STAFF_CARDS.contains(model)) return;
+          final bool isStudentCard = _STUDENT_CARDS.contains(model);
+          final bool isStaffCard = _STAFF_CARDS.contains(model);
+          if (isStudentCard || isStaffCard) return;
 
           // add active web cards
           if (model.isWebCard) _webCards[card] = model;

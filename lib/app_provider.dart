@@ -168,7 +168,9 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, studentIdDataProvider) {
     studentIdDataProvider!.userDataProvider = userDataProvider;
     // Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) studentIdDataProvider.fetchData();
+    final bool isLoggedIn = userDataProvider.isLoggedIn;
+    final bool isNotLoading = !studentIdDataProvider.isLoading;
+    if (isLoggedIn && isNotLoading) studentIdDataProvider.fetchData();
     return studentIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, EmployeeIdDataProvider>(create: (_) {
@@ -177,7 +179,9 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, employeeIdDataProvider) {
     employeeIdDataProvider!.userDataProvider = userDataProvider;
     // Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) employeeIdDataProvider.fetchData();
+    final bool isLoggedIn = userDataProvider.isLoggedIn;
+    final bool isNotLoading = !employeeIdDataProvider.isLoading;
+    if (isLoggedIn && isNotLoading) employeeIdDataProvider.fetchData();
     return employeeIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(create: (_) {

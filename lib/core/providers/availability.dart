@@ -37,7 +37,8 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
-        if (userDataProvider.userProfileModel.selectedOccuspaceLocations!.isEmpty)
+        final bool hasNoSelectedLocations = userDataProvider.userProfileModel.selectedOccuspaceLocations!.isEmpty;
+        if (hasNoSelectedLocations)
           _locationViewState[curName] = true;
 
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations

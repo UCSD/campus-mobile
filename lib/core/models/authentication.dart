@@ -55,7 +55,9 @@ class AuthenticationModel extends HiveObject {
     if (expiration == null || accessToken == null) return false;
 
     /// User has expiration and accessToken
-    if (DateTime.now().isBefore(lastUpdated.add(Duration(seconds: expiration!)))) {
+    final DateTime expirationTime = lastUpdated.add(Duration(seconds: expiration!));
+    final bool isNotExpired = DateTime.now().isBefore(expirationTime);
+    if (isNotExpired) {
       /// Current datetime < expiration datetime - isLoggedIn TRUE
       return true;
     } else {
