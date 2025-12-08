@@ -45,38 +45,78 @@ xargs grep -Hn "if[[:space:]]*(" | \
 while IFS=: read -r file line_num line_content; do
   # Quick heuristic checks for potentially long conditions
   if [[ ${#line_content} -gt 80 ]] || [[ "$line_content" == *"&&"* ]] || [[ "$line_content" == *"||"* ]]; then
-    # Extract condition between if( and ) - simplified approach
-    if [[ "$line_content" =~ if[[:space:]]*\((.+) ]]; then
-      condition="${BASH_REMATCH[1]}"
+    # Extract condition between if( and matching ) - handle nested parentheses
+    if [[ "$line_content" =~ if[[:space:]]*\( ]]; then
+      # Find the matching closing parenthesis by counting parentheses
+      temp_line="$line_content"
+      # Remove everything up to and including "if ("
+      temp_line=${temp_line#*if*\(}
 
-      # Remove trailing ) and { if present
-      condition=${condition%)*}
-      condition=${condition%\{*}
+      # Extract condition by counting parentheses
+      paren_count=1
+      condition=""
+      for (( i=0; i<${#temp_line}; i++ )); do
+        char="${temp_line:$i:1}"
+        if [[ "$char" == "(" ]]; then
+          ((paren_count++))
+        elif [[ "$char" == ")" ]]; then
+          ((paren_count--))
+          if [[ $paren_count -eq 0 ]]; then
+            break
+          fi
+        fi
+        condition+="$char"
+      done
+
+      # Clean up any whitespace
+      condition=$(echo "$condition" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
       # Check if it's a long/complex condition
       should_flag=false
 
-      # Check for complex expressions
-      if [[ "$condition" == *"&&"* ]] || [[ "$condition" == *"||"* ]]; then
-        # Has logical operators
-        if [[ ${#condition} -gt 60 ]]; then
+      # Check for complex expressions that should be refactored
+
+      # Simple condition with only variable names and logical operators should NOT be flagged
+      # Pattern: variable && variable or variable || variable (no dots, no method calls, etc.)
+      simple_condition=false
+      if [[ "$condition" =~ ^[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*(\|\||&&)[[:space:]]*[!]?[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
+        simple_condition=true
+      fi
+
+      # Don't flag simple conditions
+      if [[ "$simple_condition" == true ]]; then
+        should_flag=false
+      # Don't flag simple string contains checks like e.toString().contains("401")
+      elif [[ "$condition" =~ ^[a-zA-Z_][a-zA-Z0-9_]*\.toString\(\)\.contains\([^\)]+\)$ ]]; then
+        should_flag=false
+      # Flag complex conditions
+      else
+        # Flag if condition contains property access (dots)
+        if [[ "$condition" == *"."* ]]; then
           should_flag=true
         fi
 
-        # Check for property chains with logical operators
-        if [[ "$condition" == *"."*"."* ]]; then
+        # Flag if condition contains method calls (parentheses after words)
+        if [[ "$condition" == *"("* ]]; then
           should_flag=true
         fi
-      fi
 
-      # Check for very long conditions regardless
-      if [[ ${#condition} -gt 100 ]]; then
-        should_flag=true
-      fi
+        # Flag if condition contains null coalescing operator
+        if [[ "$condition" == *"??"* ]]; then
+          should_flag=true
+        fi
 
-      # Check for complex property access patterns
-      if [[ "$condition" == *"??"* ]] && [[ ${#condition} -gt 50 ]]; then
-        should_flag=true
+        # Flag if condition is very long (regardless of content)
+        if [[ ${#condition} -gt 100 ]]; then
+          should_flag=true
+        fi
+
+        # Flag if has logical operators with non-simple patterns
+        if [[ "$condition" == *"&&"* ]] || [[ "$condition" == *"||"* ]]; then
+          if [[ ${#condition} -gt 60 ]]; then
+            should_flag=true
+          fi
+        fi
       fi
 
       if [[ "$should_flag" == true ]]; then
