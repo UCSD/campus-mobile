@@ -43,6 +43,11 @@ violations_temp=$(mktemp)
 find lib -name "*.dart" -exec grep -l "if[[:space:]]*(" {} \; | \
 xargs grep -Hn "if[[:space:]]*(" | \
 while IFS=: read -r file line_num line_content; do
+  # Skip commented lines - check if line starts with // after whitespace
+  if [[ "$line_content" =~ ^[[:space:]]*// ]]; then
+    continue
+  fi
+
   # Quick heuristic checks for potentially long conditions
   if [[ ${#line_content} -gt 80 ]] || [[ "$line_content" == *"&&"* ]] || [[ "$line_content" == *"||"* ]]; then
     # Extract condition between if( and matching ) - handle nested parentheses
