@@ -53,7 +53,8 @@ class FreeFoodDataProvider extends ChangeNotifier {
 
   Future loadRegisteredEvents() async {
     var box = await Hive.openBox('freefoodRegisteredEvents');
-    if (box.get('freefoodRegisteredEvents') == null) await box.put('freefoodRegisteredEvents', _registeredEvents);
+    final bool hasNoSavedEvents = box.get('freefoodRegisteredEvents') == null;
+    if (hasNoSavedEvents) await box.put('freefoodRegisteredEvents', _registeredEvents);
 
     _registeredEvents = box.get('freefoodRegisteredEvents');
     notifyListeners();
@@ -78,8 +79,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _messageToCount[id] = _freeFoodModel.body.count;
     } else {
       _error = _freeFoodService.error;
-      if (_error != null && _error!.contains(ErrorConstants.INVALID_BEARER_TOKEN)) if (await _freeFoodService
-          .getNewToken()) await fetchCount(id);
+      final bool hasError = _error != null;
+      final bool isInvalidToken = _error?.contains(ErrorConstants.INVALID_BEARER_TOKEN) ?? false;
+      if (hasError && isInvalidToken) if (await _freeFoodService.getNewToken()) await fetchCount(id);
       removeId(id);
     }
     _isLoading = false;
@@ -98,8 +100,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _messageToMaxCount[id] = _freeFoodModel.body.maxCount;
     } else {
       _error = _freeFoodService.error;
-      if (_error != null && _error!.contains(ErrorConstants.INVALID_BEARER_TOKEN)) if (await _freeFoodService
-          .getNewToken()) await fetchMaxCount(id);
+      final bool hasError = _error != null;
+      final bool isInvalidToken = _error?.contains(ErrorConstants.INVALID_BEARER_TOKEN) ?? false;
+      if (hasError && isInvalidToken) if (await _freeFoodService.getNewToken()) await fetchMaxCount(id);
 
       removeId(id);
     }
@@ -132,8 +135,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
       _lastUpdated = DateTime.now();
     } else {
       _error = _freeFoodService.error;
-      if (_error != null && _error!.contains(ErrorConstants.INVALID_BEARER_TOKEN)) if (await _freeFoodService
-          .getNewToken()) await updateCount(id, body);
+      final bool hasError = _error != null;
+      final bool isInvalidToken = _error?.contains(ErrorConstants.INVALID_BEARER_TOKEN) ?? false;
+      if (hasError && isInvalidToken) if (await _freeFoodService.getNewToken()) await updateCount(id, body);
       removeId(id);
     }
 
@@ -155,8 +159,9 @@ class FreeFoodDataProvider extends ChangeNotifier {
   bool isFreeFood(String messageId) => _messageToCount.containsKey(messageId);
   int? count(String messageId) => _messageToCount[messageId];
   bool isOverCount(String messageId) {
-    if (_messageToCount.containsKey(messageId) && _messageToMaxCount.containsKey(messageId))
-      return _messageToCount[messageId]! > _messageToMaxCount[messageId]!;
+    final bool hasCount = _messageToCount.containsKey(messageId);
+    final bool hasMaxCount = _messageToMaxCount.containsKey(messageId);
+    if (hasCount && hasMaxCount) return _messageToCount[messageId]! > _messageToMaxCount[messageId]!;
     return false;
   }
 }

@@ -53,7 +53,9 @@ class MapsDataProvider extends ChangeNotifier {
   }
 
   void updateMapPosition() {
-    if (_markers.isNotEmpty && _mapController != null) {
+    final bool hasMarkers = _markers.isNotEmpty;
+    final bool hasController = _mapController != null;
+    if (hasMarkers && hasController) {
       _mapController!.animateCamera(CameraUpdate.newLatLng(_markers.values.toList()[0].position)).then((_) async {
         await Future.delayed(Duration(seconds: 1));
         try {
@@ -65,7 +67,9 @@ class MapsDataProvider extends ChangeNotifier {
 
   void reorderLocations() {
     _mapSearchModels.sort((MapSearchModel a, MapSearchModel b) {
-      if (a.distance != null && b.distance != null) return a.distance!.compareTo(b.distance!);
+      final bool aHasDistance = a.distance != null;
+      final bool bHasDistance = b.distance != null;
+      if (aHasDistance && bHasDistance) return a.distance!.compareTo(b.distance!);
       return 0;
     });
   }
@@ -110,7 +114,9 @@ class MapsDataProvider extends ChangeNotifier {
     double? longitude = _coordinates!.lon != null ? _coordinates!.lon : _defaultLong;
     if (_coordinates != null) {
       for (MapSearchModel model in _mapSearchModels) {
-        if (model.mkrLat != null && model.mkrLong != null) {
+        final bool hasLatitude = model.mkrLat != null;
+        final bool hasLongitude = model.mkrLong != null;
+        if (hasLatitude && hasLongitude) {
           var distance = calculateDistance(latitude!, longitude!, model.mkrLat!, model.mkrLong!);
           model.distance = distance as double?;
         }

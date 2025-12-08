@@ -100,7 +100,8 @@ class UserDataProvider extends ChangeNotifier {
     var userBox = await Hive.openBox<UserProfileModel?>('UserProfileModel');
     // Create new user from temp profile
     UserProfileModel tempUserProfile = await _createNewUser(UserProfileModel.fromJson({}));
-    if (userBox.get('UserProfileModel') == null) await userBox.put('UserProfileModel', tempUserProfile);
+    final bool hasNoStoredProfile = userBox.get('UserProfileModel') == null;
+    if (hasNoStoredProfile) await userBox.put('UserProfileModel', tempUserProfile);
     tempUserProfile = userBox.get('UserProfileModel')!;
     _userProfileModel = tempUserProfile;
     _subscribeToPushNotificationTopics(_userProfileModel.subscribedTopics!.whereType<String>().toList());
@@ -150,7 +151,9 @@ class UserDataProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    if (username.isNotEmpty && password.isNotEmpty) {
+    final bool hasUsername = username.isNotEmpty;
+    final bool hasPassword = password.isNotEmpty;
+    if (hasUsername && hasPassword) {
       await _encryptAndSaveCredentials(username, password);
 
       if (await silentLogin()) {
@@ -191,7 +194,8 @@ class UserDataProvider extends ChangeNotifier {
       resetAllCardHeights();
       resetNotificationsScrollOffset();
 
-      if (await _authenticationService.silentLogin(base64EncodedWithEncryptedPassword)) {
+      final bool silentLoginSuccessful = await _authenticationService.silentLogin(base64EncodedWithEncryptedPassword);
+      if (silentLoginSuccessful) {
         await updateAuthenticationModel(_authenticationService.data!);
         await fetchUserProfile();
         var _cardsDataProvider = CardsDataProvider();
@@ -355,7 +359,8 @@ class UserDataProvider extends ChangeNotifier {
       /// we only want to push data that is not null
       var tempJson = Map<String, dynamic>();
       for (var key in profile.toJson().keys) {
-        if (profile.toJson()[key] != null) tempJson[key] = profile.toJson()[key];
+        final bool hasValue = profile.toJson()[key] != null;
+        if (hasValue) tempJson[key] = profile.toJson()[key];
       }
       if (await _userProfileService.uploadUserProfile(headers, tempJson)) {
         _error = null;

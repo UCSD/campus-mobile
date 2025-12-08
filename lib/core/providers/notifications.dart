@@ -88,7 +88,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         /// foreground messaging callback via flutter_local_notifications
         /// only show message if the message has not been seen before
-        if (!_receivedMessageIds.contains(message.messageId)) showNotification(message);
+        final bool isNewMessage = !_receivedMessageIds.contains(message.messageId);
+        if (isNewMessage) showNotification(message);
         // add messageId as it has been shown already
         _receivedMessageIds.add(message.messageId!);
 
@@ -224,7 +225,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
     } else {
       // Get the token for this device
       String? fcmToken = await _fcm.getToken();
-      if (fcmToken != null && fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
+      final bool hasFcmToken = fcmToken != null && fcmToken.isNotEmpty;
+      final bool hasAccessToken = accessToken?.isNotEmpty ?? false;
+      if (hasFcmToken && hasAccessToken) {
         Map<String, String> headers = {'Authorization': 'Bearer ' + accessToken!};
         Map<String, String> body = {'deviceId': deviceId, 'token': fcmToken};
         if ((await _notificationService.postPushToken(headers, body))) {
@@ -243,7 +246,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
   /// Unregisters device from receiving push notifications
   Future<bool> unregisterDevice(String? accessToken) async {
     String? fcmToken = await _fcm.getToken();
-    if (fcmToken != null && fcmToken.isNotEmpty && (accessToken?.isNotEmpty ?? false)) {
+    final bool hasFcmToken = fcmToken != null && fcmToken.isNotEmpty;
+    final bool hasAccessToken = accessToken?.isNotEmpty ?? false;
+    if (hasFcmToken && hasAccessToken) {
       Map<String, String> headers = {'Authorization': 'Bearer ' + accessToken!};
       if ((await _notificationService.deletePushToken(headers, fcmToken))) {
         return true;

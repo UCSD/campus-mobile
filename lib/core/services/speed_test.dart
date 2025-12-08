@@ -68,7 +68,9 @@ class SpeedTestService {
   Future<WifiInfo?> fetchNetworkDiagnostics() async {
     _isLoading = true;
     // Check connected to wifi
-    if (!(await _connectivity.checkConnectivity()).contains(ConnectivityResult.wifi)) {
+    final List<ConnectivityResult> connectivity = await _connectivity.checkConnectivity();
+    final bool isNotOnWiFi = !connectivity.contains(ConnectivityResult.wifi);
+    if (isNotOnWiFi) {
       _isLoading = false;
       return null;
     }

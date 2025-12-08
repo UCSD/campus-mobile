@@ -95,14 +95,19 @@ class DiningDataProvider extends ChangeNotifier {
     if (_coordinates == null) return _diningModels.values.toList();
     List<DiningModel> orderedListOfLots = _diningModels.values.toList();
     orderedListOfLots.sort((DiningModel a, DiningModel b) {
-      if (a.distance != null && b.distance != null) return a.distance!.compareTo(b.distance!);
+      final bool aHasDistance = a.distance != null;
+      final bool bHasDistance = b.distance != null;
+      if (aHasDistance && bHasDistance) return a.distance!.compareTo(b.distance!);
       return 0;
     });
     return orderedListOfLots;
   }
 
   void populateDistances() {
-    if (_coordinates != null && _coordinates!.lat != null && _coordinates!.lon != null) {
+    final bool hasCoordinates = _coordinates != null;
+    final bool hasLatitude = _coordinates?.lat != null;
+    final bool hasLongitude = _coordinates?.lon != null;
+    if (hasCoordinates && hasLatitude && hasLongitude) {
       for (DiningModel model in _diningModels.values.toList()) {
         if (model.coordinates != null) {
           var distance = calculateDistance(
@@ -136,8 +141,9 @@ class DiningDataProvider extends ChangeNotifier {
   /// RETURNS A List<diningModels> filtered by the selected filter types
   List<DiningModel> get filteredDiningModels {
     // If all or no filters are selected, then return diningModels (the source of truth)
-    if (!_diningFilterTypeStates.values.contains(true) || _diningFilterTypeStates.values.every((f) => f))
-      return diningModels;
+    final bool noFiltersSelected = !_diningFilterTypeStates.values.contains(true);
+    final bool allFiltersSelected = _diningFilterTypeStates.values.every((f) => f);
+    if (noFiltersSelected || allFiltersSelected) return diningModels;
     // Else, return the updated filtered list
     return _filteredDiningModels.values.toList();
   }

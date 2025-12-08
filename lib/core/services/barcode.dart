@@ -13,7 +13,9 @@ class BarcodeService {
     _isLoading = true;
     try {
       final response = await NetworkHelper.authorizedPost(dotenv.get('BARCODE_SERVICE_ENDPOINT'), headers, body);
-      if (response != null && validateUploadResults(body, response))
+      final bool hasResponse = response != null;
+      final bool isValidUpload = validateUploadResults(body, response);
+      if (hasResponse && isValidUpload)
         return true;
       else
         throw (response.toString());

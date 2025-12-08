@@ -27,8 +27,9 @@ class DiningCard extends StatelessWidget {
             onPressed: () {
               // Only navigate if not loading and no error
               final provider = Provider.of<DiningDataProvider>(context, listen: false);
-              if (!provider.isLoading && provider.error == null)
-                Navigator.pushNamed(context, RoutePaths.DINING_VIEW_ALL_DINING_OPTIONS);
+              final bool isNotLoading = !provider.isLoading;
+              final bool hasNoError = provider.error == null;
+              if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.DINING_VIEW_ALL_DINING_OPTIONS);
             })
       ],
     );

@@ -107,7 +107,8 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
                 // activeColor: Theme.of(context).buttonColor,
                 activeColor: toggleActiveColor,
                 thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) return Colors.white;
+                  final bool isSelected = states.contains(WidgetState.selected);
+                  if (isSelected) return Colors.white;
                   return null;
                 }),
                 onChanged: (_) {

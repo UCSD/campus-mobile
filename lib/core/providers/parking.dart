@@ -182,16 +182,18 @@ class ParkingDataProvider extends ChangeNotifier {
     Map<String, num> totalAndOpenSpots = {"Open": 0, "Total": 0};
     if (_parkingModels[locationId] != null) {
       for (dynamic spot in _parkingModels[locationId]!.availability.keys) {
-        if (_parkingModels[locationId]!.availability[spot]['Open'] != null &&
-            _parkingModels[locationId]!.availability[spot]['Open'] != "") {
+        final bool hasOpenData = _parkingModels[locationId]!.availability[spot]['Open'] != null;
+        final bool openDataNotEmpty = _parkingModels[locationId]!.availability[spot]['Open'] != "";
+        if (hasOpenData && openDataNotEmpty) {
           totalAndOpenSpots["Open"] = totalAndOpenSpots["Open"]! +
               (_parkingModels[locationId]!.availability[spot]['Open'] is String
                   ? int.parse(_parkingModels[locationId]!.availability[spot]['Open'])
                   : _parkingModels[locationId]!.availability[spot]['Open']);
         }
 
-        if (_parkingModels[locationId]!.availability[spot]['Total'] != null &&
-            _parkingModels[locationId]!.availability[spot]['Total'] != "") {
+        final bool hasTotalData = _parkingModels[locationId]!.availability[spot]['Total'] != null;
+        final bool totalDataNotEmpty = _parkingModels[locationId]!.availability[spot]['Total'] != "";
+        if (hasTotalData && totalDataNotEmpty) {
           totalAndOpenSpots["Total"] = totalAndOpenSpots["Total"]! +
               (_parkingModels[locationId]!.availability[spot]['Total'] is String
                   ? int.parse(_parkingModels[locationId]!.availability[spot]['Total'])

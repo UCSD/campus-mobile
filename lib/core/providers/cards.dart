@@ -91,7 +91,9 @@ class CardsDataProvider extends ChangeNotifier {
           // add active web cards
           if (model.isWebCard) _webCards[card] = model;
 
-          if (!_cardOrder.contains(model) && model.cardActive) _cardOrder.add(card);
+          final bool isNewCard = !_cardOrder.contains(model);
+          final bool isActiveCard = model.cardActive;
+          if (isNewCard && isActiveCard) _cardOrder.add(card);
 
           // keep all new cards activated by default
           _cardStates.putIfAbsent(card, () => true);
@@ -136,7 +138,9 @@ class CardsDataProvider extends ChangeNotifier {
   /// Update the [_cardOrder] stored in state
   /// overwrite the [_cardOrder] in persistent storage with the model passed in
   Future updateCardOrder() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
+    final bool isUserProviderNull = _userDataProvider == null;
+    final bool isInSilentLogin = _userDataProvider?.isInSilentLogin ?? false;
+    if (isUserProviderNull || isInSilentLogin) return;
 
     // checks if box is open, creates one if not
     _cardOrderBox = await Hive.openBox(DataPersistence.CARD_ORDER);
@@ -151,7 +155,9 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardOrder] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardOrder() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
+    final bool isUserProviderNull = _userDataProvider == null;
+    final bool isInSilentLogin = _userDataProvider?.isInSilentLogin ?? false;
+    if (isUserProviderNull || isInSilentLogin) return;
 
     _cardOrderBox = await Hive.openBox(DataPersistence.CARD_ORDER);
 
@@ -185,7 +191,9 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// Update the [_cardStates] stored on disk
   Future updateCardStates() async {
-    if (_userDataProvider == null || _userDataProvider!.isInSilentLogin) return;
+    final bool isUserProviderNull = _userDataProvider == null;
+    final bool isInSilentLogin = _userDataProvider?.isInSilentLogin ?? false;
+    if (isUserProviderNull || isInSilentLogin) return;
 
     var activeCards = _cardStates.keys.where((card) => _cardStates[card]!).toList();
 
@@ -275,7 +283,9 @@ class CardsDataProvider extends ChangeNotifier {
 
   void toggleCard(String card) {
     try {
-      if (_availableCards[card]!.isWebCard && _cardStates[card]!) resetCardHeight(card);
+      final bool isWebCard = _availableCards[card]!.isWebCard;
+      final bool isCardActive = _cardStates[card]!;
+      if (isWebCard && isCardActive) resetCardHeight(card);
 
       // Toggle the card state
       _cardStates[card] = !_cardStates[card]!;

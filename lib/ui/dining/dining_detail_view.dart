@@ -55,6 +55,8 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       orElse: () => null,
     );
     var specials = diningModel.specials;
+    final bool hasSpecialHours = diningModel.specialHours != null;
+    final bool hasSpecialsTitle = specials?.specialTitle?.isNotEmpty == true;
     return [
       Row(
         children: [
@@ -122,9 +124,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       // Vendor hours
       buildHours(context, diningModel),
       // Vendor Special Hours
-      if (diningModel.specialHours != null) buildSpecialHours(context, diningModel),
+      if (hasSpecialHours) buildSpecialHours(context, diningModel),
       // Specials Field
-      if (specials?.specialTitle?.isNotEmpty == true) buildSpecialsField(context, diningModel),
+      if (hasSpecialsTitle) buildSpecialsField(context, diningModel),
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
       // Vendor Location

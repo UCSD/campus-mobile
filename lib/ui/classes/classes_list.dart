@@ -22,7 +22,8 @@ class ClassList extends StatelessWidget {
         .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
     Provider.of<ClassScheduleDataProvider>(context).enrolledClasses.keys.forEach(
       (key) {
-        if (Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.isNotEmpty) {
+        final bool hasClasses = Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.isNotEmpty;
+        if (hasClasses) {
           list.add(SliverStickyHeader(
             header: buildWeekDayHeader(context, key),
             sliver: SliverList(

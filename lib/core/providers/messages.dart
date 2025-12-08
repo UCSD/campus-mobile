@@ -14,8 +14,8 @@ class MessagesDataProvider extends ChangeNotifier {
     notificationScrollController.addListener(() {
       var triggerFetchMoreSize = 0.9 * notificationScrollController.position.maxScrollExtent;
 
-      if (notificationScrollController.position.pixels > triggerFetchMoreSize) if (!_isLoading &&
-          _hasMoreMessagesToLoad) fetchMessages(false);
+      final bool shouldTriggerFetch = notificationScrollController.position.pixels > triggerFetchMoreSize;
+      if (shouldTriggerFetch) if (!_isLoading && _hasMoreMessagesToLoad) fetchMessages(false);
       setNotificationsScrollOffset(notificationScrollController.offset);
     });
   }
@@ -90,7 +90,9 @@ class MessagesDataProvider extends ChangeNotifier {
     notifyListeners();
     int returnedTimestamp;
 
-    if (await _messageService.fetchTopicData(_previousTimestamp, userDataProvider!.subscribedTopics!)) {
+    final bool topicDataFetched =
+        await _messageService.fetchTopicData(_previousTimestamp, userDataProvider!.subscribedTopics!);
+    if (topicDataFetched) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
       updateMessages(temp);
       makeOrderedMessagesList();

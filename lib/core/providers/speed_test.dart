@@ -81,7 +81,9 @@ class SpeedTestProvider extends ChangeNotifier {
     downloadSpeedTest().then((value) {
       _timer.reset();
       uploadSpeedTest().then((value) {
-        if (_percentUploaded == 1.0 && _percentDownloaded == 1.0) {
+        final bool uploadComplete = _percentUploaded == 1.0;
+        final bool downloadComplete = _percentDownloaded == 1.0;
+        if (uploadComplete && downloadComplete) {
           _speedTestDone = true;
           notifyListeners();
         }
@@ -96,7 +98,9 @@ class SpeedTestProvider extends ChangeNotifier {
     // if not on UCSD wifi OR the file above does not exist,
     // we should not upload the speed test results
     // instead, stop the timer and exit the function
-    if (isUCSDWiFi != true || !temp.existsSync()) {
+    final bool isNotUCSDWiFi = isUCSDWiFi != true;
+    final bool fileDoesNotExist = !temp.existsSync();
+    if (isNotUCSDWiFi || fileDoesNotExist) {
       _timer.stop();
       notifyListeners();
       return;

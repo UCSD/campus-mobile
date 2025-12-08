@@ -20,7 +20,8 @@ class ClassScheduleCard extends StatelessWidget {
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {
-        if (Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading)
+        final bool isLoading = Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading;
+        if (isLoading)
           return null;
         else
           Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();

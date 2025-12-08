@@ -97,11 +97,16 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   Future<void> calculateClosestStop() async {
     // make sure we have users location before we do any calculations
-    if (_userCoords == null || _userCoords!.lon == null || _userCoords!.lat == null) return;
+    final bool hasCoordsObject = _userCoords != null;
+    final bool hasLongitude = _userCoords?.lon != null;
+    final bool hasLatitude = _userCoords?.lat != null;
+    if (!hasCoordsObject || !hasLongitude || !hasLatitude) return;
 
     for (ShuttleStopModel shuttleStop in _shuttleService.data) {
       double stopLat = shuttleStop.lat, stopLong = shuttleStop.lon;
-      if (getHaversineDistance(_userCoords!.lat, _userCoords!.lon, stopLat, stopLong) < closestDistance) {
+      final double distanceToStop = getHaversineDistance(_userCoords!.lat, _userCoords!.lon, stopLat, stopLong);
+      final bool isCloser = distanceToStop < closestDistance;
+      if (isCloser) {
         closestDistance = getHaversineDistance(_userCoords!.lat, _userCoords!.lon, stopLat, stopLong);
         _closestStop = shuttleStop;
       }
@@ -148,7 +153,9 @@ class ShuttleDataProvider extends ChangeNotifier {
   ShuttleStopModel? get closestStop => _closestStop;
   List<ShuttleStopModel> get stopsToRender {
     var stopsToRenderList = <ShuttleStopModel>[];
-    if (fetchedStops != null && userDataProvider?.userProfileModel.selectedStops != null) {
+    final bool hasStops = fetchedStops != null;
+    final bool hasSelectedStops = userDataProvider?.userProfileModel.selectedStops != null;
+    if (hasStops && hasSelectedStops) {
       for (var i = 0; i < userDataProvider!.userProfileModel.selectedStops!.length; i++) {
         int stopID = userDataProvider!.userProfileModel.selectedStops![i]!;
         if (fetchedStops![stopID] != null) stopsToRenderList.add(fetchedStops![stopID]!);
