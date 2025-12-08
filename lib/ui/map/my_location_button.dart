@@ -22,8 +22,10 @@ class MyLocationButton extends StatelessWidget {
       ),
       backgroundColor: Colors.lightBlue,
       onPressed: () {
-        if (Provider.of<MapsDataProvider>(context, listen: false).coordinates!.lat == null ||
-            Provider.of<MapsDataProvider>(context, listen: false).coordinates!.lon == null) {
+        final MapsDataProvider mapsProvider = Provider.of<MapsDataProvider>(context, listen: false);
+        final bool hasNullLatitude = mapsProvider.coordinates!.lat == null;
+        final bool hasNullLongitude = mapsProvider.coordinates!.lon == null;
+        if (hasNullLatitude || hasNullLongitude) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Please turn your location on in order to use this feature.'),
             duration: Duration(seconds: 3),

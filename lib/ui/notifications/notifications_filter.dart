@@ -57,7 +57,8 @@ class NotificationsFilterView extends StatelessWidget {
                   Provider.of<UserDataProvider>(context, listen: false).toggleNotifications(topic);
                 },
                 thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) return Colors.white;
+                  final bool isSelected = states.contains(WidgetState.selected);
+                  if (isSelected) return Colors.white;
                   return null;
                 }),
                 activeColor: toggleActiveColor,
@@ -93,10 +94,13 @@ class NotificationsFilterView extends StatelessWidget {
     PushNotificationDataProvider _pushNotificationDataProvider = Provider.of<PushNotificationDataProvider>(context);
     if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
       return _pushNotificationDataProvider.publicTopics() + _pushNotificationDataProvider.studentTopics();
-    } else if (_userDataProvider.userProfileModel.classifications?.staff ?? false) {
-      return _pushNotificationDataProvider.publicTopics() + _pushNotificationDataProvider.staffTopics();
     } else {
-      return _pushNotificationDataProvider.publicTopics();
+      final bool isStaff = _userDataProvider.userProfileModel.classifications?.staff ?? false;
+      if (isStaff) {
+        return _pushNotificationDataProvider.publicTopics() + _pushNotificationDataProvider.staffTopics();
+      } else {
+        return _pushNotificationDataProvider.publicTopics();
+      }
     }
   }
 

@@ -46,14 +46,16 @@ class _ParkingCardState extends State<ParkingCard> {
         ActionButton(
             buttonText: 'MANAGE SPOTS',
             onPressed: () {
-              if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null)
-                Navigator.pushNamed(context, RoutePaths.SPOT_TYPES_VIEW);
+              final bool isNotLoading = !_parkingDataProvider.isLoading;
+              final bool hasNoError = _parkingDataProvider.error == null;
+              if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.SPOT_TYPES_VIEW);
             }),
         ActionLink(
             buttonText: 'MANAGE LOTS',
             onPressed: () {
-              if (!_parkingDataProvider.isLoading && _parkingDataProvider.error == null)
-                Navigator.pushNamed(context, RoutePaths.MANAGE_PARKING_VIEW);
+              final bool isNotLoading = !_parkingDataProvider.isLoading;
+              final bool hasNoError = _parkingDataProvider.error == null;
+              if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.MANAGE_PARKING_VIEW);
             }),
       ],
     );

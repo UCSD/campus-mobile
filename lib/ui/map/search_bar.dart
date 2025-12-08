@@ -27,7 +27,9 @@ class MapSearchBar extends StatelessWidget {
               textInputAction: TextInputAction.search,
               onChanged: (text) {},
               onSubmitted: (text) {
-                if (Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text.isNotEmpty) {
+                final bool hasText =
+                    Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text.isNotEmpty;
+                if (hasText) {
                   // Don't fetch on empty text field
                   Provider.of<MapsDataProvider>(context, listen: false)
                       .fetchLocations(); // Text doesn't need to be sent over because it's already in the controller

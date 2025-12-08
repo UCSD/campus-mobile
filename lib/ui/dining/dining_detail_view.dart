@@ -57,6 +57,16 @@ class _DiningDetailViewState extends State<DiningDetailView> {
     var specials = diningModel.specials;
     final bool hasSpecialHours = diningModel.specialHours != null;
     final bool hasSpecialsTitle = specials?.specialTitle?.isNotEmpty == true;
+    // Move variable declarations outside the list
+    final bool hasModelOne = busynessDiningHallModelOne != null;
+    final bool modelOneMatches = hasModelOne &&
+        busynessDiningHallModelOne.subLocations
+            .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name));
+    final bool hasModelTwo = busynessDiningHallModelTwo != null;
+    final bool modelTwoMatches = hasModelTwo &&
+        busynessDiningHallModelTwo.subLocations
+            .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name));
+
     return [
       Row(
         children: [
@@ -107,12 +117,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
         ],
       ),
       // Availability Bars if applicable (Canyon Vista, Club Med, Pines, 64 Degrees, Cafe Ventanas)
-      if ((busynessDiningHallModelOne != null &&
-              busynessDiningHallModelOne.subLocations
-                  .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name))) ||
-          (busynessDiningHallModelTwo != null &&
-              busynessDiningHallModelTwo.subLocations
-                  .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name))))
+      if (modelOneMatches || modelTwoMatches)
         DiningBusynessBar(
           diningModel: diningModel,
           busynessDiningHallModel: (busynessDiningHallModelOne != null &&
@@ -184,7 +189,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
   ///////////// Special Hours Section /////////////
   Widget buildSpecialHours(BuildContext context, prefix0.DiningModel model) {
     var specialHoursDuration = "";
-    if (model.specialHours?.specialHoursValidFrom != null && model.specialHours?.specialHoursValidTo != null) {
+    final bool hasSpecialHoursFrom = model.specialHours?.specialHoursValidFrom != null;
+    final bool hasSpecialHoursTo = model.specialHours?.specialHoursValidTo != null;
+    if (hasSpecialHoursFrom && hasSpecialHoursTo) {
       specialHoursDuration =
           model.specialHours!.specialHoursValidFrom! + " to " + model.specialHours!.specialHoursValidTo! + "\n";
     }
@@ -267,7 +274,10 @@ class _DiningDetailViewState extends State<DiningDetailView> {
 
 ///////////// Location Section /////////////
 Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
-  if (model.coordinates != null && model.coordinates!.lat != null && model.coordinates!.lon != null) {
+  final bool hasCoordinates = model.coordinates != null;
+  final bool hasLatitude = hasCoordinates && model.coordinates!.lat != null;
+  final bool hasLongitude = hasCoordinates && model.coordinates!.lon != null;
+  if (hasCoordinates && hasLatitude && hasLongitude) {
     return TextButton(
       child: Row(
         children: <Widget>[
@@ -318,7 +328,9 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
 
 ///////////// Website and Menu Section /////////////
 Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
-  if (model.url != null && model.url != '') {
+  final bool hasUrl = model.url != null;
+  final bool isUrlNotEmpty = hasUrl && model.url != '';
+  if (hasUrl && isUrlNotEmpty) {
     return TextButton(
       child: Text('Visit Website'),
       onPressed: () {
@@ -339,7 +351,9 @@ Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
 }
 
 Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
-  if (model.menuWebsite != null && model.menuWebsite!.isNotEmpty) {
+  final bool hasMenuWebsite = model.menuWebsite != null;
+  final bool isMenuWebsiteNotEmpty = hasMenuWebsite && model.menuWebsite!.isNotEmpty;
+  if (hasMenuWebsite && isMenuWebsiteNotEmpty) {
     return TextButton(
       child: Row(
         children: [
@@ -542,7 +556,9 @@ class GreenDot extends StatelessWidget {
         if (endTime < startTime) adjustedEndTime += 24 * 60; // Add a day in minutes
 
         // Determine if current time is within the range
-        if (currentTimeInMinutes >= startTime && currentTimeInMinutes < adjustedEndTime) {
+        final bool isAfterStartTime = currentTimeInMinutes >= startTime;
+        final bool isBeforeEndTime = currentTimeInMinutes < adjustedEndTime;
+        if (isAfterStartTime && isBeforeEndTime) {
           return Colors.green;
         } else {
           return Colors.red;
@@ -561,7 +577,9 @@ class GreenDot extends StatelessWidget {
     final amPmRegex = RegExp(r'(\d+):(\d+)\s*(AM|PM)', caseSensitive: false);
     final match = amPmRegex.firstMatch(timeString);
 
-    if (match != null && match.groupCount >= 3) {
+    final bool hasMatch = match != null;
+    final bool hasEnoughGroups = hasMatch && match.groupCount >= 3;
+    if (hasMatch && hasEnoughGroups) {
       int hour = int.parse(match.group(1)!);
       final int minute = int.parse(match.group(2)!);
       final String amPm = match.group(3)!.toUpperCase();

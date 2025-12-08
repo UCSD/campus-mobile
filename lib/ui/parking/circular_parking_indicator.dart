@@ -33,7 +33,9 @@ class CircularParkingIndicators extends StatelessWidget {
     List<String> selectedSpots = [];
 
     Provider.of<ParkingDataProvider>(context).spotTypesState.forEach((key, value) {
-      if (value && selectedSpots.length < 4) selectedSpots.add(key);
+      final bool hasValue = value;
+      final bool hasSpaceForMore = selectedSpots.length < 4;
+      if (hasValue && hasSpaceForMore) selectedSpots.add(key);
     });
     for (String spot in selectedSpots) {
       listOfCircularParkingInfo.add(buildCircularParkingInfo(

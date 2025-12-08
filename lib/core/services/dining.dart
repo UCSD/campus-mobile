@@ -36,7 +36,10 @@ class DiningService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers)) return await fetchData();
+      if (e.toString().contains("401")) {
+        final bool tokenRefreshed = await NetworkHelper.getNewToken(headers);
+        if (tokenRefreshed) return await fetchData();
+      }
       _error = e.toString();
       return false;
     } finally {
@@ -59,7 +62,8 @@ class DiningService {
   //     /// if the authorized fetch failed we know we have to refresh the
   //     /// token for this service
   //     if (e.toString().contains("401")) {
-  //       if (await NetworkHelper.getNewToken(headers)) return await fetchMenu(id);
+  //       final bool tokenRefreshed = await NetworkHelper.getNewToken(headers);
+  //       if (tokenRefreshed) return await fetchMenu(id);
   //     }
   //     _error = e.toString();
   //     return false;

@@ -263,12 +263,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   double letterSpacingForTablet() {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) return ScalingUtility.horizontalSafeBlock * 1;
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    if (isLandscape) return ScalingUtility.horizontalSafeBlock * 1;
     return ScalingUtility.horizontalSafeBlock * 3;
   }
 
   double fontSizeForTablet() {
-    if (MediaQuery.of(context).orientation == Orientation.landscape) return ScalingUtility.horizontalSafeBlock * 2;
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    if (isLandscape) return ScalingUtility.horizontalSafeBlock * 2;
     return ScalingUtility.horizontalSafeBlock * 4;
   }
 

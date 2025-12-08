@@ -84,20 +84,23 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           });
         } else if (!_speedTestProvider.isUCSDWiFi!) {
           setState(() => cardState = TestStatus.unavailable);
-        } else if (_speedTestProvider.timeElapsedDownload + _speedTestProvider.timeElapsedUpload >
-            SPEED_TEST_TIMEOUT_CONST) {
-          setState(() {
-            goodSpeed = false;
-            cardState = TestStatus.finished;
-            timedOut = true;
-          });
-          _speedTestProvider.cancelDownload();
-          _speedTestProvider.cancelUpload();
-        } else if (_speedTestProvider.speedTestDone) {
-          setState(() {
-            goodSpeed = true;
-            cardState = TestStatus.finished;
-          });
+        } else {
+          final bool hasTimedOut =
+              _speedTestProvider.timeElapsedDownload + _speedTestProvider.timeElapsedUpload > SPEED_TEST_TIMEOUT_CONST;
+          if (hasTimedOut) {
+            setState(() {
+              goodSpeed = false;
+              cardState = TestStatus.finished;
+              timedOut = true;
+            });
+            _speedTestProvider.cancelDownload();
+            _speedTestProvider.cancelUpload();
+          } else if (_speedTestProvider.speedTestDone) {
+            setState(() {
+              goodSpeed = true;
+              cardState = TestStatus.finished;
+            });
+          }
         }
       } catch (_) {}
     });

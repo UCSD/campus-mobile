@@ -134,7 +134,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
         'Manage Shuttle Stops',
       ),
       onPressed: () {
-        if (!_shuttleCardDataProvider.isLoading) Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
+        final bool isNotLoading = !_shuttleCardDataProvider.isLoading;
+        if (isNotLoading) Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
       },
     ));
     return actionButtons;

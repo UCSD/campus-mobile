@@ -51,7 +51,9 @@ class Maps extends StatelessWidget {
 
     Uri? initialUri = await appLinks.getInitialAppLink();
     String? initialLink = initialUri?.toString();
-    if (initialLink != null && initialLink.contains("deeplinking.searchmap")) {
+    final bool hasInitialLink = initialLink != null;
+    final bool isSearchMapLink = hasInitialLink && initialLink.contains("deeplinking.searchmap");
+    if (hasInitialLink && isSearchMapLink) {
       var uri = Uri.dataFromString(initialLink);
       var query = uri.queryParameters['query']!;
       Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
@@ -61,7 +63,9 @@ class Maps extends StatelessWidget {
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
       String? link = uri?.toString();
-      if (link != null && link.contains("deeplinking.searchmap")) {
+      final bool hasLink = link != null;
+      final bool isSearchMapLink = hasLink && link.contains("deeplinking.searchmap");
+      if (hasLink && isSearchMapLink) {
         var query = uri!.queryParameters['query']!;
         Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
