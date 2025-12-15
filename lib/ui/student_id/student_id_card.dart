@@ -265,7 +265,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   double letterSpacingForTablet() {
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     if (isLandscape) return ScalingUtility.horizontalSafeBlock * 1;
-    return ScalingUtility.horizontalSafeBlock * 3;
+    return ScalingUtility.horizontalSafeBlock * 2;
   }
 
   double fontSizeForTablet() {
