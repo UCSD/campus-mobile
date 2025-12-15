@@ -133,7 +133,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
         'RefreshToken',
         onMessageReceived: (JavaScriptMessage message) async {
           final bool isNotLoggedIn = !Provider.of<UserDataProvider>(context, listen: false).isLoggedIn;
-          if (isNotLoggedIn && await _userDataProvider.silentLogin()) _webViewController.reload();
+          final bool shouldReload = isNotLoggedIn && await _userDataProvider.silentLogin();
+          if (shouldReload) _webViewController.reload();
         },
       )
       // javascript channel for redirecting the user to a new webcard URL
