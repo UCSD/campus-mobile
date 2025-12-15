@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/dining.dart'
-    as dining_model;
+import 'package:campus_mobile_experimental/core/models/dining.dart' as dining_model;
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
@@ -21,8 +20,7 @@ class DiningList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Using Provider's filteredDiningModels so that the list respects the filters
-    List<dining_model.DiningModel> data =
-        Provider.of<DiningDataProvider>(context).filteredDiningModels;
+    List<dining_model.DiningModel> data = Provider.of<DiningDataProvider>(context).filteredDiningModels;
     if (data.isEmpty) {
       return ContainerView(
         child: ListView(
@@ -42,8 +40,7 @@ class DiningList extends StatelessWidget {
     return buildDiningList(data, context);
   }
 
-  Widget buildDiningList(
-      List<dining_model.DiningModel> listOfDiners, BuildContext context) {
+  Widget buildDiningList(List<dining_model.DiningModel> listOfDiners, BuildContext context) {
     final List<Widget> diningTiles = [];
 
     /// check to see if we want to display only a limited number of elements
@@ -92,17 +89,13 @@ class DiningList extends StatelessWidget {
           );
   }
 
-  Widget textClosed(BuildContext context,
-      {String? nextOpenDay, String? nextOpenTime}) {
+  Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTime}) {
     String closedText = 'Closed';
-    if (nextOpenDay != null && nextOpenTime != null) {
-      closedText += '. Opens $nextOpenDay at $nextOpenTime.';
-    }
+    if (nextOpenDay != null && nextOpenTime != null) closedText += '. Opens $nextOpenDay at $nextOpenTime.';
     return Text(closedText, style: Theme.of(context).textTheme.bodySmall);
   }
 
-  Widget getHoursForToday(
-      dining_model.RegularHours hours, BuildContext context) {
+  Widget getHoursForToday(dining_model.RegularHours hours, BuildContext context) {
     int weekday = DateTime.now().weekday;
     String? dayHours;
 
@@ -111,71 +104,52 @@ class DiningList extends StatelessWidget {
         if (hours.mon != null)
           dayHours = hours.mon;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours),
-              nextOpenTime: findNextOpenTime(hours));
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 2:
         if (hours.tue != null)
           dayHours = hours.tue;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours),
-              nextOpenTime: findNextOpenTime(hours));
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 3:
         if (hours.wed != null)
           dayHours = hours.wed;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours),
-              nextOpenTime: findNextOpenTime(hours));
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 4:
         if (hours.thu != null)
           dayHours = hours.thu;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours),
-              nextOpenTime: findNextOpenTime(hours));
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 5:
         if (hours.fri != null)
           dayHours = hours.fri;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours),
-              nextOpenTime: findNextOpenTime(hours));
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 6:
         if (hours.sat != null)
           dayHours = hours.sat;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours),
-              nextOpenTime: findNextOpenTime(hours));
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       case 7:
         if (hours.sun != null)
           dayHours = hours.sun;
         else
-          return textClosed(context,
-              nextOpenDay: findNextOpenDay(hours),
-              nextOpenTime: findNextOpenTime(hours));
+          return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
         break;
       default:
-        return textClosed(context,
-            nextOpenDay: findNextOpenDay(hours),
-            nextOpenTime: findNextOpenTime(hours));
+        return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
     }
     if (RegExp(r"\b[0-9]{2}").allMatches(dayHours!).length != 2) {
       if (dayHours == 'Closed-Closed')
-        return textClosed(context,
-            nextOpenDay: findNextOpenDay(hours),
-            nextOpenTime: findNextOpenTime(hours));
+        return textClosed(context, nextOpenDay: findNextOpenDay(hours), nextOpenTime: findNextOpenTime(hours));
       if (dayHours == 'Invalid Date-Invalid Date')
-        return Text("Unknown hours",
-            style: Theme.of(context).textTheme.bodySmall);
+        return Text("Unknown hours", style: Theme.of(context).textTheme.bodySmall);
 
       return Text(dayHours, style: Theme.of(context).textTheme.bodySmall);
     }
@@ -185,9 +159,8 @@ class DiningList extends StatelessWidget {
       style: TextStyle(
           fontSize: 17.0,
           fontWeight: FontWeight.w400,
-          color: Theme.of(context).brightness == Brightness.light
-              ? descriptiveTextColorLight
-              : descriptiveTextColorDark),
+          color:
+              Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark),
     );
   }
 
@@ -215,17 +188,13 @@ class DiningList extends StatelessWidget {
               )
             : Icon(Icons.restaurant,
                 size: 32,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? lightPrimaryColor
-                    : darkPrimaryColor2),
+                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
       ),
       // Vendor Name
       title: Text(
         data.name,
         textAlign: TextAlign.start,
-        style: Theme.of(context).brightness == Brightness.dark
-            ? textButtonSmallDark
-            : textButtonSmallLight,
+        style: Theme.of(context).brightness == Brightness.dark ? textButtonSmallDark : textButtonSmallLight,
       ),
       // Vendor Hours
       subtitle: Padding(
@@ -236,23 +205,20 @@ class DiningList extends StatelessWidget {
       trailing: buildIconWithDistance(data, context),
       onTap: () {
         // if (data.id != null) Provider.of<DiningDataProvider>(context, listen: false).fetchDiningMenu(data.id!);
-        Navigator.pushNamed(context, RoutePaths.DiningOptionDetailView,
-            arguments: data);
+        Navigator.pushNamed(context, RoutePaths.DINING_OPTION_DETAIL_VIEW, arguments: data);
       },
     );
   }
 
   // Builds the Right side of the ListTile containing the icon and distance
-  Widget buildIconWithDistance(
-      dining_model.DiningModel data, BuildContext context) {
+  Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
         foregroundColor: linkColorLight,
       ),
       onPressed: () async {
         try {
-          await DirectionsHelper.openDirections(
-              data.coordinates!.lat!, data.coordinates!.lon!);
+          await DirectionsHelper.openDirections(data.coordinates!.lat!, data.coordinates!.lon!);
         } catch (e) {
           // an error occurred, do nothing
         }
@@ -261,20 +227,11 @@ class DiningList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.directions_walk,
-              size: 28,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? linkColorLight
-                  : linkColorDark),
+              size: 28, color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
           Text(
-            data.distance != null
-                ? (num.parse(data.distance!.toStringAsFixed(1)).toString() +
-                    ' mi')
-                : '--',
+            data.distance != null ? (num.parse(data.distance!.toStringAsFixed(1)).toString() + ' mi') : '--',
             style: TextStyle(
-                fontSize: 13,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? linkColorLight
-                    : linkColorDark),
+                fontSize: 13, color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
           ),
         ],
       ),
@@ -311,30 +268,18 @@ String? findNextOpenDay(dining_model.RegularHours hours) {
         value = hours.sun;
         break;
     }
-    if (value != null && value != 'Closed-Closed') {
-      return days[nextDay][0].toUpperCase() + days[nextDay].substring(1);
-    }
+    if (value != null && value != 'Closed-Closed') return days[nextDay][0].toUpperCase() + days[nextDay].substring(1);
   }
   return null;
 }
 
 String? findNextOpenTime(dining_model.RegularHours hours) {
-  final days = [
-    hours.mon,
-    hours.tue,
-    hours.wed,
-    hours.thu,
-    hours.fri,
-    hours.sat,
-    hours.sun
-  ];
+  final days = [hours.mon, hours.tue, hours.wed, hours.thu, hours.fri, hours.sat, hours.sun];
   final now = DateTime.now();
   for (int i = 1; i <= 7; i++) {
     int nextDay = (now.weekday + i - 1) % 7;
     String? range = days[nextDay];
-    if (range != null && range != 'Closed-Closed') {
-      return formattedTimeRange(range)?.split('-').first.trim();
-    }
+    if (range != null && range != 'Closed-Closed') return formattedTimeRange(range)?.split('-').first.trim();
   }
   return null;
 }

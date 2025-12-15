@@ -49,8 +49,8 @@ class InternetConnectivityProvider extends ChangeNotifier {
     AlertDialogWidget alert = AlertDialogWidget(
       type: MessageTypeConstants.ERROR,
       icon: Icons.block_flipped,
-      title: ConnectivityConstants.offlineTitle,
-      description: ConnectivityConstants.offlineAlert,
+      title: ConnectivityConstants.OFFLINE_TITLE,
+      description: ConnectivityConstants.OFFLINE_ALERT,
       onClose: () {
         Navigator.of(context).pop();
       },

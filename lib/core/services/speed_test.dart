@@ -29,14 +29,10 @@ class SpeedTestService {
     try {
       if (Platform.isAndroid) {
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        if (!androidInfo.isPhysicalDevice) {
-          return true;
-        }
+        if (!androidInfo.isPhysicalDevice) return true;
       } else if (Platform.isIOS) {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        if (!iosInfo.isPhysicalDevice) {
-          return true;
-        }
+        if (!iosInfo.isPhysicalDevice) return true;
       }
     } catch (exception) {
       print(exception.toString());
@@ -50,15 +46,13 @@ class SpeedTestService {
     try {
       await NetworkHelper.getNewToken(headers);
       // Get download & upload urls
-      String? _downloadResponse = await NetworkHelper.authorizedFetch(
-          dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'), headers);
-      String? _uploadResponse = await NetworkHelper.authorizedFetch(
-          dotenv.get('SPEED_TEST_UPLOAD_ENDPOINT'), headers);
+      String? _downloadResponse =
+          await NetworkHelper.authorizedFetch(dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'), headers);
+      String? _uploadResponse = await NetworkHelper.authorizedFetch(dotenv.get('SPEED_TEST_UPLOAD_ENDPOINT'), headers);
 
       /// parse data
       await fetchNetworkDiagnostics().then((WifiInfo? data) {
-        _speedTestModel = speedTestModelFromJson(
-            data, _downloadResponse!, _uploadResponse!, data != null);
+        _speedTestModel = speedTestModelFromJson(data, _downloadResponse!, _uploadResponse!, data != null);
       });
       return true;
     } catch (exception) {
@@ -74,8 +68,9 @@ class SpeedTestService {
   Future<WifiInfo?> fetchNetworkDiagnostics() async {
     _isLoading = true;
     // Check connected to wifi
-    if (!(await _connectivity.checkConnectivity())
-        .contains(ConnectivityResult.wifi)) {
+    final List<ConnectivityResult> connectivity = await _connectivity.checkConnectivity();
+    final bool isNotOnWiFi = !connectivity.contains(ConnectivityResult.wifi);
+    if (isNotOnWiFi) {
       _isLoading = false;
       return null;
     }

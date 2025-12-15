@@ -5,11 +5,9 @@ part 'authentication.g.dart';
 // To parse this JSON data, do
 //
 //     final authenticationModel = authenticationModelFromJson(jsonString);
-AuthenticationModel authenticationModelFromJson(String str) =>
-    AuthenticationModel.fromJson(json.decode(str));
+AuthenticationModel authenticationModelFromJson(String str) => AuthenticationModel.fromJson(json.decode(str));
 
-String authenticationModelToJson(AuthenticationModel data) =>
-    json.encode(data.toJson());
+String authenticationModelToJson(AuthenticationModel data) => json.encode(data.toJson());
 
 @HiveType(typeId: 1)
 class AuthenticationModel extends HiveObject {
@@ -36,8 +34,7 @@ class AuthenticationModel extends HiveObject {
     return AuthenticationModel(
       accessToken: json["access_token"] == null ? null : json["access_token"],
       pid: json["pid"] == null ? null : json["pid"],
-      ucsdaffiliation:
-          json["ucsdaffiliation"] == null ? "" : json["ucsdaffiliation"],
+      ucsdaffiliation: json["ucsdaffiliation"] == null ? "" : json["ucsdaffiliation"],
       expiration: json["expiration"] == null ? 0 : json["expiration"],
     );
   }
@@ -52,18 +49,15 @@ class AuthenticationModel extends HiveObject {
   /// Checks if the token we got back is expired
   bool isLoggedIn(DateTime? lastUpdated) {
     /// User has not logged in previously - isLoggedIn FALSE
-    if (lastUpdated == null) {
-      return false;
-    }
+    if (lastUpdated == null) return false;
 
     /// User has no expiration or accessToken - isLoggedIn FALSE
-    if (expiration == null || accessToken == null) {
-      return false;
-    }
+    if (expiration == null || accessToken == null) return false;
 
     /// User has expiration and accessToken
-    if (DateTime.now()
-        .isBefore(lastUpdated.add(Duration(seconds: expiration!)))) {
+    final DateTime expirationTime = lastUpdated.add(Duration(seconds: expiration!));
+    final bool isNotExpired = DateTime.now().isBefore(expirationTime);
+    if (isNotExpired) {
       /// Current datetime < expiration datetime - isLoggedIn TRUE
       return true;
     } else {

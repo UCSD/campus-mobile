@@ -14,8 +14,8 @@ class MapSearchService {
     _isLoading = true;
     try {
       /// fetch data
-      String? _response = await NetworkHelper.fetchData(
-          dotenv.get('MAP_BASE_ENDPOINT') + '?query=' + location + '&region=0');
+      String? _response =
+          await NetworkHelper.fetchData(dotenv.get('MAP_BASE_ENDPOINT') + '?query=' + location + '&region=0');
       if (_response != 'null') {
         /// parse data
         final data = mapSearchModelFromJson(_response!);

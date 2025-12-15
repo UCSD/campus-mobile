@@ -37,9 +37,9 @@ class _ManageParkingViewState extends State<ManageParkingView> {
           ),
           onTap: () {
             if (i == 0) {
-              Navigator.pushNamed(context, RoutePaths.NeighborhoodsView);
+              Navigator.pushNamed(context, RoutePaths.NEIGHBORHOODS_VIEW);
             } else if (i == 1) {
-              Navigator.pushNamed(context, RoutePaths.ParkingStructureView);
+              Navigator.pushNamed(context, RoutePaths.PARKING_STRUCTURE_VIEW);
             }
           },
         ),

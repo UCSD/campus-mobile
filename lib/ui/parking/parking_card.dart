@@ -17,50 +17,45 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  static const cardId = 'parking';
+  static const CARD_ID = 'parking';
 
   late ParkingDataProvider _parkingDataProvider;
 
   final _controller = PageController(viewportFraction: 0.92);
   int _currentPage = 0;
 
-  //if parking data provider changes (e.g in "Manage Spots"), this will be called.
+  // if parking data provider changes (e.g in "Manage Spots"), this will be called.
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _parkingDataProvider = Provider.of<ParkingDataProvider>(context);
-    if (_controller.hasClients) {
-      _controller.jumpToPage(_currentPage);
-    }
+    if (_controller.hasClients) _controller.jumpToPage(_currentPage);
   }
 
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[CARD_ID]!,
       isLoading: _parkingDataProvider.isLoading,
       reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(context),
-      active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      active: Provider.of<CardsDataProvider>(context).cardStates[CARD_ID],
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(CARD_ID),
       actionButtons: [
         ActionButton(
             buttonText: 'MANAGE SPOTS',
             onPressed: () {
-              if (!_parkingDataProvider.isLoading &&
-                  _parkingDataProvider.error == null) {
-                Navigator.pushNamed(context, RoutePaths.SpotTypesView);
-              }
+              final bool isNotLoading = !_parkingDataProvider.isLoading;
+              final bool hasNoError = _parkingDataProvider.error == null;
+              if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.SPOT_TYPES_VIEW);
             }),
         ActionLink(
             buttonText: 'MANAGE LOTS',
             onPressed: () {
-              if (!_parkingDataProvider.isLoading &&
-                  _parkingDataProvider.error == null) {
-                Navigator.pushNamed(context, RoutePaths.ManageParkingView);
-              }
+              final bool isNotLoading = !_parkingDataProvider.isLoading;
+              final bool hasNoError = _parkingDataProvider.error == null;
+              if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.MANAGE_PARKING_VIEW);
             }),
       ],
     );
@@ -70,9 +65,8 @@ class _ParkingCardState extends State<ParkingCard> {
     try {
       List<Widget> selectedLotsViews = [];
       for (ParkingModel model in _parkingDataProvider.parkingModels) {
-        if (_parkingDataProvider.parkingViewState[model.locationName] == true) {
+        if (_parkingDataProvider.parkingViewState[model.locationName] == true)
           selectedLotsViews.add(CircularParkingIndicators(model: model));
-        }
       }
 
       if (selectedLotsViews.isEmpty) {
@@ -117,9 +111,8 @@ class _ParkingCardState extends State<ParkingCard> {
             dotsCount: selectedLotsViews.length,
             decorator: DotsDecorator(
               color: dotsUnselectedColor,
-              activeColor: Theme.of(context).brightness == Brightness.dark
-                  ? dotsSelectedColorDark
-                  : dotsSelectedColorLight,
+              activeColor:
+                  Theme.of(context).brightness == Brightness.dark ? dotsSelectedColorDark : dotsSelectedColorLight,
               activeSize: const Size(22.0, 22.0),
               size: const Size(10.0, 10.0),
             ),

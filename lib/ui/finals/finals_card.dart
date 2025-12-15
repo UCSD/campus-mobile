@@ -16,19 +16,17 @@ class FinalsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {
-        if (Provider.of<ClassScheduleDataProvider>(context, listen: false)
-            .isLoading) {
+        final bool isLoading = Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading;
+        if (isLoading) {
           return null;
         } else {
-          Provider.of<ClassScheduleDataProvider>(context, listen: false)
-              .fetchData();
+          Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
         }
       },
       isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildFinalsCard(
           Provider.of<ClassScheduleDataProvider>(context).finals,
@@ -61,8 +59,8 @@ class FinalsCard extends StatelessWidget {
     }
   }
 
-  Widget buildFinalsCard(Map<String, List<SectionData>> finalsData,
-      DateTime lastUpdated, String? nextDayWithClasses, BuildContext context) {
+  Widget buildFinalsCard(Map<String, List<SectionData>> finalsData, DateTime lastUpdated, String? nextDayWithClasses,
+      BuildContext context) {
     try {
       var finalsCount = 0, i = 1;
       // Iterate through the map and count the number Finals
@@ -83,8 +81,7 @@ class FinalsCard extends StatelessWidget {
                 // CSE 127  19:00 - 21:59
                 Row(
                   children: [
-                    buildClassCode(
-                        context, data.subjectCode! + ' ' + data.courseCode!),
+                    buildClassCode(context, data.subjectCode! + ' ' + data.courseCode!),
                     SizedBox(width: 10), // 10 logical pixels
                     buildTimeRow(context, data.time),
                   ],
@@ -96,8 +93,7 @@ class FinalsCard extends StatelessWidget {
                 // WLH 2005
                 buildLocationRow(context, data.building! + ' ' + data.room!),
                 ///////////////// Horizontal Division ///////////////////
-                if (i < finalsCount)
-                  Divider(color: listTileDividerColorLight, thickness: 0.7),
+                if (i < finalsCount) Divider(color: listTileDividerColorLight, thickness: 0.7),
               ],
             ),
           ));
@@ -116,8 +112,7 @@ class FinalsCard extends StatelessWidget {
         shrinkWrap: true,
       );
     } catch (e) {
-      FirebaseCrashlytics.instance.recordError(
-          e, StackTrace.fromString(e.toString()),
+      FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
           reason: "Finals Card: Failed to build card content.", fatal: false);
       return Container(
         width: double.infinity,
@@ -125,8 +120,8 @@ class FinalsCard extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.only(left: 12, top: 32, bottom: 48),
             child: Container(
-              child: Text(
-                  "Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
+              child:
+                  Text("Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu"),
             ),
           ),
         ),
@@ -141,9 +136,7 @@ class FinalsCard extends StatelessWidget {
       style: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.w500,
-        color: Theme.of(context).brightness == Brightness.light
-            ? lightPrimaryColor
-            : darkPrimaryColor2,
+        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
       ),
     );
   }
@@ -156,9 +149,7 @@ class FinalsCard extends StatelessWidget {
           fontFamily: 'Refrigerator Deluxe',
           fontWeight: FontWeight.w900,
           letterSpacing: 1.1,
-          color: Theme.of(context).brightness == Brightness.light
-              ? lightPrimaryColor
-              : darkPrimaryColor2,
+          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
         ));
   }
 
@@ -168,9 +159,7 @@ class FinalsCard extends StatelessWidget {
       time ?? 'TBA', // TBA if time is null or empty
       style: TextStyle(
         fontSize: 16,
-        color: Theme.of(context).brightness == Brightness.light
-            ? descriptiveTextColorLight
-            : descriptiveTextColorDark,
+        color: Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -181,9 +170,8 @@ class FinalsCard extends StatelessWidget {
     return Text(title,
         style: TextStyle(
             fontSize: 18.0,
-            color: Theme.of(context).brightness == Brightness.light
-                ? descriptiveTextColorLight
-                : descriptiveTextColorDark,
+            color:
+                Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
             fontWeight: FontWeight.w400));
   }
 

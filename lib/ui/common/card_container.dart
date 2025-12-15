@@ -37,8 +37,7 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (active) {
       return Card(
-        margin: EdgeInsets.only(
-            top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
+        margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
         elevation: 4,
         shadowColor: Colors.black,
         semanticContainer: false,
@@ -49,15 +48,12 @@ class CardContainer extends StatelessWidget {
             width: 0.5,
           ),
         ),
-        color: Theme.of(context).brightness == Brightness.dark
-            ? darkPrimaryBgColor
-            : lightAccentColor,
+        color: Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
-              contentPadding:
-                  EdgeInsets.only(top: 0.0, right: 8.0, bottom: 0.0, left: 8.0),
+              contentPadding: EdgeInsets.only(top: 0.0, right: 8.0, bottom: 0.0, left: 8.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
               title: Text(
                 titleText,
@@ -67,11 +63,8 @@ class CardContainer extends StatelessWidget {
             ),
             buildBody(context),
             Padding(
-              padding:
-                  const EdgeInsets.only(top: 16, right: 0, bottom: 16, left: 8),
-              child: actionButtons != null
-                  ? Row(children: actionButtons!)
-                  : Container(),
+              padding: const EdgeInsets.only(top: 16, right: 0, bottom: 16, left: 8),
+              child: actionButtons != null ? Row(children: actionButtons!) : Container(),
             ),
             footer ?? Container(),
           ],
@@ -146,9 +139,7 @@ class CardContainer extends StatelessWidget {
       );
     } else if (titleText == "PARKING") {
       double _maxHeight = 320;
-      if (MediaQuery.of(context).size.width > 600) {
-        _maxHeight = 800;
-      }
+      if (MediaQuery.of(context).size.width > 600) _maxHeight = 800;
       return Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: 320, maxHeight: _maxHeight),
@@ -171,8 +162,8 @@ class CardContainer extends StatelessWidget {
       children: [
         buildMenuOptions(
           {
-            CardMenuOptionConstants.reloadCard: reload,
-            CardMenuOptionConstants.hideCard: hide,
+            CardMenuOptionConstants.RELOAD_CARD: reload,
+            CardMenuOptionConstants.HIDE_CARD: hide,
           },
         ),
       ],
@@ -203,17 +194,16 @@ class CardContainer extends StatelessWidget {
         offset: Offset(6, -3),
         child: Icon(Icons.more_vert, color: dotsUnselectedColor),
       ),
-      onChanged: (String? selectedMenuItem) =>
-          onMenuItemPressed(selectedMenuItem),
+      onChanged: (String? selectedMenuItem) => onMenuItemPressed(selectedMenuItem),
     );
   }
 
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
-      case CardMenuOptionConstants.reloadCard:
+      case CardMenuOptionConstants.RELOAD_CARD:
         reload();
         break;
-      case CardMenuOptionConstants.hideCard:
+      case CardMenuOptionConstants.HIDE_CARD:
         hide();
         break;
       default:

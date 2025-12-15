@@ -35,9 +35,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
           padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             "Parking Lots",
-            style: Theme.of(context).brightness == Brightness.dark
-                ? textSubheaderDark
-                : textSubheaderLight,
+            style: Theme.of(context).brightness == Brightness.dark ? textSubheaderDark : textSubheaderLight,
           ),
         ),
       ),
@@ -73,8 +71,8 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
                       return AlertDialogWidget(
                         type: MessageTypeConstants.ERROR,
                         icon: Icons.block_flipped,
-                        title: ParkingConstants.lotMaxTitle,
-                        description: ParkingConstants.lotMaxDesc,
+                        title: ParkingConstants.LOT_MAX_TITLE,
+                        description: ParkingConstants.LOT_MAX_DESC,
                         onClose: () {
                           Navigator.of(context).pop();
                         },
@@ -100,9 +98,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
         children: ListTile.divideTiles(
           tiles: list,
           context: context,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? listTileDividerColorDark
-              : listTileDividerColorLight,
+          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
         ).toList(),
       ),
     );

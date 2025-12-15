@@ -8,14 +8,14 @@ class BarcodeService {
   bool? _isLoading;
   String? _error;
 
-  Future<bool> uploadResults(
-      Map<String, String> headers, Map<String, dynamic> body) async {
+  Future<bool> uploadResults(Map<String, String> headers, Map<String, dynamic> body) async {
     _error = null;
     _isLoading = true;
     try {
-      final response = await NetworkHelper.authorizedPost(
-          dotenv.get('BARCODE_SERVICE_ENDPOINT'), headers, body);
-      if (response != null && validateUploadResults(body, response))
+      final response = await NetworkHelper.authorizedPost(dotenv.get('BARCODE_SERVICE_ENDPOINT'), headers, body);
+      final bool hasResponse = response != null;
+      final bool isValidUpload = validateUploadResults(body, response);
+      if (hasResponse && isValidUpload)
         return true;
       else
         throw (response.toString());
@@ -36,8 +36,7 @@ class BarcodeService {
       - The stored value returned by ScanData API matches the value that has actually been scanned
       - The student has a non-empty Account ID, User ID, or Employee ID
   */
-  bool validateUploadResults(
-      Map<String, dynamic> submit, Map<String, dynamic> response) {
+  bool validateUploadResults(Map<String, dynamic> submit, Map<String, dynamic> response) {
     try {
       return (submit["barcode"] == response["SCAN_CODE_ID"]);
     } catch (e) {

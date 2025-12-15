@@ -35,8 +35,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
         header: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: Text("Hold and drag to reorder",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+              textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ),
         children: createList(context),
         onReorder: _onReorder,
@@ -69,12 +68,9 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
           elevation: 2.0,
           margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
           child: ListTile(
-              title: Text(model.name,
-                  style: Theme.of(context).textTheme.bodyMedium),
+              title: Text(model.name, style: Theme.of(context).textTheme.bodyMedium),
               leading: Icon(Icons.drag_handle,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? linkTextColorDark
-                      : linkTextColorLight),
+                  color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
               trailing: IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () async {
@@ -97,7 +93,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
           buttonText: 'ADD MORE STOPS',
           onPressed: () {
             if (_shuttleDataProvider.stopsToRender.length < 5) {
-              Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
+              Navigator.pushNamed(context, RoutePaths.ADD_SHUTTLE_STOPS_VIEW);
             } else {
               showDialog(
                   context: context,
@@ -105,8 +101,8 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
                     return AlertDialogWidget(
                       type: MessageTypeConstants.ERROR,
                       icon: Icons.block_flipped,
-                      title: LoginConstants.shuttleMaxTitle,
-                      description: LoginConstants.shuttleMaxDesc,
+                      title: LoginConstants.SHUTTLE_MAX_TITLE,
+                      description: LoginConstants.SHUTTLE_MAX_DESC,
                       onClose: () {
                         Navigator.of(context).pop();
                       },
@@ -130,7 +126,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
     //       backgroundColor: ColorPrimary,
     //       onPressed: () {
     //         if (_shuttleDataProvider.stopsToRender.length < 5) {
-    //           Navigator.pushNamed(context, RoutePaths.AddShuttleStopsView);
+    //           Navigator.pushNamed(context, RoutePaths.ADD_SHUTTLE_STOPS_VIEW);
     //         } else {
     //           showAlertDialog(context);
     //         }
@@ -162,7 +158,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
           ),
           Expanded(
             child: Text(
-              LoginConstants.shuttleMaxTitle,
+              LoginConstants.SHUTTLE_MAX_TITLE,
               textAlign: TextAlign.left,
               style: Theme.of(context).brightness == Brightness.dark
                   ? TextStyle(
@@ -195,8 +191,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
       ),
       content: Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height *
-              0.6, // Set max height to 60% of screen height
+          maxHeight: MediaQuery.of(context).size.height * 0.6, // Set max height to 60% of screen height
         ),
         child: SingleChildScrollView(
           child: Row(
@@ -212,7 +207,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      LoginConstants.shuttleMaxDesc,
+                      LoginConstants.SHUTTLE_MAX_DESC,
                       textAlign: TextAlign.left,
                       style: Theme.of(context).brightness == Brightness.dark
                           ? TextStyle(

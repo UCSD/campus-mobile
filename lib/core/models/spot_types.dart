@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-SpotTypeModel spotTypeModelFromJson(String str) =>
-    SpotTypeModel.fromJson(json.decode(str));
+SpotTypeModel spotTypeModelFromJson(String str) => SpotTypeModel.fromJson(json.decode(str));
 
 String spotTypeModelToJson(SpotTypeModel data) => json.encode(data.toJson());
 
@@ -13,15 +12,11 @@ class SpotTypeModel {
   });
 
   factory SpotTypeModel.fromJson(Map<String, dynamic> json) => SpotTypeModel(
-        spots: json["spots"] == null
-            ? null
-            : List<Spot>.from(json["spots"].map((x) => Spot.fromJson(x))),
+        spots: json["spots"] == null ? null : List<Spot>.from(json["spots"].map((x) => Spot.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "spots": spots == null
-            ? null
-            : List<dynamic>.from(spots!.map((x) => x.toJson())),
+        "spots": spots == null ? null : List<dynamic>.from(spots!.map((x) => x.toJson())),
       };
 }
 

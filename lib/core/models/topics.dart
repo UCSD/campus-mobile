@@ -3,11 +3,10 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final topicsModel = topicsModelFromJson(jsonString);
-List<TopicsModel> topicsModelFromJson(String str) => List<TopicsModel>.from(
-    json.decode(str).map((x) => TopicsModel.fromJson(x)));
+List<TopicsModel> topicsModelFromJson(String str) =>
+    List<TopicsModel>.from(json.decode(str).map((x) => TopicsModel.fromJson(x)));
 
-String topicsModelToJson(List<TopicsModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String topicsModelToJson(List<TopicsModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class TopicsModel {
   String? audienceId;
@@ -20,16 +19,12 @@ class TopicsModel {
 
   factory TopicsModel.fromJson(Map<String, dynamic> json) => TopicsModel(
         audienceId: json["audienceId"] == null ? null : json["audienceId"],
-        topics: json["topics"] == null
-            ? null
-            : List<Topic>.from(json["topics"].map((x) => Topic.fromJson(x))),
+        topics: json["topics"] == null ? null : List<Topic>.from(json["topics"].map((x) => Topic.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "audienceId": audienceId == null ? null : audienceId,
-        "topics": topics == null
-            ? null
-            : List<dynamic>.from(topics!.map((x) => x.toJson())),
+        "topics": topics == null ? null : List<dynamic>.from(topics!.map((x) => x.toJson())),
       };
 }
 
@@ -44,9 +39,7 @@ class Topic {
 
   factory Topic.fromJson(Map<String, dynamic> json) => Topic(
         topicId: json["topicId"] == null ? null : json["topicId"],
-        topicMetadata: json["topicMetadata"] == null
-            ? null
-            : TopicMetadata.fromJson(json["topicMetadata"]),
+        topicMetadata: json["topicMetadata"] == null ? null : TopicMetadata.fromJson(json["topicMetadata"]),
       );
 
   Map<String, dynamic> toJson() => {

@@ -13,7 +13,7 @@ import 'package:path_provider/path_provider.dart';
 
 class SpeedTestProvider extends ChangeNotifier {
   SpeedTestProvider() {
-    /// TODO: probably is a bug! Async functions should not be be run in the constructor
+    // TODO: probably is a bug! Async functions should not be be run in the constructor - December 2025
     init();
   }
 
@@ -81,7 +81,9 @@ class SpeedTestProvider extends ChangeNotifier {
     downloadSpeedTest().then((value) {
       _timer.reset();
       uploadSpeedTest().then((value) {
-        if (_percentUploaded == 1.0 && _percentDownloaded == 1.0) {
+        final bool uploadComplete = _percentUploaded == 1.0;
+        final bool downloadComplete = _percentDownloaded == 1.0;
+        if (uploadComplete && downloadComplete) {
           _speedTestDone = true;
           notifyListeners();
         }
@@ -96,24 +98,23 @@ class SpeedTestProvider extends ChangeNotifier {
     // if not on UCSD wifi OR the file above does not exist,
     // we should not upload the speed test results
     // instead, stop the timer and exit the function
-    if (isUCSDWiFi != true || !temp.existsSync()) {
+    final bool isNotUCSDWiFi = isUCSDWiFi != true;
+    final bool fileDoesNotExist = !temp.existsSync();
+    if (isNotUCSDWiFi || fileDoesNotExist) {
       _timer.stop();
       notifyListeners();
       return;
     }
 
     var tempDownload = temp.readAsBytesSync();
-    var formData = new FormData.fromMap(
-        {"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
+    var formData = new FormData.fromMap({"file": MultipartFile.fromBytes(tempDownload, filename: "temp.html")});
     notifyListeners();
 
     try {
       _cancelTokenUpload = new CancelToken();
       _timer.start();
       await dio.put(_speedTestModel!.uploadUrl!,
-          data: formData,
-          onSendProgress: _progressCallbackUpload,
-          cancelToken: _cancelTokenUpload);
+          data: formData, onSendProgress: _progressCallbackUpload, cancelToken: _cancelTokenUpload);
     } catch (e) {
       print(e);
     } finally {
@@ -130,8 +131,7 @@ class SpeedTestProvider extends ChangeNotifier {
       _cancelTokenDownload = new CancelToken();
       _timer.start();
       await dio.download(_speedTestModel!.downloadUrl!, (tempDownload.path),
-          onReceiveProgress: _progressCallbackDownload,
-          cancelToken: _cancelTokenDownload);
+          onReceiveProgress: _progressCallbackDownload, cancelToken: _cancelTokenDownload);
     } catch (e) {
       print(e);
     } finally {
@@ -203,59 +203,42 @@ class SpeedTestProvider extends ChangeNotifier {
       "Latitude": _coordinates.lat.toString(),
       "Longitude": _coordinates.lon.toString(),
       "TimeStamp": _speedTestModel!.timeStamp,
-      "DownloadSpeed": lastSpeed != null
-          ? lastSpeed.toStringAsPrecision(3)
-          : _speedDownload!.toStringAsPrecision(3),
+      "DownloadSpeed": lastSpeed != null ? lastSpeed.toStringAsPrecision(3) : _speedDownload!.toStringAsPrecision(3),
       "UploadSpeed": _speedUpload!.toStringAsPrecision(3),
     };
 
     sentSuccessfully = true;
     sendLogs(wiFiLog);
-    return sentSuccessfully; //Due to failed submission or not connected to wifi
+    return sentSuccessfully; // Due to failed submission or not connected to wifi
   }
 
   Future<void> sendLogs(Map? log) async {
     final mobileLoggerApiWifi = mobileLoggerApi + "?type=WIFI";
-    offloadDataHeader = {
-      'Authorization':
-          'Bearer ${_userDataProvider.authenticationModel.accessToken}'
-    };
+    offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
 
     if (_userDataProvider.isLoggedIn) {
-      if (offloadDataHeader == null) {
-        offloadDataHeader = {
-          'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
-        };
-      }
+      if (offloadDataHeader == null)
+        offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
       // Send to offload API
       try {
-        NetworkHelper.authorizedPost(
-                mobileLoggerApiWifi, offloadDataHeader, json.encode(log))
-            .then((value) {
+        NetworkHelper.authorizedPost(mobileLoggerApiWifi, offloadDataHeader, json.encode(log)).then((value) {
           return value;
         });
       } catch (exception) {
-        if (exception.toString().contains(ErrorConstants.invalidBearerToken)) {
+        if (exception.toString().contains(ErrorConstants.INVALID_BEARER_TOKEN)) {
           _userDataProvider.silentLogin();
-          offloadDataHeader = {
-            'Authorization':
-                'Bearer ${_userDataProvider.authenticationModel.accessToken}'
-          };
-          NetworkHelper.authorizedPost(
-              mobileLoggerApiWifi, offloadDataHeader, json.encode(log));
+          offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
+          NetworkHelper.authorizedPost(mobileLoggerApiWifi, offloadDataHeader, json.encode(log));
         }
       }
     } else {
       try {
         NetworkHelper.getNewToken(headers).then((value) {
-          NetworkHelper.authorizedPost(
-              mobileLoggerApiWifi, headers, json.encode(log));
+          NetworkHelper.authorizedPost(mobileLoggerApiWifi, headers, json.encode(log));
         });
       } catch (exception) {
         NetworkHelper.getNewToken(headers).then((value) {
-          NetworkHelper.authorizedPost(
-              mobileLoggerApiWifi, headers, json.encode(log));
+          NetworkHelper.authorizedPost(mobileLoggerApiWifi, headers, json.encode(log));
         });
       }
     }
@@ -263,17 +246,11 @@ class SpeedTestProvider extends ChangeNotifier {
 
   Future<void> reportIssue() async {
     final mobileLoggerApiWifiReport = mobileLoggerApi + "?type=WIFIREPORT";
-    offloadDataHeader = {
-      'Authorization':
-          'Bearer ${_userDataProvider.authenticationModel.accessToken}'
-    };
+    offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
     wiFiLog = {
-      "userId": (_userDataProvider.userProfileModel.pid) == null
-          ? ""
-          : _userDataProvider.userProfileModel.pid,
-      "userLogin": (_userDataProvider.userProfileModel.username) == null
-          ? ""
-          : _userDataProvider.userProfileModel.username!,
+      "userId": (_userDataProvider.userProfileModel.pid) == null ? "" : _userDataProvider.userProfileModel.pid,
+      "userLogin":
+          (_userDataProvider.userProfileModel.username) == null ? "" : _userDataProvider.userProfileModel.username!,
       "Platform": _speedTestModel!.platform,
       "SSID": _speedTestModel!.ssid,
       "BSSID": _speedTestModel!.bssid,
@@ -294,37 +271,26 @@ class SpeedTestProvider extends ChangeNotifier {
     };
 
     if (_userDataProvider.isLoggedIn) {
-      if (offloadDataHeader == null) {
-        offloadDataHeader = {
-          'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
-        };
-      }
+      if (offloadDataHeader == null)
+        offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
       // Send to offload API
       try {
-        NetworkHelper.authorizedPost(
-            mobileLoggerApiWifiReport, offloadDataHeader, json.encode(wiFiLog));
+        NetworkHelper.authorizedPost(mobileLoggerApiWifiReport, offloadDataHeader, json.encode(wiFiLog));
       } catch (exception) {
-        if (exception.toString().contains(ErrorConstants.invalidBearerToken)) {
+        if (exception.toString().contains(ErrorConstants.INVALID_BEARER_TOKEN)) {
           _userDataProvider.silentLogin();
-          offloadDataHeader = {
-            'Authorization':
-                'Bearer ${_userDataProvider.authenticationModel.accessToken}'
-          };
-          NetworkHelper.authorizedPost(mobileLoggerApiWifiReport,
-              offloadDataHeader, json.encode(wiFiLog));
+          offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
+          NetworkHelper.authorizedPost(mobileLoggerApiWifiReport, offloadDataHeader, json.encode(wiFiLog));
         }
       }
     } else {
       try {
         NetworkHelper.getNewToken(headers).then((value) {
-          NetworkHelper.authorizedPost(
-              mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
+          NetworkHelper.authorizedPost(mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
         });
       } catch (exception) {
         NetworkHelper.getNewToken(headers).then((value) {
-          NetworkHelper.authorizedPost(
-              mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
+          NetworkHelper.authorizedPost(mobileLoggerApiWifiReport, headers, json.encode(wiFiLog));
         });
       }
     }
@@ -333,8 +299,7 @@ class SpeedTestProvider extends ChangeNotifier {
   /// SIMPLE SETTERS
   /// This setter is only used in provider to supply an updated Coordinates object
   set coordinates(Coordinates value) => _coordinates = value;
-  set userDataProvider(UserDataProvider userDataProvider) =>
-      _userDataProvider = userDataProvider;
+  set userDataProvider(UserDataProvider userDataProvider) => _userDataProvider = userDataProvider;
   set speed(double? lastSpeed) => _speedDownload = lastSpeed;
   double _convertToMbps(double speed) => speed / 125000;
 

@@ -11,9 +11,7 @@ class EventsAll extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider.of<EventsDataProvider>(context).isLoading
-        ? Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary))
+        ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
         : Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: buildEventsList(
@@ -38,8 +36,7 @@ class EventsAll extends StatelessWidget {
         crossAxisSpacing: 1,
         mainAxisSpacing: 8,
         children: eventTiles,
-        childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 1.4),
+        childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1.4),
       );
     } else {
       return ContainerView(

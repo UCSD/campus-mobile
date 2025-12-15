@@ -7,9 +7,7 @@ import 'package:provider/provider.dart';
 
 class NotificationsFilterView extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return ContainerView(child: buildSettingsList(context, getTopics(context)));
-  }
+  Widget build(BuildContext context) => ContainerView(child: buildSettingsList(context, getTopics(context)));
 
   Widget buildSettingsList(BuildContext context, List<String?>? topicsData) {
     return (topicsData ?? []).isNotEmpty
@@ -25,9 +23,7 @@ class NotificationsFilterView extends StatelessWidget {
               ).toList(),
             ),
           )
-        : Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary));
+        : Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary));
   }
 
   List<Widget> createList(BuildContext context, List<String?> topicsAvailable) {
@@ -56,16 +52,13 @@ class NotificationsFilterView extends StatelessWidget {
             trailing: Transform.scale(
               scale: 0.9,
               child: Switch.adaptive(
-                value: Provider.of<PushNotificationDataProvider>(context)
-                    .topicSubscriptionState[topic]!,
+                value: Provider.of<PushNotificationDataProvider>(context).topicSubscriptionState[topic]!,
                 onChanged: (_) {
-                  Provider.of<UserDataProvider>(context, listen: false)
-                      .toggleNotifications(topic);
+                  Provider.of<UserDataProvider>(context, listen: false).toggleNotifications(topic);
                 },
                 thumbColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.white;
-                  }
+                  final bool isSelected = states.contains(WidgetState.selected);
+                  if (isSelected) return Colors.white;
                   return null;
                 }),
                 activeColor: toggleActiveColor,
@@ -98,17 +91,16 @@ class NotificationsFilterView extends StatelessWidget {
 
   List<String?> getTopics(BuildContext context) {
     UserDataProvider _userDataProvider = Provider.of<UserDataProvider>(context);
-    PushNotificationDataProvider _pushNotificationDataProvider =
-        Provider.of<PushNotificationDataProvider>(context);
+    PushNotificationDataProvider _pushNotificationDataProvider = Provider.of<PushNotificationDataProvider>(context);
     if (_userDataProvider.userProfileModel.classifications?.student ?? false) {
-      return _pushNotificationDataProvider.publicTopics() +
-          _pushNotificationDataProvider.studentTopics();
-    } else if (_userDataProvider.userProfileModel.classifications?.staff ??
-        false) {
-      return _pushNotificationDataProvider.publicTopics() +
-          _pushNotificationDataProvider.staffTopics();
+      return _pushNotificationDataProvider.publicTopics() + _pushNotificationDataProvider.studentTopics();
     } else {
-      return _pushNotificationDataProvider.publicTopics();
+      final bool isStaff = _userDataProvider.userProfileModel.classifications?.staff ?? false;
+      if (isStaff) {
+        return _pushNotificationDataProvider.publicTopics() + _pushNotificationDataProvider.staffTopics();
+      } else {
+        return _pushNotificationDataProvider.publicTopics();
+      }
     }
   }
 

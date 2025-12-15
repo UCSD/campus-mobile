@@ -13,9 +13,7 @@ class ContainerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: Provider.of<CustomAppBar>(context).appBar),
+      appBar: PreferredSize(preferredSize: Size.fromHeight(50), child: Provider.of<CustomAppBar>(context).appBar),
       body: child,
     );
   }

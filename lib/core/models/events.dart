@@ -6,8 +6,7 @@ import 'dart:convert';
 List<EventModel> eventModelFromJson(String str) =>
     List<EventModel>.from(json.decode(str).map((x) => EventModel.fromJson(x)));
 
-String eventModelToJson(List<EventModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String eventModelToJson(List<EventModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class EventModel {
   EventModel({
@@ -43,9 +42,7 @@ class EventModel {
         imageThumb = json["imageThumb"],
         link = json["link"],
         id = json["id"],
-        tags = json["tags"] == null
-            ? null
-            : List<String>.from(json["tags"].map((x) => x)),
+        tags = json["tags"] == null ? null : List<String>.from(json["tags"].map((x) => x)),
         location = json["location"];
 
   Map<String, dynamic> toJson() => {

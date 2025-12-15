@@ -14,11 +14,7 @@ class LinkifyWithCatch extends StatelessWidget {
   final bool looseUrl;
 
   const LinkifyWithCatch(
-      {Key? key,
-      required this.text,
-      this.style,
-      this.textAlign = TextAlign.start,
-      this.looseUrl = false})
+      {Key? key, required this.text, this.style, this.textAlign = TextAlign.start, this.looseUrl = false})
       : super(key: key);
 
   @override

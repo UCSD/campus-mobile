@@ -36,19 +36,22 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
-      reload: () => _availabilityDataProvider.fetchAvailability(),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      reload: () {
+        setState(() {
+          _currentPage = 0;
+        });
+        _controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        _availabilityDataProvider.fetchAvailability();
+      },
       isLoading: _availabilityDataProvider.isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: _availabilityDataProvider.error,
-      child: () =>
-          buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
+      child: () => buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
       actionButtons: [
         ActionLink(
             buttonText: 'MANAGE LOCATIONS',
-            onPressed: () =>
-                Navigator.pushNamed(context, RoutePaths.ManageAvailabilityView))
+            onPressed: () => Navigator.pushNamed(context, RoutePaths.MANAGE_AVAILABILITY_VIEW))
       ],
     );
   }
@@ -61,11 +64,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       if (model != null) {
         String curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
-        if (match != null)
-          curName = curName.replaceRange(match.start, match.end, '');
-        if (_availabilityDataProvider.locationViewState[curName]!) {
-          locationsList.add(AvailabilityDisplay(model: model));
-        }
+        if (match != null) curName = curName.replaceRange(match.start, match.end, '');
+        final bool shouldShowLocation = _availabilityDataProvider.locationViewState[curName]!;
+        if (shouldShowLocation) locationsList.add(AvailabilityDisplay(model: model));
       }
     }
 
@@ -121,9 +122,8 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
                 dotsCount: locationsList.length,
                 decorator: DotsDecorator(
                   color: dotsUnselectedColor,
-                  activeColor: Theme.of(context).brightness == Brightness.dark
-                      ? dotsSelectedColorDark
-                      : dotsSelectedColorLight,
+                  activeColor:
+                      Theme.of(context).brightness == Brightness.dark ? dotsSelectedColorDark : dotsSelectedColorLight,
                   activeSize: const Size(22.0, 22.0),
                   size: const Size(10.0, 10.0),
                 ),

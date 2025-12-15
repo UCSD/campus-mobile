@@ -32,16 +32,14 @@ class CircularParkingIndicators extends StatelessWidget {
     List<Widget> listOfCircularParkingInfo = [];
     List<String> selectedSpots = [];
 
-    Provider.of<ParkingDataProvider>(context)
-        .spotTypesState
-        .forEach((key, value) {
-      if (value && selectedSpots.length < 4) selectedSpots.add(key);
+    Provider.of<ParkingDataProvider>(context).spotTypesState.forEach((key, value) {
+      final bool hasValue = value;
+      final bool hasSpaceForMore = selectedSpots.length < 4;
+      if (hasValue && hasSpaceForMore) selectedSpots.add(key);
     });
     for (String spot in selectedSpots) {
       listOfCircularParkingInfo.add(buildCircularParkingInfo(
-          Provider.of<ParkingDataProvider>(context).spotTypeMap[spot],
-          model.availability[spot],
-          context));
+          Provider.of<ParkingDataProvider>(context).spotTypeMap[spot], model.availability[spot], context));
     }
     return Expanded(
       child: Row(
@@ -51,8 +49,7 @@ class CircularParkingIndicators extends StatelessWidget {
     );
   }
 
-  Widget buildCircularParkingInfo(
-      Spot? spotType, dynamic locationData, BuildContext context) {
+  Widget buildCircularParkingInfo(Spot? spotType, dynamic locationData, BuildContext context) {
     int open, total;
     if (locationData != null) {
       open = locationData["Open"] is String
@@ -87,10 +84,7 @@ class CircularParkingIndicators extends StatelessWidget {
                             lineWidth: 9,
                             percent: (open / total).isNaN ? 0.0 : open / total,
                             center: Text(
-                              (open / total).isNaN
-                                  ? "N/A"
-                                  : ((open / total) * 100).round().toString() +
-                                      "%",
+                              (open / total).isNaN ? "N/A" : ((open / total) * 100).round().toString() + "%",
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                             circularStrokeCap: CircularStrokeCap.round,
@@ -106,21 +100,15 @@ class CircularParkingIndicators extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: spotType != null
                       ? CircleAvatar(
-                          backgroundColor:
-                              colorFromHex(spotType.logoBackgroundColor),
+                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText.startsWith('icon - ')
-                              ? Icon(
-                                  ParkingConstants.stringToIconData[
-                                          spotType.logoText] ??
-                                      Icons.error,
-                                  size: 25.0,
-                                  color: colorFromHex(spotType.logoTextColor))
+                              ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
+                                  size: 25.0, color: colorFromHex(spotType.logoTextColor))
                               : (spotType.logoText.isNotEmpty
                                   ? Text(
                                       spotType.logoText,
                                       style: TextStyle(
-                                        color: colorFromHex(
-                                            spotType.logoTextColor),
+                                        color: colorFromHex(spotType.logoTextColor),
                                         fontFamily: 'Brix Sans',
                                         fontSize: 28,
                                         fontWeight: FontWeight.w700,
@@ -165,21 +153,15 @@ class CircularParkingIndicators extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: spotType != null
                       ? CircleAvatar(
-                          backgroundColor:
-                              colorFromHex(spotType.logoBackgroundColor),
+                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
                           child: spotType.logoText.startsWith('icon - ')
-                              ? Icon(
-                                  ParkingConstants.stringToIconData[
-                                          spotType.logoText] ??
-                                      Icons.error,
-                                  size: 25.0,
-                                  color: colorFromHex(spotType.logoTextColor))
+                              ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
+                                  size: 25.0, color: colorFromHex(spotType.logoTextColor))
                               : (spotType.logoText.isNotEmpty
                                   ? Text(
                                       spotType.logoText,
                                       style: TextStyle(
-                                        color: colorFromHex(
-                                            spotType.logoTextColor),
+                                        color: colorFromHex(spotType.logoTextColor),
                                         fontFamily: 'Brix Sans',
                                         fontWeight: FontWeight.w700,
                                         fontSize: 28,
@@ -224,9 +206,7 @@ class CircularParkingIndicators extends StatelessWidget {
       child: Center(
         child: Text(
           "~" +
-              Provider.of<ParkingDataProvider>(context)
-                  .getApproxNumOfOpenSpots(model.locationName)["Open"]
-                  .toString() +
+              Provider.of<ParkingDataProvider>(context).getApproxNumOfOpenSpots(model.locationName)["Open"].toString() +
               " of " +
               Provider.of<ParkingDataProvider>(context)
                   .getApproxNumOfOpenSpots(model.locationName)["Total"]

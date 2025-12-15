@@ -30,8 +30,7 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
             child: Container(
                 height: 32,
                 width: 32,
-                child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.secondary)),
+                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
           ),
         )),
       ]);
@@ -44,8 +43,7 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
     }
   }
 
-  Widget buildAllLocationsList(BuildContext context) =>
-      ListView(children: createList(context));
+  Widget buildAllLocationsList(BuildContext context) => ListView(children: createList(context));
 
   List<Widget> createList(BuildContext context) {
     List<Widget> list = [];

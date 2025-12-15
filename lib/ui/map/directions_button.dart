@@ -20,28 +20,20 @@ class DirectionsButton extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       onPressed: () {
-        if (Provider.of<MapsDataProvider>(context, listen: false)
-                    .coordinates!
-                    .lat ==
-                null ||
-            Provider.of<MapsDataProvider>(context, listen: false)
-                    .coordinates!
-                    .lon ==
-                null) {
+        final MapsDataProvider mapsProvider = Provider.of<MapsDataProvider>(context, listen: false);
+        final bool hasNullLatitude = mapsProvider.coordinates!.lat == null;
+        final bool hasNullLongitude = mapsProvider.coordinates!.lon == null;
+        if (hasNullLatitude || hasNullLongitude) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                'Please turn your location on in order to use this feature.'),
+            content: Text('Please turn your location on in order to use this feature.'),
             duration: Duration(seconds: 3),
           ));
         } else {
-          String locationQuery =
-              Provider.of<MapsDataProvider>(context, listen: false)
-                  .searchBarController
-                  .text;
+          String locationQuery = Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text;
           if (locationQuery.isNotEmpty) {
             getDirections(context);
           } else {
-            Navigator.pushNamed(context, RoutePaths.MapSearch);
+            Navigator.pushNamed(context, RoutePaths.MAP_SEARCH);
           }
         }
       },
@@ -49,11 +41,7 @@ class DirectionsButton extends StatelessWidget {
   }
 
   Future<void> getDirections(BuildContext context) async {
-    LatLng currentPin = Provider.of<MapsDataProvider>(context, listen: false)
-        .markers
-        .values
-        .toList()[0]
-        .position;
+    LatLng currentPin = Provider.of<MapsDataProvider>(context, listen: false).markers.values.toList()[0].position;
     double lat = currentPin.latitude;
     double lon = currentPin.longitude;
 

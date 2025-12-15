@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:app_links/app_links.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 
-/// TODO: make this not global. Probably put into Widget as stateful variable...
+// TODO: make this not global. Probably put into Widget as stateful variable... - December 2025
 var hideListView = false;
 
 class NotificationsListView extends StatefulWidget {
@@ -46,8 +46,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       child: RefreshIndicator(
         child: buildListView(context),
         onRefresh: () {
-          return Provider.of<MessagesDataProvider>(context, listen: false)
-              .fetchMessages(true);
+          return Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
         },
         color: Theme.of(context).colorScheme.secondary,
       ),
@@ -55,7 +54,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   }
 
   Widget buildListView(BuildContext context) {
-    /// TODO: fix this logic up
+    // TODO: fix this logic up - December 2025
     Widget Function(BuildContext context, int index)? itemBuilder;
     var itemCount = 0;
     if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
@@ -63,8 +62,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         if (Provider.of<MessagesDataProvider>(context).isLoading) {
           // empty notifications view until they load in
         } else {
-          itemBuilder =
-              (BuildContext context, int index) => _buildNoMessagesText();
+          itemBuilder = (BuildContext context, int index) => _buildNoMessagesText();
           itemCount = 1;
         }
       } else {
@@ -73,8 +71,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       }
     }
     if (itemCount == 0) {
-      itemBuilder =
-          (BuildContext context, int index) => _buildMessage(context, index);
+      itemBuilder = (BuildContext context, int index) => _buildMessage(context, index);
       itemCount = Provider.of<MessagesDataProvider>(context).messages.length;
     }
     return Padding(
@@ -83,13 +80,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         padding: EdgeInsets.only(top: 8),
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: itemBuilder!,
-        controller: Provider.of<MessagesDataProvider>(context, listen: false)
-            .notificationScrollController,
+        controller: Provider.of<MessagesDataProvider>(context, listen: false).notificationScrollController,
         itemCount: itemCount,
         separatorBuilder: (BuildContext context, int index) => Divider(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? listTileDividerColorDark
-              : listTileDividerColorLight,
+          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
         ),
       ),
     );
@@ -99,7 +93,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(NotificationsConstants.statusFetchProblem),
+        Text(NotificationsConstants.STATUS_FETCH_PROBLEM),
       ],
     );
   }
@@ -110,7 +104,7 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       children: <Widget>[
         Flexible(
           child: Text(
-            NotificationsConstants.statusNoMessages,
+            NotificationsConstants.STATUS_NO_MESSAGES,
           ),
         ),
       ],
@@ -123,37 +117,33 @@ class _NotificationsListViewState extends State<NotificationsListView> {
 
     Uri? initialUri = await appLinks.getInitialAppLink();
     String? initialLink = initialUri?.toString();
-    if (initialLink != null && initialLink.contains("deeplinking.searchmap")) {
+    final bool hasInitialLink = initialLink != null;
+    final bool isSearchMapLink = hasInitialLink && initialLink.contains("deeplinking.searchmap");
+    if (hasInitialLink && isSearchMapLink) {
       var uri = Uri.dataFromString(initialLink);
       var query = uri.queryParameters['query']!;
-      Provider.of<MapsDataProvider>(context, listen: false)
-          .searchBarController
-          .text = query;
+      Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider.of<BottomNavigationBarProvider>(context, listen: false)
-          .currentIndex = NavigatorConstants.MapTab;
+      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
     }
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
       String? link = uri?.toString();
-      if (link != null && link.contains("deeplinking.searchmap")) {
+      final bool hasLink = link != null;
+      final bool isSearchMapLink = hasLink && link.contains("deeplinking.searchmap");
+      if (hasLink && isSearchMapLink) {
         var query = uri!.queryParameters['query']!;
-        Provider.of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text = query;
+        Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.MapTab;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
         _sub?.cancel();
       }
     });
   }
 
   Widget _buildMessage(BuildContext context, int index) {
-    MessageElement data =
-        Provider.of<MessagesDataProvider>(context).messages[index];
-    FreeFoodDataProvider freefoodProvider =
-        Provider.of<FreeFoodDataProvider>(context);
+    MessageElement data = Provider.of<MessagesDataProvider>(context).messages[index];
+    FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
 
     String messageType = data.audience.topics?[0] ?? "DM";
     return ListView(
@@ -180,9 +170,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(data.message.title,
-                    style: Theme.of(context).brightness == Brightness.dark
-                        ? headlineMediumDark2
-                        : headlineMediumLight2),
+                    style:
+                        Theme.of(context).brightness == Brightness.dark ? headlineMediumDark2 : headlineMediumLight2),
               ),
             ],
           ),
@@ -196,17 +185,16 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                     text: data.message.message,
                     onOpen: (link) async {
                       try {
-                        launchUrl(Uri.parse(link.url),
-                            mode: LaunchMode.inAppBrowserView);
+                        launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
                       } catch (e) {
                         // an error occurred, do nothing
                       }
                     },
                     options: LinkifyOptions(humanize: false),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 16,
-                        height: 1.41,
-                        fontWeight: FontWeight.w400)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400)),
                 freefoodProvider.isFreeFood(data.messageId)
                     ? FreeFoodNotification(messageId: data.messageId)
                     : Container(),
@@ -219,10 +207,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
               Padding(
                 padding: const EdgeInsets.only(top: 6.0),
                 child: Text(_readTimestamp(data.timestamp),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 12,
-                        height: 1.41,
-                        fontWeight: FontWeight.w700)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700)),
               ),
             ],
           ),

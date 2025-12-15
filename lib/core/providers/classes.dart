@@ -52,31 +52,30 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       _isLoading = true;
       _error = null;
       notifyListeners();
-      if (await _classScheduleService.fetchAcademicTerm() &&
-          _userDataProvider.isLoggedIn) {
+      final bool termFetched = await _classScheduleService.fetchAcademicTerm();
+      final bool isLoggedIn = _userDataProvider.isLoggedIn;
+      if (termFetched && isLoggedIn) {
         _academicTermModel = _classScheduleService.academicTermModel!;
         final Map<String, String> headers = {
-          'Authorization':
-              'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+          'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
         };
 
         /// erase old model
         _classScheduleModel = ClassScheduleModel();
 
         /// fetch grad courses
-        if (await _classScheduleService.fetchGRCourses(
-            headers, _academicTermModel.termCode!)) {
+        final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!);
+        if (grCoursesFetched) {
           _classScheduleModel = _classScheduleService.grData;
         } else {
           _error = _classScheduleService.error.toString();
         }
 
         /// fetch undergrad courses
-        if (await _classScheduleService.fetchUNCourses(
-            headers, _academicTermModel.termCode!)) {
+        final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(headers, _academicTermModel.termCode!);
+        if (unCoursesFetched) {
           if (_classScheduleModel.data != null) {
-            _classScheduleModel.data!
-                .addAll(_classScheduleService.unData.data!);
+            _classScheduleModel.data!.addAll(_classScheduleService.unData.data!);
           } else {
             _classScheduleModel = _classScheduleService.unData;
           }
@@ -126,7 +125,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
         _lastUpdated = DateTime.now();
       } else {
-        ///TODO: determine what error to show to the user
+        // TODO: determine what error to show to the user - December 2025
         _error = _classScheduleService.error;
       }
       _isLoading = false;
@@ -154,15 +153,15 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         sectionData.subjectCode = classData.subjectCode;
         sectionData.courseCode = classData.courseCode;
         sectionData.courseTitle = classData.courseTitle;
-        sectionData.gradeOption =
-            buildGradeEvaluation(classData.gradeOption ?? "");
+        sectionData.gradeOption = buildGradeEvaluation(classData.gradeOption ?? "");
 
         String day = 'OTHER';
         if (sectionData.days != null) {
           day = sectionData.days!;
 
-          if (sectionData.specialMtgCode != 'FI' &&
-              sectionData.specialMtgCode != 'MI') {
+          final bool isNotFinals = sectionData.specialMtgCode != 'FI';
+          final bool isNotMidterm = sectionData.specialMtgCode != 'MI';
+          if (isNotFinals && isNotMidterm) {
             _enrolledClasses[day]!.add(sectionData);
           } else if (sectionData.specialMtgCode == 'FI') {
             _finals[day]!.add(sectionData);
@@ -196,7 +195,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   /// comparator that sorts according to start time of class
   static int _compare(SectionData a, SectionData b) {
-    if (a.time == null || b.time == null) return 0;
+    final bool aTimeIsNull = a.time == null;
+    final bool bTimeIsNull = b.time == null;
+    if (aTimeIsNull || bTimeIsNull) return 0;
     DateTime aStartTime = _getStartTime(a.time!);
     DateTime bStartTime = _getStartTime(b.time!);
 
@@ -233,11 +234,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     try {
       /// get weekday and return [List<SectionData>] associated with current weekday
       List<SectionData> listToReturn = [];
-      String today = DateFormat('EEEE')
-          .format(DateTime.now())
-          .toString()
-          .toUpperCase()
-          .substring(0, 2);
+      String today = DateFormat('EEEE').format(DateTime.now()).toString().toUpperCase().substring(0, 2);
       nextDayWithClass = DateFormat('EEEE').format(DateTime.now()).toString();
 
       /// if no classes are scheduled for today then find the next day with classes
@@ -248,8 +245,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
             .toString()
             .toUpperCase()
             .substring(0, 2);
-        nextDayWithClass = DateFormat('EEEE')
-            .format(DateTime.now().add(Duration(days: daysToAdd)));
+        nextDayWithClass = DateFormat('EEEE').format(DateTime.now().add(Duration(days: daysToAdd)));
         daysToAdd += 1;
       }
 

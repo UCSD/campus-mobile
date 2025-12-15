@@ -1,6 +1,6 @@
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
-import 'package:campus_mobile_experimental/ui/common/HexColor.dart';
+import 'package:campus_mobile_experimental/ui/common/hex_color.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,17 +46,13 @@ class _SpotTypesViewState extends State<SpotTypesView> {
       );
 
   List<Widget> createList(BuildContext context) {
-    var selectedSpots = Provider.of<ParkingDataProvider>(context)
-        .spotTypesState
-        .values
-        .where((selected) => selected == true)
-        .length;
+    var selectedSpots =
+        Provider.of<ParkingDataProvider>(context).spotTypesState.values.where((selected) => selected == true).length;
 
     List<Widget> list = [];
 
     for (Spot data in spotTypesDataProvider.spotTypeModel!.spots!) {
-      var isSelected = Provider.of<ParkingDataProvider>(context)
-          .spotTypesState[data.spotKey]!;
+      var isSelected = Provider.of<ParkingDataProvider>(context).spotTypesState[data.spotKey]!;
 
       var iconColor = HexColor(data.logoBackgroundColor);
       var textColor = HexColor(data.logoTextColor);
@@ -74,11 +70,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
               child: Align(
                   alignment: Alignment.center,
                   child: data.logoText.startsWith('icon - ')
-                      ? Icon(
-                          ParkingConstants.stringToIconData[data.logoText] ??
-                              Icons.error,
-                          size: 25.0,
-                          color: textColor)
+                      ? Icon(ParkingConstants.STRING_TO_ICON_DATA[data.logoText] ?? Icons.error,
+                          size: 25.0, color: textColor)
                       : (data.logoText.isNotEmpty
                           ? Text(
                               data.logoText,
@@ -106,8 +99,8 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                       return AlertDialogWidget(
                         type: MessageTypeConstants.ERROR,
                         icon: Icons.block_flipped,
-                        title: ParkingConstants.spotMaxTitle,
-                        description: ParkingConstants.spotMaxDesc,
+                        title: ParkingConstants.SPOT_MAX_TITLE,
+                        description: ParkingConstants.SPOT_MAX_DESC,
                         onClose: () {
                           Navigator.of(context).pop();
                         },
@@ -116,8 +109,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                   );
                   return;
                 }
-                spotTypesDataProvider.toggleSpotSelection(
-                    data.spotKey, selectedSpots);
+                spotTypesDataProvider.toggleSpotSelection(data.spotKey, selectedSpots);
               },
               activeTrackColor: toggleActiveColor,
               inactiveTrackColor: Colors.grey.shade400,

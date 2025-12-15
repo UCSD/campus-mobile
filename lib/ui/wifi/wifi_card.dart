@@ -18,8 +18,7 @@ class WiFiCard extends StatefulWidget {
 
 enum TestStatus { initial, running, finished, unavailable, simulated }
 
-class _WiFiCardState extends State<WiFiCard>
-    with AutomaticKeepAliveClientMixin {
+class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin {
   /// STATES
   String cardId = "speed_test";
   bool _buttonEnabled = true;
@@ -50,13 +49,12 @@ class _WiFiCardState extends State<WiFiCard>
     super.build(context);
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => cardState != TestStatus.running
           ? Provider.of<SpeedTestProvider>(context, listen: false).init()
           : print("running test..."),
       isLoading: _speedTestProvider.isLoading!,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: _speedTestProvider.error,
       child: () => buildCardContent(context),
     );
@@ -86,21 +84,23 @@ class _WiFiCardState extends State<WiFiCard>
           });
         } else if (!_speedTestProvider.isUCSDWiFi!) {
           setState(() => cardState = TestStatus.unavailable);
-        } else if (_speedTestProvider.timeElapsedDownload +
-                _speedTestProvider.timeElapsedUpload >
-            SPEED_TEST_TIMEOUT_CONST) {
-          setState(() {
-            goodSpeed = false;
-            cardState = TestStatus.finished;
-            timedOut = true;
-          });
-          _speedTestProvider.cancelDownload();
-          _speedTestProvider.cancelUpload();
-        } else if (_speedTestProvider.speedTestDone) {
-          setState(() {
-            goodSpeed = true;
-            cardState = TestStatus.finished;
-          });
+        } else {
+          final bool hasTimedOut =
+              _speedTestProvider.timeElapsedDownload + _speedTestProvider.timeElapsedUpload > SPEED_TEST_TIMEOUT_CONST;
+          if (hasTimedOut) {
+            setState(() {
+              goodSpeed = false;
+              cardState = TestStatus.finished;
+              timedOut = true;
+            });
+            _speedTestProvider.cancelDownload();
+            _speedTestProvider.cancelUpload();
+          } else if (_speedTestProvider.speedTestDone) {
+            setState(() {
+              goodSpeed = true;
+              cardState = TestStatus.finished;
+            });
+          }
         }
       } catch (_) {}
     });
@@ -129,9 +129,7 @@ class _WiFiCardState extends State<WiFiCard>
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Icon(
             Icons.wifi_sharp,
-            color: Theme.of(context).brightness == Brightness.light
-                ? lightPrimaryColor
-                : darkPrimaryColor2,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
             size: 38,
           ),
           SizedBox(width: 10),
@@ -166,9 +164,7 @@ class _WiFiCardState extends State<WiFiCard>
                     setState(() {
                       cardState = TestStatus.running;
                     });
-                    _speedTestProvider.speedTest().timeout(
-                        const Duration(seconds: 1),
-                        onTimeout: _onTimeout);
+                    _speedTestProvider.speedTest().timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
                   }
                 }),
             // REPORT ISSUE
@@ -183,8 +179,8 @@ class _WiFiCardState extends State<WiFiCard>
                             return AlertDialogWidget(
                                 type: MessageTypeConstants.ERROR,
                                 icon: Icons.block_flipped,
-                                title: WifiConstants.wifiIssueFailedTitle,
-                                description: WifiConstants.wifiIssueFailedDesc,
+                                title: WifiConstants.WIFI_ISSUE_FAILED_TITLE,
+                                description: WifiConstants.WIFI_ISSUE_FAILED_DESC,
                                 onClose: () {
                                   Navigator.of(context).pop();
                                 });
@@ -228,9 +224,7 @@ class _WiFiCardState extends State<WiFiCard>
                 style: TextStyle(color: Colors.grey),
               ),
               direction: Axis.horizontal,
-              value: (_speedTestProvider.percentDownloaded +
-                      _speedTestProvider.percentUploaded) /
-                  2,
+              value: (_speedTestProvider.percentDownloaded + _speedTestProvider.percentUploaded) / 2,
               valueColor: AlwaysStoppedAnimation(lightPrimaryColor)),
         ),
       ],
@@ -243,8 +237,7 @@ class _WiFiCardState extends State<WiFiCard>
     String downloadSpeed = lastSpeed != null
         ? lastSpeed!.toStringAsPrecision(3)
         : _speedTestProvider.speed!.toStringAsPrecision(3) + " Mbps";
-    String uploadSpeed =
-        _speedTestProvider.uploadSpeed!.toStringAsPrecision(3) + " Mbps";
+    String uploadSpeed = _speedTestProvider.uploadSpeed!.toStringAsPrecision(3) + " Mbps";
 
     if (downloadSpeed.contains("Infinity")) downloadSpeed = "N/A";
     if (uploadSpeed.contains("Infinity")) uploadSpeed = "N/A";
@@ -288,9 +281,7 @@ class _WiFiCardState extends State<WiFiCard>
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.w700,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? lightPrimaryColor
-                          : darkPrimaryColor2,
+                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
                     ),
                   ))
             ],
@@ -323,9 +314,7 @@ class _WiFiCardState extends State<WiFiCard>
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.w700,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? lightPrimaryColor
-                          : darkPrimaryColor2,
+                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
                     ),
                   ))
             ],
@@ -337,8 +326,8 @@ class _WiFiCardState extends State<WiFiCard>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TEST SPEED
-            // TODO: This brings you back to the initial state, but that requires two "TEST SPEED" Button clicks.
-            // TODO: For the UI people, do you want 1 click? or 2 clicks but the first one indicating to "Reset"
+            // TODO: This brings you back to the initial state, but that requires two "TEST SPEED" Button clicks. - December 2025
+            // TODO: For the UI people, do you want 1 click? or 2 clicks but the first one indicating to "Reset" - December 2025
             ActionButton(
                 buttonText: 'TEST SPEED',
                 onPressed: () {
@@ -347,9 +336,7 @@ class _WiFiCardState extends State<WiFiCard>
                     cardState = TestStatus.running;
                     _speedTestProvider.resetSpeedTest();
                   });
-                  _speedTestProvider.speedTest().timeout(
-                      const Duration(seconds: 1),
-                      onTimeout: _onTimeout);
+                  _speedTestProvider.speedTest().timeout(const Duration(seconds: 1), onTimeout: _onTimeout);
                   // setState(() {
                   //   timedOut = false;
                   //   cardState = TestStatus.initial;
@@ -360,25 +347,23 @@ class _WiFiCardState extends State<WiFiCard>
             // REPORT ISSUE
             ActionLink(
               buttonText: 'REPORT ISSUE',
-              onPressed:
-                  _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED?
-                      ? () {
-                          _speedTestProvider.reportIssue();
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialogWidget(
-                                    type: MessageTypeConstants.SUCCESS,
-                                    icon: Icons.check_circle_outline_sharp,
-                                    title: WifiConstants.wifiIssueSuccessTitle,
-                                    description:
-                                        WifiConstants.wifiIssueSuccessDesc,
-                                    onClose: () {
-                                      Navigator.of(context).pop();
-                                    });
-                              });
-                        }
-                      : () {},
+              onPressed: _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED? - December 2025
+                  ? () {
+                      _speedTestProvider.reportIssue();
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialogWidget(
+                                type: MessageTypeConstants.SUCCESS,
+                                icon: Icons.check_circle_outline_sharp,
+                                title: WifiConstants.WIFI_ISSUE_SUCCESS_TITLE,
+                                description: WifiConstants.WIFI_ISSUE_SUCCESS_DESC,
+                                onClose: () {
+                                  Navigator.of(context).pop();
+                                });
+                          });
+                    }
+                  : () {},
             )
           ],
         ),
@@ -474,12 +459,8 @@ class ScalingUtility {
     _queryData = MediaQuery.of(context);
 
     /// Calculate blocks accounting for notches and home bar
-    horizontalSafeBlock = (_queryData.size.width -
-            (_queryData.padding.left + _queryData.padding.right)) /
-        100;
-    verticalSafeBlock = (_queryData.size.height -
-            (_queryData.padding.top + _queryData.padding.bottom)) /
-        100;
+    horizontalSafeBlock = (_queryData.size.width - (_queryData.padding.left + _queryData.padding.right)) / 100;
+    verticalSafeBlock = (_queryData.size.height - (_queryData.padding.top + _queryData.padding.bottom)) / 100;
   }
 }
 
@@ -503,10 +484,8 @@ class SizeConfig {
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
-    _safeAreaHorizontal =
-        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
-    _safeAreaVertical =
-        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
+    _safeAreaHorizontal = _mediaQueryData.padding.left + _mediaQueryData.padding.right;
+    _safeAreaVertical = _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
   }

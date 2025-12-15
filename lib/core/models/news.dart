@@ -14,8 +14,7 @@ class NewsModel {
     List<Item>? items,
   }) : items = items ?? [];
 
-  NewsModel.fromJson(Map<String, dynamic> json)
-      : items = List<Item>.from(json["items"].map((x) => Item.fromJson(x)));
+  NewsModel.fromJson(Map<String, dynamic> json) : items = List<Item>.from(json["items"].map((x) => Item.fromJson(x)));
 
   Map<String, dynamic> toJson() => {
         "items": List<dynamic>.from(items.map((x) => x.toJson())),

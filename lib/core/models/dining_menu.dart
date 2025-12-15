@@ -3,11 +3,9 @@ import 'dart:convert';
 // To parse this JSON data, do
 //
 //     final diningMenuItemsModel = diningMenuItemsModelFromJson(jsonString);
-DiningMenuItemsModel diningMenuItemsModelFromJson(String str) =>
-    DiningMenuItemsModel.fromJson(json.decode(str));
+DiningMenuItemsModel diningMenuItemsModelFromJson(String str) => DiningMenuItemsModel.fromJson(json.decode(str));
 
-String diningMenuItemsModelToJson(DiningMenuItemsModel data) =>
-    json.encode(data.toJson());
+String diningMenuItemsModelToJson(DiningMenuItemsModel data) => json.encode(data.toJson());
 
 class DiningMenuItemsModel {
   List<DiningMenuItem>? menuItems;
@@ -22,16 +20,13 @@ class DiningMenuItemsModel {
 
   DiningMenuItemsModel.fromJson(Map<String, dynamic> json)
       : menuItems = json["menuitems"] != null
-            ? List<DiningMenuItem>.from(
-                json["menuitems"].map((x) => DiningMenuItem.fromJson(x)))
+            ? List<DiningMenuItem>.from(json["menuitems"].map((x) => DiningMenuItem.fromJson(x)))
             : [],
         disclaimer = json["disclaimer"],
         disclaimerEmail = json["disclaimerEmail"];
 
   Map<String, dynamic> toJson() => {
-        "menuitems": menuItems!.isNotEmpty
-            ? List<dynamic>.from(menuItems!.map((x) => x.toJson()))
-            : null,
+        "menuitems": menuItems!.isNotEmpty ? List<dynamic>.from(menuItems!.map((x) => x.toJson())) : null,
         "disclaimer": disclaimer,
         "disclaimerEmail": disclaimerEmail,
       };
@@ -58,13 +53,13 @@ class DiningMenuItem {
   });
 
   DiningMenuItem.fromJson(Map<String, dynamic> json)
-      : name = json["name"],
+      : name = json["name"] ?? "",
         itemId = json["itemID"],
         station = json["station"],
-        price = json["price"],
+        price = json["price"] ?? "",
         images = json["images"],
-        tags = json["tags"],
-        nutrition = Nutrition.fromJson(json["nutrition"]);
+        tags = json["tags"] ?? "",
+        nutrition = json["nutrition"] != null ? Nutrition.fromJson(json["nutrition"]) : Nutrition();
 
   Map<String, dynamic> toJson() => {
         "name": name,

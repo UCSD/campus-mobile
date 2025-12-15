@@ -29,22 +29,19 @@ class NewsCard extends StatelessWidget {
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
     actionButtons.add(ActionButton(
-        buttonText: 'VIEW MORE NEWS STORIES',
-        onPressed: () => Navigator.pushNamed(context, RoutePaths.NewsViewAll)));
+        buttonText: 'VIEW MORE NEWS STORIES', onPressed: () => Navigator.pushNamed(context, RoutePaths.NEWS_VIEW_ALL)));
     return actionButtons;
   }
 
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      /// TODO: need to hook up hidden to state using provider
+      // TODO: need to hook up hidden to state using provider - December 2025
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
-      reload: () =>
-          Provider.of<NewsDataProvider>(context, listen: false).fetchNews(),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+      reload: () => Provider.of<NewsDataProvider>(context, listen: false).fetchNews(),
       isLoading: Provider.of<NewsDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<NewsDataProvider>(context).error,
       child: () => buildNewsCard(),
       actionButtons: buildActionButtons(context),

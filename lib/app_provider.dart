@@ -31,8 +31,7 @@ List<SingleChildWidget> providers = [
 ];
 
 final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-final FirebaseAnalyticsObserver observer =
-    FirebaseAnalyticsObserver(analytics: analytics);
+final FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
 List<SingleChildWidget> independentServices = [
   Provider.value(value: observer),
@@ -82,8 +81,7 @@ List<SingleChildWidget> independentServices = [
   ChangeNotifierProvider<InternetConnectivityProvider>(
     create: (_) {
       print("CreateProvider: InternetConnectivityProvider");
-      InternetConnectivityProvider _connectivityProvider =
-          InternetConnectivityProvider();
+      InternetConnectivityProvider _connectivityProvider = InternetConnectivityProvider();
       _connectivityProvider.monitorInternet();
       return _connectivityProvider;
     },
@@ -113,15 +111,12 @@ List<SingleChildWidget> dependentServices = [
 
         /// try to load any persistent saved data
         /// once loaded from memory get the user's online profile
-        _userDataProvider
-            .loadSavedData()
-            .whenComplete(() => _userDataProvider.fetchUserProfile());
+        _userDataProvider.loadSavedData().whenComplete(() => _userDataProvider.fetchUserProfile());
         return _userDataProvider;
       },
       lazy: false,
       update: (_, pushNotificationDataProvider, _userDataProvider) {
-        _userDataProvider!.pushNotificationDataProvider =
-            pushNotificationDataProvider;
+        _userDataProvider!.pushNotificationDataProvider = pushNotificationDataProvider;
         return _userDataProvider;
       }),
   ChangeNotifierProxyProvider<UserDataProvider, CardsDataProvider>(
@@ -136,22 +131,20 @@ List<SingleChildWidget> dependentServices = [
         cardsDataProvider
           ..loadSavedData().then((_) {
             // Update available cards
-            cardsDataProvider.updateAvailableCards(
-                userDataProvider.authenticationModel.ucsdaffiliation);
+            cardsDataProvider.updateAvailableCards(userDataProvider.authenticationModel.ucsdaffiliation);
 
             // Student card activation
-            if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel.classifications?.student ??
-                    false)) {
+            final bool isLoggedIn = userDataProvider.isLoggedIn;
+            final bool isStudent = userDataProvider.userProfileModel.classifications?.student ?? false;
+            if (isLoggedIn && isStudent) {
               cardsDataProvider.activateStudentCards();
             } else {
               cardsDataProvider.deactivateStudentCards();
             }
 
             // Staff card activation
-            if (userDataProvider.isLoggedIn &&
-                (userDataProvider.userProfileModel.classifications?.staff ??
-                    false)) {
+            final bool isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
+            if (isLoggedIn && isStaff) {
               cardsDataProvider.activateStaffCards();
             } else {
               cardsDataProvider.deactivateStaffCards();
@@ -159,43 +152,39 @@ List<SingleChildWidget> dependentServices = [
           });
         return cardsDataProvider;
       }),
-  ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(
-      create: (_) {
+  ChangeNotifierProxyProvider<UserDataProvider, ClassScheduleDataProvider>(create: (_) {
     var classDataProvider = ClassScheduleDataProvider();
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider!.userDataProvider = userDataProvider;
-    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) {
-      classScheduleDataProvider.fetchData();
-    }
+    final bool isLoggedIn = userDataProvider.isLoggedIn;
+    final bool isNotLoading = !classScheduleDataProvider.isLoading;
+    if (isLoggedIn && isNotLoading) classScheduleDataProvider.fetchData();
     return classScheduleDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(
-      create: (_) {
+  ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(create: (_) {
     var studentIdDataProvider = StudentIdDataProvider();
     return studentIdDataProvider;
   }, update: (_, userDataProvider, studentIdDataProvider) {
     studentIdDataProvider!.userDataProvider = userDataProvider;
-    //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) {
-      studentIdDataProvider.fetchData();
-    }
+    // Verify that the user is logged in
+    final bool isLoggedIn = userDataProvider.isLoggedIn;
+    final bool isNotLoading = !studentIdDataProvider.isLoading;
+    if (isLoggedIn && isNotLoading) studentIdDataProvider.fetchData();
     return studentIdDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, EmployeeIdDataProvider>(
-      create: (_) {
+  ChangeNotifierProxyProvider<UserDataProvider, EmployeeIdDataProvider>(create: (_) {
     var employeeIdDataProvider = EmployeeIdDataProvider();
     return employeeIdDataProvider;
   }, update: (_, userDataProvider, employeeIdDataProvider) {
     employeeIdDataProvider!.userDataProvider = userDataProvider;
-    //Verify that the user is logged in
-    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) {
-      employeeIdDataProvider.fetchData();
-    }
+    // Verify that the user is logged in
+    final bool isLoggedIn = userDataProvider.isLoggedIn;
+    final bool isNotLoading = !employeeIdDataProvider.isLoading;
+    if (isLoggedIn && isNotLoading) employeeIdDataProvider.fetchData();
     return employeeIdDataProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(
-      create: (_) {
+  ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(create: (_) {
     var availabilityDataProvider = AvailabilityDataProvider();
     availabilityDataProvider.fetchAvailability();
     return availabilityDataProvider;
@@ -203,8 +192,7 @@ List<SingleChildWidget> dependentServices = [
     availabilityDataProvider!.userDataProvider = userDataProvider;
     return availabilityDataProvider;
   }),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
-      ShuttleDataProvider>(create: (_) {
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, ShuttleDataProvider>(create: (_) {
     var shuttleDataProvider = ShuttleDataProvider();
     return shuttleDataProvider;
   }, update: (_, coordinates, userDataProvider, shuttleDataProvider) {
@@ -214,8 +202,7 @@ List<SingleChildWidget> dependentServices = [
     shuttleDataProvider.fetchStops(true);
     return shuttleDataProvider;
   }),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider,
-      SpeedTestProvider>(create: (_) {
+  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, SpeedTestProvider>(create: (_) {
     SpeedTestProvider speedTestProvider = SpeedTestProvider();
     speedTestProvider.init();
     return speedTestProvider;
@@ -224,8 +211,7 @@ List<SingleChildWidget> dependentServices = [
     speedTestProvider.userDataProvider = userDataProvider;
     return speedTestProvider;
   }),
-  ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(
-      create: (_) {
+  ChangeNotifierProxyProvider<UserDataProvider, ParkingDataProvider>(create: (_) {
     var parkingDataProvider = ParkingDataProvider();
     return parkingDataProvider;
   }, update: (_, userDataProvider, parkingDataProvider) {

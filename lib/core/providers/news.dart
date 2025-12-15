@@ -22,7 +22,7 @@ class NewsDataProvider extends ChangeNotifier {
       _newsModels = _newsService.newsModels;
       _lastUpdated = DateTime.now();
     } else {
-      /// TODO: determine what error to show to the user
+      // TODO: determine what error to show to the user - December 2025
       _error = _newsService.error;
     }
     _isLoading = false;

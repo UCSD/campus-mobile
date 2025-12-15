@@ -6,28 +6,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const cardId = 'MyUCSDChart';
+const cardId = 'my_student_chart';
 
-class MyUCSDChartCard extends StatelessWidget {
+class MyStudentChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => null,
       isLoading: false,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: null,
       child: () => buildCardContent(context),
       actionButtons: [
         ActionButton(
-          buttonText: 'LOG IN TO MyUCSDChart',
+          buttonText: 'LOG IN TO MyStudentChart',
           onPressed: () {
             try {
-              const url =
-                  'https://myucsdchart.ucsd.edu/UCSD/Authentication/Login';
-              launchUrl(Uri.parse(url), mode: LaunchMode.inAppBrowserView);
+              launchUrl(
+                  Uri.parse('https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN'),
+                  mode: LaunchMode.inAppBrowserView);
             } catch (e) {
               // an error occurred, do nothing
             }

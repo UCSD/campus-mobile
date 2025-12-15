@@ -23,8 +23,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
   }
 
   Widget structureList(BuildContext context) {
-    List<String> structures =
-        Provider.of<ParkingDataProvider>(context).getStructures();
+    List<String> structures = Provider.of<ParkingDataProvider>(context).getStructures();
 
     List<Widget> listTiles = [];
     listTiles.add(
@@ -33,9 +32,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
         title: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Text("Parking Structures",
-              style: Theme.of(context).brightness == Brightness.dark
-                  ? textSubheaderDark
-                  : textSubheaderLight),
+              style: Theme.of(context).brightness == Brightness.dark ? textSubheaderDark : textSubheaderLight),
         ),
       ),
     );
@@ -46,8 +43,7 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
     });
 
     for (var structureName in structures) {
-      bool structureState =
-          parkingDataProvider.parkingViewState[structureName]!;
+      bool structureState = parkingDataProvider.parkingViewState[structureName]!;
       listTiles.add(
         ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -72,8 +68,8 @@ class _ParkingStructureViewState extends State<ParkingStructureView> {
                       return AlertDialogWidget(
                         type: MessageTypeConstants.ERROR,
                         icon: Icons.block_flipped,
-                        title: ParkingConstants.lotMaxTitle,
-                        description: ParkingConstants.lotMaxDesc,
+                        title: ParkingConstants.LOT_MAX_TITLE,
+                        description: ParkingConstants.LOT_MAX_DESC,
                         onClose: () {
                           Navigator.of(context).pop();
                         },

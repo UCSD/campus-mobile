@@ -78,7 +78,7 @@ class NewsList extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(
           context,
-          RoutePaths.NewsDetailView,
+          RoutePaths.NEWS_DETAIL_VIEW,
           arguments: newsItem,
         );
       },
@@ -107,14 +107,12 @@ class NewsList extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: DateFormat.yMMMMd()
-                                .format(newsItem.date.toLocal()),
+                            text: DateFormat.yMMMMd().format(newsItem.date.toLocal()),
                             style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                               height: 1.42,
-                              color:
-                                  Theme.of(context).textTheme.bodyMedium!.color,
+                              color: Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                           ),
                           TextSpan(
@@ -122,17 +120,11 @@ class NewsList extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineMedium!
-                                .copyWith(
-                                    height: 1.42,
-                                    fontSize: 16.0,
-                                    decoration: TextDecoration.none),
+                                .copyWith(height: 1.42, fontSize: 16.0, decoration: TextDecoration.none),
                           ),
                           TextSpan(
                             text: newsItem.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium!
-                                .copyWith(height: 1.42, fontSize: 18.0),
+                            style: Theme.of(context).textTheme.headlineMedium!.copyWith(height: 1.42, fontSize: 18.0),
                           ),
                         ],
                       ),
@@ -143,10 +135,7 @@ class NewsList extends StatelessWidget {
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(fontSize: 16.0, height: 1.42),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16.0, height: 1.42),
                     ),
                   ],
                 ),

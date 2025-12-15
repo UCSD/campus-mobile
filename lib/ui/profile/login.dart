@@ -40,25 +40,19 @@ class _LoginState extends State<Login> {
 
     return Container(
         constraints: BoxConstraints(maxWidth: 100, maxHeight: 100),
-        child: Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary)));
+        child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)));
   }
 
   Widget buildLoggedInWidget(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'LOGGED IN AS:',
-              style: Theme.of(context).brightness == Brightness.dark
-                  ? titleMediumDark
-                  : titleMediumLight,
-            ),
-            buildUserProfileTile(context),
-          ]),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+        Text(
+          'LOGGED IN AS:',
+          style: Theme.of(context).brightness == Brightness.dark ? titleMediumDark : titleMediumLight,
+        ),
+        buildUserProfileTile(context),
+      ]),
     );
   }
 
@@ -125,10 +119,7 @@ class _LoginState extends State<Login> {
           ),
           SizedBox(height: 10),
           TextField(
-            style: TextStyle(
-                fontFamily: 'Brix Sans',
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF737373)),
+            style: TextStyle(fontFamily: 'Brix Sans', fontWeight: FontWeight.w400, color: const Color(0xFF737373)),
             decoration: InputDecoration(
               hintText: 'UCSD Email',
               hintStyle: TextStyle(
@@ -136,8 +127,7 @@ class _LoginState extends State<Login> {
               ),
               border: OutlineInputBorder(),
               focusedBorder: new OutlineInputBorder(
-                borderSide: new BorderSide(
-                    color: Theme.of(context).colorScheme.secondary),
+                borderSide: new BorderSide(color: Theme.of(context).colorScheme.secondary),
               ),
               labelText: 'UCSD Email',
               labelStyle: TextStyle(
@@ -149,10 +139,7 @@ class _LoginState extends State<Login> {
           ),
           SizedBox(height: 10),
           TextField(
-            style: TextStyle(
-                fontFamily: 'Brix Sans',
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF737373)),
+            style: TextStyle(fontFamily: 'Brix Sans', fontWeight: FontWeight.w400, color: const Color(0xFF737373)),
             decoration: InputDecoration(
               hintText: 'Password',
               hintStyle: TextStyle(
@@ -163,15 +150,14 @@ class _LoginState extends State<Login> {
                   // Based on passwordObscured state choose the icon
                   _passwordObscured ? Icons.visibility_off : Icons.visibility,
 
-                  /// TODO: Change color to improve its visibility in dark theme.
+                  // TODO: Change color to improve its visibility in dark theme. - December 2025
                   color: Theme.of(context).iconTheme.color,
                 ),
                 onPressed: () => _toggle(),
               ),
               border: OutlineInputBorder(),
               focusedBorder: new OutlineInputBorder(
-                borderSide: new BorderSide(
-                    color: Theme.of(context).colorScheme.secondary),
+                borderSide: new BorderSide(color: Theme.of(context).colorScheme.secondary),
               ),
               labelText: 'Password',
               labelStyle: TextStyle(
@@ -203,8 +189,7 @@ class _LoginState extends State<Login> {
                         ? null
                         : () {
                             _userDataProvider
-                                .manualLogin(_emailTextFieldController.text,
-                                    _passwordTextFieldController.text)
+                                .manualLogin(_emailTextFieldController.text, _passwordTextFieldController.text)
                                 .then((isLoggedIn) {
                               if (!isLoggedIn) {
                                 showDialog(
@@ -213,9 +198,8 @@ class _LoginState extends State<Login> {
                                     return AlertDialogWidget(
                                       type: MessageTypeConstants.ERROR,
                                       icon: Icons.block_flipped,
-                                      title: LoginConstants.loginFailedTitle,
-                                      description:
-                                          LoginConstants.loginFailedDesc,
+                                      title: LoginConstants.LOGIN_FAILED_TITLE,
+                                      description: LoginConstants.LOGIN_FAILED_DESC,
                                       onClose: () {
                                         Navigator.of(context).pop();
                                       },
@@ -243,8 +227,7 @@ class _LoginState extends State<Login> {
                   ),
                   onTap: () async {
                     try {
-                      String link =
-                          'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
+                      String link = 'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
                       await launch(link, forceSafariVC: true);
                     } catch (e) {
                       // an error occurred, do nothing
@@ -281,35 +264,25 @@ class _LoginState extends State<Login> {
         children: [
           Expanded(
             child: Icon(Icons.info_outline,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? linkTextColorDark
-                    : linkTextColorLight),
+                color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
             flex: 1,
           ),
           Expanded(
             child: Text(
-              LoginConstants.loginFailedTitle,
+              LoginConstants.LOGIN_FAILED_TITLE,
               textAlign: TextAlign.left,
               style: Theme.of(context).brightness == Brightness.dark
                   ? TextStyle(
-                      color: linkTextColorDark,
-                      fontFamily: 'Brix Sans',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18.0)
+                      color: linkTextColorDark, fontFamily: 'Brix Sans', fontWeight: FontWeight.w700, fontSize: 18.0)
                   : TextStyle(
-                      color: linkTextColorLight,
-                      fontFamily: 'Brix Sans',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18.0),
+                      color: linkTextColorLight, fontFamily: 'Brix Sans', fontWeight: FontWeight.w700, fontSize: 18.0),
             ),
             flex: 7,
           ),
           Expanded(
             child: IconButton(
               icon: Icon(Icons.close,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? linkTextColorDark
-                      : linkTextColorLight),
+                  color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
               alignment: Alignment.topRight,
               onPressed: () {
                 Navigator.of(context).pop();
@@ -321,8 +294,7 @@ class _LoginState extends State<Login> {
       ),
       content: Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height *
-              0.6, // Set max height to 60% of screen height
+          maxHeight: MediaQuery.of(context).size.height * 0.6, // Set max height to 60% of screen height
         ),
         child: SingleChildScrollView(
           child: Row(
@@ -338,7 +310,7 @@ class _LoginState extends State<Login> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      LoginConstants.loginFailedDesc,
+                      LoginConstants.LOGIN_FAILED_DESC,
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           color: linkTextColorLight,

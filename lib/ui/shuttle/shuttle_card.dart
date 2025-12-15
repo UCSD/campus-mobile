@@ -38,20 +38,17 @@ class _ShuttleCardState extends State<ShuttleCard> {
   Widget build(BuildContext context) {
     return CardContainer(
       active: Provider.of<CardsDataProvider>(context).cardStates[cardId],
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false)
-          .toggleCard(cardId),
+      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {
         setState(() {
           _currentPage = 0;
         });
-        Provider.of<ShuttleDataProvider>(context, listen: false)
-            .fetchStops(true);
+        Provider.of<ShuttleDataProvider>(context, listen: false).fetchStops(true);
       },
       isLoading: _shuttleCardDataProvider.isLoading,
-      titleText: CardTitleConstants.titleMap[cardId]!,
+      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: _shuttleCardDataProvider.error,
-      child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender,
-          _shuttleCardDataProvider.arrivalsToRender),
+      child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender, _shuttleCardDataProvider.arrivalsToRender),
       actionButtons: [
         ActionLink(
             buttonText: 'MANAGE SHUTTLE STOPS',
@@ -59,14 +56,13 @@ class _ShuttleCardState extends State<ShuttleCard> {
               setState(() {
                 _currentPage = 0;
               });
-              Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+              Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
             }),
       ],
     );
   }
 
-  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender,
-      Map<int, List<ArrivingShuttle>> arrivalsToRender) {
+  Widget buildShuttleCard(List<ShuttleStopModel> stopsToRender, Map<int, List<ArrivingShuttle>> arrivalsToRender) {
     List<Widget> renderList = [];
     try {
       // Initialize first shuttle display with arrival information
@@ -77,7 +73,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
         );
       }
 
-      // TODO: Reuse if you want to show the closest stop, let's say in the "Manage Shuttle Stops" screen, delete if not needed
+      // TODO: Reuse if you want to show the closest stop, let's say in the "Manage Shuttle Stops" screen, delete if not needed - December 2025
       // if (_shuttleCardDataProvider.closestStop != null) {
       //   renderList.add(ShuttleDisplay(
       //       stop: _shuttleCardDataProvider.closestStop!,
@@ -89,8 +85,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       for (var i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
         renderList.add(ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
-            arrivingShuttles: arrivalsToRender[
-                _shuttleCardDataProvider.stopsToRender[i].id]));
+            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.stopsToRender[i].id]));
       }
       return Column(
         children: <Widget>[
@@ -110,9 +105,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
             dotsCount: renderList.length,
             decorator: DotsDecorator(
               color: dotsUnselectedColor,
-              activeColor: Theme.of(context).brightness == Brightness.dark
-                  ? dotsSelectedColorDark
-                  : dotsSelectedColorLight,
+              activeColor:
+                  Theme.of(context).brightness == Brightness.dark ? dotsSelectedColorDark : dotsSelectedColorLight,
               activeSize: const Size(22.0, 22.0),
               size: const Size(10.0, 10.0),
             ),
@@ -140,8 +134,8 @@ class _ShuttleCardState extends State<ShuttleCard> {
         'Manage Shuttle Stops',
       ),
       onPressed: () {
-        if (!_shuttleCardDataProvider.isLoading)
-          Navigator.pushNamed(context, RoutePaths.ManageShuttleView);
+        final bool isNotLoading = !_shuttleCardDataProvider.isLoading;
+        if (isNotLoading) Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
       },
     ));
     return actionButtons;

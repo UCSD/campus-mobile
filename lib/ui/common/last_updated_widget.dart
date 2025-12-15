@@ -20,12 +20,12 @@ class LastUpdatedWidget extends StatelessWidget {
 
   static String determineText(DateTime time) {
     Duration difference = DateTime.now().difference(time);
-    if (difference.compareTo(Duration(seconds: 120)) <= 0)
-      return 'a few seconds ago';
-    if (difference.compareTo(Duration(minutes: 60)) <= 0)
-      return '${difference.inMinutes} minutes ago';
-    if (difference.compareTo(Duration(hours: 48)) <= 0)
-      return '${difference.inHours} hours ago';
+    final bool isWithinTwoMinutes = difference.compareTo(Duration(seconds: 120)) <= 0;
+    final bool isWithinOneHour = difference.compareTo(Duration(minutes: 60)) <= 0;
+    final bool isWithinTwoDays = difference.compareTo(Duration(hours: 48)) <= 0;
+    if (isWithinTwoMinutes) return 'a few seconds ago';
+    if (isWithinOneHour) return '${difference.inMinutes} minutes ago';
+    if (isWithinTwoDays) return '${difference.inHours} hours ago';
     return '${difference.inDays} days ago';
   }
 }
