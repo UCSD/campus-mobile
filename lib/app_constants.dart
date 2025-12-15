@@ -89,13 +89,6 @@ class DiningConstants {
   ];
 }
 
-class ButtonText {
-  static const SCAN_NOW_FULL = 'SCAN YOUR COVID-19 KIT.';
-  static const SCAN_NOW = 'SCAN NOW';
-  static const SIGN_IN_FULL = 'SCAN YOUR COVID-19 KIT.';
-  static const SIGN_IN = 'SIGN IN';
-}
-
 class ErrorConstants {
   static const AUTHORIZED_POST_ERRORS = 'Failed to upload data: ';
   static const AUTHORIZED_PUT_ERRORS = 'Failed to update data: ';
