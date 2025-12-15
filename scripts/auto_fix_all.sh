@@ -77,7 +77,7 @@ fi
 echo "------------------------------------"
 # Fifth fix is to run dart format
 echo "Running dart format..."
-if bash dart format --line-length 120 lib; then
+if dart format --line-length 120 lib; then
     echo "Dart formatting completed"
 else
     echo "Nothing to fix, moving on..."
