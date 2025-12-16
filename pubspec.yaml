@@ -21,7 +21,7 @@ dependencies:
       url: https://github.com/UCSD/flutter_dotenv.git
       ref: master
   flutter_linkify: 6.0.0
-  flutter_local_notifications: 17.2.3
+  flutter_local_notifications: ^19.5.0
   flutter_secure_storage: ^9.2.4
   flutter_sticky_header: ^0.8.0
   get: 4.7.2
