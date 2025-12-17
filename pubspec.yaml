@@ -25,7 +25,7 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   flutter_sticky_header: ^0.8.0
   get: 4.7.2
-  google_maps_flutter: 2.10.1
+  google_maps_flutter: ^2.14.0
   hive: 2.2.3
   hive_flutter: 1.1.0
   intl: ^0.20.2
@@ -47,7 +47,7 @@ dependencies:
       ref: e0fb416f81daedeabb1eedef22041e67f30f792b
   device_info_plus: ^11.1.0
 dependency_overrides:
-  google_maps_flutter_ios: 2.13.1 # To fix the tooltips bug in Google Maps
+  google_maps_flutter_ios: 2.15.7
   value_layout_builder: ^0.5.0 # Fix Flutter 3.32.0 compatibility
 dev_dependencies:
   build_runner: 2.4.13
