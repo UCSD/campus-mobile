@@ -42,7 +42,7 @@ class _CardsViewState extends State<CardsView> {
           order.insert(newIndex, order.removeAt(oldIndex));
           setState(() {
             // Checks against stored user order in remote profile
-            _cardsDataProvider.updateCardOrder();
+            _cardsDataProvider.updateCardOrder(isUserReorder: true);
           });
         });
 
