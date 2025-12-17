@@ -6,7 +6,7 @@ environment:
   sdk: ^3.5.3
 dependencies:
   barcode_widget: 2.0.4
-  connectivity_plus: 6.1.0
+  connectivity_plus: 7.0.0
   dio: ^5.9.0
   encrypt: ^5.0.3
   dots_indicator: 4.0.1
