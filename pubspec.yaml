@@ -45,7 +45,7 @@ dependencies:
     git:
       url: https://github.com/UCSD/wifi_connection.git
       ref: e0fb416f81daedeabb1eedef22041e67f30f792b
-  device_info_plus: ^11.1.0
+  device_info_plus: ^11.5.0
 dependency_overrides:
   google_maps_flutter_ios: 2.15.7
   value_layout_builder: ^0.5.0 # Fix Flutter 3.32.0 compatibility
