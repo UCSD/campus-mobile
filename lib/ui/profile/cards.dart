@@ -90,7 +90,7 @@ class _CardsViewState extends State<CardsView> {
                   onChanged: (_) {
                     _cardsDataProvider.toggleCard(card);
                   },
-                  activeThumbColor: toggleActiveColor, // Ensure this is a solid color
+                  activeColor: toggleActiveColor, // Ensure this is a solid color
                   thumbColor: WidgetStateProperty.resolveWith((states) {
                     final bool isSelected = states.contains(WidgetState.selected);
                     if (isSelected) return Colors.white;
