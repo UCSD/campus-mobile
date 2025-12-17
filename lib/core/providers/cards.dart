@@ -69,9 +69,9 @@ class CardsDataProvider extends ChangeNotifier {
   ];
 
   // Native staff cards
+  // TODO: removed 'staff_info', if needed re-add later - December 2025
   static const List<String> _STAFF_CARDS = [
     'my_ucsd_chart',
-    'staff_info',
     'employee_id',
   ];
 
@@ -79,10 +79,35 @@ class CardsDataProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
+    final bool isStaff = _userDataProvider?.userProfileModel.classifications?.staff ?? false;
 
     if (await _cardsService.fetchCards(ucsdAffiliation)) {
-      _availableCards = _cardsService.cardsModel;
+      // Convert the known server response keys from camelCase to snake_case
+      Map<String, CardsModel> normalizedCards = {};
+      _cardsService.cardsModel.forEach((serverKey, model) {
+        if (serverKey == 'MyUCSDChart') {
+          normalizedCards['my_ucsd_chart'] = model;
+          return;
+        }
+        if (serverKey == 'MyStudentChart') {
+          normalizedCards['my_student_chart'] = model;
+          return;
+        }
+        // All other keys are assumed to be already in snake_case
+        // App will fail if server sends unexpected key format, so simply add
+        // the snake case version of the key above like the two cases above.
+        normalizedCards[serverKey] = model;
+      });
+      _availableCards = normalizedCards;
+
       _lastUpdated = DateTime.now();
+      if (isStaff) {
+        // Temporal fix to remove my student chart from the staff view
+        _availableCards.remove('my_student_chart');
+        _cardStates.remove('my_student_chart');
+        _cardOrder.remove('my_student_chart');
+        _webCards.remove('my_student_chart');
+      }
 
       if (_availableCards.isNotEmpty) {
         // Only if the user doesn't have a custom order, use the default
@@ -114,11 +139,11 @@ class CardsDataProvider extends ChangeNotifier {
             // add active web cards
             if (model.isWebCard) _webCards[card] = model;
             // Add new cards to user's order if they're not already there
-            final bool notInCurrOrder = !_cardOrder.contains(card);
+            final bool isNotInCurrentOrder = !_cardOrder.contains(card);
             final bool isActiveCard = model.cardActive;
             final bool isNotStudentCard = !_STUDENT_CARDS.contains(card);
             final bool isNotStaffCard = !_STAFF_CARDS.contains(card);
-            final bool shouldAddCard = notInCurrOrder && isActiveCard && isNotStudentCard && isNotStaffCard;
+            final bool shouldAddCard = isNotInCurrentOrder && isActiveCard && isNotStudentCard && isNotStaffCard;
 
             if (shouldAddCard) _cardOrder.add(card);
             // keep all new cards activated by default
@@ -129,6 +154,9 @@ class CardsDataProvider extends ChangeNotifier {
 
       updateCardOrder(); // default order isUserReorder: false
       updateCardStates();
+      // print('\x1B[95mDEBUG: Final cardOrder: $_cardOrder\x1B[0m');
+      // print('\x1B[95mDEBUG: Final cardStates keys: ${_cardStates.keys.toList()}\x1B[0m');
+      // print('\x1B[95mDEBUG: Final availableCards keys: ${_availableCards.keys.toList()}\x1B[0m');
     } else {
       _error = _cardsService.error;
     }
@@ -369,7 +397,7 @@ class CardsDataProvider extends ChangeNotifier {
   void activateStudentCardsForSilentLogin() {
     // Only modify order if user hasn't created a custom order
     if (!_hasUserCustomOrder) {
-      var index = _cardOrder.indexOf('MyStudentChart') + 1;
+      var index = _cardOrder.indexOf('my_student_chart') + 1;
       _cardOrder.insertAll(index, _STUDENT_CARDS.toList());
 
       // TODO: test w/o this - December 2025
@@ -426,7 +454,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void activateStaffCards() {
-    var index = _cardOrder.indexOf('my_student_chart') + 1;
+    var index = _cardOrder.indexOf('my_ucsd_chart') + 1;
     _cardOrder.insertAll(index, _STAFF_CARDS.toList());
 
     // TODO: test w/o this - December 2025
@@ -438,7 +466,7 @@ class CardsDataProvider extends ChangeNotifier {
   void activateStaffCardsForSilentLogin() {
     // Only modify order if user hasn't created a custom order
     if (!_hasUserCustomOrder) {
-      var index = _cardOrder.indexOf('MyStudentChart') + 1;
+      var index = _cardOrder.indexOf('my_ucsd_chart') + 1;
       _cardOrder.insertAll(index, _STAFF_CARDS.toList());
 
       // TODO: test w/o this - December 2025
@@ -470,7 +498,7 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   void showAllStaffCards() {
-    var index = _cardOrder.indexOf('my_student_chart') + 1;
+    var index = _cardOrder.indexOf('my_ucsd_chart') + 1;
     _cardOrder.insertAll(index, _STAFF_CARDS.toList());
 
     // TODO: test w/o this - December 2025
