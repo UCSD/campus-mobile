@@ -423,7 +423,10 @@ class UserDataProvider extends ChangeNotifier {
   /// Proactively refresh authentication if token is about to expire
   /// Call this method periodically (e.g., when app comes to foreground)
   Future<void> refreshAuthenticationIfNeeded() async {
-    if (!isTokenValid() && await _shouldAttemptSilentLogin()) await silentLogin();
+    final bool isTokenInvalid = !isTokenValid();
+    final bool shouldAttemptLogin = await _shouldAttemptSilentLogin();
+
+    if (isTokenInvalid && shouldAttemptLogin) await silentLogin();
   }
 
   /// SIMPLE SETTERS

@@ -114,12 +114,13 @@ class CardsDataProvider extends ChangeNotifier {
             // add active web cards
             if (model.isWebCard) _webCards[card] = model;
             // Add new cards to user's order if they're not already there
-            if (!_cardOrder.contains(card) &&
-                model.cardActive &&
-                !_STUDENT_CARDS.contains(card) &&
-                !_STAFF_CARDS.contains(card)) {
-              _cardOrder.add(card);
-            }
+            final bool notInCurrOrder = !_cardOrder.contains(card);
+            final bool isActiveCard = model.cardActive;
+            final bool isNotStudentCard = !_STUDENT_CARDS.contains(card);
+            final bool isNotStaffCard = !_STAFF_CARDS.contains(card);
+            final bool shouldAddCard = notInCurrOrder && isActiveCard && isNotStudentCard && isNotStaffCard;
+
+            if (shouldAddCard) _cardOrder.add(card);
             // keep all new cards activated by default
             _cardStates.putIfAbsent(card, () => true);
           });
