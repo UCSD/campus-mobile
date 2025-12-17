@@ -52,8 +52,13 @@ class UserDataProvider extends ChangeNotifier {
   Future updateAuthenticationModel(AuthenticationModel model) async {
     _authenticationModel = model;
     var box = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
+    var timeBox = await Hive.openBox<DateTime?>('AuthenticationModelLastUpdated');
+
+    // save authentication model
     await box.put('AuthenticationModel', model);
+    // save last updated time
     _lastUpdated = DateTime.now();
+    await timeBox.put('lastUpdated', _lastUpdated);
   }
 
   /// Update the [UserProfileModel] stored in state
@@ -83,14 +88,30 @@ class UserDataProvider extends ChangeNotifier {
   /// Will create persistent storage if no data is found
   Future _loadSavedAuthenticationModel() async {
     var authBox = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
+    var timeBox = await Hive.openBox<DateTime?>('AuthenticationModelLastUpdated');
+
     AuthenticationModel temp = AuthenticationModel.fromJson({});
     // Check to see if we have added the authentication model into the box already
     if (authBox.get('AuthenticationModel') == null) {
       await authBox.put('AuthenticationModel', temp);
       temp = authBox.get('AuthenticationModel')!;
       _authenticationModel = temp;
+      _lastUpdated = null; // no token yet
     } else {
-      await silentLogin();
+      // load the stored authentication model
+      temp = authBox.get('AuthenticationModel')!;
+      _authenticationModel = temp;
+
+      // load original timestamp
+      _lastUpdated = timeBox.get('AuthenticationModelLastUpdated');
+
+      // Only attempt silent login if the token is expired or invalid
+      if (!_authenticationModel.isLoggedIn(_lastUpdated)) {
+        await silentLogin();
+      } else {
+        // Token is still valid, no need to silent login
+        print("Token is still valid, no need to silent login");
+      }
     }
   }
 
@@ -155,7 +176,6 @@ class UserDataProvider extends ChangeNotifier {
     final bool hasPassword = password.isNotEmpty;
     if (hasUsername && hasPassword) {
       await _encryptAndSaveCredentials(username, password);
-
       if (await silentLogin()) {
         if (_userProfileModel.classifications!.student!) {
           cardsDataProvider.showAllStudentCards();
@@ -179,11 +199,32 @@ class UserDataProvider extends ChangeNotifier {
     return false;
   }
 
+  /// Check if silent login should be attempted
+  /// Returns true if we have stored credentials but invalid/expired token
+  Future<bool> _shouldAttemptSilentLogin() async {
+    String? username = await getUsernameFromDevice();
+    String? encryptedPassword = await _getEncryptedPasswordFromDevice();
+
+    // No stored credentials - don't attempt silent login
+    if (username == null || encryptedPassword == null) return false;
+
+    // Have credentials but token is invalid/expired - attempt silent login
+    return !_authenticationModel.isLoggedIn(_lastUpdated);
+  }
+
   /// Logs user in with saved credentials on device
   /// If this login mechanism fails then the user is logged out
   Future<bool> silentLogin() async {
     _isInSilentLogin = true;
     notifyListeners();
+
+    // Check if we should even attempt silent login
+    if (!await _shouldAttemptSilentLogin()) {
+      _isInSilentLogin = false;
+      notifyListeners();
+      return _authenticationModel.isLoggedIn(_lastUpdated);
+    }
+
     String? username = await getUsernameFromDevice();
     String? encryptedPassword = await _getEncryptedPasswordFromDevice();
 
@@ -373,6 +414,16 @@ class UserDataProvider extends ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
+  }
+
+  /// Check if the current token is still valid
+  /// This can be called periodically to check token status
+  bool isTokenValid() => _authenticationModel.isLoggedIn(_lastUpdated);
+
+  /// Proactively refresh authentication if token is about to expire
+  /// Call this method periodically (e.g., when app comes to foreground)
+  Future<void> refreshAuthenticationIfNeeded() async {
+    if (!isTokenValid() && await _shouldAttemptSilentLogin()) await silentLogin();
   }
 
   /// SIMPLE SETTERS

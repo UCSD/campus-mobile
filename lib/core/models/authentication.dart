@@ -48,20 +48,23 @@ class AuthenticationModel extends HiveObject {
 
   /// Checks if the token we got back is expired
   bool isLoggedIn(DateTime? lastUpdated) {
-    /// User has not logged in previously - isLoggedIn FALSE
+    // User has not logged in previously - isLoggedIn FALSE
     if (lastUpdated == null) return false;
 
-    /// User has no expiration or accessToken - isLoggedIn FALSE
+    // User has no expiration or accessToken - isLoggedIn FALSE
     if (expiration == null || accessToken == null) return false;
 
-    /// User has expiration and accessToken
+    // User has expiration and accessToken
+    // The `expiration` field represents how many seconds the token is valid after it was issued (i.e., after `lastUpdated`).
+    // By adding `expiration` seconds to `lastUpdated`, we get the exact DateTime when the token will expire.
     final DateTime expirationTime = lastUpdated.add(Duration(seconds: expiration!));
+    // If the current time is before this expiration time, the token is still valid.
     final bool isNotExpired = DateTime.now().isBefore(expirationTime);
     if (isNotExpired) {
-      /// Current datetime < expiration datetime - isLoggedIn TRUE
+      // Current datetime < expiration datetime - isLoggedIn TRUE
       return true;
     } else {
-      /// Current datetime > expiration datetime - isLoggedIn FALSE
+      // Current datetime > expiration datetime - isLoggedIn FALSE
       return false;
     }
   }
