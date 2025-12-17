@@ -41,6 +41,7 @@ class _CardsViewState extends State<CardsView> {
           var order = _cardsDataProvider.cardOrder;
           order.insert(newIndex, order.removeAt(oldIndex));
           setState(() {
+            // Checks against stored user order in remote profile
             _cardsDataProvider.updateCardOrder();
           });
         });

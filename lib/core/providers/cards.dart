@@ -142,8 +142,12 @@ class CardsDataProvider extends ChangeNotifier {
     final bool isInSilentLogin = _userDataProvider?.isInSilentLogin ?? false;
     if (isUserProviderNull || isInSilentLogin) return;
 
-    // checks if box is open, creates one if not
-    _cardOrderBox = await Hive.openBox(DataPersistence.CARD_ORDER);
+    // Check if box is already open, if not then open it
+    if (!Hive.isBoxOpen(DataPersistence.CARD_ORDER)) {
+      _cardOrderBox = await Hive.openBox(DataPersistence.CARD_ORDER);
+    } else {
+      _cardOrderBox = Hive.box(DataPersistence.CARD_ORDER);
+    }
 
     // no need to await - data is saved to disk in background
     _cardOrderBox.put(DataPersistence.CARD_ORDER, _cardOrder);
@@ -159,7 +163,12 @@ class CardsDataProvider extends ChangeNotifier {
     final bool isInSilentLogin = _userDataProvider?.isInSilentLogin ?? false;
     if (isUserProviderNull || isInSilentLogin) return;
 
-    _cardOrderBox = await Hive.openBox(DataPersistence.CARD_ORDER);
+    // Check if box is already open, if not then open it
+    if (!Hive.isBoxOpen(DataPersistence.CARD_ORDER)) {
+      _cardOrderBox = await Hive.openBox(DataPersistence.CARD_ORDER);
+    } else {
+      _cardOrderBox = Hive.box(DataPersistence.CARD_ORDER);
+    }
 
     if (_cardOrderBox.get(DataPersistence.CARD_ORDER) == null)
       await _cardOrderBox.put(DataPersistence.CARD_ORDER, _cardOrder);
@@ -172,7 +181,12 @@ class CardsDataProvider extends ChangeNotifier {
   /// Load [_cardStates] from persistent storage
   /// Will create persistent storage if no data is found
   Future _loadCardStates() async {
-    _cardStateBox = await Hive.openBox(DataPersistence.CARD_STATES);
+    // Check if box is already open, if not then open it
+    if (!Hive.isBoxOpen(DataPersistence.CARD_STATES)) {
+      _cardStateBox = await Hive.openBox(DataPersistence.CARD_STATES);
+    } else {
+      _cardStateBox = Hive.box(DataPersistence.CARD_STATES);
+    }
 
     // if no data was found then create the data and save it
     // by default all cards will be on
@@ -198,7 +212,11 @@ class CardsDataProvider extends ChangeNotifier {
     var activeCards = _cardStates.keys.where((card) => _cardStates[card]!).toList();
 
     // checks if box is open, creates one if not
-    _cardStateBox = await Hive.openBox(DataPersistence.CARD_STATES);
+    if (!Hive.isBoxOpen(DataPersistence.CARD_STATES)) {
+      _cardStateBox = await Hive.openBox(DataPersistence.CARD_STATES);
+    } else {
+      _cardStateBox = Hive.box(DataPersistence.CARD_STATES);
+    }
 
     // no need to await - data is saved to disk in background
     _cardStateBox.put(DataPersistence.CARD_STATES, activeCards);

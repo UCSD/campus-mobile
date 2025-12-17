@@ -137,6 +137,7 @@ List<SingleChildWidget> dependentServices = [
             final bool isLoggedIn = userDataProvider.isLoggedIn;
             final bool isStudent = userDataProvider.userProfileModel.classifications?.student ?? false;
             if (isLoggedIn && isStudent) {
+              // Uses silent login, respect user preferences.
               cardsDataProvider.activateStudentCards();
             } else {
               cardsDataProvider.deactivateStudentCards();
@@ -145,6 +146,7 @@ List<SingleChildWidget> dependentServices = [
             // Staff card activation
             final bool isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
             if (isLoggedIn && isStaff) {
+              // Uses silent login, respect user preferences.
               cardsDataProvider.activateStaffCards();
             } else {
               cardsDataProvider.deactivateStaffCards();
