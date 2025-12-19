@@ -19,7 +19,6 @@ class _CardsViewState extends State<CardsView> {
   @override
   void initState() {
     super.initState();
-    context.read<CardsDataProvider>().monitorInternet();
   }
 
   @override
@@ -41,37 +40,45 @@ class _CardsViewState extends State<CardsView> {
           var order = _cardsDataProvider.cardOrder;
           order.insert(newIndex, order.removeAt(oldIndex));
           setState(() {
-            _cardsDataProvider.updateCardOrder();
+            // Checks against stored user order in remote profile
+            _cardsDataProvider.updateCardOrder(isUserReorder: true);
           });
         });
-
-    if (_cardsDataProvider.noInternet) {
-      Future.delayed(
-          Duration.zero,
-          () => {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialogWidget(
-                        type: MessageTypeConstants.ERROR,
-                        icon: Icons.block_flipped,
-                        title: 'No Internet',
-                        description: 'Cards requires an internet connection.',
-                        onClose: () {
-                          Navigator.of(context).pop();
-                        },
-                      );
-                    }),
-              });
-    }
 
     return tempView;
   }
 
   List<Widget> createList() {
     List<Widget> list = [];
+
+    // Check if cards failed to load (likely due to internet issues)
+    var hasCardsInOrder = _cardsDataProvider.cardOrder.isNotEmpty;
+    var noCardsLoaded = _cardsDataProvider.availableCards.isEmpty;
+    if (hasCardsInOrder && noCardsLoaded) {
+      Future.delayed(Duration.zero, () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialogWidget(
+              type: MessageTypeConstants.ERROR,
+              icon: Icons.wifi_off,
+              title: 'Cards Not Available',
+              description: 'Unable to load cards. Please check your internet connection and try again.',
+              onClose: () {
+                Navigator.of(context).pop();
+              },
+            );
+          },
+        );
+      });
+      return list;
+    }
+
     for (String card in _cardsDataProvider.cardOrder) {
       try {
+        // Skip cards that aren't available
+        if (_cardsDataProvider.availableCards[card] == null) continue;
+
         list.add(
           Card(
             key: Key(card),
@@ -104,11 +111,8 @@ class _CardsViewState extends State<CardsView> {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
         FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
             reason: "Profile/Cards: Failed to load Cards page", fatal: false);
-
-        _cardsDataProvider.changeInternetStatus(true);
       }
     }
-
     return list;
   }
 }
