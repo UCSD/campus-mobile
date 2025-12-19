@@ -52,7 +52,9 @@ class _CardsViewState extends State<CardsView> {
     List<Widget> list = [];
 
     // Check if cards failed to load (likely due to internet issues)
-    if (_cardsDataProvider.cardOrder.isNotEmpty && _cardsDataProvider.availableCards.isEmpty) {
+    var hasCardsInOrder = _cardsDataProvider.cardOrder.isNotEmpty;
+    var noCardsLoaded = _cardsDataProvider.availableCards.isEmpty;
+    if (hasCardsInOrder && noCardsLoaded) {
       Future.delayed(Duration.zero, () {
         showDialog(
           context: context,
