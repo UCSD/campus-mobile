@@ -3,7 +3,6 @@ import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/cards.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -19,7 +18,6 @@ class CardsDataProvider extends ChangeNotifier {
   }
 
   /// STATES
-  bool _noInternet = false;
   bool _isLoading = false;
   bool _hasUserCustomOrder = false; // Check if the user has reordered the cards
   DateTime? _lastUpdated;
@@ -33,7 +31,7 @@ class CardsDataProvider extends ChangeNotifier {
   late Box _cardStateBox;
 
   /// MODELS
-  late Map<String, CardsModel> _availableCards;
+  Map<String, CardsModel> _availableCards = {};
 
   /// PROVIDERS
   Map<String, CardsModel> _webCards = {};
@@ -41,7 +39,6 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// SERVICES
   final _cardsService = CardsService();
-  final _connectivity = Connectivity();
 
   // Default card order for native cards
   // Most of the time immediately overwritten by default card order coming from server
@@ -162,28 +159,6 @@ class CardsDataProvider extends ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
-  }
-
-  Future changeInternetStatus(bool noInternet) async {
-    _noInternet = noInternet;
-  }
-
-  Future<void> initConnectivity() async {
-    try {
-      var status = await _connectivity.checkConnectivity();
-      _noInternet = (status == ConnectivityResult.none);
-      notifyListeners();
-    } catch (e) {
-      print("Encounter $e when monitoring Internet for cards");
-    }
-  }
-
-  void monitorInternet() async {
-    await initConnectivity();
-    _connectivity.onConnectivityChanged.listen((result) async {
-      _noInternet = (result == ConnectivityResult.none);
-      notifyListeners();
-    });
   }
 
   /// Load saved data from disk or create new persistent storage if none exists
@@ -553,7 +528,6 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
-  get noInternet => _noInternet;
   get hasUserCustomOrder => _hasUserCustomOrder;
   get error => _error;
   get lastUpdated => _lastUpdated;
