@@ -48,7 +48,7 @@ class OnboardingSlideTemplate extends StatelessWidget {
                   style: const TextStyle(
                     fontFamily: 'Refrigerator Deluxe',
                     color: ColorPrimary,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w900,
                     fontSize: 50,
                   ),
                   textAlign: TextAlign.left,
