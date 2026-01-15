@@ -24,6 +24,10 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+// Provider registration for the entire app
+// Registers UserDataProvider, which stores authentication state and access token for chatbot integration
+// Ensures authentication state is available to all services and UI components
+// If you want to persist chat history or session state, you would register additional providers here
 List<SingleChildWidget> providers = [
   ...independentServices,
   ...dependentServices,
@@ -134,20 +138,15 @@ List<SingleChildWidget> dependentServices = [
             cardsDataProvider.updateAvailableCards(userDataProvider.authenticationModel.ucsdaffiliation);
 
             // Student card activation
-            final bool isLoggedIn = userDataProvider.isLoggedIn;
-            final bool isStudent = userDataProvider.userProfileModel.classifications?.student ?? false;
-            if (isLoggedIn && isStudent) {
-              // Uses silent login, respect user preferences.
-              cardsDataProvider.activateStudentCardsForSilentLogin();
+            if (userDataProvider.isLoggedIn && (userDataProvider.userProfileModel.classifications?.student ?? false)) {
+              cardsDataProvider.activateStudentCards();
             } else {
               cardsDataProvider.deactivateStudentCards();
             }
 
             // Staff card activation
-            final bool isStaff = userDataProvider.userProfileModel.classifications?.staff ?? false;
-            if (isLoggedIn && isStaff) {
-              // Uses silent login, respect user preferences.
-              cardsDataProvider.activateStaffCardsForSilentLogin();
+            if (userDataProvider.isLoggedIn && (userDataProvider.userProfileModel.classifications?.staff ?? false)) {
+              cardsDataProvider.activateStaffCards();
             } else {
               cardsDataProvider.deactivateStaffCards();
             }
@@ -159,9 +158,7 @@ List<SingleChildWidget> dependentServices = [
     return classDataProvider;
   }, update: (_, userDataProvider, classScheduleDataProvider) {
     classScheduleDataProvider!.userDataProvider = userDataProvider;
-    final bool isLoggedIn = userDataProvider.isLoggedIn;
-    final bool isNotLoading = !classScheduleDataProvider.isLoading;
-    if (isLoggedIn && isNotLoading) classScheduleDataProvider.fetchData();
+    if (userDataProvider.isLoggedIn && !classScheduleDataProvider.isLoading) classScheduleDataProvider.fetchData();
     return classScheduleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(create: (_) {
@@ -170,9 +167,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, studentIdDataProvider) {
     studentIdDataProvider!.userDataProvider = userDataProvider;
     // Verify that the user is logged in
-    final bool isLoggedIn = userDataProvider.isLoggedIn;
-    final bool isNotLoading = !studentIdDataProvider.isLoading;
-    if (isLoggedIn && isNotLoading) studentIdDataProvider.fetchData();
+    if (userDataProvider.isLoggedIn && !studentIdDataProvider.isLoading) studentIdDataProvider.fetchData();
     return studentIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, EmployeeIdDataProvider>(create: (_) {
@@ -181,9 +176,7 @@ List<SingleChildWidget> dependentServices = [
   }, update: (_, userDataProvider, employeeIdDataProvider) {
     employeeIdDataProvider!.userDataProvider = userDataProvider;
     // Verify that the user is logged in
-    final bool isLoggedIn = userDataProvider.isLoggedIn;
-    final bool isNotLoading = !employeeIdDataProvider.isLoading;
-    if (isLoggedIn && isNotLoading) employeeIdDataProvider.fetchData();
+    if (userDataProvider.isLoggedIn && !employeeIdDataProvider.isLoading) employeeIdDataProvider.fetchData();
     return employeeIdDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, AvailabilityDataProvider>(create: (_) {
