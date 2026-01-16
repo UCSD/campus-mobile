@@ -30,10 +30,9 @@ class ChatSessionService {
     _isLoading = true;
 
     try {
-      // Add Authorization header with current access token - replace {key} with actual auth key from wso2
-      headers['Authorization'] =
-          'Bearer eyJ4NXQiOiJNR1UzWVRkbU1XUmpZemxpTTJZNFpqY3hORGM1TkRNMlkyWTVNMlF5TlRZek9EZGhaV1kyTWciLCJraWQiOiJZVFZtT1RCbU1tTXpOemRtWVRBeU5UWmpNbVk1WlRReU56VXdaamN5TnpZME4yUTVPR1U1TURJNFlXWmpaamcxTnpnNE5UazVNMlF3TUdRd1ltSTNPQV9SUzI1NiIsInR5cCI6ImF0K2p3dCIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJhbncwNzUiLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6IkdtVEE4ZmhCR0o4V3hxVGNBemdMdlRYbEY1b2EiLCJuYmYiOjE3Njg1MjAzMTcsImF6cCI6IkdtVEE4ZmhCR0o4V3hxVGNBemdMdlRYbEY1b2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvYXBpLXFhLnVjc2QuZWR1XC9vYXV0aDJcL3Rva2VuIiwicmVhbG0iOnsic2lnbmluZ190ZW5hbnQiOiJjYXJib24uc3VwZXIifSwiZXhwIjoxNzY4NTIzOTE3LCJpYXQiOjE3Njg1MjAzMTcsImp0aSI6IjM0ZTZiN2IyLTQ2MWMtNDk5OS1hMmUzLTk2ZTQ5NzQ1Y2RhZCJ9.JXgyX1Pm8H5_dkDIoySzypVB_nStfNQhzaIajSowVUXdfGwngWUdFIj71cNjgWmrUbNttAUEPC6fFXbjavhuhTgBDIUBPnqJq8V5YYFFYkxvuVVL-4b6XCnleP6zKGIiaZorvfgoFI0GAtbNzu-7bL-vqTW48VQcP6_VG_5T89XM3a_NM6hVFOUP-16D1W1PLn8gkIPTnmlPJ4lB46soOBbx8iaH_-ZoRiO6wwKuD29jsnXOz40pfhsdNMto9OSVyNLC9zrRE4wQW3OZMjvBO-Fa6YUM7XecGITDkzRc05aTjeZu5ZckE4UokRsMVy1DVYSphch-HGnM0fElvpoDBw';
-
+      // headers['Authorization'] =
+      //     'Bearer eyJ4NXQiOiJNR1UzWVRkbU1XUmpZemxpTTJZNFpqY3hORGM1TkRNMlkyWTVNMlF5TlRZek9EZGhaV1kyTWciLCJraWQiOiJZVFZtT1RCbU1tTXpOemRtWVRBeU5UWmpNbVk1WlRReU56VXdaamN5TnpZME4yUTVPR1U1TURJNFlXWmpaamcxTnpnNE5UazVNMlF3TUdRd1ltSTNPQV9SUzI1NiIsInR5cCI6ImF0K2p3dCIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJhbncwNzUiLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6IkdtVEE4ZmhCR0o4V3hxVGNBemdMdlRYbEY1b2EiLCJuYmYiOjE3Njg1MjAzMTcsImF6cCI6IkdtVEE4ZmhCR0o4V3hxVGNBemdMdlRYbEY1b2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvYXBpLXFhLnVjc2QuZWR1XC9vYXV0aDJcL3Rva2VuIiwicmVhbG0iOnsic2lnbmluZ190ZW5hbnQiOiJjYXJib24uc3VwZXIifSwiZXhwIjoxNzY4NTIzOTE3LCJpYXQiOjE3Njg1MjAzMTcsImp0aSI6IjM0ZTZiN2IyLTQ2MWMtNDk5OS1hMmUzLTk2ZTQ5NzQ1Y2RhZCJ9.JXgyX1Pm8H5_dkDIoySzypVB_nStfNQhzaIajSowVUXdfGwngWUdFIj71cNjgWmrUbNttAUEPC6fFXbjavhuhTgBDIUBPnqJq8V5YYFFYkxvuVVL-4b6XCnleP6zKGIiaZorvfgoFI0GAtbNzu-7bL-vqTW48VQcP6_VG_5T89XM3a_NM6hVFOUP-16D1W1PLn8gkIPTnmlPJ4lB46soOBbx8iaH_-ZoRiO6wwKuD29jsnXOz40pfhsdNMto9OSVyNLC9zrRE4wQW3OZMjvBO-Fa6YUM7XecGITDkzRc05aTjeZu5ZckE4UokRsMVy1DVYSphch-HGnM0fElvpoDBw';
+      headers['Authorization'] = 'Bearer ${_userDataProvider.authenticationModel.accessToken}';
       print('headers $headers');
 
       // String createChatSessionEndpoint = dotenv.get('CHAT_CREATE_SESSION_ENDPOINT');
@@ -57,7 +56,6 @@ class ChatSessionService {
 
       print("_response $_response");
 
-      /// Parse successful response
       final CreateChatSessionID chatSessionId = CreateChatSessionID.fromJson(_response);
 
       return chatSessionId;
@@ -70,7 +68,6 @@ class ChatSessionService {
         print('data: ${e.response?.data}');
       }
 
-      // Retry exactly once if expired token
       if (!_hasRetried && e.toString().contains("401")) {
         _hasRetried = true;
 
@@ -85,7 +82,6 @@ class ChatSessionService {
         }
       }
 
-      // No retry (or retry failed): record error and bail
       _error = e.toString();
       _hasRetried = false; // reset for next top-level call
       return null;
