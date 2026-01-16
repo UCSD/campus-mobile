@@ -24,10 +24,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-// Provider registration for the entire app
-// Registers UserDataProvider, which stores authentication state and access token for chatbot integration
-// Ensures authentication state is available to all services and UI components
-// If you want to persist chat history or session state, you would register additional providers here
 List<SingleChildWidget> providers = [
   ...independentServices,
   ...dependentServices,

@@ -24,10 +24,6 @@ double getNotificationsScrollOffset() => _notificationsScrollOffset;
 void setNotificationsScrollOffset(double currentScrollOffset) => _notificationsScrollOffset = currentScrollOffset;
 void resetNotificationsScrollOffset() => _notificationsScrollOffset = 0.0;
 
-// Main navigation bar for the app
-// Integrates the chatbot UI (ChatPage) as the "AI Assistant" tab (index 2)
-// Prevents access to chatbot unless user is logged in
-// When switching tabs, chat history in assistant.dart is cleared (RAM only)
 class BottomTabBar extends StatefulWidget {
   @override
   _BottomTabBarState createState() => _BottomTabBarState();
