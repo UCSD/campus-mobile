@@ -155,8 +155,8 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList() {
-    final orderedCards = getOrderedCardsList(context.watch<CardsDataProvider>().cardOrder);
-    final noticesCards = getNoticesCardsList(context.watch<NoticesDataProvider>().noticesModel);
+    final orderedCards = getOrderedCardsList(context.select((CardsDataProvider p) => p.cardOrder));
+    final noticesCards = getNoticesCardsList(context.select((NoticesDataProvider p) => p.noticesModel));
     return [...noticesCards, ...orderedCards];
   }
 
