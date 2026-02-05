@@ -510,11 +510,11 @@ class CardsDataProvider extends ChangeNotifier {
       _updateUserToggledCards();
       // print("DEBUG: toggleCard() - Saved user preference for $card: ${_userToggledCards[card]}");
 
-      // Update states in persistent storage
-      updateCardStates();
+      // Notify immediately so UI updates synchronously
+      notifyListeners();
 
-      // Force an additional notification to ensure UI is updated
-      Future.microtask(() => notifyListeners());
+      // Update states in persistent storage (async, its notifyListeners is redundant but harmless)
+      updateCardStates();
     } catch (e) {
       print("Error toggling card state for $card: $e");
       // Revert the state change if it fails

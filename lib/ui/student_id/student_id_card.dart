@@ -70,7 +70,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
     ScalingUtility().getCurrentMeasurements(context);
 
     return CardContainer(
-      active: Provider.of<CardsDataProvider>(context).cardStates[CARD_ID],
+      active: context.select((CardsDataProvider p) => p.cardStates[CARD_ID] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(CARD_ID),
       reload: () => Provider.of<StudentIdDataProvider>(context, listen: false).fetchData(),
       isLoading: Provider.of<StudentIdDataProvider>(context).isLoading,
