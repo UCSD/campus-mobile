@@ -1,6 +1,7 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'user_profile.dart';
 
-// GENERATED CODE - DO NOT MODIFY BY HAND
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
@@ -23,13 +24,14 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       selectedParkingLots: (fields[4] as Map?)?.cast<String?, bool>(),
       selectedStops: (fields[5] as List?)?.cast<int?>(),
       surveyCompletion: (fields[6] as List?)?.cast<String>(),
+      selectedVentilationLocations: (fields[7] as List?)?.cast<String?>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserProfileModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.selectedLots)
       ..writeByte(1)
@@ -43,7 +45,9 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       ..writeByte(5)
       ..write(obj.selectedStops)
       ..writeByte(6)
-      ..write(obj.surveyCompletion);
+      ..write(obj.surveyCompletion)
+      ..writeByte(7)
+      ..write(obj.selectedVentilationLocations);
   }
 
   @override

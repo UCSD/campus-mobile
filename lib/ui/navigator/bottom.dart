@@ -9,6 +9,7 @@ import 'package:campus_mobile_experimental/ui/notifications/notifications_list_v
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/ui/tgpt/tgpt.dart';
 
 // ---saved scroll offsets for Home Screen---
 var _homeScrollOffset = 0.0;
@@ -31,6 +32,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
   var currentTab = [
     Home(),
     prefix0.Maps(),
+    ChatPage(),
     NotificationsListView(),
     Profile(),
   ];
@@ -43,7 +45,9 @@ class _BottomTabBarState extends State<BottomTabBar> {
     return Scaffold(
       drawerScrimColor: Colors.transparent,
       backgroundColor: provider.currentIndex == 0 ? lightPrimaryColor : theme.scaffoldBackgroundColor,
-      appBar: PreferredSize(preferredSize: Size.fromHeight(50), child: Provider.of<CustomAppBar>(context).appBar),
+      appBar: provider.currentIndex == 2
+          ? null
+          : PreferredSize(preferredSize: Size.fromHeight(50), child: Provider.of<CustomAppBar>(context).appBar),
       body: PushNotificationWrapper(child: currentTab[provider.currentIndex]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -71,6 +75,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
                 resetAllCardLoadedStates();
                 Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
                 break;
+              case NavigatorConstants.CHAT_TAB:
+                resetAllCardLoadedStates();
+                Provider.of<CustomAppBar>(context, listen: false).changeTitle("AI Assistant");
+                break;
               case NavigatorConstants.NOTIFICATIONS_TAB:
                 resetAllCardLoadedStates();
                 Provider.of<CustomAppBar>(context, listen: false)
@@ -92,11 +100,21 @@ class _BottomTabBarState extends State<BottomTabBar> {
               label: 'MAP',
             ),
             BottomNavigationBarItem(
-              icon: _buildIcon(Icons.notifications, provider.currentIndex == 2, theme),
+              icon: _buildIcon(
+                'assets/images/tgpt/center-icon.png',
+                provider.currentIndex == 2,
+                theme,
+                isImage: true,
+                size: 30,
+              ),
+              label: 'AI Assistant',
+            ),
+            BottomNavigationBarItem(
+              icon: _buildIcon(Icons.notifications, provider.currentIndex == 3, theme),
               label: 'NOTIFICATIONS',
             ),
             BottomNavigationBarItem(
-              icon: _buildIcon(Icons.person, provider.currentIndex == 3, theme, size: 38),
+              icon: _buildIcon(Icons.person, provider.currentIndex == 4, theme, size: 38),
               label: 'PROFILE',
             ),
           ],
@@ -114,7 +132,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
   }
 
 // Build bottom navigator icons
-  Widget _buildIcon(IconData icon, bool isSelected, ThemeData theme, {double size = 34}) {
+  Widget _buildIcon(dynamic icon, bool isSelected, ThemeData theme, {double size = 34, bool isImage = false}) {
     return Container(
       height: 34,
       margin: EdgeInsets.only(top: size == 34 ? 4 : 2),
@@ -123,13 +141,22 @@ class _BottomTabBarState extends State<BottomTabBar> {
         color: isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
         borderRadius: BorderRadius.circular(34),
       ),
-      child: Icon(
-        icon,
-        size: size,
-        color: isSelected
-            ? theme.bottomNavigationBarTheme.selectedItemColor
-            : theme.bottomNavigationBarTheme.unselectedItemColor,
-      ),
+      child: isImage
+          ? Image.asset(
+              icon as String,
+              width: size,
+              height: size,
+              color: isSelected
+                  ? theme.bottomNavigationBarTheme.selectedItemColor
+                  : theme.bottomNavigationBarTheme.unselectedItemColor,
+            )
+          : Icon(
+              icon as IconData,
+              size: size,
+              color: isSelected
+                  ? theme.bottomNavigationBarTheme.selectedItemColor
+                  : theme.bottomNavigationBarTheme.unselectedItemColor,
+            ),
     );
   }
 }

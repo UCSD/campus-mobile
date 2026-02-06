@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
+import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_persistence.dart'; // tgpt code
 import 'package:campus_mobile_experimental/core/services/user.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:encrypt/encrypt.dart';
@@ -19,6 +20,20 @@ import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserDataProvider extends ChangeNotifier {
+  // --- tgpt - dev tools - blue button - start ---
+  static UserDataProvider fakeGuest() {
+    final provider = UserDataProvider();
+    provider._authenticationModel = AuthenticationModel.fromJson({});
+    return provider;
+  }
+
+  static UserDataProvider fakeLoggedIn(String token) {
+    final provider = UserDataProvider();
+    provider._authenticationModel = AuthenticationModel.fromJson({"access_token": token});
+    return provider;
+  }
+
+  // --- tgpt - dev tools - blue button - finish ---
   /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
@@ -127,6 +142,8 @@ class UserDataProvider extends ChangeNotifier {
     _userProfileModel = tempUserProfile;
     _subscribeToPushNotificationTopics(_userProfileModel.subscribedTopics!.whereType<String>().toList());
     notifyListeners();
+    final chatPersistence = ChatPersistenceService(this);
+    await chatPersistence.clearUserChatData();
   }
 
   /// Save encrypted password to device

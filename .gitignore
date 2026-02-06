@@ -123,3 +123,7 @@ android/app/google-services.json
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+# TGPT dev tools 
+lib/ui/tgpt/dev_tools/
+lib/core/services/tgpt_services/dev_tools_services/

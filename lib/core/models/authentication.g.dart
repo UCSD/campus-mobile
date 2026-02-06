@@ -1,6 +1,7 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'authentication.dart';
 
-// GENERATED CODE - DO NOT MODIFY BY HAND
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************

@@ -16,23 +16,28 @@ dependencies:
   firebase_messaging: ^16.1.0
   flutter:
     sdk: flutter
+  flutter_chat_ui: ^1.6.15 # tgpt 
   flutter_dotenv:
     git:
       url: https://github.com/UCSD/flutter_dotenv.git
       ref: master
   flutter_linkify: 6.0.0
   flutter_local_notifications: ^19.5.0
+  flutter_markdown: ^0.6.18 # tgpt 
   flutter_secure_storage: ^9.2.4
   flutter_sticky_header: ^0.8.0
+  flutter_svg: ^2.0.7 # tgpt 
   get: 4.7.2
   google_maps_flutter: ^2.14.0
   hive: 2.2.3
   hive_flutter: 1.1.0
+  http: ^1.1.0
   intl: ^0.20.2
   liquid_progress_indicator_v2: 0.5.0
   measured_size: 1.0.0
   geolocator: ^13.0.4
   package_info_plus: ^8.3.1
+  path_provider: ^2.0.15 # tgpt 
   percent_indicator: ^4.2.5
   permission_handler: ^12.0.1
   pointycastle: ^3.9.0
@@ -50,16 +55,27 @@ dependency_overrides:
   google_maps_flutter_ios: 2.15.7
   value_layout_builder: ^0.5.0 # Fix Flutter 3.32.0 compatibility
 dev_dependencies:
+  analyzer: ^6.4.1 # tgpt - chat_message_persistent.g.dart - build_runner needs Dart‑3 analyzer for .g.dart
   build_runner: 2.4.13
   flutter_test:
     sdk: flutter
-  hive_generator: 1.1.3
+  hive_generator: ^2.0.1 # tgpt - upgrade for persistent.g.dart - analyzer ^10.0.2 & hive_generator 1.1.3 incompatibility
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
     - assets/images/onboarding/
     - .env
+    - assets/images/tgpt/center-icon.png
+    - assets/images/tgpt/document_icon.svg
+    - assets/images/tgpt/new_chat_icon.svg
+    - assets/images/tgpt/new_chat2.svg
+    - assets/images/tgpt/pin-sidebar.svg
+    - assets/images/tgpt/send-message.svg
+    - assets/images/tgpt/tgpt-icon.png
+    - assets/images/tgpt/tritongpt-header.svg
+    - assets/images/tgpt/unpin-sidebar.svg
+    - assets/images/tgpt/uc-san-diego-assistant.svg
   fonts:
     - family: Refrigerator Deluxe
       fonts:
