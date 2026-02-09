@@ -21,7 +21,7 @@ style: Theme.of(context).brightness == Brightness.dark
 const Color lightPrimaryColor = Color(0xFF182B49);
 const Color darkPrimaryColor = Color(0xFF333333);
 const Color darkPrimaryColor2 = Color(0xFFF5F0E6);
-const Color darkPrimaryBgColor = Color(0xff1D1D1D);
+const Color darkPrimaryBgColor = Color(0xFFFF0000);
 
 const Color secondaryColorLight = Color(0xFF182B49);
 const Color secondaryColorDark = Color(0xFF5496BC);
@@ -308,7 +308,7 @@ const Color bottomTabBarColorDark = Color(0xFF404142);
 const Color lightTextFieldBorderColor = Color(0xFFFFFFFF);
 
 // Accent colors for themes
-const Color lightAccentColor = Color(0xFFFFFFFF);
+const Color lightAccentColor = Color(0xFFFF0000);
 const Color darkAccentColor = Color(0xFF333333);
 
 // Universal color for themes
