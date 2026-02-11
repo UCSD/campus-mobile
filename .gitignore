@@ -31,7 +31,6 @@
 build/
 
 # Generated dart files
-*.g.dart
 *.freezed.dart
 *.mocks.dart
 *.config.dart
