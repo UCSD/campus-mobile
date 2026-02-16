@@ -22,10 +22,13 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  bool _didInitChatSession = false;
+
   // ---------- Composer ----------
   void _sendFromComposer() {
     final text = _textController.text.trim();
     if (text.isEmpty) return;
+    FocusScope.of(context).unfocus();
     _textController.clear();
     setState(() {}); // refresh send button disabled state
     _handleSendPressed(types.PartialText(text: text));
@@ -300,7 +303,10 @@ class _ChatPageState extends State<ChatPage> {
       _persistenceService = null;
     }
 
-    _initializeChatSession();
+    if (!_didInitChatSession) {
+      _didInitChatSession = true;
+      _initializeChatSession();
+    }
   }
 
   Future<void> _initializeChatSession() async {
@@ -374,6 +380,7 @@ class _ChatPageState extends State<ChatPage> {
                     onSubmitted: (_) {
                       if (canSend) _sendFromComposer();
                     },
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   ),
                 ),
               ),
@@ -700,6 +707,7 @@ class _ChatPageState extends State<ChatPage> {
 
 // ---------- Send Flow ----------
   void _handleSendPressed(types.PartialText message) async {
+    FocusScope.of(context).unfocus();
     final missingSessionId = _currentSessionId == null || _currentSessionId!.isEmpty;
     if (missingSessionId) {
       ScaffoldMessenger.of(context).showSnackBar(
