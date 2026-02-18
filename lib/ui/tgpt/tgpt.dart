@@ -50,6 +50,7 @@ class _ChatPageState extends State<ChatPage> {
   ChatPersistenceService? _persistenceService;
 
   // ---------- Sidebar ----------
+  static const double _sidebarWidth = 300;
   bool _isSidebarOpen = false;
   void _toggleSidebar() {
     setState(() => _isSidebarOpen = !_isSidebarOpen);
@@ -632,19 +633,25 @@ class _ChatPageState extends State<ChatPage> {
           ),
           if (_isSidebarOpen)
             Positioned.fill(
-              child: Stack(
-                children: [
-                  Container(color: const Color(0xFF000000).withOpacity(0.04)),
-                  SideSlider(
-                    isOpen: _isSidebarOpen,
-                    onClose: _closeSidebar,
-                    width: 300,
-                    onNewChat: _createNewSessionAndSwitch,
-                    onSelectSession: _switchToSession,
-                    sessions: _sessions,
-                    isLoggedIn: _userDataProvider.isLoggedIn,
-                  ),
-                ],
+              child: Listener(
+                behavior: HitTestBehavior.translucent,
+                onPointerDown: (e) {
+                  if (e.position.dx > _sidebarWidth) _closeSidebar();
+                },
+                child: Stack(
+                  children: [
+                    Container(color: const Color(0xFF000000).withOpacity(0.04)),
+                    SideSlider(
+                      isOpen: _isSidebarOpen,
+                      onClose: _closeSidebar,
+                      width: _sidebarWidth,
+                      onNewChat: _createNewSessionAndSwitch,
+                      onSelectSession: _switchToSession,
+                      sessions: _sessions,
+                      isLoggedIn: _userDataProvider.isLoggedIn,
+                    ),
+                  ],
+                ),
               ),
             ),
         ],
