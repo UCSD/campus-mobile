@@ -482,6 +482,7 @@ class _ChatPageState extends State<ChatPage> {
                         (!isUser) ? (message.metadata?['rqs'] as List?)?.cast<String>() ?? const [] : const [];
                     final String displayText =
                         (!isUser) ? (message.metadata?['display_text'] as String?) ?? message.text : message.text;
+                    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
                     final content = MarkdownBody(
                       data: displayText,
                       styleSheet: MarkdownStyleSheet(
@@ -543,7 +544,13 @@ class _ChatPageState extends State<ChatPage> {
                                             runSpacing: 8,
                                             children: rqs
                                                 .map((q) => ActionChip(
-                                                      label: Text(q, style: const TextStyle(fontSize: 13)),
+                                                      label: Text(
+                                                        q,
+                                                        style: TextStyle(
+                                                          fontSize: 13,
+                                                          color: isDarkMode ? const Color(0xFF182B49) : null,
+                                                        ),
+                                                      ),
                                                       onPressed: () => _onTapRelatedQuestion(q),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       elevation: 0,
