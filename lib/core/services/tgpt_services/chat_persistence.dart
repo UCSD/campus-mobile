@@ -15,7 +15,12 @@ class ChatPersistenceService {
 
   ChatPersistenceService(this._userDataProvider);
 
-  String get _userKey => _userDataProvider.authenticationModel.accessToken?.hashCode.toString() ?? 'unknown';
+  String get _userKey {
+    final auth = _userDataProvider.authenticationModel;
+    final profile = _userDataProvider.userProfileModel;
+    final stableId = auth.pid ?? profile.pid ?? profile.username;
+    return stableId?.isNotEmpty == true ? stableId! : auth.accessToken?.hashCode.toString() ?? 'unknown';
+  }
 
   String get _historyBoxName => '$CHAT_HISTORY_BOX_PREFIX$_userKey';
 

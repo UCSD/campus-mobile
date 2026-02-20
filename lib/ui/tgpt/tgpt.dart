@@ -13,8 +13,8 @@ import 'slider.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_history.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_persistence.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-// import './dev_tools/blue_button.dart'; // Blue-button diagnostics (disable by commenting out)
-// import './dev_tools/red_button.dart'; // Red-button diagnostics (disable by commenting out)
+import './dev_tools/blue_button.dart'; // Blue-button diagnostics (disable by commenting out)
+import './dev_tools/red_button.dart'; // Red-button diagnostics (disable by commenting out)
 
 class ChatPage extends StatefulWidget {
   @override
@@ -191,6 +191,11 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _createNewSessionAndSwitch() async {
     await _persistCurrentSessionMessages();
 
+    final hasMessages = _messages.isNotEmpty;
+    final hasDraft = _textController.text.trim().isNotEmpty;
+    final hasSession = _currentSessionId != null && _currentSessionId!.isNotEmpty;
+    if (hasSession && !hasMessages && !hasDraft) return;
+
     final session = await _chatSessionService.createChatSession();
     if (session == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -318,7 +323,28 @@ class _ChatPageState extends State<ChatPage> {
         await _loadDocumentsIndex();
 
         if (_sessions.isEmpty) {
-          await _createNewSessionAndSwitch();
+          final lastSessionId = await _persistenceService!.loadSessionId();
+          final hasLastSessionId = lastSessionId != null && lastSessionId.isNotEmpty;
+          if (hasLastSessionId) {
+            final msgs = await _persistenceService!.loadMessagesForSession(lastSessionId!);
+            final now = DateTime.now();
+            final meta = ChatSessionMeta(
+              id: lastSessionId,
+              title: 'New Chat',
+              createdAt: now,
+              updatedAt: now,
+            );
+            _sessions.insert(0, meta);
+            await _persistSessionsIndex();
+            setState(() {
+              _currentSessionId = lastSessionId;
+              _messages
+                ..clear()
+                ..addAll(msgs);
+            });
+          } else {
+            await _createNewSessionAndSwitch();
+          }
         } else {
           await _switchToSession(_sessions.first.id);
         }
@@ -455,8 +481,8 @@ class _ChatPageState extends State<ChatPage> {
                       onPressed: _toggleSidebar,
                     ),
                     const Spacer(),
-                    // LimitTestButton(), // Blue-button diagnostics (disable by commenting out)
-                    // RedDebugButton(), // Red-button diagnostics (disable by commenting out)
+                    LimitTestButton(), // Blue-button diagnostics (disable by commenting out)
+                    RedDebugButton(), // Red-button diagnostics (disable by commenting out)
                     IconButton(
                       icon: SvgPicture.asset(
                         'assets/images/tgpt/new_chat2.svg',
