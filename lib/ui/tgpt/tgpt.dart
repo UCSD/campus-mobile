@@ -13,8 +13,8 @@ import 'slider.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_history.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_persistence.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import './dev_tools/blue_button.dart'; // Blue-button diagnostics (disable by commenting out)
-import './dev_tools/red_button.dart'; // Red-button diagnostics (disable by commenting out)
+// import './dev_tools/blue_button.dart'; // Blue-button diagnostics (disable by commenting out)
+// import './dev_tools/red_button.dart'; // Red-button diagnostics (disable by commenting out)
 
 class ChatPage extends StatefulWidget {
   @override
@@ -481,8 +481,8 @@ class _ChatPageState extends State<ChatPage> {
                       onPressed: _toggleSidebar,
                     ),
                     const Spacer(),
-                    LimitTestButton(), // Blue-button diagnostics (disable by commenting out)
-                    RedDebugButton(), // Red-button diagnostics (disable by commenting out)
+                    // LimitTestButton(), // Blue-button diagnostics (disable by commenting out)
+                    // RedDebugButton(), // Red-button diagnostics (disable by commenting out)
                     IconButton(
                       icon: SvgPicture.asset(
                         'assets/images/tgpt/new_chat2.svg',
