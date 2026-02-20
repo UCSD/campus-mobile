@@ -509,27 +509,29 @@ class _ChatPageState extends State<ChatPage> {
                     final String displayText =
                         (!isUser) ? (message.metadata?['display_text'] as String?) ?? message.text : message.text;
                     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-                    final content = MarkdownBody(
-                      data: displayText,
-                      styleSheet: MarkdownStyleSheet(
-                        p: TextStyle(
-                          fontFamily: 'Brix Sans',
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w400,
-                          color: isUser ? Color(0xFF182B49) : Color(0xFF182B49),
-                          height: 1.35,
+                    final content = SelectionArea(
+                      child: MarkdownBody(
+                        data: displayText,
+                        styleSheet: MarkdownStyleSheet(
+                          p: TextStyle(
+                            fontFamily: 'Brix Sans',
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w400,
+                            color: isUser ? Color(0xFF182B49) : Color(0xFF182B49),
+                            height: 1.35,
+                          ),
+                          strong: TextStyle(
+                            fontFamily: 'Brix Sans',
+                            fontWeight: FontWeight.w600,
+                            color: isUser ? Color(0xFF182B49) : Color(0xFF182B49),
+                            fontSize: 15.0,
+                          ),
                         ),
-                        strong: TextStyle(
-                          fontFamily: 'Brix Sans',
-                          fontWeight: FontWeight.w600,
-                          color: isUser ? Color(0xFF182B49) : Color(0xFF182B49),
-                          fontSize: 15.0,
+                        builders: {'citation': CitationMarkdownBuilder(isUser: isUser)},
+                        extensionSet: md.ExtensionSet(
+                          md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                          [CitationInlineSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
                         ),
-                      ),
-                      builders: {'citation': CitationMarkdownBuilder(isUser: isUser)},
-                      extensionSet: md.ExtensionSet(
-                        md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-                        [CitationInlineSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
                       ),
                     );
                     if (!isUser) {
