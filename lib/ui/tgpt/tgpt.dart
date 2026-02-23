@@ -737,7 +737,7 @@ class _ChatPageState extends State<ChatPage> {
                 },
                 child: Stack(
                   children: [
-                    Container(color: const Color(0xFF000000).withOpacity(0.04)),
+                    Container(color: const Color(0xFF000000).withOpacity(0.10)),
                     SideSlider(
                       isOpen: _isSidebarOpen,
                       onClose: _closeSidebar,

@@ -48,8 +48,8 @@ class SideSlider extends StatelessWidget {
           if (isOpen)
             Positioned.fill(
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
-                child: Container(color: const Color(0xFFD5D5D5).withOpacity(0.14)),
+                filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                child: Container(color: const Color(0xFFD5D5D5).withOpacity(0.20)),
               ),
             ),
           AnimatedPositioned(
