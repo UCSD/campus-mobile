@@ -133,30 +133,39 @@ class _BottomTabBarState extends State<BottomTabBar> {
 
 // Build bottom navigator icons
   Widget _buildIcon(dynamic icon, bool isSelected, ThemeData theme, {double size = 34, bool isImage = false}) {
-    return Container(
-      height: 34,
-      margin: EdgeInsets.only(top: size == 34 ? 4 : 2),
-      padding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
-      decoration: BoxDecoration(
-        color: isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
-        borderRadius: BorderRadius.circular(34),
+    final isStandardSize = size == 34;
+    final isIOS = theme.platform == TargetPlatform.iOS;
+    final containerHeight = isIOS ? 36.0 : 42.0;
+    final topMargin = isIOS ? (isStandardSize ? 2.0 : 0.0) : (isStandardSize ? 8.0 : 6.0);
+    final verticalPadding = isIOS ? 1.0 : 3.0;
+    final containerShift = isIOS ? 3.5 : 0.0;
+    return Transform.translate(
+      offset: Offset(0, containerShift),
+      child: Container(
+        height: containerHeight,
+        margin: EdgeInsets.only(top: topMargin),
+        padding: EdgeInsets.only(left: 16, right: 16, top: verticalPadding, bottom: verticalPadding),
+        decoration: BoxDecoration(
+          color: isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
+          borderRadius: BorderRadius.circular(34),
+        ),
+        child: isImage
+            ? Image.asset(
+                icon as String,
+                width: size,
+                height: size,
+                color: isSelected
+                    ? theme.bottomNavigationBarTheme.selectedItemColor
+                    : theme.bottomNavigationBarTheme.unselectedItemColor,
+              )
+            : Icon(
+                icon as IconData,
+                size: size,
+                color: isSelected
+                    ? theme.bottomNavigationBarTheme.selectedItemColor
+                    : theme.bottomNavigationBarTheme.unselectedItemColor,
+              ),
       ),
-      child: isImage
-          ? Image.asset(
-              icon as String,
-              width: size,
-              height: size,
-              color: isSelected
-                  ? theme.bottomNavigationBarTheme.selectedItemColor
-                  : theme.bottomNavigationBarTheme.unselectedItemColor,
-            )
-          : Icon(
-              icon as IconData,
-              size: size,
-              color: isSelected
-                  ? theme.bottomNavigationBarTheme.selectedItemColor
-                  : theme.bottomNavigationBarTheme.unselectedItemColor,
-            ),
     );
   }
 }
