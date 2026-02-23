@@ -428,10 +428,10 @@ class _ChatPageState extends State<ChatPage> {
                     focusNode: _composerFocus,
                     minLines: 1,
                     maxLines: 4,
-                    style: const TextStyle(fontSize: 14, color: Color(0xFF182B49), fontWeight: FontWeight.w400),
+                    style: const TextStyle(fontSize: 18, color: Color(0xFF182B49), fontWeight: FontWeight.w400),
                     decoration: const InputDecoration(
                       hintText: 'Talk with UC San Diego Assistant...',
-                      hintStyle: TextStyle(fontSize: 14, color: Color(0xFF757575), fontWeight: FontWeight.w400),
+                      hintStyle: TextStyle(fontSize: 18, color: Color(0xFF757575), fontWeight: FontWeight.w400),
                       border: InputBorder.none,
                     ),
                     onChanged: (_) => setState(() {}),
