@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_session_creation.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_stream.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_feedback.dart';
@@ -62,12 +62,43 @@ class _ChatPageState extends State<ChatPage> {
 
   final _textController = TextEditingController();
   final _composerFocus = FocusNode();
+  final _messagesScrollController = ScrollController();
+  final Map<String, GlobalKey> _messageKeys = {};
 
   @override
   void dispose() {
     _textController.dispose();
     _composerFocus.dispose();
+    _messagesScrollController.dispose();
     super.dispose();
+  }
+
+  GlobalKey _messageKey(String id) => _messageKeys.putIfAbsent(id, GlobalKey.new);
+
+  void _scrollMessageToTop(String messageId, {int attempt = 0}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final key = _messageKeys[messageId];
+      final ctx = key?.currentContext;
+      final renderObject = ctx?.findRenderObject();
+      if (renderObject == null || !_messagesScrollController.hasClients) {
+        if (attempt < 8) {
+          Future.delayed(const Duration(milliseconds: 16), () {
+            if (mounted) _scrollMessageToTop(messageId, attempt: attempt + 1);
+          });
+        }
+        return;
+      }
+      final viewport = RenderAbstractViewport.of(renderObject);
+      final target = viewport.getOffsetToReveal(renderObject, 0.0).offset.clamp(
+            _messagesScrollController.position.minScrollExtent,
+            _messagesScrollController.position.maxScrollExtent,
+          );
+      _messagesScrollController.animateTo(
+        target.toDouble(),
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   // ---------- Utils ----------
@@ -436,6 +467,201 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  Widget _buildEmptyState() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/images/tgpt/uc-san-diego-assistant.svg',
+              height: 24,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'This assistant has access to campus information.',
+              style: TextStyle(
+                color: Color(0xFF757575),
+                fontFamily: 'Brix Sans',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildTextMessage(BuildContext context, types.TextMessage message) {
+    final isUser = message.author.id == _user.id;
+    final List<String> rqs = (!isUser) ? (message.metadata?['rqs'] as List?)?.cast<String>() ?? const [] : const [];
+    final String displayText =
+        (!isUser) ? (message.metadata?['display_text'] as String?) ?? message.text : message.text;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final content = SelectionArea(
+      child: MarkdownBody(
+        data: displayText,
+        styleSheet: MarkdownStyleSheet(
+          p: const TextStyle(
+            fontFamily: 'Brix Sans',
+            fontSize: 15.0,
+            fontWeight: FontWeight.w400,
+            color: Color(0xFF182B49),
+            height: 1.35,
+          ),
+          strong: const TextStyle(
+            fontFamily: 'Brix Sans',
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF182B49),
+            fontSize: 15.0,
+          ),
+        ),
+        builders: {'citation': CitationMarkdownBuilder(isUser: isUser)},
+        extensionSet: md.ExtensionSet(
+          md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+          [CitationInlineSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
+        ),
+      ),
+    );
+
+    if (!isUser) {
+      final isFinalized = message.metadata != null && message.metadata!['message_id'] != null;
+      int chatMessageId = 0;
+      if (isFinalized) {
+        chatMessageId = message.metadata!['message_id'] is int
+            ? message.metadata!['message_id'] as int
+            : int.tryParse(message.metadata!['message_id'].toString()) ?? 0;
+      }
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset('assets/images/tgpt/tgpt-icon.png', width: 22, height: 22, fit: BoxFit.contain),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  content,
+                  if (rqs.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    Container(height: 1, color: const Color(0xFFE6E6E6)),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Related Questions',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF182B49))),
+                          const SizedBox(height: 6),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: rqs
+                                .map((q) => ActionChip(
+                                      label: Text(
+                                        q,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: isDarkMode ? const Color(0xFF182B49) : null,
+                                        ),
+                                      ),
+                                      onPressed: () => _onTapRelatedQuestion(q),
+                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      elevation: 0,
+                                      backgroundColor: const Color(0xFFF3F4F6),
+                                    ))
+                                .toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  if (isFinalized)
+                    FeedbackRow(
+                      initialUp: message.metadata?['thumbs_up'] == true,
+                      initialDown: message.metadata?['thumbs_down'] == true,
+                      onSend: (isPositive) async {
+                        final ok = await _chatFeedbackService.sendFeedback(
+                          chatMessageId: chatMessageId,
+                          isPositive: isPositive,
+                        );
+                        final canUpdate = ok && mounted;
+                        if (canUpdate) {
+                          final idx = _messages.indexWhere((m) => m.id == message.id);
+                          final isTextMessage = idx >= 0 && _messages[idx] is types.TextMessage;
+                          if (isTextMessage) {
+                            final oldMsg = _messages[idx] as types.TextMessage;
+                            final newMeta = Map<String, dynamic>.from(oldMsg.metadata ?? {});
+                            newMeta['thumbs_up'] = isPositive;
+                            newMeta['thumbs_down'] = !isPositive;
+                            _persistenceService?.saveMessagesForSession(_currentSessionId!, [
+                              for (var i = 0; i < _messages.length; i++)
+                                if (i == idx) oldMsg.copyWith(metadata: newMeta) else _messages[i],
+                            ]);
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Thanks for your feedback! 👍'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                        return ok;
+                      },
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF3F4F6),
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: content,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessagesPane(BuildContext context) {
+    if (_messages.isEmpty) return _buildEmptyState();
+
+    final ordered = _messages.reversed.toList(growable: false);
+    // Keep enough trailing space so the newest prompt can be truly anchored at
+    // the top even when it is near the end of the list.
+    final anchorBottomSpace = MediaQuery.of(context).size.height * 0.95;
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: ListView(
+        controller: _messagesScrollController,
+        padding: const EdgeInsets.only(top: 8, bottom: 8),
+        children: [
+          for (final message in ordered)
+            if (message is types.TextMessage)
+              KeyedSubtree(
+                key: _messageKey(message.id),
+                child: _buildTextMessage(context, message),
+              ),
+          SizedBox(height: anchorBottomSpace),
+        ],
+      ),
+    );
+  }
+
   // ---------- UI ----------
   @override
   Widget build(BuildContext context) {
@@ -497,173 +723,9 @@ class _ChatPageState extends State<ChatPage> {
                 ),
               ),
               Expanded(
-                child: Chat(
-                  messages: _messages,
-                  onSendPressed: _handleSendPressed,
-                  user: _user,
-                  customBottomWidget: _buildComposer(context),
-                  textMessageBuilder: (types.TextMessage message, {required int messageWidth, required bool showName}) {
-                    final isUser = message.author.id == _user.id;
-                    final List<String> rqs =
-                        (!isUser) ? (message.metadata?['rqs'] as List?)?.cast<String>() ?? const [] : const [];
-                    final String displayText =
-                        (!isUser) ? (message.metadata?['display_text'] as String?) ?? message.text : message.text;
-                    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-                    final content = SelectionArea(
-                      child: MarkdownBody(
-                        data: displayText,
-                        styleSheet: MarkdownStyleSheet(
-                          p: TextStyle(
-                            fontFamily: 'Brix Sans',
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w400,
-                            color: isUser ? Color(0xFF182B49) : Color(0xFF182B49),
-                            height: 1.35,
-                          ),
-                          strong: TextStyle(
-                            fontFamily: 'Brix Sans',
-                            fontWeight: FontWeight.w600,
-                            color: isUser ? Color(0xFF182B49) : Color(0xFF182B49),
-                            fontSize: 15.0,
-                          ),
-                        ),
-                        builders: {'citation': CitationMarkdownBuilder(isUser: isUser)},
-                        extensionSet: md.ExtensionSet(
-                          md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-                          [CitationInlineSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
-                        ),
-                      ),
-                    );
-                    if (!isUser) {
-                      final isFinalized = message.metadata != null && message.metadata!['message_id'] != null;
-                      int chatMessageId = 0;
-                      if (isFinalized) {
-                        chatMessageId = message.metadata!['message_id'] is int
-                            ? message.metadata!['message_id'] as int
-                            : int.tryParse(message.metadata!['message_id'].toString()) ?? 0;
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.asset('assets/images/tgpt/tgpt-icon.png', width: 22, height: 22, fit: BoxFit.contain),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  content,
-                                  if (rqs.isNotEmpty) ...[
-                                    const SizedBox(height: 10),
-                                    Container(height: 1, color: const Color(0xFFE6E6E6)),
-                                    const SizedBox(height: 10),
-                                    Container(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Related Questions',
-                                              style: TextStyle(
-                                                  fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF182B49))),
-                                          const SizedBox(height: 6),
-                                          Wrap(
-                                            spacing: 8,
-                                            runSpacing: 8,
-                                            children: rqs
-                                                .map((q) => ActionChip(
-                                                      label: Text(
-                                                        q,
-                                                        style: TextStyle(
-                                                          fontSize: 13,
-                                                          color: isDarkMode ? const Color(0xFF182B49) : null,
-                                                        ),
-                                                      ),
-                                                      onPressed: () => _onTapRelatedQuestion(q),
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      elevation: 0,
-                                                      backgroundColor: Color(0xFFF3F4F6),
-                                                    ))
-                                                .toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                  if (isFinalized)
-                                    FeedbackRow(
-                                      initialUp: message.metadata?['thumbs_up'] == true,
-                                      initialDown: message.metadata?['thumbs_down'] == true,
-                                      onSend: (isPositive) async {
-                                        final ok = await _chatFeedbackService.sendFeedback(
-                                          chatMessageId: chatMessageId,
-                                          isPositive: isPositive,
-                                        );
-                                        final canUpdate = ok && mounted;
-                                        if (canUpdate) {
-                                          final idx = _messages.indexWhere((m) => m.id == message.id);
-                                          final isTextMessage = idx >= 0 && _messages[idx] is types.TextMessage;
-                                          if (isTextMessage) {
-                                            final oldMsg = _messages[idx] as types.TextMessage;
-                                            final newMeta = Map<String, dynamic>.from(oldMsg.metadata ?? {});
-                                            newMeta['thumbs_up'] = isPositive;
-                                            newMeta['thumbs_down'] = !isPositive;
-                                            _persistenceService?.saveMessagesForSession(_currentSessionId!, [
-                                              for (var i = 0; i < _messages.length; i++)
-                                                if (i == idx) oldMsg.copyWith(metadata: newMeta) else _messages[i],
-                                            ]);
-                                          }
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                                content: Text('Thanks for your feedback! 👍'),
-                                                duration: Duration(seconds: 2)),
-                                          );
-                                        }
-                                        return ok;
-                                      },
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: content,
-                    );
-                  },
-                  theme: DefaultChatTheme(
-                    backgroundColor: const Color(0xFFFFFFFF),
-                    messageBorderRadius: 16,
-                    messageInsetsHorizontal: 32,
-                    messageInsetsVertical: 48,
-                    primaryColor: const Color(0xFFF3F4F6),
-                    secondaryColor: Colors.white,
-                    sentMessageBodyTextStyle: const TextStyle(color: Colors.black, fontSize: 15),
-                    receivedMessageBodyTextStyle: const TextStyle(color: Colors.black87, fontSize: 15),
-                  ),
-                  emptyState: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/images/tgpt/uc-san-diego-assistant.svg',
-                          height: 24,
-                        ),
-                        const SizedBox(height: 8),
-                        const Text('This assistant has access to campus information.',
-                            style: TextStyle(
-                                color: Color(0xFF757575),
-                                fontFamily: 'Brix Sans',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14)),
-                      ],
-                    ),
-                  ),
-                ),
+                child: _buildMessagesPane(context),
               ),
+              _buildComposer(context),
             ],
           ),
           if (_isSidebarOpen)
@@ -783,6 +845,10 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     setState(() => _messages.insert(0, placeholder));
+    _scrollMessageToTop(userMessage.id);
+    Future.delayed(const Duration(milliseconds: 120), () {
+      if (mounted) _scrollMessageToTop(userMessage.id);
+    });
     var lastPaint = DateTime.now();
     var finalized = false;
     int? streamMessageId;
