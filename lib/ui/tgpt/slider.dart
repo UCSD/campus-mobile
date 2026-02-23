@@ -71,33 +71,59 @@ class SideSlider extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         children: [
                           _sectionHeader('Chats', color: Color(0xFF182B49), fontWeight: FontWeight.w700),
-                          if (prev7.isNotEmpty)
-                            _ChatsGroup(
-                              title: 'Previous 7 Days',
-                              items: prev7.map((s) => _ChatItemData(id: s.id, title: s.title)).toList(),
-                              onTap: (id) {
-                                onSelectSession(id);
-                                onClose();
-                              },
+                          if (isLoggedIn) ...[
+                            if (prev7.isNotEmpty)
+                              _ChatsGroup(
+                                title: 'Previous 7 Days',
+                                items: prev7.map((s) => _ChatItemData(id: s.id, title: s.title)).toList(),
+                                onTap: (id) {
+                                  onSelectSession(id);
+                                  onClose();
+                                },
+                                initiallyExpanded: true,
+                              ),
+                            if (prev30.isNotEmpty)
+                              _ChatsGroup(
+                                title: 'Previous 30 Days',
+                                items: prev30.map((s) => _ChatItemData(id: s.id, title: s.title)).toList(),
+                                onTap: (id) {
+                                  onSelectSession(id);
+                                  onClose();
+                                },
+                                initiallyExpanded: true,
+                              ),
+                            if (older.isNotEmpty)
+                              _ChatsGroup(
+                                title: 'Older',
+                                items: older.map((s) => _ChatItemData(id: s.id, title: s.title)).toList(),
+                                onTap: (id) {
+                                  onSelectSession(id);
+                                  onClose();
+                                },
+                                initiallyExpanded: true,
+                              ),
+                          ] else ...[
+                            ...sessions.map(
+                              (s) => ListTile(
+                                dense: true,
+                                visualDensity: const VisualDensity(vertical: -4),
+                                contentPadding: const EdgeInsets.only(left: 24, right: 16),
+                                title: Text(
+                                  s.title,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xFF6A6B6D),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                onTap: () {
+                                  onSelectSession(s.id);
+                                  onClose();
+                                },
+                              ),
                             ),
-                          if (prev30.isNotEmpty)
-                            _ChatsGroup(
-                              title: 'Previous 30 Days',
-                              items: prev30.map((s) => _ChatItemData(id: s.id, title: s.title)).toList(),
-                              onTap: (id) {
-                                onSelectSession(id);
-                                onClose();
-                              },
-                            ),
-                          if (older.isNotEmpty)
-                            _ChatsGroup(
-                              title: 'Older',
-                              items: older.map((s) => _ChatItemData(id: s.id, title: s.title)).toList(),
-                              onTap: (id) {
-                                onSelectSession(id);
-                                onClose();
-                              },
-                            ),
+                          ],
                           const SizedBox(height: 16),
                         ],
                       ),
@@ -198,14 +224,26 @@ class _ChatsGroup extends StatefulWidget {
   final String title;
   final List<_ChatItemData> items;
   final void Function(String id) onTap;
-  const _ChatsGroup({required this.title, required this.items, required this.onTap});
+  final bool initiallyExpanded;
+  const _ChatsGroup({
+    required this.title,
+    required this.items,
+    required this.onTap,
+    this.initiallyExpanded = false,
+  });
 
   @override
   State<_ChatsGroup> createState() => _ChatsGroupState();
 }
 
 class _ChatsGroupState extends State<_ChatsGroup> {
-  bool _isExpanded = false;
+  late bool _isExpanded;
+
+  @override
+  void initState() {
+    super.initState();
+    _isExpanded = widget.initiallyExpanded;
+  }
 
   @override
   Widget build(BuildContext context) {
