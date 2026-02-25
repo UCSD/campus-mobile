@@ -23,6 +23,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   bool _didInitChatSession = false;
+  int _anchorHoldCount = 0;
 
   // ---------- Composer ----------
   void _sendFromComposer() {
@@ -74,16 +75,32 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   GlobalKey _messageKey(String id) => _messageKeys.putIfAbsent(id, GlobalKey.new);
+  bool get _useAnchorSpacer => _anchorHoldCount > 0;
 
-  void _scrollMessageToTop(String messageId, {int attempt = 0}) {
+  void _scrollMessageToTop(String messageId, {int attempt = 0, bool usedFallback = false}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final key = _messageKeys[messageId];
       final ctx = key?.currentContext;
       final renderObject = ctx?.findRenderObject();
       if (renderObject == null || !_messagesScrollController.hasClients) {
+        if (_messagesScrollController.hasClients && !usedFallback && attempt >= 4) {
+          final max = _messagesScrollController.position.maxScrollExtent;
+          _messagesScrollController
+              .animateTo(
+            max,
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+          )
+              .whenComplete(() {
+            Future.delayed(const Duration(milliseconds: 80), () {
+              if (mounted) _scrollMessageToTop(messageId, attempt: 0, usedFallback: true);
+            });
+          });
+          return;
+        }
         if (attempt < 8) {
           Future.delayed(const Duration(milliseconds: 16), () {
-            if (mounted) _scrollMessageToTop(messageId, attempt: attempt + 1);
+            if (mounted) _scrollMessageToTop(messageId, attempt: attempt + 1, usedFallback: usedFallback);
           });
         }
         return;
@@ -384,8 +401,7 @@ class _ChatPageState extends State<ChatPage> {
         _guestSessions.clear();
         await _createNewSessionAndSwitch();
       }
-    } catch (e, st) {
-      debugPrint('initializeChatSession error: $e\n$st');
+    } catch (_) {
       _sessions.clear();
       _guestSessions.clear();
       await _createNewSessionAndSwitch();
@@ -643,7 +659,7 @@ class _ChatPageState extends State<ChatPage> {
     final ordered = _messages.reversed.toList(growable: false);
     // Keep enough trailing space so the newest prompt can be truly anchored at
     // the top even when it is near the end of the list.
-    final anchorBottomSpace = MediaQuery.of(context).size.height * 0.95;
+    final anchorBottomSpace = _useAnchorSpacer ? MediaQuery.of(context).size.height * 0.95 : 0.0;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: ListView(
@@ -845,6 +861,7 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     setState(() => _messages.insert(0, placeholder));
+    setState(() => _anchorHoldCount += 1);
     _scrollMessageToTop(userMessage.id);
     Future.delayed(const Duration(milliseconds: 120), () {
       if (mounted) _scrollMessageToTop(userMessage.id);
@@ -902,6 +919,11 @@ class _ChatPageState extends State<ChatPage> {
       );
     } finally {
       await _persistCurrentSessionMessages();
+      if (mounted) {
+        setState(() {
+          _anchorHoldCount = ((_anchorHoldCount - 1).clamp(0, 1 << 30) as num).toInt();
+        });
+      }
     }
   }
 
