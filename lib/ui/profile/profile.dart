@@ -99,7 +99,7 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    'Get Mobile App Support',
+                    'Feedback & Support',
                     style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
                   ),
                   onTap: handleFeedbackTap,
@@ -135,7 +135,7 @@ class Profile extends StatelessWidget {
   // }
 
   Future<void> handleFeedbackTap() async {
-    const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=668781";
+    const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=857622";
     openLink(feedbackUrl);
   }
 
