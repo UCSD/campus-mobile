@@ -501,7 +501,7 @@ class _ChatPageState extends State<ChatPage> {
         styleSheet: MarkdownStyleSheet(
           p: const TextStyle(
             fontFamily: 'Brix Sans',
-            fontSize: 15.0,
+            fontSize: 19.0,
             fontWeight: FontWeight.w400,
             color: Color(0xFF182B49),
             height: 1.35,
@@ -510,7 +510,7 @@ class _ChatPageState extends State<ChatPage> {
             fontFamily: 'Brix Sans',
             fontWeight: FontWeight.w600,
             color: Color(0xFF182B49),
-            fontSize: 15.0,
+            fontSize: 19.0,
           ),
         ),
         builders: {'citation': CitationMarkdownBuilder(isUser: isUser)},
