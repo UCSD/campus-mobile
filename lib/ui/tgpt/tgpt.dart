@@ -263,13 +263,10 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     if (_userDataProvider.isLoggedIn) {
-      _sessions.insert(0, meta);
-      await _persistSessionsIndex();
       await _persistenceService!.saveMessagesForSession(meta.id, []);
       await _persistenceService!.saveSessionId(meta.id);
     } else {
       _guestSessions[meta.id] = [];
-      _sessions.insert(0, meta);
     }
 
     setState(() {
@@ -314,14 +311,24 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _maybeSetTitleFromFirstUser(types.TextMessage userMsg) async {
     final id = _currentSessionId;
     if (id == null) return;
-    final idx = _sessions.indexWhere((s) => s.id == id);
-    if (idx < 0) return;
-
     final userCount = _messages.whereType<types.TextMessage>().where((m) => m.author.id == _user.id).length;
 
     if (userCount == 1) {
-      final newTitle = _titleFrom(userMsg.text);
       final now = DateTime.now();
+      final newTitle = _titleFrom(userMsg.text);
+      var idx = _sessions.indexWhere((s) => s.id == id);
+      if (idx < 0) {
+        final meta = ChatSessionMeta(
+          id: id,
+          title: 'New Chat',
+          createdAt: now,
+          updatedAt: now,
+        );
+        _sessions.insert(0, meta);
+        idx = 0;
+      }
+
+      final oldTitle = _sessions[idx].title;
       _sessions[idx] = _sessions[idx].copyWith(title: newTitle, updatedAt: now);
 
       final meta = _sessions.removeAt(idx);
@@ -382,14 +389,27 @@ class _ChatPageState extends State<ChatPage> {
               createdAt: now,
               updatedAt: now,
             );
-            _sessions.insert(0, meta);
-            await _persistSessionsIndex();
             setState(() {
               _currentSessionId = lastSessionId;
               _messages
                 ..clear()
                 ..addAll(msgs);
             });
+            final shouldRestoreHistoryRow = msgs.isNotEmpty;
+            if (shouldRestoreHistoryRow) {
+              String restoredTitle = 'New Chat';
+              for (final m in msgs) {
+                if (m is types.TextMessage && m.author.id == _user.id) {
+                  restoredTitle = _titleFrom(m.text);
+                  break;
+                }
+              }
+              _sessions.insert(
+                0,
+                meta.copyWith(title: restoredTitle),
+              );
+              await _persistSessionsIndex();
+            }
           } else {
             await _createNewSessionAndSwitch();
           }
@@ -401,7 +421,7 @@ class _ChatPageState extends State<ChatPage> {
         _guestSessions.clear();
         await _createNewSessionAndSwitch();
       }
-    } catch (_) {
+    } catch (e) {
       _sessions.clear();
       _guestSessions.clear();
       await _createNewSessionAndSwitch();
