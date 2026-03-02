@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PushNotificationDataProvider extends ChangeNotifier {
   PushNotificationDataProvider() {
@@ -62,11 +63,23 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
   var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+  static const String _notificationPermissionRequestedKey = 'notification_permission_requested';
+
   /// Configures the [_fcm] object to receive push notifications
   Future<void> initPlatformState(BuildContext context) async {
     try {
       /// Initialize flutter notification settings
       this.context = context;
+
+      /// Request notification permission on Android once (early, like iOS)
+      if (Platform.isAndroid) {
+        final prefs = await SharedPreferences.getInstance();
+        if (!(prefs.getBool(_notificationPermissionRequestedKey) ?? false)) {
+          await FirebaseMessaging.instance.requestPermission();
+          await prefs.setBool(_notificationPermissionRequestedKey, true);
+        }
+      }
+
       const initializationSettingsAndroid = AndroidInitializationSettings("@drawable/ic_notif_round");
       final initializationSettingsIOS = DarwinInitializationSettings();
       final initializationSettings =
