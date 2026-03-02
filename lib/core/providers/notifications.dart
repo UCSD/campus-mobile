@@ -63,7 +63,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
   var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  static const String _notificationPermissionRequestedKey = 'notification_permission_requested';
+  static const String _NOTIFICATION_PERMISSION_REQUESTED_KEY = 'notification_permission_requested';
 
   /// Configures the [_fcm] object to receive push notifications
   Future<void> initPlatformState(BuildContext context) async {
@@ -74,9 +74,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
       /// Request notification permission on Android once (early, like iOS)
       if (Platform.isAndroid) {
         final prefs = await SharedPreferences.getInstance();
-        if (!(prefs.getBool(_notificationPermissionRequestedKey) ?? false)) {
+        if (!(prefs.getBool(_NOTIFICATION_PERMISSION_REQUESTED_KEY) ?? false)) {
           await FirebaseMessaging.instance.requestPermission();
-          await prefs.setBool(_notificationPermissionRequestedKey, true);
+          await prefs.setBool(_NOTIFICATION_PERMISSION_REQUESTED_KEY, true);
         }
       }
 
