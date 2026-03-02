@@ -40,7 +40,7 @@ class _ParkingCardState extends State<ParkingCard> {
       reload: () => {_parkingDataProvider.fetchParkingData()},
       errorText: _parkingDataProvider.error,
       child: () => buildParkingCard(context),
-      active: Provider.of<CardsDataProvider>(context).cardStates[CARD_ID],
+      active: context.select((CardsDataProvider p) => p.cardStates[CARD_ID] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(CARD_ID),
       actionButtons: [
         ActionButton(
