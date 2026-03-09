@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId = "edu.ucsd"
-        minSdkVersion = 23
+        minSdkVersion = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
