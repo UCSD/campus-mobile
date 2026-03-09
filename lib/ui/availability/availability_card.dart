@@ -41,7 +41,10 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         setState(() {
           _currentPage = 0;
         });
-        _controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        // check at least one is enabled to avoid crash
+        if (_controller.hasClients) {
+          _controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        }
         _availabilityDataProvider.fetchAvailability();
       },
       isLoading: _availabilityDataProvider.isLoading,
@@ -65,7 +68,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         String curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
         if (match != null) curName = curName.replaceRange(match.start, match.end, '');
-        final bool shouldShowLocation = _availabilityDataProvider.locationViewState[curName]!;
+        final bool shouldShowLocation = _availabilityDataProvider.locationViewState[curName] ?? false;
         if (shouldShowLocation) locationsList.add(AvailabilityDisplay(model: model));
       }
     }
@@ -118,7 +121,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
             child: Container(
               margin: const EdgeInsets.only(top: 30.0),
               child: DotsIndicator(
-                position: _currentPage.toDouble(),
+                position: _currentPage.clamp(0, locationsList.length - 1).toDouble(),
                 dotsCount: locationsList.length,
                 decorator: DotsDecorator(
                   color: dotsUnselectedColor,
