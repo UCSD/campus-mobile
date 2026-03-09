@@ -28,6 +28,8 @@ class AvailabilityDataProvider extends ChangeNotifier {
     Map<String, AvailabilityModel> newMapOfLots = {};
 
     if (await _availabilityService.fetchData()) {
+      Map<String?, bool> newLocationViewState = {};
+
       /// setting the LocationViewState based on user data
       for (AvailabilityModel model in _availabilityService.data) {
         String curName = model.name;
@@ -37,15 +39,20 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
         /// if the user is logged out and has not put any preferences,
         /// show all locations by default
-        final bool hasNoSelectedLocations = userDataProvider.userProfileModel.selectedOccuspaceLocations!.isEmpty;
+        final selectedLocations = userDataProvider.userProfileModel.selectedOccuspaceLocations ?? [];
+        final bool hasNoSelectedLocations = selectedLocations.isEmpty;
+        
         if (hasNoSelectedLocations)
-          _locationViewState[curName] = true;
-
-        /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
+          newLocationViewState[curName] = _locationViewState[curName] ?? true;
         else {
-          _locationViewState[curName] = userDataProvider.userProfileModel.selectedOccuspaceLocations!.contains(curName);
+          newLocationViewState[curName] = _locationViewState[curName] ??
+              userDataProvider.userProfileModel.selectedOccuspaceLocations!.contains(curName);
         }
       }
+
+      // After the loop, assign it:
+      _locationViewState = newLocationViewState;
+    
 
       /// replace old list of lots with new one
       _availabilityModels = newMapOfLots;
