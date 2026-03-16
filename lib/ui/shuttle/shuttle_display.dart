@@ -197,10 +197,6 @@ class ShuttleDisplay extends StatelessWidget {
 
   Widget buildArrivalTime(BuildContext context, ArrivingShuttle shuttle) {
     var minutesToArrival = shuttle.secondsToArrival ~/ 60;
-    // Calculate luminance to determine the color of the text
-    Color circleColor = HexColor(shuttle.routeColor);
-    final double luminance = circleColor.computeLuminance();
-    final Color textColor = luminance > 0.5 ? Colors.black : Colors.white;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -208,8 +204,8 @@ class ShuttleDisplay extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 8.0),
           child: CircleAvatar(
             minRadius: 20,
-            backgroundColor: circleColor,
-            foregroundColor: textColor,
+            backgroundColor: HexColor(shuttle.routeColor),
+            foregroundColor: Colors.black,
             child: Text(
               shuttle.routeName[0],
               style: TextStyle(fontSize: 25),

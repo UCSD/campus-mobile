@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/news.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
@@ -29,13 +30,18 @@ class NewsCard extends StatelessWidget {
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
     actionButtons.add(ActionButton(
-        buttonText: 'VIEW MORE NEWS STORIES', onPressed: () => Navigator.pushNamed(context, RoutePaths.NEWS_VIEW_ALL)));
+        buttonText: 'VIEW MORE NEWS STORIES',
+        onPressed: () {
+          analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_more'});
+          Navigator.pushNamed(context, RoutePaths.NEWS_VIEW_ALL);
+        }));
     return actionButtons;
   }
 
   @override
   Widget build(BuildContext context) {
     return CardContainer(
+      cardId: cardId,
       // TODO: need to hook up hidden to state using provider - December 2025
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),

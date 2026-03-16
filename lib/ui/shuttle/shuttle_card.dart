@@ -2,6 +2,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -37,6 +38,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
   Widget build(BuildContext context) {
     return CardContainer(
+      cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {
@@ -53,6 +55,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
         ActionLink(
             buttonText: 'MANAGE SHUTTLE STOPS',
             onPressed: () {
+              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage_stops'});
               setState(() {
                 _currentPage = 0;
               });

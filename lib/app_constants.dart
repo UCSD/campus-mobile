@@ -68,7 +68,12 @@ class RouteTitles {
 }
 
 class ParkingDefaults {
-  static const DEFAULT_LOTS = ["Athena", "Gilman", "Hopkins", "Theatre District", "South", "First Ave"];
+  static const DEFAULT_LOTS = [
+    "Athena",
+    "Gilman",
+    "Hopkins",
+    "Theatre District",
+  ];
   static const DEFAULT_SPOTS = ["S", "B", "A"];
 }
 

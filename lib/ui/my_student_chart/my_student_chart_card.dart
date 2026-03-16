@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
@@ -12,6 +13,7 @@ class MyStudentChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
+      cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => null,
@@ -23,6 +25,7 @@ class MyStudentChartCard extends StatelessWidget {
         ActionButton(
           buttonText: 'LOG IN TO MyStudentChart',
           onPressed: () {
+            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'login'});
             try {
               launchUrl(
                   Uri.parse('https://mystudentchart.ucsd.edu/SHS/Authentication/Saml/Login?idp=UCSD_STUDENT_AD_LOGIN'),

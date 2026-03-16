@@ -15,6 +15,7 @@ class FinalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
+      cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {

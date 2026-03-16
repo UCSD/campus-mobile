@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
@@ -14,6 +15,7 @@ class DiningCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
+      cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => Provider.of<DiningDataProvider>(context, listen: false).fetchDiningLocations(),
@@ -25,6 +27,7 @@ class DiningCard extends StatelessWidget {
         ActionButton(
             buttonText: 'VIEW ALL DINING OPTIONS',
             onPressed: () {
+              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_all'});
               // Only navigate if not loading and no error
               final provider = Provider.of<DiningDataProvider>(context, listen: false);
               final bool isNotLoading = !provider.isLoading;

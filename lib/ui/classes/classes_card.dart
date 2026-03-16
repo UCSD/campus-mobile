@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -17,6 +18,7 @@ class ClassScheduleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
+      cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {
@@ -40,6 +42,7 @@ class ClassScheduleCard extends StatelessWidget {
         ActionButton(
           buttonText: 'VIEW ALL CLASSES',
           onPressed: () {
+            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_all'});
             Navigator.pushNamed(context, RoutePaths.CLASS_SCHEDULE_VIEW_ALL);
           },
         ),

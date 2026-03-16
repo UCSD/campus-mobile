@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
@@ -48,6 +49,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
   Widget build(BuildContext context) {
     super.build(context);
     return CardContainer(
+      cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => cardState != TestStatus.running
@@ -156,6 +158,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             ActionButton(
                 buttonText: 'TEST SPEED',
                 onPressed: () {
+                  analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'test_speed'});
                   if (_speedTestProvider.onSimulator!) {
                     setState(() {
                       cardState = TestStatus.simulated;
@@ -172,6 +175,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
               buttonText: 'REPORT ISSUE',
               onPressed: _buttonEnabled
                   ? () {
+                      analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'report_issue'});
                       _speedTestProvider.reportIssue();
                       showDialog(
                           context: context,
@@ -331,6 +335,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
             ActionButton(
                 buttonText: 'TEST SPEED',
                 onPressed: () {
+                  analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'test_speed'});
                   setState(() {
                     timedOut = false;
                     cardState = TestStatus.running;
@@ -349,6 +354,7 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
               buttonText: 'REPORT ISSUE',
               onPressed: _buttonEnabled // TODO: DO WE REALLY NEED THIS BUTTON ENABLED? - December 2025
                   ? () {
+                      analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'report_issue'});
                       _speedTestProvider.reportIssue();
                       showDialog(
                           context: context,
@@ -386,7 +392,12 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
           ),
         ),
         SizedBox(height: 50),
-        ActionButton(buttonText: 'TRY AGAIN', onPressed: () => tryAgain()),
+        ActionButton(
+            buttonText: 'TRY AGAIN',
+            onPressed: () {
+              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'try_again'});
+              tryAgain();
+            }),
       ],
     );
   }
