@@ -10,6 +10,7 @@ import 'package:campus_mobile_experimental/core/providers/notices.dart';
 import 'package:campus_mobile_experimental/main.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_card.dart';
+import 'package:campus_mobile_experimental/ui/common/card_view_tracking_wrapper.dart';
 import 'package:campus_mobile_experimental/ui/common/webview_container.dart';
 import 'package:campus_mobile_experimental/ui/dining/dining_card.dart';
 import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart';
@@ -161,7 +162,10 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> getNoticesCardsList(List<NoticesModel> notices) =>
-      notices.map((notice) => NoticesCard(notice: notice)).whereType<NoticesCard>().toList();
+      notices.asMap().entries.map((e) => CardViewTrackingWrapper(
+            cardId: 'notice_${e.key}',
+            child: NoticesCard(notice: e.value),
+          )).toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
   static const _CARD_CTORS = {
@@ -202,30 +206,33 @@ class _HomeState extends State<Home> {
       // TODO: if-branches logic here theoretically could be simplified - December 2025
       if (!webCards.containsKey(cardName)) {
         final cardCtor = _CARD_CTORS[cardName];
-        if (cardCtor != null) orderedCards.add(cardCtor());
+        if (cardCtor != null) orderedCards.add(CardViewTrackingWrapper(cardId: cardName, child: cardCtor()));
       } else {
         final card = webCards[cardName]!;
         orderedCards.add(
-          WebViewContainer(
-            key: ValueKey(cardName),
-            initialUrl: card.initialURL,
-            titleText: card.titleText,
+          CardViewTrackingWrapper(
             cardId: cardName,
-            requireAuth: card.requireAuth,
-            isLoaded: webViewCardNotLoaded[cardName] ?? true,
-            onPageFinished: () {
-              // Only update if loaded state is not already true
-              if (webViewCardNotLoaded[cardName] != true) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  setState(() {
-                    webViewCardNotLoaded[cardName] = true;
+            child: WebViewContainer(
+              key: ValueKey(cardName),
+              initialUrl: card.initialURL,
+              titleText: card.titleText,
+              cardId: cardName,
+              requireAuth: card.requireAuth,
+              isLoaded: webViewCardNotLoaded[cardName] ?? true,
+              onPageFinished: () {
+                // Only update if loaded state is not already true
+                if (webViewCardNotLoaded[cardName] != true) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      webViewCardNotLoaded[cardName] = true;
+                    });
                   });
-                });
-              }
-            },
-            onWidgetSizeChange: (size) {
-              setNewCardHeight(cardName, size.height);
-            },
+                }
+              },
+              onWidgetSizeChange: (size) {
+                setNewCardHeight(cardName, size.height);
+              },
+            ),
           ),
         );
       }

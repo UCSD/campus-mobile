@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -35,6 +36,7 @@ class _ParkingCardState extends State<ParkingCard> {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
+      cardId: CARD_ID,
       titleText: CardTitleConstants.TITLE_MAP[CARD_ID]!,
       isLoading: _parkingDataProvider.isLoading,
       reload: () => {_parkingDataProvider.fetchParkingData()},
@@ -46,6 +48,7 @@ class _ParkingCardState extends State<ParkingCard> {
         ActionButton(
             buttonText: 'MANAGE SPOTS',
             onPressed: () {
+              analytics.logEvent(name: '${CARD_ID}_card_action', parameters: {'action': 'manage_spots'});
               final bool isNotLoading = !_parkingDataProvider.isLoading;
               final bool hasNoError = _parkingDataProvider.error == null;
               if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.SPOT_TYPES_VIEW);
@@ -53,6 +56,7 @@ class _ParkingCardState extends State<ParkingCard> {
         ActionLink(
             buttonText: 'MANAGE LOTS',
             onPressed: () {
+              analytics.logEvent(name: '${CARD_ID}_card_action', parameters: {'action': 'manage_lots'});
               final bool isNotLoading = !_parkingDataProvider.isLoading;
               final bool hasNoError = _parkingDataProvider.error == null;
               if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.MANAGE_PARKING_VIEW);

@@ -31,6 +31,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
         (employeeModel.employeePreferredDisplayName != null && employeeModel.employeeId != null);
 
     return CardContainer(
+      cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => Provider.of<EmployeeIdDataProvider>(context, listen: false).fetchData(),

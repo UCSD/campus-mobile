@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,7 @@ class CardContainer extends StatelessWidget {
     this.actionButtons,
     this.footer,
     this.hideMenu = false,
+    this.cardId,
   })  : active = active ?? false,
         super(key: key);
 
@@ -33,6 +35,7 @@ class CardContainer extends StatelessWidget {
   final bool hideMenu;
   final List<Widget>? actionButtons;
   final Widget? footer;
+  final String? cardId;
   @override
   Widget build(BuildContext context) {
     if (active) {
@@ -201,9 +204,11 @@ class CardContainer extends StatelessWidget {
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
       case CardMenuOptionConstants.RELOAD_CARD:
+        if (cardId != null) analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'reload'});
         reload();
         break;
       case CardMenuOptionConstants.HIDE_CARD:
+        if (cardId != null) analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'hide'});
         hide();
         break;
       default:

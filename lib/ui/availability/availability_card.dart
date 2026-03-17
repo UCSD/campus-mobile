@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
@@ -35,13 +36,15 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
+      cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () {
         setState(() {
           _currentPage = 0;
         });
-        _controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        // check at least one is enabled to avoid crash
+        if (_controller.hasClients) _controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         _availabilityDataProvider.fetchAvailability();
       },
       isLoading: _availabilityDataProvider.isLoading,
@@ -51,7 +54,10 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       actionButtons: [
         ActionLink(
             buttonText: 'MANAGE LOCATIONS',
-            onPressed: () => Navigator.pushNamed(context, RoutePaths.MANAGE_AVAILABILITY_VIEW))
+            onPressed: () {
+              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage'});
+              Navigator.pushNamed(context, RoutePaths.MANAGE_AVAILABILITY_VIEW);
+            })
       ],
     );
   }
@@ -65,7 +71,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
         String curName = model.name;
         RegExpMatch? match = multiPager.firstMatch(curName);
         if (match != null) curName = curName.replaceRange(match.start, match.end, '');
-        final bool shouldShowLocation = _availabilityDataProvider.locationViewState[curName]!;
+        final bool shouldShowLocation = _availabilityDataProvider.locationViewState[curName] ?? false;
         if (shouldShowLocation) locationsList.add(AvailabilityDisplay(model: model));
       }
     }
@@ -118,7 +124,7 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
             child: Container(
               margin: const EdgeInsets.only(top: 30.0),
               child: DotsIndicator(
-                position: _currentPage.toDouble(),
+                position: _currentPage.clamp(0, locationsList.length - 1).toDouble(),
                 dotsCount: locationsList.length,
                 decorator: DotsDecorator(
                   color: dotsUnselectedColor,

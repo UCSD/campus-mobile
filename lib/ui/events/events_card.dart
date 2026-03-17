@@ -1,4 +1,5 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
@@ -15,6 +16,7 @@ class EventsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
+      cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
@@ -24,7 +26,11 @@ class EventsCard extends StatelessWidget {
       child: () => buildEventsCardList(Provider.of<EventsDataProvider>(context).eventsModels),
       actionButtons: [
         ActionButton(
-            buttonText: "VIEW ALL EVENTS", onPressed: () => Navigator.pushNamed(context, RoutePaths.EVENTS_VIEW_ALL))
+            buttonText: "VIEW ALL EVENTS",
+            onPressed: () {
+              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_all'});
+              Navigator.pushNamed(context, RoutePaths.EVENTS_VIEW_ALL);
+            })
       ],
     );
   }
