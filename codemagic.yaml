@@ -1,0 +1,358 @@
+# =============================================================================
+# campus-mobile — codemagic.yaml
+# -----------------------------------------------------------------------------
+# All shared configuration is defined once under `definitions:` using YAML
+# anchors and re-used in each workflow via aliases. The build scripts
+# (post-clone.sh, post-publish.sh, set-env.js, build-notifier.js) live in the
+# repository and are called directly — no inline script duplication.
+# =============================================================================
+
+definitions:
+
+  # ---------------------------------------------------------------------------
+  # Shared environment blocks
+  # ---------------------------------------------------------------------------
+  environment:
+    # Common toolchain versions used by every workflow
+    common_env: &common_env
+      flutter: 3.32.0
+      xcode: latest        # 26.2 at time of writing
+      cocoapods: 1.10.1
+      node: 18.16.0        # Replaces the manual curl install in post-clone.sh
+      groups:
+        - campus_mobile_secrets
+        # Group must contain:
+        #   APP_CONFIG          (base64-encoded .env file)
+        #   SP_CONFIG           (base64-encoded sp-config.json)
+        #   FIREBASE_IOS        (base64-encoded GoogleService-Info.plist)
+        #   FIREBASE_ANDROID    (base64-encoded google-services.json)
+
+    # Android-specific additions (code signing)
+    android_env: &android_env
+      << : *common_env
+      android_signing:
+        - campus_mobile_keystore   # TODO: replace with your keystore reference name
+                                   # as configured in Codemagic Teams > Code signing
+
+    # iOS-specific additions (code signing)
+    ios_env: &ios_env
+      << : *common_env
+      ios_signing:
+        distribution_type: app_store   # TODO: confirm — ad_hoc / app_store / development
+        bundle_identifier: edu.ucsd.campus-mobile   # TODO: confirm bundle ID
+
+  # ---------------------------------------------------------------------------
+  # Caching (shared across all workflows)
+  # ---------------------------------------------------------------------------
+  cache: &cache
+    cache_paths:
+      - $FLUTTER_ROOT/.pub-cache
+      - $HOME/.gradle/caches
+      - $HOME/Library/Caches/CocoaPods
+
+  # ---------------------------------------------------------------------------
+  # Triggering patterns
+  # ---------------------------------------------------------------------------
+  triggering:
+    # PR workflows — fire on any pull request
+    pr_trigger: &pr_trigger
+      events:
+        - pull_request
+      branch_patterns:
+        - pattern: "*"
+          include: true
+          source: true
+      cancel_previous_builds: true
+
+    # Branch-push workflows — fire when commits land on named branches
+    push_trigger_main: &push_trigger_main
+      events:
+        - push
+      branch_patterns:
+        - pattern: experimental
+          include: true
+      cancel_previous_builds: false
+
+    push_trigger_prod_test: &push_trigger_prod_test
+      events:
+        - push
+      branch_patterns:
+        - pattern: prod-test   # TODO: confirm your PROD-TEST branch name
+          include: true
+      cancel_previous_builds: false
+
+  # ---------------------------------------------------------------------------
+  # Reusable script steps
+  # ---------------------------------------------------------------------------
+  scripts:
+    # Run the shared post-clone bootstrap (writes configs, release notes, etc.)
+    - &post_clone
+      name: Post-clone setup
+      script: ./scripts/codemagic-ci/post-clone.sh
+
+    # Flutter dependency fetch
+    - &flutter_pub_get
+      name: Get Flutter packages
+      script: flutter pub get
+
+    # CocoaPods install (iOS only)
+    - &pod_install
+      name: Install CocoaPods dependencies
+      script: cd ios && pod install
+
+    # Python deps needed by the artifact-upload script
+    - &python_deps
+      name: Install Python dependencies for artifact upload
+      script: |
+        cd ./scripts/codemagic-ci
+        pip3 install --target=./python_modules -r requirements.txt
+
+    # Android APK build
+    - &build_apk
+      name: Build Android APK (release)
+      script: flutter build apk --release
+
+    # iOS IPA build
+    - &build_ipa
+      name: Build iOS IPA (release)
+      script: |
+        flutter build ipa --release \
+          --export-options-plist=/Users/builder/export_options.plist
+        # TODO: confirm export options plist path, or remove the flag to use
+        #       Codemagic automatic signing
+
+    # Upload dSYMs to Firebase Crashlytics (iOS post-publish)
+    - &upload_dsym
+      name: Upload dSYMs to Firebase Crashlytics
+      script: |
+        dsymPath=$(find "$CM_BUILD_DIR/build/ios/archive/Runner.xcarchive" \
+          -name "*.dSYM" | head -1)
+        if [ -z "$dsymPath" ]; then
+          echo "No debug symbols found, skipping"
+        else
+          echo "Uploading dSYMs from $dsymPath"
+          "$CM_BUILD_DIR/ios/Pods/FirebaseCrashlytics/upload-symbols" \
+            -gsp "$CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist" \
+            -p ios "$dsymPath"
+        fi
+
+    # Teams notification + artifact upload to SharePoint (all workflows)
+    - &post_publish
+      name: Send Teams notification and upload artifacts
+      script: ./scripts/codemagic-ci/post-publish.sh
+
+  # ---------------------------------------------------------------------------
+  # Artifact patterns
+  # ---------------------------------------------------------------------------
+  artifacts:
+    android_artifacts: &android_artifacts
+      - build/app/outputs/apk/release/app-release.apk
+      - flutter_drive.log
+
+    ios_artifacts: &ios_artifacts
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+
+  # ---------------------------------------------------------------------------
+  # Publishing blocks
+  # ---------------------------------------------------------------------------
+  publishing:
+    google_play_qa: &google_play_qa
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS   # TODO: add to secrets
+        track: internal   # TODO: confirm QA track
+        submit_as_draft: true
+      scripts:
+        - *post_publish
+
+    google_play_prod: &google_play_prod
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS   # TODO: add to secrets
+        track: production   # TODO: confirm PROD track
+        submit_as_draft: false
+      scripts:
+        - *post_publish
+
+    google_play_prod_test: &google_play_prod_test
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS   # TODO: add to secrets
+        track: internal   # TODO: confirm PROD-TEST track
+        submit_as_draft: true
+      scripts:
+        - *post_publish
+
+    app_store_connect: &app_store_connect
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY      # TODO: add to secrets
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER    # TODO: add to secrets
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID      # TODO: add to secrets
+        submit_to_testflight: true
+        submit_to_app_store: false   # TODO: set true for full PROD App Store release
+      scripts:
+        - *upload_dsym
+        - *post_publish
+
+
+# =============================================================================
+# Workflows
+# =============================================================================
+workflows:
+
+  # ---------------------------------------------------------------------------
+  # Experimental PR - Android (QA)
+  # ---------------------------------------------------------------------------
+  experimental-pr-android-qa:
+    name: Experimental PR - Android (QA)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      << : *android_env
+      vars:
+        BUILD_PLATFORM: ANDROID
+        BUILD_ENV: QA
+        APP_VERSION: "7.35.0"   # TODO: update per release
+    cache: *cache
+    triggering: *pr_trigger
+    scripts:
+      - *post_clone
+      - name: Set QA environment
+        script: node ./scripts/codemagic-ci/set-env.js QA "$APP_VERSION" "$PROJECT_BUILD_NUMBER"
+      - *flutter_pub_get
+      - *python_deps
+      - *build_apk
+    artifacts: *android_artifacts
+    publishing: *google_play_qa
+
+
+  # ---------------------------------------------------------------------------
+  # Experimental PR - iOS (QA)
+  # ---------------------------------------------------------------------------
+  experimental-pr-ios-qa:
+    name: Experimental PR - iOS (QA)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      << : *ios_env
+      vars:
+        BUILD_PLATFORM: IOS
+        BUILD_ENV: QA
+        APP_VERSION: "7.35.0"   # TODO: update per release
+    cache: *cache
+    triggering: *pr_trigger
+    scripts:
+      - *post_clone
+      - name: Set QA environment
+        script: node ./scripts/codemagic-ci/set-env.js QA "$APP_VERSION" "$PROJECT_BUILD_NUMBER"
+      - *flutter_pub_get
+      - *python_deps
+      - *pod_install
+      - *build_ipa
+    artifacts: *ios_artifacts
+    publishing: *app_store_connect
+
+
+  # ---------------------------------------------------------------------------
+  # Experimental - Android (PROD)
+  # ---------------------------------------------------------------------------
+  experimental-android-prod:
+    name: Experimental - Android (PROD)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      << : *android_env
+      vars:
+        BUILD_PLATFORM: ANDROID
+        BUILD_ENV: PROD
+        APP_VERSION: "7.35.0"   # TODO: update per release
+    cache: *cache
+    triggering: *push_trigger_main
+    scripts:
+      - *post_clone
+      - name: Set PROD environment
+        script: node ./scripts/codemagic-ci/set-env.js PROD "$APP_VERSION" "$PROJECT_BUILD_NUMBER"
+      - *flutter_pub_get
+      - *python_deps
+      - *build_apk
+    artifacts: *android_artifacts
+    publishing: *google_play_prod
+
+
+  # ---------------------------------------------------------------------------
+  # Experimental - iOS (PROD)
+  # ---------------------------------------------------------------------------
+  experimental-ios-prod:
+    name: Experimental - iOS (PROD)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      << : *ios_env
+      vars:
+        BUILD_PLATFORM: IOS
+        BUILD_ENV: PROD
+        APP_VERSION: "7.35.0"   # TODO: update per release
+    cache: *cache
+    triggering: *push_trigger_main
+    scripts:
+      - *post_clone
+      - name: Set PROD environment
+        script: node ./scripts/codemagic-ci/set-env.js PROD "$APP_VERSION" "$PROJECT_BUILD_NUMBER"
+      - *flutter_pub_get
+      - *python_deps
+      - *pod_install
+      - *build_ipa
+    artifacts: *ios_artifacts
+    publishing: *app_store_connect
+
+
+  # ---------------------------------------------------------------------------
+  # Experimental - Android (PROD-TEST)
+  # ---------------------------------------------------------------------------
+  experimental-android-prod-test:
+    name: Experimental - Android (PROD-TEST)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      << : *android_env
+      vars:
+        BUILD_PLATFORM: ANDROID
+        BUILD_ENV: PROD-TEST
+        APP_VERSION: "7.35.0"   # TODO: update per release
+    cache: *cache
+    triggering: *push_trigger_prod_test
+    scripts:
+      - *post_clone
+      - name: Set PROD-TEST environment
+        script: node ./scripts/codemagic-ci/set-env.js PROD-TEST "$APP_VERSION" "$PROJECT_BUILD_NUMBER"
+      - *flutter_pub_get
+      - *python_deps
+      - *build_apk
+    artifacts: *android_artifacts
+    publishing: *google_play_prod_test
+
+
+  # ---------------------------------------------------------------------------
+  # Experimental - iOS (PROD-TEST)
+  # ---------------------------------------------------------------------------
+  experimental-ios-prod-test:
+    name: Experimental - iOS (PROD-TEST)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      << : *ios_env
+      vars:
+        BUILD_PLATFORM: IOS
+        BUILD_ENV: PROD-TEST
+        APP_VERSION: "7.35.0"   # TODO: update per release
+    cache: *cache
+    triggering: *push_trigger_prod_test
+    scripts:
+      - *post_clone
+      - name: Set PROD-TEST environment
+        script: node ./scripts/codemagic-ci/set-env.js PROD-TEST "$APP_VERSION" "$PROJECT_BUILD_NUMBER"
+      - *flutter_pub_get
+      - *python_deps
+      - *pod_install
+      - *build_ipa
+    artifacts: *ios_artifacts
+    publishing: *app_store_connect
