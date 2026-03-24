@@ -10,9 +10,10 @@ class DirectionsHelper {
     if (Platform.isIOS) {
       // On iOS, try Apple Maps native app first
       final appleMapsUrl = dotenv.get('APPLE_MAPS_URL') + '$lat,$lon&dirflg=w';
-      if (await canLaunchUrl(appleMapsUrl as Uri)) {
+      final appleUri = Uri.parse(appleMapsUrl);
+      if (await canLaunchUrl(appleUri)) {
         await launchUrl(
-          appleMapsUrl as Uri,
+          appleUri,
           mode: LaunchMode.externalApplication,
         );
         return;
@@ -21,9 +22,10 @@ class DirectionsHelper {
 
     // Try Google Maps app URL scheme (works on both iOS and Android)
     final googleMapsAppUrl = dotenv.get('GOOGLE_MAPS_APP_URL') + '$lat,$lon&directionsmode=walking';
-    if (await canLaunchUrl(googleMapsAppUrl as Uri)) {
+    final googleAppUri = Uri.parse(googleMapsAppUrl);
+    if (await canLaunchUrl(googleAppUri)) {
       await launchUrl(
-        googleMapsAppUrl as Uri,
+        googleAppUri,
         mode: LaunchMode.externalApplication,
       );
       return;
@@ -31,9 +33,10 @@ class DirectionsHelper {
 
     // Fall back to Google Maps web
     final googleMapsWebUrl = dotenv.get('GOOGLE_MAPS_WEB_URL') + '$lat,$lon';
-    if (await canLaunchUrl(googleMapsWebUrl as Uri)) {
+    final googleWebUri = Uri.parse(googleMapsWebUrl);
+    if (await canLaunchUrl(googleWebUri)) {
       await launchUrl(
-        googleMapsWebUrl as Uri,
+        googleWebUri,
         mode: LaunchMode.externalApplication,
       );
     } else {
