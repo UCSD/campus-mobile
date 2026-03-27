@@ -1,45 +1,39 @@
-import 'dart:convert';
+/// Request model for creating a chat session (matches original cma-tgpt).
+class ChatSessionCreationRequest {
+  final int personaId;
+  final String? description;
 
-/// Parse a ChatSession from JSON string
-ChatSession chatSessionFromJson(String str) => ChatSession.fromJson(json.decode(str));
-
-/// Convert a ChatSession to JSON string
-String chatSessionToJson(ChatSession data) => json.encode(data.toJson());
-
-/// Request model for creating a chat session via /chat/create-chat-session
-class ChatSessionRequest {
-  final String personaId;
-
-  ChatSessionRequest({
+  ChatSessionCreationRequest({
     required this.personaId,
+    this.description,
   });
 
-  Map<String, dynamic> toJson() => {
-        "persona_id": personaId,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = {
+      'persona_id': personaId,
+    };
+
+    if (description != null) json['description'] = description;
+
+    return json;
+  }
 }
 
-/// Response model for a chat session
-class ChatSession {
+/// Response model for chat session creation.
+class CreateChatSessionID {
   final String chatSessionId;
-  final String? personaId;
-  final DateTime? createdAt;
 
-  ChatSession({
+  CreateChatSessionID({
     required this.chatSessionId,
-    this.personaId,
-    this.createdAt,
   });
 
-  factory ChatSession.fromJson(Map<String, dynamic> json) => ChatSession(
-        chatSessionId: json["chat_session_id"],
-        personaId: json["persona_id"],
-        createdAt: json["created_at"] != null ? DateTime.tryParse(json["created_at"]) : null,
-      );
+  factory CreateChatSessionID.fromJson(Map<String, dynamic> json) {
+    return CreateChatSessionID(
+      chatSessionId: json['chat_session_id'] as String,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-        "chat_session_id": chatSessionId,
-        "persona_id": personaId,
-        "created_at": createdAt?.toIso8601String(),
+        'chat_session_id': chatSessionId,
       };
 }

@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'chat_message_persistent.g.dart';
 
 /// Persistent chat message model for local storage via Hive.
-/// 
+///
 /// This model stores chat messages locally for viewing chat history
 /// when offline or for quick access without API calls.
 @HiveType(typeId: 3)
