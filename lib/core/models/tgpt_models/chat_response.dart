@@ -18,7 +18,7 @@ class RetrievalOptions {
 class BasicCreateChatMessageRequest {
   final String message;
   final String chatSessionId;
-  final String? parentMessageId;
+  final int? parentMessageId;
   final RetrievalOptions retrievalOptions;
   final List<dynamic> fileDescriptors;
 
