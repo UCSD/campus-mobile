@@ -8,11 +8,15 @@ import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
+import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 import 'package:campus_mobile_experimental/ui/common/action_link.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_display.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const String cardId = 'shuttle';
+
+const String _wayfinderTransitMapUrl = 'https://wayfinder.ucsd.onebusawaycloud.com/';
 
 class ShuttleCard extends StatefulWidget {
   @override
@@ -52,15 +56,36 @@ class _ShuttleCardState extends State<ShuttleCard> {
       errorText: _shuttleCardDataProvider.error,
       child: () => buildShuttleCard(_shuttleCardDataProvider.stopsToRender, _shuttleCardDataProvider.arrivalsToRender),
       actionButtons: [
-        ActionLink(
-            buttonText: 'MANAGE SHUTTLE STOPS',
-            onPressed: () {
-              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage_stops'});
-              setState(() {
-                _currentPage = 0;
-              });
-              Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
-            }),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ActionButton(
+                buttonText: 'VIEW LIVE TRANSIT MAP',
+                trailingIcon: Icons.open_in_new,
+                onPressed: () {
+                  analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_live_transit_map'});
+                  try {
+                    launchUrl(Uri.parse(_wayfinderTransitMapUrl), mode: LaunchMode.inAppBrowserView);
+                  } catch (e) {
+                    // an error occurred, do nothing
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              ActionLink(
+                  buttonText: 'MANAGE SHUTTLE STOPS',
+                  onPressed: () {
+                    analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage_stops'});
+                    setState(() {
+                      _currentPage = 0;
+                    });
+                    Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
+                  }),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -124,23 +149,5 @@ class _ShuttleCardState extends State<ShuttleCard> {
         ),
       );
     }
-  }
-
-  List<Widget> buildActionButtons() {
-    List<Widget> actionButtons = [];
-    actionButtons.add(TextButton(
-      style: TextButton.styleFrom(
-        // primary: Theme.of(context).buttonColor,
-        foregroundColor: Theme.of(context).colorScheme.surface,
-      ),
-      child: Text(
-        'Manage Shuttle Stops',
-      ),
-      onPressed: () {
-        final bool isNotLoading = !_shuttleCardDataProvider.isLoading;
-        if (isNotLoading) Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
-      },
-    ));
-    return actionButtons;
   }
 }

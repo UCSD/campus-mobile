@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class ActionLink extends StatelessWidget {
@@ -15,12 +16,16 @@ class ActionLink extends StatelessWidget {
     return TextButton(
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll<Color>(Colors.transparent),
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.centerLeft,
+        padding: WidgetStatePropertyAll(EdgeInsets.zero),
+        minimumSize: WidgetStatePropertyAll(Size.zero),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: actionButtonHorizontalPadding),
         child: Text(
           buttonText,
+          textAlign: TextAlign.start,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 decoration: TextDecoration.underline,
               ),
