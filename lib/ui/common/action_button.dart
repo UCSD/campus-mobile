@@ -4,15 +4,24 @@ import 'package:flutter/material.dart';
 class ActionButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
+  final IconData? trailingIcon;
 
   const ActionButton({
     Key? key,
     required this.buttonText,
     required this.onPressed,
+    this.trailingIcon,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = TextStyle(
+      color: lightPrimaryColor,
+      fontFamily: 'Brix Sans',
+      fontSize: 18,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0,
+    );
     return TextButton(
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll<Color>(actionButtonBackgroundColor),
@@ -21,18 +30,24 @@ class ActionButton extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
         ),
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.centerLeft,
+        padding: WidgetStatePropertyAll(EdgeInsets.zero),
+        minimumSize: WidgetStatePropertyAll(Size.zero),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-        child: Text(buttonText,
-            style: TextStyle(
-              color: lightPrimaryColor,
-              fontFamily: 'Brix Sans',
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0,
-            )),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: actionButtonHorizontalPadding),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(buttonText, style: textStyle),
+            if (trailingIcon != null) ...[
+              const SizedBox(width: 8),
+              Icon(trailingIcon, size: 18, color: lightPrimaryColor),
+            ],
+          ],
+        ),
       ),
       onPressed: onPressed,
     );
