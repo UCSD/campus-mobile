@@ -219,6 +219,9 @@ const agnosticDisabled = Color(0xFF8A8A8A);
 // Card Layout
 const cardMargin = 8.0;
 const cardPaddingInner = 8.0;
+
+/// Horizontal inset for primary/secondary card action buttons and tertiary links so stacked labels align.
+const double actionButtonHorizontalPadding = 16.0;
 const cardMinHeight = 60.0;
 
 // Card Heights
