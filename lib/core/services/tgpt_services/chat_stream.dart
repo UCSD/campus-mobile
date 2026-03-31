@@ -116,9 +116,7 @@ class ChatMessageStreamService {
               // Token delta - the actual streaming content
               if (type == 'message_delta') {
                 final content = obj['content'] as String?;
-                if (content != null && content.isNotEmpty) {
-                  yield StreamingChatChunk(delta: content);
-                }
+                if (content != null && content.isNotEmpty) yield StreamingChatChunk(delta: content);
               }
             }
           } catch (_) {

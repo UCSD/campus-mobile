@@ -81,9 +81,7 @@ class ChatPersistenceService {
     final box = await _openHistoryBox();
     final results = <ChatMessagePersistent>[];
     for (final persistent in box.values) {
-      if (persistent.sessionId == sessionId) {
-        results.add(persistent);
-      }
+      if (persistent.sessionId == sessionId) results.add(persistent);
     }
     results.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return results;
