@@ -1,3 +1,8 @@
+/// TGPT Chat Message Service
+///
+/// Required .env variables:
+/// - CHAT_SEND_MESSAGE_ENDPOINT: URL for sending chat messages
+/// - MOBILE_APP_PUBLIC_DATA_KEY: Public API key for unauthenticated users
 import 'dart:convert';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_response.dart';
@@ -13,13 +18,16 @@ class ChatMessageService {
   String? _error;
   bool _hasRetried = false;
 
-  /// Default headers for POST requests
-  final Map<String, String> headers = {
-    "accept": "application/json",
-    "content-type": "application/json",
-  };
-
   ChatMessageService(this._userDataProvider);
+
+  /// Build fresh headers for each request to avoid race conditions
+  /// with concurrent calls.
+  Map<String, String> _buildHeaders() {
+    return {
+      "accept": "application/json",
+      "content-type": "application/json",
+    };
+  }
 
   /// Build the request body for sending a message.
   ///
@@ -53,6 +61,9 @@ class ChatMessageService {
     int? parentMessageId,
   }) async {
     _error = null;
+
+    // Build fresh headers per request to avoid race conditions
+    final headers = _buildHeaders();
 
     try {
       // Set auth header based on login state

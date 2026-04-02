@@ -1,3 +1,9 @@
+/// TGPT Chat Session Creation Service
+///
+/// Required .env variables:
+/// - CHAT_CREATE_SESSION_ENDPOINT: URL for creating chat sessions
+/// - MOBILE_APP_PUBLIC_DATA_KEY: Public API key for unauthenticated users
+/// - TGPT_PERSONA_ID: Persona ID for chat sessions (optional, defaults to 1)
 import 'dart:convert';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_session.dart';
@@ -12,13 +18,18 @@ class ChatSessionService {
   String? _error;
   bool _hasRetried = false;
 
-  /// Default headers for POST requests
-  final Map<String, String> headers = {
-    "accept": "application/json",
-    "content-type": "application/json",
-  };
+  /// Default persona ID if not configured in environment
+  static const int _defaultPersonaId = 1;
 
   ChatSessionService(this._userDataProvider);
+
+  /// Build fresh headers for each request to avoid race conditions.
+  Map<String, String> _buildHeaders() {
+    return {
+      "accept": "application/json",
+      "content-type": "application/json",
+    };
+  }
 
   /// Create a new chat session.
   ///
@@ -27,6 +38,9 @@ class ChatSessionService {
   Future<CreateChatSessionID?> createChatSession() async {
     _error = null;
     _isLoading = true;
+
+    // Build fresh headers per request to avoid race conditions
+    final headers = _buildHeaders();
 
     try {
       // Set auth header based on login state
@@ -38,8 +52,11 @@ class ChatSessionService {
 
       final String createChatSessionEndpoint = dotenv.get('CHAT_CREATE_SESSION_ENDPOINT');
 
+      // Read persona ID from environment, with fallback to default
+      final int personaId = int.tryParse(dotenv.get('TGPT_PERSONA_ID', fallback: '')) ?? _defaultPersonaId;
+
       // Build request payload
-      final ChatSessionCreationRequest request = ChatSessionCreationRequest(personaId: 1);
+      final ChatSessionCreationRequest request = ChatSessionCreationRequest(personaId: personaId);
       final String requestBody = json.encode(request.toJson());
 
       // Send POST
@@ -49,7 +66,8 @@ class ChatSessionService {
         requestBody,
       );
 
-      final CreateChatSessionID chatSessionId = CreateChatSessionID.fromJson(response);
+      // Defensive parsing: handle both Map and String responses
+      final CreateChatSessionID chatSessionId = CreateChatSessionID.fromJsonSafe(response);
       return chatSessionId;
     } catch (e) {
       // Retry once on 401 with refreshed token
