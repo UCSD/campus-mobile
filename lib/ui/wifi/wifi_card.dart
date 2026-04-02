@@ -110,15 +110,16 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
     // STATE MACHINE
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-      child: switch (cardState) {
-        TestStatus.initial => initialState(context),
-        TestStatus.running => speedTest(),
-        TestStatus.finished => finishedState(),
-        TestStatus.unavailable => unavailableState(),
-        TestStatus.simulated => simulatedState(),
-        _ => initialState(context) // Default State (Initial)
-      },
+      child: _buildStateWidget(context),
     );
+  }
+
+  Widget _buildStateWidget(BuildContext context) {
+    if (cardState == TestStatus.running) return speedTest();
+    if (cardState == TestStatus.finished) return finishedState();
+    if (cardState == TestStatus.unavailable) return unavailableState();
+    if (cardState == TestStatus.simulated) return simulatedState();
+    return initialState(context);
   }
 
   //////////// INITIAL STATE (Before Testing for the first time) ////////////

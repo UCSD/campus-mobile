@@ -32,6 +32,8 @@ build/
 
 # Generated dart files
 *.g.dart
+# TGPT Hive adapter (tracked for CI without build_runner in pre-test)
+!lib/core/models/tgpt_models/chat_message_persistent.g.dart
 *.freezed.dart
 *.mocks.dart
 *.config.dart
