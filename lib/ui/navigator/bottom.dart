@@ -32,6 +32,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
     Home(),
     prefix0.Maps(),
     NotificationsListView(),
+    Container(),
     Profile(),
   ];
 
@@ -76,6 +77,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
                 Provider.of<CustomAppBar>(context, listen: false)
                     .changeTitle("Notifications", done: false, notification: true);
                 break;
+              case NavigatorConstants.CHAT_TAB:
+                resetAllCardLoadedStates();
+                Provider.of<CustomAppBar>(context, listen: false).changeTitle("Chat");
+                break;
               case NavigatorConstants.PROFILE_TAB:
                 resetAllCardLoadedStates();
                 Provider.of<CustomAppBar>(context, listen: false).changeTitle("Profile");
@@ -96,7 +101,11 @@ class _BottomTabBarState extends State<BottomTabBar> {
               label: 'NOTIFICATIONS',
             ),
             BottomNavigationBarItem(
-              icon: _buildIcon(Icons.person, provider.currentIndex == 3, theme, size: 38),
+              icon: _buildIcon(Icons.chat_bubble_outline, provider.currentIndex == 3, theme),
+              label: 'CHAT',
+            ),
+            BottomNavigationBarItem(
+              icon: _buildIcon(Icons.person, provider.currentIndex == 4, theme, size: 38),
               label: 'PROFILE',
             ),
           ],

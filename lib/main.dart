@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
+import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message_persistent.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -52,6 +53,7 @@ Future<void> initializeHive() async {
   await Hive.initFlutter('.');
   Hive.registerAdapter(AuthenticationModelAdapter());
   Hive.registerAdapter(UserProfileModelAdapter());
+  Hive.registerAdapter(ChatMessagePersistentAdapter());
 }
 
 Future<void> initializeApp() async {

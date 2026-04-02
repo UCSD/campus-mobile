@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
+import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_persistence.dart';
 import 'package:campus_mobile_experimental/core/services/user.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:encrypt/encrypt.dart';
@@ -37,6 +38,7 @@ class UserDataProvider extends ChangeNotifier {
   /// SERVICES
   var _authenticationService = AuthenticationService();
   var _userProfileService = UserProfileService();
+  late final ChatPersistenceService _chatPersistenceService = ChatPersistenceService(this);
   // var storage = FlutterSecureStorage();
   final storage = const FlutterSecureStorage(
     iOptions: IOSOptions(
@@ -265,6 +267,7 @@ class UserDataProvider extends ChangeNotifier {
     resetAllCardHeights();
     resetNotificationsScrollOffset();
     _pushNotificationDataProvider.unregisterDevice(_authenticationModel.accessToken);
+    await _chatPersistenceService.clearUserChatData();
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
     updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
     _deletePasswordFromDevice();
