@@ -16,7 +16,7 @@ class TopContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
-      preferredSize: Size.fromHeight(50),
+      preferredSize: Size.fromHeight(57),
       child: AppBar(
         elevation: 0,
         backgroundColor: ColorPrimary,
