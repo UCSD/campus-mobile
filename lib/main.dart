@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -37,6 +38,12 @@ void main() async {
 
     // dotenv loading
     await dotenv.load(isOptional: true);
+
+    // Initialize ArcGIS
+    final arcgisAgeKey = dotenv.env['ARCGIS_AGE_API_KEY'] ?? '';
+    if (arcgisAgeKey.isNotEmpty) {
+      ArcGISEnvironment.apiKey = arcgisAgeKey;
+    }
 
     /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);

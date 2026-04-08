@@ -4,7 +4,8 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/wrappers/push_notifications.dart';
 import 'package:campus_mobile_experimental/ui/ai_assistant/ai_assistant.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
-import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
+// import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
+import 'package:campus_mobile_experimental/ui/esrimap/esrimap.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
@@ -32,7 +33,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
   
     var currentTab = [
     Home(),
-    prefix0.Maps(),
+    EsriMap(),
     AIAssistantTab(),
     NotificationsListView(),
     Profile(),
@@ -48,14 +49,15 @@ class _BottomTabBarState extends State<BottomTabBar> {
       drawerScrimColor: Colors.transparent,
       backgroundColor: provider.currentIndex == 0 ? lightPrimaryColor : theme.scaffoldBackgroundColor,
       appBar: isAssistantTab
-          ? null
-          : PreferredSize(preferredSize: Size.fromHeight(57), child: Provider.of<CustomAppBar>(context).appBar),
+        ? null
+        : PreferredSize(preferredSize: Size.fromHeight(50), child: Provider.of<CustomAppBar>(context).appBar),
       body: PushNotificationWrapper(
         child: IndexedStack(
           index: provider.currentIndex,
           children: currentTab,
         ),
       ),
+      
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: theme.bottomNavigationBarTheme.backgroundColor,
