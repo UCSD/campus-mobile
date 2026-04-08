@@ -29,8 +29,8 @@ class BottomTabBar extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar> {
-
-  var currentTab = [
+  
+    var currentTab = [
     Home(),
     prefix0.Maps(),
     AIAssistantTab(),
@@ -116,7 +116,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
               label: 'NOTIFICATIONS',
             ),
             BottomNavigationBarItem(
-              icon: _buildIcon(Icons.person, provider.currentIndex == 4, theme, size: 38),
+              icon: _buildIcon(Icons.person, provider.currentIndex == NavigatorConstants.PROFILE_TAB, theme, size: 38),
               label: 'PROFILE',
             ),
           ],

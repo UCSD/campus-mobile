@@ -24,16 +24,42 @@ class _AIAssistantViewState extends State<AIAssistantView> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isSidebarOpen = false;
+  ChatProvider? _chatProvider;
+  UserDataProvider? _userDataProvider;
   bool? _lastObservedLoginState;
   String? _lastShownError;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final ChatProvider nextChatProvider = context.read<ChatProvider>();
+    if (!identical(_chatProvider, nextChatProvider)) {
+      _chatProvider?.removeListener(_handleChatProviderChanged);
+      _chatProvider = nextChatProvider;
+      _chatProvider?.addListener(_handleChatProviderChanged);
+      _handleChatProviderChanged();
+    }
+
+    final UserDataProvider nextUserDataProvider = context.read<UserDataProvider>();
+    if (!identical(_userDataProvider, nextUserDataProvider)) {
+      _userDataProvider?.removeListener(_handleUserDataChanged);
+      _userDataProvider = nextUserDataProvider;
+      _lastObservedLoginState = nextUserDataProvider.isLoggedIn;
+      _userDataProvider?.addListener(_handleUserDataChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    _chatProvider?.removeListener(_handleChatProviderChanged);
+    _userDataProvider?.removeListener(_handleUserDataChanged);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ChatProvider chatProvider = context.watch<ChatProvider>();
-    final bool isLoggedIn = context.select<UserDataProvider, bool>((UserDataProvider provider) => provider.isLoggedIn);
-
-    _syncLoginStateIfNeeded(chatProvider, isLoggedIn);
-    _showErrorIfNeeded(chatProvider.errorMessage);
 
     return PopScope(
       canPop: !_isSidebarOpen,
@@ -132,19 +158,20 @@ class _AIAssistantViewState extends State<AIAssistantView> {
           ),
         ),
         Expanded(
-          child: chatProvider.hasMessages
-              ? ChatMessageList(
-                  messages: chatProvider.messages,
-                  onFeedbackSelected: chatProvider.toggleMessageFeedback,
-                )
-              : const AssistantEmptyState(),
+          child:
+              chatProvider.hasMessages ? ChatMessageList(messages: chatProvider.messages) : const AssistantEmptyState(),
         ),
       ],
     );
   }
 
-  void _showErrorIfNeeded(String? errorMessage) {
-    if (errorMessage == null || errorMessage.isEmpty || errorMessage == _lastShownError) return;
+  void _handleChatProviderChanged() {
+    final String? errorMessage = _chatProvider?.errorMessage;
+    if (errorMessage == null || errorMessage.isEmpty) {
+      _lastShownError = null;
+      return;
+    }
+    if (errorMessage == _lastShownError) return;
 
     _lastShownError = errorMessage;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -155,16 +182,17 @@ class _AIAssistantViewState extends State<AIAssistantView> {
     });
   }
 
-  void _syncLoginStateIfNeeded(ChatProvider chatProvider, bool isLoggedIn) {
-    if (_lastObservedLoginState == null) {
-      _lastObservedLoginState = isLoggedIn;
-      return;
-    }
+  void _handleUserDataChanged() {
+    final ChatProvider? chatProvider = _chatProvider;
+    final UserDataProvider? userDataProvider = _userDataProvider;
+    if (chatProvider == null || userDataProvider == null) return;
+
+    final bool isLoggedIn = userDataProvider.isLoggedIn;
     if (_lastObservedLoginState == isLoggedIn) return;
 
     _lastObservedLoginState = isLoggedIn;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
+      if (!mounted || !identical(chatProvider, _chatProvider)) return;
       chatProvider.syncLoginState(isLoggedIn);
     });
   }

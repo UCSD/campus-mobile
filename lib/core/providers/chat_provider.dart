@@ -155,23 +155,6 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  void toggleMessageFeedback(String messageId, AssistantChatFeedback feedback) {
-    final int messageIndex = _messages.indexWhere((AssistantChatMessage message) => message.id == messageId);
-    if (messageIndex == -1) return;
-
-    final AssistantChatMessage message = _messages[messageIndex];
-    final AssistantChatFeedback? nextFeedback = message.feedback == feedback ? null : feedback;
-    _messages[messageIndex] = message.copyWith(
-      feedback: nextFeedback,
-      clearFeedback: nextFeedback == null,
-    );
-    final String? sessionId = _activeSessionId;
-    if (sessionId != null && sessionId.isNotEmpty) {
-      _setSessionMessages(sessionId, _messages);
-    }
-    notifyListeners();
-  }
-
   Future<void> sendMessage(String rawMessage) async {
     final String message = rawMessage.trim();
     if (message.isEmpty || isStreaming) return;

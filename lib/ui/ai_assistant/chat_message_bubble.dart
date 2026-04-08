@@ -8,11 +8,9 @@ class ChatMessageBubble extends StatelessWidget {
   const ChatMessageBubble({
     super.key,
     required this.message,
-    required this.onFeedbackSelected,
   });
 
   final AssistantChatMessage message;
-  final void Function(String messageId, AssistantChatFeedback feedback) onFeedbackSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -118,32 +116,7 @@ class ChatMessageBubble extends StatelessWidget {
                         .toList(),
                   ),
                 ),
-              if (!message.isStreaming && message.text.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      _FeedbackButton(
-                        icon: message.feedback == AssistantChatFeedback.upvote
-                            ? Icons.thumb_up_alt
-                            : Icons.thumb_up_alt_outlined,
-                        isSelected: message.feedback == AssistantChatFeedback.upvote,
-                        onTap: () => onFeedbackSelected(message.id, AssistantChatFeedback.upvote),
-                      ),
-                      const SizedBox(width: 2),
-                      _FeedbackButton(
-                        icon: message.feedback == AssistantChatFeedback.downvote
-                            ? Icons.thumb_down_alt
-                            : Icons.thumb_down_alt_outlined,
-                        isSelected: message.feedback == AssistantChatFeedback.downvote,
-                        onTap: () => onFeedbackSelected(message.id, AssistantChatFeedback.downvote),
-                      ),
-                    ],
-                  ),
-                ),
-              if (message.isStreaming && message.text.isEmpty)
-                const _TypingIndicator(),
+              if (message.isStreaming && message.text.isEmpty) const _TypingIndicator(),
             ],
           ),
         ),
@@ -188,9 +161,7 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
             animation: _controller,
             builder: (BuildContext context, Widget? child) {
               final double phase = (_controller.value - i * 0.18).clamp(0.0, 1.0);
-              final double offset = phase < 0.5
-                  ? -4.0 * (phase / 0.5)
-                  : -4.0 * (1.0 - (phase - 0.5) / 0.5);
+              final double offset = phase < 0.5 ? -4.0 * (phase / 0.5) : -4.0 * (1.0 - (phase - 0.5) / 0.5);
               return Transform.translate(
                 offset: Offset(0, offset),
                 child: child,
@@ -207,36 +178,6 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
             ),
           );
         }),
-      ),
-    );
-  }
-}
-
-class _FeedbackButton extends StatelessWidget {
-  const _FeedbackButton({
-    required this.icon,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onTap,
-      splashRadius: 18,
-      padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(
-        minWidth: 32,
-        minHeight: 32,
-      ),
-      icon: Icon(
-        icon,
-        size: 18,
-        color: isSelected ? const Color(0xFF00629B) : const Color(0xFF8C9198),
       ),
     );
   }

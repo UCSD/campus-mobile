@@ -1,10 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message_persistent.dart';
 
-enum AssistantChatFeedback {
-  upvote,
-  downvote,
-}
-
 class AssistantChatCitation {
   final int number;
   final String url;
@@ -22,7 +17,6 @@ class AssistantChatMessage {
   final bool isFromUser;
   final bool isStreaming;
   final List<AssistantChatCitation> citations;
-  final AssistantChatFeedback? feedback;
 
   const AssistantChatMessage({
     required this.id,
@@ -31,7 +25,6 @@ class AssistantChatMessage {
     required this.isFromUser,
     this.isStreaming = false,
     this.citations = const [],
-    this.feedback,
   });
 
   AssistantChatMessage copyWith({
@@ -41,8 +34,6 @@ class AssistantChatMessage {
     bool? isFromUser,
     bool? isStreaming,
     List<AssistantChatCitation>? citations,
-    AssistantChatFeedback? feedback,
-    bool clearFeedback = false,
   }) {
     return AssistantChatMessage(
       id: id ?? this.id,
@@ -51,7 +42,6 @@ class AssistantChatMessage {
       isFromUser: isFromUser ?? this.isFromUser,
       isStreaming: isStreaming ?? this.isStreaming,
       citations: citations ?? this.citations,
-      feedback: clearFeedback ? null : (feedback ?? this.feedback),
     );
   }
 

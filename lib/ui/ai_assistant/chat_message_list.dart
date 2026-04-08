@@ -6,11 +6,9 @@ class ChatMessageList extends StatefulWidget {
   const ChatMessageList({
     super.key,
     required this.messages,
-    required this.onFeedbackSelected,
   });
 
   final List<AssistantChatMessage> messages;
-  final void Function(String messageId, AssistantChatFeedback feedback) onFeedbackSelected;
 
   @override
   State<ChatMessageList> createState() => _ChatMessageListState();
@@ -55,7 +53,6 @@ class _ChatMessageListState extends State<ChatMessageList> {
       itemBuilder: (BuildContext context, int index) {
         return ChatMessageBubble(
           message: widget.messages[index],
-          onFeedbackSelected: widget.onFeedbackSelected,
         );
       },
     );
