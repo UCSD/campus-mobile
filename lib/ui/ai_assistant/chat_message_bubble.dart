@@ -46,6 +46,8 @@ class ChatMessageBubble extends StatelessWidget {
   }
 
   Widget _buildAssistantBubble(BuildContext context) {
+    final AssistantMessageContent content = message.content;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -65,9 +67,9 @@ class ChatMessageBubble extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (message.text.isNotEmpty)
+              if (content.markdown.isNotEmpty)
                 MarkdownBody(
-                  data: message.text,
+                  data: content.markdown,
                   shrinkWrap: true,
                   onTapLink: (_, String? href, __) {
                     if (href == null || href.isEmpty) return;
@@ -111,16 +113,96 @@ class ChatMessageBubble extends StatelessWidget {
                     runSpacing: 8,
                     children: message.citations
                         .map(
-                          (AssistantChatCitation citation) => ChatCitation(citation: citation),
+                          (ChatCitationReference citation) => ChatCitation(citation: citation),
                         )
                         .toList(),
                   ),
                 ),
-              if (message.isStreaming && message.text.isEmpty) const _TypingIndicator(),
+              if (content.relatedQuestions.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: _RelatedQuestionsSection(questions: content.relatedQuestions),
+                ),
+              if (message.isStreaming && content.markdown.isEmpty && content.relatedQuestions.isEmpty)
+                const _TypingIndicator(),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class _RelatedQuestionsSection extends StatelessWidget {
+  const _RelatedQuestionsSection({
+    required this.questions,
+  });
+
+  final List<String> questions;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF6F8FB),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFFE1E6EE),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text(
+            'Related Questions',
+            style: TextStyle(
+              fontFamily: 'Brix Sans',
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: lightPrimaryColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...questions.map(
+            (String question) => Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      '•',
+                      style: TextStyle(
+                        fontFamily: 'Brix Sans',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: lightPrimaryColor,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      question,
+                      style: const TextStyle(
+                        fontFamily: 'Brix Sans',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: lightPrimaryColor,
+                        height: 1.35,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -9,7 +9,7 @@ class ChatCitation extends StatelessWidget {
     required this.citation,
   });
 
-  final AssistantChatCitation citation;
+  final ChatCitationReference citation;
 
   @override
   Widget build(BuildContext context) {

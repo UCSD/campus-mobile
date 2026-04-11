@@ -218,16 +218,7 @@ class ChatProvider extends ChangeNotifier {
         if (placeholderIndex == -1) continue;
 
         final AssistantChatMessage currentMessage = sessionMessages[placeholderIndex];
-        final List<AssistantChatCitation> citations = chunk.citations == null
-            ? currentMessage.citations
-            : chunk.citations!
-                .map(
-                  (citation) => AssistantChatCitation(
-                    number: citation.citationNum,
-                    url: citation.documentId,
-                  ),
-                )
-                .toList();
+        final List<ChatCitationReference> citations = chunk.citations ?? currentMessage.citations;
 
         final String nextText = chunk.delta.isEmpty ? currentMessage.text : '${currentMessage.text}${chunk.delta}';
         sessionMessages[placeholderIndex] = currentMessage.copyWith(

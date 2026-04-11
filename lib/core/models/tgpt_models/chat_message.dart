@@ -1,13 +1,88 @@
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message_persistent.dart';
 
-class AssistantChatCitation {
+class ChatCitationReference {
   final int number;
   final String url;
 
-  const AssistantChatCitation({
+  const ChatCitationReference({
     required this.number,
     required this.url,
   });
+
+  factory ChatCitationReference.fromStreamJson(Map<String, dynamic> json) {
+    final Object? rawNumber = json['citation_num'];
+    final int? number = rawNumber is int ? rawNumber : int.tryParse(rawNumber?.toString() ?? '');
+
+    return ChatCitationReference(
+      number: number ?? 0,
+      url: json['document_id']?.toString() ?? '',
+    );
+  }
+}
+
+class AssistantMessageContent {
+  static final RegExp _relatedQuestionPattern = RegExp(
+    r'^(?:[-*]\s*)?\[rq\]\s*(.*)$',
+    caseSensitive: false,
+  );
+
+  const AssistantMessageContent({
+    required this.markdown,
+    this.relatedQuestions = const <String>[],
+  });
+
+  final String markdown;
+  final List<String> relatedQuestions;
+
+  factory AssistantMessageContent.parse(String rawText) {
+    if (rawText.isEmpty) {
+      return const AssistantMessageContent(markdown: '');
+    }
+
+    final List<String> answerLines = <String>[];
+    final List<String> relatedQuestions = <String>[];
+
+    for (final String line in rawText.replaceAll('\r\n', '\n').split('\n')) {
+      final String trimmedLine = line.trimLeft();
+      final Match? match = _relatedQuestionPattern.firstMatch(trimmedLine);
+
+      if (match != null) {
+        final String question = match.group(1)?.trim() ?? '';
+        if (question.isNotEmpty) {
+          relatedQuestions.add(question);
+        }
+        continue;
+      }
+
+      answerLines.add(line);
+    }
+
+    final List<String> normalizedAnswerLines = _trimBlankLines(answerLines);
+    if (relatedQuestions.isNotEmpty && normalizedAnswerLines.isNotEmpty) {
+      final String trailingLine = normalizedAnswerLines.last.trim().toLowerCase();
+      if (trailingLine == 'related questions' || trailingLine == 'related questions:') {
+        normalizedAnswerLines.removeLast();
+      }
+    }
+
+    return AssistantMessageContent(
+      markdown: _trimBlankLines(normalizedAnswerLines).join('\n'),
+      relatedQuestions: List<String>.unmodifiable(relatedQuestions),
+    );
+  }
+
+  static List<String> _trimBlankLines(List<String> lines) {
+    final List<String> trimmedLines = List<String>.from(lines);
+
+    while (trimmedLines.isNotEmpty && trimmedLines.first.trim().isEmpty) {
+      trimmedLines.removeAt(0);
+    }
+    while (trimmedLines.isNotEmpty && trimmedLines.last.trim().isEmpty) {
+      trimmedLines.removeLast();
+    }
+
+    return trimmedLines;
+  }
 }
 
 class AssistantChatMessage {
@@ -16,7 +91,7 @@ class AssistantChatMessage {
   final DateTime createdAt;
   final bool isFromUser;
   final bool isStreaming;
-  final List<AssistantChatCitation> citations;
+  final List<ChatCitationReference> citations;
 
   const AssistantChatMessage({
     required this.id,
@@ -33,7 +108,7 @@ class AssistantChatMessage {
     DateTime? createdAt,
     bool? isFromUser,
     bool? isStreaming,
-    List<AssistantChatCitation>? citations,
+    List<ChatCitationReference>? citations,
   }) {
     return AssistantChatMessage(
       id: id ?? this.id,
@@ -44,6 +119,8 @@ class AssistantChatMessage {
       citations: citations ?? this.citations,
     );
   }
+
+  AssistantMessageContent get content => AssistantMessageContent.parse(text);
 
   ChatMessagePersistent toPersistent({
     required String sessionId,

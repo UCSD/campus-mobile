@@ -60,6 +60,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
   @override
   Widget build(BuildContext context) {
     final ChatProvider chatProvider = context.watch<ChatProvider>();
+    final bool isLoggedIn = context.watch<UserDataProvider>().isLoggedIn;
 
     return PopScope(
       canPop: !_isSidebarOpen,
@@ -78,6 +79,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
           });
         },
         drawer: AssistantSidebar(
+          isLoggedIn: isLoggedIn,
           sessions: chatProvider.sessions,
           activeSessionId: chatProvider.activeSessionId,
           onNewChat: () async {

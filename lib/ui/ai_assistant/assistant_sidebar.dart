@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class AssistantSidebar extends StatelessWidget {
   const AssistantSidebar({
     super.key,
+    required this.isLoggedIn,
     required this.sessions,
     required this.activeSessionId,
     required this.onNewChat,
@@ -13,6 +14,7 @@ class AssistantSidebar extends StatelessWidget {
     required this.onClose,
   });
 
+  final bool isLoggedIn;
   final List<ChatSessionMeta> sessions;
   final String? activeSessionId;
   final Future<void> Function() onNewChat;
@@ -106,15 +108,18 @@ class AssistantSidebar extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 24),
                 children: <Widget>[
-                  if (recentSessions.isNotEmpty) ...<Widget>[
-                    const _SidebarSectionTitle(title: 'Previous 7 Days'),
-                    ...recentSessions.map(_buildSessionRow),
-                  ],
-                  if (olderSessions.isNotEmpty) ...<Widget>[
-                    const SizedBox(height: 12),
-                    const _SidebarSectionTitle(title: 'Older'),
-                    ...olderSessions.map(_buildSessionRow),
-                  ],
+                  if (isLoggedIn) ...<Widget>[
+                    if (recentSessions.isNotEmpty) ...<Widget>[
+                      const _SidebarSectionTitle(title: 'Previous 7 Days'),
+                      ...recentSessions.map(_buildSessionRow),
+                    ],
+                    if (olderSessions.isNotEmpty) ...<Widget>[
+                      const SizedBox(height: 12),
+                      const _SidebarSectionTitle(title: 'Older'),
+                      ...olderSessions.map(_buildSessionRow),
+                    ],
+                  ] else
+                    ...sessions.map(_buildSessionRow),
                 ],
               ),
             ),
