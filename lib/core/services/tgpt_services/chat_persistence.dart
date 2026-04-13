@@ -127,6 +127,13 @@ class ChatPersistenceService {
     await sessionBox.put(_K_SESSION_ID_KEY, sessionId);
   }
 
+  /// Clear the current active session ID while leaving session history intact.
+  Future<void> clearSessionId() async {
+    if (!_isLoggedIn) return;
+    final sessionBox = await _openSessionBox();
+    await sessionBox.delete(_K_SESSION_ID_KEY);
+  }
+
   /// Load the current active session ID.
   Future<String?> loadSessionId() async {
     if (!_isLoggedIn) return null;

@@ -9,43 +9,20 @@
 /// - TGPT_PERSONA_ID: Persona ID for chat sessions (optional, defaults to 1)
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_send_message.dart';
-
-/// A citation reference linking a citation number to a document URL.
-///
-/// Parsed from `citation_delta` events in the stream:
-/// ```json
-/// {"ind": 3, "obj": {"type": "citation_delta", "citations": [
-///   {"citation_num": 1, "document_id": "https://example.com/page"}
-/// ]}}
-/// ```
-class StreamingCitation {
-  final int citationNum;
-  final String documentId; // typically a URL
-
-  const StreamingCitation({
-    required this.citationNum,
-    required this.documentId,
-  });
-
-  factory StreamingCitation.fromJson(Map<String, dynamic> json) {
-    return StreamingCitation(
-      citationNum: json['citation_num'] as int,
-      documentId: json['document_id'] as String,
-    );
-  }
-}
 
 /// Streaming chunk data for real-time chat display.
 class StreamingChatChunk {
   final String delta; // incremental token text
   final bool done; // end-of-stream marker
   final int? messageId; // reserved_assistant_message_id for threading
-  final List<StreamingCitation>? citations; // citation references (at end of stream)
+  final List<ChatCitationReference>? citations; // citation references (at end of stream)
 
   const StreamingChatChunk({
     required this.delta,
@@ -186,7 +163,8 @@ class ChatMessageStreamService {
                 if (citationsList != null && citationsList.isNotEmpty) {
                   final citations = citationsList
                       .whereType<Map<String, dynamic>>()
-                      .map((c) => StreamingCitation.fromJson(c))
+                      .map(ChatCitationReference.fromStreamJson)
+                      .where((ChatCitationReference citation) => citation.url.isNotEmpty)
                       .toList();
                   yield StreamingChatChunk(delta: '', citations: citations);
                 }

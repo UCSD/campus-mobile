@@ -39,6 +39,7 @@ class RoutePaths {
 class RouteTitles {
   static const TITLE_MAP = {
     'Maps': 'MAP',
+    'AI Assistant': 'AI ASSISTANT',
     'MapSearch': 'MAP',
     'MapLocationList': 'MAP',
     'Notifications': 'NOTIFICATIONS',
@@ -138,8 +139,9 @@ class Plugins {
 class NavigatorConstants {
   static const HOME_TAB = 0;
   static const MAP_TAB = 1;
-  static const NOTIFICATIONS_TAB = 2;
-  static const CHAT_TAB = 3;
+  static const AI_ASSISTANT_TAB = 2;
+  static const CHAT_TAB = AI_ASSISTANT_TAB;
+  static const NOTIFICATIONS_TAB = 3;
   static const PROFILE_TAB = 4;
 }
 

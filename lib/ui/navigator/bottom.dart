@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/wrappers/push_notifications.dart';
+import 'package:campus_mobile_experimental/ui/ai_assistant/ai_assistant.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
@@ -28,11 +29,12 @@ class BottomTabBar extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar> {
-  var currentTab = [
+  
+    var currentTab = [
     Home(),
     prefix0.Maps(),
+    AIAssistantTab(),
     NotificationsListView(),
-    Container(),
     Profile(),
   ];
 
@@ -40,12 +42,20 @@ class _BottomTabBarState extends State<BottomTabBar> {
   Widget build(BuildContext context) {
     var provider = Provider.of<BottomNavigationBarProvider>(context);
     final theme = Theme.of(context);
+    final bool isAssistantTab = provider.currentIndex == NavigatorConstants.AI_ASSISTANT_TAB;
 
     return Scaffold(
       drawerScrimColor: Colors.transparent,
       backgroundColor: provider.currentIndex == 0 ? lightPrimaryColor : theme.scaffoldBackgroundColor,
-      appBar: PreferredSize(preferredSize: Size.fromHeight(50), child: Provider.of<CustomAppBar>(context).appBar),
-      body: PushNotificationWrapper(child: currentTab[provider.currentIndex]),
+      appBar: isAssistantTab
+          ? null
+          : PreferredSize(preferredSize: Size.fromHeight(57), child: Provider.of<CustomAppBar>(context).appBar),
+      body: PushNotificationWrapper(
+        child: IndexedStack(
+          index: provider.currentIndex,
+          children: currentTab,
+        ),
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: theme.bottomNavigationBarTheme.backgroundColor,
@@ -72,14 +82,14 @@ class _BottomTabBarState extends State<BottomTabBar> {
                 resetAllCardLoadedStates();
                 Provider.of<CustomAppBar>(context, listen: false).changeTitle("Maps");
                 break;
+              case NavigatorConstants.AI_ASSISTANT_TAB:
+                resetAllCardLoadedStates();
+                Provider.of<CustomAppBar>(context, listen: false).changeTitle("AI Assistant");
+                break;
               case NavigatorConstants.NOTIFICATIONS_TAB:
                 resetAllCardLoadedStates();
                 Provider.of<CustomAppBar>(context, listen: false)
                     .changeTitle("Notifications", done: false, notification: true);
-                break;
-              case NavigatorConstants.CHAT_TAB:
-                resetAllCardLoadedStates();
-                Provider.of<CustomAppBar>(context, listen: false).changeTitle("Chat");
                 break;
               case NavigatorConstants.PROFILE_TAB:
                 resetAllCardLoadedStates();
@@ -97,15 +107,16 @@ class _BottomTabBarState extends State<BottomTabBar> {
               label: 'MAP',
             ),
             BottomNavigationBarItem(
-              icon: _buildIcon(Icons.notifications, provider.currentIndex == 2, theme),
+              icon: _buildAIAssistantIcon(provider.currentIndex == NavigatorConstants.AI_ASSISTANT_TAB, theme),
+              label: 'AI ASSISTANT',
+            ),
+            BottomNavigationBarItem(
+              icon:
+                  _buildIcon(Icons.notifications, provider.currentIndex == NavigatorConstants.NOTIFICATIONS_TAB, theme),
               label: 'NOTIFICATIONS',
             ),
             BottomNavigationBarItem(
-              icon: _buildIcon(Icons.chat_bubble_outline, provider.currentIndex == 3, theme),
-              label: 'CHAT',
-            ),
-            BottomNavigationBarItem(
-              icon: _buildIcon(Icons.person, provider.currentIndex == 4, theme, size: 38),
+              icon: _buildIcon(Icons.person, provider.currentIndex == NavigatorConstants.PROFILE_TAB, theme, size: 38),
               label: 'PROFILE',
             ),
           ],
@@ -118,6 +129,27 @@ class _BottomTabBarState extends State<BottomTabBar> {
           unselectedFontSize: 0,
           iconSize: 34,
         ),
+      ),
+    );
+  }
+
+  Widget _buildAIAssistantIcon(bool isSelected, ThemeData theme) {
+    return Container(
+      height: 34,
+      margin: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
+        borderRadius: BorderRadius.circular(34),
+      ),
+      child: Image.asset(
+        'assets/images/tgpt/center-icon2.png',
+        width: 34,
+        height: 34,
+        color: isSelected
+            ? theme.bottomNavigationBarTheme.selectedItemColor
+            : theme.bottomNavigationBarTheme.unselectedItemColor,
+        colorBlendMode: BlendMode.srcIn,
       ),
     );
   }

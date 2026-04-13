@@ -1,37 +1,18 @@
-/// TGPT Chat Message Service
-///
-/// Required .env variables:
-/// - CHAT_SEND_MESSAGE_ENDPOINT: URL for sending chat messages
-/// - MOBILE_APP_PUBLIC_DATA_KEY: Public API key for unauthenticated users
 import 'dart:convert';
-import 'package:campus_mobile_experimental/app_networking.dart';
+
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_response.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:campus_mobile_experimental/core/providers/user.dart';
 
-/// Service for sending chat messages via the TGPT API.
+/// Shared helpers for building chat message requests.
 ///
-/// This is a simple POST helper that sends messages and returns raw responses.
-/// For real-time streaming UI, use [ChatMessageStreamService] instead.
+/// Streaming requests are sent by [ChatMessageStreamService]. This file keeps
+/// the payload builder in one place so the request shape stays consistent.
 class ChatMessageService {
-  final UserDataProvider _userDataProvider;
-  String? _error;
-  bool _hasRetried = false;
-
-  ChatMessageService(this._userDataProvider);
-
-  /// Build fresh headers for each request to avoid race conditions
-  /// with concurrent calls.
-  Map<String, String> _buildHeaders() {
-    return {
-      "accept": "application/json",
-      "content-type": "application/json",
-    };
-  }
+  const ChatMessageService._();
 
   /// Build the request body for sending a message.
   ///
-  /// Shared logic that can be used by both this service and streaming service.
+  /// Shared logic that can be used anywhere a `/chat/send-message` payload is
+  /// needed.
   static String buildRequestBody({
     required String message,
     required String chatSessionId,
@@ -46,70 +27,4 @@ class ChatMessageService {
     );
     return json.encode(req.toJson());
   }
-
-  /// Send a message and return the raw response string.
-  ///
-  /// [parentMessageId] - Omit (null) for the first message in a conversation.
-  /// For subsequent messages, use the `reserved_assistant_message_id` from the
-  /// previous response to maintain conversation threading.
-  ///
-  /// Returns the raw newline-delimited JSON response for custom parsing,
-  /// or null on error.
-  Future<String?> sendMessage({
-    required String message,
-    required String chatSessionId,
-    int? parentMessageId,
-  }) async {
-    _error = null;
-
-    // Build fresh headers per request to avoid race conditions
-    final headers = _buildHeaders();
-
-    try {
-      // Set auth header based on login state
-      if (_userDataProvider.isLoggedIn) {
-        headers['Authorization'] = 'Bearer ${_userDataProvider.authenticationModel.accessToken}';
-      } else {
-        headers['Authorization'] = dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY');
-      }
-
-      final endpoint = dotenv.env['CHAT_SEND_MESSAGE_ENDPOINT'];
-      if (endpoint == null) {
-        _error = 'No valid endpoint found.';
-        return null;
-      }
-
-      final body = buildRequestBody(
-        message: message,
-        chatSessionId: chatSessionId,
-        parentMessageId: parentMessageId,
-      );
-
-      final raw = await NetworkHelper.authorizedPost(endpoint, headers, body);
-      return raw is String ? raw : raw.toString();
-    } catch (e) {
-      // Retry once on 401 with refreshed token
-      if (!_hasRetried && e.toString().contains("401")) {
-        _hasRetried = true;
-
-        final bool refreshed = await NetworkHelper.getNewToken(headers);
-        if (refreshed) {
-          return await sendMessage(
-            message: message,
-            chatSessionId: chatSessionId,
-            parentMessageId: parentMessageId,
-          );
-        } else {
-          _hasRetried = false;
-          return null;
-        }
-      }
-
-      _error = e.toString();
-      _hasRetried = false;
-      return null;
-    }
-  }
-
-  String? get error => _error;
 }

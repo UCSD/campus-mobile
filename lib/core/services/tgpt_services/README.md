@@ -1,63 +1,40 @@
 # TGPT Services
 
-Services for interfacing with the TritonGPT chat API.
+These services back the current mobile AI Assistant flow. The orchestration entry point is `ChatProvider`; these files are the lower-level session, streaming, and persistence pieces it calls.
 
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `chat_session_creation.dart` | Creates new chat sessions via `/chat/create-chat-session` endpoint |
-| `chat_send_message.dart` | Builds request payload and sends messages (returns raw response) |
-| `chat_stream.dart` | Streams chat responses in real-time for token-by-token display |
-| `chat_persistence.dart` | Local storage of chat messages and session history via Hive |
+| `chat_session_creation.dart` | Creates a TGPT chat session through `/chat/create-chat-session` |
+| `chat_stream.dart` | Streams `/chat/send-message` responses, including token deltas and citations |
+| `chat_send_message.dart` | Shared request-body builder for `/chat/send-message` payloads |
+| `chat_persistence.dart` | Persists signed-in chat sessions and messages with Hive |
 
-## Dependencies
+## Actual App Flow
 
-- **Models**: `lib/core/models/tgpt_models/` - Data classes for API requests/responses
-  - `BasicCreateChatMessageRequest` - Request payload (used by both services)
-  - `RetrievalOptions` - Search options for request
-  - `ChatCitation` - Citation data in streaming responses
-- **Auth**: `UserDataProvider` - Provides login state and access tokens
-- **Network**: `app_networking.dart` - HTTP helpers with token refresh
-- **Config**: `.env` - API endpoints (`CHAT_CREATE_SESSION_ENDPOINT`, `CHAT_SEND_MESSAGE_ENDPOINT`)
+1. `AIAssistantView` wires `ChatComposer.onSubmitted` to `ChatProvider.sendMessage(...)`.
+2. `ChatProvider` creates a session if needed, appends the user message plus a streaming placeholder, and starts `ChatMessageStreamService`.
+3. `ChatMessageStreamService` sends the request, handles 401 retry via `NetworkHelper.getNewToken(...)`, and yields `StreamingChatChunk` values as the SSE/NDJSON response arrives.
+4. `ChatProvider` merges streamed text and citations into the active `AssistantChatMessage`, updates sidebar session metadata, and persists the session when the user is signed in.
+5. `ChatMessageBubble` parses assistant text to separate the main markdown answer from `[rq]`-prefixed related questions.
 
-## Usage
+## Auth And Persistence Rules
 
-```dart
-// 1. Create a session
-final sessionService = ChatSessionService(userDataProvider);
-final session = await sessionService.createChatSession();
+- Signed-in users send TGPT requests with their bearer token and get persisted chat history.
+- Guests send TGPT requests with `MOBILE_APP_PUBLIC_DATA_KEY` and keep chat history in memory only for the current app run.
+- Only the signed-in experience uses saved session IDs and time-bucketed sidebar history.
 
-// 2. Stream messages (recommended for UI)
-final streamService = ChatMessageStreamService(userDataProvider);
-int? lastMessageId;
+## Configuration
 
-await for (final chunk in streamService.streamMessage(
-  message: "Hello",
-  chatSessionId: session!.chatSessionId,
-  parentMessageId: lastMessageId, // null for first message
-)) {
-  // Capture message ID for threading
-  if (chunk.messageId != null) lastMessageId = chunk.messageId;
-  
-  // Display streaming text
-  print(chunk.delta);
-  
-  if (chunk.done) break;
-}
+Environment variables used by this flow:
 
-// For follow-up messages, pass the lastMessageId
-await for (final chunk in streamService.streamMessage(
-  message: "Tell me more",
-  chatSessionId: session.chatSessionId,
-  parentMessageId: lastMessageId,
-)) {
-  if (chunk.messageId != null) lastMessageId = chunk.messageId;
-  print(chunk.delta);
-  if (chunk.done) break;
-}
+- `CHAT_CREATE_SESSION_ENDPOINT`
+- `CHAT_SEND_MESSAGE_ENDPOINT`
+- `MOBILE_APP_PUBLIC_DATA_KEY` for guest chat/session requests
+- `TGPT_PERSONA_ID` (optional; defaults inside the session service when omitted)
 
-// Persist messages
-final persistence = ChatPersistenceService(userDataProvider);
-await persistence.saveMessagesForSession(sessionId, messages);
-```
+## Notes
+
+- Streaming is the supported message path for the mobile app.
+- If request payload fields change, update `BasicCreateChatMessageRequest` in `lib/core/models/tgpt_models/chat_response.dart` and keep `ChatMessageService.buildRequestBody(...)` aligned with it.
