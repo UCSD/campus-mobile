@@ -74,10 +74,11 @@ class NewsList extends StatelessWidget {
   }
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
-    return Semantics(
-      link: true,
-      label: 'Open link',
-      child: GestureDetector(
+    return MergeSemantics(
+      child: Semantics(
+        link: true,
+        label: 'Open link',
+        child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(
             context,
@@ -146,6 +147,7 @@ class NewsList extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
       ),
     );

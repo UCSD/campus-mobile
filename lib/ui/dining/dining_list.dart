@@ -165,10 +165,11 @@ class DiningList extends StatelessWidget {
   }
 
   Widget buildDiningTile(dining_model.DiningModel data, BuildContext context) {
-    return Semantics(
-      link: true,
-      label: 'Open link',
-      child: ListTile(
+    return MergeSemantics(
+      child: Semantics(
+        link: true,
+        label: 'Open link',
+        child: ListTile(
       contentPadding: EdgeInsets.zero,
       // Vendor Logo
       minLeadingWidth: 0, // Reduce minimum width
@@ -210,6 +211,7 @@ class DiningList extends StatelessWidget {
         // if (data.id != null) Provider.of<DiningDataProvider>(context, listen: false).fetchDiningMenu(data.id!);
         Navigator.pushNamed(context, RoutePaths.DINING_OPTION_DETAIL_VIEW, arguments: data);
       },
+    ),
     ),
     );
   }
