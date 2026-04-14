@@ -95,8 +95,10 @@ class _ParkingCardState extends State<ParkingCard> {
 
       return Column(
         children: <Widget>[
-          Expanded(
-            child: PageView.builder(
+          Semantics(
+            hint: 'Swipe left or right to view other parking areas',
+            child: Expanded(
+              child: PageView.builder(
               controller: _controller,
               itemCount: selectedLotsViews.length,
               physics: BouncingScrollPhysics(),
@@ -109,6 +111,7 @@ class _ParkingCardState extends State<ParkingCard> {
                 return selectedLotsViews[index];
               },
             ),
+          ),
           ),
           DotsIndicator(
             position: _currentPage.toDouble(),
