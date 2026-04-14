@@ -76,6 +76,8 @@ class NewsList extends StatelessWidget {
   Widget buildNewsTile(Item newsItem, BuildContext context) {
     return Semantics(
       link: true,
+      label: newsItem.title,
+      excludeSemantics: true,
       child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(
@@ -84,68 +86,68 @@ class NewsList extends StatelessWidget {
             arguments: newsItem,
           );
         },
-      child: Container(
-        padding: EdgeInsets.all(8.0),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 140,
-                margin: EdgeInsets.only(right: 8.0),
-                child: ImageLoader(
-                  url: newsItem.image,
-                  fullSize: true,
-                  fit: BoxFit.cover,
+        child: Container(
+          padding: EdgeInsets.all(8.0),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 140,
+                  margin: EdgeInsets.only(right: 8.0),
+                  child: ImageLoader(
+                    url: newsItem.image,
+                    fullSize: true,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      textScaler: MediaQuery.textScalerOf(context),
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: DateFormat.yMMMMd().format(newsItem.date.toLocal()),
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                              height: 1.42,
-                              color: Theme.of(context).textTheme.bodyMedium!.color,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RichText(
+                        textScaler: MediaQuery.textScalerOf(context),
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: DateFormat.yMMMMd().format(newsItem.date.toLocal()),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                height: 1.42,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                              ),
                             ),
-                          ),
-                          TextSpan(
-                            text: ' - ',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium!
-                                .copyWith(height: 1.42, fontSize: 16.0, decoration: TextDecoration.none),
-                          ),
-                          TextSpan(
-                            text: newsItem.title,
-                            style: Theme.of(context).textTheme.headlineMedium!.copyWith(height: 1.42, fontSize: 18.0),
-                          ),
-                        ],
+                            TextSpan(
+                              text: ' - ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium!
+                                  .copyWith(height: 1.42, fontSize: 16.0, decoration: TextDecoration.none),
+                            ),
+                            TextSpan(
+                              text: newsItem.title,
+                              style: Theme.of(context).textTheme.headlineMedium!.copyWith(height: 1.42, fontSize: 18.0),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      newsItem.description,
-                      textAlign: TextAlign.start,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16.0, height: 1.42),
-                    ),
-                  ],
+                      SizedBox(height: 8),
+                      Text(
+                        newsItem.description,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16.0, height: 1.42),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
