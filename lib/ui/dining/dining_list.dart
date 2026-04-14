@@ -211,7 +211,6 @@ class DiningList extends StatelessWidget {
         Navigator.pushNamed(context, RoutePaths.DINING_OPTION_DETAIL_VIEW, arguments: data);
       },
     ),
-    ),
     );
   }
 
