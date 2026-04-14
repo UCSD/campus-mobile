@@ -95,10 +95,6 @@ class _ParkingCardState extends State<ParkingCard> {
 
       return Column(
         children: <Widget>[
-          Semantics(
-            label: 'Swipe left or right to view other parking areas',
-            child: const SizedBox.shrink(),
-          ),
           Expanded(
             child: PageView.builder(
               controller: _controller,

@@ -165,11 +165,10 @@ class DiningList extends StatelessWidget {
   }
 
   Widget buildDiningTile(dining_model.DiningModel data, BuildContext context) {
-    return MergeSemantics(
-      child: Semantics(
-        link: true,
-        label: 'Open link',
-        child: ListTile(
+    return Semantics(
+      link: true,
+      hint: 'Open link',
+      child: ListTile(
       contentPadding: EdgeInsets.zero,
       // Vendor Logo
       minLeadingWidth: 0, // Reduce minimum width
