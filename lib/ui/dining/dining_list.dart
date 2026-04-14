@@ -165,11 +165,7 @@ class DiningList extends StatelessWidget {
   }
 
   Widget buildDiningTile(dining_model.DiningModel data, BuildContext context) {
-    return Semantics(
-      link: true,
-      label: data.name,
-      excludeSemantics: true,
-      child: ListTile(
+    return ListTile(
       contentPadding: EdgeInsets.zero,
       // Vendor Logo
       minLeadingWidth: 0, // Reduce minimum width
@@ -195,10 +191,13 @@ class DiningList extends StatelessWidget {
                 color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
       ),
       // Vendor Name
-      title: Text(
-        data.name,
-        textAlign: TextAlign.start,
-        style: Theme.of(context).brightness == Brightness.dark ? textButtonSmallDark : textButtonSmallLight,
+      title: Semantics(
+        link: true,
+        child: Text(
+          data.name,
+          textAlign: TextAlign.start,
+          style: Theme.of(context).brightness == Brightness.dark ? textButtonSmallDark : textButtonSmallLight,
+        ),
       ),
       // Vendor Hours
       subtitle: Padding(
@@ -211,7 +210,6 @@ class DiningList extends StatelessWidget {
         // if (data.id != null) Provider.of<DiningDataProvider>(context, listen: false).fetchDiningMenu(data.id!);
         Navigator.pushNamed(context, RoutePaths.DINING_OPTION_DETAIL_VIEW, arguments: data);
       },
-    ),
     );
   }
 

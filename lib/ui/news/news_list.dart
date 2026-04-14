@@ -74,11 +74,7 @@ class NewsList extends StatelessWidget {
   }
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
-    return Semantics(
-      link: true,
-      label: newsItem.title,
-      excludeSemantics: true,
-      child: GestureDetector(
+    return GestureDetector(
         onTap: () {
           Navigator.pushNamed(
             context,
@@ -126,9 +122,14 @@ class NewsList extends StatelessWidget {
                                   .headlineMedium!
                                   .copyWith(height: 1.42, fontSize: 16.0, decoration: TextDecoration.none),
                             ),
-                            TextSpan(
-                              text: newsItem.title,
-                              style: Theme.of(context).textTheme.headlineMedium!.copyWith(height: 1.42, fontSize: 18.0),
+                          WidgetSpan(
+                            child: Semantics(
+                              link: true,
+                              child: Text(
+                                newsItem.title,
+                                style: Theme.of(context).textTheme.headlineMedium!.copyWith(height: 1.42, fontSize: 18.0),
+                              ),
+                            ),
                             ),
                           ],
                         ),
@@ -148,7 +149,6 @@ class NewsList extends StatelessWidget {
             ),
           ),
         ),
-      ),
     );
   }
 }
