@@ -182,11 +182,15 @@ class CircularParkingIndicators extends StatelessWidget {
   }
 
   Widget buildLocationTitle(BuildContext context) {
-    return Text(
-      model.locationName.toUpperCase(),
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.normal,
-          ),
+    return Semantics(
+      label: '${model.locationName.toUpperCase()}. Swipe left or right to view other parking areas',
+      excludeSemantics: true,
+      child: Text(
+        model.locationName.toUpperCase(),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.normal,
+            ),
+      ),
     );
   }
 

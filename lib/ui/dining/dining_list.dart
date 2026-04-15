@@ -167,7 +167,8 @@ class DiningList extends StatelessWidget {
   Widget buildDiningTile(dining_model.DiningModel data, BuildContext context) {
     return Semantics(
       link: true,
-      hint: 'Open link',
+      label: 'Open link. ${data.name}',
+      excludeSemantics: true,
       child: ListTile(
       contentPadding: EdgeInsets.zero,
       // Vendor Logo

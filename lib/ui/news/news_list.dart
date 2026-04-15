@@ -76,7 +76,8 @@ class NewsList extends StatelessWidget {
   Widget buildNewsTile(Item newsItem, BuildContext context) {
     return Semantics(
       link: true,
-      hint: 'Open link',
+      label: 'Open link. ${newsItem.title}. ${newsItem.description}',
+      excludeSemantics: true,
       child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(
