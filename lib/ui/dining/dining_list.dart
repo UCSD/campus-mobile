@@ -192,7 +192,8 @@ class DiningList extends StatelessWidget {
       ),
       // Vendor Name
       title: Semantics(
-        label: 'Open link',
+        label: 'Open link. ${data.name}',
+        excludeSemantics: true,
         child: Text(
           data.name,
           textAlign: TextAlign.start,

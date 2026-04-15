@@ -98,10 +98,14 @@ class AvailabilityDisplay extends StatelessWidget {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 35,
-                          color: Theme.of(context).brightness == Brightness.dark ? linkColorLight : linkColorDark,
+                        Semantics(
+                          label: 'View details for ${subLocation.name}',
+                          button: true,
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 35,
+                            color: Theme.of(context).brightness == Brightness.dark ? linkColorLight : linkColorDark,
+                          ),
                         ),
                       ],
                     ),
