@@ -218,10 +218,11 @@ class DiningList extends StatelessWidget {
 
   // Builds the Right side of the ListTile containing the icon and distance
   Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
-    String distanceText = data.distance != null ? '${num.parse(data.distance!.toStringAsFixed(1))} miles' : '';
+    String distanceText = data.distance != null
+        ? '${num.parse(data.distance!.toStringAsFixed(1))} miles, get directions'
+        : 'Get directions';
     return Semantics(
       label: distanceText,
-      button: true,
       excludeSemantics: true,
       child: TextButton(
       style: TextButton.styleFrom(
