@@ -57,7 +57,7 @@ class AvailabilityDisplay extends StatelessWidget {
         child: Semantics(
           button: subLocation.floors.isNotEmpty,
           label: subLocation.floors.isNotEmpty
-              ? 'View details for ${subLocation.name}. ${(100 * percentAvailability(subLocation)).toInt()}% Busy'
+              ? '${subLocation.name}. ${(100 * percentAvailability(subLocation)).toInt()}% Busy. View details for ${subLocation.name}'
               : '${subLocation.name}. ${(100 * percentAvailability(subLocation)).toInt()}% Busy',
           excludeSemantics: true,
           child: GestureDetector(
