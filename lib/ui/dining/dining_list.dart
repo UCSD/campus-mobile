@@ -169,7 +169,8 @@ class DiningList extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       // Vendor Logo
       minLeadingWidth: 0, // Reduce minimum width
-      leading: SizedBox(
+      leading: ExcludeSemantics(
+        child: SizedBox(
         width: 48,
         height: 48,
         child: data.vendorLogo != null
@@ -189,6 +190,7 @@ class DiningList extends StatelessWidget {
             : Icon(Icons.restaurant,
                 size: 32,
                 color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
+      ),
       ),
       // Vendor Name
       title: Semantics(

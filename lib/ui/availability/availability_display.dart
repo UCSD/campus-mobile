@@ -54,7 +54,13 @@ class AvailabilityDisplay extends StatelessWidget {
     List<Widget> locations = model.subLocations.map((subLocation) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
-        child: GestureDetector(
+        child: Semantics(
+          button: subLocation.floors.isNotEmpty,
+          label: subLocation.floors.isNotEmpty
+              ? 'View details for ${subLocation.name}. ${(100 * percentAvailability(subLocation)).toInt()}% Busy'
+              : '${subLocation.name}. ${(100 * percentAvailability(subLocation)).toInt()}% Busy',
+          excludeSemantics: true,
+          child: GestureDetector(
           onTap: () {
             if (subLocation.floors.isNotEmpty) {
               Navigator.pushNamed(
@@ -98,14 +104,10 @@ class AvailabilityDisplay extends StatelessWidget {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Semantics(
-                          label: 'View details for ${subLocation.name}',
-                          button: true,
-                          child: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 35,
-                            color: Theme.of(context).brightness == Brightness.dark ? linkColorLight : linkColorDark,
-                          ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 35,
+                          color: Theme.of(context).brightness == Brightness.dark ? linkColorLight : linkColorDark,
                         ),
                       ],
                     ),
@@ -128,6 +130,7 @@ class AvailabilityDisplay extends StatelessWidget {
               ),
             ],
           ),
+        ),
         ),
       );
     }).toList();
