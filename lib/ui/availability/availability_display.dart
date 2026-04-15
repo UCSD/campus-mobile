@@ -26,11 +26,15 @@ class AvailabilityDisplay extends StatelessWidget {
     return Container(
       alignment: Alignment.centerLeft,
       margin: EdgeInsets.only(bottom: 8),
-      child: Text(
-        model.name.toUpperCase(),
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.normal,
-            ),
+      child: Semantics(
+        label: '${model.name.toUpperCase()}. Swipe left or right to view other areas',
+        excludeSemantics: true,
+        child: Text(
+          model.name.toUpperCase(),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.normal,
+              ),
+        ),
       ),
     );
   }

@@ -164,35 +164,9 @@ class DiningList extends StatelessWidget {
     );
   }
 
-  String _getHoursTextForToday(dining_model.RegularHours hours) {
-    int weekday = DateTime.now().weekday;
-    String? dayHours;
-    switch (weekday) {
-      case 1: dayHours = hours.mon; break;
-      case 2: dayHours = hours.tue; break;
-      case 3: dayHours = hours.wed; break;
-      case 4: dayHours = hours.thu; break;
-      case 5: dayHours = hours.fri; break;
-      case 6: dayHours = hours.sat; break;
-      case 7: dayHours = hours.sun; break;
-    }
-    if (dayHours == null || dayHours == 'Closed-Closed') {
-      String text = 'Closed';
-      String? nextDay = findNextOpenDay(hours);
-      String? nextTime = findNextOpenTime(hours);
-      if (nextDay != null && nextTime != null) text += '. Opens $nextDay at $nextTime';
-      return text;
-    }
-    if (dayHours == 'Invalid Date-Invalid Date') return 'Unknown hours';
-    return formattedTimeRange(dayHours) ?? dayHours;
-  }
-
   Widget buildDiningTile(dining_model.DiningModel data, BuildContext context) {
-    String hoursText = _getHoursTextForToday(data.regularHours);
     return Semantics(
       link: true,
-      label: 'Open link. ${data.name}. $hoursText',
-      excludeSemantics: true,
       child: ListTile(
       contentPadding: EdgeInsets.zero,
       // Vendor Logo
@@ -219,10 +193,13 @@ class DiningList extends StatelessWidget {
                 color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
       ),
       // Vendor Name
-      title: Text(
-        data.name,
-        textAlign: TextAlign.start,
-        style: Theme.of(context).brightness == Brightness.dark ? textButtonSmallDark : textButtonSmallLight,
+      title: Semantics(
+        label: 'Open link',
+        child: Text(
+          data.name,
+          textAlign: TextAlign.start,
+          style: Theme.of(context).brightness == Brightness.dark ? textButtonSmallDark : textButtonSmallLight,
+        ),
       ),
       // Vendor Hours
       subtitle: Padding(
