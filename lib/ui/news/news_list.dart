@@ -74,14 +74,18 @@ class NewsList extends StatelessWidget {
   }
 
   Widget buildNewsTile(Item newsItem, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          RoutePaths.NEWS_DETAIL_VIEW,
-          arguments: newsItem,
-        );
-      },
+    return Semantics(
+      link: true,
+      label: '${DateFormat.yMMMMd().format(newsItem.date.toLocal())}. Open link. ${newsItem.title}. ${newsItem.description}',
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            RoutePaths.NEWS_DETAIL_VIEW,
+            arguments: newsItem,
+          );
+        },
       child: Container(
         padding: EdgeInsets.all(8.0),
         child: IntrinsicHeight(
@@ -143,6 +147,7 @@ class NewsList extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
     );
   }

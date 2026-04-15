@@ -169,7 +169,8 @@ class DiningList extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       // Vendor Logo
       minLeadingWidth: 0, // Reduce minimum width
-      leading: SizedBox(
+      leading: ExcludeSemantics(
+        child: SizedBox(
         width: 48,
         height: 48,
         child: data.vendorLogo != null
@@ -190,11 +191,16 @@ class DiningList extends StatelessWidget {
                 size: 32,
                 color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
       ),
+      ),
       // Vendor Name
-      title: Text(
-        data.name,
-        textAlign: TextAlign.start,
-        style: Theme.of(context).brightness == Brightness.dark ? textButtonSmallDark : textButtonSmallLight,
+      title: Semantics(
+        label: 'Open link. ${data.name}',
+        excludeSemantics: true,
+        child: Text(
+          data.name,
+          textAlign: TextAlign.start,
+          style: Theme.of(context).brightness == Brightness.dark ? textButtonSmallDark : textButtonSmallLight,
+        ),
       ),
       // Vendor Hours
       subtitle: Padding(
@@ -212,7 +218,13 @@ class DiningList extends StatelessWidget {
 
   // Builds the Right side of the ListTile containing the icon and distance
   Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
-    return TextButton(
+    String distanceText = data.distance != null
+        ? '${num.parse(data.distance!.toStringAsFixed(1))} miles, get directions'
+        : 'Get directions';
+    return Semantics(
+      label: distanceText,
+      excludeSemantics: true,
+      child: TextButton(
       style: TextButton.styleFrom(
         foregroundColor: linkColorLight,
       ),
@@ -235,6 +247,7 @@ class DiningList extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }

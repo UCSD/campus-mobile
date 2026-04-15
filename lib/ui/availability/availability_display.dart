@@ -26,11 +26,15 @@ class AvailabilityDisplay extends StatelessWidget {
     return Container(
       alignment: Alignment.centerLeft,
       margin: EdgeInsets.only(bottom: 8),
-      child: Text(
-        model.name.toUpperCase(),
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.normal,
-            ),
+      child: Semantics(
+        label: '${model.name.toUpperCase()}. Swipe left or right to view other areas',
+        excludeSemantics: true,
+        child: Text(
+          model.name.toUpperCase(),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.normal,
+              ),
+        ),
       ),
     );
   }
@@ -50,7 +54,13 @@ class AvailabilityDisplay extends StatelessWidget {
     List<Widget> locations = model.subLocations.map((subLocation) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
-        child: GestureDetector(
+        child: Semantics(
+          button: subLocation.floors.isNotEmpty,
+          label: subLocation.floors.isNotEmpty
+              ? '${subLocation.name}. ${(100 * percentAvailability(subLocation)).toInt()}% Busy. View details for ${subLocation.name}'
+              : '${subLocation.name}. ${(100 * percentAvailability(subLocation)).toInt()}% Busy',
+          excludeSemantics: true,
+          child: GestureDetector(
           onTap: () {
             if (subLocation.floors.isNotEmpty) {
               Navigator.pushNamed(
@@ -120,6 +130,7 @@ class AvailabilityDisplay extends StatelessWidget {
               ),
             ],
           ),
+        ),
         ),
       );
     }).toList();
