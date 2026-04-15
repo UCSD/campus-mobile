@@ -86,6 +86,9 @@ class DiningConstants {
 }
 
 class ErrorConstants {
+  /// Shown when TritonGPT endpoints fail (5xx, timeouts, connection loss, etc.).
+  static const TRITONGPT_UNAVAILABLE = 'Unable to reach TritonGPT right now. Please try again later.';
+
   static const AUTHORIZED_POST_ERRORS = 'Failed to upload data: ';
   static const AUTHORIZED_PUT_ERRORS = 'Failed to update data: ';
   static const INVALID_BEARER_TOKEN = 'Invalid bearer token';

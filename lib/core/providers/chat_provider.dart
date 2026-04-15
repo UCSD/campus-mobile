@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_history.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -231,12 +232,12 @@ class ChatProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (_) {
-      _errorMessage = 'Unable to reach TritonGPT right now.';
+      _errorMessage = ErrorConstants.TRITONGPT_UNAVAILABLE;
       final int placeholderIndex =
           sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);
       if (placeholderIndex != -1) {
         sessionMessages[placeholderIndex] = sessionMessages[placeholderIndex].copyWith(
-          text: 'Unable to reach TritonGPT right now.',
+          text: ErrorConstants.TRITONGPT_UNAVAILABLE,
           isStreaming: false,
         );
       }

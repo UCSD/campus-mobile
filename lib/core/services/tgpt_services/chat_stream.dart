@@ -16,6 +16,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_send_message.dart';
+import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_user_message.dart';
 
 /// Streaming chunk data for real-time chat display.
 class StreamingChatChunk {
@@ -196,10 +197,10 @@ class ChatMessageStreamService {
         }
       }
       _hasRetried = false;
-      yield StreamingChatChunk(delta: 'Error: $e', done: true);
+      yield StreamingChatChunk(delta: tgptUserMessageForError(e), done: true);
     } catch (e) {
       _hasRetried = false;
-      yield StreamingChatChunk(delta: 'Error: $e', done: true);
+      yield StreamingChatChunk(delta: tgptUserMessageForError(e), done: true);
     } finally {
       dio.close();
     }

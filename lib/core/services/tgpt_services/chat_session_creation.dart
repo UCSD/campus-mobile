@@ -8,6 +8,8 @@ import 'dart:convert';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_session.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_user_message.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Service for creating chat sessions via the TGPT API.
@@ -71,7 +73,7 @@ class ChatSessionService {
       return chatSessionId;
     } catch (e) {
       // Retry once on 401 with refreshed token
-      if (!_hasRetried && e.toString().contains("401")) {
+      if (!_hasRetried && e is DioException && e.response?.statusCode == 401) {
         _hasRetried = true;
 
         final bool refreshed = await NetworkHelper.getNewToken(headers);
@@ -84,7 +86,7 @@ class ChatSessionService {
         }
       }
 
-      _error = e.toString();
+      _error = tgptUserMessageForError(e);
       _hasRetried = false;
       return null;
     } finally {
