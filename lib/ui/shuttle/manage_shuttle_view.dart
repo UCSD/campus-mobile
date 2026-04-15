@@ -73,6 +73,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
                   color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
               trailing: IconButton(
                   icon: Icon(Icons.close),
+                  tooltip: 'Remove ${model.name}',
                   onPressed: () async {
                     await _shuttleDataProvider.removeStop(model.id);
                   })),
