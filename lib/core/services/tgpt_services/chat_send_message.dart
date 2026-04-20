@@ -10,9 +10,6 @@ class ChatMessageService {
   const ChatMessageService._();
 
   /// Build the request body for sending a message.
-  ///
-  /// Shared logic that can be used anywhere a `/chat/send-message` payload is
-  /// needed.
   static String buildRequestBody({
     required String message,
     required String chatSessionId,
@@ -22,8 +19,6 @@ class ChatMessageService {
       message: message,
       chatSessionId: chatSessionId,
       parentMessageId: parentMessageId,
-      retrievalOptions: RetrievalOptions(runSearch: 'always'),
-      fileDescriptors: const [],
     );
     return json.encode(req.toJson());
   }

@@ -9,8 +9,10 @@ class ChatCitationReference {
     required this.url,
   });
 
+  /// Parses a citation object from legacy `citation_delta` arrays (`citation_num`)
+  /// or new `citation_info` packets (`citation_number`).
   factory ChatCitationReference.fromStreamJson(Map<String, dynamic> json) {
-    final Object? rawNumber = json['citation_num'];
+    final Object? rawNumber = json['citation_num'] ?? json['citation_number'];
     final int? number = rawNumber is int ? rawNumber : int.tryParse(rawNumber?.toString() ?? '');
 
     return ChatCitationReference(
