@@ -212,23 +212,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _locationDataSource = SystemLocationDataSource();
   bool _locationStarted = false;
 
-  // Routing
-  final _routeGraphicsOverlay = GraphicsOverlay();
-  bool _isRouting = false;
-  bool _hasRoute = false;
-  bool _routeFailed = false;
-  String _travelMode = 'Walking';
-  double _routeTravelTimeMinutes = 0;
-  List<DirectionManeuver> _routeManeuvers = [];
-  bool _showRouteFields = false;
-  final _fromController = TextEditingController();
-  final _toController = TextEditingController();
-  final _fromFocusNode = FocusNode();
-  final _toFocusNode = FocusNode();
-  String? _activeRouteField;
-  (double, double)? _fromLatLng;
-  MapSearchResult? _routeDestination;
-
   @override
   bool get wantKeepAlive => true;
 
@@ -240,8 +223,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _fetchAllPoiClasses();
     // Listen for focus changes to show/hide suggestions
     _focusNode.addListener(_onFocusChanged);
-    _fromFocusNode.addListener(_onFromFocusChanged);
-    _toFocusNode.addListener(_onToFocusChanged);
   }
 
   @override
@@ -249,10 +230,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _categorySheetController.dispose();
     _detailSheetController.dispose();
     _searchController.dispose();
-    _fromController.dispose();
-    _toController.dispose();
-    _fromFocusNode.dispose();
-    _toFocusNode.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -289,7 +266,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.arcGISMap = _map;
     _mapViewController.interactionOptions.rotateEnabled = false;
     _mapViewController.graphicsOverlays.add(_graphicsOverlay);
-    _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
 
     // Wire up location display — blue dot, no auto-pan on start
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
@@ -316,44 +292,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _showSuggestions = true;
         _showResults = false;
       });
-    }
-  }
-
-  void _onFromFocusChanged() {
-    if (_fromFocusNode.hasFocus) {
-      setState(() {
-        _activeRouteField = 'from';
-        if (_fromController.text.isEmpty) {
-          _showSuggestions = true;
-          _showResults = false;
-        }
-      });
-      if (_detailSheetController.isAttached) {
-        _detailSheetController.animateTo(
-          0.15,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
-      }
-    }
-  }
-
-  void _onToFocusChanged() {
-    if (_toFocusNode.hasFocus) {
-      setState(() {
-        _activeRouteField = 'to';
-        if (_toController.text.isEmpty) {
-          _showSuggestions = true;
-          _showResults = false;
-        }
-      });
-      if (_detailSheetController.isAttached) {
-        _detailSheetController.animateTo(
-          0.15,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
-      }
     }
   }
 
@@ -739,8 +677,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _searchController.text = category.label;
     });
     _focusNode.unfocus();
-    _fromFocusNode.unfocus();
-    _toFocusNode.unfocus();
 
     try {
       final allResults = await _queryPOIsByClass(category.poiClassValue);
@@ -784,48 +720,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _selectResult(MapSearchResult result) {
-    // Handle result selection within route fields
-    if (_showRouteFields && _activeRouteField != null) {
-      if (_activeRouteField == 'from') {
-        _fromController.text = result.name;
-        _fromLatLng = (result.latitude, result.longitude);
-        _graphicsOverlay.graphics.clear();
-        setState(() {
-          _showResults = false;
-          _showSuggestions = false;
-          _mappedResults = [];
-          _allCategoryResults = [];
-          _showSeeAll = false;
-          _showCategoryList = false;
-          _activeCategory = null;
-        });
-        _fromFocusNode.unfocus();
-        // Re-solve route if we already have a destination
-        if (_routeDestination != null) {
-          _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-        }
-      } else if (_activeRouteField == 'to') {
-        _toController.text = result.name;
-        _routeDestination = result;
-        _graphicsOverlay.graphics.clear();
-        setState(() {
-          _selectedResult = result;
-          _lastSelectedResult = result;
-          _showResults = false;
-          _showSuggestions = false;
-          _mappedResults = [];
-          _allCategoryResults = [];
-          _showSeeAll = false;
-          _showCategoryList = false;
-          _activeCategory = null;
-        });
-        _toFocusNode.unfocus();
-        _solveRoute(result, originLatLng: _fromLatLng);
-      }
-      _addToRecentSearches(result);
-      return;
-    }
-
     _graphicsOverlay.graphics.clear();
 
     final point = ArcGISPoint(
@@ -908,47 +802,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   /// Select a result from a map pin tap
   /// keeps all existing category pins visible
   void _selectResultFromPin(MapSearchResult result) {
-    // In routing mode, treat pin tap based on active route field
-    if (_showRouteFields) {
-      if (_activeRouteField == 'from') {
-        _fromController.text = result.name;
-        _fromLatLng = (result.latitude, result.longitude);
-        _graphicsOverlay.graphics.clear();
-        setState(() {
-          _showResults = false;
-          _showSuggestions = false;
-          _mappedResults = [];
-          _allCategoryResults = [];
-          _showSeeAll = false;
-          _showCategoryList = false;
-          _activeCategory = null;
-        });
-        _fromFocusNode.unfocus();
-        if (_routeDestination != null) {
-          _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-        }
-      } else {
-        _toController.text = result.name;
-        _routeDestination = result;
-        _graphicsOverlay.graphics.clear();
-        setState(() {
-          _selectedResult = result;
-          _lastSelectedResult = result;
-          _showResults = false;
-          _showSuggestions = false;
-          _mappedResults = [];
-          _allCategoryResults = [];
-          _showSeeAll = false;
-          _showCategoryList = false;
-          _activeCategory = null;
-        });
-        _toFocusNode.unfocus();
-        _solveRoute(result, originLatLng: _fromLatLng);
-      }
-      _addToRecentSearches(result);
-      return;
-    }
-
     final point = ArcGISPoint(
       x: result.longitude,
       y: result.latitude,
@@ -974,9 +827,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _closeDetail() {
     setState(() {
       _selectedResult = null;
-      // If a category search is active and not in routing mode, reopen the list view
-      if (_allCategoryResults.isNotEmpty &&
-          !_showRouteFields && !_hasRoute && !_routeFailed) {
+      // If a category search is active, reopen the list view
+      if (_allCategoryResults.isNotEmpty) {
         _showCategoryList = true;
       }
     });
@@ -1011,17 +863,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   void _clearSearch() {
     _searchController.clear();
-    _fromController.clear();
-    _toController.clear();
     _graphicsOverlay.graphics.clear();
-    _routeGraphicsOverlay.graphics.clear();
     setState(() {
-      _hasRoute = false;
-      _routeFailed = false;
-      _travelMode = 'Walking';
-      _routeTravelTimeMinutes = 0;
-      _routeManeuvers = [];
-      _showRouteFields = false;
       _searchResults = [];
       _matchingPoiClasses = [];
       _mappedResults = [];
@@ -1033,24 +876,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _activeCategory = null;
       _selectedResult = null;
       _lastSelectedResult = null;
-      _activeRouteField = null;
-      _fromLatLng = null;
-      _routeDestination = null;
     });
   }
 
-  Future<void> _launchWebsite(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Routing
-  // ---------------------------------------------------------------------------
-
-/*   Future<void> _launchDirections(MapSearchResult result) async {                                                                
+  Future<void> _launchDirections(MapSearchResult result) async {
     final uri = Uri.parse(
       'https://www.google.com/maps/dir/?api=1'
       '&destination=${result.latitude},${result.longitude}',
@@ -1058,178 +887,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
-  } */
-
-  static const _routeServiceUrl =
-      'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
-      'Wayfinding/Campus_Wayfinding_Network/NAServer/Route';
-
-  Future<void> _solveRoute(MapSearchResult destination, {String? travelMode, (double, double)? originLatLng}) async {
-    // Use provided origin or fall back to GPS
-    final userLatLng = originLatLng ?? _getUserLatLng();
-    if (userLatLng == null) {
-      setState(() => _isRouting = false);
-      return;
-    }
-
-    final mode = travelMode ?? _travelMode;
-
-    setState(() {
-      _isRouting = true;
-      _routeFailed = false;
-      _travelMode = mode;
-    });
-
-    try {
-      await dotenv.load(fileName: ".env");
-      final token = dotenv.env['ARCGIS_AGE_API_KEY'] ?? '';
-
-      final routeTask = RouteTask.withUri(Uri.parse(_routeServiceUrl));
-      routeTask.apiKey = token;
-      await routeTask.load();
-
-      final params = await routeTask.createDefaultParameters();
-      params.returnDirections = true;
-      final taskInfo = routeTask.getRouteTaskInfo();
-      final matchingMode = taskInfo.travelModes
-          .where((m) => m.name == mode)
-          .firstOrNull;
-      if (matchingMode != null) {
-        params.travelMode = matchingMode;
-      }
-
-      final origin = Stop(ArcGISPoint(
-        x: userLatLng.$2,
-        y: userLatLng.$1,
-        spatialReference: SpatialReference.wgs84,
-      ));
-      final dest = Stop(ArcGISPoint(
-        x: destination.longitude,
-        y: destination.latitude,
-        spatialReference: SpatialReference.wgs84,
-      ));
-      params.setStops([origin, dest]);
-
-      final result = await routeTask.solveRoute(params);
-      if (result.routes.isEmpty) {
-        setState(() {
-          _isRouting = false;
-          _routeFailed = true;
-        });
-        return;
-      }
-
-      final route = result.routes.first;
-      _routeTravelTimeMinutes = route.totalTime;
-      _routeManeuvers = route.directionManeuvers;
-
-      final routeGeometry = route.routeGeometry;
-      if (routeGeometry == null) {
-        setState(() {
-          _isRouting = false;
-          _routeFailed = true;
-        });
-        return;
-      }
-
-      _routeGraphicsOverlay.graphics.clear();
-      final routeGraphic = Graphic(
-        geometry: routeGeometry,
-        symbol: SimpleLineSymbol(
-          style: SimpleLineSymbolStyle.solid,
-          color: Colors.blue,
-          width: 4,
-        ),
-      );
-      _routeGraphicsOverlay.graphics.add(routeGraphic);
-
-      // End point marker
-      final whiteOutline = SimpleLineSymbol(
-        style: SimpleLineSymbolStyle.solid,
-        color: Colors.white,
-        width: 2,
-      );
-      _routeGraphicsOverlay.graphics.add(Graphic(
-        geometry: ArcGISPoint(
-          x: destination.longitude,
-          y: destination.latitude,
-          spatialReference: SpatialReference.wgs84,
-        ),
-        symbol: SimpleMarkerSymbol(
-          style: SimpleMarkerSymbolStyle.circle,
-          color: Colors.red,
-          size: 12,
-        )..outline = whiteOutline,
-      ));
-
-      // Start point marker (only when origin is not GPS)
-      if (originLatLng != null) {
-        _routeGraphicsOverlay.graphics.add(Graphic(
-          geometry: ArcGISPoint(
-            x: originLatLng.$2,
-            y: originLatLng.$1,
-            spatialReference: SpatialReference.wgs84,
-          ),
-          symbol: SimpleMarkerSymbol(
-            style: SimpleMarkerSymbolStyle.circle,
-            color: Colors.blue,
-            size: 12,
-          )..outline = whiteOutline,
-        ));
-      }
-
-      // Zoom to the route extent with extra bottom padding so the line
-      // stays centred in the visible map area above the detail slide-over.
-      final extent = routeGeometry.extent;
-      final dx = extent.width * 0.2;
-      final dyTop = extent.height * 0.5;
-      final dyBottom = extent.height * 0.75;
-      final paddedExtent = Envelope.fromXY(
-        xMin: extent.xMin - dx,
-        yMin: extent.yMin - dyBottom,
-        xMax: extent.xMax + dx,
-        yMax: extent.yMax + dyTop,
-        spatialReference: extent.spatialReference,
-      );
-      _mapViewController.setViewpointAnimated(
-        Viewpoint.fromTargetExtent(paddedExtent),
-      );
-
-      _graphicsOverlay.graphics.clear();
-      _mappedResults = [];
-      _allCategoryResults = [];
-
-      setState(() {
-        _isRouting = false;
-        _hasRoute = true;
-        _showSeeAll = false;
-        _showCategoryList = false;
-        _activeCategory = null;
-      });
-    } catch (e) {
-      debugPrint('Route solve error: $e');
-      setState(() {
-        _isRouting = false;
-        _routeFailed = true;
-      });
-    }
   }
 
-  void _clearRoute() {
-    _routeGraphicsOverlay.graphics.clear();
-    _fromController.clear();
-    _toController.clear();
-    setState(() {
-      _hasRoute = false;
-      _routeFailed = false;
-      _travelMode = 'Walking';
-      _routeTravelTimeMinutes = 0;
-      _routeManeuvers = [];
-      _showRouteFields = false;
-      _activeRouteField = null;
-      _fromLatLng = null;
-      _routeDestination = null;
-    });
+  Future<void> _launchWebsite(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   IconData _iconForResult(MapSearchResult result) {
@@ -1723,7 +1387,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Widget _buildDetailSlideOver(BuildContext context, MapSearchResult result) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isRouting = _showRouteFields || _hasRoute || _routeFailed;
 
     final detailText = result.source == MapSearchSource.building
         ? result.address
@@ -1737,13 +1400,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     // header ~80 + name ~30 + detail ~20 + buttons ~48 + padding ~40
     double contentEst = _slideOverHeaderHeight + 30 + 48 + 40;
     if (detailText.isNotEmpty) contentEst += 60;
-    if (_hasRoute && _routeManeuvers.isNotEmpty) contentEst += _routeManeuvers.length * 52.0;
     final contentFraction = (contentEst / screenHeight).clamp(0.15, 0.80);
     final initialSize =
-        _hasRoute ? 0.35 : (contentFraction < 0.30 ? contentFraction : 0.30);
-    final maxSize = _hasRoute
-        ? 0.80
-        : (contentFraction < 0.80 ? contentFraction.clamp(0.30, 0.80) : 0.80);
+        contentFraction < 0.30 ? contentFraction : 0.30;
+    final maxSize =
+        contentFraction < 0.80 ? contentFraction.clamp(0.30, 0.80) : 0.80;
     // Snap sizes must be strictly increasing and within [min, max]
     final snaps = <double>[0.15];
     if (initialSize > 0.15 + 0.01) snaps.add(initialSize);
@@ -1759,9 +1420,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         return _buildSlideOverContent(
           context: context,
           scrollController: scrollController,
-          headerTitle: isRouting
-              ? 'Directions to ${result.name}'
-              : result.name,
+          headerTitle: result.name,
           headerIcon: _iconForResult(result),
           onClose: _closeDetail,
           sliverBody: [
@@ -1771,18 +1430,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Category label (hidden in routing mode)
-                    if (!isRouting)
-                      Text(
-                        categoryLabel,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
-                        ),
+                    // Category label
+                    Text(
+                      categoryLabel,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
                       ),
+                    ),
 
-                    // Detail text (hidden in routing mode)
-                    if (!isRouting && detailText.isNotEmpty) ...[
+                    // Detail text
+                    if (detailText.isNotEmpty) ...[
                       const SizedBox(height: 8),
                       Text(
                         detailText,
@@ -1795,272 +1453,56 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                    if (!isRouting) const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
                     // Action buttons
-                    if (_routeFailed) ...[
-                      Text(
-                        'No route available from your current location.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        width: double.infinity,
-                        child: FilledButton.icon(
-                          onPressed: () => _launchWebsite(
-                            'https://www.google.com/maps/dir/?api=1'
-                            '&destination=${_routeDestination?.latitude ?? result.latitude},${_routeDestination?.longitude ?? result.longitude}'
-                            '&travelmode=walking'
-                            '${_fromLatLng != null ? '&origin=${_fromLatLng!.$1},${_fromLatLng!.$2}' : ''}',
-                          ),
-                          icon: const Icon(Icons.map_outlined, size: 18),
-                          label: const Text('Navigate in Google Maps'),
-                          style: FilledButton.styleFrom(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ] else if (_hasRoute) ...[
-                      // Travel time
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.schedule,
-                            size: 18,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            _routeTravelTimeMinutes < 1
-                                ? '< 1 min'
-                                : '${_routeTravelTimeMinutes.ceil()} min',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: isDark ? Colors.white : Colors.grey[900],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Travel mode toggle chips
-                      Row(
-                        children: [
-                          for (final mode in ['Walking', 'Accessible']) ...[
-                            if (mode != 'Walking') const SizedBox(width: 8),
-                            GestureDetector(
-                              onTap: _isRouting || mode == _travelMode
-                                  ? null
-                                  : () => _solveRoute(result, travelMode: mode, originLatLng: _fromLatLng),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: mode == _travelMode
-                                      ? (isDark
-                                          ? Colors.white
-                                          : Colors.grey[900])
-                                      : (isDark
-                                          ? Colors.grey[800]
-                                          : Colors.grey[100]),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      mode == 'Walking'
-                                          ? Icons.directions_walk
-                                          : Icons.accessible,
-                                      size: 16,
-                                      color: mode == _travelMode
-                                          ? (isDark
-                                              ? Colors.grey[900]
-                                              : Colors.white)
-                                          : (isDark
-                                              ? Colors.white70
-                                              : Colors.grey[700]),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      mode,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                        color: mode == _travelMode
-                                            ? (isDark
-                                                ? Colors.grey[900]
-                                                : Colors.white)
-                                            : (isDark
-                                                ? Colors.white70
-                                                : Colors.grey[700]),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Navigate in Google Maps button
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () => _launchWebsite(
-                            'https://www.google.com/maps/dir/?api=1'
-                            '&destination=${_routeDestination?.latitude ?? result.latitude},${_routeDestination?.longitude ?? result.longitude}'
-                            '&travelmode=walking'
-                            '${_fromLatLng != null ? '&origin=${_fromLatLng!.$1},${_fromLatLng!.$2}' : ''}',
-                          ),
-                          icon: const Icon(Icons.map_outlined, size: 18),
-                          label: const Text('Navigate in Google Maps'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: isDark
-                                ? const Color(0xFFFFCD00)
-                                : null,
-                            side: isDark
-                                ? const BorderSide(
-                                    color: Color(0xFFFFCD00))
-                                : null,
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ] else
-                      Row(
-                        children: [
-                          if (result.websiteUrl != null) ...[
-                            Expanded(
-                              child: OutlinedButton.icon(
-                                onPressed: () =>
-                                    _launchWebsite(result.websiteUrl!),
-                                icon: const Icon(Icons.language, size: 18),
-                                label: const Text('View website'),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: isDark
-                                      ? const Color(0xFFFFCD00)
-                                      : null,
-                                  side: isDark
-                                      ? const BorderSide(
-                                          color: Color(0xFFFFCD00))
-                                      : null,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                          ],
+                    Row(
+                      children: [
+                        if (result.websiteUrl != null) ...[
                           Expanded(
-                            child: FilledButton.icon(
-                              onPressed: _isRouting
-                                  ? null
-                                  : () {
-                                      final gps = _getUserLatLng();
-                                      _fromController.text =
-                                          gps != null ? 'My Location' : '';
-                                      _toController.text = result.name;
-                                      _routeDestination = result;
-                                      _graphicsOverlay.graphics.clear();
-                                      setState(() {
-                                        _showRouteFields = true;
-                                        _mappedResults = [];
-                                        _allCategoryResults = [];
-                                        _showSeeAll = false;
-                                        _showCategoryList = false;
-                                        _activeCategory = null;
-                                      });
-                                      _solveRoute(result);
-                                    },
-                              icon: _isRouting
-                                  ? const SizedBox(
-                                      width: 18,
-                                      height: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : const Icon(Icons.directions, size: 18),
-                              label: Text(
-                                  _isRouting ? 'Routing...' : 'Get Directions'),
-                              style: FilledButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
+                            child: OutlinedButton.icon(
+                              onPressed: () =>
+                                  _launchWebsite(result.websiteUrl!),
+                              icon: const Icon(Icons.language, size: 18),
+                              label: const Text('View website'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: isDark
+                                    ? const Color(0xFFFFCD00)
+                                    : null,
+                                side: isDark
+                                    ? const BorderSide(
+                                        color: Color(0xFFFFCD00))
+                                    : null,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 12),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                             ),
                           ),
+                          const SizedBox(width: 12),
                         ],
-                      ),
+                        Expanded(
+                          child: FilledButton.icon(
+                            onPressed: () => _launchDirections(result),
+                            icon: const Icon(Icons.directions, size: 18),
+                            label: const Text('Get Directions'),
+                            style: FilledButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
-            // Direction maneuver steps (when route is active)
-            if (_hasRoute && _routeManeuvers.isNotEmpty)
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final step = _routeManeuvers[index];
-                    final distMeters = step.length;
-                    final distLabel = distMeters < 1000
-                        ? '${distMeters.round()} m'
-                        : '${(distMeters / 1000).toStringAsFixed(1)} km';
-                    return Column(
-                      children: [
-                        if (index == 0) const Divider(height: 1),
-                        ListTile(
-                          leading: Icon(
-                            Icons.subdirectory_arrow_right,
-                            size: 20,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
-                          ),
-                          title: Text(
-                            step.directionText,
-                            style: const TextStyle(fontSize: 13),
-                          ),
-                          trailing: distMeters > 0
-                              ? Text(
-                                  distLabel,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: isDark
-                                        ? Colors.grey[500]
-                                        : Colors.grey[500],
-                                  ),
-                                )
-                              : null,
-                          dense: true,
-                        ),
-                        if (index < _routeManeuvers.length - 1)
-                          const Divider(height: 1),
-                      ],
-                    );
-                  },
-                  childCount: _routeManeuvers.length,
-                ),
-              ),
           ],
         );
       },
@@ -2102,271 +1544,90 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             right: 12,
             child: Column(
               children: [
-                // Search bar / route fields
-                if (_showRouteFields)
-                  Material(
-                    elevation: 4,
-                    borderRadius: BorderRadius.circular(8),
-                    color: isDark ? Colors.grey[850] : Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // Left dot column
-                          Padding(
-                            padding: const EdgeInsets.only(left: 14),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.circle_outlined,
-                                    size: 12,
-                                    color: Colors.blue),
-                                Container(
-                                  width: 1.5,
-                                  height: 24,
-                                  color: isDark
-                                      ? Colors.grey[600]
-                                      : Colors.grey[300],
-                                ),
-                                Icon(Icons.circle,
-                                    size: 12,
-                                    color: Colors.red),
-                              ],
-                            ),
-                          ),
-                          // Text fields
-                          Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _fromController,
-                                        focusNode: _fromFocusNode,
-                                        style: const TextStyle(fontSize: 15),
-                                        decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                              EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 10),
-                                          hintText: 'From',
-                                          isDense: true,
-                                        ),
-                                        onTap: () {
-                                          setState(() =>
-                                              _activeRouteField = 'from');
-                                        },
-                                        onChanged: (text) {
-                                          _fromLatLng = null;
-                                          if (text.length >= 3) {
-                                            _performSearch(text);
-                                          } else if (text.isEmpty) {
-                                            setState(() {
-                                              _showResults = false;
-                                              _showSuggestions = true;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              _showResults = false;
-                                              _showSuggestions = false;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    if (_fromController.text.isNotEmpty)
-                                      SizedBox(
-                                        width: 28,
-                                        height: 28,
-                                        child: IconButton(
-                                          padding: EdgeInsets.zero,
-                                          icon: Icon(Icons.close,
-                                              size: 16,
-                                              color: isDark
-                                                  ? Colors.white70
-                                                  : Colors.grey[600]),
-                                          onPressed: () {
-                                            _fromController.clear();
-                                            _fromLatLng = null;
-                                            setState(() =>
-                                                _showSuggestions = true);
-                                          },
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                Divider(height: 1, indent: 10, endIndent: 10),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _toController,
-                                        focusNode: _toFocusNode,
-                                        style: const TextStyle(fontSize: 15),
-                                        decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                              EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 10),
-                                          hintText: 'To',
-                                          isDense: true,
-                                        ),
-                                        onTap: () {
-                                          setState(() =>
-                                              _activeRouteField = 'to');
-                                        },
-                                        onChanged: (text) {
-                                          if (text.length >= 3) {
-                                            _performSearch(text);
-                                          } else if (text.isEmpty) {
-                                            setState(() {
-                                              _showResults = false;
-                                              _showSuggestions = true;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              _showResults = false;
-                                              _showSuggestions = false;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    if (_toController.text.isNotEmpty)
-                                      SizedBox(
-                                        width: 28,
-                                        height: 28,
-                                        child: IconButton(
-                                          padding: EdgeInsets.zero,
-                                          icon: Icon(Icons.close,
-                                              size: 16,
-                                              color: isDark
-                                                  ? Colors.white70
-                                                  : Colors.grey[600]),
-                                          onPressed: () {
-                                            _toController.clear();
-                                            setState(() =>
-                                                _showSuggestions = true);
-                                          },
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Swap button
-                          SizedBox(
-                            width: 36,
-                            height: 36,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              icon: Icon(Icons.swap_vert,
-                                  size: 20,
-                                  color: isDark
-                                      ? Colors.white70
-                                      : Colors.grey[600]),
-                              onPressed: () {
-                                final tmp = _fromController.text;
-                                _fromController.text = _toController.text;
-                                _toController.text = tmp;
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                        ],
+                // Search bar
+                Material(
+                  elevation: 4,
+                  borderRadius: BorderRadius.circular(8),
+                  color: isDark ? Colors.grey[850] : Colors.white,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 12),
+                        child: Icon(
+                          Icons.search,
+                          color: isDark ? Colors.white70 : Colors.grey[600],
+                        ),
                       ),
-                    ),
-                  )
-                else
-                  Material(
-                    elevation: 4,
-                    borderRadius: BorderRadius.circular(8),
-                    color: isDark ? Colors.grey[850] : Colors.white,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 12),
-                          child: Icon(
-                            Icons.search,
-                            color: isDark ? Colors.white70 : Colors.grey[600],
-                          ),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            controller: _searchController,
-                            focusNode: _focusNode,
-                            textInputAction: TextInputAction.search,
-                            onSubmitted: _performSearch,
-                            onChanged: (text) {
-                              if (text.isEmpty) {
-                                setState(() {
-                                  _showResults = false;
-                                  _searchResults = [];
-                                  _matchingPoiClasses = [];
-                                  _showSuggestions = _focusNode.hasFocus;
-                                });
-                              } else {
-                                final q = text.toLowerCase();
-                                // Match against server-fetched classes
-                                final matched = _allPoiClasses
-                                    .where((c) => c.toLowerCase().contains(q))
-                                    .toList();
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          focusNode: _focusNode,
+                          textInputAction: TextInputAction.search,
+                          onSubmitted: _performSearch,
+                          onChanged: (text) {
+                            if (text.isEmpty) {
+                              setState(() {
+                                _showResults = false;
+                                _searchResults = [];
+                                _matchingPoiClasses = [];
+                                _showSuggestions = _focusNode.hasFocus;
+                              });
+                            } else {
+                              final q = text.toLowerCase();
+                              // Match against server-fetched classes
+                              final matched = _allPoiClasses
+                                  .where((c) => c.toLowerCase().contains(q))
+                                  .toList();
 
-                                // Always include hardcoded category class values as a fallback
-                                // so chips appear even if the server fetch is still in flight
-                                for (final cat in _categories) {
-                                  if (cat.poiClassValue.toLowerCase().contains(q) &&
-                                      !matched.contains(cat.poiClassValue)) {
-                                    matched.insert(0, cat.poiClassValue);
-                                  }
+                              // Always include hardcoded category class values as a fallback
+                              // so chips appear even if the server fetch is still in flight
+                              for (final cat in _categories) {
+                                if (cat.poiClassValue.toLowerCase().contains(q) &&
+                                    !matched.contains(cat.poiClassValue)) {
+                                  matched.insert(0, cat.poiClassValue);
                                 }
+                              }
 
-                                setState(() {
-                                  _showSuggestions = false;
-                                  _matchingPoiClasses = matched;
-                                });
-                              }
-                            },
-                            onTap: () {
-                              // Close detail panel when user taps search bar
-                              if (_selectedResult != null) {
-                                setState(() {
-                                  _selectedResult = null;
-                                });
-                              }
-                              // Show suggestions if text is empty
-                              if (_searchController.text.isEmpty) {
-                                setState(() {
-                                  _showSuggestions = true;
-                                  _showResults = false;
-                                });
-                              }
-                            },
-                            style: TextStyle(fontSize: 16),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 14,
-                              ),
-                              hintText: 'Search buildings, places...',
+                              setState(() {
+                                _showSuggestions = false;
+                                _matchingPoiClasses = matched;
+                              });
+                            }
+                          },
+                          onTap: () {
+                            // Close detail panel when user taps search bar
+                            if (_selectedResult != null) {
+                              setState(() {
+                                _selectedResult = null;
+                              });
+                            }
+                            // Show suggestions if text is empty
+                            if (_searchController.text.isEmpty) {
+                              setState(() {
+                                _showSuggestions = true;
+                                _showResults = false;
+                              });
+                            }
+                          },
+                          style: TextStyle(fontSize: 16),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 14,
                             ),
+                            hintText: 'Search buildings, places...',
                           ),
                         ),
-                        if (_searchController.text.isNotEmpty)
-                          IconButton(
-                            icon: Icon(Icons.clear),
-                            onPressed: _clearSearch,
-                          ),
-                      ],
-                    ),
+                      ),
+                      if (_searchController.text.isNotEmpty)
+                        IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: _clearSearch,
+                        ),
+                    ],
                   ),
+                ),
 
                 SizedBox(height: 4),
 
@@ -2527,16 +1788,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                       onPressed: _reopenDetail,
                       child: const Icon(Icons.info_outline),
                     ),
-                  if (_showRouteFields || _hasRoute) ...[
-                    FloatingActionButton.small(
-                      heroTag: 'clearRouteBtn',
-                      backgroundColor: Colors.redAccent,
-                      foregroundColor: Colors.white,
-                      onPressed: _clearRoute,
-                      child: const Icon(Icons.close),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
                   if (_allCategoryResults.isNotEmpty || _lastSelectedResult != null)
                     const SizedBox(height: 10),
                   FloatingActionButton.small(
