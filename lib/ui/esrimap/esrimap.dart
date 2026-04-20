@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'esrimap_basemaps.dart';
+
 // -----------------------------------------------------------------------------
 // Model
 // -----------------------------------------------------------------------------
@@ -229,6 +231,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   (double, double)? _fromLatLng;
   MapSearchResult? _routeDestination;
 
+  // Basemap switcher
+  BasemapType _currentBasemapType = BasemapType.defaultMap;
+  final Map<BasemapType, Basemap> _basemaps = {};
+  bool _showBasemapMenu = false;
+
   @override
   bool get wantKeepAlive => true;
 
@@ -258,23 +265,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _initMap() {
-    final hillshadeLayer = ArcGISTiledLayer.withUri(
-      Uri.parse(
-        'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer',
-      ),
-    );
+    // Build all three basemaps up front. The default is applied immediately;
+    // the other two are preloaded in the background by
+    // _preloadAlternateBasemaps() once the MapView is ready.
+    for (final type in BasemapType.values) {
+      _basemaps[type] = buildBasemap(type);
+    }
 
-    final campusVectorTileLayer = ArcGISVectorTiledLayer.withUri(
-      Uri.parse(
-        'https://admin-enterprise-gis.ucsd.edu/server/rest/services/Hosted/CampusMapVector/VectorTileServer',
-      ),
-    );
-
-    final basemap = Basemap();
-    basemap.baseLayers.add(hillshadeLayer);
-    basemap.baseLayers.add(campusVectorTileLayer);
-
-    _map = ArcGISMap.withBasemap(basemap);
+    _map = ArcGISMap.withBasemap(_basemaps[_currentBasemapType]!);
     _map.initialViewpoint = Viewpoint.fromCenter(
       ArcGISPoint(
         x: -117.2340,
@@ -297,6 +295,33 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         LocationDisplayAutoPanMode.off;
 
     _startLocationDisplay();
+    _preloadAlternateBasemaps();
+  }
+
+  ///Loads metadata and style sheets; tile content still fetches lazily once the basemap is applied to the MapView.
+  void _preloadAlternateBasemaps() {
+    for (final entry in _basemaps.entries) {
+      if (entry.key == _currentBasemapType) continue;
+      entry.value.load().catchError((Object e) {
+        debugPrint('Failed to preload basemap ${entry.key}: $e');
+      });
+    }
+  }
+
+  void _switchBasemap(BasemapType newType) {
+    if (newType == _currentBasemapType) {
+      setState(() => _showBasemapMenu = false);
+      return;
+    }
+    final newBasemap = _basemaps[newType];
+    if (newBasemap == null) return;
+
+    // Setting Map.basemap swaps the underlying layers without changing the current Viewpoint, so the user's view frame is preserved.
+    setState(() {
+      _map.basemap = newBasemap;
+      _currentBasemapType = newType;
+      _showBasemapMenu = false;
+    });
   }
 
   Future<void> _startLocationDisplay() async {
@@ -1557,6 +1582,55 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     );
   }
 
+  Widget _buildBasemapMenu(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? Colors.grey[850] : Colors.white;
+    final textColor = isDark ? Colors.white : Colors.grey[900];
+    final accent =
+        isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
+
+    return Material(
+      elevation: 6,
+      borderRadius: BorderRadius.circular(12),
+      color: bgColor,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: BasemapType.values.map((type) {
+          final opt = basemapOptions[type]!;
+          final selected = type == _currentBasemapType;
+          return InkWell(
+            onTap: () => _switchBasemap(type),
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    opt.label,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight:
+                          selected ? FontWeight.w600 : FontWeight.w500,
+                      color: textColor,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  SizedBox(
+                    width: 16,
+                    child: selected
+                        ? Icon(Icons.check, size: 16, color: accent)
+                        : null,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   // ---------------------------------------------------------------------------
   // List view
   // ---------------------------------------------------------------------------
@@ -2498,6 +2572,26 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  // Basemap picker menu (shown above the layers FAB when open)
+                  if (_showBasemapMenu) ...[
+                    _buildBasemapMenu(context),
+                    const SizedBox(height: 10),
+                  ],
+                  // Layers FAB — toggles the basemap menu
+                  FloatingActionButton.small(
+                    heroTag: 'layersBtn',
+                    backgroundColor: _showBasemapMenu
+                        ? Theme.of(context).colorScheme.primary
+                        : (isDark ? Colors.grey[800] : null),
+                    foregroundColor: _showBasemapMenu
+                        ? Colors.white
+                        : (isDark ? Colors.white : null),
+                    onPressed: () {
+                      setState(() => _showBasemapMenu = !_showBasemapMenu);
+                    },
+                    child: const Icon(Icons.layers_outlined),
+                  ),
+                  const SizedBox(height: 10),
                   // List view button — only when a category search is active
                   if (_allCategoryResults.isNotEmpty) ...[
                     FloatingActionButton.small(
