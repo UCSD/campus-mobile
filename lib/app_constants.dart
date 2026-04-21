@@ -34,12 +34,14 @@ class RoutePaths {
   static const String NEIGHBORHOODS_VIEW = "parking/neighborhoods_view";
   static const String NEIGHBORHOODS_LOTS_VIEW = "parking/neighborhoods_lot_view";
   static const String AVAILABILITY_DETAILED_VIEW = "availability/detailed_view";
+  static const String TGPT_CITATION_WEB = 'ai_assistant/citation_web';
 }
 
 class RouteTitles {
   static const TITLE_MAP = {
     'Maps': 'MAP',
     'AI Assistant': 'AI ASSISTANT',
+    'ai_assistant/citation_web': 'CITATION',
     'MapSearch': 'MAP',
     'MapLocationList': 'MAP',
     'Notifications': 'NOTIFICATIONS',

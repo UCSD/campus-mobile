@@ -1,8 +1,10 @@
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message.dart';
+import 'package:campus_mobile_experimental/core/providers/chat_provider.dart';
 import 'package:campus_mobile_experimental/ui/ai_assistant/chat_citation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:provider/provider.dart';
 
 class ChatMessageBubble extends StatelessWidget {
   const ChatMessageBubble({
@@ -73,7 +75,9 @@ class ChatMessageBubble extends StatelessWidget {
                   shrinkWrap: true,
                   onTapLink: (_, String? href, __) {
                     if (href == null || href.isEmpty) return;
-                    ChatCitation.openCitation(href);
+                    // Skip Related Questions placeholders like #rq (handled in openCitation too).
+                    if (href.trim().startsWith('#')) return;
+                    ChatCitation.openCitation(context, href);
                   },
                   styleSheet: MarkdownStyleSheet(
                     p: const TextStyle(
@@ -121,7 +125,10 @@ class ChatMessageBubble extends StatelessWidget {
               if (content.relatedQuestions.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
-                  child: _RelatedQuestionsSection(questions: content.relatedQuestions),
+                  child: _RelatedQuestionsSection(
+                    questions: content.relatedQuestions,
+                    enabled: !message.isStreaming,
+                  ),
                 ),
               if (message.isStreaming && content.markdown.isEmpty && content.relatedQuestions.isEmpty)
                 const _TypingIndicator(),
@@ -136,9 +143,11 @@ class ChatMessageBubble extends StatelessWidget {
 class _RelatedQuestionsSection extends StatelessWidget {
   const _RelatedQuestionsSection({
     required this.questions,
+    required this.enabled,
   });
 
   final List<String> questions;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -186,14 +195,27 @@ class _RelatedQuestionsSection extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      question,
-                      style: const TextStyle(
-                        fontFamily: 'Brix Sans',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: lightPrimaryColor,
-                        height: 1.35,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: enabled
+                            ? () => context.read<ChatProvider>().sendMessage(question)
+                            : null,
+                        borderRadius: BorderRadius.circular(6),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                          child: Text(
+                            question,
+                            style: TextStyle(
+                              fontFamily: 'Brix Sans',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: enabled ? linkTextColorLight : lightPrimaryColor,
+                              decoration: enabled ? TextDecoration.underline : TextDecoration.none,
+                              height: 1.35,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
