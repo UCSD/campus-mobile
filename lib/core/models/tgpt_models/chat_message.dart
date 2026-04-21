@@ -9,8 +9,10 @@ class ChatCitationReference {
     required this.url,
   });
 
+  /// Parses a citation object from legacy `citation_delta` arrays (`citation_num`)
+  /// or new `citation_info` packets (`citation_number`).
   factory ChatCitationReference.fromStreamJson(Map<String, dynamic> json) {
-    final Object? rawNumber = json['citation_num'];
+    final Object? rawNumber = json['citation_num'] ?? json['citation_number'];
     final int? number = rawNumber is int ? rawNumber : int.tryParse(rawNumber?.toString() ?? '');
 
     return ChatCitationReference(
@@ -21,10 +23,17 @@ class ChatCitationReference {
 }
 
 class AssistantMessageContent {
+  /// Line-based `[rq] question` (mobile / legacy TGPT lines).
   static final RegExp _relatedQuestionPattern = RegExp(
     r'^(?:[-*]\s*)?\[rq\]\s*(.*)$',
     caseSensitive: false,
   );
+
+  /// Markdown links `[label](#rq)` from web-style TGPT output.
+  static final RegExp _rqMarkdownLink = RegExp(r'\[([^\]\n]+)\]\(\s*#rq\s*\)');
+
+  /// Bullet line that is only `- [label](#rq)`.
+  static final RegExp _bulletRqOnlyLine = RegExp(r'^\s*[-*+]\s*\[[^\]\n]+\]\(\s*#rq\s*\)\s*$');
 
   const AssistantMessageContent({
     required this.markdown,
@@ -39,25 +48,31 @@ class AssistantMessageContent {
       return const AssistantMessageContent(markdown: '');
     }
 
-    final List<String> answerLines = <String>[];
+    final String normalized = rawText.replaceAll('\r\n', '\n');
     final List<String> relatedQuestions = <String>[];
 
-    for (final String line in rawText.replaceAll('\r\n', '\n').split('\n')) {
-      final String trimmedLine = line.trimLeft();
-      final Match? match = _relatedQuestionPattern.firstMatch(trimmedLine);
+    for (final Match m in _rqMarkdownLink.allMatches(normalized)) {
+      _addUniqueRelatedQuestion(relatedQuestions, m.group(1) ?? '');
+    }
 
-      if (match != null) {
-        final String question = match.group(1)?.trim() ?? '';
-        if (question.isNotEmpty) {
-          relatedQuestions.add(question);
-        }
+    final List<String> answerLines = <String>[];
+    for (final String line in normalized.split('\n')) {
+      final String trimmedLeft = line.trimLeft();
+      final Match? rqLine = _relatedQuestionPattern.firstMatch(trimmedLeft);
+      if (rqLine != null) {
+        _addUniqueRelatedQuestion(relatedQuestions, rqLine.group(1) ?? '');
         continue;
       }
-
+      if (_bulletRqOnlyLine.hasMatch(line)) {
+        continue;
+      }
+      if (_isRelatedQuestionsHeadingLine(line)) {
+        continue;
+      }
       answerLines.add(line);
     }
 
-    final List<String> normalizedAnswerLines = _trimBlankLines(answerLines);
+    List<String> normalizedAnswerLines = _trimBlankLines(answerLines);
     if (relatedQuestions.isNotEmpty && normalizedAnswerLines.isNotEmpty) {
       final String trailingLine = normalizedAnswerLines.last.trim().toLowerCase();
       if (trailingLine == 'related questions' || trailingLine == 'related questions:') {
@@ -65,10 +80,38 @@ class AssistantMessageContent {
       }
     }
 
+    String markdown = _trimBlankLines(normalizedAnswerLines).join('\n');
+    markdown = markdown.replaceAllMapped(_rqMarkdownLink, (Match m) => m.group(1)!.trim());
+    markdown = _collapseBlankLines(markdown).trim();
+
     return AssistantMessageContent(
-      markdown: _trimBlankLines(normalizedAnswerLines).join('\n'),
+      markdown: markdown,
       relatedQuestions: List<String>.unmodifiable(relatedQuestions),
     );
+  }
+
+  static void _addUniqueRelatedQuestion(List<String> list, String raw) {
+    final String q = raw.trim();
+    if (q.isEmpty) return;
+    if (!list.contains(q)) {
+      list.add(q);
+    }
+  }
+
+  static bool _isRelatedQuestionsHeadingLine(String line) {
+    final String t = line.trim();
+    if (t.isEmpty) return false;
+    if (RegExp(r'^\*{0,2}\s*Related Questions\s*\*{0,2}\s*:?\s*$', caseSensitive: false).hasMatch(t)) {
+      return true;
+    }
+    if (RegExp(r'^#+\s*Related Questions\s*:?\s*$', caseSensitive: false).hasMatch(t)) {
+      return true;
+    }
+    return false;
+  }
+
+  static String _collapseBlankLines(String text) {
+    return text.replaceAll(RegExp(r'\n{3,}'), '\n\n');
   }
 
   static List<String> _trimBlankLines(List<String> lines) {

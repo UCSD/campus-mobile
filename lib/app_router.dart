@@ -17,6 +17,7 @@ import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
 import 'package:campus_mobile_experimental/ui/map/map_search_view.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
+import 'package:campus_mobile_experimental/ui/ai_assistant/citation_web_view.dart';
 import 'package:campus_mobile_experimental/ui/news/news_detail_view.dart';
 import 'package:campus_mobile_experimental/ui/news/news_list.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
@@ -75,6 +76,12 @@ class Router {
         return MaterialPageRoute(builder: (_) {
           Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NewsDetailView(data: newsItem);
+        });
+      case RoutePaths.TGPT_CITATION_WEB:
+        final String citationUrl = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
+          return CitationWebView(initialUrl: citationUrl);
         });
       case RoutePaths.EVENT_DETAIL_VIEW:
         EventModel data = settings.arguments as EventModel;

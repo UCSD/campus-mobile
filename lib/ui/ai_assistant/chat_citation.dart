@@ -1,7 +1,7 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ChatCitation extends StatelessWidget {
   const ChatCitation({
@@ -14,7 +14,7 @@ class ChatCitation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => openCitation(citation.url),
+      onTap: () => openCitation(context, citation.url),
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
@@ -49,8 +49,34 @@ class ChatCitation extends StatelessWidget {
     );
   }
 
-  static Future<void> openCitation(String url) async {
-    final Uri uri = Uri.parse(url);
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  /// Opens [url] in an in-app [CitationWebView] so the app bar title is **CITATION**.
+  ///
+  /// Ignores fragment-only placeholders (e.g. `[text](#rq)` from Related Questions) and
+  /// any string that is not a navigable `http`/`https` URL after resolution.
+  static Future<void> openCitation(BuildContext context, String url) async {
+    final String trimmed = url.trim();
+    if (trimmed.isEmpty) return;
+    // Related-question / UI placeholders from model markdown — not real URLs.
+    if (trimmed.startsWith('#')) return;
+    if (trimmed.toLowerCase().startsWith('javascript:')) return;
+
+    String resolved = trimmed;
+    if (trimmed.startsWith('//')) {
+      resolved = 'https:$trimmed';
+    } else {
+      final Uri parsed = Uri.tryParse(trimmed) ?? Uri();
+      if (!parsed.hasScheme && trimmed.contains('.')) {
+        resolved = 'https://$trimmed';
+      }
+    }
+
+    final Uri? uri = Uri.tryParse(resolved);
+    if (uri == null || !uri.hasScheme) return;
+    if (uri.scheme != 'http' && uri.scheme != 'https') return;
+
+    await Navigator.of(context).pushNamed(
+      RoutePaths.TGPT_CITATION_WEB,
+      arguments: resolved,
+    );
   }
 }

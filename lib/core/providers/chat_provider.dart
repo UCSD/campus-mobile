@@ -6,6 +6,8 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_persistence.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_session_creation.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_stream.dart';
+import 'package:campus_mobile_experimental/app_constants.dart';
+import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_error_message.dart';
 import 'package:flutter/material.dart';
 
 class ChatProvider extends ChangeNotifier {
@@ -160,6 +162,8 @@ class ChatProvider extends ChangeNotifier {
     if (message.isEmpty || isStreaming) return;
 
     _errorMessage = null;
+    notifyListeners();
+
     final String? sessionId = await _ensureActiveSession();
     if (sessionId == null) {
       notifyListeners();
@@ -230,13 +234,14 @@ class ChatProvider extends ChangeNotifier {
         _setSessionMessages(sessionId, sessionMessages);
         notifyListeners();
       }
-    } catch (_) {
-      _errorMessage = 'Unable to reach TritonGPT right now.';
+    } catch (e) {
+      final String userMessage = tgptErrorMessageFor(e);
+      _errorMessage = userMessage;
       final int placeholderIndex =
           sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);
       if (placeholderIndex != -1) {
         sessionMessages[placeholderIndex] = sessionMessages[placeholderIndex].copyWith(
-          text: 'Unable to reach TritonGPT right now.',
+          text: userMessage,
           isStreaming: false,
         );
       }
@@ -260,7 +265,7 @@ class ChatProvider extends ChangeNotifier {
 
     final session = await _chatSessionService.createChatSession();
     if (session == null) {
-      _errorMessage = _chatSessionService.error ?? 'Unable to start a new chat.';
+      _errorMessage = _chatSessionService.error ?? ErrorConstants.TRITONGPT_UNAVAILABLE;
       return null;
     }
 

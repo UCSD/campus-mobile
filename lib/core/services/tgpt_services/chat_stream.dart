@@ -10,12 +10,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_send_message.dart';
+import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_error_message.dart';
 
 /// Streaming chunk data for real-time chat display.
 class StreamingChatChunk {
@@ -30,6 +32,24 @@ class StreamingChatChunk {
     this.messageId,
     this.citations,
   });
+}
+
+/// Merges search/retrieval documents into [documentIdToUrl] so [citation_info] can resolve URLs.
+void _mergeDocumentsForUrls(Map<String, String> documentIdToUrl, dynamic raw) {
+  if (raw is! List<dynamic>) return;
+  for (final Object? item in raw) {
+    if (item is! Map<String, dynamic>) continue;
+    final Object? id = item['document_id'] ?? item['id'] ?? item['semantic_identifier'] ?? item['url'];
+    if (id == null) continue;
+    final String idStr = id.toString();
+    final Object? urlCandidate = item['url'] ?? item['source_url'] ?? item['document_id'] ?? id;
+    documentIdToUrl[idStr] = urlCandidate.toString();
+  }
+}
+
+List<ChatCitationReference> _sortedCitations(Map<int, ChatCitationReference> byNumber) {
+  final List<int> keys = byNumber.keys.toList()..sort();
+  return keys.map((int k) => byNumber[k]!).toList();
 }
 
 /// Service for streaming chat messages from the TGPT API.
@@ -76,7 +96,7 @@ class ChatMessageStreamService {
 
     final endpoint = dotenv.env['CHAT_SEND_MESSAGE_ENDPOINT'];
     if (endpoint == null) {
-      yield const StreamingChatChunk(delta: 'Error: No endpoint configured', done: true);
+      yield const StreamingChatChunk(delta: ErrorConstants.TRITONGPT_UNAVAILABLE, done: true);
       return;
     }
 
@@ -98,20 +118,21 @@ class ChatMessageStreamService {
       final response = await dio.post<ResponseBody>(endpoint, data: body);
 
       if (response.data == null) {
-        yield const StreamingChatChunk(delta: 'No response received.', done: true);
+        yield const StreamingChatChunk(delta: ErrorConstants.TRITONGPT_UNAVAILABLE, done: true);
         return;
       }
 
       String buffer = '';
-      bool messageIdEmitted = false;
+      final Map<int, ChatCitationReference> citationByNumber = <int, ChatCitationReference>{};
+      final Map<String, String> documentIdToUrl = <String, String>{};
 
       await for (final chunk in response.data!.stream) {
         buffer += utf8.decode(chunk);
 
         // Process complete lines (newline-delimited JSON)
         while (buffer.contains('\n')) {
-          final newlineIndex = buffer.indexOf('\n');
-          final line = buffer.substring(0, newlineIndex).trim();
+          final int newlineIndex = buffer.indexOf('\n');
+          final String line = buffer.substring(0, newlineIndex).trim();
           buffer = buffer.substring(newlineIndex + 1);
 
           if (line.isEmpty) continue;
@@ -124,49 +145,69 @@ class ChatMessageStreamService {
           }
 
           try {
-            final json = jsonDecode(jsonLine) as Map<String, dynamic>;
+            final Map<String, dynamic> json = jsonDecode(jsonLine) as Map<String, dynamic>;
 
-            // First line: extract message ID for threading
-            // {"user_message_id": 80067, "reserved_assistant_message_id": 80068}
-            if (!messageIdEmitted && json.containsKey('reserved_assistant_message_id')) {
-              messageIdEmitted = true;
-              // Handle both int and String types for reserved_assistant_message_id
-              final rawId = json['reserved_assistant_message_id'];
-              final int? messageId = rawId is int ? rawId : int.tryParse(rawId.toString());
-              yield StreamingChatChunk(
-                delta: '',
-                messageId: messageId,
-              );
-              continue;
+            final Map<String, dynamic>? obj = json['obj'] as Map<String, dynamic>?;
+            final Object? rawReserved =
+                json['reserved_assistant_message_id'] ?? obj?['reserved_assistant_message_id'];
+            if (rawReserved != null) {
+              final int? messageId =
+                  rawReserved is int ? rawReserved : int.tryParse(rawReserved.toString());
+              if (messageId != null) {
+                yield StreamingChatChunk(delta: '', messageId: messageId);
+              }
             }
 
-            // Message content: {"ind": 1, "obj": {"type": "message_delta", "content": "..."}}
-            final obj = json['obj'] as Map<String, dynamic>?;
-            if (obj != null) {
-              final type = obj['type'] as String?;
+            // Optional legacy root field (some streams still emit it)
+            final Object? answerPiece = json['answer_piece'];
+            if (answerPiece is String && answerPiece.isNotEmpty) {
+              yield StreamingChatChunk(delta: answerPiece);
+            }
 
-              // Stop signal
+            _mergeDocumentsForUrls(documentIdToUrl, json['top_documents']);
+
+            if (obj != null) {
+              final String? type = obj['type'] as String?;
+
               if (type == 'stop') {
                 yield const StreamingChatChunk(delta: '', done: true);
                 return;
               }
 
-              // Token delta - the actual streaming content
-              if (type == 'message_delta') {
-                final content = obj['content'] as String?;
-                if (content != null && content.isNotEmpty) yield StreamingChatChunk(delta: content);
+              if (type == 'message_start') {
+                _mergeDocumentsForUrls(documentIdToUrl, obj['final_documents']);
               }
 
-              // Citation data - maps citation numbers to document IDs (URLs)
+              if (type == 'message_delta') {
+                final String? content = obj['content'] as String?;
+                if (content != null && content.isNotEmpty) {
+                  yield StreamingChatChunk(delta: content);
+                }
+              }
+
+              // New schema: one citation per packet
+              if (type == 'citation_info') {
+                final String? docId = obj['document_id']?.toString();
+                final Object? rawNum = obj['citation_number'];
+                final int? num = rawNum is int ? rawNum : int.tryParse(rawNum?.toString() ?? '');
+                if (docId != null && docId.isNotEmpty && num != null && num > 0) {
+                  final String url = documentIdToUrl[docId] ?? docId;
+                  citationByNumber[num] = ChatCitationReference(number: num, url: url);
+                  yield StreamingChatChunk(delta: '', citations: _sortedCitations(citationByNumber));
+                }
+              }
+
+              // Legacy: batch citation list
               if (type == 'citation_delta') {
-                final citationsList = obj['citations'] as List<dynamic>?;
+                final List<dynamic>? citationsList = obj['citations'] as List<dynamic>?;
                 if (citationsList != null && citationsList.isNotEmpty) {
-                  final citations = citationsList
-                      .whereType<Map<String, dynamic>>()
-                      .map(ChatCitationReference.fromStreamJson)
-                      .where((ChatCitationReference citation) => citation.url.isNotEmpty)
-                      .toList();
-                  yield StreamingChatChunk(delta: '', citations: citations);
+                  for (final Map<String, dynamic> row in citationsList.whereType<Map<String, dynamic>>()) {
+                    final ChatCitationReference ref = ChatCitationReference.fromStreamJson(row);
+                    if (ref.url.isNotEmpty && ref.number > 0) {
+                      citationByNumber[ref.number] = ref;
+                    }
+                  }
+                  yield StreamingChatChunk(delta: '', citations: _sortedCitations(citationByNumber));
                 }
               }
             }
@@ -196,10 +237,10 @@ class ChatMessageStreamService {
         }
       }
       _hasRetried = false;
-      yield StreamingChatChunk(delta: 'Error: $e', done: true);
+      yield StreamingChatChunk(delta: tgptErrorMessageFor(e), done: true);
     } catch (e) {
       _hasRetried = false;
-      yield StreamingChatChunk(delta: 'Error: $e', done: true);
+      yield StreamingChatChunk(delta: tgptErrorMessageFor(e), done: true);
     } finally {
       dio.close();
     }

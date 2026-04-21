@@ -34,12 +34,14 @@ class RoutePaths {
   static const String NEIGHBORHOODS_VIEW = "parking/neighborhoods_view";
   static const String NEIGHBORHOODS_LOTS_VIEW = "parking/neighborhoods_lot_view";
   static const String AVAILABILITY_DETAILED_VIEW = "availability/detailed_view";
+  static const String TGPT_CITATION_WEB = 'ai_assistant/citation_web';
 }
 
 class RouteTitles {
   static const TITLE_MAP = {
     'Maps': 'MAP',
     'AI Assistant': 'AI ASSISTANT',
+    'ai_assistant/citation_web': 'CITATION',
     'MapSearch': 'MAP',
     'MapLocationList': 'MAP',
     'Notifications': 'NOTIFICATIONS',
@@ -86,6 +88,16 @@ class DiningConstants {
 }
 
 class ErrorConstants {
+  /// TritonGPT chat / streaming failures (user-facing; no stack traces).
+  static const TRITONGPT_UNAVAILABLE =
+      'Unable to reach TritonGPT right now. Please try again later.';
+  static const TRITONGPT_NOT_FOUND =
+      'TritonGPT could not be reached. Please try again later.';
+  static const TRITONGPT_SERVER_ERROR =
+      'TritonGPT is temporarily unavailable. Please try again later.';
+  static const TRITONGPT_BAD_REQUEST =
+      'Your message could not be processed. Please try again.';
+
   static const AUTHORIZED_POST_ERRORS = 'Failed to upload data: ';
   static const AUTHORIZED_PUT_ERRORS = 'Failed to update data: ';
   static const INVALID_BEARER_TOKEN = 'Invalid bearer token';
