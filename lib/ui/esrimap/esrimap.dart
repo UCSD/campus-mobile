@@ -236,6 +236,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   BasemapType _currentBasemapType = BasemapType.defaultMap;
   final Map<BasemapType, Basemap> _basemaps = {};
   bool _showBasemapMenu = false;
+  bool _showCampusDistricts = false;
+  ArcGISMapImageLayer? _campusDistrictsLayer;
 
   @override
   bool get wantKeepAlive => true;
@@ -323,6 +325,28 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _currentBasemapType = newType;
       _showBasemapMenu = false;
     });
+  }
+
+  void _toggleCampusDistricts() {
+    if (_showCampusDistricts) {
+      if (_campusDistrictsLayer != null) {
+        _map.operationalLayers.remove(_campusDistrictsLayer!);
+      }
+      setState(() => _showCampusDistricts = false);
+    } else {
+        if (_campusDistrictsLayer == null) {
+          _campusDistrictsLayer = ArcGISMapImageLayer.withUri(Uri.parse(
+            'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
+            'AdministrationServices/Areas_and_Boundaries/MapServer',
+        ));
+        // Show only sublayer 4 (Campus Districts)
+        for (final sublayer in _campusDistrictsLayer!.mapImageSublayers) {
+          sublayer.isVisible = sublayer.id == 4;
+        }
+      }
+      _map.operationalLayers.add(_campusDistrictsLayer!);
+      setState(() => _showCampusDistricts = true);
+    }
   }
 
   Future<void> _startLocationDisplay() async {
@@ -1672,47 +1696,70 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? Colors.grey[850] : Colors.white;
     final textColor = isDark ? Colors.white : Colors.grey[900];
+    final labelColor = isDark ? Colors.grey[500]! : Colors.grey[500]!;
     final accent =
         isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
 
-    return Material(
-      elevation: 6,
-      borderRadius: BorderRadius.circular(12),
-      color: bgColor,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: BasemapType.values.map((type) {
-          final opt = basemapOptions[type]!;
-          final selected = type == _currentBasemapType;
-          return InkWell(
-            onTap: () => _switchBasemap(type),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    opt.label,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight:
-                          selected ? FontWeight.w600 : FontWeight.w500,
-                      color: textColor,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  SizedBox(
-                    width: 16,
-                    child: selected
-                        ? Icon(Icons.check, size: 16, color: accent)
-                        : null,
-                  ),
-                ],
-              ),
+    Widget sectionLabel(String text) => Padding(
+          padding: const EdgeInsets.fromLTRB(14, 10, 14, 4),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.6,
+              color: labelColor,
             ),
-          );
-        }).toList(),
+          ),
+        );
+
+    Widget menuRow(String label, bool selected, VoidCallback onTap) => InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                    color: textColor,
+                  ),
+                ),
+                SizedBox(
+                  width: 16,
+                  child: selected
+                      ? Icon(Icons.check, size: 16, color: accent)
+                      : null,
+                ),
+              ],
+            ),
+          ),
+        );
+
+      return SizedBox(
+        width: 160,
+        child: Material(
+          elevation: 6,
+          borderRadius: BorderRadius.circular(12),
+          color: bgColor,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              sectionLabel('BASEMAP'),
+              ...BasemapType.values.map((type) => menuRow(
+                    basemapOptions[type]!.label,
+                    type == _currentBasemapType,
+                    () => _switchBasemap(type),
+                  )),
+              const Divider(height: 1),
+              sectionLabel('LAYERS'),
+              menuRow('Campus Districts', _showCampusDistricts, _toggleCampusDistricts),
+          ],
+        ),
       ),
     );
   }
