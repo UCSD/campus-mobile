@@ -8,7 +8,7 @@ There are three basemaps with three layers each.
 
 import 'package:arcgis_maps/arcgis_maps.dart';
 
-enum BasemapType { defaultMap, light, dark }
+enum BasemapType { defaultMap, light, dark, satellite }
 
 class BasemapOption {
   final String label;
@@ -32,6 +32,10 @@ const basemapOptions = <BasemapType, BasemapOption>{
     label: 'Dark',
     itemId: '09d7b3934b6c4c2cad8380c04e08c1b1',
   ),
+  BasemapType.satellite: BasemapOption(
+    label: 'Satellite',
+    itemId: '6643ee62af494f5bafe7dfdb8eb3f857',
+  ),
 };
 
 // Esri world tile service URIs (raster).
@@ -51,6 +55,12 @@ const _darkGrayBaseUri =
     'https://services.arcgisonline.com/arcgis/rest/services/'
     'Canvas/World_Dark_Gray_Base/MapServer';
 
+// Nearmap tile service
+const _nearmapUri =
+    'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
+    'Campus_Imagery_Nearmap_9in_2025_0423_0514/MapServer';
+
+// AGE portal for campus vector tiles
 final _agePortal = Portal(
   Uri.parse('https://admin-enterprise-gis.ucsd.edu/portal'),
 );
@@ -59,25 +69,33 @@ final _agePortal = Portal(
 /// call returns an independent Basemap instance with freshly constructed
 /// layers.
 Basemap buildBasemap(BasemapType type) {
-  final hillshade = ArcGISTiledLayer.withUri(Uri.parse(_hillshadeUri));
-  final esriContext = _esriContextLayer(type);
-  final ucsdLayer = _ucsdCampusLayer(type);
-
   final basemap = Basemap();
-  basemap.baseLayers.add(hillshade);
-  basemap.baseLayers.add(esriContext);
-  basemap.baseLayers.add(ucsdLayer);
+
+  if (type == BasemapType.satellite) {
+    // Light gray fallback + Nearmap imagery + campus vector
+    basemap.baseLayers.add(ArcGISTiledLayer.withUri(Uri.parse(_lightGrayBaseUri)));
+    basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(_nearmapUri)));
+  } else {
+    basemap.baseLayers.add(ArcGISTiledLayer.withUri(Uri.parse(_hillshadeUri)));
+    basemap.baseLayers.add(_esriContextLayer(type));
+  }
+
+  if (type != BasemapType.satellite) {
+    basemap.baseLayers.add(_ucsdCampusLayer(type));
+  }
   return basemap;
 }
 
 ArcGISTiledLayer _esriContextLayer(BasemapType type) {
   switch (type) {
     case BasemapType.defaultMap:
-      return ArcGISTiledLayer.withUri(Uri.parse(_worldTopoUri));
+      return ArcGISTiledLayer.withUri(Uri.parse(_lightGrayBaseUri));
     case BasemapType.light:
       return ArcGISTiledLayer.withUri(Uri.parse(_lightGrayBaseUri));
     case BasemapType.dark:
       return ArcGISTiledLayer.withUri(Uri.parse(_darkGrayBaseUri));
+    case BasemapType.satellite:
+      return ArcGISTiledLayer.withUri(Uri.parse(_lightGrayBaseUri));
   }
 }
 
