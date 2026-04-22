@@ -218,6 +218,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _routeGraphicsOverlay = GraphicsOverlay();
   bool _isRouting = false;
   bool _hasRoute = false;
+  Envelope? _routePaddedExtent;
   bool _routeFailed = false;
   String _travelMode = 'Walking';
   double _routeTravelTimeMinutes = 0;
@@ -1034,6 +1035,39 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
+  void _recenterOnView() {
+    if (_selectedResult != null) {
+      // Center on active location, same viewpoint as when it was first selected
+      _mapViewController.setViewpointAnimated(
+        Viewpoint.fromCenter(
+          ArcGISPoint(
+            x: _selectedResult!.longitude,
+            y: _selectedResult!.latitude,
+            spatialReference: SpatialReference.wgs84,
+          ),
+          scale: 5000,
+        ),
+      );
+    } else if (_hasRoute && _routePaddedExtent != null) {
+      // Re-fit the route extent (same padded envelope computed at solve time)
+      _mapViewController.setViewpointAnimated(
+        Viewpoint.fromTargetExtent(_routePaddedExtent!),
+      );
+    } else {
+      // Default campus view
+      _mapViewController.setViewpointAnimated(
+        Viewpoint.fromCenter(
+          ArcGISPoint(
+            x: -117.2340,
+            y: 32.8801,
+            spatialReference: SpatialReference.wgs84,
+          ),
+          scale: 24000,
+        ),
+      );
+    }
+  }
+
   void _clearSearch() {
     _searchController.clear();
     _fromController.clear();
@@ -1216,6 +1250,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         yMax: extent.yMax + dyTop,
         spatialReference: extent.spatialReference,
       );
+      _routePaddedExtent = paddedExtent;
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromTargetExtent(paddedExtent),
       );
@@ -1244,6 +1279,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _routeGraphicsOverlay.graphics.clear();
     _fromController.clear();
     _toController.clear();
+    _routePaddedExtent = null;
     setState(() {
       _hasRoute = false;
       _routeFailed = false;
@@ -1316,11 +1352,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             SizedBox(height: 12),
 
             // Category icons row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _categories
-                  .map((cat) => _buildCategoryChip(context, cat))
-                  .toList(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: _categories
+                    .map((cat) => _buildCategoryChip(context, cat))
+                    .toList(),
+              ),
             ),
 
             // Recent searches section
@@ -1343,6 +1382,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               ...List.generate(_recentSearches.length, (index) {
                 final recent = _recentSearches[index];
                 return ListTile(
+                  splashColor: Colors.transparent,
                   dense: true,
                   leading: Icon(
                     Icons.history,
@@ -1375,6 +1415,19 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Widget _buildCategoryChip(BuildContext context, _SearchCategory category) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final colors = {
+      'Parking':             Color(0xFFCCF4F7),
+      'Dining and Beverage': Color(0xFFF9DDEF),
+      'Athletic Facilities': Color(0xFFFCF9CC),
+      'Transit':             Color(0xFFFFEDD1),
+    };
+    final iconColors = {
+      'Parking':             Colors.black,
+      'Dining and Beverage': Colors.black,
+      'Athletic Facilities': Colors.black,
+      'Transit':             Colors.black,
+    };
+
     return GestureDetector(
       onTap: () => _performCategorySearch(category),
       child: Column(
@@ -1384,13 +1437,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: isDark ? Colors.grey[800] : Colors.grey[100],
-              borderRadius: BorderRadius.circular(16),
+              color: colors[category.poiClassValue] ?? (isDark ? Colors.grey[800]! : Colors.grey[100]!),
+              shape: BoxShape.circle,
             ),
             child: Icon(
               category.icon,
               size: 24,
-              color: isDark ? Colors.white70 : Colors.grey[700],
+              color: iconColors[category.poiClassValue] ?? (isDark ? Colors.white70 : Colors.grey[700]),
             ),
           ),
           SizedBox(height: 6),
@@ -2481,6 +2534,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                           ),
                           ..._matchingPoiClasses.map(
                             (classValue) => ListTile(
+                              splashColor: Colors.transparent,
                               leading: Icon(
                                 _iconForClass(classValue),
                                 size: 20,
@@ -2580,12 +2634,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   // Layers FAB — toggles the basemap menu
                   FloatingActionButton.small(
                     heroTag: 'layersBtn',
-                    backgroundColor: _showBasemapMenu
-                        ? Theme.of(context).colorScheme.primary
-                        : (isDark ? Colors.grey[800] : null),
-                    foregroundColor: _showBasemapMenu
-                        ? Colors.white
-                        : (isDark ? Colors.white : null),
+                    backgroundColor: isDark ? Colors.grey[800] : null,
+                    foregroundColor: isDark ? Colors.white : null,
                     onPressed: () {
                       setState(() => _showBasemapMenu = !_showBasemapMenu);
                     },
@@ -2601,15 +2651,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                           _showCategoryList = !_showCategoryList;
                         });
                       },
-                      backgroundColor: _showCategoryList
-                          ? Theme.of(context).colorScheme.primary
-                          : (isDark ? Colors.grey[800] : null),
-                      foregroundColor: _showCategoryList
-                          ? Colors.white
-                          : (isDark ? Colors.white : null),
-                      child: Icon(
-                        _showCategoryList ? Icons.map_outlined : Icons.list,
-                      ),
+                      backgroundColor: isDark ? Colors.grey[800] : null,
+                      foregroundColor: isDark ? Colors.white : null,
+                      child: const Icon(Icons.list),
                     ),
                     const SizedBox(height: 10),
                   ],
@@ -2633,6 +2677,16 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   ],
                   if (_allCategoryResults.isNotEmpty || _lastSelectedResult != null)
                     const SizedBox(height: 10),
+
+                  FloatingActionButton.small(
+                    heroTag: 'recenterBtn',
+                    backgroundColor: isDark ? Colors.grey[800] : null,
+                    foregroundColor: isDark ? Colors.white : null,
+                    onPressed: _recenterOnView,
+                    child: const Icon(Icons.center_focus_strong),
+                  ),
+
+                  const SizedBox(height: 10),
                   FloatingActionButton.small(
                     heroTag: 'locateBtn',
                     backgroundColor: isDark ? Colors.grey[800] : null,
