@@ -1037,7 +1037,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   void _recenterOnView() {
     if (_selectedResult != null) {
-      // Center on active location, same viewpoint as when it was first selected
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
           ArcGISPoint(
@@ -1048,13 +1047,22 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           scale: 5000,
         ),
       );
-    } else if (_hasRoute && _routePaddedExtent != null) {
-      // Re-fit the route extent (same padded envelope computed at solve time)
+    } else if (_lastSelectedResult != null && _mappedResults.isEmpty) {
+      // Single pin on map, slide-over closed
       _mapViewController.setViewpointAnimated(
-        Viewpoint.fromTargetExtent(_routePaddedExtent!),
+        Viewpoint.fromCenter(
+          ArcGISPoint(
+            x: _lastSelectedResult!.longitude,
+            y: _lastSelectedResult!.latitude,
+            spatialReference: SpatialReference.wgs84,
+          ),
+          scale: 5000,
+        ),
       );
+    } else if (_mappedResults.isNotEmpty) {
+      // Category pins on map
+      _zoomToResults(_mappedResults);
     } else {
-      // Default campus view
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
           ArcGISPoint(
@@ -1280,6 +1288,31 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _fromController.clear();
     _toController.clear();
     _routePaddedExtent = null;
+
+    // Re-add destination pin and center on it if a result is still selected
+    final destination = _selectedResult;
+    if (destination != null) {
+      final point = ArcGISPoint(
+        x: destination.longitude,
+        y: destination.latitude,
+        spatialReference: SpatialReference.wgs84,
+      );
+      _graphicsOverlay.graphics.clear();
+      _graphicsOverlay.graphics.add(Graphic(
+        geometry: point,
+        symbol: SimpleMarkerSymbol(
+          style: SimpleMarkerSymbolStyle.circle,
+          color: destination.source == MapSearchSource.building
+              ? Colors.blue
+              : Colors.red,
+          size: 14,
+        ),
+      ));
+      _mapViewController.setViewpointAnimated(
+        Viewpoint.fromCenter(point, scale: 5000),
+      );
+    }
+
     setState(() {
       _hasRoute = false;
       _routeFailed = false;
@@ -1890,7 +1923,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               ? 'Directions to ${result.name}'
               : result.name,
           headerIcon: _iconForResult(result),
-          onClose: _closeDetail,
+          onClose: isRouting ? _clearRoute : _closeDetail,
           sliverBody: [
             SliverToBoxAdapter(
               child: Padding(
@@ -2399,9 +2432,27 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                                       ? Colors.white70
                                       : Colors.grey[600]),
                               onPressed: () {
-                                final tmp = _fromController.text;
+                                final tmpText = _fromController.text;
+                                final tmpLatLng = _fromLatLng;
                                 _fromController.text = _toController.text;
-                                _toController.text = tmp;
+                                _toController.text = tmpText;
+                                setState(() {
+                                  _fromLatLng = _routeDestination != null
+                                      ? (_routeDestination!.latitude, _routeDestination!.longitude)
+                                      : null;
+                                  _routeDestination = tmpLatLng != null
+                                      ? MapSearchResult(
+                                          name: tmpText,
+                                          subtitle: '',
+                                          latitude: tmpLatLng.$1,
+                                          longitude: tmpLatLng.$2,
+                                          source: MapSearchSource.building,
+                                        )
+                                      : null;
+                                });
+                                if (_routeDestination != null && _fromLatLng != null) {
+                                  _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+                                }
                               },
                             ),
                           ),
