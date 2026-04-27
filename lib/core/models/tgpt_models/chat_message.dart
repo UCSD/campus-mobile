@@ -69,6 +69,10 @@ class AssistantMessageContent {
       if (_isRelatedQuestionsHeadingLine(line)) {
         continue;
       }
+      // Streaming: drop incomplete `[rq] ...` lines (widget avoids showing broken markers).
+      if (_isPartialLegacyRelatedQuestionLine(trimmedLeft)) {
+        continue;
+      }
       answerLines.add(line);
     }
 
@@ -83,11 +87,64 @@ class AssistantMessageContent {
     String markdown = _trimBlankLines(normalizedAnswerLines).join('\n');
     markdown = markdown.replaceAllMapped(_rqMarkdownLink, (Match m) => m.group(1)!.trim());
     markdown = _collapseBlankLines(markdown).trim();
+    markdown = _stripTrailingRelatedQuestionsFromMarkdown(markdown, relatedQuestions);
 
     return AssistantMessageContent(
       markdown: markdown,
       relatedQuestions: List<String>.unmodifiable(relatedQuestions),
     );
+  }
+
+  /// TGPT web widget strips the related-questions block from the visible transcript; keep
+  /// questions only in the dedicated UI ([...](#rq) hydrated separately from markdown).
+  static String _stripTrailingRelatedQuestionsFromMarkdown(
+    String markdown,
+    List<String> relatedQuestions,
+  ) {
+    if (relatedQuestions.isEmpty || markdown.trim().isEmpty) {
+      return markdown;
+    }
+
+    final List<String> lines = markdown.split('\n');
+    int end = lines.length;
+    while (end > 0 && lines[end - 1].trim().isEmpty) {
+      end--;
+    }
+    if (end == 0) {
+      return '';
+    }
+
+    int scan = end - 1;
+    for (int rqIdx = relatedQuestions.length - 1; rqIdx >= 0; rqIdx--) {
+      final String expected = relatedQuestions[rqIdx].trim();
+      if (expected.isEmpty) {
+        return markdown;
+      }
+      while (scan >= 0 && lines[scan].trim().isEmpty) {
+        scan--;
+      }
+      if (scan < 0 || lines[scan].trim() != expected) {
+        return markdown;
+      }
+      scan--;
+    }
+    while (scan >= 0 && lines[scan].trim().isEmpty) {
+      scan--;
+    }
+    if (scan >= 0) {
+      final String candidate = lines[scan].trim();
+      if (RegExp(r'^-{3,}\s*$').hasMatch(candidate)) {
+        scan--;
+        while (scan >= 0 && lines[scan].trim().isEmpty) {
+          scan--;
+        }
+      }
+    }
+    if (scan < 0) {
+      return '';
+    }
+    final List<String> kept = lines.sublist(0, scan + 1);
+    return _collapseBlankLines(_trimBlankLines(kept).join('\n')).trim();
   }
 
   static void _addUniqueRelatedQuestion(List<String> list, String raw) {
@@ -96,6 +153,12 @@ class AssistantMessageContent {
     if (!list.contains(q)) {
       list.add(q);
     }
+  }
+
+  static bool _isPartialLegacyRelatedQuestionLine(String trimmedLeft) {
+    if (!trimmedLeft.startsWith('[rq')) return false;
+    if (_relatedQuestionPattern.hasMatch(trimmedLeft)) return false;
+    return true;
   }
 
   static bool _isRelatedQuestionsHeadingLine(String line) {

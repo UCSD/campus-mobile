@@ -14,11 +14,13 @@ class ChatMessageService {
     required String message,
     required String chatSessionId,
     int? parentMessageId,
+    required String url,
   }) {
     final req = BasicCreateChatMessageRequest(
       message: message,
       chatSessionId: chatSessionId,
       parentMessageId: parentMessageId,
+      url: url,
     );
     return json.encode(req.toJson());
   }

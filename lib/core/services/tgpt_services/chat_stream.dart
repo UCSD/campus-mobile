@@ -100,11 +100,17 @@ class ChatMessageStreamService {
       return;
     }
 
-    // Build request body using shared helper
+    final String? rawContextUrl = dotenv.env['TGPT_CHAT_SEND_CONTEXT_URL'];
+    final String sendContextUrl = (rawContextUrl != null && rawContextUrl.trim().isNotEmpty)
+        ? rawContextUrl.trim()
+        : 'https://mobile.ucsd.edu/';
+
+    // Build request body using shared helper (includes `url` per TGPT web widget contract)
     final body = ChatMessageService.buildRequestBody(
       message: message,
       chatSessionId: chatSessionId,
       parentMessageId: parentMessageId,
+      url: sendContextUrl,
     );
 
     final dio = Dio();

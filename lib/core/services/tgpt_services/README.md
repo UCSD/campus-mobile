@@ -31,6 +31,7 @@ Environment variables used by this flow:
 
 - `CHAT_CREATE_SESSION_ENDPOINT`
 - `CHAT_SEND_MESSAGE_ENDPOINT`
+- `TGPT_CHAT_SEND_CONTEXT_URL` (optional; sent as `url` on each message, defaults to `https://mobile.ucsd.edu/`)
 - `MOBILE_APP_PUBLIC_DATA_KEY` for guest chat/session requests
 - `TGPT_PERSONA_ID` (optional; defaults inside the session service when omitted)
 
