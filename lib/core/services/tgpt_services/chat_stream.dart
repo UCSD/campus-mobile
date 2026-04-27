@@ -237,10 +237,11 @@ class ChatMessageStreamService {
         }
       }
       _hasRetried = false;
-      yield StreamingChatChunk(delta: tgptErrorMessageFor(e), done: true);
+      yield StreamingChatChunk(delta: await tgptErrorMessageForDio(e), done: true);
     } catch (e) {
       _hasRetried = false;
-      yield StreamingChatChunk(delta: tgptErrorMessageFor(e), done: true);
+      final String delta = e is DioException ? await tgptErrorMessageForDio(e) : tgptErrorMessageFor(e);
+      yield StreamingChatChunk(delta: delta, done: true);
     } finally {
       dio.close();
     }
