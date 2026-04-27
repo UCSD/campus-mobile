@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'esrimap_basemaps.dart';
+import 'esrimap_scene.dart';
 
 // -----------------------------------------------------------------------------
 // Model
@@ -239,6 +240,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   bool _showCampusDistricts = false;
   ArcGISMapImageLayer? _campusDistrictsLayer;
 
+  // 3D scene toggle
+  bool _show3D = false;
+  EsriSceneWidget? _sceneWidget;
+
   @override
   bool get wantKeepAlive => true;
 
@@ -289,8 +294,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _onMapViewReady() {
     _mapViewController.arcGISMap = _map;
     _mapViewController.interactionOptions.rotateEnabled = false;
-    _mapViewController.graphicsOverlays.add(_graphicsOverlay);
-    _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
+    if (!_mapViewController.graphicsOverlays.contains(_graphicsOverlay)) {
+      _mapViewController.graphicsOverlays.add(_graphicsOverlay);
+    }
+    if (!_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay)) {
+      _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
+    }
 
     // Wire up location display — blue dot, no auto-pan on start
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
@@ -324,6 +333,33 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _map.basemap = newBasemap;
       _currentBasemapType = newType;
       _showBasemapMenu = false;
+    });
+  }
+
+  void _toggle3D() {
+    double lat = 32.8801;
+    double lng = -117.2340;
+
+    final center = _mapViewController.visibleArea?.extent.center;
+    if (center != null) {
+      final wgs = GeometryEngine.project(
+        center,
+        outputSpatialReference: SpatialReference.wgs84,
+      ) as ArcGISPoint?;
+      if (wgs != null) {
+        lat = wgs.y;
+        lng = wgs.x;
+      }
+    }
+
+    setState(() {
+      if (_sceneWidget == null) {
+        _sceneWidget = EsriSceneWidget(
+          initialLatitude: lat,
+          initialLongitude: lng,
+        );
+      }
+      _show3D = !_show3D;
     });
   }
 
@@ -2286,17 +2322,23 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     return Scaffold(
       body: Stack(
         children: [
-          // Map — Listener detects pointer-down to collapse slideovers
+          // Map — swaps between 2D ArcGISMapView and 3D ArcGISSceneView
           Column(
             children: [
               Expanded(
-                child: Listener(
-                  onPointerDown: _onMapPointerDown,
-                  child: ArcGISMapView(
-                    controllerProvider: () => _mapViewController,
-                    onMapViewReady: _onMapViewReady,
-                    onTap: _onMapTap,
-                  ),
+                child: IndexedStack(
+                  index: _show3D ? 1 : 0,
+                  children: [
+                    Listener(
+                      onPointerDown: _onMapPointerDown,
+                      child: ArcGISMapView(
+                        controllerProvider: () => _mapViewController,
+                        onMapViewReady: _onMapViewReady,
+                        onTap: _onMapTap,
+                      ),
+                    ),
+                    _sceneWidget ?? const SizedBox.shrink(),
+                  ],
                 ),
               ),
             ],
@@ -2724,6 +2766,21 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  // 3D/2D toggle FAB
+                  FloatingActionButton.small(
+                    heroTag: 'toggle3DBtn',
+                    backgroundColor: _show3D
+                        ? Theme.of(context).colorScheme.primary
+                        : (isDark ? Colors.grey[800] : null),
+                    foregroundColor: _show3D
+                        ? Colors.white
+                        : (isDark ? Colors.white : null),
+                    onPressed: _toggle3D,
+                    child: Icon(
+                      _show3D ? Icons.map_outlined : Icons.view_in_ar_outlined,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   // Basemap picker menu (shown above the layers FAB when open)
                   if (_showBasemapMenu) ...[
                     _buildBasemapMenu(context),
