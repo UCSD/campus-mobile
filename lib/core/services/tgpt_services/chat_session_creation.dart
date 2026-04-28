@@ -9,6 +9,7 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_session.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_error_message.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Service for creating chat sessions via the TGPT API.
@@ -85,7 +86,7 @@ class ChatSessionService {
         }
       }
 
-      _error = tgptErrorMessageFor(e);
+      _error = e is DioException ? await tgptErrorMessageForDio(e) : tgptErrorMessageFor(e);
       _hasRetried = false;
       return null;
     } finally {

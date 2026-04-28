@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_sess
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_stream.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_error_message.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class ChatProvider extends ChangeNotifier {
@@ -235,7 +236,8 @@ class ChatProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      final String userMessage = tgptErrorMessageFor(e);
+      final String userMessage =
+          e is DioException ? await tgptErrorMessageForDio(e) : tgptErrorMessageFor(e);
       _errorMessage = userMessage;
       final int placeholderIndex =
           sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);

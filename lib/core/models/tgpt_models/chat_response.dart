@@ -6,16 +6,20 @@ class BasicCreateChatMessageRequest {
   final String message;
   final String chatSessionId;
   final int? parentMessageId;
+  /// TGPT web widget sends `window.location.href`; mobile uses a stable context URL.
+  final String url;
 
   BasicCreateChatMessageRequest({
     required this.message,
     required this.chatSessionId,
     this.parentMessageId,
+    required this.url,
   });
 
   Map<String, dynamic> toJson() => {
         'message': message,
         'chat_session_id': chatSessionId,
         'parent_message_id': parentMessageId,
+        'url': url,
       };
 }
