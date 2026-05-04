@@ -2781,44 +2781,52 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     );
   }
 }
+
 class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
   final Future<Map<String, dynamic>> Function(Map<String, dynamic>) callLambda;
+  
+  String? _cachedToken;
+  DateTime? _tokenExpiry;
 
   _AgeAuthChallengeHandler(this.callLambda);
+
+  Future<String?> _getToken() async {
+    if (_cachedToken != null &&
+        _tokenExpiry != null &&
+        DateTime.now().isBefore(_tokenExpiry!.subtract(const Duration(minutes: 5)))) {
+      return _cachedToken;
+    }
+    final data = await callLambda({'action': 'getTokens'});
+    _cachedToken = data['age']?['token'] as String?;
+    final expiresIn = data['age']?['expires_in'] as int? ?? 7200;
+    _tokenExpiry = DateTime.now().add(Duration(seconds: expiresIn));
+    return _cachedToken;
+  }
 
   @override
   Future<void> handleArcGISAuthenticationChallenge(
     ArcGISAuthenticationChallenge challenge,
   ) async {
     try {
-      final data = await callLambda({'action': 'getTokens'});
-      final token = data['age']?['token'] as String?;
-      final expiresIn = data['age']?['expires_in'] as int?;
-
+      final token = await _getToken();
       if (token == null) {
         challenge.continueAndFail();
         return;
       }
-
       final tokenInfo = TokenInfo.create(
         accessToken: token,
-        expirationDate: DateTime.now().add(
-          Duration(seconds: expiresIn ?? 7200),
-        ),
+        expirationDate: _tokenExpiry!,
         isSslRequired: true,
       );
-
       if (tokenInfo == null) {
         challenge.continueAndFail();
         return;
       }
-
       final credential = PregeneratedTokenCredential(
         uri: challenge.requestUri,
         tokenInfo: tokenInfo,
         referer: '',
       );
-
       challenge.continueWithCredential(credential);
     } catch (e) {
       debugPrint('AGE auth challenge failed: $e');
