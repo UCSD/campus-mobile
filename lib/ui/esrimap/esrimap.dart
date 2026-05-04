@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'esrimap_basemaps.dart';
+import 'esrimap_fab.dart';
+import 'esrimap_layers_panel.dart';
 import 'esrimap_scene.dart';
 
 // -----------------------------------------------------------------------------
@@ -232,14 +234,24 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // Basemap switcher
   BasemapType _currentBasemapType = BasemapType.defaultMap;
   final Map<BasemapType, Basemap> _basemaps = {};
-  bool _showBasemapMenu = false;
+  bool _showLayersPanel = false;
+
+  // Operational layers
   bool _showCampusDistricts = false;
   ArcGISMapImageLayer? _campusDistrictsLayer;
+  bool _showConstruction = false;
+  ArcGISMapImageLayer? _constructionLayer;
+  bool _loadingConstruction = false;
+  bool _showAssemblyAreas = false;
+  ArcGISMapImageLayer? _assemblyAreasLayer;
+  bool _loadingAssemblyAreas = false;
+
   final _mapReadyCompleter = Completer<void>();
 
-  // 3D scene toggle
-  bool _show3D = false;
-  EsriSceneWidget? _sceneWidget;
+  // Scene mode: 'Default' | '3D Building' | 'Drone View'
+  String _sceneMode = 'Default';
+  EsriSceneWidget? _scene3DWidget;
+  EsriSceneWidget? _sceneDroneWidget;
 
   @override
   bool get wantKeepAlive => true;
@@ -293,7 +305,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     await _mapReadyCompleter.future;
     _setupAgeAuthChallengeHandler();
     _mapViewController.arcGISMap = _map;
-    _mapViewController.interactionOptions.rotateEnabled = false;
+    _mapViewController.interactionOptions.rotateEnabled = true;
     if (!_mapViewController.graphicsOverlays.contains(_graphicsOverlay)) {
       _mapViewController.graphicsOverlays.add(_graphicsOverlay);
     }
@@ -321,10 +333,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _switchBasemap(BasemapType newType) {
-    if (newType == _currentBasemapType) {
-      setState(() => _showBasemapMenu = false);
-      return;
-    }
+    if (newType == _currentBasemapType) return;
     final newBasemap = _basemaps[newType];
     if (newBasemap == null) return;
 
@@ -332,34 +341,24 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     setState(() {
       _map.basemap = newBasemap;
       _currentBasemapType = newType;
-      _showBasemapMenu = false;
     });
   }
 
-  void _toggle3D() {
-    double lat = 32.8801;
-    double lng = -117.2340;
-
-    final center = _mapViewController.visibleArea?.extent.center;
-    if (center != null) {
-      final wgs = GeometryEngine.project(
-        center,
-        outputSpatialReference: SpatialReference.wgs84,
-      ) as ArcGISPoint?;
-      if (wgs != null) {
-        lat = wgs.y;
-        lng = wgs.x;
-      }
-    }
-
+  void _setSceneMode(String mode) {
+    if (mode == _sceneMode) return;
     setState(() {
-      if (_sceneWidget == null) {
-        _sceneWidget = EsriSceneWidget(
-          initialLatitude: lat,
-          initialLongitude: lng,
+      _sceneMode = mode;
+      if (mode == '3D Building' && _scene3DWidget == null) {
+        _scene3DWidget = const EsriSceneWidget(
+          portalUri: 'https://ucsd-admin.maps.arcgis.com',
+          itemId: 'a0a255ad97534836aa9e159d4a546bfc',
+        );
+      } else if (mode == 'Drone View' && _sceneDroneWidget == null) {
+        _sceneDroneWidget = const EsriSceneWidget(
+          portalUri: 'https://admin-enterprise-gis.ucsd.edu/portal',
+          itemId: '0ffe293479844ce49ff5c30ffc0a0b67',
         );
       }
-      _show3D = !_show3D;
     });
   }
 
@@ -382,6 +381,62 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
       _map.operationalLayers.add(_campusDistrictsLayer!);
       setState(() => _showCampusDistricts = true);
+    }
+  }
+
+  void _toggleConstruction() async {
+    if (_showConstruction) {
+      if (_constructionLayer != null) {
+        _map.operationalLayers.remove(_constructionLayer!);
+      }
+      setState(() => _showConstruction = false);
+    } else {
+      setState(() => _loadingConstruction = true);
+      if (_constructionLayer == null) {
+        _constructionLayer = ArcGISMapImageLayer.withUri(Uri.parse(
+          // TODO: replace with the real AGE construction layer URL
+          'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
+          'CampusServices/Construction_Impacts/MapServer',
+        ));
+      }
+      _map.operationalLayers.add(_constructionLayer!);
+      try {
+        await _constructionLayer!.load();
+      } catch (e) {
+        debugPrint('Construction layer load error: $e');
+      }
+      setState(() {
+        _showConstruction = true;
+        _loadingConstruction = false;
+      });
+    }
+  }
+
+  void _toggleAssemblyAreas() async {
+    if (_showAssemblyAreas) {
+      if (_assemblyAreasLayer != null) {
+        _map.operationalLayers.remove(_assemblyAreasLayer!);
+      }
+      setState(() => _showAssemblyAreas = false);
+    } else {
+      setState(() => _loadingAssemblyAreas = true);
+      if (_assemblyAreasLayer == null) {
+        _assemblyAreasLayer = ArcGISMapImageLayer.withUri(Uri.parse(
+          // TODO: replace with the real AGE assembly areas layer URL
+          'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
+          'CampusServices/Assembly_Areas/MapServer',
+        ));
+      }
+      _map.operationalLayers.add(_assemblyAreasLayer!);
+      try {
+        await _assemblyAreasLayer!.load();
+      } catch (e) {
+        debugPrint('Assembly areas layer load error: $e');
+      }
+      setState(() {
+        _showAssemblyAreas = true;
+        _loadingAssemblyAreas = false;
+      });
     }
   }
 
@@ -1515,6 +1570,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
 
   void _onMapPointerDown(PointerDownEvent _) {
+    // Close layers panel when user touches the map
+    if (_showLayersPanel) {
+      setState(() => _showLayersPanel = false);
+      return;
+    }
     // Collapse whichever sheet is active to the minimum snap
     if (_showCategoryList && _selectedResult == null) {
       if (_categorySheetController.isAttached) {
@@ -1640,78 +1700,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           ),
           ...sliverBody,
         ],
-      ),
-    );
-  }
-
-  Widget _buildBasemapMenu(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? Colors.grey[850] : Colors.white;
-    final textColor = isDark ? Colors.white : Colors.grey[900];
-    final labelColor = isDark ? Colors.grey[500]! : Colors.grey[500]!;
-    final accent =
-        isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
-
-    Widget sectionLabel(String text) => Padding(
-          padding: const EdgeInsets.fromLTRB(14, 10, 14, 4),
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.6,
-              color: labelColor,
-            ),
-          ),
-        );
-
-    Widget menuRow(String label, bool selected, VoidCallback onTap) => InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                    color: textColor,
-                  ),
-                ),
-                SizedBox(
-                  width: 16,
-                  child: selected
-                      ? Icon(Icons.check, size: 16, color: accent)
-                      : null,
-                ),
-              ],
-            ),
-          ),
-        );
-
-      return SizedBox(
-        width: 160,
-        child: Material(
-          elevation: 6,
-          borderRadius: BorderRadius.circular(12),
-          color: bgColor,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              sectionLabel('BASEMAP'),
-              ...BasemapType.values.map((type) => menuRow(
-                    basemapOptions[type]!.label,
-                    type == _currentBasemapType,
-                    () => _switchBasemap(type),
-                  )),
-              const Divider(height: 1),
-              sectionLabel('LAYERS'),
-              menuRow('Campus Districts', _showCampusDistricts, _toggleCampusDistricts),
-          ],
-        ),
       ),
     );
   }
@@ -2234,6 +2222,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
       body: Stack(
@@ -2243,7 +2232,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             children: [
               Expanded(
                 child: IndexedStack(
-                  index: _show3D ? 1 : 0,
+                  index: _sceneMode == '3D Building' ? 1
+                       : _sceneMode == 'Drone View'  ? 2
+                       : 0,
                   children: [
                     Listener(
                       onPointerDown: _onMapPointerDown,
@@ -2253,14 +2244,16 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         onTap: _onMapTap,
                       ),
                     ),
-                    _sceneWidget ?? const SizedBox.shrink(),
+                    _scene3DWidget ?? const SizedBox.shrink(),
+                    _sceneDroneWidget ?? const SizedBox.shrink(),
                   ],
                 ),
               ),
             ],
           ),
 
-          // Floating search bar + dropdown
+          // Floating search bar + dropdown — hidden in 3D/Drone View modes
+          if (_sceneMode == 'Default')
           Positioned(
             top: 8,
             left: 12,
@@ -2673,99 +2666,24 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 child: _buildSeeAllButton(context),
               ),
             ),
-          // Bottom-right FAB cluster: list view button + info button
-          if (_selectedResult == null)
+          // Bottom-right FAB cluster — hidden when keyboard or layers panel is active
+          if (_selectedResult == null && !keyboardVisible && !_showLayersPanel)
             Positioned(
               right: 16,
               bottom: 32,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // 3D/2D toggle FAB
-                  FloatingActionButton.small(
-                    heroTag: 'toggle3DBtn',
-                    backgroundColor: _show3D
-                        ? Theme.of(context).colorScheme.primary
-                        : (isDark ? Colors.grey[800] : null),
-                    foregroundColor: _show3D
-                        ? Colors.white
-                        : (isDark ? Colors.white : null),
-                    onPressed: _toggle3D,
-                    child: Icon(
-                      _show3D ? Icons.map_outlined : Icons.view_in_ar_outlined,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  // Basemap picker menu (shown above the layers FAB when open)
-                  if (_showBasemapMenu) ...[
-                    _buildBasemapMenu(context),
-                    const SizedBox(height: 10),
-                  ],
-                  // Layers FAB — toggles the basemap menu
-                  FloatingActionButton.small(
-                    heroTag: 'layersBtn',
-                    backgroundColor: isDark ? Colors.grey[800] : null,
-                    foregroundColor: isDark ? Colors.white : null,
-                    onPressed: () {
-                      setState(() => _showBasemapMenu = !_showBasemapMenu);
-                    },
-                    child: const Icon(Icons.layers_outlined),
-                  ),
-                  const SizedBox(height: 10),
-                  // List view button — only when a category search is active
-                  if (_allCategoryResults.isNotEmpty) ...[
-                    FloatingActionButton.small(
-                      heroTag: 'listBtn',
-                      onPressed: () {
-                        setState(() {
-                          _showCategoryList = !_showCategoryList;
-                        });
-                      },
-                      backgroundColor: isDark ? Colors.grey[800] : null,
-                      foregroundColor: isDark ? Colors.white : null,
-                      child: const Icon(Icons.list),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                  if (_lastSelectedResult != null)
-                    FloatingActionButton.small(
-                      heroTag: 'infoBtn',
-                      backgroundColor: isDark ? Colors.grey[800] : null,
-                      foregroundColor: isDark ? Colors.white : null,
-                      onPressed: _reopenDetail,
-                      child: const Icon(Icons.info_outline),
-                    ),
-                  if (_showRouteFields || _hasRoute) ...[
-                    FloatingActionButton.small(
-                      heroTag: 'clearRouteBtn',
-                      backgroundColor: Colors.redAccent,
-                      foregroundColor: Colors.white,
-                      onPressed: _clearRoute,
-                      child: const Icon(Icons.close),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                  if (_allCategoryResults.isNotEmpty || _lastSelectedResult != null)
-                    const SizedBox(height: 10),
-
-                  FloatingActionButton.small(
-                    heroTag: 'recenterBtn',
-                    backgroundColor: isDark ? Colors.grey[800] : null,
-                    foregroundColor: isDark ? Colors.white : null,
-                    onPressed: _recenterOnView,
-                    child: const Icon(Icons.center_focus_strong),
-                  ),
-
-                  const SizedBox(height: 10),
-                  FloatingActionButton.small(
-                    heroTag: 'locateBtn',
-                    backgroundColor: isDark ? Colors.grey[800] : null,
-                    foregroundColor: isDark ? Colors.white : null,
-                    onPressed: _recenterOnUser,
-                    child: const Icon(Icons.my_location),
-                  ),
-                ],
+              child: EsriMapFabCluster(
+                isDark: isDark,
+                allCategoryResultsCount: _allCategoryResults.length,
+                showCategoryList: _showCategoryList,
+                hasLastSelectedResult: _lastSelectedResult != null,
+                showRouteFields: _showRouteFields,
+                hasRoute: _hasRoute,
+                onShowLayersPanel: () => setState(() => _showLayersPanel = true),
+                onToggleCategoryList: () => setState(() => _showCategoryList = !_showCategoryList),
+                onReopenDetail: _reopenDetail,
+                onClearRoute: _clearRoute,
+                onRecenterOnView: _recenterOnView,
+                onRecenterOnUser: _recenterOnUser,
               ),
             ),
 
@@ -2773,9 +2691,23 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           if (_showCategoryList && _selectedResult == null && _allCategoryResults.isNotEmpty)
             _buildCategoryListPanel(context),
 
-          // Detail slide-over
-          if (_selectedResult != null)
-            _buildDetailSlideOver(context, _selectedResult!),
+          // Layers/display panel
+          if (_showLayersPanel)
+            EsriMapLayersPanel(
+              currentBasemapType: _currentBasemapType,
+              sceneMode: _sceneMode,
+              showCampusDistricts: _showCampusDistricts,
+              showConstruction: _showConstruction,
+              loadingConstruction: _loadingConstruction,
+              showAssemblyAreas: _showAssemblyAreas,
+              loadingAssemblyAreas: _loadingAssemblyAreas,
+              onSwitchBasemap: _switchBasemap,
+              onSetSceneMode: _setSceneMode,
+              onToggleCampusDistricts: _toggleCampusDistricts,
+              onToggleConstruction: _toggleConstruction,
+              onToggleAssemblyAreas: _toggleAssemblyAreas,
+              onClose: () => setState(() => _showLayersPanel = false),
+            ),
         ],
       ),
     );
