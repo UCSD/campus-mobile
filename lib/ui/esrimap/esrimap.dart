@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:async';
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -72,7 +73,7 @@ enum MapSearchSource { building, poi }
 class _SearchCategory {
   final String label;
   final IconData icon;
-  final String poiClassValue; // maps to POI "Class" field value
+  final String poiClassValue;
 
   const _SearchCategory({
     required this.label,
@@ -170,12 +171,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _detailSheetController = DraggableScrollableController();
 
   // Service endpoints
-  static const _buildingsQueryUrl =
-      'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
-      'AdministrationServices/Buildings_Public/MapServer/0/query';
-  static const _poiQueryUrl =
-      'https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/'
-      'Points_Of_Interest/FeatureServer/0/query';
+  static const _lambdaUrl = "https://i0slpyw2gb.execute-api.us-west-2.amazonaws.com/default/ArcGIS-Map";
 
   // SharedPreferences key for recent searches
   static const _recentSearchesKey = 'esri_map_recent_searches';
@@ -239,6 +235,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   bool _showBasemapMenu = false;
   bool _showCampusDistricts = false;
   ArcGISMapImageLayer? _campusDistrictsLayer;
+  final _mapReadyCompleter = Completer<void>();
 
   // 3D scene toggle
   bool _show3D = false;
@@ -253,10 +250,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _initMap();
     _loadRecentSearches();
     _fetchAllPoiClasses();
-    // Listen for focus changes to show/hide suggestions
     _focusNode.addListener(_onFocusChanged);
-    _fromFocusNode.addListener(_onFromFocusChanged);
-    _toFocusNode.addListener(_onToFocusChanged);
   }
 
   @override
@@ -272,10 +266,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     super.dispose();
   }
 
+  void _setupAgeAuthChallengeHandler() {
+    ArcGISEnvironment
+        .authenticationManager
+        .arcGISAuthenticationChallengeHandler = _AgeAuthChallengeHandler(_callLambda);
+  }
+
   void _initMap() {
-    // Build all three basemaps up front. The default is applied immediately;
-    // the other two are preloaded in the background by
-    // _preloadAlternateBasemaps() once the MapView is ready.
     for (final type in BasemapType.values) {
       _basemaps[type] = buildBasemap(type);
     }
@@ -289,9 +286,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       ),
       scale: 24000,
     );
+    _mapReadyCompleter.complete();
   }
 
-  void _onMapViewReady() {
+  void _onMapViewReady() async {
+    await _mapReadyCompleter.future;
+    _setupAgeAuthChallengeHandler();
     _mapViewController.arcGISMap = _map;
     _mapViewController.interactionOptions.rotateEnabled = false;
     if (!_mapViewController.graphicsOverlays.contains(_graphicsOverlay)) {
@@ -496,153 +496,69 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // Query helpers
   // ---------------------------------------------------------------------------
 
-  String _escSql(String input) => input.replaceAll("'", "''");
-
-  /// Query the Buildings (AGE) MapServer
-  Future<List<MapSearchResult>> _queryBuildings(String query) async {
-    await dotenv.load(fileName: ".env");
-    final token = dotenv.env['ARCGIS_AGE_API_KEY'] ?? '';
-    final escaped = _escSql(query);
-    final where = "UPPER(FacilityLongName) LIKE UPPER('%$escaped%') "
-        "OR UPPER(BuildingAliases) LIKE UPPER('%$escaped%')";
-
-    final uri = Uri.parse(_buildingsQueryUrl).replace(
-      queryParameters: {
-        'where': where,
-        'outFields':
-            'FacilityLongName,BuildingAliases,StreetAddress,City,Zipcode,Latitude,Longitude',
-        'returnGeometry': 'false',
-        'resultRecordCount': '8',
-        'f': 'json',
-        if (token.isNotEmpty) 'token': token,
-      },
+  /// POST to the Lambda map handler.
+  Future<Map<String, dynamic>> _callLambda(Map<String, dynamic> payload) async {
+    final response = await http.post(
+      Uri.parse(_lambdaUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(payload),
     );
+    if (response.statusCode != 200) {
+      throw Exception('Lambda error ${response.statusCode}: ${response.body}');
+    }
+    return jsonDecode(response.body) as Map<String, dynamic>;
+  }
 
-    final response = await http.get(uri);
-    if (response.statusCode != 200) return [];
-
-    final json = jsonDecode(response.body);
-    final features = json['features'] as List<dynamic>? ?? [];
-
-    return features.map<MapSearchResult>((f) {
-      final attrs = f['attributes'] as Map<String, dynamic>;
-      final name =
-          (attrs['FacilityLongName'] as String?) ?? 'Unknown Building';
-      final alias = (attrs['BuildingAliases'] as String?) ?? '';
-      final street = (attrs['StreetAddress'] as String?) ?? '';
-      final city = (attrs['City'] as String?) ?? '';
-      final zip = (attrs['Zipcode'] as String?) ?? '';
-      final lat = (attrs['Latitude'] as num?)?.toDouble() ?? 0.0;
-      final lng = (attrs['Longitude'] as num?)?.toDouble() ?? 0.0;
-
-      final addressParts = <String>[
-        if (street.isNotEmpty) street,
-        if (city.isNotEmpty) city,
-        if (zip.isNotEmpty) zip,
-      ];
-      final fullAddress = addressParts.join(', ');
-      final subtitle = alias.isNotEmpty ? alias : 'Building';
-
+  Future<List<MapSearchResult>> _queryBuildings(String query) async {
+    final data = await _callLambda({'action': 'searchBuildings', 'query': query});
+    return (data['results'] as List<dynamic>? ?? []).map<MapSearchResult>((r) {
       return MapSearchResult(
-        name: name,
-        subtitle: subtitle,
-        latitude: lat,
-        longitude: lng,
+        name: r['name'] as String? ?? 'Unknown Building',
+        subtitle: r['subtitle'] as String? ?? 'Building',
+        latitude: (r['latitude'] as num?)?.toDouble() ?? 0.0,
+        longitude: (r['longitude'] as num?)?.toDouble() ?? 0.0,
         source: MapSearchSource.building,
-        address: fullAddress,
+        address: r['address'] as String? ?? '',
       );
     }).where((r) => r.latitude != 0.0 && r.longitude != 0.0).toList();
   }
 
-  /// Fetches all distinct POI Class values from the FeatureServer and caches them.
   Future<void> _fetchAllPoiClasses() async {
     try {
-      final uri = Uri.parse(_poiQueryUrl).replace(queryParameters: {
-        'where': '1=1',
-        'outFields': 'Class',
-        'returnDistinctValues': 'true',
-        'orderByFields': 'Class',
-        'returnGeometry': 'false',
-        'resultRecordCount': '200',
-        'f': 'json',
-      });
-      final response = await http.get(uri);
-      if (response.statusCode != 200) return;
-      final json = jsonDecode(response.body);
-      final features = json['features'] as List<dynamic>? ?? [];
-      final classes = features
-          .map((f) => (f['attributes']['Class'] as String?) ?? '')
-          .where((c) => c.isNotEmpty)
-          .toList()
-        ..sort();
+      final data = await _callLambda({'action': 'fetchAllPoiClasses'});
+      final classes = (data['classes'] as List<dynamic>? ?? [])
+          .map((c) => c as String)
+          .toList();
       setState(() => _allPoiClasses = classes);
-      print(_allPoiClasses);
     } catch (e) {
       debugPrint('Failed to fetch POI classes: $e');
     }
   }
 
-  /// Query the POIs (AGO) FeatureServer by text search.
   Future<List<MapSearchResult>> _queryPOIs(String query) async {
-    final escaped = _escSql(query);
-    final where = "UpdatedName LIKE '%$escaped%' "
-        "OR C3DName LIKE '%$escaped%' "
-        "OR C3DKeywords LIKE '%$escaped%'";
-    return _executePOIQuery(where);
+    final data = await _callLambda({'action': 'searchPOI', 'query': query});
+    return _parsePOIResults(data);
   }
 
-  /// Query POIs filtered by a specific Class value (for category taps).
   Future<List<MapSearchResult>> _queryPOIsByClass(String classValue) async {
-    final escaped = _escSql(classValue);
-    final where = "Class = '$escaped'";
-    return _executePOIQuery(where, maxResults: 100);
+    final data = await _callLambda({
+      'action': 'searchPOIByClass',
+      'classValue': classValue,
+      'maxResults': 100,
+    });
+    return _parsePOIResults(data);
   }
 
-  /// Shared POI query execution.
-  Future<List<MapSearchResult>> _executePOIQuery(
-    String where, {
-    int maxResults = 8,
-  }) async {
-    final uri = Uri.parse(_poiQueryUrl).replace(
-      queryParameters: {
-        'where': where,
-        'outFields':
-            'UpdatedName,C3DName,Class,Subclass,C3DDescription,URL,Latitude,Longitude',
-        'returnGeometry': 'false',
-        'resultRecordCount': '$maxResults',
-        'f': 'json',
-      },
-    );
-
-    final response = await http.get(uri);
-    if (response.statusCode != 200) return [];
-
-    final json = jsonDecode(response.body);
-    final features = json['features'] as List<dynamic>? ?? [];
-
-    return features.map<MapSearchResult>((f) {
-      final attrs = f['attributes'] as Map<String, dynamic>;
-      final updatedName = (attrs['UpdatedName'] as String?) ?? '';
-      final c3dName = (attrs['C3DName'] as String?) ?? '';
-      final name = updatedName.isNotEmpty ? updatedName : c3dName;
-      final poiClass = (attrs['Class'] as String?) ?? '';
-      final subclass = (attrs['Subclass'] as String?) ?? '';
-      final description = (attrs['C3DDescription'] as String?) ?? '';
-      final url = (attrs['URL'] as String?) ?? '';
-      final lat = (attrs['Latitude'] as num?)?.toDouble() ?? 0.0;
-      final lng = (attrs['Longitude'] as num?)?.toDouble() ?? 0.0;
-
-      final subtitle =
-          subclass.isNotEmpty ? '$poiClass - $subclass' : poiClass;
-
+  List<MapSearchResult> _parsePOIResults(Map<String, dynamic> data) {
+    return (data['results'] as List<dynamic>? ?? []).map<MapSearchResult>((r) {
       return MapSearchResult(
-        name: name.isNotEmpty ? name : 'Unknown POI',
-        subtitle: subtitle,
-        latitude: lat,
-        longitude: lng,
+        name: r['name'] as String? ?? 'Unknown POI',
+        subtitle: r['subtitle'] as String? ?? '',
+        latitude: (r['latitude'] as num?)?.toDouble() ?? 0.0,
+        longitude: (r['longitude'] as num?)?.toDouble() ?? 0.0,
         source: MapSearchSource.poi,
-        description: description,
-        websiteUrl: url.isNotEmpty ? url : null,
+        description: r['description'] as String? ?? '',
+        websiteUrl: r['websiteUrl'] as String?,
       );
     }).where((r) => r.latitude != 0.0 && r.longitude != 0.0).toList();
   }
@@ -2863,5 +2779,50 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         ],
       ),
     );
+  }
+}
+class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
+  final Future<Map<String, dynamic>> Function(Map<String, dynamic>) callLambda;
+
+  _AgeAuthChallengeHandler(this.callLambda);
+
+  @override
+  Future<void> handleArcGISAuthenticationChallenge(
+    ArcGISAuthenticationChallenge challenge,
+  ) async {
+    try {
+      final data = await callLambda({'action': 'getTokens'});
+      final token = data['age']?['token'] as String?;
+      final expiresIn = data['age']?['expires_in'] as int?;
+
+      if (token == null) {
+        challenge.continueAndFail();
+        return;
+      }
+
+      final tokenInfo = TokenInfo.create(
+        accessToken: token,
+        expirationDate: DateTime.now().add(
+          Duration(seconds: expiresIn ?? 7200),
+        ),
+        isSslRequired: true,
+      );
+
+      if (tokenInfo == null) {
+        challenge.continueAndFail();
+        return;
+      }
+
+      final credential = PregeneratedTokenCredential(
+        uri: challenge.requestUri,
+        tokenInfo: tokenInfo,
+        referer: '',
+      );
+
+      challenge.continueWithCredential(credential);
+    } catch (e) {
+      debugPrint('AGE auth challenge failed: $e');
+      challenge.continueAndFail();
+    }
   }
 }
