@@ -24,6 +24,9 @@ class _EsriSceneWidgetState extends State<EsriSceneWidget> {
     _sceneViewController = ArcGISSceneView.createController();
     _sceneViewController.interactionOptions.rotateEnabled = true;
     _sceneViewController.interactionOptions.panEnabled = true;
+    // Reduce GPU overhead: skip atmosphere and star-field rendering
+    _sceneViewController.atmosphereEffect = AtmosphereEffect.none;
+    _sceneViewController.spaceEffect = SpaceEffect.transparent;
   }
 
   void _onSceneViewReady() {
@@ -32,7 +35,27 @@ class _EsriSceneWidgetState extends State<EsriSceneWidget> {
       portal: portal,
       itemId: widget.itemId,
     );
-    _sceneViewController.arcGISScene = ArcGISScene.withItem(portalItem);
+    final scene = ArcGISScene.withItem(portalItem);
+    _sceneViewController.arcGISScene = scene;
+    _applyLabelScales(scene);
+  }
+
+  // Restrict building labels to only appear when zoomed in close (scale <= 4000)
+  Future<void> _applyLabelScales(ArcGISScene scene) async {
+    await scene.load();
+    _applyLabelScalesToLayers(scene.operationalLayers);
+  }
+
+  void _applyLabelScalesToLayers(List<Layer> layers) {
+    for (final layer in layers) {
+      if (layer is FeatureLayer) {
+        for (final labelDef in layer.labelDefinitions) {
+          labelDef.minScale = 4000;
+        }
+      } else if (layer is GroupLayer) {
+        _applyLabelScalesToLayers(layer.layers);
+      }
+    }
   }
 
   @override

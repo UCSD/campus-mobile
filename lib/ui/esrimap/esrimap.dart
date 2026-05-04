@@ -348,6 +348,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (mode == _sceneMode) return;
     setState(() {
       _sceneMode = mode;
+      if (mode != 'Default') _showLayersPanel = false;
       if (mode == '3D Building' && _scene3DWidget == null) {
         _scene3DWidget = const EsriSceneWidget(
           portalUri: 'https://ucsd-admin.maps.arcgis.com',

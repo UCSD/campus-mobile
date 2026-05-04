@@ -197,90 +197,95 @@ class EsriMapLayersPanel extends StatelessWidget {
               ),
             ),
 
-            // Row 1: Basemaps
-            sectionLabel('BASEMAP'),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
+            // Basemap + Layers sections — grayed out when not in Default scene mode
+            Opacity(
+              opacity: sceneMode == 'Default' ? 1.0 : 0.35,
+              child: IgnorePointer(
+                ignoring: sceneMode != 'Default',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (final type in BasemapType.values) ...[
-                      imageTile(
-                        label: basemapOptions[type]!.label,
-                        // Basemap tiles are only "selected" in Default scene mode
-                        selected: currentBasemapType == type &&
-                            sceneMode == 'Default',
-                        onTap: () {
-                          onSwitchBasemap(type);
-                          if (sceneMode != 'Default') {
-                            onSetSceneMode('Default');
-                          }
-                        },
-                        // TODO: swap Container for
-                        // Image.asset('assets/map/basemap_${type.name}.png', fit: BoxFit.cover)
-                        imageWidget: Container(
-                          color: {
-                            BasemapType.defaultMap:
-                                const Color(0xFFD6E4F0),
-                            BasemapType.light: const Color(0xFFEEEEEE),
-                            BasemapType.dark: const Color(0xFF444444),
-                            BasemapType.satellite:
-                                const Color(0xFF3A5A3A),
-                          }[type],
+                    // Row 1: Basemaps
+                    sectionLabel('BASEMAP'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            for (final type in BasemapType.values) ...[
+                              imageTile(
+                                label: basemapOptions[type]!.label,
+                                selected: currentBasemapType == type,
+                                onTap: () => onSwitchBasemap(type),
+                                // TODO: swap Container for
+                                // Image.asset('assets/map/basemap_${type.name}.png', fit: BoxFit.cover)
+                                imageWidget: Container(
+                                  color: {
+                                    BasemapType.defaultMap:
+                                        const Color(0xFFD6E4F0),
+                                    BasemapType.light: const Color(0xFFEEEEEE),
+                                    BasemapType.dark: const Color(0xFF444444),
+                                    BasemapType.satellite:
+                                        const Color(0xFF3A5A3A),
+                                  }[type],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 8),
-                    ],
+                    ),
+
+                    const Divider(height: 24, indent: 16, endIndent: 16),
+
+                    // Row 2: Operational layers
+                    sectionLabel('LAYERS'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            imageTile(
+                              label: 'Campus Districts',
+                              selected: showCampusDistricts,
+                              onTap: onToggleCampusDistricts,
+                              // TODO: replace with thumbnail image
+                              imageWidget:
+                                  Container(color: const Color(0xFFCCE5FF)),
+                            ),
+                            const SizedBox(width: 8),
+                            imageTile(
+                              label: 'Construction',
+                              selected: showConstruction,
+                              loading: loadingConstruction,
+                              onTap: onToggleConstruction,
+                              // TODO: replace with thumbnail image
+                              imageWidget:
+                                  Container(color: const Color(0xFFFFE5CC)),
+                            ),
+                            const SizedBox(width: 8),
+                            imageTile(
+                              label: 'Assembly Areas',
+                              selected: showAssemblyAreas,
+                              loading: loadingAssemblyAreas,
+                              onTap: onToggleAssemblyAreas,
+                              // TODO: replace with thumbnail image
+                              imageWidget:
+                                  Container(color: const Color(0xFFD4EDDA)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const Divider(height: 24, indent: 16, endIndent: 16),
                   ],
                 ),
               ),
             ),
-
-            const Divider(height: 24, indent: 16, endIndent: 16),
-
-            // Row 2: Operational layers
-            sectionLabel('LAYERS'),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    imageTile(
-                      label: 'Campus Districts',
-                      selected: showCampusDistricts,
-                      onTap: onToggleCampusDistricts,
-                      // TODO: replace with thumbnail image
-                      imageWidget:
-                          Container(color: const Color(0xFFCCE5FF)),
-                    ),
-                    const SizedBox(width: 8),
-                    imageTile(
-                      label: 'Construction',
-                      selected: showConstruction,
-                      loading: loadingConstruction,
-                      onTap: onToggleConstruction,
-                      // TODO: replace with thumbnail image
-                      imageWidget:
-                          Container(color: const Color(0xFFFFE5CC)),
-                    ),
-                    const SizedBox(width: 8),
-                    imageTile(
-                      label: 'Assembly Areas',
-                      selected: showAssemblyAreas,
-                      loading: loadingAssemblyAreas,
-                      onTap: onToggleAssemblyAreas,
-                      // TODO: replace with thumbnail image
-                      imageWidget:
-                          Container(color: const Color(0xFFD4EDDA)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const Divider(height: 24, indent: 16, endIndent: 16),
 
             // Row 3: Scene mode chips
             sectionLabel('SCENE'),
