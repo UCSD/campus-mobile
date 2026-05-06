@@ -65,14 +65,12 @@ final _agePortal = Portal(
   Uri.parse('https://admin-enterprise-gis.ucsd.edu/portal'),
 );
 
-/// Build a basemap of the given type. Safe to call multiple times; each
-/// call returns an independent Basemap instance with freshly constructed
-/// layers.
+
+
 Basemap buildBasemap(BasemapType type) {
   final basemap = Basemap();
 
   if (type == BasemapType.satellite) {
-    // Light gray fallback + Nearmap imagery + campus vector
     basemap.baseLayers.add(ArcGISTiledLayer.withUri(Uri.parse(_lightGrayBaseUri)));
     basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(_nearmapUri)));
   } else {

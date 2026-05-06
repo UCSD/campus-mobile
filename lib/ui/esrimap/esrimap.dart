@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:async';
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -8,6 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'esrimap_basemaps.dart';
+import 'esrimap_fab.dart';
+import 'esrimap_layers_panel.dart';
+import 'esrimap_scene.dart';
 
 // -----------------------------------------------------------------------------
 // Model
@@ -71,7 +75,7 @@ enum MapSearchSource { building, poi }
 class _SearchCategory {
   final String label;
   final IconData icon;
-  final String poiClassValue; // maps to POI "Class" field value
+  final String poiClassValue;
 
   const _SearchCategory({
     required this.label,
@@ -169,12 +173,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _detailSheetController = DraggableScrollableController();
 
   // Service endpoints
-  static const _buildingsQueryUrl =
-      'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
-      'AdministrationServices/Buildings_Public/MapServer/0/query';
-  static const _poiQueryUrl =
-      'https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/'
-      'Points_Of_Interest/FeatureServer/0/query';
+  static const _lambdaUrl = "https://i0slpyw2gb.execute-api.us-west-2.amazonaws.com/default/ArcGIS-Map";
 
   // SharedPreferences key for recent searches
   static const _recentSearchesKey = 'esri_map_recent_searches';
@@ -235,9 +234,24 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // Basemap switcher
   BasemapType _currentBasemapType = BasemapType.defaultMap;
   final Map<BasemapType, Basemap> _basemaps = {};
-  bool _showBasemapMenu = false;
+  bool _showLayersPanel = false;
+
+  // Operational layers
   bool _showCampusDistricts = false;
   ArcGISMapImageLayer? _campusDistrictsLayer;
+  bool _showConstruction = false;
+  ArcGISMapImageLayer? _constructionLayer;
+  bool _loadingConstruction = false;
+  bool _showAssemblyAreas = false;
+  ArcGISMapImageLayer? _assemblyAreasLayer;
+  bool _loadingAssemblyAreas = false;
+
+  final _mapReadyCompleter = Completer<void>();
+
+  // Scene mode: 'Default' | '3D Building' | 'Drone View'
+  String _sceneMode = 'Default';
+  EsriSceneWidget? _scene3DWidget;
+  EsriSceneWidget? _sceneDroneWidget;
 
   @override
   bool get wantKeepAlive => true;
@@ -248,10 +262,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _initMap();
     _loadRecentSearches();
     _fetchAllPoiClasses();
-    // Listen for focus changes to show/hide suggestions
     _focusNode.addListener(_onFocusChanged);
-    _fromFocusNode.addListener(_onFromFocusChanged);
-    _toFocusNode.addListener(_onToFocusChanged);
   }
 
   @override
@@ -267,10 +278,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     super.dispose();
   }
 
+  void _setupAgeAuthChallengeHandler() {
+    ArcGISEnvironment
+        .authenticationManager
+        .arcGISAuthenticationChallengeHandler = _AgeAuthChallengeHandler(_callLambda);
+  }
+
   void _initMap() {
-    // Build all three basemaps up front. The default is applied immediately;
-    // the other two are preloaded in the background by
-    // _preloadAlternateBasemaps() once the MapView is ready.
     for (final type in BasemapType.values) {
       _basemaps[type] = buildBasemap(type);
     }
@@ -284,13 +298,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       ),
       scale: 24000,
     );
+    _mapReadyCompleter.complete();
   }
 
-  void _onMapViewReady() {
+  void _onMapViewReady() async {
+    await _mapReadyCompleter.future;
+    _setupAgeAuthChallengeHandler();
     _mapViewController.arcGISMap = _map;
-    _mapViewController.interactionOptions.rotateEnabled = false;
-    _mapViewController.graphicsOverlays.add(_graphicsOverlay);
-    _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
+    _mapViewController.interactionOptions.rotateEnabled = true;
+    if (!_mapViewController.graphicsOverlays.contains(_graphicsOverlay)) {
+      _mapViewController.graphicsOverlays.add(_graphicsOverlay);
+    }
+    if (!_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay)) {
+      _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
+    }
 
     // Wire up location display — blue dot, no auto-pan on start
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
@@ -312,10 +333,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _switchBasemap(BasemapType newType) {
-    if (newType == _currentBasemapType) {
-      setState(() => _showBasemapMenu = false);
-      return;
-    }
+    if (newType == _currentBasemapType) return;
     final newBasemap = _basemaps[newType];
     if (newBasemap == null) return;
 
@@ -323,7 +341,25 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     setState(() {
       _map.basemap = newBasemap;
       _currentBasemapType = newType;
-      _showBasemapMenu = false;
+    });
+  }
+
+  void _setSceneMode(String mode) {
+    if (mode == _sceneMode) return;
+    setState(() {
+      _sceneMode = mode;
+      if (mode != 'Default') _showLayersPanel = false;
+      if (mode == '3D Building' && _scene3DWidget == null) {
+        _scene3DWidget = const EsriSceneWidget(
+          portalUri: 'https://ucsd-admin.maps.arcgis.com',
+          itemId: 'a0a255ad97534836aa9e159d4a546bfc',
+        );
+      } else if (mode == 'Drone View' && _sceneDroneWidget == null) {
+        _sceneDroneWidget = const EsriSceneWidget(
+          portalUri: 'https://admin-enterprise-gis.ucsd.edu/portal',
+          itemId: '0ffe293479844ce49ff5c30ffc0a0b67',
+        );
+      }
     });
   }
 
@@ -346,6 +382,62 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
       _map.operationalLayers.add(_campusDistrictsLayer!);
       setState(() => _showCampusDistricts = true);
+    }
+  }
+
+  void _toggleConstruction() async {
+    if (_showConstruction) {
+      if (_constructionLayer != null) {
+        _map.operationalLayers.remove(_constructionLayer!);
+      }
+      setState(() => _showConstruction = false);
+    } else {
+      setState(() => _loadingConstruction = true);
+      if (_constructionLayer == null) {
+        _constructionLayer = ArcGISMapImageLayer.withUri(Uri.parse(
+          // TODO: replace with the real AGE construction layer URL
+          'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
+          'CampusServices/Construction_Impacts/MapServer',
+        ));
+      }
+      _map.operationalLayers.add(_constructionLayer!);
+      try {
+        await _constructionLayer!.load();
+      } catch (e) {
+        debugPrint('Construction layer load error: $e');
+      }
+      setState(() {
+        _showConstruction = true;
+        _loadingConstruction = false;
+      });
+    }
+  }
+
+  void _toggleAssemblyAreas() async {
+    if (_showAssemblyAreas) {
+      if (_assemblyAreasLayer != null) {
+        _map.operationalLayers.remove(_assemblyAreasLayer!);
+      }
+      setState(() => _showAssemblyAreas = false);
+    } else {
+      setState(() => _loadingAssemblyAreas = true);
+      if (_assemblyAreasLayer == null) {
+        _assemblyAreasLayer = ArcGISMapImageLayer.withUri(Uri.parse(
+          // TODO: replace with the real AGE assembly areas layer URL
+          'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
+          'CampusServices/Assembly_Areas/MapServer',
+        ));
+      }
+      _map.operationalLayers.add(_assemblyAreasLayer!);
+      try {
+        await _assemblyAreasLayer!.load();
+      } catch (e) {
+        debugPrint('Assembly areas layer load error: $e');
+      }
+      setState(() {
+        _showAssemblyAreas = true;
+        _loadingAssemblyAreas = false;
+      });
     }
   }
 
@@ -460,153 +552,69 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // Query helpers
   // ---------------------------------------------------------------------------
 
-  String _escSql(String input) => input.replaceAll("'", "''");
-
-  /// Query the Buildings (AGE) MapServer
-  Future<List<MapSearchResult>> _queryBuildings(String query) async {
-    await dotenv.load(fileName: ".env");
-    final token = dotenv.env['ARCGIS_AGE_API_KEY'] ?? '';
-    final escaped = _escSql(query);
-    final where = "UPPER(FacilityLongName) LIKE UPPER('%$escaped%') "
-        "OR UPPER(BuildingAliases) LIKE UPPER('%$escaped%')";
-
-    final uri = Uri.parse(_buildingsQueryUrl).replace(
-      queryParameters: {
-        'where': where,
-        'outFields':
-            'FacilityLongName,BuildingAliases,StreetAddress,City,Zipcode,Latitude,Longitude',
-        'returnGeometry': 'false',
-        'resultRecordCount': '8',
-        'f': 'json',
-        if (token.isNotEmpty) 'token': token,
-      },
+  /// POST to the Lambda map handler.
+  Future<Map<String, dynamic>> _callLambda(Map<String, dynamic> payload) async {
+    final response = await http.post(
+      Uri.parse(_lambdaUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(payload),
     );
+    if (response.statusCode != 200) {
+      throw Exception('Lambda error ${response.statusCode}: ${response.body}');
+    }
+    return jsonDecode(response.body) as Map<String, dynamic>;
+  }
 
-    final response = await http.get(uri);
-    if (response.statusCode != 200) return [];
-
-    final json = jsonDecode(response.body);
-    final features = json['features'] as List<dynamic>? ?? [];
-
-    return features.map<MapSearchResult>((f) {
-      final attrs = f['attributes'] as Map<String, dynamic>;
-      final name =
-          (attrs['FacilityLongName'] as String?) ?? 'Unknown Building';
-      final alias = (attrs['BuildingAliases'] as String?) ?? '';
-      final street = (attrs['StreetAddress'] as String?) ?? '';
-      final city = (attrs['City'] as String?) ?? '';
-      final zip = (attrs['Zipcode'] as String?) ?? '';
-      final lat = (attrs['Latitude'] as num?)?.toDouble() ?? 0.0;
-      final lng = (attrs['Longitude'] as num?)?.toDouble() ?? 0.0;
-
-      final addressParts = <String>[
-        if (street.isNotEmpty) street,
-        if (city.isNotEmpty) city,
-        if (zip.isNotEmpty) zip,
-      ];
-      final fullAddress = addressParts.join(', ');
-      final subtitle = alias.isNotEmpty ? alias : 'Building';
-
+  Future<List<MapSearchResult>> _queryBuildings(String query) async {
+    final data = await _callLambda({'action': 'searchBuildings', 'query': query});
+    return (data['results'] as List<dynamic>? ?? []).map<MapSearchResult>((r) {
       return MapSearchResult(
-        name: name,
-        subtitle: subtitle,
-        latitude: lat,
-        longitude: lng,
+        name: r['name'] as String? ?? 'Unknown Building',
+        subtitle: r['subtitle'] as String? ?? 'Building',
+        latitude: (r['latitude'] as num?)?.toDouble() ?? 0.0,
+        longitude: (r['longitude'] as num?)?.toDouble() ?? 0.0,
         source: MapSearchSource.building,
-        address: fullAddress,
+        address: r['address'] as String? ?? '',
       );
     }).where((r) => r.latitude != 0.0 && r.longitude != 0.0).toList();
   }
 
-  /// Fetches all distinct POI Class values from the FeatureServer and caches them.
   Future<void> _fetchAllPoiClasses() async {
     try {
-      final uri = Uri.parse(_poiQueryUrl).replace(queryParameters: {
-        'where': '1=1',
-        'outFields': 'Class',
-        'returnDistinctValues': 'true',
-        'orderByFields': 'Class',
-        'returnGeometry': 'false',
-        'resultRecordCount': '200',
-        'f': 'json',
-      });
-      final response = await http.get(uri);
-      if (response.statusCode != 200) return;
-      final json = jsonDecode(response.body);
-      final features = json['features'] as List<dynamic>? ?? [];
-      final classes = features
-          .map((f) => (f['attributes']['Class'] as String?) ?? '')
-          .where((c) => c.isNotEmpty)
-          .toList()
-        ..sort();
+      final data = await _callLambda({'action': 'fetchAllPoiClasses'});
+      final classes = (data['classes'] as List<dynamic>? ?? [])
+          .map((c) => c as String)
+          .toList();
       setState(() => _allPoiClasses = classes);
-      print(_allPoiClasses);
     } catch (e) {
       debugPrint('Failed to fetch POI classes: $e');
     }
   }
 
-  /// Query the POIs (AGO) FeatureServer by text search.
   Future<List<MapSearchResult>> _queryPOIs(String query) async {
-    final escaped = _escSql(query);
-    final where = "UpdatedName LIKE '%$escaped%' "
-        "OR C3DName LIKE '%$escaped%' "
-        "OR C3DKeywords LIKE '%$escaped%'";
-    return _executePOIQuery(where);
+    final data = await _callLambda({'action': 'searchPOI', 'query': query});
+    return _parsePOIResults(data);
   }
 
-  /// Query POIs filtered by a specific Class value (for category taps).
   Future<List<MapSearchResult>> _queryPOIsByClass(String classValue) async {
-    final escaped = _escSql(classValue);
-    final where = "Class = '$escaped'";
-    return _executePOIQuery(where, maxResults: 100);
+    final data = await _callLambda({
+      'action': 'searchPOIByClass',
+      'classValue': classValue,
+      'maxResults': 100,
+    });
+    return _parsePOIResults(data);
   }
 
-  /// Shared POI query execution.
-  Future<List<MapSearchResult>> _executePOIQuery(
-    String where, {
-    int maxResults = 8,
-  }) async {
-    final uri = Uri.parse(_poiQueryUrl).replace(
-      queryParameters: {
-        'where': where,
-        'outFields':
-            'UpdatedName,C3DName,Class,Subclass,C3DDescription,URL,Latitude,Longitude',
-        'returnGeometry': 'false',
-        'resultRecordCount': '$maxResults',
-        'f': 'json',
-      },
-    );
-
-    final response = await http.get(uri);
-    if (response.statusCode != 200) return [];
-
-    final json = jsonDecode(response.body);
-    final features = json['features'] as List<dynamic>? ?? [];
-
-    return features.map<MapSearchResult>((f) {
-      final attrs = f['attributes'] as Map<String, dynamic>;
-      final updatedName = (attrs['UpdatedName'] as String?) ?? '';
-      final c3dName = (attrs['C3DName'] as String?) ?? '';
-      final name = updatedName.isNotEmpty ? updatedName : c3dName;
-      final poiClass = (attrs['Class'] as String?) ?? '';
-      final subclass = (attrs['Subclass'] as String?) ?? '';
-      final description = (attrs['C3DDescription'] as String?) ?? '';
-      final url = (attrs['URL'] as String?) ?? '';
-      final lat = (attrs['Latitude'] as num?)?.toDouble() ?? 0.0;
-      final lng = (attrs['Longitude'] as num?)?.toDouble() ?? 0.0;
-
-      final subtitle =
-          subclass.isNotEmpty ? '$poiClass - $subclass' : poiClass;
-
+  List<MapSearchResult> _parsePOIResults(Map<String, dynamic> data) {
+    return (data['results'] as List<dynamic>? ?? []).map<MapSearchResult>((r) {
       return MapSearchResult(
-        name: name.isNotEmpty ? name : 'Unknown POI',
-        subtitle: subtitle,
-        latitude: lat,
-        longitude: lng,
+        name: r['name'] as String? ?? 'Unknown POI',
+        subtitle: r['subtitle'] as String? ?? '',
+        latitude: (r['latitude'] as num?)?.toDouble() ?? 0.0,
+        longitude: (r['longitude'] as num?)?.toDouble() ?? 0.0,
         source: MapSearchSource.poi,
-        description: description,
-        websiteUrl: url.isNotEmpty ? url : null,
+        description: r['description'] as String? ?? '',
+        websiteUrl: r['websiteUrl'] as String?,
       );
     }).where((r) => r.latitude != 0.0 && r.longitude != 0.0).toList();
   }
@@ -1563,6 +1571,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
 
   void _onMapPointerDown(PointerDownEvent _) {
+    // Close layers panel when user touches the map
+    if (_showLayersPanel) {
+      setState(() => _showLayersPanel = false);
+      return;
+    }
     // Collapse whichever sheet is active to the minimum snap
     if (_showCategoryList && _selectedResult == null) {
       if (_categorySheetController.isAttached) {
@@ -1688,78 +1701,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           ),
           ...sliverBody,
         ],
-      ),
-    );
-  }
-
-  Widget _buildBasemapMenu(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? Colors.grey[850] : Colors.white;
-    final textColor = isDark ? Colors.white : Colors.grey[900];
-    final labelColor = isDark ? Colors.grey[500]! : Colors.grey[500]!;
-    final accent =
-        isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
-
-    Widget sectionLabel(String text) => Padding(
-          padding: const EdgeInsets.fromLTRB(14, 10, 14, 4),
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.6,
-              color: labelColor,
-            ),
-          ),
-        );
-
-    Widget menuRow(String label, bool selected, VoidCallback onTap) => InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                    color: textColor,
-                  ),
-                ),
-                SizedBox(
-                  width: 16,
-                  child: selected
-                      ? Icon(Icons.check, size: 16, color: accent)
-                      : null,
-                ),
-              ],
-            ),
-          ),
-        );
-
-      return SizedBox(
-        width: 160,
-        child: Material(
-          elevation: 6,
-          borderRadius: BorderRadius.circular(12),
-          color: bgColor,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              sectionLabel('BASEMAP'),
-              ...BasemapType.values.map((type) => menuRow(
-                    basemapOptions[type]!.label,
-                    type == _currentBasemapType,
-                    () => _switchBasemap(type),
-                  )),
-              const Divider(height: 1),
-              sectionLabel('LAYERS'),
-              menuRow('Campus Districts', _showCampusDistricts, _toggleCampusDistricts),
-          ],
-        ),
       ),
     );
   }
@@ -2282,27 +2223,38 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
       body: Stack(
         children: [
-          // Map — Listener detects pointer-down to collapse slideovers
+          // Map — swaps between 2D ArcGISMapView and 3D ArcGISSceneView
           Column(
             children: [
               Expanded(
-                child: Listener(
-                  onPointerDown: _onMapPointerDown,
-                  child: ArcGISMapView(
-                    controllerProvider: () => _mapViewController,
-                    onMapViewReady: _onMapViewReady,
-                    onTap: _onMapTap,
-                  ),
+                child: IndexedStack(
+                  index: _sceneMode == '3D Building' ? 1
+                       : _sceneMode == 'Drone View'  ? 2
+                       : 0,
+                  children: [
+                    Listener(
+                      onPointerDown: _onMapPointerDown,
+                      child: ArcGISMapView(
+                        controllerProvider: () => _mapViewController,
+                        onMapViewReady: _onMapViewReady,
+                        onTap: _onMapTap,
+                      ),
+                    ),
+                    _scene3DWidget ?? const SizedBox.shrink(),
+                    _sceneDroneWidget ?? const SizedBox.shrink(),
+                  ],
                 ),
               ),
             ],
           ),
 
-          // Floating search bar + dropdown
+          // Floating search bar + dropdown — hidden in 3D/Drone View modes
+          if (_sceneMode == 'Default')
           Positioned(
             top: 8,
             left: 12,
@@ -2715,84 +2667,24 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 child: _buildSeeAllButton(context),
               ),
             ),
-          // Bottom-right FAB cluster: list view button + info button
-          if (_selectedResult == null)
+          // Bottom-right FAB cluster — hidden when keyboard or layers panel is active
+          if (_selectedResult == null && !keyboardVisible && !_showLayersPanel)
             Positioned(
               right: 16,
               bottom: 32,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // Basemap picker menu (shown above the layers FAB when open)
-                  if (_showBasemapMenu) ...[
-                    _buildBasemapMenu(context),
-                    const SizedBox(height: 10),
-                  ],
-                  // Layers FAB — toggles the basemap menu
-                  FloatingActionButton.small(
-                    heroTag: 'layersBtn',
-                    backgroundColor: isDark ? Colors.grey[800] : null,
-                    foregroundColor: isDark ? Colors.white : null,
-                    onPressed: () {
-                      setState(() => _showBasemapMenu = !_showBasemapMenu);
-                    },
-                    child: const Icon(Icons.layers_outlined),
-                  ),
-                  const SizedBox(height: 10),
-                  // List view button — only when a category search is active
-                  if (_allCategoryResults.isNotEmpty) ...[
-                    FloatingActionButton.small(
-                      heroTag: 'listBtn',
-                      onPressed: () {
-                        setState(() {
-                          _showCategoryList = !_showCategoryList;
-                        });
-                      },
-                      backgroundColor: isDark ? Colors.grey[800] : null,
-                      foregroundColor: isDark ? Colors.white : null,
-                      child: const Icon(Icons.list),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                  if (_lastSelectedResult != null)
-                    FloatingActionButton.small(
-                      heroTag: 'infoBtn',
-                      backgroundColor: isDark ? Colors.grey[800] : null,
-                      foregroundColor: isDark ? Colors.white : null,
-                      onPressed: _reopenDetail,
-                      child: const Icon(Icons.info_outline),
-                    ),
-                  if (_showRouteFields || _hasRoute) ...[
-                    FloatingActionButton.small(
-                      heroTag: 'clearRouteBtn',
-                      backgroundColor: Colors.redAccent,
-                      foregroundColor: Colors.white,
-                      onPressed: _clearRoute,
-                      child: const Icon(Icons.close),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                  if (_allCategoryResults.isNotEmpty || _lastSelectedResult != null)
-                    const SizedBox(height: 10),
-
-                  FloatingActionButton.small(
-                    heroTag: 'recenterBtn',
-                    backgroundColor: isDark ? Colors.grey[800] : null,
-                    foregroundColor: isDark ? Colors.white : null,
-                    onPressed: _recenterOnView,
-                    child: const Icon(Icons.center_focus_strong),
-                  ),
-
-                  const SizedBox(height: 10),
-                  FloatingActionButton.small(
-                    heroTag: 'locateBtn',
-                    backgroundColor: isDark ? Colors.grey[800] : null,
-                    foregroundColor: isDark ? Colors.white : null,
-                    onPressed: _recenterOnUser,
-                    child: const Icon(Icons.my_location),
-                  ),
-                ],
+              child: EsriMapFabCluster(
+                isDark: isDark,
+                allCategoryResultsCount: _allCategoryResults.length,
+                showCategoryList: _showCategoryList,
+                hasLastSelectedResult: _lastSelectedResult != null,
+                showRouteFields: _showRouteFields,
+                hasRoute: _hasRoute,
+                onShowLayersPanel: () => setState(() => _showLayersPanel = true),
+                onToggleCategoryList: () => setState(() => _showCategoryList = !_showCategoryList),
+                onReopenDetail: _reopenDetail,
+                onClearRoute: _clearRoute,
+                onRecenterOnView: _recenterOnView,
+                onRecenterOnUser: _recenterOnUser,
               ),
             ),
 
@@ -2800,11 +2692,78 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           if (_showCategoryList && _selectedResult == null && _allCategoryResults.isNotEmpty)
             _buildCategoryListPanel(context),
 
-          // Detail slide-over
-          if (_selectedResult != null)
-            _buildDetailSlideOver(context, _selectedResult!),
+          // Layers/display panel
+          if (_showLayersPanel)
+            EsriMapLayersPanel(
+              currentBasemapType: _currentBasemapType,
+              sceneMode: _sceneMode,
+              showCampusDistricts: _showCampusDistricts,
+              showConstruction: _showConstruction,
+              loadingConstruction: _loadingConstruction,
+              showAssemblyAreas: _showAssemblyAreas,
+              loadingAssemblyAreas: _loadingAssemblyAreas,
+              onSwitchBasemap: _switchBasemap,
+              onSetSceneMode: _setSceneMode,
+              onToggleCampusDistricts: _toggleCampusDistricts,
+              onToggleConstruction: _toggleConstruction,
+              onToggleAssemblyAreas: _toggleAssemblyAreas,
+              onClose: () => setState(() => _showLayersPanel = false),
+            ),
         ],
       ),
     );
+  }
+}
+
+class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
+  final Future<Map<String, dynamic>> Function(Map<String, dynamic>) callLambda;
+  
+  String? _cachedToken;
+  DateTime? _tokenExpiry;
+
+  _AgeAuthChallengeHandler(this.callLambda);
+
+  Future<String?> _getToken() async {
+    if (_cachedToken != null &&
+        _tokenExpiry != null &&
+        DateTime.now().isBefore(_tokenExpiry!.subtract(const Duration(minutes: 5)))) {
+      return _cachedToken;
+    }
+    final data = await callLambda({'action': 'getTokens'});
+    _cachedToken = data['age']?['token'] as String?;
+    final expiresIn = data['age']?['expires_in'] as int? ?? 7200;
+    _tokenExpiry = DateTime.now().add(Duration(seconds: expiresIn));
+    return _cachedToken;
+  }
+
+  @override
+  Future<void> handleArcGISAuthenticationChallenge(
+    ArcGISAuthenticationChallenge challenge,
+  ) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        challenge.continueAndFail();
+        return;
+      }
+      final tokenInfo = TokenInfo.create(
+        accessToken: token,
+        expirationDate: _tokenExpiry!,
+        isSslRequired: true,
+      );
+      if (tokenInfo == null) {
+        challenge.continueAndFail();
+        return;
+      }
+      final credential = PregeneratedTokenCredential(
+        uri: challenge.requestUri,
+        tokenInfo: tokenInfo,
+        referer: '',
+      );
+      challenge.continueWithCredential(credential);
+    } catch (e) {
+      debugPrint('AGE auth challenge failed: $e');
+      challenge.continueAndFail();
+    }
   }
 }
