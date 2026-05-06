@@ -5,6 +5,8 @@ import 'esrimap_basemaps.dart';
 class EsriMapLayersPanel extends StatelessWidget {
   final BasemapType currentBasemapType;
   final String sceneMode;
+  final bool showTransitLayer;
+  final bool loadingTransitLayer;
   final bool showCampusDistricts;
   final bool showConstruction;
   final bool loadingConstruction;
@@ -12,6 +14,7 @@ class EsriMapLayersPanel extends StatelessWidget {
   final bool loadingAssemblyAreas;
   final void Function(BasemapType) onSwitchBasemap;
   final void Function(String) onSetSceneMode;
+  final VoidCallback onToggleTransitLayer;
   final VoidCallback onToggleCampusDistricts;
   final VoidCallback onToggleConstruction;
   final VoidCallback onToggleAssemblyAreas;
@@ -21,6 +24,8 @@ class EsriMapLayersPanel extends StatelessWidget {
     Key? key,
     required this.currentBasemapType,
     required this.sceneMode,
+    required this.showTransitLayer,
+    required this.loadingTransitLayer,
     required this.showCampusDistricts,
     required this.showConstruction,
     required this.loadingConstruction,
@@ -28,6 +33,7 @@ class EsriMapLayersPanel extends StatelessWidget {
     required this.loadingAssemblyAreas,
     required this.onSwitchBasemap,
     required this.onSetSceneMode,
+    required this.onToggleTransitLayer,
     required this.onToggleCampusDistricts,
     required this.onToggleConstruction,
     required this.onToggleAssemblyAreas,
@@ -218,17 +224,14 @@ class EsriMapLayersPanel extends StatelessWidget {
                                 label: basemapOptions[type]!.label,
                                 selected: currentBasemapType == type,
                                 onTap: () => onSwitchBasemap(type),
-                                // TODO: swap Container for
-                                // Image.asset('assets/map/basemap_${type.name}.png', fit: BoxFit.cover)
-                                imageWidget: Container(
-                                  color: {
-                                    BasemapType.defaultMap:
-                                        const Color(0xFFD6E4F0),
-                                    BasemapType.light: const Color(0xFFEEEEEE),
-                                    BasemapType.dark: const Color(0xFF444444),
-                                    BasemapType.satellite:
-                                        const Color(0xFF3A5A3A),
-                                  }[type],
+                                imageWidget: Image.asset(
+                                  {
+                                    BasemapType.defaultMap: 'lib/ui/esrimap/temp_assets/default-thumbnail.png',
+                                    BasemapType.light:     'lib/ui/esrimap/temp_assets/light-thumbnail.png',
+                                    BasemapType.dark:      'lib/ui/esrimap/temp_assets/dark-thumbnail.png',
+                                    BasemapType.satellite: 'lib/ui/esrimap/temp_assets/satellite-thumbnail.png',
+                                  }[type]!,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -249,12 +252,24 @@ class EsriMapLayersPanel extends StatelessWidget {
                         child: Row(
                           children: [
                             imageTile(
-                              label: 'Campus Districts',
+                              label: 'Triton Transit',
+                              selected: showTransitLayer,
+                              loading: loadingTransitLayer,
+                              onTap: onToggleTransitLayer,
+                              imageWidget: Image.asset(
+                                'lib/ui/esrimap/temp_assets/shuttles-thumbnail.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            imageTile(
+                              label: 'Districts',
                               selected: showCampusDistricts,
                               onTap: onToggleCampusDistricts,
-                              // TODO: replace with thumbnail image
-                              imageWidget:
-                                  Container(color: const Color(0xFFCCE5FF)),
+                              imageWidget: Image.asset(
+                                'lib/ui/esrimap/temp_assets/districts-thumbnail.png',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                             const SizedBox(width: 8),
                             imageTile(
@@ -262,9 +277,10 @@ class EsriMapLayersPanel extends StatelessWidget {
                               selected: showConstruction,
                               loading: loadingConstruction,
                               onTap: onToggleConstruction,
-                              // TODO: replace with thumbnail image
-                              imageWidget:
-                                  Container(color: const Color(0xFFFFE5CC)),
+                              imageWidget: Image.asset(
+                                'lib/ui/esrimap/temp_assets/construction-thumbnail.png',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                             const SizedBox(width: 8),
                             imageTile(
@@ -272,7 +288,6 @@ class EsriMapLayersPanel extends StatelessWidget {
                               selected: showAssemblyAreas,
                               loading: loadingAssemblyAreas,
                               onTap: onToggleAssemblyAreas,
-                              // TODO: replace with thumbnail image
                               imageWidget:
                                   Container(color: const Color(0xFFD4EDDA)),
                             ),

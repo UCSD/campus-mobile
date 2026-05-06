@@ -245,6 +245,15 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   bool _showAssemblyAreas = false;
   ArcGISMapImageLayer? _assemblyAreasLayer;
   bool _loadingAssemblyAreas = false;
+  bool _showTransitLayer = false;
+  FeatureLayer? _transitShuttlesLayer;
+  FeatureLayer? _transitRoutesLayer;
+  bool _loadingTransitLayer = false;
+  Timer? _transitRefreshTimer;
+
+  // Compass
+  double _mapRotation = 0.0;
+  StreamSubscription<void>? _viewpointChangedSubscription;
 
   final _mapReadyCompleter = Completer<void>();
 
@@ -275,6 +284,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _fromFocusNode.dispose();
     _toFocusNode.dispose();
     _focusNode.dispose();
+    _transitRefreshTimer?.cancel();
+    _viewpointChangedSubscription?.cancel();
     super.dispose();
   }
 
@@ -320,6 +331,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     _startLocationDisplay();
     _preloadAlternateBasemaps();
+
+    _viewpointChangedSubscription =
+        _mapViewController.onViewpointChanged.listen((_) {
+      final vp = _mapViewController.getCurrentViewpoint(
+        ViewpointType.centerAndScale,
+      );
+      if (vp != null && mounted) {
+        setState(() => _mapRotation = vp.rotation);
+      }
+    });
+  }
+
+  void _snapToNorth() {
+    _mapViewController.setViewpointRotation(angleDegrees: 0);
   }
 
   ///Loads metadata and style sheets; tile content still fetches lazily once the basemap is applied to the MapView.
@@ -363,6 +388,71 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
+  void _toggleTransitLayer() async {
+    if (_showTransitLayer) {
+      _transitRefreshTimer?.cancel();
+      _transitRefreshTimer = null;
+      if (_transitShuttlesLayer != null) {
+        _map.operationalLayers.remove(_transitShuttlesLayer!);
+      }
+      if (_transitRoutesLayer != null) {
+        _map.operationalLayers.remove(_transitRoutesLayer!);
+      }
+      setState(() => _showTransitLayer = false);
+    } else {
+      setState(() => _loadingTransitLayer = true);
+      if (_transitRoutesLayer == null) {
+        _transitRoutesLayer = FeatureLayer.withFeatureTable(
+          ServiceFeatureTable.withUri(Uri.parse(
+            'https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/'
+            'Triton_Transit_Route_Lines/FeatureServer/0',
+          )),
+        );
+      }
+      if (_transitShuttlesLayer == null) {
+        _transitShuttlesLayer = FeatureLayer.withFeatureTable(
+          ServiceFeatureTable.withUri(Uri.parse(
+            'https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/'
+            'Triton_Transit_Shuttle_Positions/FeatureServer/0',
+          )),
+        );
+      }
+      _map.operationalLayers.add(_transitRoutesLayer!);
+      _map.operationalLayers.add(_transitShuttlesLayer!);
+      try {
+        await Future.wait([
+          _transitRoutesLayer!.load(),
+          _transitShuttlesLayer!.load(),
+        ]);
+      } catch (e) {
+        debugPrint('Transit layer load error: $e');
+      }
+      setState(() {
+        _showTransitLayer = true;
+        _loadingTransitLayer = false;
+      });
+      _transitRefreshTimer = Timer.periodic(
+        const Duration(seconds: 15),
+        (_) async {
+          if (!mounted || _transitShuttlesLayer == null) return;
+          _map.operationalLayers.remove(_transitShuttlesLayer!);
+          _transitShuttlesLayer = FeatureLayer.withFeatureTable(
+            ServiceFeatureTable.withUri(Uri.parse(
+              'https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/'
+              'Triton_Transit_Shuttle_Positions/FeatureServer/0',
+            )),
+          );
+          _map.operationalLayers.add(_transitShuttlesLayer!);
+          try {
+            await _transitShuttlesLayer!.load();
+          } catch (e) {
+            debugPrint('Transit shuttle refresh error: $e');
+          }
+        },
+      );
+    }
+  }
+
   void _toggleCampusDistricts() {
     if (_showCampusDistricts) {
       if (_campusDistrictsLayer != null) {
@@ -395,9 +485,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       setState(() => _loadingConstruction = true);
       if (_constructionLayer == null) {
         _constructionLayer = ArcGISMapImageLayer.withUri(Uri.parse(
-          // TODO: replace with the real AGE construction layer URL
           'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
-          'CampusServices/Construction_Impacts/MapServer',
+          'Construction/Construction_Alert_Approved/MapServer',
         ));
       }
       _map.operationalLayers.add(_constructionLayer!);
@@ -2679,12 +2768,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 hasLastSelectedResult: _lastSelectedResult != null,
                 showRouteFields: _showRouteFields,
                 hasRoute: _hasRoute,
+                mapRotation: _mapRotation,
                 onShowLayersPanel: () => setState(() => _showLayersPanel = true),
                 onToggleCategoryList: () => setState(() => _showCategoryList = !_showCategoryList),
                 onReopenDetail: _reopenDetail,
                 onClearRoute: _clearRoute,
                 onRecenterOnView: _recenterOnView,
                 onRecenterOnUser: _recenterOnUser,
+                onSnapToNorth: _snapToNorth,
               ),
             ),
 
@@ -2697,6 +2788,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             EsriMapLayersPanel(
               currentBasemapType: _currentBasemapType,
               sceneMode: _sceneMode,
+              showTransitLayer: _showTransitLayer,
+              loadingTransitLayer: _loadingTransitLayer,
               showCampusDistricts: _showCampusDistricts,
               showConstruction: _showConstruction,
               loadingConstruction: _loadingConstruction,
@@ -2704,6 +2797,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               loadingAssemblyAreas: _loadingAssemblyAreas,
               onSwitchBasemap: _switchBasemap,
               onSetSceneMode: _setSceneMode,
+              onToggleTransitLayer: _toggleTransitLayer,
               onToggleCampusDistricts: _toggleCampusDistricts,
               onToggleConstruction: _toggleConstruction,
               onToggleAssemblyAreas: _toggleAssemblyAreas,
@@ -2717,23 +2811,43 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
 class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
   final Future<Map<String, dynamic>> Function(Map<String, dynamic>) callLambda;
-  
-  String? _cachedToken;
-  DateTime? _tokenExpiry;
+
+  String? _cachedAgeToken;
+  DateTime? _ageTokenExpiry;
+
+  String? _cachedAgoToken;
+  DateTime? _agoTokenExpiry;
 
   _AgeAuthChallengeHandler(this.callLambda);
 
-  Future<String?> _getToken() async {
-    if (_cachedToken != null &&
-        _tokenExpiry != null &&
-        DateTime.now().isBefore(_tokenExpiry!.subtract(const Duration(minutes: 5)))) {
-      return _cachedToken;
+  Future<(String?, DateTime?)> _getTokenForHost(String host) async {
+    final isAgo = host.contains('arcgis.com');
+
+    if (isAgo) {
+      if (_cachedAgoToken != null &&
+          _agoTokenExpiry != null &&
+          DateTime.now().isBefore(_agoTokenExpiry!.subtract(const Duration(minutes: 5)))) {
+        return (_cachedAgoToken, _agoTokenExpiry);
+      }
+    } else {
+      if (_cachedAgeToken != null &&
+          _ageTokenExpiry != null &&
+          DateTime.now().isBefore(_ageTokenExpiry!.subtract(const Duration(minutes: 5)))) {
+        return (_cachedAgeToken, _ageTokenExpiry);
+      }
     }
+
     final data = await callLambda({'action': 'getTokens'});
-    _cachedToken = data['age']?['token'] as String?;
-    final expiresIn = data['age']?['expires_in'] as int? ?? 7200;
-    _tokenExpiry = DateTime.now().add(Duration(seconds: expiresIn));
-    return _cachedToken;
+
+    _cachedAgeToken = data['age']?['token'] as String?;
+    final ageExpiresIn = data['age']?['expires_in'] as int? ?? 7200;
+    _ageTokenExpiry = DateTime.now().add(Duration(seconds: ageExpiresIn));
+
+    _cachedAgoToken = data['ago']?['token'] as String?;
+    final agoExpiresIn = data['ago']?['expires_in'] as int? ?? 7200;
+    _agoTokenExpiry = DateTime.now().add(Duration(seconds: agoExpiresIn));
+
+    return isAgo ? (_cachedAgoToken, _agoTokenExpiry) : (_cachedAgeToken, _ageTokenExpiry);
   }
 
   @override
@@ -2741,14 +2855,15 @@ class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
     ArcGISAuthenticationChallenge challenge,
   ) async {
     try {
-      final token = await _getToken();
-      if (token == null) {
+      final host = challenge.requestUri.host;
+      final (token, expiry) = await _getTokenForHost(host);
+      if (token == null || expiry == null) {
         challenge.continueAndFail();
         return;
       }
       final tokenInfo = TokenInfo.create(
         accessToken: token,
-        expirationDate: _tokenExpiry!,
+        expirationDate: expiry,
         isSslRequired: true,
       );
       if (tokenInfo == null) {
@@ -2762,7 +2877,7 @@ class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
       );
       challenge.continueWithCredential(credential);
     } catch (e) {
-      debugPrint('AGE auth challenge failed: $e');
+      debugPrint('Auth challenge failed: $e');
       challenge.continueAndFail();
     }
   }
