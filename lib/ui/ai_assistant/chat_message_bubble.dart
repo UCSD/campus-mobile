@@ -198,9 +198,7 @@ class _RelatedQuestionsSection extends StatelessWidget {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: enabled
-                            ? () => context.read<ChatProvider>().sendMessage(question)
-                            : null,
+                        onTap: enabled ? () => context.read<ChatProvider>().sendMessage(question) : null,
                         borderRadius: BorderRadius.circular(6),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),

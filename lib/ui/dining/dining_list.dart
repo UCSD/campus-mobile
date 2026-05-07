@@ -171,26 +171,26 @@ class DiningList extends StatelessWidget {
       minLeadingWidth: 0, // Reduce minimum width
       leading: ExcludeSemantics(
         child: SizedBox(
-        width: 48,
-        height: 48,
-        child: data.vendorLogo != null
-            ? Container(
-                decoration: Theme.of(context).brightness == Brightness.dark
-                    ? BoxDecoration(
-                        color: lightTextColor,
-                        borderRadius: BorderRadius.circular(8),
-                      )
-                    : null,
-                child: Image.network(
-                  data.vendorLogo!,
-                  width: 48,
-                  height: 48,
-                ),
-              )
-            : Icon(Icons.restaurant,
-                size: 32,
-                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
-      ),
+          width: 48,
+          height: 48,
+          child: data.vendorLogo != null
+              ? Container(
+                  decoration: Theme.of(context).brightness == Brightness.dark
+                      ? BoxDecoration(
+                          color: lightTextColor,
+                          borderRadius: BorderRadius.circular(8),
+                        )
+                      : null,
+                  child: Image.network(
+                    data.vendorLogo!,
+                    width: 48,
+                    height: 48,
+                  ),
+                )
+              : Icon(Icons.restaurant,
+                  size: 32,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
+        ),
       ),
       // Vendor Name
       title: Semantics(
@@ -225,29 +225,30 @@ class DiningList extends StatelessWidget {
       label: distanceText,
       excludeSemantics: true,
       child: TextButton(
-      style: TextButton.styleFrom(
-        foregroundColor: linkColorLight,
+        style: TextButton.styleFrom(
+          foregroundColor: linkColorLight,
+        ),
+        onPressed: () async {
+          try {
+            await DirectionsHelper.openDirections(data.coordinates!.lat!, data.coordinates!.lon!);
+          } catch (e) {
+            // an error occurred, do nothing
+          }
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.directions_walk,
+                size: 28, color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
+            Text(
+              data.distance != null ? (num.parse(data.distance!.toStringAsFixed(1)).toString() + ' mi') : '--',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
+            ),
+          ],
+        ),
       ),
-      onPressed: () async {
-        try {
-          await DirectionsHelper.openDirections(data.coordinates!.lat!, data.coordinates!.lon!);
-        } catch (e) {
-          // an error occurred, do nothing
-        }
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.directions_walk,
-              size: 28, color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
-          Text(
-            data.distance != null ? (num.parse(data.distance!.toStringAsFixed(1)).toString() + ' mi') : '--',
-            style: TextStyle(
-                fontSize: 13, color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
-          ),
-        ],
-      ),
-    ),
     );
   }
 }

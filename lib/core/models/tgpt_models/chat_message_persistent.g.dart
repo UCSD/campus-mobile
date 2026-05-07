@@ -53,7 +53,5 @@ class ChatMessagePersistentAdapter extends TypeAdapter<ChatMessagePersistent> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ChatMessagePersistentAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is ChatMessagePersistentAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

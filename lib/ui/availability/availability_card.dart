@@ -44,7 +44,8 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
           _currentPage = 0;
         });
         // check at least one is enabled to avoid crash
-        if (_controller.hasClients) _controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        if (_controller.hasClients)
+          _controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         _availabilityDataProvider.fetchAvailability();
       },
       isLoading: _availabilityDataProvider.isLoading,

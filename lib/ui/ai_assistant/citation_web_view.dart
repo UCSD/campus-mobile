@@ -25,8 +25,7 @@ class _CitationWebViewState extends State<CitationWebView> {
   void initState() {
     super.initState();
     final Uri? uri = Uri.tryParse(widget.initialUrl);
-    final bool ok =
-        uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    final bool ok = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
     if (!ok) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -46,9 +45,7 @@ class _CitationWebViewState extends State<CitationWebView> {
   Widget build(BuildContext context) {
     final WebViewController? c = _controller;
     return ContainerView(
-      child: c == null
-          ? const SizedBox.shrink()
-          : WebViewWidget(controller: c),
+      child: c == null ? const SizedBox.shrink() : WebViewWidget(controller: c),
     );
   }
 }
