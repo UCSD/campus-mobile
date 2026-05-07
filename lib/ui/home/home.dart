@@ -156,7 +156,10 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList() {
-    final orderedCards = getOrderedCardsList(context.select((CardsDataProvider p) => p.cardOrder));
+    // Copy list so select() detects reorder: profile mutates _cardOrder in place (same ref).
+    final orderedCards = getOrderedCardsList(
+      context.select((CardsDataProvider p) => List<String>.from(p.cardOrder)),
+    );
     final noticesCards = getNoticesCardsList(context.select((NoticesDataProvider p) => p.noticesModel));
     return [...noticesCards, ...orderedCards];
   }
