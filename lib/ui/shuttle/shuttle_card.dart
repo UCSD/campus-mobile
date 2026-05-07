@@ -16,8 +16,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 const String cardId = 'shuttle';
 
-const String _wayfinderTransitMapUrl = 'https://wayfinder.ucsd.onebusawaycloud.com/';
-
 class ShuttleCard extends StatefulWidget {
   @override
   _ShuttleCardState createState() => _ShuttleCardState();
@@ -41,6 +39,36 @@ class _ShuttleCardState extends State<ShuttleCard> {
   }
 
   Widget build(BuildContext context) {
+    final shuttleCardConfig = context.select((CardsDataProvider p) => p.availableCards[cardId]);
+    final externalLinkURL = shuttleCardConfig?.externalLinkURL.trim() ?? '';
+    final externalLinkText = shuttleCardConfig?.externalLinkText ?? '';
+    final actionButtonChildren = <Widget>[
+      if (externalLinkURL.isNotEmpty) ...[
+        ActionButton(
+          buttonText: externalLinkText,
+          trailingIcon: Icons.open_in_new,
+          onPressed: () {
+            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_live_transit_map'});
+            try {
+              launchUrl(Uri.parse(externalLinkURL), mode: LaunchMode.inAppBrowserView);
+            } catch (e) {
+              // an error occurred, do nothing
+            }
+          },
+        ),
+        const SizedBox(height: 16),
+      ],
+      ActionLink(
+          buttonText: 'MANAGE SHUTTLE STOPS',
+          onPressed: () {
+            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage_stops'});
+            setState(() {
+              _currentPage = 0;
+            });
+            Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
+          }),
+    ];
+
     return CardContainer(
       cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
@@ -60,30 +88,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: [
-              ActionButton(
-                buttonText: 'VIEW LIVE TRANSIT MAP',
-                trailingIcon: Icons.open_in_new,
-                onPressed: () {
-                  analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_live_transit_map'});
-                  try {
-                    launchUrl(Uri.parse(_wayfinderTransitMapUrl), mode: LaunchMode.inAppBrowserView);
-                  } catch (e) {
-                    // an error occurred, do nothing
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-              ActionLink(
-                  buttonText: 'MANAGE SHUTTLE STOPS',
-                  onPressed: () {
-                    analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage_stops'});
-                    setState(() {
-                      _currentPage = 0;
-                    });
-                    Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
-                  }),
-            ],
+            children: actionButtonChildren,
           ),
         ),
       ],
