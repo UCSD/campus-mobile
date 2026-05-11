@@ -236,8 +236,7 @@ class ChatProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      final String userMessage =
-          e is DioException ? await tgptErrorMessageForDio(e) : tgptErrorMessageFor(e);
+      final String userMessage = e is DioException ? await tgptErrorMessageForDio(e) : tgptErrorMessageFor(e);
       _errorMessage = userMessage;
       final int placeholderIndex =
           sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);

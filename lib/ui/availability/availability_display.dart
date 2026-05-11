@@ -61,76 +61,77 @@ class AvailabilityDisplay extends StatelessWidget {
               : '${subLocation.name}. ${(100 * percentAvailability(subLocation)).toInt()}% Busy',
           excludeSemantics: true,
           child: GestureDetector(
-          onTap: () {
-            if (subLocation.floors.isNotEmpty) {
-              Navigator.pushNamed(
-                context,
-                RoutePaths.AVAILABILITY_DETAILED_VIEW,
-                arguments: subLocation,
-              );
-            }
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          subLocation.name,
-                          style: subLocation.floors.isNotEmpty
-                              ? (Theme.of(context).brightness == Brightness.dark
-                                  ? textButtonSmallDark
-                                  : textButtonSmallLight)
-                              : (Theme.of(context).brightness == Brightness.dark
-                                  ? descriptiveTextSmallDark.copyWith(fontSize: 22.0)
-                                  : descriptiveTextSmallLight.copyWith(fontSize: 22.0)),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          '${(100 * percentAvailability(subLocation)).toInt()}% Busy',
-                          style: Theme.of(context).brightness == Brightness.dark
-                              ? textSmallMoreInfoDark
-                              : textSmallMoreInfoLight,
-                        ),
-                      ],
+            onTap: () {
+              if (subLocation.floors.isNotEmpty) {
+                Navigator.pushNamed(
+                  context,
+                  RoutePaths.AVAILABILITY_DETAILED_VIEW,
+                  arguments: subLocation,
+                );
+              }
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            subLocation.name,
+                            style: subLocation.floors.isNotEmpty
+                                ? (Theme.of(context).brightness == Brightness.dark
+                                    ? textButtonSmallDark
+                                    : textButtonSmallLight)
+                                : (Theme.of(context).brightness == Brightness.dark
+                                    ? descriptiveTextSmallDark.copyWith(fontSize: 22.0)
+                                    : descriptiveTextSmallLight.copyWith(fontSize: 22.0)),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '${(100 * percentAvailability(subLocation)).toInt()}% Busy',
+                            style: Theme.of(context).brightness == Brightness.dark
+                                ? textSmallMoreInfoDark
+                                : textSmallMoreInfoLight,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  if (subLocation.floors.isNotEmpty)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 35,
-                          color: Theme.of(context).brightness == Brightness.dark ? linkColorLight : linkColorDark,
-                        ),
-                      ],
-                    ),
-                ],
-              ),
-              SizedBox(
-                height: 6,
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(BORDER_RADIUS),
-                  child: LinearProgressIndicator(
-                    value:
-                        (percentAvailability(subLocation) <= 0.01) ? 0.01 : percentAvailability(subLocation).toDouble(),
-                    backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      setIndicatorColor(percentAvailability(subLocation)),
+                    if (subLocation.floors.isNotEmpty)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 35,
+                            color: Theme.of(context).brightness == Brightness.dark ? linkColorLight : linkColorDark,
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+                SizedBox(
+                  height: 6,
+                  width: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                    child: LinearProgressIndicator(
+                      value: (percentAvailability(subLocation) <= 0.01)
+                          ? 0.01
+                          : percentAvailability(subLocation).toDouble(),
+                      backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        setIndicatorColor(percentAvailability(subLocation)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
         ),
       );
     }).toList();

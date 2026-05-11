@@ -29,8 +29,7 @@ class BottomTabBar extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar> {
-  
-    var currentTab = [
+  var currentTab = [
     Home(),
     prefix0.Maps(),
     AIAssistantTab(),

@@ -101,9 +101,8 @@ class ChatMessageStreamService {
     }
 
     final String? rawContextUrl = dotenv.env['TGPT_CHAT_SEND_CONTEXT_URL'];
-    final String sendContextUrl = (rawContextUrl != null && rawContextUrl.trim().isNotEmpty)
-        ? rawContextUrl.trim()
-        : 'https://mobile.ucsd.edu/';
+    final String sendContextUrl =
+        (rawContextUrl != null && rawContextUrl.trim().isNotEmpty) ? rawContextUrl.trim() : 'https://mobile.ucsd.edu/';
 
     // Build request body using shared helper (includes `url` per TGPT web widget contract)
     final body = ChatMessageService.buildRequestBody(
@@ -154,11 +153,9 @@ class ChatMessageStreamService {
             final Map<String, dynamic> json = jsonDecode(jsonLine) as Map<String, dynamic>;
 
             final Map<String, dynamic>? obj = json['obj'] as Map<String, dynamic>?;
-            final Object? rawReserved =
-                json['reserved_assistant_message_id'] ?? obj?['reserved_assistant_message_id'];
+            final Object? rawReserved = json['reserved_assistant_message_id'] ?? obj?['reserved_assistant_message_id'];
             if (rawReserved != null) {
-              final int? messageId =
-                  rawReserved is int ? rawReserved : int.tryParse(rawReserved.toString());
+              final int? messageId = rawReserved is int ? rawReserved : int.tryParse(rawReserved.toString());
               if (messageId != null) {
                 yield StreamingChatChunk(delta: '', messageId: messageId);
               }

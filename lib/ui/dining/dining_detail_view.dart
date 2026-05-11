@@ -278,45 +278,54 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
   final bool hasLatitude = hasCoordinates && model.coordinates!.lat != null;
   final bool hasLongitude = hasCoordinates && model.coordinates!.lon != null;
   if (hasCoordinates && hasLatitude && hasLongitude) {
-    return TextButton(
-      child: Row(
-        children: <Widget>[
-          Text(
-            'Get Directions',
-            style: linkTextDark.copyWith(
-              fontSize: 18.0,
-              color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
-            ),
-          ),
-          SizedBox(width: 6),
-          Row(
+    return Semantics(
+      label:
+          'Get directions to ${model.name}, ${model.distance != null ? "${model.distance!.toStringAsFixed(1)} miles away" : "distance unknown"}',
+      hint: 'Double tap to open in Maps',
+      button: true,
+      child: ExcludeSemantics(
+        child: TextButton(
+          child: Row(
             children: <Widget>[
-              Icon(
-                Icons.directions_walk,
-                color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
-                size: 32,
+              Text(
+                'Get Directions',
+                style: linkTextDark.copyWith(
+                  fontSize: 18.0,
+                  color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+                ),
               ),
-              model.distance != null
-                  ? Text(num.parse(model.distance!.toStringAsFixed(1)).toString() + ' mi',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 18.0,
-                            color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
-                          ))
-                  : Text('--', style: TextStyle(color: linkColorLight)),
+              SizedBox(width: 6),
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.directions_walk,
+                    color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+                    size: 32,
+                  ),
+                  model.distance != null
+                      ? Text(num.parse(model.distance!.toStringAsFixed(1)).toString() + ' mi',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontSize: 18.0,
+                                color:
+                                    Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+                              ))
+                      : Text('--', style: TextStyle(color: linkColorLight)),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
-      onPressed: () async {
-        try {
-          await DirectionsHelper.openDirections(model.coordinates!.lat!, model.coordinates!.lon!);
-        } catch (e) {
-          // an error occurred, do nothing
-          debugPrint('Error opening directions: $e');
-        }
-      },
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.all(0.0),
+          onPressed: () async {
+            try {
+              await DirectionsHelper.openDirections(model.coordinates!.lat!, model.coordinates!.lon!);
+            } catch (e) {
+              // an error occurred, do nothing
+              debugPrint('Error opening directions: $e');
+            }
+          },
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.all(0.0),
+          ),
+        ),
       ),
     );
   } else {
@@ -331,19 +340,26 @@ Widget buildWebsiteButton(BuildContext context, prefix0.DiningModel model) {
   final bool hasUrl = model.url != null;
   final bool isUrlNotEmpty = hasUrl && model.url != '';
   if (hasUrl && isUrlNotEmpty) {
-    return TextButton(
-      child: Text('Visit Website'),
-      onPressed: () {
-        try {
-          launchUrl(Uri.parse(model.url!), mode: LaunchMode.inAppBrowserView);
-        } catch (e) {
-          // an error occurred, do nothing
-        }
-      },
-      style: TextButton.styleFrom(
-        backgroundColor: actionButtonBackgroundColor,
-        foregroundColor: lightPrimaryColor,
-        padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+    return Semantics(
+      label: 'Visit ${model.name} website',
+      hint: 'Double tap to open in browser',
+      button: true,
+      child: ExcludeSemantics(
+        child: TextButton(
+          child: Text('Visit Website'),
+          onPressed: () {
+            try {
+              launchUrl(Uri.parse(model.url!), mode: LaunchMode.inAppBrowserView);
+            } catch (e) {
+              // an error occurred, do nothing
+            }
+          },
+          style: TextButton.styleFrom(
+            backgroundColor: actionButtonBackgroundColor,
+            foregroundColor: lightPrimaryColor,
+            padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+          ),
+        ),
       ),
     );
   } else
@@ -354,25 +370,32 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
   final bool hasMenuWebsite = model.menuWebsite != null;
   final bool isMenuWebsiteNotEmpty = hasMenuWebsite && model.menuWebsite!.isNotEmpty;
   if (hasMenuWebsite && isMenuWebsiteNotEmpty) {
-    return TextButton(
-      child: Row(
-        children: [
-          Text('View Menu'),
-          SizedBox(width: 5),
-          Icon(Icons.open_in_new, size: 16),
-        ],
-      ),
-      onPressed: () {
-        try {
-          launch(model.menuWebsite!, forceSafariVC: true);
-        } catch (e) {
-          // an error occurred, do nothing
-        }
-      },
-      style: TextButton.styleFrom(
-        backgroundColor: Color(0xFF00629B),
-        foregroundColor: Colors.white,
-        padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+    return Semantics(
+      label: 'View ${model.name} menu',
+      hint: 'Double tap to open in browser',
+      button: true,
+      child: ExcludeSemantics(
+        child: TextButton(
+          child: Row(
+            children: [
+              Text('View Menu'),
+              SizedBox(width: 5),
+              Icon(Icons.open_in_new, size: 16),
+            ],
+          ),
+          onPressed: () {
+            try {
+              launch(model.menuWebsite!, forceSafariVC: true);
+            } catch (e) {
+              // an error occurred, do nothing
+            }
+          },
+          style: TextButton.styleFrom(
+            backgroundColor: Color(0xFF00629B),
+            foregroundColor: Colors.white,
+            padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+          ),
+        ),
       ),
     );
   } else {

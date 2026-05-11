@@ -6,6 +6,7 @@ class BasicCreateChatMessageRequest {
   final String message;
   final String chatSessionId;
   final int? parentMessageId;
+
   /// TGPT web widget sends `window.location.href`; mobile uses a stable context URL.
   final String url;
 
