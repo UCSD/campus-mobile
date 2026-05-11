@@ -2,8 +2,9 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AssistantSidebar extends StatelessWidget {
+class AssistantSidebar extends StatefulWidget {
   const AssistantSidebar({
     super.key,
     required this.isLoggedIn,
@@ -22,13 +23,60 @@ class AssistantSidebar extends StatelessWidget {
   final VoidCallback onClose;
 
   @override
+  State<AssistantSidebar> createState() => _AssistantSidebarState();
+}
+
+class _AssistantSidebarState extends State<AssistantSidebar> {
+  static const String _previous7DaysExpandedKey = 'tgpt_sidebar_previous_7_days_expanded';
+  static const String _olderExpandedKey = 'tgpt_sidebar_older_expanded';
+
+  bool _isPrevious7DaysExpanded = true;
+  bool _isOlderExpanded = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadExpandedPreferences();
+  }
+
+  Future<void> _loadExpandedPreferences() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _isPrevious7DaysExpanded = preferences.getBool(_previous7DaysExpandedKey) ?? true;
+      _isOlderExpanded = preferences.getBool(_olderExpandedKey) ?? true;
+    });
+  }
+
+  Future<void> _setPrevious7DaysExpanded(bool isExpanded) async {
+    setState(() {
+      _isPrevious7DaysExpanded = isExpanded;
+    });
+
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool(_previous7DaysExpandedKey, isExpanded);
+  }
+
+  Future<void> _setOlderExpanded(bool isExpanded) async {
+    setState(() {
+      _isOlderExpanded = isExpanded;
+    });
+
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool(_olderExpandedKey, isExpanded);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double drawerWidth = MediaQuery.sizeOf(context).width * 0.78;
     final DateTime cutoff = DateTime.now().subtract(const Duration(days: 7));
     final List<ChatSessionMeta> recentSessions =
-        sessions.where((ChatSessionMeta session) => session.updatedAt.isAfter(cutoff)).toList();
+        widget.sessions.where((ChatSessionMeta session) => session.updatedAt.isAfter(cutoff)).toList();
     final List<ChatSessionMeta> olderSessions =
-        sessions.where((ChatSessionMeta session) => !session.updatedAt.isAfter(cutoff)).toList();
+        widget.sessions.where((ChatSessionMeta session) => !session.updatedAt.isAfter(cutoff)).toList();
 
     return Drawer(
       width: drawerWidth,
@@ -45,7 +93,7 @@ class AssistantSidebar extends StatelessWidget {
                 children: <Widget>[
                   const Spacer(),
                   IconButton(
-                    onPressed: onClose,
+                    onPressed: widget.onClose,
                     splashRadius: 20,
                     icon: SvgPicture.asset(
                       'assets/images/tgpt/pin-sidebar.svg',
@@ -59,7 +107,7 @@ class AssistantSidebar extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
               child: InkWell(
-                onTap: onNewChat,
+                onTap: widget.onNewChat,
                 borderRadius: BorderRadius.circular(14),
                 child: Ink(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -108,18 +156,26 @@ class AssistantSidebar extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 24),
                 children: <Widget>[
-                  if (isLoggedIn) ...<Widget>[
+                  if (widget.isLoggedIn) ...<Widget>[
                     if (recentSessions.isNotEmpty) ...<Widget>[
-                      const _SidebarSectionTitle(title: 'Previous 7 Days'),
-                      ...recentSessions.map(_buildSessionRow),
+                      _SidebarSectionTitle(
+                        title: 'Previous 7 Days',
+                        isExpanded: _isPrevious7DaysExpanded,
+                        onTap: () => _setPrevious7DaysExpanded(!_isPrevious7DaysExpanded),
+                      ),
+                      if (_isPrevious7DaysExpanded) ...recentSessions.map(_buildSessionRow),
                     ],
                     if (olderSessions.isNotEmpty) ...<Widget>[
                       const SizedBox(height: 12),
-                      const _SidebarSectionTitle(title: 'Older'),
-                      ...olderSessions.map(_buildSessionRow),
+                      _SidebarSectionTitle(
+                        title: 'Older',
+                        isExpanded: _isOlderExpanded,
+                        onTap: () => _setOlderExpanded(!_isOlderExpanded),
+                      ),
+                      if (_isOlderExpanded) ...olderSessions.map(_buildSessionRow),
                     ],
                   ] else
-                    ...sessions.map(_buildSessionRow),
+                    ...widget.sessions.map(_buildSessionRow),
                 ],
               ),
             ),
@@ -130,12 +186,12 @@ class AssistantSidebar extends StatelessWidget {
   }
 
   Widget _buildSessionRow(ChatSessionMeta session) {
-    final bool isActive = session.id == activeSessionId;
+    final bool isActive = session.id == widget.activeSessionId;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 1),
       child: InkWell(
-        onTap: () => onSelectSession(session.id),
+        onTap: () => widget.onSelectSession(session.id),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
@@ -161,31 +217,44 @@ class AssistantSidebar extends StatelessWidget {
 }
 
 class _SidebarSectionTitle extends StatelessWidget {
-  const _SidebarSectionTitle({required this.title});
+  const _SidebarSectionTitle({
+    required this.title,
+    required this.isExpanded,
+    required this.onTap,
+  });
 
   final String title;
+  final bool isExpanded;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 2, 16, 4),
-      child: Row(
-        children: <Widget>[
-          const Icon(
-            Icons.arrow_drop_down,
-            size: 26,
-            color: lightPrimaryColor,
+      padding: const EdgeInsets.fromLTRB(8, 0, 16, 0),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(4, 8, 0, 8),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                isExpanded ? Icons.arrow_drop_down : Icons.arrow_right,
+                size: 26,
+                color: lightPrimaryColor,
+              ),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontFamily: 'Brix Sans',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: lightPrimaryColor,
+                ),
+              ),
+            ],
           ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontFamily: 'Brix Sans',
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: lightPrimaryColor,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
