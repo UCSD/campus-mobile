@@ -221,7 +221,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                           children: [
                             for (final type in BasemapType.values) ...[
                               imageTile(
-                                label: basemapOptions[type]!.label,
+                                label: basemapLabels[type]!,
                                 selected: currentBasemapType == type,
                                 onTap: () => onSwitchBasemap(type),
                                 imageWidget: Image.asset(

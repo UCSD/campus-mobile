@@ -39,12 +39,6 @@ void main() async {
     // dotenv loading
     await dotenv.load(isOptional: true);
 
-    // Initialize ArcGIS
-    final arcgisAgeKey = dotenv.env['ARCGIS_AGE_API_KEY'] ?? '';
-    if (arcgisAgeKey.isNotEmpty) {
-      ArcGISEnvironment.apiKey = arcgisAgeKey;
-    }
-
     /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 

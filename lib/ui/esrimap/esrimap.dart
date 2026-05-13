@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'dart:async';
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -12,6 +11,7 @@ import 'esrimap_basemaps.dart';
 import 'esrimap_fab.dart';
 import 'esrimap_layers_panel.dart';
 import 'esrimap_scene.dart';
+import 'esrimap_config.dart';
 
 // -----------------------------------------------------------------------------
 // Model
@@ -172,8 +172,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _categorySheetController = DraggableScrollableController();
   final _detailSheetController = DraggableScrollableController();
 
-  // Service endpoints
-  static const _lambdaUrl = "https://i0slpyw2gb.execute-api.us-west-2.amazonaws.com/default/ArcGIS-Map";
+  // Service base URL
+  static const _baseUrl = 'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
+
+  // Config -- loaded on init, gates map setup
+  EsriMapConfig? _config;
 
   // SharedPreferences key for recent searches
   static const _recentSearchesKey = 'esri_map_recent_searches';
@@ -268,10 +271,22 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
-    _initMap();
+    _fetchConfigThenInit();
     _loadRecentSearches();
-    _fetchAllPoiClasses();
     _focusNode.addListener(_onFocusChanged);
+  }
+
+  Future<void> _fetchConfigThenInit() async {
+    try {
+      final config = await EsriMapConfigService.instance.fetch();
+      if (!mounted) return;
+      setState(() => _config = config);
+      _initMap(config);
+      _fetchAllPoiClasses();
+    } catch (e) {
+      debugPrint('Config fetch failed: $e');
+      _mapReadyCompleter.completeError(e);
+    }
   }
 
   @override
@@ -292,12 +307,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _setupAgeAuthChallengeHandler() {
     ArcGISEnvironment
         .authenticationManager
-        .arcGISAuthenticationChallengeHandler = _AgeAuthChallengeHandler(_callLambda);
+        .arcGISAuthenticationChallengeHandler = _AgeAuthChallengeHandler(
+          EsriMapConfigService.instance.tokensUrl,
+        );
   }
 
-  void _initMap() {
+  void _initMap(EsriMapConfig config) {
     for (final type in BasemapType.values) {
-      _basemaps[type] = buildBasemap(type);
+      _basemaps[type] = buildBasemap(type, config);
     }
 
     _map = ArcGISMap.withBasemap(_basemaps[_currentBasemapType]!);
@@ -374,15 +391,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     setState(() {
       _sceneMode = mode;
       if (mode != 'Default') _showLayersPanel = false;
-      if (mode == '3D Building' && _scene3DWidget == null) {
-        _scene3DWidget = const EsriSceneWidget(
-          portalUri: 'https://ucsd-admin.maps.arcgis.com',
-          itemId: 'a0a255ad97534836aa9e159d4a546bfc',
+      if (mode == '3D Building' && _scene3DWidget == null && _config != null) {
+        final scene = _config!.scenes['building3d']!;
+        _scene3DWidget = EsriSceneWidget(
+          portalUri: scene.portalUrl,
+          itemId: scene.itemId,
         );
-      } else if (mode == 'Drone View' && _sceneDroneWidget == null) {
-        _sceneDroneWidget = const EsriSceneWidget(
-          portalUri: 'https://admin-enterprise-gis.ucsd.edu/portal',
-          itemId: '0ffe293479844ce49ff5c30ffc0a0b67',
+      } else if (mode == 'Drone View' && _sceneDroneWidget == null && _config != null) {
+        final scene = _config!.scenes['droneView']!;
+        _sceneDroneWidget = EsriSceneWidget(
+          portalUri: scene.portalUrl,
+          itemId: scene.itemId,
         );
       }
     });
@@ -403,18 +422,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       setState(() => _loadingTransitLayer = true);
       if (_transitRoutesLayer == null) {
         _transitRoutesLayer = FeatureLayer.withFeatureTable(
-          ServiceFeatureTable.withUri(Uri.parse(
-            'https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/'
-            'Triton_Transit_Route_Lines/FeatureServer/0',
-          )),
+          ServiceFeatureTable.withUri(Uri.parse(_config!.layers.transitRoutes)),
         );
       }
       if (_transitShuttlesLayer == null) {
         _transitShuttlesLayer = FeatureLayer.withFeatureTable(
-          ServiceFeatureTable.withUri(Uri.parse(
-            'https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/'
-            'Triton_Transit_Shuttle_Positions/FeatureServer/0',
-          )),
+          ServiceFeatureTable.withUri(Uri.parse(_config!.layers.transitShuttles)),
         );
       }
       _map.operationalLayers.add(_transitRoutesLayer!);
@@ -437,10 +450,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           if (!mounted || _transitShuttlesLayer == null) return;
           _map.operationalLayers.remove(_transitShuttlesLayer!);
           _transitShuttlesLayer = FeatureLayer.withFeatureTable(
-            ServiceFeatureTable.withUri(Uri.parse(
-              'https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/'
-              'Triton_Transit_Shuttle_Positions/FeatureServer/0',
-            )),
+            ServiceFeatureTable.withUri(Uri.parse(_config!.layers.transitShuttles)),
           );
           _map.operationalLayers.add(_transitShuttlesLayer!);
           try {
@@ -461,10 +471,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       setState(() => _showCampusDistricts = false);
     } else {
         if (_campusDistrictsLayer == null) {
-          _campusDistrictsLayer = ArcGISMapImageLayer.withUri(Uri.parse(
-            'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
-            'AdministrationServices/Areas_and_Boundaries/MapServer',
-        ));
+          _campusDistrictsLayer = ArcGISMapImageLayer.withUri(
+            Uri.parse(_config!.layers.campusDistricts),
+          );
         // Show only sublayer 4 (Campus Districts)
         for (final sublayer in _campusDistrictsLayer!.mapImageSublayers) {
           sublayer.isVisible = sublayer.id == 4;
@@ -484,10 +493,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     } else {
       setState(() => _loadingConstruction = true);
       if (_constructionLayer == null) {
-        _constructionLayer = ArcGISMapImageLayer.withUri(Uri.parse(
-          'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
-          'Construction/Construction_Alert_Approved/MapServer',
-        ));
+        _constructionLayer = ArcGISMapImageLayer.withUri(
+          Uri.parse(_config!.layers.construction),
+        );
       }
       _map.operationalLayers.add(_constructionLayer!);
       try {
@@ -511,11 +519,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     } else {
       setState(() => _loadingAssemblyAreas = true);
       if (_assemblyAreasLayer == null) {
-        _assemblyAreasLayer = ArcGISMapImageLayer.withUri(Uri.parse(
-          // TODO: replace with the real AGE assembly areas layer URL
-          'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
-          'CampusServices/Assembly_Areas/MapServer',
-        ));
+        _assemblyAreasLayer = ArcGISMapImageLayer.withUri(
+          Uri.parse(_config!.layers.assemblyAreas),
+        );
       }
       _map.operationalLayers.add(_assemblyAreasLayer!);
       try {
@@ -641,21 +647,30 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // Query helpers
   // ---------------------------------------------------------------------------
 
-  /// POST to the Lambda map handler.
-  Future<Map<String, dynamic>> _callLambda(Map<String, dynamic> payload) async {
+  /// GET from the REST API.
+  Future<Map<String, dynamic>> _apiGet(String path, [Map<String, String>? params]) async {
+    final uri = Uri.parse('$_baseUrl/$path').replace(queryParameters: params);
+    final response = await http.get(uri);
+    if (response.statusCode != 200) {
+      throw Exception('API error ${response.statusCode}: ${response.body}');
+    }
+    return jsonDecode(response.body) as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> _apiPost(String path, Map<String, dynamic> body) async {
     final response = await http.post(
-      Uri.parse(_lambdaUrl),
+      Uri.parse('$_baseUrl/$path'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(payload),
+      body: jsonEncode(body),
     );
     if (response.statusCode != 200) {
-      throw Exception('Lambda error ${response.statusCode}: ${response.body}');
+      throw Exception('API error ${response.statusCode}: ${response.body}');
     }
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
   Future<List<MapSearchResult>> _queryBuildings(String query) async {
-    final data = await _callLambda({'action': 'searchBuildings', 'query': query});
+    final data = await _apiGet('buildings', {'q': query});
     return (data['results'] as List<dynamic>? ?? []).map<MapSearchResult>((r) {
       return MapSearchResult(
         name: r['name'] as String? ?? 'Unknown Building',
@@ -670,7 +685,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Future<void> _fetchAllPoiClasses() async {
     try {
-      final data = await _callLambda({'action': 'fetchAllPoiClasses'});
+      final data = await _apiGet('poi/classes');
       final classes = (data['classes'] as List<dynamic>? ?? [])
           .map((c) => c as String)
           .toList();
@@ -681,16 +696,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   Future<List<MapSearchResult>> _queryPOIs(String query) async {
-    final data = await _callLambda({'action': 'searchPOI', 'query': query});
+    final data = await _apiGet('poi', {'q': query});
     return _parsePOIResults(data);
   }
 
   Future<List<MapSearchResult>> _queryPOIsByClass(String classValue) async {
-    final data = await _callLambda({
-      'action': 'searchPOIByClass',
-      'classValue': classValue,
-      'maxResults': 100,
-    });
+    final data = await _apiGet('poi', {'class': classValue, 'limit': '100'});
     return _parsePOIResults(data);
   }
 
@@ -1269,11 +1280,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
 
     try {
-      await dotenv.load(fileName: ".env");
-      final token = dotenv.env['ARCGIS_AGE_API_KEY'] ?? '';
-
       final routeTask = RouteTask.withUri(Uri.parse(_routeServiceUrl));
-      routeTask.apiKey = token;
       await routeTask.load();
 
       final params = await routeTask.createDefaultParameters();
@@ -2803,6 +2810,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               onToggleAssemblyAreas: _toggleAssemblyAreas,
               onClose: () => setState(() => _showLayersPanel = false),
             ),
+
+          // Detail slide-over
+          if (_selectedResult != null)
+            _buildDetailSlideOver(context, _selectedResult!),
         ],
       ),
     );
@@ -2810,7 +2821,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 }
 
 class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
-  final Future<Map<String, dynamic>> Function(Map<String, dynamic>) callLambda;
+  final String tokensUrl;
 
   String? _cachedAgeToken;
   DateTime? _ageTokenExpiry;
@@ -2818,7 +2829,7 @@ class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
   String? _cachedAgoToken;
   DateTime? _agoTokenExpiry;
 
-  _AgeAuthChallengeHandler(this.callLambda);
+  _AgeAuthChallengeHandler(this.tokensUrl);
 
   Future<(String?, DateTime?)> _getTokenForHost(String host) async {
     final isAgo = host.contains('arcgis.com');
@@ -2837,7 +2848,10 @@ class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
       }
     }
 
-    final data = await callLambda({'action': 'getTokens'});
+    final response = await http.get(Uri.parse(tokensUrl));
+    if (response.statusCode != 200) throw Exception('Token fetch failed: ${response.statusCode}');
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+
 
     _cachedAgeToken = data['age']?['token'] as String?;
     final ageExpiresIn = data['age']?['expires_in'] as int? ?? 7200;

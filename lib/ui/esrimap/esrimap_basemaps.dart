@@ -1,106 +1,55 @@
-/* Basemap config for campus map
-
-There are three basemaps with three layers each.
-1. World Hillshade shows terrain relief and adds depth to non campus areas
-2. Esri world context fills off campus areas
-3. UCSD Campus Vector Tile layer loaded from AGE
- */
-
 import 'package:arcgis_maps/arcgis_maps.dart';
+import 'esrimap_config.dart';
 
 enum BasemapType { defaultMap, light, dark, satellite }
 
-class BasemapOption {
-  final String label;
-  final String itemId;
-  const BasemapOption({
-    required this.label,
-    required this.itemId,
-  });
-}
-
-const basemapOptions = <BasemapType, BasemapOption>{
-  BasemapType.defaultMap: BasemapOption(
-    label: 'Default',
-    itemId: 'e19f33d2c1f44967aef673306c483913',
-  ),
-  BasemapType.light: BasemapOption(
-    label: 'Light',
-    itemId: '6643ee62af494f5bafe7dfdb8eb3f857',
-  ),
-  BasemapType.dark: BasemapOption(
-    label: 'Dark',
-    itemId: '09d7b3934b6c4c2cad8380c04e08c1b1',
-  ),
-  BasemapType.satellite: BasemapOption(
-    label: 'Satellite',
-    itemId: '6643ee62af494f5bafe7dfdb8eb3f857',
-  ),
+// Label lookup -- used by the layers panel
+const basemapLabels = <BasemapType, String>{
+  BasemapType.defaultMap: 'Default',
+  BasemapType.light:      'Light',
+  BasemapType.dark:       'Dark',
+  BasemapType.satellite:  'Satellite',
 };
 
-// Esri world tile service URIs (raster).
-const _hillshadeUri =
-    'https://services.arcgisonline.com/arcgis/rest/services/'
-    'Elevation/World_Hillshade/MapServer';
+String _typeKey(BasemapType type) {
+  switch (type) {
+    case BasemapType.defaultMap: return 'defaultMap';
+    case BasemapType.light:      return 'light';
+    case BasemapType.dark:       return 'dark';
+    case BasemapType.satellite:  return 'satellite';
+  }
+}
 
-const _worldTopoUri =
-    'https://services.arcgisonline.com/arcgis/rest/services/'
-    'World_Topo_Map/MapServer';
-
-const _lightGrayBaseUri =
-    'https://services.arcgisonline.com/arcgis/rest/services/'
-    'Canvas/World_Light_Gray_Base/MapServer';
-
-const _darkGrayBaseUri =
-    'https://services.arcgisonline.com/arcgis/rest/services/'
-    'Canvas/World_Dark_Gray_Base/MapServer';
-
-// Nearmap tile service
-const _nearmapUri =
-    'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
-    'Campus_Imagery_Nearmap_9in_2025_0423_0514/MapServer';
-
-// AGE portal for campus vector tiles
-final _agePortal = Portal(
-  Uri.parse('https://admin-enterprise-gis.ucsd.edu/portal'),
-);
-
-
-
-Basemap buildBasemap(BasemapType type) {
+Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
   final basemap = Basemap();
+  final agePortal = Portal(Uri.parse(config.agePortalUrl));
 
   if (type == BasemapType.satellite) {
-    basemap.baseLayers.add(ArcGISTiledLayer.withUri(Uri.parse(_lightGrayBaseUri)));
-    basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(_nearmapUri)));
+    basemap.baseLayers.add(
+      ArcGISTiledLayer.withUri(Uri.parse(config.esriTileUrls.lightGrayBase)),
+    );
+    basemap.baseLayers.add(
+      ArcGISMapImageLayer.withUri(Uri.parse(config.nearmapUrl)),
+    );
   } else {
-    basemap.baseLayers.add(ArcGISTiledLayer.withUri(Uri.parse(_hillshadeUri)));
-    basemap.baseLayers.add(_esriContextLayer(type));
+    basemap.baseLayers.add(
+      ArcGISTiledLayer.withUri(Uri.parse(config.esriTileUrls.hillshade)),
+    );
+    final contextUrl = type == BasemapType.dark
+        ? config.esriTileUrls.darkGrayBase
+        : config.esriTileUrls.lightGrayBase;
+    basemap.baseLayers.add(
+      ArcGISTiledLayer.withUri(Uri.parse(contextUrl)),
+    );
+    final itemId = config.basemaps[_typeKey(type)]?.itemId;
+    if (itemId != null) {
+      basemap.baseLayers.add(
+        ArcGISVectorTiledLayer.withItem(
+          PortalItem.withPortalAndItemId(portal: agePortal, itemId: itemId),
+        ),
+      );
+    }
   }
 
-  if (type != BasemapType.satellite) {
-    basemap.baseLayers.add(_ucsdCampusLayer(type));
-  }
   return basemap;
-}
-
-ArcGISTiledLayer _esriContextLayer(BasemapType type) {
-  switch (type) {
-    case BasemapType.defaultMap:
-      return ArcGISTiledLayer.withUri(Uri.parse(_lightGrayBaseUri));
-    case BasemapType.light:
-      return ArcGISTiledLayer.withUri(Uri.parse(_lightGrayBaseUri));
-    case BasemapType.dark:
-      return ArcGISTiledLayer.withUri(Uri.parse(_darkGrayBaseUri));
-    case BasemapType.satellite:
-      return ArcGISTiledLayer.withUri(Uri.parse(_lightGrayBaseUri));
-  }
-}
-
-ArcGISVectorTiledLayer _ucsdCampusLayer(BasemapType type) {
-  final portalItem = PortalItem.withPortalAndItemId(
-    portal: _agePortal,
-    itemId: basemapOptions[type]!.itemId,
-  );
-  return ArcGISVectorTiledLayer.withItem(portalItem);
 }
