@@ -65,6 +65,7 @@ flutter:
     - assets/images/
     - assets/images/onboarding/
     - assets/images/tgpt/
+    - lib/ui/esrimap/temp_assets/
     - .env
   fonts:
     - family: Refrigerator Deluxe
