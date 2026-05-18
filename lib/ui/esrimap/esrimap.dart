@@ -12,6 +12,7 @@ import 'esrimap_fab.dart';
 import 'esrimap_layers_panel.dart';
 import 'esrimap_scene.dart';
 import 'esrimap_config.dart';
+import 'esrimap_ai_search.dart';
 
 // -----------------------------------------------------------------------------
 // Model
@@ -1411,6 +1412,72 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
   }
 
+  void _onAiLocationSelected(AiSearchResult result) {
+    _searchController.text = result.name;
+    final point = ArcGISPoint(
+      x: result.longitude,
+      y: result.latitude,
+      spatialReference: SpatialReference.wgs84,
+    );
+    _graphicsOverlay.graphics.clear();
+    _graphicsOverlay.graphics.add(Graphic(
+      geometry: point,
+      symbol: SimpleMarkerSymbol(
+        style: SimpleMarkerSymbolStyle.circle,
+        color: Colors.red,
+        size: 14,
+      ),
+    ));
+    _mapViewController.setViewpointAnimated(
+      Viewpoint.fromCenter(point, scale: 5000),
+    );
+    final mapResult = MapSearchResult(
+      name: result.name,
+      subtitle: result.subtitle,
+      latitude: result.latitude,
+      longitude: result.longitude,
+      source: MapSearchSource.poi,
+      address: result.address,
+    );
+    setState(() {
+      _selectedResult = mapResult;
+      _lastSelectedResult = mapResult;
+      _showResults = false;
+      _showSuggestions = false;
+    });
+  }
+
+  void _onAiRouteRequested(List<AiSearchResult> stops) {
+    if (stops.length < 2) return;
+    final first = stops.first;
+    final last = stops.last;
+    final destination = MapSearchResult(
+      name: last.name,
+      subtitle: last.subtitle,
+      latitude: last.latitude,
+      longitude: last.longitude,
+      source: MapSearchSource.poi,
+      address: last.address,
+    );
+    _toController.text = destination.name;
+    _routeDestination = destination;
+    final gps = _getUserLatLng();
+    _fromController.text = gps != null ? 'My Location' : first.name;
+    _fromLatLng = gps ?? (first.latitude, first.longitude);
+    _graphicsOverlay.graphics.clear();
+    setState(() {
+      _showRouteFields = true;
+      _selectedResult = destination;
+      _lastSelectedResult = destination;
+      _mappedResults = [];
+      _allCategoryResults = [];
+      _showSeeAll = false;
+      _showCategoryList = false;
+      _activeCategory = null;
+    });
+    _solveRoute(destination, originLatLng: _fromLatLng);
+  }
+
   void _clearRoute() {
     _routeGraphicsOverlay.graphics.clear();
     _fromController.clear();
@@ -2776,6 +2843,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 showRouteFields: _showRouteFields,
                 hasRoute: _hasRoute,
                 mapRotation: _mapRotation,
+                onShowAiSearch: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => EsriAiSearchSheet(
+                    userLat: _getUserLatLng()?.$1,
+                    userLon: _getUserLatLng()?.$2,
+                    onLocationSelected: _onAiLocationSelected,
+                    onRouteRequested: _onAiRouteRequested,
+                  ),
+                ),
                 onShowLayersPanel: () => setState(() => _showLayersPanel = true),
                 onToggleCategoryList: () => setState(() => _showCategoryList = !_showCategoryList),
                 onReopenDetail: _reopenDetail,

@@ -10,6 +10,7 @@ class EsriMapFabCluster extends StatelessWidget {
   final bool hasRoute;
   final double mapRotation;
   final VoidCallback onShowLayersPanel;
+  final VoidCallback onShowAiSearch;
   final VoidCallback onToggleCategoryList;
   final VoidCallback onReopenDetail;
   final VoidCallback onClearRoute;
@@ -27,6 +28,7 @@ class EsriMapFabCluster extends StatelessWidget {
     required this.hasRoute,
     required this.mapRotation,
     required this.onShowLayersPanel,
+    required this.onShowAiSearch,
     required this.onToggleCategoryList,
     required this.onReopenDetail,
     required this.onClearRoute,
@@ -39,12 +41,21 @@ class EsriMapFabCluster extends StatelessWidget {
   Widget build(BuildContext context) {
     final bgColor = isDark ? Colors.grey[800]! : Colors.white;
     final fgColor = isDark ? Colors.white : Colors.grey[800]!;
+    final accent = Theme.of(context).colorScheme.primary;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         // Layers/display panel toggle
+        FloatingActionButton.small(
+          heroTag: 'aiSearchBtn',
+          backgroundColor: accent,
+          foregroundColor: Colors.white,
+          onPressed: onShowAiSearch,
+          child: const Icon(Icons.auto_awesome),
+        ),
+        const SizedBox(height: 10),
         FloatingActionButton.small(
           heroTag: 'layersBtn',
           backgroundColor: bgColor,
