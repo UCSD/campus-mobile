@@ -265,6 +265,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   String _sceneMode = 'Default';
   EsriSceneWidget? _scene3DWidget;
   EsriSceneWidget? _sceneDroneWidget;
+  final _scene3DKey = GlobalKey<EsriSceneWidgetState>();
+  final _sceneDroneKey = GlobalKey<EsriSceneWidgetState>();
 
   @override
   bool get wantKeepAlive => true;
@@ -362,6 +364,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _snapToNorth() {
+    if (_sceneMode != 'Default') {
+      if (_sceneMode == '3D Building') {
+        _scene3DKey.currentState?.snapToNorth();
+      } else {
+        _sceneDroneKey.currentState?.snapToNorth();
+      }
+      return;
+    }
     _mapViewController.setViewpointRotation(angleDegrees: 0);
   }
 
@@ -395,14 +405,18 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       if (mode == '3D Building' && _scene3DWidget == null && _config != null) {
         final scene = _config!.scenes['building3d']!;
         _scene3DWidget = EsriSceneWidget(
+          key: _scene3DKey,
           portalUri: scene.portalUrl,
           itemId: scene.itemId,
+          onHeadingChanged: (h) => setState(() => _mapRotation = h),
         );
       } else if (mode == 'Drone View' && _sceneDroneWidget == null && _config != null) {
         final scene = _config!.scenes['droneView']!;
         _sceneDroneWidget = EsriSceneWidget(
+          key: _sceneDroneKey,
           portalUri: scene.portalUrl,
           itemId: scene.itemId,
+          onHeadingChanged: (h) => setState(() => _mapRotation = h),
         );
       }
     });
@@ -1169,6 +1183,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _recenterOnView() {
+    if (_sceneMode != 'Default') {
+      if (_sceneMode == '3D Building') {
+        _scene3DKey.currentState?.resetCamera();
+      } else {
+        _sceneDroneKey.currentState?.resetCamera();
+      }
+      return;
+    }
     if (_selectedResult != null) {
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
@@ -2835,8 +2857,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             Positioned(
               right: 16,
               bottom: 32,
-              child: EsriMapFabCluster(
+            child: EsriMapFabCluster(
                 isDark: isDark,
+                is3D: _sceneMode != 'Default',
                 allCategoryResultsCount: _allCategoryResults.length,
                 showCategoryList: _showCategoryList,
                 hasLastSelectedResult: _lastSelectedResult != null,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class EsriMapFabCluster extends StatelessWidget {
   final bool isDark;
+  final bool is3D;
   final int allCategoryResultsCount;
   final bool showCategoryList;
   final bool hasLastSelectedResult;
@@ -21,6 +22,7 @@ class EsriMapFabCluster extends StatelessWidget {
   const EsriMapFabCluster({
     Key? key,
     required this.isDark,
+    this.is3D = false,
     required this.allCategoryResultsCount,
     required this.showCategoryList,
     required this.hasLastSelectedResult,
@@ -47,15 +49,16 @@ class EsriMapFabCluster extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        // Layers/display panel toggle
-        FloatingActionButton.small(
-          heroTag: 'aiSearchBtn',
-          backgroundColor: accent,
-          foregroundColor: Colors.white,
-          onPressed: onShowAiSearch,
-          child: const Icon(Icons.auto_awesome),
-        ),
-        const SizedBox(height: 10),
+        if (!is3D) ...[
+          FloatingActionButton.small(
+            heroTag: 'aiSearchBtn',
+            backgroundColor: accent,
+            foregroundColor: Colors.white,
+            onPressed: onShowAiSearch,
+            child: const Icon(Icons.auto_awesome),
+          ),
+          const SizedBox(height: 10),
+        ],
         FloatingActionButton.small(
           heroTag: 'layersBtn',
           backgroundColor: bgColor,
@@ -64,8 +67,8 @@ class EsriMapFabCluster extends StatelessWidget {
           child: const Icon(Icons.layers_outlined),
         ),
         const SizedBox(height: 10),
-        // List view button — only when a category search is active
-        if (allCategoryResultsCount > 0) ...[
+        // List view button — only when a category search is active and not in 3D
+        if (!is3D && allCategoryResultsCount > 0) ...[
           FloatingActionButton.small(
             heroTag: 'listBtn',
             onPressed: onToggleCategoryList,
@@ -75,7 +78,7 @@ class EsriMapFabCluster extends StatelessWidget {
           ),
           const SizedBox(height: 10),
         ],
-        if (hasLastSelectedResult) ...[
+        if (!is3D && hasLastSelectedResult) ...[
           FloatingActionButton.small(
             heroTag: 'infoBtn',
             backgroundColor: bgColor,
@@ -85,7 +88,7 @@ class EsriMapFabCluster extends StatelessWidget {
           ),
           const SizedBox(height: 10),
         ],
-        if (showRouteFields || hasRoute) ...[
+        if (!is3D && (showRouteFields || hasRoute)) ...[
           FloatingActionButton.small(
             heroTag: 'clearRouteBtn',
             backgroundColor: Colors.redAccent,

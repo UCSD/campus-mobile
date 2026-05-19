@@ -283,14 +283,6 @@ class EsriMapLayersPanel extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            imageTile(
-                              label: 'Assembly Areas',
-                              selected: showAssemblyAreas,
-                              loading: loadingAssemblyAreas,
-                              onTap: onToggleAssemblyAreas,
-                              imageWidget:
-                                  Container(color: const Color(0xFFD4EDDA)),
-                            ),
                           ],
                         ),
                       ),
