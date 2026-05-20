@@ -21,6 +21,7 @@ class EsriSceneWidget extends StatefulWidget {
 class EsriSceneWidgetState extends State<EsriSceneWidget> {
   late final ArcGISSceneViewController _sceneViewController;
   Camera? _initialCamera;
+  double _camToTargetLatOffset = 0.0;
   StreamSubscription<void>? _viewpointSubscription;
 
   @override
@@ -53,6 +54,19 @@ class EsriSceneWidgetState extends State<EsriSceneWidget> {
       roll: 0,
     );
     _sceneViewController.setViewpointCamera(_initialCamera!);
+
+    // Capture the lat offset between camera and look-at target once the
+    // viewpoint stabilizes — used by snapToNorth to rotate around target.
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
+      final vp = _sceneViewController.getCurrentViewpoint(
+        ViewpointType.centerAndScale,
+      );
+      final pt = vp?.targetGeometry;
+      if (pt is ArcGISPoint) {
+        _camToTargetLatOffset = pt.y - _initialCamera!.location.y;
+      }
+    });
 
     _viewpointSubscription = _sceneViewController.onViewpointChanged.listen((_) {
       if (!mounted) return;
@@ -90,20 +104,30 @@ class EsriSceneWidgetState extends State<EsriSceneWidget> {
     _sceneViewController.setViewpointCamera(_initialCamera!);
   }
 
-  /// Snaps heading to north while preserving current position and pitch.
+  /// Snaps heading to north by rotating the camera around the current
+  /// look-at target so the building/point stays centered on screen.
   void snapToNorth() {
     if (_initialCamera == null) return;
     final vp = _sceneViewController.getCurrentViewpoint(
       ViewpointType.centerAndScale,
     );
-    final pt = vp?.targetGeometry;
-    final lat = (pt is ArcGISPoint) ? pt.y : _initialCamera!.location.y;
-    final lon = (pt is ArcGISPoint) ? pt.x : _initialCamera!.location.x;
+    final target = vp?.targetGeometry;
+    if (target is! ArcGISPoint) {
+      resetCamera();
+      return;
+    }
+
+    // Position camera due south of the current target at the same distance
+    // as the initial camera-to-target offset
+    final pivotLat = target.y;
+    final pivotLon = target.x;
+    final camAlt = _initialCamera!.location.z ?? 1062.871;
+
     _sceneViewController.setViewpointCamera(
       Camera.withLatLong(
-        latitude: lat,
-        longitude: lon,
-        altitude: _initialCamera!.location.z ?? 1062.871,
+        latitude: pivotLat - _camToTargetLatOffset,
+        longitude: pivotLon,
+        altitude: camAlt,
         heading: 0,
         pitch: _initialCamera!.pitch,
         roll: 0,

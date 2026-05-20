@@ -87,33 +87,13 @@
 
   "layers": {
     "tritonTransit": {
-      "label":          "Triton Transit",
-      "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/shuttles-thumbnail.png",
-      "sublayers": [
-        {
-          "name":            "transitRoutes",
-          "source":          "url",
-          "url":             "https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/Triton_Transit_Route_Lines/FeatureServer/0",
-          "refreshInterval": 0,
-          "popup":           false
-        },
-        {
-          "name":            "transitStops",
-          "source":          "url",
-          "url":             "https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/Triton_Transit_Bus_Stops/FeatureServer/1",
-          "refreshInterval": 0,
-          "popup":           true,
-          "popupTemplate":   "Stop #${stop_id}: ${stop_name}\n${route_short_names}"
-        },
-        {
-          "name":            "transitShuttlePositions",
-          "source":          "url",
-          "url":             "https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/Triton_Transit_Shuttle_Positions/FeatureServer/0",
-          "refreshInterval": 5,
-          "popup":           true,
-          "popupTemplate":   "${route_short_name} - ${route_long_name}\n${route_desc}"
-        }
-      ]
+      "label":           "Transit",
+      "thumbnailAsset":  "https://dvsbke0idzv4u.cloudfront.net/thumbnails/shuttles-thumbnail.png",
+      "source":          "portalItem",
+      "portalKey":       "ago",
+      "itemId":          "ea5cdd8987414942b62178726120d5c7",
+      "refreshInterval": 0,
+      "popup":           false
     },
     "campusDistricts": {
       "label":           "Districts",
@@ -158,9 +138,29 @@
   },
 
   "searchCategories": [
-    { "label": "Dining",     "poiClass": "Dining",     "icon": "restaurant"     },
-    { "label": "Library",    "poiClass": "Library",    "icon": "menu_book"      },
-    { "label": "Parking",    "poiClass": "Parking",    "icon": "local_parking"  },
-    { "label": "Recreation", "poiClass": "Recreation", "icon": "fitness_center" }
+    {
+      "label": "Dining",
+      "poiClass": "Dining and Beverage",
+      "icon": "restaurant",
+      "color": "#00C6D7"
+    },
+    {
+      "label": "Library",
+      "poiClass": "Library",
+      "icon": "menu_book",
+      "color": "#D462AD"
+    },
+    {
+      "label": "Parking",
+      "poiClass": "Parking",
+      "icon": "local_parking",
+      "color": "#6E963B"
+    },
+    {
+      "label": "Recreation",
+      "poiClass": "Recreation Facilities",
+      "icon": "fitness_center",
+      "color": "#FC8900"
+    }
   ]
 }

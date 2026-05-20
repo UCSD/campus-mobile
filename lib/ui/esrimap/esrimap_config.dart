@@ -170,11 +170,13 @@ class SearchCategoryConfig {
   final String label;
   final String poiClass;
   final String icon;
+  final String? color;
 
   const SearchCategoryConfig({
     required this.label,
     required this.poiClass,
     required this.icon,
+    this.color,
   });
 
   factory SearchCategoryConfig.fromJson(Map<String, dynamic> json) =>
@@ -182,6 +184,7 @@ class SearchCategoryConfig {
         label:    json['label']    as String,
         poiClass: json['poiClass'] as String,
         icon:     json['icon']     as String,
+        color:    json['color']    as String?,
       );
 }
 

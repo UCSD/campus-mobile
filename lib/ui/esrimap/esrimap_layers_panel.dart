@@ -12,6 +12,7 @@ class EsriMapLayersPanel extends StatelessWidget {
   final void Function(String) onSetSceneMode;
   final void Function(String) onToggleLayer;
   final VoidCallback onClose;
+  final bool hideSceneSwitcher;
 
   const EsriMapLayersPanel({
     Key? key,
@@ -24,6 +25,7 @@ class EsriMapLayersPanel extends StatelessWidget {
     required this.onSetSceneMode,
     required this.onToggleLayer,
     required this.onClose,
+    this.hideSceneSwitcher = false,
   }) : super(key: key);
 
   @override
@@ -250,8 +252,8 @@ class EsriMapLayersPanel extends StatelessWidget {
                 ),
               ),
 
-              // Scene chips — gated by features flag
-              if (config.features.scenes) ...[
+              // Scene chips — gated by features flag, hidden when slide-over is active
+              if (config.features.scenes && !hideSceneSwitcher) ...[
                 const Divider(height: 24, indent: 16, endIndent: 16),
                 sectionLabel('SCENE'),
                 Padding(
