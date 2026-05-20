@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class EsriMapFabCluster extends StatelessWidget {
   final bool isDark;
   final bool is3D;
+  final bool showAiSearch;
   final int allCategoryResultsCount;
   final bool showCategoryList;
   final bool hasLastSelectedResult;
@@ -23,6 +24,7 @@ class EsriMapFabCluster extends StatelessWidget {
     Key? key,
     required this.isDark,
     this.is3D = false,
+    this.showAiSearch = true,
     required this.allCategoryResultsCount,
     required this.showCategoryList,
     required this.hasLastSelectedResult,

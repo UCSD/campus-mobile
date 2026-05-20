@@ -85,28 +85,16 @@ class _SearchCategory {
   });
 }
 
-const _categories = [
-  _SearchCategory(
-    label: 'Parking',
-    icon: Icons.local_parking,
-    poiClassValue: 'Parking',
-  ),
-  _SearchCategory(
-    label: 'Dining',
-    icon: Icons.restaurant,
-    poiClassValue: 'Dining and Beverage',
-  ),
-  _SearchCategory(
-    label: 'Recreation',
-    icon: Icons.fitness_center,
-    poiClassValue: 'Athletic Facilities',
-  ),
-  _SearchCategory(
-    label: 'Transit',
-    icon: Icons.directions_bus,
-    poiClassValue: 'Transit',
-  ),
-];
+IconData _iconDataForName(String name) {
+  switch (name) {
+    case 'restaurant':     return Icons.restaurant;
+    case 'menu_book':      return Icons.menu_book;
+    case 'local_parking':  return Icons.local_parking;
+    case 'fitness_center': return Icons.fitness_center;
+    case 'directions_bus': return Icons.directions_bus;
+    default:               return Icons.place;
+  }
+}
 
 // -----------------------------------------------------------------------------
 // Slide-over header delegate
@@ -240,20 +228,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final Map<BasemapType, Basemap> _basemaps = {};
   bool _showLayersPanel = false;
 
-  // Operational layers
-  bool _showCampusDistricts = false;
-  ArcGISMapImageLayer? _campusDistrictsLayer;
-  bool _showConstruction = false;
-  ArcGISMapImageLayer? _constructionLayer;
-  bool _loadingConstruction = false;
-  bool _showAssemblyAreas = false;
-  ArcGISMapImageLayer? _assemblyAreasLayer;
-  bool _loadingAssemblyAreas = false;
-  bool _showTransitLayer = false;
-  FeatureLayer? _transitShuttlesLayer;
-  FeatureLayer? _transitRoutesLayer;
-  bool _loadingTransitLayer = false;
-  Timer? _transitRefreshTimer;
+  // Operational layers — keyed by config layer key
+  final Map<String, bool> _layerVisible = {};
+  final Map<String, bool> _layerLoading = {};
+  final Map<String, List<Layer?>> _layerInstances = {};
+  final Map<String, Timer> _layerTimers = {};
 
   // Compass
   double _mapRotation = 0.0;
@@ -261,8 +240,19 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   final _mapReadyCompleter = Completer<void>();
 
-  // Scene mode: 'Default' | '3D Building' | 'Drone View'
-  String _sceneMode = 'Default';
+  List<_SearchCategory> get _categories {
+    if (_config == null) return [];
+    return _config!.searchCategories
+        .map((c) => _SearchCategory(
+              label: c.label,
+              icon: _iconDataForName(c.icon),
+              poiClassValue: c.poiClass,
+            ))
+        .toList();
+  }
+
+  // Scene mode key — matches keys in config.scenes ('default' | 'building3d' | 'droneView')
+  String _sceneMode = 'default';
   EsriSceneWidget? _scene3DWidget;
   EsriSceneWidget? _sceneDroneWidget;
   final _scene3DKey = GlobalKey<EsriSceneWidgetState>();
@@ -302,7 +292,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _fromFocusNode.dispose();
     _toFocusNode.dispose();
     _focusNode.dispose();
-    _transitRefreshTimer?.cancel();
+    for (final timer in _layerTimers.values) {
+      timer.cancel();
+    }
     _viewpointChangedSubscription?.cancel();
     super.dispose();
   }
@@ -364,8 +356,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _snapToNorth() {
-    if (_sceneMode != 'Default') {
-      if (_sceneMode == '3D Building') {
+    if (_sceneMode != 'default') {
+      if (_sceneMode == 'building3d') {
         _scene3DKey.currentState?.snapToNorth();
       } else {
         _sceneDroneKey.currentState?.snapToNorth();
@@ -397,158 +389,151 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  void _setSceneMode(String mode) {
-    if (mode == _sceneMode) return;
+  void _setSceneMode(String key) {
+    if (key == _sceneMode) return;
     setState(() {
-      _sceneMode = mode;
-      if (mode != 'Default') _showLayersPanel = false;
-      if (mode == '3D Building' && _scene3DWidget == null && _config != null) {
-        final scene = _config!.scenes['building3d']!;
+      _sceneMode = key;
+      if (key != 'default') _showLayersPanel = false;
+      if (_config == null) return;
+      final scene = _config!.scenes[key];
+      if (scene == null || scene.type != 'scene') return;
+      final portalUrl = scene.portalKey != null
+          ? _config!.portals[scene.portalKey!]
+          : null;
+      if (portalUrl == null || scene.itemId == null) return;
+      if (key == 'building3d' && _scene3DWidget == null) {
         _scene3DWidget = EsriSceneWidget(
           key: _scene3DKey,
-          portalUri: scene.portalUrl,
-          itemId: scene.itemId,
+          portalUri: portalUrl,
+          itemId: scene.itemId!,
           onHeadingChanged: (h) => setState(() => _mapRotation = h),
         );
-      } else if (mode == 'Drone View' && _sceneDroneWidget == null && _config != null) {
-        final scene = _config!.scenes['droneView']!;
+      } else if (key == 'droneView' && _sceneDroneWidget == null) {
         _sceneDroneWidget = EsriSceneWidget(
           key: _sceneDroneKey,
-          portalUri: scene.portalUrl,
-          itemId: scene.itemId,
+          portalUri: portalUrl,
+          itemId: scene.itemId!,
           onHeadingChanged: (h) => setState(() => _mapRotation = h),
         );
       }
     });
   }
 
-  void _toggleTransitLayer() async {
-    if (_showTransitLayer) {
-      _transitRefreshTimer?.cancel();
-      _transitRefreshTimer = null;
-      if (_transitShuttlesLayer != null) {
-        _map.operationalLayers.remove(_transitShuttlesLayer!);
+void _toggleLayer(String key) async {
+    final entry = _config?.layers[key];
+    if (entry == null) return;
+
+    if (_layerVisible[key] == true) {
+      _layerTimers[key]?.cancel();
+      _layerTimers.remove(key);
+      for (final layer in _layerInstances[key] ?? []) {
+        if (layer != null) _map.operationalLayers.remove(layer);
       }
-      if (_transitRoutesLayer != null) {
-        _map.operationalLayers.remove(_transitRoutesLayer!);
+      _layerInstances.remove(key);
+      setState(() => _layerVisible[key] = false);
+      return;
+    }
+
+    setState(() => _layerLoading[key] = true);
+
+    final instances = _buildLayerInstances(entry);
+    _layerInstances[key] = instances;
+
+    for (final layer in instances) {
+      if (layer != null) _map.operationalLayers.add(layer);
+    }
+
+    try {
+      await Future.wait(instances.whereType<Layer>().map((l) => l.load()));
+      _applyLayerSpecialCases(key, instances);
+    } catch (e) {
+      debugPrint('Layer $key load error: $e');
+    }
+
+    _startLayerRefreshTimer(key, entry);
+
+    setState(() {
+      _layerVisible[key] = true;
+      _layerLoading[key] = false;
+    });
+  }
+
+  List<Layer?> _buildLayerInstances(LayerEntry entry) {
+    if (entry.hasSublayers) {
+      return entry.sublayers!.map(_layerFromSublayer).toList();
+    }
+    return [_layerFromEntry(entry)];
+  }
+
+  Layer? _layerFromSublayer(SublayerEntry sub) {
+    if (sub.source == 'url' && sub.url != null) {
+      return sub.url!.contains('FeatureServer')
+          ? FeatureLayer.withFeatureTable(
+              ServiceFeatureTable.withUri(Uri.parse(sub.url!)))
+          : ArcGISMapImageLayer.withUri(Uri.parse(sub.url!));
+    }
+    return null;
+  }
+
+  Layer? _layerFromEntry(LayerEntry entry) {
+    if (entry.source == 'url' && entry.url != null) {
+      return entry.url!.contains('FeatureServer')
+          ? FeatureLayer.withFeatureTable(
+              ServiceFeatureTable.withUri(Uri.parse(entry.url!)))
+          : ArcGISMapImageLayer.withUri(Uri.parse(entry.url!));
+    }
+    return null;
+  }
+
+  void _applyLayerSpecialCases(String key, List<Layer?> instances) {
+    // campusDistricts: show only sublayer id 4
+    if (key == 'campusDistricts' &&
+        instances.isNotEmpty &&
+        instances.first is ArcGISMapImageLayer) {
+      final imageLayer = instances.first as ArcGISMapImageLayer;
+      for (final sub in imageLayer.mapImageSublayers) {
+        sub.isVisible = sub.id == 4;
       }
-      setState(() => _showTransitLayer = false);
-    } else {
-      setState(() => _loadingTransitLayer = true);
-      if (_transitRoutesLayer == null) {
-        _transitRoutesLayer = FeatureLayer.withFeatureTable(
-          ServiceFeatureTable.withUri(Uri.parse(_config!.layers.transitRoutes)),
-        );
-      }
-      if (_transitShuttlesLayer == null) {
-        _transitShuttlesLayer = FeatureLayer.withFeatureTable(
-          ServiceFeatureTable.withUri(Uri.parse(_config!.layers.transitShuttles)),
-        );
-      }
-      _map.operationalLayers.add(_transitRoutesLayer!);
-      _map.operationalLayers.add(_transitShuttlesLayer!);
-      try {
-        await Future.wait([
-          _transitRoutesLayer!.load(),
-          _transitShuttlesLayer!.load(),
-        ]);
-      } catch (e) {
-        debugPrint('Transit layer load error: $e');
-      }
-      setState(() {
-        _showTransitLayer = true;
-        _loadingTransitLayer = false;
-      });
-      _transitRefreshTimer = Timer.periodic(
-        const Duration(seconds: 15),
-        (_) async {
-          if (!mounted || _transitShuttlesLayer == null) return;
-          _map.operationalLayers.remove(_transitShuttlesLayer!);
-          _transitShuttlesLayer = FeatureLayer.withFeatureTable(
-            ServiceFeatureTable.withUri(Uri.parse(_config!.layers.transitShuttles)),
-          );
-          _map.operationalLayers.add(_transitShuttlesLayer!);
-          try {
-            await _transitShuttlesLayer!.load();
-          } catch (e) {
-            debugPrint('Transit shuttle refresh error: $e');
-          }
-        },
-      );
     }
   }
 
-  void _toggleCampusDistricts() {
-    if (_showCampusDistricts) {
-      if (_campusDistrictsLayer != null) {
-        _map.operationalLayers.remove(_campusDistrictsLayer!);
+  void _startLayerRefreshTimer(String key, LayerEntry entry) {
+    final subs = entry.sublayers;
+    if (subs == null) return;
+
+    int? capturedIdx;
+    int? interval;
+    for (int i = 0; i < subs.length; i++) {
+      if (subs[i].refreshInterval > 0) {
+        capturedIdx = i;
+        interval = subs[i].refreshInterval;
+        break;
       }
-      setState(() => _showCampusDistricts = false);
-    } else {
-        if (_campusDistrictsLayer == null) {
-          _campusDistrictsLayer = ArcGISMapImageLayer.withUri(
-            Uri.parse(_config!.layers.campusDistricts),
-          );
-        // Show only sublayer 4 (Campus Districts)
-        for (final sublayer in _campusDistrictsLayer!.mapImageSublayers) {
-          sublayer.isVisible = sublayer.id == 4;
+    }
+    if (capturedIdx == null || interval == null) return;
+
+    final idx = capturedIdx;
+    final sub = subs[idx];
+
+    _layerTimers[key] = Timer.periodic(Duration(seconds: interval), (_) async {
+      if (!mounted) return;
+      final instances = _layerInstances[key];
+      if (instances == null || idx >= instances.length) return;
+
+      final oldLayer = instances[idx];
+      if (oldLayer != null) _map.operationalLayers.remove(oldLayer);
+
+      final newLayer = _layerFromSublayer(sub);
+      instances[idx] = newLayer;
+      if (newLayer != null) {
+        _map.operationalLayers.add(newLayer);
+        try {
+          await newLayer.load();
+        } catch (e) {
+          debugPrint('Refresh error $key[$idx]: $e');
         }
       }
-      _map.operationalLayers.add(_campusDistrictsLayer!);
-      setState(() => _showCampusDistricts = true);
-    }
-  }
-
-  void _toggleConstruction() async {
-    if (_showConstruction) {
-      if (_constructionLayer != null) {
-        _map.operationalLayers.remove(_constructionLayer!);
-      }
-      setState(() => _showConstruction = false);
-    } else {
-      setState(() => _loadingConstruction = true);
-      if (_constructionLayer == null) {
-        _constructionLayer = ArcGISMapImageLayer.withUri(
-          Uri.parse(_config!.layers.construction),
-        );
-      }
-      _map.operationalLayers.add(_constructionLayer!);
-      try {
-        await _constructionLayer!.load();
-      } catch (e) {
-        debugPrint('Construction layer load error: $e');
-      }
-      setState(() {
-        _showConstruction = true;
-        _loadingConstruction = false;
-      });
-    }
-  }
-
-  void _toggleAssemblyAreas() async {
-    if (_showAssemblyAreas) {
-      if (_assemblyAreasLayer != null) {
-        _map.operationalLayers.remove(_assemblyAreasLayer!);
-      }
-      setState(() => _showAssemblyAreas = false);
-    } else {
-      setState(() => _loadingAssemblyAreas = true);
-      if (_assemblyAreasLayer == null) {
-        _assemblyAreasLayer = ArcGISMapImageLayer.withUri(
-          Uri.parse(_config!.layers.assemblyAreas),
-        );
-      }
-      _map.operationalLayers.add(_assemblyAreasLayer!);
-      try {
-        await _assemblyAreasLayer!.load();
-      } catch (e) {
-        debugPrint('Assembly areas layer load error: $e');
-      }
-      setState(() {
-        _showAssemblyAreas = true;
-        _loadingAssemblyAreas = false;
-      });
-    }
+    });
   }
 
   Future<void> _startLocationDisplay() async {
@@ -1183,8 +1168,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _recenterOnView() {
-    if (_sceneMode != 'Default') {
-      if (_sceneMode == '3D Building') {
+    if (_sceneMode != 'default') {
+      if (_sceneMode == 'building3d') {
         _scene3DKey.currentState?.resetCamera();
       } else {
         _sceneDroneKey.currentState?.resetCamera();
@@ -1424,6 +1409,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _showSeeAll = false;
         _showCategoryList = false;
         _activeCategory = null;
+        _selectedResult = destination;
+        _lastSelectedResult = destination;
       });
     } catch (e) {
       debugPrint('Route solve error: $e');
@@ -1587,6 +1574,42 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // user location from from field in routing mode
+            if (_showRouteFields && _activeRouteField == 'from') ...[
+              ListTile(
+                splashColor: Colors.transparent,
+                dense: true,
+                leading: Icon(
+                  Icons.my_location,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                title: Text(
+                  'Current Location',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                onTap: () {
+                  final gps = _getUserLatLng();
+                  if (gps == null) return;
+                  _fromController.text = 'My Location';
+                  _fromLatLng = gps;
+                  setState(() {
+                    _showSuggestions = false;
+                    _showResults = false;
+                  });
+                  _fromFocusNode.unfocus();
+                  if (_routeDestination != null) {
+                    _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+                  }
+                },
+              ),
+              Divider(height: 1),
+              SizedBox(height: 8),
+            ],
             // Category section header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -1666,16 +1689,16 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final colors = {
-      'Parking':             Color(0xFFCCF4F7),
-      'Dining and Beverage': Color(0xFFF9DDEF),
-      'Athletic Facilities': Color(0xFFFCF9CC),
-      'Transit':             Color(0xFFFFEDD1),
+      'Parking':     const Color(0xFFCCF4F7),
+      'Dining':      const Color(0xFFF9DDEF),
+      'Recreation':  const Color(0xFFFCF9CC),
+      'Library':     const Color(0xFFE8F4FD),
     };
     final iconColors = {
-      'Parking':             Colors.black,
-      'Dining and Beverage': Colors.black,
-      'Athletic Facilities': Colors.black,
-      'Transit':             Colors.black,
+      'Parking':     Colors.black,
+      'Dining':      Colors.black,
+      'Recreation':  Colors.black,
+      'Library':     Colors.black,
     };
 
     return GestureDetector(
@@ -2315,6 +2338,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                                       _graphicsOverlay.graphics.clear();
                                       setState(() {
                                         _showRouteFields = true;
+                                        _selectedResult = null;
                                         _mappedResults = [];
                                         _allCategoryResults = [];
                                         _showSeeAll = false;
@@ -2418,8 +2442,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             children: [
               Expanded(
                 child: IndexedStack(
-                  index: _sceneMode == '3D Building' ? 1
-                       : _sceneMode == 'Drone View'  ? 2
+                  index: _sceneMode == 'building3d' ? 1
+                       : _sceneMode == 'droneView'  ? 2
                        : 0,
                   children: [
                     Listener(
@@ -2439,7 +2463,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           ),
 
           // Floating search bar + dropdown — hidden in 3D/Drone View modes
-          if (_sceneMode == 'Default')
+          if (_sceneMode == 'default')
           Positioned(
             top: 8,
             left: 12,
@@ -2501,8 +2525,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                                           isDense: true,
                                         ),
                                         onTap: () {
-                                          setState(() =>
-                                              _activeRouteField = 'from');
+                                          setState(() {
+                                            _activeRouteField = 'from';
+                                            _showSuggestions = true;
+                                            _showResults = false;
+                                          });
                                         },
                                         onChanged: (text) {
                                           _fromLatLng = null;
@@ -2561,8 +2588,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                                           isDense: true,
                                         ),
                                         onTap: () {
-                                          setState(() =>
-                                              _activeRouteField = 'to');
+                                          setState(() {
+                                            _activeRouteField = 'to';
+                                            _showSuggestions = true;
+                                            _showResults = false;
+                                          });
                                         },
                                         onChanged: (text) {
                                           if (text.length >= 3) {
@@ -2859,7 +2889,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               bottom: 32,
             child: EsriMapFabCluster(
                 isDark: isDark,
-                is3D: _sceneMode != 'Default',
+                is3D: _sceneMode != 'default',
+                showAiSearch: _config?.features.aiSearch ?? false,
                 allCategoryResultsCount: _allCategoryResults.length,
                 showCategoryList: _showCategoryList,
                 hasLastSelectedResult: _lastSelectedResult != null,
@@ -2892,23 +2923,16 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             _buildCategoryListPanel(context),
 
           // Layers/display panel
-          if (_showLayersPanel)
+          if (_showLayersPanel && _config != null)
             EsriMapLayersPanel(
+              config: _config!,
               currentBasemapType: _currentBasemapType,
-              sceneMode: _sceneMode,
-              showTransitLayer: _showTransitLayer,
-              loadingTransitLayer: _loadingTransitLayer,
-              showCampusDistricts: _showCampusDistricts,
-              showConstruction: _showConstruction,
-              loadingConstruction: _loadingConstruction,
-              showAssemblyAreas: _showAssemblyAreas,
-              loadingAssemblyAreas: _loadingAssemblyAreas,
+              currentSceneKey: _sceneMode,
+              layerVisible: _layerVisible,
+              layerLoading: _layerLoading,
               onSwitchBasemap: _switchBasemap,
               onSetSceneMode: _setSceneMode,
-              onToggleTransitLayer: _toggleTransitLayer,
-              onToggleCampusDistricts: _toggleCampusDistricts,
-              onToggleConstruction: _toggleConstruction,
-              onToggleAssemblyAreas: _toggleAssemblyAreas,
+              onToggleLayer: _toggleLayer,
               onClose: () => setState(() => _showLayersPanel = false),
             ),
 

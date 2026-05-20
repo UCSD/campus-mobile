@@ -1,0 +1,166 @@
+{
+  "portals": {
+    "age": "https://admin-enterprise-gis.ucsd.edu/portal",
+    "ago": "https://ucsd-admin.maps.arcgis.com"
+  },
+
+  "serviceUrls": {
+    "hillshade":     "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer",
+    "lightGrayBase": "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer",
+    "darkGrayBase":  "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer",
+    "nearmap":       "https://admin-enterprise-gis.ucsd.edu/server/rest/services/Campus_Imagery_Nearmap_9in_2025_0423_0514/MapServer"
+  },
+
+  "basemaps": {
+    "defaultMap": {
+      "label": "Default",
+      "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/default-thumbnail.png",
+      "baseLayers": [
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "hillshade"
+        },
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "lightGrayBase"
+        },
+        {
+          "type": "arcgisVectorTiled",
+          "portalKey": "age",
+          "itemId": "e19f33d2c1f44967aef673306c483913"
+        }
+      ]
+    },
+    "light": {
+      "label": "Light",
+      "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/light-thumbnail.png",
+      "baseLayers": [
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "hillshade"
+        },
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "lightGrayBase"
+        },
+        {
+          "type": "arcgisVectorTiled",
+          "portalKey": "age",
+          "itemId": "6643ee62af494f5bafe7dfdb8eb3f857"
+        }
+      ]
+    },
+    "dark": {
+      "label": "Dark",
+      "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/dark-thumbnail.png",
+      "baseLayers": [
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "hillshade"
+        },
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "darkGrayBase"
+        },
+        {
+          "type": "arcgisVectorTiled",
+          "portalKey": "age",
+          "itemId": "09d7b3934b6c4c2cad8380c04e08c1b1"
+        }
+      ]
+    },
+    "satellite": {
+      "label": "Satellite",
+      "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/satellite-thumbnail.png",
+      "baseLayers": [
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "lightGrayBase"
+        },
+        {
+          "type": "arcgisMapImage",
+          "serviceKey": "nearmap"
+        }
+      ]
+    }
+  },
+
+  "layers": {
+    "tritonTransit": {
+      "label":          "Triton Transit",
+      "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/shuttles-thumbnail.png",
+      "sublayers": [
+        {
+          "name":            "transitRoutes",
+          "source":          "url",
+          "url":             "https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/Triton_Transit_Route_Lines/FeatureServer/0",
+          "refreshInterval": 0,
+          "popup":           false
+        },
+        {
+          "name":            "transitStops",
+          "source":          "url",
+          "url":             "https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/Triton_Transit_Bus_Stops/FeatureServer/1",
+          "refreshInterval": 0,
+          "popup":           true,
+          "popupTemplate":   "Stop #${stop_id}: ${stop_name}\n${route_short_names}"
+        },
+        {
+          "name":            "transitShuttlePositions",
+          "source":          "url",
+          "url":             "https://services9.arcgis.com/mXNwDpiENQiMIzRv/arcgis/rest/services/Triton_Transit_Shuttle_Positions/FeatureServer/0",
+          "refreshInterval": 5,
+          "popup":           true,
+          "popupTemplate":   "${route_short_name} - ${route_long_name}\n${route_desc}"
+        }
+      ]
+    },
+    "campusDistricts": {
+      "label":           "Districts",
+      "thumbnailAsset":  "https://dvsbke0idzv4u.cloudfront.net/thumbnails/districts-thumbnail.png",
+      "source":          "url",
+      "url":             "https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Areas_and_Boundaries/MapServer",
+      "refreshInterval": 0,
+      "popup":           false
+    },
+    "construction": {
+      "label":           "Construction",
+      "thumbnailAsset":  "https://dvsbke0idzv4u.cloudfront.net/thumbnails/construction-thumbnail.png",
+      "source":          "url",
+      "url":             "https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer",
+      "refreshInterval": 0,
+      "popup":           false
+    }
+  },
+
+  "scenes": {
+    "default": {
+      "label": "Default",
+      "type":  "2d"
+    },
+    "building3d": {
+      "label":     "3D Building",
+      "type":      "scene",
+      "portalKey": "ago",
+      "itemId":    "b6931d8c429c4138afd9dd936ee7bcd1"
+    },
+    "droneView": {
+      "label":     "Drone View",
+      "type":      "scene",
+      "portalKey": "age",
+      "itemId":    "0ffe293479844ce49ff5c30ffc0a0b67"
+    }
+  },
+
+  "features": {
+    "aiSearch": true,
+    "scenes":   true
+  },
+
+  "searchCategories": [
+    { "label": "Dining",     "poiClass": "Dining",     "icon": "restaurant"     },
+    { "label": "Library",    "poiClass": "Library",    "icon": "menu_book"      },
+    { "label": "Parking",    "poiClass": "Parking",    "icon": "local_parking"  },
+    { "label": "Recreation", "poiClass": "Recreation", "icon": "fitness_center" }
+  ]
+}
