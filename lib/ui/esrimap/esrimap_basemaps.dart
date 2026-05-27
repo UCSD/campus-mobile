@@ -3,15 +3,7 @@ import 'esrimap_config.dart';
 
 enum BasemapType { defaultMap, light, dark, satellite }
 
-// Label lookup -- used by the layers panel
-const basemapLabels = <BasemapType, String>{
-  BasemapType.defaultMap: 'Default',
-  BasemapType.light:      'Light',
-  BasemapType.dark:       'Dark',
-  BasemapType.satellite:  'Satellite',
-};
-
-String _typeKey(BasemapType type) {
+String basemapKey(BasemapType type) {
   switch (type) {
     case BasemapType.defaultMap: return 'defaultMap';
     case BasemapType.light:      return 'light';
@@ -20,36 +12,57 @@ String _typeKey(BasemapType type) {
   }
 }
 
-Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
-  final basemap = Basemap();
-  final agePortal = Portal(Uri.parse(config.agePortalUrl));
+BasemapType? basemapTypeFromKey(String key) {
+  switch (key) {
+    case 'defaultMap': return BasemapType.defaultMap;
+    case 'light':      return BasemapType.light;
+    case 'dark':       return BasemapType.dark;
+    case 'satellite':  return BasemapType.satellite;
+    default:           return null;
+  }
+}
 
-  if (type == BasemapType.satellite) {
-    basemap.baseLayers.add(
-      ArcGISTiledLayer.withUri(Uri.parse(config.esriTileUrls.lightGrayBase)),
-    );
-    basemap.baseLayers.add(
-      ArcGISMapImageLayer.withUri(Uri.parse(config.nearmapUrl)),
-    );
-  } else {
-    basemap.baseLayers.add(
-      ArcGISTiledLayer.withUri(Uri.parse(config.esriTileUrls.hillshade)),
-    );
-    final contextUrl = type == BasemapType.dark
-        ? config.esriTileUrls.darkGrayBase
-        : config.esriTileUrls.lightGrayBase;
-    basemap.baseLayers.add(
-      ArcGISTiledLayer.withUri(Uri.parse(contextUrl)),
-    );
-    final itemId = config.basemaps[_typeKey(type)]?.itemId;
-    if (itemId != null) {
-      basemap.baseLayers.add(
-        ArcGISVectorTiledLayer.withItem(
-          PortalItem.withPortalAndItemId(portal: agePortal, itemId: itemId),
-        ),
-      );
+Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
+  final entry = config.basemaps[basemapKey(type)];
+  if (entry == null) return Basemap();
+
+  final basemap = Basemap();
+  for (final layer in entry.baseLayers) {
+    switch (layer.type) {
+      case 'arcgisTiled':
+        final url = layer.serviceKey != null
+            ? config.serviceUrls[layer.serviceKey!]
+            : null;
+        if (url != null) {
+          basemap.baseLayers.add(ArcGISTiledLayer.withUri(Uri.parse(url)));
+        }
+        break;
+
+      case 'arcgisVectorTiled':
+        final portalUrl = layer.portalKey != null
+            ? config.portals[layer.portalKey!]
+            : null;
+        if (portalUrl != null && layer.itemId != null) {
+          basemap.baseLayers.add(
+            ArcGISVectorTiledLayer.withItem(
+              PortalItem.withPortalAndItemId(
+                portal: Portal(Uri.parse(portalUrl)),
+                itemId: layer.itemId!,
+              ),
+            ),
+          );
+        }
+        break;
+
+      case 'arcgisMapImage':
+        final url = layer.serviceKey != null
+            ? config.serviceUrls[layer.serviceKey!]
+            : null;
+        if (url != null) {
+          basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(url)));
+        }
+        break;
     }
   }
-
   return basemap;
 }

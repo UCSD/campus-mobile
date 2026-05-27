@@ -1,43 +1,31 @@
 import 'package:flutter/material.dart';
-
 import 'esrimap_basemaps.dart';
+import 'esrimap_config.dart';
 
 class EsriMapLayersPanel extends StatelessWidget {
+  final EsriMapConfig config;
   final BasemapType currentBasemapType;
-  final String sceneMode;
-  final bool showTransitLayer;
-  final bool loadingTransitLayer;
-  final bool showCampusDistricts;
-  final bool showConstruction;
-  final bool loadingConstruction;
-  final bool showAssemblyAreas;
-  final bool loadingAssemblyAreas;
+  final String currentSceneKey;
+  final Map<String, bool> layerVisible;
+  final Map<String, bool> layerLoading;
   final void Function(BasemapType) onSwitchBasemap;
   final void Function(String) onSetSceneMode;
-  final VoidCallback onToggleTransitLayer;
-  final VoidCallback onToggleCampusDistricts;
-  final VoidCallback onToggleConstruction;
-  final VoidCallback onToggleAssemblyAreas;
+  final void Function(String) onToggleLayer;
   final VoidCallback onClose;
+  final bool hideSceneSwitcher;
 
   const EsriMapLayersPanel({
     Key? key,
+    required this.config,
     required this.currentBasemapType,
-    required this.sceneMode,
-    required this.showTransitLayer,
-    required this.loadingTransitLayer,
-    required this.showCampusDistricts,
-    required this.showConstruction,
-    required this.loadingConstruction,
-    required this.showAssemblyAreas,
-    required this.loadingAssemblyAreas,
+    required this.currentSceneKey,
+    required this.layerVisible,
+    required this.layerLoading,
     required this.onSwitchBasemap,
     required this.onSetSceneMode,
-    required this.onToggleTransitLayer,
-    required this.onToggleCampusDistricts,
-    required this.onToggleConstruction,
-    required this.onToggleAssemblyAreas,
+    required this.onToggleLayer,
     required this.onClose,
+    this.hideSceneSwitcher = false,
   }) : super(key: key);
 
   @override
@@ -85,16 +73,14 @@ class EsriMapLayersPanel extends StatelessWidget {
                   border: selected
                       ? Border.all(color: accent, width: 2.5)
                       : Border.all(
-                          color: isDark
-                              ? Colors.grey[700]!
-                              : Colors.grey[300]!,
+                          color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
                           width: 1,
                         ),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6.5),
                   child: loading
-                      ? Center(
+                      ? const Center(
                           child: SizedBox(
                             width: 22,
                             height: 22,
@@ -103,9 +89,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                         )
                       : (imageWidget ??
                           Container(
-                            color: isDark
-                                ? Colors.grey[700]
-                                : Colors.grey[300],
+                            color: isDark ? Colors.grey[700] : Colors.grey[300],
                           )),
                 ),
               ),
@@ -117,8 +101,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight:
-                      selected ? FontWeight.w700 : FontWeight.w400,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
                   color: selected ? accent : textColor,
                 ),
               ),
@@ -128,22 +111,25 @@ class EsriMapLayersPanel extends StatelessWidget {
       );
     }
 
-    Widget sceneChip(String label, bool selected) => GestureDetector(
-          onTap: () {
-            onSetSceneMode(label);
-            // Keep panel open so the user sees the active chip update
-          },
+    Widget networkImage(String url) => Image.network(
+          url,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => Container(
+            color: isDark ? Colors.grey[700] : Colors.grey[300],
+          ),
+        );
+
+    Widget sceneChip(String key, String label, bool selected) =>
+        GestureDetector(
+          onTap: () => onSetSceneMode(key),
           child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               border: selected
                   ? Border.all(color: accent, width: 2)
                   : Border.all(
-                      color: isDark
-                          ? Colors.grey[700]!
-                          : Colors.grey[300]!,
+                      color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
                       width: 1,
                     ),
               color: selected
@@ -154,8 +140,7 @@ class EsriMapLayersPanel extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 13,
-                fontWeight:
-                    selected ? FontWeight.w700 : FontWeight.w400,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
                 color: selected ? accent : textColor,
               ),
             ),
@@ -163,6 +148,7 @@ class EsriMapLayersPanel extends StatelessWidget {
         );
 
     final bottomPad = MediaQuery.of(context).padding.bottom;
+    final isDefault = currentSceneKey == 'default';
 
     return Positioned(
       left: 12,
@@ -173,151 +159,122 @@ class EsriMapLayersPanel extends StatelessWidget {
           if (details.velocity.pixelsPerSecond.dy > 200) onClose();
         },
         child: Material(
-        elevation: 10,
-        color: bgColor,
-        borderRadius: BorderRadius.circular(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header row
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 14, 8, 0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Map Display',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: textColor,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.close, size: 20, color: subtitleColor),
-                    onPressed: onClose,
-                  ),
-                ],
-              ),
-            ),
-
-            // Basemap + Layers sections — grayed out when not in Default scene mode
-            Opacity(
-              opacity: sceneMode == 'Default' ? 1.0 : 0.35,
-              child: IgnorePointer(
-                ignoring: sceneMode != 'Default',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          elevation: 10,
+          color: bgColor,
+          borderRadius: BorderRadius.circular(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 8, 0),
+                child: Row(
                   children: [
-                    // Row 1: Basemaps
-                    sectionLabel('BASEMAP'),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            for (final type in BasemapType.values) ...[
-                              imageTile(
-                                label: basemapLabels[type]!,
-                                selected: currentBasemapType == type,
-                                onTap: () => onSwitchBasemap(type),
-                                imageWidget: Image.asset(
-                                  {
-                                    BasemapType.defaultMap: 'lib/ui/esrimap/temp_assets/default-thumbnail.png',
-                                    BasemapType.light:     'lib/ui/esrimap/temp_assets/light-thumbnail.png',
-                                    BasemapType.dark:      'lib/ui/esrimap/temp_assets/dark-thumbnail.png',
-                                    BasemapType.satellite: 'lib/ui/esrimap/temp_assets/satellite-thumbnail.png',
-                                  }[type]!,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                            ],
-                          ],
+                    Expanded(
+                      child: Text(
+                        'Map Display',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: textColor,
                         ),
                       ),
                     ),
-
-                    const Divider(height: 24, indent: 16, endIndent: 16),
-
-                    // Row 2: Operational layers
-                    sectionLabel('LAYERS'),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            imageTile(
-                              label: 'Triton Transit',
-                              selected: showTransitLayer,
-                              loading: loadingTransitLayer,
-                              onTap: onToggleTransitLayer,
-                              imageWidget: Image.asset(
-                                'lib/ui/esrimap/temp_assets/shuttles-thumbnail.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            imageTile(
-                              label: 'Districts',
-                              selected: showCampusDistricts,
-                              onTap: onToggleCampusDistricts,
-                              imageWidget: Image.asset(
-                                'lib/ui/esrimap/temp_assets/districts-thumbnail.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            imageTile(
-                              label: 'Construction',
-                              selected: showConstruction,
-                              loading: loadingConstruction,
-                              onTap: onToggleConstruction,
-                              imageWidget: Image.asset(
-                                'lib/ui/esrimap/temp_assets/construction-thumbnail.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            imageTile(
-                              label: 'Assembly Areas',
-                              selected: showAssemblyAreas,
-                              loading: loadingAssemblyAreas,
-                              onTap: onToggleAssemblyAreas,
-                              imageWidget:
-                                  Container(color: const Color(0xFFD4EDDA)),
-                            ),
-                          ],
-                        ),
-                      ),
+                    IconButton(
+                      icon: Icon(Icons.close, size: 20, color: subtitleColor),
+                      onPressed: onClose,
                     ),
-
-                    const Divider(height: 24, indent: 16, endIndent: 16),
                   ],
                 ),
               ),
-            ),
 
-            // Row 3: Scene mode chips
-            sectionLabel('SCENE'),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
-              child: Wrap(
-                spacing: 8,
-                children: [
-                  sceneChip('Default', sceneMode == 'Default'),
-                  sceneChip('3D Building', sceneMode == '3D Building'),
-                  sceneChip('Drone View', sceneMode == 'Drone View'),
-                ],
+              // Basemap + Layers — grayed out when not in default scene
+              Opacity(
+                opacity: isDefault ? 1.0 : 0.35,
+                child: IgnorePointer(
+                  ignoring: !isDefault,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      sectionLabel('BASEMAP'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (final entry in config.basemaps.entries) ...[
+                                if (basemapTypeFromKey(entry.key) != null) ...[
+                                  imageTile(
+                                    label: entry.value.label,
+                                    selected: currentBasemapType ==
+                                        basemapTypeFromKey(entry.key),
+                                    onTap: () {
+                                      final t = basemapTypeFromKey(entry.key);
+                                      if (t != null) onSwitchBasemap(t);
+                                    },
+                                    imageWidget: networkImage(entry.value.thumbnailAsset),
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const Divider(height: 24, indent: 16, endIndent: 16),
+
+                      sectionLabel('LAYERS'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (final entry in config.layers.entries) ...[
+                                imageTile(
+                                  label: entry.value.label,
+                                  selected: layerVisible[entry.key] ?? false,
+                                  loading: layerLoading[entry.key] ?? false,
+                                  onTap: () => onToggleLayer(entry.key),
+                                  imageWidget: networkImage(entry.value.thumbnailAsset),
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ],
+
+              // Scene chips — gated by features flag, hidden when slide-over is active
+              if (config.features.scenes && !hideSceneSwitcher) ...[
+                const Divider(height: 24, indent: 16, endIndent: 16),
+                sectionLabel('SCENE'),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
+                  child: Wrap(
+                    spacing: 8,
+                    children: [
+                      for (final entry in config.scenes.entries)
+                        sceneChip(
+                          entry.key,
+                          entry.value.label,
+                          currentSceneKey == entry.key,
+                        ),
+                    ],
+                  ),
+                ),
+              ] else
+                const SizedBox(height: 20),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
