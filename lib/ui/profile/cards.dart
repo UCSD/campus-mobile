@@ -28,10 +28,11 @@ class _CardsViewState extends State<CardsView> {
   }
 
   Widget buildCardsList() {
+    final screenReaderActive = MediaQuery.accessibleNavigationOf(context);
     var tempView = ReorderableListView(
         header: Padding(
           padding: const EdgeInsets.only(top: 10),
-          child: Text("Hold and drag to reorder",
+          child: Text(screenReaderActive ? "Use the up and down arrows to reorder" : "Hold and drag to reorder",
               textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ),
         children: createList(),
@@ -74,19 +75,28 @@ class _CardsViewState extends State<CardsView> {
       return list;
     }
 
-    for (String card in _cardsDataProvider.cardOrder) {
-      try {
-        // Skip cards that aren't available
-        if (_cardsDataProvider.availableCards[card] == null) continue;
+    // Cards actually rendered, in display order - used to know which card is
+    // first/last so the up/down arrows can be disabled at the boundaries.
+    final visibleCards =
+        _cardsDataProvider.cardOrder.where((card) => _cardsDataProvider.availableCards[card] != null).toList();
+    final screenReaderActive = MediaQuery.accessibleNavigationOf(context);
 
+    for (var i = 0; i < visibleCards.length; i++) {
+      final card = visibleCards[i];
+      try {
         list.add(
           Card(
             key: Key(card),
             elevation: 2.0,
             margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
             child: ListTile(
-              leading: Icon(Icons.drag_handle,
-                  color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
+              // Dragging to reorder isn't reliably accessible to screen reader
+              // users, so up/down arrow buttons are shown instead whenever a
+              // screen reader is active.
+              leading: screenReaderActive
+                  ? _buildReorderArrows(card, isFirst: i == 0, isLast: i == visibleCards.length - 1)
+                  : Icon(Icons.drag_handle,
+                      color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
               title: Text(_cardsDataProvider.availableCards[card]!.titleText,
                   style: Theme.of(context).textTheme.bodyMedium),
               trailing: Transform.scale(
@@ -114,5 +124,47 @@ class _CardsViewState extends State<CardsView> {
       }
     }
     return list;
+  }
+
+  Widget _buildReorderArrows(String card, {required bool isFirst, required bool isLast}) {
+    final title = _cardsDataProvider.availableCards[card]!.titleText;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: Icon(Icons.arrow_upward),
+          iconSize: 20,
+          padding: EdgeInsets.zero,
+          constraints: BoxConstraints(minWidth: 32, minHeight: 32),
+          tooltip: 'Move $title up',
+          onPressed: isFirst ? null : () => _moveCard(card, -1),
+        ),
+        IconButton(
+          icon: Icon(Icons.arrow_downward),
+          iconSize: 20,
+          padding: EdgeInsets.zero,
+          constraints: BoxConstraints(minWidth: 32, minHeight: 32),
+          tooltip: 'Move $title down',
+          onPressed: isLast ? null : () => _moveCard(card, 1),
+        ),
+      ],
+    );
+  }
+
+  /// Moves [card] by [delta] positions (e.g. -1 to move up, +1 to move down)
+  /// within the stored card order - the same effect as dragging it, just
+  /// driven by a button tap instead of a drag gesture.
+  void _moveCard(String card, int delta) {
+    final order = _cardsDataProvider.cardOrder;
+    final currentIndex = order.indexOf(card);
+    if (currentIndex == -1) return;
+    final newIndex = currentIndex + delta;
+    if (newIndex < 0 || newIndex >= order.length) return;
+    setState(() {
+      order.insert(newIndex, order.removeAt(currentIndex));
+      // Checks against stored user order in remote profile
+      _cardsDataProvider.updateCardOrder(isUserReorder: true);
+    });
   }
 }
