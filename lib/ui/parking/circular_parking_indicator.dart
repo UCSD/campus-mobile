@@ -63,114 +63,130 @@ class CircularParkingIndicators extends StatelessWidget {
       open = total = 0;
     }
 
+    final double percent = open / total;
+    final bool hasPercent = !percent.isNaN;
+    // Spot type name is announced before the percentage so screen readers hear
+    // what the number applies to first, instead of a number followed by a bare letter.
+    final String spotName = spotType?.name ?? '';
+    final String accessibleLabel =
+        hasPercent ? '$spotName. ${(percent * 100).round()}% available' : '$spotName. Availability data not available';
+
     return locationData != null
-        ? Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Center(
-                        child: SizedBox(
-                          height: 90,
-                          width: 90,
-                          child: CircularPercentIndicator(
-                            radius: 45,
-                            animation: true,
-                            animationDuration: 1000,
-                            lineWidth: 9,
-                            percent: (open / total).isNaN ? 0.0 : open / total,
-                            center: Text(
-                              (open / total).isNaN ? "N/A" : ((open / total) * 100).round().toString() + "%",
-                              style: Theme.of(context).textTheme.titleMedium,
+        ? Semantics(
+            label: accessibleLabel,
+            excludeSemantics: true,
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Center(
+                          child: SizedBox(
+                            height: 90,
+                            width: 90,
+                            child: CircularPercentIndicator(
+                              radius: 45,
+                              animation: true,
+                              animationDuration: 1000,
+                              lineWidth: 9,
+                              percent: (open / total).isNaN ? 0.0 : open / total,
+                              center: Text(
+                                (open / total).isNaN ? "N/A" : ((open / total) * 100).round().toString() + "%",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              circularStrokeCap: CircularStrokeCap.round,
+                              backgroundColor: colorFromHex('#EDECEC'),
+                              progressColor: getColor(open / total),
                             ),
-                            circularStrokeCap: CircularStrokeCap.round,
-                            backgroundColor: colorFromHex('#EDECEC'),
-                            progressColor: getColor(open / total),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: spotType != null
-                      ? CircleAvatar(
-                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
-                          child: spotType.logoText.startsWith('icon - ')
-                              ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
-                                  size: 25.0, color: colorFromHex(spotType.logoTextColor))
-                              : (spotType.logoText.isNotEmpty
-                                  ? Text(
-                                      spotType.logoText,
-                                      style: TextStyle(
-                                        color: colorFromHex(spotType.logoTextColor),
-                                        fontFamily: 'Brix Sans',
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    )
-                                  : SizedBox.shrink()))
-                      : Container(),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: spotType != null
+                        ? CircleAvatar(
+                            backgroundColor: colorFromHex(spotType.logoBackgroundColor),
+                            child: spotType.logoText.startsWith('icon - ')
+                                ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
+                                    size: 25.0, color: colorFromHex(spotType.logoTextColor))
+                                : (spotType.logoText.isNotEmpty
+                                    ? Text(
+                                        spotType.logoText,
+                                        style: TextStyle(
+                                          color: colorFromHex(spotType.logoTextColor),
+                                          fontFamily: 'Brix Sans',
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      )
+                                    : SizedBox.shrink()))
+                        : Container(),
+                  )
+                ],
+              ),
             ),
           )
-        : Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Center(
-                        child: SizedBox(
-                          height: 90,
-                          width: 90,
-                          child: CircularPercentIndicator(
-                            radius: 45,
-                            animation: false,
-                            lineWidth: 9,
-                            percent: 0.0,
-                            center: Text(
-                              "N/A",
-                              style: Theme.of(context).textTheme.titleMedium,
+        : Semantics(
+            label: accessibleLabel,
+            excludeSemantics: true,
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Center(
+                          child: SizedBox(
+                            height: 90,
+                            width: 90,
+                            child: CircularPercentIndicator(
+                              radius: 45,
+                              animation: false,
+                              lineWidth: 9,
+                              percent: 0.0,
+                              center: Text(
+                                "N/A",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              backgroundColor: colorFromHex('#EDECEC'),
                             ),
-                            backgroundColor: colorFromHex('#EDECEC'),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: spotType != null
-                      ? CircleAvatar(
-                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
-                          child: spotType.logoText.startsWith('icon - ')
-                              ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
-                                  size: 25.0, color: colorFromHex(spotType.logoTextColor))
-                              : (spotType.logoText.isNotEmpty
-                                  ? Text(
-                                      spotType.logoText,
-                                      style: TextStyle(
-                                        color: colorFromHex(spotType.logoTextColor),
-                                        fontFamily: 'Brix Sans',
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 28,
-                                      ),
-                                    )
-                                  : SizedBox.shrink()))
-                      : Container(),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: spotType != null
+                        ? CircleAvatar(
+                            backgroundColor: colorFromHex(spotType.logoBackgroundColor),
+                            child: spotType.logoText.startsWith('icon - ')
+                                ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
+                                    size: 25.0, color: colorFromHex(spotType.logoTextColor))
+                                : (spotType.logoText.isNotEmpty
+                                    ? Text(
+                                        spotType.logoText,
+                                        style: TextStyle(
+                                          color: colorFromHex(spotType.logoTextColor),
+                                          fontFamily: 'Brix Sans',
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 28,
+                                        ),
+                                      )
+                                    : SizedBox.shrink()))
+                        : Container(),
+                  )
+                ],
+              ),
             ),
           );
   }
