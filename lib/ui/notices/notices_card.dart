@@ -13,6 +13,12 @@ class NoticesCard extends StatelessWidget {
   /// MODELS
   final NoticesModel notice;
 
+  // VoiceOver/TalkBack read "TWOW" as a made-up word instead of spelling it
+  // out, so it's spaced into individual letters for the accessibility label only.
+  static final RegExp _twowPattern = RegExp(r'\bTWOW\b', caseSensitive: false);
+
+  static String _spellOutForScreenReaders(String text) => text.replaceAll(_twowPattern, 'T W O W');
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -32,7 +38,7 @@ class NoticesCard extends StatelessWidget {
   Widget buildBannerView(NoticesModel notice) {
     // The screen reader will read - "image - (text on the image)"
     return Semantics(
-      label: notice.title,
+      label: _spellOutForScreenReaders(notice.title),
       image: true,
       button: true,
       child: GestureDetector(
