@@ -53,6 +53,10 @@ class EventTile extends StatelessWidget {
 
   Widget _eventDetailsCard(BuildContext context) {
     final df = DateFormat("MMM d y");
+    // Screen readers inconsistently pronounce abbreviated months (e.g. reading
+    // "APR" letter-by-letter) and skip the "-" separator, so a fully spelled-out
+    // label is read instead of the abbreviated/dashed display text.
+    final accessibleDf = DateFormat("MMMM d, y");
 
     final localStart = data.startDate.toLocal();
     final localEnd = data.endDate.toLocal();
@@ -60,6 +64,9 @@ class EventTile extends StatelessWidget {
     final startDate = df.format(localStart);
     final endDate = df.format(localEnd);
     final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
+    final accessibleDateLabel = startDate == endDate
+        ? accessibleDf.format(localStart)
+        : '${accessibleDf.format(localStart)} to ${accessibleDf.format(localEnd)}';
     final startTime = DateFormat.jm().format(localStart);
     final endTime = DateFormat.jm().format(localEnd);
 
@@ -79,7 +86,7 @@ class EventTile extends StatelessWidget {
           elevation: 4.0,
           child: Column(
             children: [
-              _eventImageLoader(data.imageThumb),
+              _eventImageLoader(data.imageThumb, data.title),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 child: Row(
@@ -90,7 +97,7 @@ class EventTile extends StatelessWidget {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         alignment: Alignment.centerLeft,
-                        child: StartEndDateContainer(date: dateDisplay),
+                        child: StartEndDateContainer(date: dateDisplay, semanticLabel: accessibleDateLabel),
                       ),
                     ),
                     if (hasTime)
@@ -109,6 +116,7 @@ class EventTile extends StatelessWidget {
                                   ))
                               : TileTime(
                                   time: '$startTime - $endTime',
+                                  semanticLabel: '$startTime to $endTime',
                                 ),
                         ),
                       ),
@@ -127,18 +135,20 @@ class EventTile extends StatelessWidget {
   }
 }
 
-Widget _eventImageLoader(String? url) {
+Widget _eventImageLoader(String? url, String title) {
   return url?.isEmpty ?? true
       ? ClipRRect(
           borderRadius: BorderRadius.only(
             topLeft: EventTile.CORNER_RADIUS,
             topRight: EventTile.CORNER_RADIUS,
           ),
+          // generic placeholder logo conveys no event-specific content
           child: Image.asset(
             'assets/images/UCSDMobile_sharp.png',
             height: 150,
             width: EventTile.TILE_WIDTH,
             fit: BoxFit.cover,
+            excludeFromSemantics: true,
           ))
       : ClipRRect(
           borderRadius: BorderRadius.only(
@@ -147,6 +157,7 @@ Widget _eventImageLoader(String? url) {
           ),
           child: Image.network(
             url!,
+            semanticLabel: title,
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) return child;
               return Center(
@@ -193,7 +204,8 @@ class TileTitle extends StatelessWidget {
 
 class TileTime extends StatelessWidget {
   final String time;
-  const TileTime({Key? key, required this.time}) : super(key: key);
+  final String semanticLabel;
+  const TileTime({Key? key, required this.time, required this.semanticLabel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final splitTimes = time.split(' - ');
@@ -208,145 +220,158 @@ class TileTime extends StatelessWidget {
       fontWeight: FontWeight.w400,
     );
 
-    return Padding(
-        padding: const EdgeInsets.only(right: 8, left: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (startTime != endTime)
-              Row(
-                children: [
-                  // Start Time
-                  Text(
-                    startTime,
-                    textAlign: TextAlign.right,
-                    style: style,
-                  ),
-                  Text(" - ", style: style), // Separator
-                ],
+    // The "-" separator isn't picked up by screen readers, so the visual
+    // dash is hidden from semantics and semanticLabel is read instead.
+    return Semantics(
+      label: semanticLabel,
+      excludeSemantics: true,
+      child: Padding(
+          padding: const EdgeInsets.only(right: 8, left: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (startTime != endTime)
+                Row(
+                  children: [
+                    // Start Time
+                    Text(
+                      startTime,
+                      textAlign: TextAlign.right,
+                      style: style,
+                    ),
+                    Text(" - ", style: style), // Separator
+                  ],
+                ),
+              Text(
+                endTime, // End Time
+                textAlign: TextAlign.right,
+                style: style,
               ),
-            Text(
-              endTime, // End Time
-              textAlign: TextAlign.right,
-              style: style,
-            ),
-          ],
-        ));
+            ],
+          )),
+    );
   }
 }
 
 class StartEndDateContainer extends StatelessWidget {
   final String date;
-  const StartEndDateContainer({Key? key, required this.date}) : super(key: key);
+  final String semanticLabel;
+  const StartEndDateContainer({Key? key, required this.date, required this.semanticLabel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 5.0),
-      child: Row(
-        children: [
-          // Mar 24 2025 - May 2 2025
-          //  0   1   2  3  4  5  6
-          if (date.contains(' - ')) ...[
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Column(
-                    children: [
-                      // Start Date Month
-                      Text(
-                        date.split(' ')[0].toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      // Start Date Day
-                      Text(
-                        date.split(' ')[1].toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            Padding(
-              // "-"
-              padding: EdgeInsets.symmetric(horizontal: 4.0),
-              child: Text(
-                date.split(' ')[3].toUpperCase(),
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 8), // Adjust padding as needed
-                  child: Column(
-                    children: [
-                      // End Date Day
-                      Text(
-                        date.split(' ')[4].toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      // End Date Year
-                      Text(
-                        date.split(' ')[5].toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )
-          ]
-          // If it's a single date, display it normally
-          else ...[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the padding as needed
-              child: Column(
+    // The "-" separator and abbreviated months (e.g. "APR") aren't read
+    // reliably by screen readers, so semanticLabel spells out the full range.
+    return Semantics(
+      label: semanticLabel,
+      excludeSemantics: true,
+      child: Container(
+        padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 5.0),
+        child: Row(
+          children: [
+            // Mar 24 2025 - May 2 2025
+            //  0   1   2  3  4  5  6
+            if (date.contains(' - ')) ...[
+              Column(
                 children: [
-                  // Month
-                  Text(
-                    date.split(' ')[0].toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                      fontWeight: FontWeight.w600,
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Column(
+                      children: [
+                        // Start Date Month
+                        Text(
+                          date.split(' ')[0].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        // Start Date Day
+                        Text(
+                          date.split(' ')[1].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  // Day
-                  Text(
-                    date.split(' ')[1].toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  )
                 ],
               ),
-            )
+              Padding(
+                // "-"
+                padding: EdgeInsets.symmetric(horizontal: 4.0),
+                child: Text(
+                  date.split(' ')[3].toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 8), // Adjust padding as needed
+                    child: Column(
+                      children: [
+                        // End Date Day
+                        Text(
+                          date.split(' ')[4].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        // End Date Year
+                        Text(
+                          date.split(' ')[5].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ]
+            // If it's a single date, display it normally
+            else ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the padding as needed
+                child: Column(
+                  children: [
+                    // Month
+                    Text(
+                      date.split(' ')[0].toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    // Day
+                    Text(
+                      date.split(' ')[1].toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

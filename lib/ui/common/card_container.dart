@@ -58,9 +58,16 @@ class CardContainer extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.only(top: 0.0, right: 8.0, bottom: 0.0, left: 8.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-              title: Text(
-                titleText,
-                style: Theme.of(context).textTheme.titleLarge,
+              // container + explicitChildNodes keep this from being merged with the
+              // trailing menu's semantics into one "[title], button" announcement.
+              title: Semantics(
+                header: true,
+                container: true,
+                explicitChildNodes: true,
+                child: Text(
+                  titleText,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
               trailing: buildMenu(),
             ),
@@ -159,17 +166,22 @@ class CardContainer extends StatelessWidget {
   Widget buildMenu() {
     if (hideMenu) return Container();
 
-    return ButtonBar(
-      buttonPadding: const EdgeInsets.all(0),
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        buildMenuOptions(
-          {
-            CardMenuOptionConstants.RELOAD_CARD: reload,
-            CardMenuOptionConstants.HIDE_CARD: hide,
-          },
-        ),
-      ],
+    return Semantics(
+      container: true,
+      explicitChildNodes: true,
+      label: 'More options for $titleText',
+      child: ButtonBar(
+        buttonPadding: const EdgeInsets.all(0),
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildMenuOptions(
+            {
+              CardMenuOptionConstants.RELOAD_CARD: reload,
+              CardMenuOptionConstants.HIDE_CARD: hide,
+            },
+          ),
+        ],
+      ),
     );
   }
 
