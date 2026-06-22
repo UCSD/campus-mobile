@@ -9,17 +9,11 @@ Finder findBannerSemantics() =>
 void main() {
   group('NoticesCard Tests', () {
     testWidgets('spells out TWOW as separate letters in the accessibility label', (WidgetTester tester) async {
+      final semanticsHandle = tester.ensureSemantics();
+      addTearDown(semanticsHandle.dispose);
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: NoticesCard(
-              notice: NoticesModel(
-                title: 'UC San Diego TWOW',
-                imageUrl: '',
-                link: '',
-              ),
-            ),
-          ),
+          home: Scaffold(body: NoticesCard(notice: NoticesModel(title: 'UC San Diego TWOW', imageUrl: '', link: ''))),
         ),
       );
 
@@ -28,16 +22,12 @@ void main() {
     });
 
     testWidgets('leaves titles without TWOW unchanged', (WidgetTester tester) async {
+      final semanticsHandle = tester.ensureSemantics();
+      addTearDown(semanticsHandle.dispose);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: NoticesCard(
-              notice: NoticesModel(
-                title: 'Welcome Week Schedule',
-                imageUrl: '',
-                link: '',
-              ),
-            ),
+            body: NoticesCard(notice: NoticesModel(title: 'Welcome Week Schedule', imageUrl: '', link: '')),
           ),
         ),
       );
@@ -47,17 +37,11 @@ void main() {
     });
 
     testWidgets('does not alter words that merely contain twow as a substring', (WidgetTester tester) async {
+      final semanticsHandle = tester.ensureSemantics();
+      addTearDown(semanticsHandle.dispose);
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: NoticesCard(
-              notice: NoticesModel(
-                title: 'TWOWeek Kickoff',
-                imageUrl: '',
-                link: '',
-              ),
-            ),
-          ),
+          home: Scaffold(body: NoticesCard(notice: NoticesModel(title: 'TWOWeek Kickoff', imageUrl: '', link: ''))),
         ),
       );
 
