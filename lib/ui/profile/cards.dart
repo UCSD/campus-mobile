@@ -94,7 +94,7 @@ class _CardsViewState extends State<CardsView> {
               // users, so up/down arrow buttons are shown instead whenever a
               // screen reader is active.
               leading: screenReaderActive
-                  ? _buildReorderArrows(card, isFirst: i == 0, isLast: i == visibleCards.length - 1)
+                  ? _buildReorderArrows(card, visibleCards, isFirst: i == 0, isLast: i == visibleCards.length - 1)
                   : Icon(Icons.drag_handle,
                       color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
               title: Text(_cardsDataProvider.availableCards[card]!.titleText,
@@ -126,7 +126,7 @@ class _CardsViewState extends State<CardsView> {
     return list;
   }
 
-  Widget _buildReorderArrows(String card, {required bool isFirst, required bool isLast}) {
+  Widget _buildReorderArrows(String card, List<String> visibleCards, {required bool isFirst, required bool isLast}) {
     final title = _cardsDataProvider.availableCards[card]!.titleText;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -138,7 +138,7 @@ class _CardsViewState extends State<CardsView> {
           padding: EdgeInsets.zero,
           constraints: BoxConstraints(minWidth: 32, minHeight: 32),
           tooltip: 'Move $title up',
-          onPressed: isFirst ? null : () => _moveCard(card, -1),
+          onPressed: isFirst ? null : () => _moveCard(card, visibleCards, -1),
         ),
         IconButton(
           icon: Icon(Icons.arrow_downward),
@@ -146,23 +146,28 @@ class _CardsViewState extends State<CardsView> {
           padding: EdgeInsets.zero,
           constraints: BoxConstraints(minWidth: 32, minHeight: 32),
           tooltip: 'Move $title down',
-          onPressed: isLast ? null : () => _moveCard(card, 1),
+          onPressed: isLast ? null : () => _moveCard(card, visibleCards, 1),
         ),
       ],
     );
   }
 
-  /// Moves [card] by [delta] positions (e.g. -1 to move up, +1 to move down)
-  /// within the stored card order - the same effect as dragging it, just
-  /// driven by a button tap instead of a drag gesture.
-  void _moveCard(String card, int delta) {
+  /// Moves [card] next to the adjacent visible card. The stored order may
+  /// contain unavailable cards, so raw list indices cannot drive this action.
+  void _moveCard(String card, List<String> visibleCards, int delta) {
     final order = _cardsDataProvider.cardOrder;
+    final visibleIndex = visibleCards.indexOf(card);
+    final targetVisibleIndex = visibleIndex + delta;
+    if (visibleIndex == -1 || targetVisibleIndex < 0 || targetVisibleIndex >= visibleCards.length) return;
+
+    final targetCard = visibleCards[targetVisibleIndex];
     final currentIndex = order.indexOf(card);
-    if (currentIndex == -1) return;
-    final newIndex = currentIndex + delta;
-    if (newIndex < 0 || newIndex >= order.length) return;
+    final targetIndex = order.indexOf(targetCard);
+    if (currentIndex == -1 || targetIndex == -1) return;
+
     setState(() {
-      order.insert(newIndex, order.removeAt(currentIndex));
+      order.removeAt(currentIndex);
+      order.insert(targetIndex, card);
       // Checks against stored user order in remote profile
       _cardsDataProvider.updateCardOrder(isUserReorder: true);
     });
