@@ -58,12 +58,13 @@ class CardContainer extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.only(top: 0.0, right: 8.0, bottom: 0.0, left: 8.0),
               visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-              // container + explicitChildNodes keep this from being merged with the
-              // trailing menu's semantics into one "[title], button" announcement.
+              // A labeled semantics boundary keeps the title distinct from the
+              // trailing menu without creating an extra child announcement.
               title: Semantics(
                 header: true,
                 container: true,
-                explicitChildNodes: true,
+                label: titleText,
+                excludeSemantics: true,
                 child: Text(
                   titleText,
                   style: Theme.of(context).textTheme.titleLarge,
@@ -166,22 +167,17 @@ class CardContainer extends StatelessWidget {
   Widget buildMenu() {
     if (hideMenu) return Container();
 
-    return Semantics(
-      container: true,
-      explicitChildNodes: true,
-      label: 'More options for $titleText',
-      child: ButtonBar(
-        buttonPadding: const EdgeInsets.all(0),
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          buildMenuOptions(
-            {
-              CardMenuOptionConstants.RELOAD_CARD: reload,
-              CardMenuOptionConstants.HIDE_CARD: hide,
-            },
-          ),
-        ],
-      ),
+    return ButtonBar(
+      buttonPadding: const EdgeInsets.all(0),
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        buildMenuOptions(
+          {
+            CardMenuOptionConstants.RELOAD_CARD: reload,
+            CardMenuOptionConstants.HIDE_CARD: hide,
+          },
+        ),
+      ],
     );
   }
 
@@ -200,16 +196,20 @@ class CardContainer extends StatelessWidget {
       menu.add(item as DropdownMenuItem<String>);
     });
 
-    return DropdownButton(
-      items: menu,
-      iconSize: 36,
-      iconEnabledColor: dotsUnselectedColor,
-      underline: Container(),
-      icon: Transform.translate(
-        offset: Offset(6, -3),
-        child: Icon(Icons.more_vert, color: dotsUnselectedColor),
+    return Semantics(
+      label: 'More options for $titleText',
+      button: true,
+      child: DropdownButton(
+        items: menu,
+        iconSize: 36,
+        iconEnabledColor: dotsUnselectedColor,
+        underline: Container(),
+        icon: Transform.translate(
+          offset: Offset(6, -3),
+          child: Icon(Icons.more_vert, color: dotsUnselectedColor),
+        ),
+        onChanged: (String? selectedMenuItem) => onMenuItemPressed(selectedMenuItem),
       ),
-      onChanged: (String? selectedMenuItem) => onMenuItemPressed(selectedMenuItem),
     );
   }
 

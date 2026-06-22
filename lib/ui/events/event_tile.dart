@@ -157,7 +157,7 @@ Widget _eventImageLoader(String? url, String title) {
           ),
           child: Image.network(
             url!,
-            semanticLabel: title,
+            semanticLabel: 'Image for $title',
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) return child;
               return Center(
@@ -318,7 +318,7 @@ class StartEndDateContainer extends StatelessWidget {
                     padding: EdgeInsets.only(right: 8), // Adjust padding as needed
                     child: Column(
                       children: [
-                        // End Date Day
+                        // End Date Month
                         Text(
                           date.split(' ')[4].toUpperCase(),
                           style: TextStyle(
@@ -327,7 +327,7 @@ class StartEndDateContainer extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        // End Date Year
+                        // End Date Day
                         Text(
                           date.split(' ')[5].toUpperCase(),
                           style: TextStyle(
