@@ -72,10 +72,10 @@ class CircularParkingIndicators extends StatelessWidget {
         hasPercent ? '$spotName. ${(percent * 100).round()}% available' : '$spotName. Availability data not available';
 
     return locationData != null
-        ? Semantics(
-            label: accessibleLabel,
-            excludeSemantics: true,
-            child: Expanded(
+        ? Expanded(
+            child: Semantics(
+              label: accessibleLabel,
+              excludeSemantics: true,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -132,10 +132,10 @@ class CircularParkingIndicators extends StatelessWidget {
               ),
             ),
           )
-        : Semantics(
-            label: accessibleLabel,
-            excludeSemantics: true,
-            child: Expanded(
+        : Expanded(
+            child: Semantics(
+              label: accessibleLabel,
+              excludeSemantics: true,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
