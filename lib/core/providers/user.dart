@@ -259,7 +259,9 @@ class UserDataProvider extends ChangeNotifier {
   /// Logs out user
   /// Unregisters device from direct push notification using [_pushNotificationDataProvider]
   /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage
-  void logout() async {
+  /// [clearChatHistory] must be true to delete local TGPT chat history; pass true only from
+  /// the explicit user-initiated logout action, not from automated auth-refresh paths.
+  void logout({bool clearChatHistory = false}) async {
     _error = null;
     _isLoading = true;
     notifyListeners();
@@ -267,7 +269,7 @@ class UserDataProvider extends ChangeNotifier {
     resetAllCardHeights();
     resetNotificationsScrollOffset();
     _pushNotificationDataProvider.unregisterDevice(_authenticationModel.accessToken);
-    await _chatPersistenceService.clearUserChatData();
+    if (clearChatHistory) await _chatPersistenceService.clearUserChatData();
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
     updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
     _deletePasswordFromDevice();
