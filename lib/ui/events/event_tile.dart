@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:flutter/semantics.dart';
 
 class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
@@ -169,12 +170,16 @@ class TileTitle extends StatelessWidget {
   const TileTitle({Key? key, required this.title}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
+    return Semantics(
+      container: true,
+      sortKey: const OrdinalSortKey(1),
+      child: Padding(
+        padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
       child: Center(
         // Centers the Text
         child: Text(
           title,
+          semanticsLabel: 'Event: $title',
           textAlign: TextAlign.center,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -186,6 +191,7 @@ class TileTitle extends StatelessWidget {
             decoration: TextDecoration.underline, // Underlines the text
           ),
         ),
+      ),
       ),
     );
   }
@@ -208,7 +214,14 @@ class TileTime extends StatelessWidget {
       fontWeight: FontWeight.w400,
     );
 
-    return Padding(
+    String semanticTime = 'From: ' + time.replaceAll('-', 'to');
+
+    return Semantics(
+      container: true,
+      sortKey: const OrdinalSortKey(3),
+      label: semanticTime,
+      child: ExcludeSemantics(
+        child: Padding(
         padding: const EdgeInsets.only(right: 8, left: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +244,10 @@ class TileTime extends StatelessWidget {
               style: style,
             ),
           ],
-        ));
+        ),
+      ),
+      ),
+    );
   }
 }
 
@@ -253,7 +269,8 @@ class StartEndDateContainer extends StatelessWidget {
 
     return Semantics(
         container: true,
-        label: semanticDate,
+        sortKey: const OrdinalSortKey(2),
+        label: 'When: $semanticDate',
         child: ExcludeSemantics(
             child: Container(
           padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 5.0),
@@ -367,6 +384,8 @@ class StartEndDateContainer extends StatelessWidget {
               ],
             ],
           ),
-        )));
+        ),
+      ),
+    );
   }
 }
