@@ -25,7 +25,7 @@ class EventDetailView extends StatelessWidget {
     return ListView(
       children: [
         // Event Image
-        EventImage(imageUrl: data.imageHQ),
+        EventImage(data: data),
         // Event Content
         Container(
           padding: const EdgeInsets.all(16.0),
@@ -131,18 +131,34 @@ class EventDetailView extends StatelessWidget {
 
 // CREATE EVENT IMAGE
 class EventImage extends StatelessWidget {
-  final String imageUrl;
-  const EventImage({Key? key, required this.imageUrl}) : super(key: key);
+  final EventModel data;
+  const EventImage({Key? key, required this.data}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.width / 2.1,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover, // Ensure the image fills the container
-          image: (imageUrl.isEmpty)
-              ? AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
-              : NetworkImage(imageUrl),
+    String fallbackTitle = data.title;
+    if (fallbackTitle.length > 40) {
+      fallbackTitle = fallbackTitle.substring(0, 40) + '...';
+    }
+    String semanticLabel = data.imageAltText ?? fallbackTitle;
+    
+    // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out
+    semanticLabel = semanticLabel.replaceAllMapped(
+      RegExp(r'[A-Z]{2,}'),
+      (match) => match.group(0)!.split('').join(' '),
+    );
+
+    return Semantics(
+      image: true,
+      label: semanticLabel,
+      child: Container(
+        height: MediaQuery.of(context).size.width / 2.1,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover, // Ensure the image fills the container
+            image: (data.imageHQ.isEmpty)
+                ? AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
+                : NetworkImage(data.imageHQ),
+          ),
         ),
       ),
     );
