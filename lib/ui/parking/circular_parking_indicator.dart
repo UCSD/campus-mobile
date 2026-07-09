@@ -65,6 +65,10 @@ class CircularParkingIndicators extends StatelessWidget {
 
     return locationData != null
         ? Expanded(
+            child: Semantics(
+            label:
+                '${spotType?.name ?? "Unknown"} parking, ${((open / total).isNaN ? "Not applicable" : ((open / total) * 100).round().toString() + "% available")}',
+            excludeSemantics: true,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -119,8 +123,12 @@ class CircularParkingIndicators extends StatelessWidget {
                 )
               ],
             ),
-          )
+          ) // close Semantics
+            ) // close Expanded
         : Expanded(
+            child: Semantics(
+            label: '${spotType?.name ?? "Unknown"} parking, Not applicable',
+            excludeSemantics: true,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -172,7 +180,7 @@ class CircularParkingIndicators extends StatelessWidget {
                 )
               ],
             ),
-          );
+          ));
   }
 
   static Color getColor(double value) {
@@ -183,7 +191,7 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Widget buildLocationTitle(BuildContext context) {
     return Semantics(
-      label: '${model.locationName.toUpperCase()}. Swipe left or right to view other parking areas',
+      label: 'Parking Name: ${model.locationName.toUpperCase()}',
       excludeSemantics: true,
       child: Text(
         model.locationName.toUpperCase(),
@@ -199,6 +207,7 @@ class CircularParkingIndicators extends StatelessWidget {
       padding: const EdgeInsets.only(top: 6.0),
       child: Text(
         model.locationContext.toUpperCase(),
+        semanticsLabel: 'Located at: ${model.locationContext}',
         style: Theme.of(context).textTheme.titleSmall,
       ),
     );
