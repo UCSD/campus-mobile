@@ -67,7 +67,7 @@ class CircularParkingIndicators extends StatelessWidget {
         ? Expanded(
             child: Semantics(
             label:
-                '${spotType?.name ?? "Unknown"} parking, ${((open / total).isNaN ? "Not applicable" : ((open / total) * 100).round().toString() + "% available")}',
+                'For ${spotType?.name ?? "Unknown"} parking spots, ${((open / total).isNaN ? "Not applicable" : ((open / total) * 100).round().toString() + "% available")}',
             excludeSemantics: true,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -127,7 +127,7 @@ class CircularParkingIndicators extends StatelessWidget {
             ) // close Expanded
         : Expanded(
             child: Semantics(
-            label: '${spotType?.name ?? "Unknown"} parking, Not applicable',
+            label: 'For ${spotType?.name ?? "Unknown"} parking, Not applicable',
             excludeSemantics: true,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -214,17 +214,19 @@ class CircularParkingIndicators extends StatelessWidget {
   }
 
   Widget buildSpotsAvailableText(BuildContext context) {
+    final openSpots =
+        Provider.of<ParkingDataProvider>(context).getApproxNumOfOpenSpots(model.locationName)["Open"].toString();
+    final totalSpots =
+        Provider.of<ParkingDataProvider>(context).getApproxNumOfOpenSpots(model.locationName)["Total"].toString();
+    final visualText = "~$openSpots of $totalSpots Spots Available";
+    final semanticText = "Approximately $openSpots of $totalSpots Spots Available";
+
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Center(
         child: Text(
-          "~" +
-              Provider.of<ParkingDataProvider>(context).getApproxNumOfOpenSpots(model.locationName)["Open"].toString() +
-              " of " +
-              Provider.of<ParkingDataProvider>(context)
-                  .getApproxNumOfOpenSpots(model.locationName)["Total"]
-                  .toString() +
-              " Spots Available",
+          visualText,
+          semanticsLabel: semanticText,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       ),
