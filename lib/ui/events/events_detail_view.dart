@@ -57,31 +57,42 @@ class EventDetailView extends StatelessWidget {
               SizedBox(width: 5),
               Expanded(
                 child: data.location != null && data.location!.isNotEmpty
-                    ? LinkifyWithCatch(
-                        text: data.location!,
-                        looseUrl: true,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                          fontWeight: FontWeight.w400,
+                    ? Semantics(
+                        label: 'Location: ',
+                        child: LinkifyWithCatch(
+                          text: data.location!,
+                          looseUrl: true,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       )
                     : Container(),
               ),
               SizedBox(width: 5),
               // Event Time
-              Text(
-                data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
+              Builder(builder: (context) {
+                final timeString = data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
                     ? '    All day     '
                     : DateFormat.jm().format(data.startDate.toLocal()) +
                         ' - ' +
-                        DateFormat.jm().format(data.endDate.toLocal()),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+                        DateFormat.jm().format(data.endDate.toLocal());
+                final semanticTime = 'From: ' + timeString.replaceAll('-', 'to').trim();
+                return Semantics(
+                  container: true,
+                  child: Text(
+                    timeString,
+                    semanticsLabel: semanticTime,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                );
+              }),
               SizedBox(width: 16),
             ])),
         Container(
@@ -94,6 +105,7 @@ class EventDetailView extends StatelessWidget {
                 data.description != null && data.description!.isNotEmpty
                     ? Text(
                         data.description!,
+                        semanticsLabel: 'Event Description and Details: ${data.description}',
                         style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
                       )
                     : Container(),
@@ -140,7 +152,7 @@ class EventImage extends StatelessWidget {
       fallbackTitle = fallbackTitle.substring(0, 40) + '...';
     }
     String semanticLabel = data.imageAltText ?? fallbackTitle;
-    
+
     // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out
     semanticLabel = semanticLabel.replaceAllMapped(
       RegExp(r'[A-Z]{2,}'),
@@ -171,32 +183,57 @@ class EventDateContainer extends StatelessWidget {
   const EventDateContainer({Key? key, required this.date}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Month
-        Text(date.split(' ')[0].toUpperCase(),
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-              fontWeight: FontWeight.w400,
-            )),
-        // Day
-        Text(date.split(' ')[1].toUpperCase(),
-            style: TextStyle(
-              fontSize: 20,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-              fontWeight: FontWeight.w500,
-            )),
-        // Year
-        Text(date.split(' ')[2].toUpperCase(),
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-              fontWeight: FontWeight.w400,
-            )),
-      ],
+    String semanticDate = date;
+    final Map<String, String> months = {
+      'Jan': 'January',
+      'Feb': 'February',
+      'Mar': 'March',
+      'Apr': 'April',
+      'May': 'May',
+      'Jun': 'June',
+      'Jul': 'July',
+      'Aug': 'August',
+      'Sep': 'September',
+      'Oct': 'October',
+      'Nov': 'November',
+      'Dec': 'December'
+    };
+    months.forEach((key, value) {
+      semanticDate = semanticDate.replaceAll(key, value);
+    });
+
+    return Semantics(
+      container: true,
+      label: 'When: $semanticDate',
+      child: ExcludeSemantics(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Month
+            Text(date.split(' ')[0].toUpperCase(),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                  fontWeight: FontWeight.w400,
+                )),
+            // Day
+            Text(date.split(' ')[1].toUpperCase(),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                  fontWeight: FontWeight.w500,
+                )),
+            // Year
+            Text(date.split(' ')[2].toUpperCase(),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                  fontWeight: FontWeight.w400,
+                )),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -208,22 +245,26 @@ class EventTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 12.0),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+    return Semantics(
+      container: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 12.0),
+            child: Text(
+              title,
+              semanticsLabel: 'Event: $title',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
