@@ -22,14 +22,19 @@ class CardHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Semantics(
-                container: true,
-                header: true,
-                focusable: true,
-                child: Text(
-                  titleText,
-                  style: Theme.of(context).textTheme.titleLarge,
-                  semanticsLabel: '$titleText Card Heading',
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Focus(
+                  child: Semantics(
+                    container: true,
+                    header: true,
+                    focusable: true,
+                    child: Text(
+                      titleText,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      semanticsLabel: '$titleText Card',
+                    ),
+                  ),
                 ),
               ),
             ),
