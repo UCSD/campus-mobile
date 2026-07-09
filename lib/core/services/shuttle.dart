@@ -31,6 +31,10 @@ class ShuttleService {
       /// parse data
       var data = shuttleStopModelFromJson(_response);
       _data = data;
+      // print fetched data to terminal in green (one line per stop with reset)
+      // for (var stop in _data) {
+      //   print('\x1B[32mShuttleStop(id: ${stop.id}, name: ${stop.name}, lat: ${stop.lat}, lon: ${stop.lon})\x1B[0m');
+      // }
       return true;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
