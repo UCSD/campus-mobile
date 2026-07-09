@@ -14,17 +14,38 @@ class NewsDetailView extends StatelessWidget {
     return ContainerView(
       child: ListView(
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.33,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: data.image.isEmpty
-                    ? const AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
-                    : NetworkImage(data.image),
+          Builder(builder: (context) {
+            String fallbackTitle = data.title;
+            if (fallbackTitle.contains(':')) {
+              fallbackTitle = fallbackTitle.split(':')[0].trim();
+            }
+            if (fallbackTitle.length > 40) {
+              fallbackTitle = fallbackTitle.substring(0, 40) + '...';
+            }
+            String semanticLabel = fallbackTitle;
+
+            // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out
+            semanticLabel = semanticLabel.replaceAllMapped(
+              RegExp(r'[A-Z]{2,}'),
+              (match) => match.group(0)!.split('').join(' '),
+            );
+
+            return Semantics(
+              image: true,
+              label: semanticLabel,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.33,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: data.image.isEmpty
+                        ? const AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
+                        : NetworkImage(data.image),
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          }),
           Container(
             padding: const EdgeInsets.all(16.0),
             child: Row(
