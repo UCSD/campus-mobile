@@ -33,17 +33,15 @@ class EventDetailView extends StatelessWidget {
           child: Row(
             children: [
               // Event Date
-              Builder(
-                builder: (context) {
-                  final df = DateFormat("MMM d y");
-                  final localStart = data.startDate.toLocal();
-                  final localEnd = data.endDate.toLocal();
-                  final startDate = df.format(localStart);
-                  final endDate = df.format(localEnd);
-                  final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
-                  return StartEndDateContainer(date: dateDisplay);
-                }
-              ),
+              Builder(builder: (context) {
+                final df = DateFormat("MMM d y");
+                final localStart = data.startDate.toLocal();
+                final localEnd = data.endDate.toLocal();
+                final startDate = df.format(localStart);
+                final endDate = df.format(localEnd);
+                final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
+                return StartEndDateContainer(date: dateDisplay);
+              }),
 
               // Event Title
               Expanded(child: EventTitle(title: data.title)),
@@ -124,7 +122,6 @@ class EventDetailView extends StatelessWidget {
       ],
     );
   }
-
 }
 
 // CREATE EVENT IMAGE
@@ -160,7 +157,6 @@ class EventImage extends StatelessWidget {
     );
   }
 }
-
 
 // CREATE EVENT TITLE
 class EventTitle extends StatelessWidget {

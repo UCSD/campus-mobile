@@ -134,8 +134,7 @@ class ChatMessageBubble extends StatelessWidget {
                     enabled: !isMessageStreaming,
                   ),
                 ),
-              if (isTypingIndicator)
-                const _TypingIndicator(),
+              if (isTypingIndicator) const _TypingIndicator(),
             ],
           ),
         ),

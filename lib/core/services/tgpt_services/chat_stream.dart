@@ -204,9 +204,7 @@ class ChatMessageStreamService {
                     final ChatCitationReference ref = ChatCitationReference.fromStreamJson(row);
                     var isUrlNotEmpty = ref.url.isNotEmpty;
                     var isNumberPositive = ref.number > 0;
-                    if (isUrlNotEmpty && isNumberPositive) {
-                      citationByNumber[ref.number] = ref;
-                    }
+                    if (isUrlNotEmpty && isNumberPositive) citationByNumber[ref.number] = ref;
                   }
                   yield StreamingChatChunk(delta: '', citations: _sortedCitations(citationByNumber));
                 }

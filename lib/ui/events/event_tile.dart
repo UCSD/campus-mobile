@@ -175,23 +175,23 @@ class TileTitle extends StatelessWidget {
       sortKey: const OrdinalSortKey(1),
       child: Padding(
         padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
-      child: Center(
-        // Centers the Text
-        child: Text(
-          title,
-          semanticsLabel: 'Event: $title',
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.light ? linkTextColorLight : Colors.white,
-            fontSize: 16,
-            height: 1.4,
-            fontWeight: FontWeight.w600,
-            decoration: TextDecoration.underline, // Underlines the text
+        child: Center(
+          // Centers the Text
+          child: Text(
+            title,
+            semanticsLabel: 'Event: $title',
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.light ? linkTextColorLight : Colors.white,
+              fontSize: 16,
+              height: 1.4,
+              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.underline, // Underlines the text
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -222,30 +222,30 @@ class TileTime extends StatelessWidget {
       label: semanticTime,
       child: ExcludeSemantics(
         child: Padding(
-        padding: const EdgeInsets.only(right: 8, left: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (startTime != endTime)
-              Row(
-                children: [
-                  // Start Time
-                  Text(
-                    startTime,
-                    textAlign: TextAlign.right,
-                    style: style,
-                  ),
-                  Text(" - ", style: style), // Separator
-                ],
+          padding: const EdgeInsets.only(right: 8, left: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (startTime != endTime)
+                Row(
+                  children: [
+                    // Start Time
+                    Text(
+                      startTime,
+                      textAlign: TextAlign.right,
+                      style: style,
+                    ),
+                    Text(" - ", style: style), // Separator
+                  ],
+                ),
+              Text(
+                endTime, // End Time
+                textAlign: TextAlign.right,
+                style: style,
               ),
-            Text(
-              endTime, // End Time
-              textAlign: TextAlign.right,
-              style: style,
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -258,21 +258,29 @@ class StartEndDateContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     String semanticDate = date.replaceAll('-', 'to');
     final Map<String, String> months = {
-      'Jan': 'January', 'Feb': 'February', 'Mar': 'March',
-      'Apr': 'April', 'May': 'May', 'Jun': 'June',
-      'Jul': 'July', 'Aug': 'August', 'Sep': 'September',
-      'Oct': 'October', 'Nov': 'November', 'Dec': 'December'
+      'Jan': 'January',
+      'Feb': 'February',
+      'Mar': 'March',
+      'Apr': 'April',
+      'May': 'May',
+      'Jun': 'June',
+      'Jul': 'July',
+      'Aug': 'August',
+      'Sep': 'September',
+      'Oct': 'October',
+      'Nov': 'November',
+      'Dec': 'December'
     };
     months.forEach((key, value) {
       semanticDate = semanticDate.replaceAll(key, value);
     });
 
     return Semantics(
-        container: true,
-        sortKey: const OrdinalSortKey(2),
-        label: 'When: $semanticDate',
-        child: ExcludeSemantics(
-            child: Container(
+      container: true,
+      sortKey: const OrdinalSortKey(2),
+      label: 'When: $semanticDate',
+      child: ExcludeSemantics(
+        child: Container(
           padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 5.0),
           child: Row(
             children: [
