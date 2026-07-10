@@ -16,12 +16,8 @@ class NewsDetailView extends StatelessWidget {
         children: [
           Builder(builder: (context) {
             String fallbackTitle = data.title;
-            if (fallbackTitle.contains(':')) {
-              fallbackTitle = fallbackTitle.split(':')[0].trim();
-            }
-            if (fallbackTitle.length > 40) {
-              fallbackTitle = fallbackTitle.substring(0, 40) + '...';
-            }
+            if (fallbackTitle.contains(':')) fallbackTitle = fallbackTitle.split(':')[0].trim();
+            if (fallbackTitle.length > 40) fallbackTitle = fallbackTitle.substring(0, 40) + '...';
             String semanticLabel = fallbackTitle;
 
             // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out

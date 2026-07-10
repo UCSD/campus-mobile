@@ -31,10 +31,8 @@ class NoticesCard extends StatelessWidget {
 
   Widget buildBannerView(NoticesModel notice) {
     String accessibilityLabel = notice.title;
-    var isTwowNotice = notice.title == 'Triton Weeks of Welcome - Welcoming new students to the Triton community';
-    if (isTwowNotice) {
+    if (notice.title == 'Triton Weeks of Welcome - Welcoming new students to the Triton community')
       accessibilityLabel = 'T W O W - Triton Weeks of Welcome - visit t w o w dot ucsd dot e d u';
-    }
 
     // The screen reader will read - "image - (text on the image)"
     // print('\x1B[32mNoticesModel(title: ${notice.title}, link: ${notice.link}, imageUrl: ${notice.imageUrl})\x1B[0m');

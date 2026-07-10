@@ -123,9 +123,7 @@ class ChatProvider extends ChangeNotifier {
     _activeSessionId = null;
     _errorMessage = null;
 
-    if (_userDataProvider.isLoggedIn) {
-      await _chatPersistenceService.clearSessionId();
-    }
+    if (_userDataProvider.isLoggedIn) await _chatPersistenceService.clearSessionId();
 
     notifyListeners();
   }
@@ -139,9 +137,7 @@ class ChatProvider extends ChangeNotifier {
         ..clear()
         ..addAll(_sessionMessagesById[sessionId] ?? const <AssistantChatMessage>[]);
       _parentMessageIdsBySession[sessionId] ??= _deriveParentMessageId(_messages);
-      if (_userDataProvider.isLoggedIn) {
-        await _chatPersistenceService.saveSessionId(sessionId);
-      }
+      if (_userDataProvider.isLoggedIn) await _chatPersistenceService.saveSessionId(sessionId);
       notifyListeners();
       return;
     }
@@ -217,9 +213,7 @@ class ChatProvider extends ChangeNotifier {
         chatSessionId: sessionId,
         parentMessageId: _parentMessageIdsBySession[sessionId],
       )) {
-        if (chunk.messageId != null) {
-          reservedAssistantMessageId = chunk.messageId;
-        }
+        if (chunk.messageId != null) reservedAssistantMessageId = chunk.messageId;
 
         final int placeholderIndex =
             sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);
@@ -263,11 +257,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<String?> _ensureActiveSession() async {
-    var hasActiveSession = _activeSessionId != null;
-    var isActiveSessionNotEmpty = _activeSessionId?.isNotEmpty ?? false;
-    if (hasActiveSession && isActiveSessionNotEmpty) {
-      return _activeSessionId;
-    }
+    if (_activeSessionId != null && _activeSessionId!.isNotEmpty) return _activeSessionId;
 
     final session = await _chatSessionService.createChatSession();
     if (session == null) {
@@ -279,9 +269,7 @@ class ChatProvider extends ChangeNotifier {
     _parentMessageIdsBySession[_activeSessionId!] = null;
     _sessionMessagesById.putIfAbsent(_activeSessionId!, () => <AssistantChatMessage>[]);
 
-    if (_userDataProvider.isLoggedIn) {
-      await _chatPersistenceService.saveSessionId(_activeSessionId!);
-    }
+    if (_userDataProvider.isLoggedIn) await _chatPersistenceService.saveSessionId(_activeSessionId!);
 
     return _activeSessionId;
   }
@@ -303,9 +291,7 @@ class ChatProvider extends ChangeNotifier {
     _activeSessionId = sessionId;
     _parentMessageIdsBySession[sessionId] = _deriveParentMessageId(persistedMessages);
 
-    if (saveAsActive) {
-      await _chatPersistenceService.saveSessionId(sessionId);
-    }
+    if (saveAsActive) await _chatPersistenceService.saveSessionId(sessionId);
 
     notifyListeners();
   }
@@ -332,9 +318,7 @@ class ChatProvider extends ChangeNotifier {
             .toList(),
       );
       await _chatPersistenceService.saveSessionsIndex(_persistedSessions);
-      if (saveAsActive) {
-        await _chatPersistenceService.saveSessionId(sessionId);
-      }
+      if (saveAsActive) await _chatPersistenceService.saveSessionId(sessionId);
       return;
     }
 
@@ -356,9 +340,7 @@ class ChatProvider extends ChangeNotifier {
       updatedAt: updatedAt,
     );
 
-    if (existingIndex != -1) {
-      target.removeAt(existingIndex);
-    }
+    if (existingIndex != -1) target.removeAt(existingIndex);
 
     target.insert(0, updatedSession);
     final List<ChatSessionMeta> dedupedSessions = _dedupeSessions(target);

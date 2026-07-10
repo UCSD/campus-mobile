@@ -63,20 +63,14 @@ Future<String> tgptErrorMessageForDio(DioException e) async {
 String tgptErrorMessageFor(Object error) {
   if (error is DioException) {
     final int? code = error.response?.statusCode;
-    if (code == 404) {
-      return ErrorConstants.TRITONGPT_NOT_FOUND;
-    }
-    if (code != null && code >= 500 && code < 600) {
-      return ErrorConstants.TRITONGPT_SERVER_ERROR;
-    }
+    if (code == 404) return ErrorConstants.TRITONGPT_NOT_FOUND;
+    if (code != null && code >= 500 && code < 600) return ErrorConstants.TRITONGPT_SERVER_ERROR;
     if (code == 400) {
       final String? parsed = _parseTgptApiErrorMessageFromData(error.response?.data);
       if (parsed != null) return parsed;
       return ErrorConstants.TRITONGPT_BAD_REQUEST;
     }
-    if (code == 422) {
-      return ErrorConstants.TRITONGPT_BAD_REQUEST;
-    }
+    if (code == 422) return ErrorConstants.TRITONGPT_BAD_REQUEST;
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
@@ -86,33 +80,19 @@ String tgptErrorMessageFor(Object error) {
       default:
         break;
     }
-    if (code != null && code >= 400 && code < 500) {
-      return ErrorConstants.TRITONGPT_BAD_REQUEST;
-    }
+    if (code != null && code >= 400 && code < 500) return ErrorConstants.TRITONGPT_BAD_REQUEST;
     return ErrorConstants.TRITONGPT_UNAVAILABLE;
   }
 
   final String s = error.toString();
-  var has404Error = s.contains('[404]') || s.contains('status code of 404');
-  if (has404Error) {
-    return ErrorConstants.TRITONGPT_NOT_FOUND;
-  }
-  var has50xError = s.contains('[500]') ||
+  if (s.contains('[404]') || s.contains('status code of 404')) return ErrorConstants.TRITONGPT_NOT_FOUND;
+  if (s.contains('[500]') ||
       s.contains('[502]') ||
       s.contains('[503]') ||
       s.contains('status code of 500') ||
       s.contains('status code of 502') ||
-      s.contains('status code of 503');
-  if (has50xError) {
-    return ErrorConstants.TRITONGPT_SERVER_ERROR;
-  }
-  var has422Error = s.contains('[422]') || s.contains('status code of 422');
-  if (has422Error) {
-    return ErrorConstants.TRITONGPT_BAD_REQUEST;
-  }
-  var has400Error = s.contains('[400]') || s.contains('status code of 400');
-  if (has400Error) {
-    return ErrorConstants.TRITONGPT_BAD_REQUEST;
-  }
+      s.contains('status code of 503')) return ErrorConstants.TRITONGPT_SERVER_ERROR;
+  if (s.contains('[422]') || s.contains('status code of 422')) return ErrorConstants.TRITONGPT_BAD_REQUEST;
+  if (s.contains('[400]') || s.contains('status code of 400')) return ErrorConstants.TRITONGPT_BAD_REQUEST;
   return ErrorConstants.TRITONGPT_UNAVAILABLE;
 }

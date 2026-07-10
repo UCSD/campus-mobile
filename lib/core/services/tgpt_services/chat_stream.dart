@@ -156,18 +156,12 @@ class ChatMessageStreamService {
             final Object? rawReserved = json['reserved_assistant_message_id'] ?? obj?['reserved_assistant_message_id'];
             if (rawReserved != null) {
               final int? messageId = rawReserved is int ? rawReserved : int.tryParse(rawReserved.toString());
-              if (messageId != null) {
-                yield StreamingChatChunk(delta: '', messageId: messageId);
-              }
+              if (messageId != null) yield StreamingChatChunk(delta: '', messageId: messageId);
             }
 
             // Optional legacy root field (some streams still emit it)
             final Object? answerPiece = json['answer_piece'];
-            var isAnswerPieceString = answerPiece is String;
-            var isAnswerPieceNotEmpty = answerPiece is String && answerPiece.isNotEmpty;
-            if (isAnswerPieceString && isAnswerPieceNotEmpty) {
-              yield StreamingChatChunk(delta: answerPiece);
-            }
+            if (answerPiece is String && answerPiece.isNotEmpty) yield StreamingChatChunk(delta: answerPiece);
 
             _mergeDocumentsForUrls(documentIdToUrl, json['top_documents']);
 
@@ -179,17 +173,11 @@ class ChatMessageStreamService {
                 return;
               }
 
-              if (type == 'message_start') {
-                _mergeDocumentsForUrls(documentIdToUrl, obj['final_documents']);
-              }
+              if (type == 'message_start') _mergeDocumentsForUrls(documentIdToUrl, obj['final_documents']);
 
               if (type == 'message_delta') {
                 final String? content = obj['content'] as String?;
-                var hasContent = content != null;
-                var isContentNotEmpty = content?.isNotEmpty ?? false;
-                if (hasContent && isContentNotEmpty) {
-                  yield StreamingChatChunk(delta: content);
-                }
+                if (content != null && content.isNotEmpty) yield StreamingChatChunk(delta: content);
               }
 
               // New schema: one citation per packet
