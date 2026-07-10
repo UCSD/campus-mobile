@@ -65,9 +65,7 @@ class ChatCitation extends StatelessWidget {
       resolved = 'https:$trimmed';
     } else {
       final Uri parsed = Uri.tryParse(trimmed) ?? Uri();
-      if (!parsed.hasScheme && trimmed.contains('.')) {
-        resolved = 'https://$trimmed';
-      }
+      if (!parsed.hasScheme && trimmed.contains('.')) resolved = 'https://$trimmed';
     }
 
     final Uri? uri = Uri.tryParse(resolved);

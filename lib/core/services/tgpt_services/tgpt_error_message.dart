@@ -63,20 +63,14 @@ Future<String> tgptErrorMessageForDio(DioException e) async {
 String tgptErrorMessageFor(Object error) {
   if (error is DioException) {
     final int? code = error.response?.statusCode;
-    if (code == 404) {
-      return ErrorConstants.TRITONGPT_NOT_FOUND;
-    }
-    if (code != null && code >= 500 && code < 600) {
-      return ErrorConstants.TRITONGPT_SERVER_ERROR;
-    }
+    if (code == 404) return ErrorConstants.TRITONGPT_NOT_FOUND;
+    if (code != null && code >= 500 && code < 600) return ErrorConstants.TRITONGPT_SERVER_ERROR;
     if (code == 400) {
       final String? parsed = _parseTgptApiErrorMessageFromData(error.response?.data);
       if (parsed != null) return parsed;
       return ErrorConstants.TRITONGPT_BAD_REQUEST;
     }
-    if (code == 422) {
-      return ErrorConstants.TRITONGPT_BAD_REQUEST;
-    }
+    if (code == 422) return ErrorConstants.TRITONGPT_BAD_REQUEST;
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
@@ -86,29 +80,19 @@ String tgptErrorMessageFor(Object error) {
       default:
         break;
     }
-    if (code != null && code >= 400 && code < 500) {
-      return ErrorConstants.TRITONGPT_BAD_REQUEST;
-    }
+    if (code != null && code >= 400 && code < 500) return ErrorConstants.TRITONGPT_BAD_REQUEST;
     return ErrorConstants.TRITONGPT_UNAVAILABLE;
   }
 
   final String s = error.toString();
-  if (s.contains('[404]') || s.contains('status code of 404')) {
-    return ErrorConstants.TRITONGPT_NOT_FOUND;
-  }
+  if (s.contains('[404]') || s.contains('status code of 404')) return ErrorConstants.TRITONGPT_NOT_FOUND;
   if (s.contains('[500]') ||
       s.contains('[502]') ||
       s.contains('[503]') ||
       s.contains('status code of 500') ||
       s.contains('status code of 502') ||
-      s.contains('status code of 503')) {
-    return ErrorConstants.TRITONGPT_SERVER_ERROR;
-  }
-  if (s.contains('[422]') || s.contains('status code of 422')) {
-    return ErrorConstants.TRITONGPT_BAD_REQUEST;
-  }
-  if (s.contains('[400]') || s.contains('status code of 400')) {
-    return ErrorConstants.TRITONGPT_BAD_REQUEST;
-  }
+      s.contains('status code of 503')) return ErrorConstants.TRITONGPT_SERVER_ERROR;
+  if (s.contains('[422]') || s.contains('status code of 422')) return ErrorConstants.TRITONGPT_BAD_REQUEST;
+  if (s.contains('[400]') || s.contains('status code of 400')) return ErrorConstants.TRITONGPT_BAD_REQUEST;
   return ErrorConstants.TRITONGPT_UNAVAILABLE;
 }
