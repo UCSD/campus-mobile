@@ -57,6 +57,11 @@ class ShuttleService {
 
       /// parse data
       final arrivingData = getArrivingShuttles(_response);
+      // print arriving data to terminal in pink (one line per arrival with reset)
+      // for (var arrival in arrivingData) {
+      //   print(
+      //       '\x1B[35mArrivingShuttle(stopId: ${arrival.routeStopId}, routeId: ${arrival.routeId}, routeName: ${arrival.routeName}, routeColor: ${arrival.routeColor}, minutesToArrival: ${arrival.secondsToArrival / 60})\x1B[0m');
+      // }
       return arrivingData;
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
