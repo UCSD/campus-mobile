@@ -49,6 +49,10 @@ class ChatMessageBubble extends StatelessWidget {
 
   Widget _buildAssistantBubble(BuildContext context) {
     final AssistantMessageContent content = message.content;
+    var isMessageStreaming = message.isStreaming;
+    var isMarkdownEmpty = content.markdown.isEmpty;
+    var isRelatedQuestionsEmpty = content.relatedQuestions.isEmpty;
+    var isTypingIndicator = isMessageStreaming && isMarkdownEmpty && isRelatedQuestionsEmpty;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +78,9 @@ class ChatMessageBubble extends StatelessWidget {
                   data: content.markdown,
                   shrinkWrap: true,
                   onTapLink: (_, String? href, __) {
-                    if (href == null || href.isEmpty) return;
+                    var isHrefNull = href == null;
+                    var isHrefEmpty = href?.isEmpty ?? false;
+                    if (isHrefNull || isHrefEmpty) return;
                     // Skip Related Questions placeholders like #rq (handled in openCitation too).
                     if (href.trim().startsWith('#')) return;
                     ChatCitation.openCitation(context, href);
@@ -127,10 +133,10 @@ class ChatMessageBubble extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 12),
                   child: _RelatedQuestionsSection(
                     questions: content.relatedQuestions,
-                    enabled: !message.isStreaming,
+                    enabled: !isMessageStreaming,
                   ),
                 ),
-              if (message.isStreaming && content.markdown.isEmpty && content.relatedQuestions.isEmpty)
+              if (isTypingIndicator)
                 const _TypingIndicator(),
             ],
           ),

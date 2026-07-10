@@ -19,8 +19,8 @@ class AIAssistantView extends StatefulWidget {
 }
 
 class _AIAssistantViewState extends State<AIAssistantView> {
-  static const Color _sidebarIconColor = Color(0xFF747678);
-  static const Color _newChatIconColor = Color(0xFF00629B);
+  static const Color _SIDEBAR_ICON_COLOR = Color(0xFF747678);
+  static const Color _NEW_CHAT_ICON_COLOR = Color(0xFF00629B);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isSidebarOpen = false;
@@ -143,7 +143,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
                   'assets/images/tgpt/unpin-sidebar.svg',
                   width: 22,
                   height: 22,
-                  colorFilter: const ColorFilter.mode(_sidebarIconColor, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(_SIDEBAR_ICON_COLOR, BlendMode.srcIn),
                 ),
               ),
               IconButton(
@@ -153,7 +153,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
                   'assets/images/tgpt/new_chat2.svg',
                   width: 22,
                   height: 22,
-                  colorFilter: const ColorFilter.mode(_newChatIconColor, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(_NEW_CHAT_ICON_COLOR, BlendMode.srcIn),
                 ),
               ),
             ],
@@ -169,7 +169,8 @@ class _AIAssistantViewState extends State<AIAssistantView> {
 
   void _handleChatProviderChanged() {
     final String? errorMessage = _chatProvider?.errorMessage;
-    if (errorMessage == null || errorMessage.isEmpty) {
+    var hasErrorMessage = errorMessage != null && errorMessage.isNotEmpty;
+    if (!hasErrorMessage) {
       _lastShownError = null;
       return;
     }
@@ -194,7 +195,9 @@ class _AIAssistantViewState extends State<AIAssistantView> {
 
     _lastObservedLoginState = isLoggedIn;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !identical(chatProvider, _chatProvider)) return;
+      var isUnmounted = !mounted;
+      var isChatProviderChanged = !identical(chatProvider, _chatProvider);
+      if (isUnmounted || isChatProviderChanged) return;
       chatProvider.syncLoginState(isLoggedIn);
     });
   }

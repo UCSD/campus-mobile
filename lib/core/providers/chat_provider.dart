@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 class ChatProvider extends ChangeNotifier {
   ChatProvider(this._userDataProvider);
 
-  static const String _defaultSessionTitle = 'New Chat';
-  static const String _assistantAuthorId = 'assistant';
+  static const String _DEFAULT_SESSION_TITLE = 'New Chat';
+  static const String _ASSISTANT_AUTHOR_ID = 'assistant';
 
   final UserDataProvider _userDataProvider;
   final List<AssistantChatMessage> _messages = <AssistantChatMessage>[];
@@ -109,7 +109,9 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> startNewChat() async {
     final String? previousSessionId = _activeSessionId;
-    if (previousSessionId != null && previousSessionId.isNotEmpty) {
+    var hasPreviousSession = previousSessionId != null;
+    var isPreviousSessionNotEmpty = previousSessionId?.isNotEmpty ?? false;
+    if (hasPreviousSession && isPreviousSessionNotEmpty) {
       _setSessionMessages(previousSessionId, _messages);
       await _persistSessionState(
         previousSessionId,
@@ -160,7 +162,8 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> sendMessage(String rawMessage) async {
     final String message = rawMessage.trim();
-    if (message.isEmpty || isStreaming) return;
+    var isMessageEmpty = message.isEmpty;
+    if (isMessageEmpty || isStreaming) return;
 
     _errorMessage = null;
     notifyListeners();
@@ -260,7 +263,9 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<String?> _ensureActiveSession() async {
-    if (_activeSessionId != null && _activeSessionId!.isNotEmpty) {
+    var hasActiveSession = _activeSessionId != null;
+    var isActiveSessionNotEmpty = _activeSessionId?.isNotEmpty ?? false;
+    if (hasActiveSession && isActiveSessionNotEmpty) {
       return _activeSessionId;
     }
 
@@ -320,7 +325,7 @@ class ChatProvider extends ChangeNotifier {
             .map(
               (message) => message.toPersistent(
                 sessionId: sessionId,
-                authorId: message.isFromUser ? _userAuthorId : _assistantAuthorId,
+                authorId: message.isFromUser ? _userAuthorId : _ASSISTANT_AUTHOR_ID,
                 parentMessageId: message.isFromUser ? _parentMessageIdsBySession[sessionId]?.toString() : null,
               ),
             )
@@ -378,13 +383,15 @@ class ChatProvider extends ChangeNotifier {
 
   String _sessionTitleForMessage(String text) {
     final String normalized = text.replaceAll(RegExp(r'\s+'), ' ').trim();
-    if (normalized.isEmpty) return _defaultSessionTitle;
+    if (normalized.isEmpty) return _DEFAULT_SESSION_TITLE;
     if (normalized.length <= 36) return normalized;
     return '${normalized.substring(0, 36).trimRight()}...';
   }
 
   String? _resolveSessionToOpen(String? savedSessionId) {
-    if (savedSessionId != null && savedSessionId.isNotEmpty) {
+    var hasSavedSessionId = savedSessionId != null;
+    var isSavedSessionIdNotEmpty = savedSessionId?.isNotEmpty ?? false;
+    if (hasSavedSessionId && isSavedSessionIdNotEmpty) {
       final bool hasSavedSession = _persistedSessions.any(
         (ChatSessionMeta session) => session.id == savedSessionId,
       );

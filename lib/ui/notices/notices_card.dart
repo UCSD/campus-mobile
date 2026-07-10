@@ -31,7 +31,8 @@ class NoticesCard extends StatelessWidget {
 
   Widget buildBannerView(NoticesModel notice) {
     String accessibilityLabel = notice.title;
-    if (notice.title == 'Triton Weeks of Welcome - Welcoming new students to the Triton community') {
+    var isTwowNotice = notice.title == 'Triton Weeks of Welcome - Welcoming new students to the Triton community';
+    if (isTwowNotice) {
       accessibilityLabel = 'T W O W - Triton Weeks of Welcome - visit t w o w dot ucsd dot e d u';
     }
 

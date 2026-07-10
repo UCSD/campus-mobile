@@ -27,8 +27,8 @@ class AssistantSidebar extends StatefulWidget {
 }
 
 class _AssistantSidebarState extends State<AssistantSidebar> {
-  static const String _previous7DaysExpandedKey = 'tgpt_sidebar_previous_7_days_expanded';
-  static const String _olderExpandedKey = 'tgpt_sidebar_older_expanded';
+  static const String _PREVIOUS7DAYS_EXPANDED_KEY = 'tgpt_sidebar_previous_7_days_expanded';
+  static const String _OLDER_EXPANDED_KEY = 'tgpt_sidebar_older_expanded';
 
   bool _isPrevious7DaysExpanded = true;
   bool _isOlderExpanded = true;
@@ -46,8 +46,8 @@ class _AssistantSidebarState extends State<AssistantSidebar> {
     }
 
     setState(() {
-      _isPrevious7DaysExpanded = preferences.getBool(_previous7DaysExpandedKey) ?? true;
-      _isOlderExpanded = preferences.getBool(_olderExpandedKey) ?? true;
+      _isPrevious7DaysExpanded = preferences.getBool(_PREVIOUS7DAYS_EXPANDED_KEY) ?? true;
+      _isOlderExpanded = preferences.getBool(_OLDER_EXPANDED_KEY) ?? true;
     });
   }
 
@@ -57,7 +57,7 @@ class _AssistantSidebarState extends State<AssistantSidebar> {
     });
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.setBool(_previous7DaysExpandedKey, isExpanded);
+    await preferences.setBool(_PREVIOUS7DAYS_EXPANDED_KEY, isExpanded);
   }
 
   Future<void> _setOlderExpanded(bool isExpanded) async {
@@ -66,7 +66,7 @@ class _AssistantSidebarState extends State<AssistantSidebar> {
     });
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.setBool(_olderExpandedKey, isExpanded);
+    await preferences.setBool(_OLDER_EXPANDED_KEY, isExpanded);
   }
 
   @override

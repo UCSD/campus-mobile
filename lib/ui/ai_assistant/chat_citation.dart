@@ -65,14 +65,20 @@ class ChatCitation extends StatelessWidget {
       resolved = 'https:$trimmed';
     } else {
       final Uri parsed = Uri.tryParse(trimmed) ?? Uri();
-      if (!parsed.hasScheme && trimmed.contains('.')) {
+      var hasNoScheme = !parsed.hasScheme;
+      var containsDot = trimmed.contains('.');
+      if (hasNoScheme && containsDot) {
         resolved = 'https://$trimmed';
       }
     }
 
     final Uri? uri = Uri.tryParse(resolved);
-    if (uri == null || !uri.hasScheme) return;
-    if (uri.scheme != 'http' && uri.scheme != 'https') return;
+    var isUriNull = uri == null;
+    var hasNoScheme = uri?.hasScheme == false;
+    if (isUriNull || hasNoScheme) return;
+    var isNotHttp = uri?.scheme != 'http';
+    var isNotHttps = uri?.scheme != 'https';
+    if (isNotHttp && isNotHttps) return;
 
     await Navigator.of(context).pushNamed(
       RoutePaths.TGPT_CITATION_WEB,
