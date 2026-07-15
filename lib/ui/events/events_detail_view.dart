@@ -131,7 +131,8 @@ class EventImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String fallbackTitle = data.title;
-    if (fallbackTitle.length > 40) fallbackTitle = fallbackTitle.substring(0, 40) + '...';
+    var isTitleTooLong = fallbackTitle.length > 40;
+    if (isTitleTooLong) fallbackTitle = fallbackTitle.substring(0, 40) + '...';
     String semanticLabel = data.imageAltText ?? fallbackTitle;
 
     // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out

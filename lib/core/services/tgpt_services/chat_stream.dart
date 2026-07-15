@@ -161,7 +161,8 @@ class ChatMessageStreamService {
 
             // Optional legacy root field (some streams still emit it)
             final Object? answerPiece = json['answer_piece'];
-            if (answerPiece is String && answerPiece.isNotEmpty) yield StreamingChatChunk(delta: answerPiece);
+            var hasValidAnswerPiece = answerPiece is String && answerPiece.isNotEmpty;
+            if (hasValidAnswerPiece) yield StreamingChatChunk(delta: answerPiece);
 
             _mergeDocumentsForUrls(documentIdToUrl, json['top_documents']);
 
@@ -177,7 +178,8 @@ class ChatMessageStreamService {
 
               if (type == 'message_delta') {
                 final String? content = obj['content'] as String?;
-                if (content != null && content.isNotEmpty) yield StreamingChatChunk(delta: content);
+                var hasValidContent = content != null && content.isNotEmpty;
+                if (hasValidContent) yield StreamingChatChunk(delta: content);
               }
 
               // New schema: one citation per packet

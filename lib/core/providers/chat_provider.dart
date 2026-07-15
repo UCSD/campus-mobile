@@ -123,7 +123,8 @@ class ChatProvider extends ChangeNotifier {
     _activeSessionId = null;
     _errorMessage = null;
 
-    if (_userDataProvider.isLoggedIn) await _chatPersistenceService.clearSessionId();
+    var isLoggedIn = _userDataProvider.isLoggedIn;
+    if (isLoggedIn) await _chatPersistenceService.clearSessionId();
 
     notifyListeners();
   }
@@ -137,7 +138,8 @@ class ChatProvider extends ChangeNotifier {
         ..clear()
         ..addAll(_sessionMessagesById[sessionId] ?? const <AssistantChatMessage>[]);
       _parentMessageIdsBySession[sessionId] ??= _deriveParentMessageId(_messages);
-      if (_userDataProvider.isLoggedIn) await _chatPersistenceService.saveSessionId(sessionId);
+      var isLoggedIn = _userDataProvider.isLoggedIn;
+      if (isLoggedIn) await _chatPersistenceService.saveSessionId(sessionId);
       notifyListeners();
       return;
     }
@@ -213,7 +215,8 @@ class ChatProvider extends ChangeNotifier {
         chatSessionId: sessionId,
         parentMessageId: _parentMessageIdsBySession[sessionId],
       )) {
-        if (chunk.messageId != null) reservedAssistantMessageId = chunk.messageId;
+        var hasMessageId = chunk.messageId != null;
+        if (hasMessageId) reservedAssistantMessageId = chunk.messageId;
 
         final int placeholderIndex =
             sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);
@@ -257,7 +260,8 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<String?> _ensureActiveSession() async {
-    if (_activeSessionId != null && _activeSessionId!.isNotEmpty) return _activeSessionId;
+    var hasActiveSession = _activeSessionId != null && _activeSessionId!.isNotEmpty;
+    if (hasActiveSession) return _activeSessionId;
 
     final session = await _chatSessionService.createChatSession();
     if (session == null) {
@@ -269,7 +273,8 @@ class ChatProvider extends ChangeNotifier {
     _parentMessageIdsBySession[_activeSessionId!] = null;
     _sessionMessagesById.putIfAbsent(_activeSessionId!, () => <AssistantChatMessage>[]);
 
-    if (_userDataProvider.isLoggedIn) await _chatPersistenceService.saveSessionId(_activeSessionId!);
+    var isLoggedIn = _userDataProvider.isLoggedIn;
+    if (isLoggedIn) await _chatPersistenceService.saveSessionId(_activeSessionId!);
 
     return _activeSessionId;
   }
