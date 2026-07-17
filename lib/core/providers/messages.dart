@@ -132,5 +132,10 @@ class MessagesDataProvider extends ChangeNotifier {
   get statusText => _statusText;
   get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
   ScrollController get scrollController => notificationScrollController;
-  List<MessageElement> get messages => _messages;
+  List<MessageElement> get messages {
+    final subscribedTopics = userDataProvider?.subscribedTopics ?? [];
+    return _messages
+        .where((message) => (message.audience.topics ?? const ['DM']).any(subscribedTopics.contains))
+        .toList();
+  }
 }
