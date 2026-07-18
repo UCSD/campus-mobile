@@ -35,8 +35,7 @@ class _CardsViewState extends State<CardsView> {
               textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ),
         children: createList(),
-        onReorder: (int oldIndex, int newIndex) {
-          if (newIndex > oldIndex) newIndex -= 1;
+        onReorderItem: (int oldIndex, int newIndex) {
           var order = _cardsDataProvider.cardOrder;
           order.insert(newIndex, order.removeAt(oldIndex));
           setState(() {
