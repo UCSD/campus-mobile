@@ -104,7 +104,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
               child: Switch.adaptive(
                 value: Provider.of<AvailabilityDataProvider>(context).locationViewState[curName]!,
                 // activeColor: Theme.of(context).buttonColor,
-                activeColor: toggleActiveColor,
+                activeTrackColor: toggleActiveColor,
                 thumbColor: WidgetStateProperty.resolveWith((states) {
                   final bool isSelected = states.contains(WidgetState.selected);
                   if (isSelected) return Colors.white;

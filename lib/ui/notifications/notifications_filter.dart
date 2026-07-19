@@ -61,7 +61,7 @@ class NotificationsFilterView extends StatelessWidget {
                   if (isSelected) return Colors.white;
                   return null;
                 }),
-                activeColor: toggleActiveColor,
+                activeTrackColor: toggleActiveColor,
               ),
             ),
           ),

@@ -385,7 +385,7 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
           ),
           onPressed: () {
             try {
-              launch(model.menuWebsite!, forceSafariVC: true);
+              launchUrl(Uri.parse(model.menuWebsite!), mode: LaunchMode.inAppBrowserView);
             } catch (e) {
               // an error occurred, do nothing
             }

@@ -231,7 +231,7 @@ class GoToEventPageButton extends StatelessWidget {
           ),
           onPressed: () async {
             try {
-              await launch(link, forceSafariVC: true);
+              await launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.')));
             }
