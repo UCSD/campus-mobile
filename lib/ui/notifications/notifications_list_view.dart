@@ -54,12 +54,15 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   }
 
   Widget buildListView(BuildContext context) {
+    final messagesProvider = Provider.of<MessagesDataProvider>(context);
+    final messages = messagesProvider.messages;
+
     // TODO: fix this logic up - December 2025
     Widget Function(BuildContext context, int index)? itemBuilder;
     var itemCount = 0;
-    if (Provider.of<MessagesDataProvider>(context).messages.length == 0) {
-      if (Provider.of<MessagesDataProvider>(context).error == null) {
-        if (Provider.of<MessagesDataProvider>(context).isLoading) {
+    if (messages.isEmpty) {
+      if (messagesProvider.error == null) {
+        if (messagesProvider.isLoading) {
           // empty notifications view until they load in
         } else {
           itemBuilder = (BuildContext context, int index) => _buildNoMessagesText();
@@ -71,8 +74,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
       }
     }
     if (itemCount == 0) {
-      itemBuilder = (BuildContext context, int index) => _buildMessage(context, index);
-      itemCount = Provider.of<MessagesDataProvider>(context).messages.length;
+      itemBuilder = (BuildContext context, int index) => _buildMessage(context, messages[index]);
+      itemCount = messages.length;
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -141,81 +144,70 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     });
   }
 
-  Widget _buildMessage(BuildContext context, int index) {
-    MessageElement data = Provider.of<MessagesDataProvider>(context).messages[index];
+  Widget _buildMessage(BuildContext context, MessageElement data) {
     FreeFoodDataProvider freefoodProvider = Provider.of<FreeFoodDataProvider>(context);
 
     String messageType = data.audience.topics?[0] ?? "DM";
-    return ListView(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      children: <Widget>[
-        ListTile(
-          minTileHeight: 20,
-          titleAlignment: ListTileTitleAlignment.top,
-          minVerticalPadding: 0,
-          minLeadingWidth: 10,
-          contentPadding: EdgeInsets.all(0),
-          leading: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(NotificationsFilterView.chooseIcons(messageType),
-                  color: Theme.of(context).iconTheme.color, size: 30),
-            ],
+    return ListTile(
+      minTileHeight: 20,
+      titleAlignment: ListTileTitleAlignment.top,
+      minVerticalPadding: 0,
+      minLeadingWidth: 10,
+      contentPadding: EdgeInsets.all(0),
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(NotificationsFilterView.chooseIcons(messageType), color: Theme.of(context).iconTheme.color, size: 30),
+        ],
+      ),
+      title: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(data.message.title,
+                style: Theme.of(context).brightness == Brightness.dark ? headlineMediumDark2 : headlineMediumLight2),
           ),
-          title: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(data.message.title,
-                    style:
-                        Theme.of(context).brightness == Brightness.dark ? headlineMediumDark2 : headlineMediumLight2),
-              ),
-            ],
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Linkify(
-                    text: data.message.message,
-                    onOpen: (link) async {
-                      try {
-                        launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
-                      } catch (e) {
-                        // an error occurred, do nothing
-                      }
-                    },
-                    options: LinkifyOptions(humanize: false),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400)),
-                freefoodProvider.isFreeFood(data.messageId)
-                    ? FreeFoodNotification(messageId: data.messageId)
-                    : Container(),
-              ],
-            ),
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 6.0),
-                child: Text(_readTimestamp(data.timestamp),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700)),
-              ),
-            ],
-          ),
+        ],
+      ),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(top: 4.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Linkify(
+                text: data.message.message,
+                onOpen: (link) async {
+                  try {
+                    launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
+                  } catch (e) {
+                    // an error occurred, do nothing
+                  }
+                },
+                options: LinkifyOptions(humanize: false),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400)),
+            freefoodProvider.isFreeFood(data.messageId) ? FreeFoodNotification(messageId: data.messageId) : Container(),
+          ],
         ),
-      ],
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 6.0),
+            child: Text(_readTimestamp(data.timestamp),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700)),
+          ),
+        ],
+      ),
     );
   }
 
