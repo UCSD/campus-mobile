@@ -11,24 +11,25 @@ const finalBuildNumber = parseInt(ENV_VARS.buildNumber) + 1000
 const teamsWebhookUrl = ENV_VARS.msTeamsWebhookUrl
 
 const getStringValue = (value) => (value === undefined || value === null) ? '' : String(value)
+const isUrl = (value) => typeof value === 'string' && /^https?:\/\//.test(value)
 
 const findArtifactLink = (artifactLinks, artifactFilename) => {
 	if (!artifactLinks || !artifactFilename) {
 		return ''
 	}
 
-	const searchArtifactLinks = (value) => {
+	const findUrlInValue = (value) => {
 		if (!value) {
 			return ''
 		}
 
 		if (typeof value === 'string') {
-			return value.includes(artifactFilename) ? value : ''
+			return isUrl(value) && value.includes(artifactFilename) ? value : ''
 		}
 
 		if (Array.isArray(value)) {
 			for (const item of value) {
-				const artifactUrl = searchArtifactLinks(item)
+				const artifactUrl = findUrlInValue(item)
 				if (artifactUrl) {
 					return artifactUrl
 				}
@@ -37,8 +38,22 @@ const findArtifactLink = (artifactLinks, artifactFilename) => {
 		}
 
 		if (typeof value === 'object') {
-			for (const item of Object.values(value)) {
-				const artifactUrl = searchArtifactLinks(item)
+			const objectValues = Object.values(value)
+			const directUrl = objectValues.find((item) => isUrl(item) && item.includes(artifactFilename))
+			if (directUrl) {
+				return directUrl
+			}
+
+			const artifactName = objectValues.find((item) => typeof item === 'string' && item.includes(artifactFilename))
+			if (artifactName) {
+				const objectUrl = objectValues.find((item) => isUrl(item))
+				if (objectUrl) {
+					return objectUrl
+				}
+			}
+
+			for (const item of objectValues) {
+				const artifactUrl = findUrlInValue(item)
 				if (artifactUrl) {
 					return artifactUrl
 				}
@@ -48,7 +63,7 @@ const findArtifactLink = (artifactLinks, artifactFilename) => {
 		return ''
 	}
 
-	return searchArtifactLinks(artifactLinks)
+	return findUrlInValue(artifactLinks)
 }
 
 const createTeamsNotificationPayload = (title, facts, actions) => ({
