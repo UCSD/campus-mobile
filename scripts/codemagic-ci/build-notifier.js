@@ -3,14 +3,84 @@ const AbortController = require('abort-controller')
 const moment = require('moment')
 const fs = require('fs')
 const XlsxTemplate = require('xlsx-template')
-const spsave = require('spsave').spsave
 const ENV_VARS = require('./env-vars.json')
 const SP_CONFIG = require('./sp-config.json')
 
-const INTERNAL_ERROR = { 'error': 'An error occurred.' }
 const INTERNAL_TIMEOUT = 20000
 const finalBuildNumber = parseInt(ENV_VARS.buildNumber) + 1000
-const buildArtifacts = {}
+const teamsWebhookUrl = ENV_VARS.msTeamsWebhookUrl
+
+const getStringValue = (value) => (value === undefined || value === null) ? '' : String(value)
+
+const findArtifactLink = (artifactLinks, artifactFilename) => {
+	if (!artifactLinks || !artifactFilename) {
+		return ''
+	}
+
+	const searchArtifactLinks = (value) => {
+		if (!value) {
+			return ''
+		}
+
+		if (typeof value === 'string') {
+			return value.includes(artifactFilename) ? value : ''
+		}
+
+		if (Array.isArray(value)) {
+			for (const item of value) {
+				const artifactUrl = searchArtifactLinks(item)
+				if (artifactUrl) {
+					return artifactUrl
+				}
+			}
+			return ''
+		}
+
+		if (typeof value === 'object') {
+			for (const item of Object.values(value)) {
+				const artifactUrl = searchArtifactLinks(item)
+				if (artifactUrl) {
+					return artifactUrl
+				}
+			}
+		}
+
+		return ''
+	}
+
+	return searchArtifactLinks(artifactLinks)
+}
+
+const createTeamsNotificationPayload = (title, facts, actions) => ({
+	'type': 'message',
+	'attachments': [
+		{
+			'contentType': 'application/vnd.microsoft.card.adaptive',
+			'content': {
+				'type': 'AdaptiveCard',
+				'body': [
+					{
+						'type': 'TextBlock',
+						'text': title,
+						'weight': 'Bolder',
+						'size': 'Medium',
+						'wrap': true,
+					},
+					{
+						'type': 'FactSet',
+						'facts': facts.map((fact) => ({
+							'title': fact.title,
+							'value': getStringValue(fact.value),
+						})),
+					},
+				],
+				'actions': actions,
+				'$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
+				'version': '1.2',
+			},
+		},
+	],
+})
 
 ENV_VARS.commitHash = ENV_VARS.commitHash.substring(0, 7)
 
@@ -22,164 +92,142 @@ const buildNotify = async () => {
 		const fciProjectLink = 'https://codemagic.io/app/' + ENV_VARS.fciProjectId + '/build/' + ENV_VARS.fciBuildId
 		let buildSuccess = (ENV_VARS.fciBuildStepStatus === 'success') ? true : false
 		let buildApkFile = 'app-release.apk'
-		let buildIpaFile = 'UC_San_Diego.ipa'
 		let prAuthor = ''
-		let saveArtifactApkSuccess = false
-		let saveArtifactIpaSuccess = false
 		let testPlanFilename = ''
 		let testPlanUrl = ''
 
 		console.log('ENV_VARS.fciBuildStepStatus: ' + ENV_VARS.fciBuildStepStatus)
 		console.log('buildSuccess: ' + buildSuccess)
 		console.log('buildPlatform: ' + ENV_VARS.buildPlatform)
+
 		// Check build success
 		if (buildSuccess) {
-
 			// Supplemental GitHub metadata for PRs
 			if (ENV_VARS.prNumber) {
 				prAuthor = await githubMeta()
 			}
 
-			// Save build artifacts
-			if (ENV_VARS.buildPlatform === 'IOS') {
-				saveArtifactIpaSuccess = await saveArtifact(buildIpaFile)
-			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
-				saveArtifactApkSuccess = await saveArtifact(buildApkFile)
-			}
-
 			// Generate test plan
 			;({ testPlanFilename, testPlanUrl } = await generateTestPlan(prAuthor))
 		}
-		console.log('saveArtifactIpaSuccess: ' + saveArtifactIpaSuccess)
-        console.log('saveArtifactApkSuccess: ' + saveArtifactApkSuccess)
+
+		const androidApkUrl = findArtifactLink(ENV_VARS.fciArtifactLinks, buildApkFile)
+		const successEmojiList = ['🥇','🏆','🎖','🎉','🎊','🚀','🛫','🏋','💪','👏','💯']
+		const failedEmojiList = ['🙀','😱','😵']
+		let buildStatusText = ''
+
+		// Build success or failure
+		if (buildSuccess) {
+			const successEmoji = successEmojiList[Math.floor(Math.random() * successEmojiList.length)]
+			buildStatusText = 'BUILD SUCCESS ' + successEmoji
+		} else {
+			const failedEmoji = failedEmojiList[Math.floor(Math.random() * failedEmojiList.length)]
+			buildStatusText = 'BUILD FAILED ' + failedEmoji
+		}
 
 		// Construct build notifier message
-		let teamsMessage = '#### Campus Mobile Build Notifier\n\n'
-		teamsMessage += '<table border="0" style="margin:16px">'
-		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Version:</b></td><td>' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')</td></tr>'
-		teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Environment:</b></td><td>' + ENV_VARS.buildEnv + '</td></tr>'
+		const teamsFacts = [
+			{ 'title': 'Version:', 'value': ENV_VARS.appVersion + ' (' + finalBuildNumber + ')' },
+			{ 'title': 'Environment:', 'value': ENV_VARS.buildEnv },
+		]
+		const teamsActions = [
+			{
+				'type': 'Action.OpenUrl',
+				'title': 'View CodeMagic Build',
+				'url': fciProjectLink,
+			},
+		]
 
 		// PR or Branch
 		if (ENV_VARS.prNumber) {
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>PR:</b></td><td><a href="https://github.com/UCSD/campus-mobile/pull/' + ENV_VARS.prNumber + '" style="text-decoration:underline">' + ENV_VARS.prNumber + '</a></td></tr>'
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Author:</b></td><td>' + prAuthor + '</td></tr>'
+			teamsFacts.push({ 'title': 'PR:', 'value': ENV_VARS.prNumber })
+			teamsFacts.push({ 'title': 'Author:', 'value': prAuthor })
+			teamsActions.push({
+				'type': 'Action.OpenUrl',
+				'title': 'View PR',
+				'url': 'https://github.com/UCSD/campus-mobile/pull/' + ENV_VARS.prNumber,
+			})
 		} else {
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Branch:</b></td><td>' + ENV_VARS.buildBranch + '</td></tr>'
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Commit:</b></td><td><a href="https://github.com/UCSD/campus-mobile/commit/' + ENV_VARS.commitHash + '" style="text-decoration:underline">' + ENV_VARS.commitHash + '</a></td></tr>'
+			teamsFacts.push({ 'title': 'Branch:', 'value': ENV_VARS.buildBranch })
+			teamsFacts.push({ 'title': 'Commit:', 'value': ENV_VARS.commitHash })
+			teamsActions.push({
+				'type': 'Action.OpenUrl',
+				'title': 'View Commit',
+				'url': 'https://github.com/UCSD/campus-mobile/commit/' + ENV_VARS.commitHash,
+			})
 		}
 
 		// Build Artifacts
 		if (ENV_VARS.buildPlatform === 'IOS') {
-			if (saveArtifactIpaSuccess) {
-				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>iOS:</b></td><td><a href="https://mobile.ucsd.edu/testflight" style="text-decoration:underline">TestFlight ' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')</a></td></tr>'
-			} else {
-				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>iOS:</b></td><td><span style="color:#d60000">N/A</span></td></tr>'
-			}
+			teamsFacts.push({
+				'title': 'iOS:',
+				'value': 'TestFlight ' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')',
+			})
+			teamsActions.push({
+				'type': 'Action.OpenUrl',
+				'title': 'Open TestFlight',
+				'url': 'https://mobile.ucsd.edu/testflight',
+			})
 		} else if (ENV_VARS.buildPlatform === 'ANDROID') {
-			if (saveArtifactApkSuccess) {
-				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><a href="' + buildArtifacts.buildApkFinalUrl + '" download style="text-decoration:underline">' + buildArtifacts.buildApkFinalFilename + '</a></td></tr>'
-			} else {
-				teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Android:</b></td><td><span style="color:#d60000">N/A</span></td></tr>'
+			teamsFacts.push({
+				'title': 'Android:',
+				'value': androidApkUrl ? buildApkFile : 'N/A',
+			})
+			if (androidApkUrl) {
+				teamsActions.push({
+					'type': 'Action.OpenUrl',
+					'title': 'Download Android APK',
+					'url': androidApkUrl,
+				})
 			}
 		}
 
 		// Test plan
 		if (testPlanUrl && testPlanFilename) {
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Testing:</b></td><td><a href="' + testPlanUrl + '" style="text-decoration:underline">' + testPlanFilename + '</a></td></tr>'
+			teamsFacts.push({ 'title': 'Testing:', 'value': testPlanFilename })
+			teamsActions.push({
+				'type': 'Action.OpenUrl',
+				'title': 'Open Test Plan',
+				'url': testPlanUrl,
+			})
 		}
 
-		const successEmojiList = ['🥇','🏆','🎖','🎉','🎊','🚀','🛫','🏋','💪','👏','💯']
-		const failedEmojiList = ['🙀','😱','😵']
+		teamsFacts.push({ 'title': 'Status:', 'value': buildStatusText })
+		teamsFacts.push({ 'title': 'Time:', 'value': buildTimestamp })
 
-		// Build success or failure
-		if (buildSuccess &&
-			((saveArtifactApkSuccess && ENV_VARS.buildPlatform === 'ANDROID') ||
-			(saveArtifactIpaSuccess && ENV_VARS.buildPlatform === 'IOS'))) {
-			const successEmoji = successEmojiList[Math.floor(Math.random() * successEmojiList.length)]
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Status:</b></td><td><span style="color:#12a102">BUILD SUCCESS ' + successEmoji + '</span> (<a href="' + fciProjectLink + '" style="text-decoration:underline">detail</a>)</td></tr>'
-		} else {
-			const failedEmoji = failedEmojiList[Math.floor(Math.random() * failedEmojiList.length)]
-			teamsMessage += '<tr style="border-bottom: 1px solid grey"><td align="right"><b>Status:</b></td><td><span style="color:#d60000">BUILD FAILED ' + failedEmoji + '</span> (<a href="' + fciProjectLink + '" style="text-decoration:underline">detail</a>)</td></tr>'
-		}
-
-		teamsMessage += '<tr><td align="right"><b>Time:</b></td><td width="320">' + buildTimestamp + '</td></tr>'
-		teamsMessage += '</table>'
+		const teamsPayload = createTeamsNotificationPayload(
+			'Campus Mobile Build Notifier',
+			teamsFacts,
+			teamsActions,
+		)
 
 		// Send notification via webhook integration
 		console.log('Sending Teams notification for UC San Diego ' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')\n')
+		if (ENV_VARS.buildPlatform === 'ANDROID' && androidApkUrl) {
+			console.log('Android APK CodeMagic artifact URL: ' + androidApkUrl)
+		}
+		if (!teamsWebhookUrl) {
+			throw 'Error: MS Teams webhook URL unavailable'
+		}
+
 		const notifyController = new AbortController()
 		const notifyTimeout = setTimeout(() => { notifyController.abort() }, INTERNAL_TIMEOUT)
-		const notifyResp = await fetch(SP_CONFIG.webhookUrl, {
+		const notifyResp = await fetch(teamsWebhookUrl, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({
-				'text': teamsMessage
-			}),
+			body: JSON.stringify(teamsPayload),
 			signal: notifyController.signal,
 		})
 		clearTimeout(notifyTimeout)
 
-		if (notifyResp.statusText != 'OK') {
-			throw 'Error: Unable to POST to webhookUrl (status: ' + notifyResp.statusText + ')'
+		if (!notifyResp.ok) {
+			throw 'Error: Unable to POST to Teams webhook (status: ' + notifyResp.status + ' ' + notifyResp.statusText + ')'
 		}
 	} catch (err) {
 		console.log(err)
 		process.exitCode = 1
-	}
-}
-
-const saveArtifact = async (artifactFilename) => {
-	try {
-		// Exit if artifact filename unavailable (build failed)
-		if (!artifactFilename) {
-			console.log('Error1: saveArtifact: artifact filename unavailable (build failed)')
-			return false
-		}
-
-		const buildFilenamePrEnvStr = ENV_VARS.prNumber ? '-PR-' + ENV_VARS.prNumber : '-' + ENV_VARS.buildEnv
-		const buildFolder = ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolderLink : SP_CONFIG.spRegressionBuildFolderLink
-		const coreOptions = { siteUrl: SP_CONFIG.spSiteUrl }
-		const fileOptions = { folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestBuildFolder : SP_CONFIG.spRegressionBuildFolder }
-
-		// Save build artifacts to SP
-		if (ENV_VARS.buildPlatform === 'ANDROID') {
-			buildArtifacts.buildApkFilepath = '../../build/app/outputs/apk/release/app-release.apk'
-			buildArtifacts.buildApkFinalFilename = ENV_VARS.appVersion + '-' + finalBuildNumber + buildFilenamePrEnvStr + '.apk'
-			buildArtifacts.buildApkFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildApkFinalFilename).replace(/ /g, '%20')
-			fs.copyFileSync(buildArtifacts.buildApkFilepath, './' + buildArtifacts.buildApkFinalFilename)
-			fileOptions.fileName = buildArtifacts.buildApkFinalFilename
-			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
-			console.log('trying to upload ' + fileOptions.fileName + ' to ' + fileOptions.folder )
-			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
-			if (pythonProcess.status == 0) {
-			    console.log("Uploading apk succeeded")
-			} else {
-			    console.log("Uploading apk failed")
-			}
-
-			return true
-		} else if (ENV_VARS.buildPlatform === 'IOS') {
-			buildArtifacts.buildIpaFilepath = '../../build/ios/ipa/UC San Diego.ipa'
-			buildArtifacts.buildIpaFinalFilename = ENV_VARS.appVersion + '-' + finalBuildNumber + buildFilenamePrEnvStr + '.ipa'
-			buildArtifacts.buildIpaFinalUrl = (SP_CONFIG.spSiteUrl + buildFolder + buildArtifacts.buildIpaFinalFilename).replace(/ /g, '%20')
-			fs.copyFileSync(buildArtifacts.buildIpaFilepath, './' + buildArtifacts.buildIpaFinalFilename)
-			fileOptions.fileName = buildArtifacts.buildIpaFinalFilename
-			console.log('Saving artifact `' + fileOptions.fileName + ' to SP...')
-			console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
-			const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
-            if (pythonProcess.status == 0) {
-                console.log("Uploading ipa succeeded")
-            } else {
-                console.log('Uploaded ipa failed')
-            }
-			return true
-		}
-		return false
-	} catch(err) {
-		console.log(err)
-		return false
 	}
 }
 
@@ -193,7 +241,6 @@ const generateTestPlan = async (prAuthor) => {
 			testPlanUrl = (SP_CONFIG.spSiteUrl + SP_CONFIG.spPullRequestTestFolderLink + testPlanFilename + '?web=1').replace(/ /g, '%20')
 			console.log('  (1/3) Downloading PR test plan template ...')
 			if (ENV_VARS.buildPlatform === 'IOS') {
-				
 				fs.copyFileSync(SP_CONFIG.prTestPlanTemplateUrlIos, testPlanFilename)
 			} else if (ENV_VARS.buildPlatform === 'ANDROID') {
 				fs.copyFileSync(SP_CONFIG.prTestPlanTemplateUrlAndroid, testPlanFilename)
@@ -253,18 +300,17 @@ const generateTestPlan = async (prAuthor) => {
 		))
 
 		console.log('(4/4) Uploading test plan for build ' + finalBuildNumber)
-		const coreOptions = { siteUrl: SP_CONFIG.spSiteUrl }
 		const fileOptions = {
 			folder: ENV_VARS.prNumber ? SP_CONFIG.spPullRequestTestFolder : SP_CONFIG.spRegressionTestFolder,
 			fileName: testPlanFilename,
 		}
 		console.log('trying to upload' + fileOptions.fileName + 'to' + fileOptions.folder )
 		const pythonProcess = spawnSync('python', ['upload-build.py', SP_CONFIG.spSiteUrl, JSON.stringify(SP_CONFIG.credentials), JSON.stringify(fileOptions)], { stdio: 'inherit' })
-        if (pythonProcess.status == 0) {
-            console.log("Uploading test succeeded")
-        } else {
-            console.log('Uploading test failed')
-        }
+		if (pythonProcess.status == 0) {
+			console.log('Uploading test succeeded')
+		} else {
+			console.log('Uploading test failed')
+		}
 		return {
 			testPlanFilename: testPlanFilename,
 			testPlanUrl: testPlanUrl,
