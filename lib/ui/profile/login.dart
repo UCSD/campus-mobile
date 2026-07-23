@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
   void executeLogout() {
     _passwordTextFieldController.clear();
     _emailTextFieldController.clear();
-    _userDataProvider.logout();
+    _userDataProvider.logout(clearChatHistory: true);
   }
 
   Widget buildLoginWidget() {
