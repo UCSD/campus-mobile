@@ -52,7 +52,7 @@ class NotificationsFilterView extends StatelessWidget {
             trailing: Transform.scale(
               scale: 0.9,
               child: Switch.adaptive(
-                value: Provider.of<PushNotificationDataProvider>(context).topicSubscriptionState[topic]!,
+                value: Provider.of<UserDataProvider>(context).subscribedTopics?.contains(topic) ?? false,
                 onChanged: (_) {
                   Provider.of<UserDataProvider>(context, listen: false).toggleNotifications(topic);
                 },
