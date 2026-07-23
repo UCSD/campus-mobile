@@ -77,10 +77,10 @@ class _ChatComposerState extends State<ChatComposer> {
               ),
             ),
           ),
-          border: _border,
-          enabledBorder: _border,
-          focusedBorder: _border,
-          disabledBorder: _border,
+          border: _BORDER,
+          enabledBorder: _BORDER,
+          focusedBorder: _BORDER,
+          disabledBorder: _BORDER,
         ),
       ),
     );
@@ -94,7 +94,7 @@ class _ChatComposerState extends State<ChatComposer> {
     await widget.onSubmitted(message);
   }
 
-  static const OutlineInputBorder _border = OutlineInputBorder(
+  static const OutlineInputBorder _BORDER = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(10)),
     borderSide: BorderSide(
       color: Color(0xFFB1B5BB),

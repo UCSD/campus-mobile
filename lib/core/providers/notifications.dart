@@ -74,7 +74,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
       /// Request notification permission on Android once (early, like iOS)
       if (Platform.isAndroid) {
         final prefs = await SharedPreferences.getInstance();
-        if (!(prefs.getBool(_NOTIFICATION_PERMISSION_REQUESTED_KEY) ?? false)) {
+        var isPermissionRequested = prefs.getBool(_NOTIFICATION_PERMISSION_REQUESTED_KEY) ?? false;
+        if (!isPermissionRequested) {
           await FirebaseMessaging.instance.requestPermission();
           await prefs.setBool(_NOTIFICATION_PERMISSION_REQUESTED_KEY, true);
         }

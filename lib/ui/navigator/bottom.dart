@@ -133,6 +133,9 @@ class _BottomTabBarState extends State<BottomTabBar> {
   }
 
   Widget _buildAIAssistantIcon(bool isSelected, ThemeData theme) {
+    final iconAsset =
+        isSelected ? 'assets/images/tgpt/center-icon2.png' : 'assets/images/tgpt/center-icon2-unselected.png';
+
     return Container(
       height: 34,
       margin: const EdgeInsets.only(top: 4),
@@ -142,13 +145,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
         borderRadius: BorderRadius.circular(34),
       ),
       child: Image.asset(
-        'assets/images/tgpt/center-icon2.png',
+        iconAsset,
         width: 34,
         height: 34,
-        color: isSelected
-            ? theme.bottomNavigationBarTheme.selectedItemColor
-            : theme.bottomNavigationBarTheme.unselectedItemColor,
-        colorBlendMode: BlendMode.srcIn,
+        filterQuality: FilterQuality.high,
       ),
     );
   }

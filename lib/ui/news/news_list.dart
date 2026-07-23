@@ -77,7 +77,7 @@ class NewsList extends StatelessWidget {
     return Semantics(
       link: true,
       label:
-          '${DateFormat.yMMMMd().format(newsItem.date.toLocal())}. Open link. ${newsItem.title}. ${newsItem.description}',
+          'News from: ${DateFormat.yMMMMd().format(newsItem.date.toLocal())}. ${newsItem.title}. Click to learn more.',
       excludeSemantics: true,
       child: GestureDetector(
         onTap: () {

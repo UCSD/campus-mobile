@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:flutter/semantics.dart';
 
 class EventTile extends StatelessWidget {
   const EventTile({Key? key, required this.data}) : super(key: key);
@@ -169,21 +170,26 @@ class TileTitle extends StatelessWidget {
   const TileTitle({Key? key, required this.title}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
-      child: Center(
-        // Centers the Text
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.light ? linkTextColorLight : Colors.white,
-            fontSize: 16,
-            height: 1.4,
-            fontWeight: FontWeight.w600,
-            decoration: TextDecoration.underline, // Underlines the text
+    return Semantics(
+      container: true,
+      sortKey: const OrdinalSortKey(1),
+      child: Padding(
+        padding: EdgeInsets.only(left: 16.0, top: 5.0, right: 16.0), // Keep padding
+        child: Center(
+          // Centers the Text
+          child: Text(
+            title,
+            semanticsLabel: 'Event: $title',
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.light ? linkTextColorLight : Colors.white,
+              fontSize: 16,
+              height: 1.4,
+              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.underline, // Underlines the text
+            ),
           ),
         ),
       ),
@@ -208,30 +214,40 @@ class TileTime extends StatelessWidget {
       fontWeight: FontWeight.w400,
     );
 
-    return Padding(
-        padding: const EdgeInsets.only(right: 8, left: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (startTime != endTime)
-              Row(
-                children: [
-                  // Start Time
-                  Text(
-                    startTime,
-                    textAlign: TextAlign.right,
-                    style: style,
-                  ),
-                  Text(" - ", style: style), // Separator
-                ],
+    String semanticTime = 'From: ' + time.replaceAll('-', 'to');
+
+    return Semantics(
+      container: true,
+      sortKey: const OrdinalSortKey(3),
+      label: semanticTime,
+      child: ExcludeSemantics(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 8, left: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (startTime != endTime)
+                Row(
+                  children: [
+                    // Start Time
+                    Text(
+                      startTime,
+                      textAlign: TextAlign.right,
+                      style: style,
+                    ),
+                    Text(" - ", style: style), // Separator
+                  ],
+                ),
+              Text(
+                endTime, // End Time
+                textAlign: TextAlign.right,
+                style: style,
               ),
-            Text(
-              endTime, // End Time
-              textAlign: TextAlign.right,
-              style: style,
-            ),
-          ],
-        ));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -240,20 +256,119 @@ class StartEndDateContainer extends StatelessWidget {
   const StartEndDateContainer({Key? key, required this.date}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 5.0),
-      child: Row(
-        children: [
-          // Mar 24 2025 - May 2 2025
-          //  0   1   2  3  4  5  6
-          if (date.contains(' - ')) ...[
-            Column(
-              children: [
+    String semanticDate = date.replaceAll('-', 'to');
+    final Map<String, String> months = {
+      'Jan': 'January',
+      'Feb': 'February',
+      'Mar': 'March',
+      'Apr': 'April',
+      'May': 'May',
+      'Jun': 'June',
+      'Jul': 'July',
+      'Aug': 'August',
+      'Sep': 'September',
+      'Oct': 'October',
+      'Nov': 'November',
+      'Dec': 'December'
+    };
+    months.forEach((key, value) {
+      semanticDate = semanticDate.replaceAll(key, value);
+    });
+
+    return Semantics(
+      container: true,
+      sortKey: const OrdinalSortKey(2),
+      label: 'When: $semanticDate',
+      child: ExcludeSemantics(
+        child: Container(
+          padding: EdgeInsets.only(left: 2.0, right: 4.0, top: 5.0),
+          child: Row(
+            children: [
+              // Mar 24 2025 - May 2 2025
+              //  0   1   2  3  4  5  6
+              if (date.contains(' - ')) ...[
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Column(
+                        children: [
+                          // Start Date Month
+                          Text(
+                            date.split(' ')[0].toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 20,
+                              color:
+                                  Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          // Start Date Day
+                          Text(
+                            date.split(' ')[1].toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 22,
+                              color:
+                                  Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
                 Padding(
-                  padding: EdgeInsets.only(left: 8),
+                  // "-"
+                  padding: EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Text(
+                    date.split(' ')[3].toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 8), // Adjust padding as needed
+                      child: Column(
+                        children: [
+                          // End Date Day
+                          Text(
+                            date.split(' ')[4].toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 20,
+                              color:
+                                  Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          // End Date Year
+                          Text(
+                            date.split(' ')[5].toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 22,
+                              color:
+                                  Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ]
+              // If it's a single date, display it normally
+              else ...[
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the padding as needed
                   child: Column(
                     children: [
-                      // Start Date Month
+                      // Month
                       Text(
                         date.split(' ')[0].toUpperCase(),
                         style: TextStyle(
@@ -262,7 +377,7 @@ class StartEndDateContainer extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      // Start Date Day
+                      // Day
                       Text(
                         date.split(' ')[1].toUpperCase(),
                         style: TextStyle(
@@ -275,78 +390,9 @@ class StartEndDateContainer extends StatelessWidget {
                   ),
                 )
               ],
-            ),
-            Padding(
-              // "-"
-              padding: EdgeInsets.symmetric(horizontal: 4.0),
-              child: Text(
-                date.split(' ')[3].toUpperCase(),
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 8), // Adjust padding as needed
-                  child: Column(
-                    children: [
-                      // End Date Day
-                      Text(
-                        date.split(' ')[4].toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      // End Date Year
-                      Text(
-                        date.split(' ')[5].toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )
-          ]
-          // If it's a single date, display it normally
-          else ...[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the padding as needed
-              child: Column(
-                children: [
-                  // Month
-                  Text(
-                    date.split(' ')[0].toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  // Day
-                  Text(
-                    date.split(' ')[1].toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }

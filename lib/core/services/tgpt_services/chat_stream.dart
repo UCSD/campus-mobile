@@ -66,8 +66,8 @@ class ChatMessageStreamService {
   /// Streaming timeout configuration.
   /// connectTimeout: reasonable limit to establish connection.
   /// receiveTimeout: long/zero for open SSE streams that may take minutes.
-  static const Duration _connectTimeout = Duration(seconds: 30);
-  static const Duration _receiveTimeout = Duration(minutes: 5);
+  static const Duration _CONNECT_TIMEOUT = Duration(seconds: 30);
+  static const Duration _RECEIVE_TIMEOUT = Duration(minutes: 5);
 
   ChatMessageStreamService(this._userDataProvider);
 
@@ -116,8 +116,8 @@ class ChatMessageStreamService {
     dio.options.responseType = ResponseType.stream;
     dio.options.headers = headers;
     // Use long timeouts for streaming - SSE responses can take minutes
-    dio.options.connectTimeout = _connectTimeout;
-    dio.options.receiveTimeout = _receiveTimeout;
+    dio.options.connectTimeout = _CONNECT_TIMEOUT;
+    dio.options.receiveTimeout = _RECEIVE_TIMEOUT;
 
     try {
       final response = await dio.post<ResponseBody>(endpoint, data: body);
@@ -156,16 +156,13 @@ class ChatMessageStreamService {
             final Object? rawReserved = json['reserved_assistant_message_id'] ?? obj?['reserved_assistant_message_id'];
             if (rawReserved != null) {
               final int? messageId = rawReserved is int ? rawReserved : int.tryParse(rawReserved.toString());
-              if (messageId != null) {
-                yield StreamingChatChunk(delta: '', messageId: messageId);
-              }
+              if (messageId != null) yield StreamingChatChunk(delta: '', messageId: messageId);
             }
 
             // Optional legacy root field (some streams still emit it)
             final Object? answerPiece = json['answer_piece'];
-            if (answerPiece is String && answerPiece.isNotEmpty) {
-              yield StreamingChatChunk(delta: answerPiece);
-            }
+            var hasValidAnswerPiece = answerPiece is String && answerPiece.isNotEmpty;
+            if (hasValidAnswerPiece) yield StreamingChatChunk(delta: answerPiece);
 
             _mergeDocumentsForUrls(documentIdToUrl, json['top_documents']);
 
@@ -177,15 +174,12 @@ class ChatMessageStreamService {
                 return;
               }
 
-              if (type == 'message_start') {
-                _mergeDocumentsForUrls(documentIdToUrl, obj['final_documents']);
-              }
+              if (type == 'message_start') _mergeDocumentsForUrls(documentIdToUrl, obj['final_documents']);
 
               if (type == 'message_delta') {
                 final String? content = obj['content'] as String?;
-                if (content != null && content.isNotEmpty) {
-                  yield StreamingChatChunk(delta: content);
-                }
+                var hasValidContent = content != null && content.isNotEmpty;
+                if (hasValidContent) yield StreamingChatChunk(delta: content);
               }
 
               // New schema: one citation per packet
@@ -193,7 +187,9 @@ class ChatMessageStreamService {
                 final String? docId = obj['document_id']?.toString();
                 final Object? rawNum = obj['citation_number'];
                 final int? num = rawNum is int ? rawNum : int.tryParse(rawNum?.toString() ?? '');
-                if (docId != null && docId.isNotEmpty && num != null && num > 0) {
+                var hasDocId = docId != null && docId.isNotEmpty;
+                var hasNum = num != null && num > 0;
+                if (hasDocId && hasNum) {
                   final String url = documentIdToUrl[docId] ?? docId;
                   citationByNumber[num] = ChatCitationReference(number: num, url: url);
                   yield StreamingChatChunk(delta: '', citations: _sortedCitations(citationByNumber));
@@ -203,12 +199,14 @@ class ChatMessageStreamService {
               // Legacy: batch citation list
               if (type == 'citation_delta') {
                 final List<dynamic>? citationsList = obj['citations'] as List<dynamic>?;
-                if (citationsList != null && citationsList.isNotEmpty) {
+                var hasCitationsList = citationsList != null;
+                var isCitationsListNotEmpty = citationsList?.isNotEmpty ?? false;
+                if (hasCitationsList && isCitationsListNotEmpty) {
                   for (final Map<String, dynamic> row in citationsList.whereType<Map<String, dynamic>>()) {
                     final ChatCitationReference ref = ChatCitationReference.fromStreamJson(row);
-                    if (ref.url.isNotEmpty && ref.number > 0) {
-                      citationByNumber[ref.number] = ref;
-                    }
+                    var isUrlNotEmpty = ref.url.isNotEmpty;
+                    var isNumberPositive = ref.number > 0;
+                    if (isUrlNotEmpty && isNumberPositive) citationByNumber[ref.number] = ref;
                   }
                   yield StreamingChatChunk(delta: '', citations: _sortedCitations(citationByNumber));
                 }
@@ -223,7 +221,9 @@ class ChatMessageStreamService {
       yield const StreamingChatChunk(delta: '', done: true);
     } on DioException catch (e) {
       // Retry once on 401 with refreshed token (align with send/session behavior)
-      if (!_hasRetried && e.response?.statusCode == 401) {
+      var isNotRetried = !_hasRetried;
+      var has401Status = e.response?.statusCode == 401;
+      if (isNotRetried && has401Status) {
         _hasRetried = true;
         dio.close();
 
