@@ -39,7 +39,7 @@ class Spot {
         spotKey: json["key"] ?? '',
         name: json["name"] ?? '',
         logoBackgroundColor: json["logo_background_color"] ?? '',
-        logoText: json["logo_text"] ?? '',
+        logoText: json["logo_text"] == 'SR' ? 'RS' : (json["logo_text"] ?? ''),
         logoTextColor: json["logo_text_color"] ?? '',
       );
 

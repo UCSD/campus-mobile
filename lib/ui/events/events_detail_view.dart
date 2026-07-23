@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/ui/events/event_tile.dart';
 
 class EventDetailView extends StatelessWidget {
   const EventDetailView({Key? key, required this.data}) : super(key: key);
@@ -25,20 +26,22 @@ class EventDetailView extends StatelessWidget {
     return ListView(
       children: [
         // Event Image
-        EventImage(imageUrl: data.imageHQ),
+        EventImage(data: data),
         // Event Content
         Container(
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
               // Event Date
-              EventDateContainer(
-                date: DateFormat("MMM d y").format(
-                  isMultiDay(data.startDate, data.endDate)
-                      ? getDisplayDate(data.startDate, data.endDate)
-                      : data.startDate.toLocal(),
-                ),
-              ),
+              Builder(builder: (context) {
+                final df = DateFormat("MMM d y");
+                final localStart = data.startDate.toLocal();
+                final localEnd = data.endDate.toLocal();
+                final startDate = df.format(localStart);
+                final endDate = df.format(localEnd);
+                final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
+                return StartEndDateContainer(date: dateDisplay);
+              }),
 
               // Event Title
               Expanded(child: EventTitle(title: data.title)),
@@ -57,31 +60,42 @@ class EventDetailView extends StatelessWidget {
               SizedBox(width: 5),
               Expanded(
                 child: data.location != null && data.location!.isNotEmpty
-                    ? LinkifyWithCatch(
-                        text: data.location!,
-                        looseUrl: true,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                          fontWeight: FontWeight.w400,
+                    ? Semantics(
+                        label: 'Location: ',
+                        child: LinkifyWithCatch(
+                          text: data.location!,
+                          looseUrl: true,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       )
                     : Container(),
               ),
               SizedBox(width: 5),
               // Event Time
-              Text(
-                data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
+              Builder(builder: (context) {
+                final timeString = data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
                     ? '    All day     '
                     : DateFormat.jm().format(data.startDate.toLocal()) +
                         ' - ' +
-                        DateFormat.jm().format(data.endDate.toLocal()),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+                        DateFormat.jm().format(data.endDate.toLocal());
+                final semanticTime = 'From: ' + timeString.replaceAll('-', 'to').trim();
+                return Semantics(
+                  container: true,
+                  child: Text(
+                    timeString,
+                    semanticsLabel: semanticTime,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                );
+              }),
               SizedBox(width: 16),
             ])),
         Container(
@@ -94,6 +108,7 @@ class EventDetailView extends StatelessWidget {
                 data.description != null && data.description!.isNotEmpty
                     ? Text(
                         data.description!,
+                        semanticsLabel: 'Event Description and Details: ${data.description}',
                         style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
                       )
                     : Container(),
@@ -107,80 +122,39 @@ class EventDetailView extends StatelessWidget {
       ],
     );
   }
-
-  DateTime getDisplayDate(DateTime start, DateTime end) {
-    final now = DateTime.now();
-    final localStart = start.toLocal();
-    final localEnd = end.toLocal();
-
-    // If today is within the event window
-    final bool isNotBeforeStart = !now.isBefore(localStart);
-    final bool isNotAfterEnd = !now.isAfter(localEnd);
-    if (isNotBeforeStart && isNotAfterEnd) return now;
-
-    // Otherwise, show the earlier of the two future dates
-    return localStart.isBefore(localEnd) ? localStart : localEnd;
-  }
-
-  bool isMultiDay(DateTime start, DateTime end) {
-    final s = start.toLocal();
-    final e = end.toLocal();
-    return s.year != e.year || s.month != e.month || s.day != e.day;
-  }
 }
 
 // CREATE EVENT IMAGE
 class EventImage extends StatelessWidget {
-  final String imageUrl;
-  const EventImage({Key? key, required this.imageUrl}) : super(key: key);
+  final EventModel data;
+  const EventImage({Key? key, required this.data}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.width / 2.1,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover, // Ensure the image fills the container
-          image: (imageUrl.isEmpty)
-              ? AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
-              : NetworkImage(imageUrl),
+    String fallbackTitle = data.title;
+    var isTitleTooLong = fallbackTitle.length > 40;
+    if (isTitleTooLong) fallbackTitle = fallbackTitle.substring(0, 40) + '...';
+    String semanticLabel = data.imageAltText ?? fallbackTitle;
+
+    // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out
+    semanticLabel = semanticLabel.replaceAllMapped(
+      RegExp(r'[A-Z]{2,}'),
+      (match) => match.group(0)!.split('').join(' '),
+    );
+
+    return Semantics(
+      image: true,
+      label: semanticLabel,
+      child: Container(
+        height: MediaQuery.of(context).size.width / 2.1,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover, // Ensure the image fills the container
+            image: (data.imageHQ.isEmpty)
+                ? AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
+                : NetworkImage(data.imageHQ),
+          ),
         ),
       ),
-    );
-  }
-}
-
-// CREATE START DATE CONTAINER
-class EventDateContainer extends StatelessWidget {
-  final String date;
-  const EventDateContainer({Key? key, required this.date}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Month
-        Text(date.split(' ')[0].toUpperCase(),
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-              fontWeight: FontWeight.w400,
-            )),
-        // Day
-        Text(date.split(' ')[1].toUpperCase(),
-            style: TextStyle(
-              fontSize: 20,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-              fontWeight: FontWeight.w500,
-            )),
-        // Year
-        Text(date.split(' ')[2].toUpperCase(),
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-              fontWeight: FontWeight.w400,
-            )),
-      ],
     );
   }
 }
@@ -192,22 +166,26 @@ class EventTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 12.0),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+    return Semantics(
+      container: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 12.0),
+            child: Text(
+              title,
+              semanticsLabel: 'Event: $title',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
