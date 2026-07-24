@@ -15,6 +15,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const String _androidNotificationChannelId = 'campus_mobile_notifications';
+const String _androidNotificationChannelName = 'Campus Mobile Notifications';
+const String _androidNotificationChannelDescription = 'Campus Mobile alerts and messages';
+
 class PushNotificationDataProvider extends ChangeNotifier {
   PushNotificationDataProvider() {
     initState();
@@ -64,20 +68,31 @@ class PushNotificationDataProvider extends ChangeNotifier {
   var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static const String _NOTIFICATION_PERMISSION_REQUESTED_KEY = 'notification_permission_requested';
+  bool _platformStateInitialized = false;
 
   /// Configures the [_fcm] object to receive push notifications
   Future<void> initPlatformState(BuildContext context) async {
     try {
       /// Initialize flutter notification settings
       this.context = context;
+      if (_platformStateInitialized) {
+        debugPrint('[PushNotifications] initPlatformState skipped; already initialized');
+        return;
+      }
+      _platformStateInitialized = true;
+      debugPrint('[PushNotifications] initPlatformState starting');
 
       /// Request notification permission on Android once (early, like iOS)
       if (Platform.isAndroid) {
         final prefs = await SharedPreferences.getInstance();
         var isPermissionRequested = prefs.getBool(_NOTIFICATION_PERMISSION_REQUESTED_KEY) ?? false;
         if (!isPermissionRequested) {
-          await FirebaseMessaging.instance.requestPermission();
+          final settings = await FirebaseMessaging.instance.requestPermission();
+          debugPrint('[PushNotifications] Android permission requested: ${settings.authorizationStatus}');
           await prefs.setBool(_NOTIFICATION_PERMISSION_REQUESTED_KEY, true);
+        } else {
+          final settings = await FirebaseMessaging.instance.getNotificationSettings();
+          debugPrint('[PushNotifications] Android permission already requested: ${settings.authorizationStatus}');
         }
       }
 
@@ -87,10 +102,12 @@ class PushNotificationDataProvider extends ChangeNotifier {
           InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onDidReceiveNotificationResponse: selectNotification);
+      if (Platform.isAndroid) await _createAndroidNotificationChannel();
 
       RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
       if (initialMessage != null) {
+        _logRemoteMessage('initialMessage', initialMessage);
         await Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
 
         /// switch to the notifications tab
@@ -100,6 +117,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
       /// Foreground messaging
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        _logRemoteMessage('onMessage', message);
+
         /// foreground messaging callback via flutter_local_notifications
         /// only show message if the message has not been seen before
         final bool isNewMessage = !_receivedMessageIds.contains(message.messageId);
@@ -113,6 +132,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
       FirebaseMessaging.onMessageOpenedApp.listen(
         (RemoteMessage message) {
+          _logRemoteMessage('onMessageOpenedApp', message);
+
           /// Fetch in-app messages
           Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
 
@@ -127,6 +148,7 @@ class PushNotificationDataProvider extends ChangeNotifier {
       );
     } on PlatformException {
       _error = 'Failed to get platform info.';
+      _platformStateInitialized = false;
     }
   }
 
@@ -147,19 +169,50 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
   /// Displays the notification
   showNotification(RemoteMessage message) async {
-    const androidPlatformChannelSpecifics = AndroidNotificationDetails('your channel id', 'your channel name',
-        icon: '@drawable/ic_notif_round',
-        largeIcon: const DrawableResourceAndroidBitmap('@drawable/app_icon'),
-        importance: Importance.max,
-        priority: Priority.high,
-        showWhen: false);
+    debugPrint(
+      '[PushNotifications] showNotification start channel=$_androidNotificationChannelId '
+      'messageId=${message.messageId}',
+    );
+    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      _androidNotificationChannelId,
+      _androidNotificationChannelName,
+      channelDescription: _androidNotificationChannelDescription,
+      icon: '@drawable/ic_notif_round',
+      largeIcon: const DrawableResourceAndroidBitmap('@drawable/app_icon'),
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
     const DarwinNotificationDetails();
     const platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics, iOS: DarwinNotificationDetails());
     // This is where you put info from firebase
-    await flutterLocalNotificationsPlugin.show(
-        0, message.notification!.title, message.notification!.body, platformChannelSpecifics,
-        payload: 'This is the payload');
+    try {
+      await flutterLocalNotificationsPlugin.show(
+        DateTime.now().millisecondsSinceEpoch.remainder(100000),
+        message.notification?.title ?? message.data['title']?.toString(),
+        message.notification?.body ?? message.data['body']?.toString(),
+        platformChannelSpecifics,
+        payload: 'This is the payload',
+      );
+      debugPrint('[PushNotifications] showNotification posted messageId=${message.messageId}');
+    } catch (error, stackTrace) {
+      debugPrint('[PushNotifications] showNotification failed: $error');
+      debugPrint(stackTrace.toString());
+    }
+  }
+
+  Future<void> _createAndroidNotificationChannel() async {
+    const channel = AndroidNotificationChannel(
+      _androidNotificationChannelId,
+      _androidNotificationChannelName,
+      description: _androidNotificationChannelDescription,
+      importance: Importance.max,
+    );
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+    debugPrint('[PushNotifications] Android channel ensured: $_androidNotificationChannelId');
   }
 
   /// Fetches topics from endpoint
@@ -238,23 +291,49 @@ class PushNotificationDataProvider extends ChangeNotifier {
       return false;
     } else {
       // Get the token for this device
-      String? fcmToken = await _fcm.getToken();
+      String? fcmToken;
+      try {
+        fcmToken = await _fcm.getToken();
+      } catch (error, stackTrace) {
+        _error = 'Failed to get firebase token: $error';
+        debugPrint('[PushNotifications] registerDevice getToken failed: $error');
+        debugPrint(stackTrace.toString());
+        return false;
+      }
       final bool hasFcmToken = fcmToken != null && fcmToken.isNotEmpty;
       final bool hasAccessToken = accessToken?.isNotEmpty ?? false;
+      debugPrint(
+        '[PushNotifications] registerDevice deviceId=$deviceId '
+        'hasFcmToken=$hasFcmToken hasAccessToken=$hasAccessToken',
+      );
       if (hasFcmToken && hasAccessToken) {
         Map<String, String> headers = {'Authorization': 'Bearer ' + accessToken!};
         Map<String, String> body = {'deviceId': deviceId, 'token': fcmToken};
         if ((await _notificationService.postPushToken(headers, body))) {
+          debugPrint('[PushNotifications] registerDevice postPushToken succeeded');
           return true;
         } else {
           _error = _notificationService.error;
+          debugPrint('[PushNotifications] registerDevice postPushToken failed: $_error');
           return false;
         }
       } else {
         _error = 'Failed to get firebase token.';
+        debugPrint('[PushNotifications] registerDevice failed: $_error');
         return false;
       }
     }
+  }
+
+  void _logRemoteMessage(String source, RemoteMessage message) {
+    debugPrint(
+      '[PushNotifications] $source '
+      'messageId=${message.messageId} '
+      'hasNotification=${message.notification != null} '
+      'title=${message.notification?.title ?? message.data['title']} '
+      'body=${message.notification?.body ?? message.data['body']} '
+      'data=${message.data}',
+    );
   }
 
   /// Unregisters device from receiving push notifications
