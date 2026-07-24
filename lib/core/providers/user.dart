@@ -44,9 +44,6 @@ class UserDataProvider extends ChangeNotifier {
     iOptions: IOSOptions(
       accessibility: KeychainAccessibility.first_unlock_this_device,
     ),
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
   );
 
   /// Update the [AuthenticationModel] stored in state
