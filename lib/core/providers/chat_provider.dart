@@ -8,13 +8,14 @@ import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_sess
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_stream.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_error_message.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class ChatProvider extends ChangeNotifier {
   ChatProvider(this._userDataProvider);
 
-  static const String _defaultSessionTitle = 'New Chat';
-  static const String _assistantAuthorId = 'assistant';
+  static const String _DEFAULT_SESSION_TITLE = 'New Chat';
+  static const String _ASSISTANT_AUTHOR_ID = 'assistant';
 
   final UserDataProvider _userDataProvider;
   final List<AssistantChatMessage> _messages = <AssistantChatMessage>[];
@@ -108,7 +109,9 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> startNewChat() async {
     final String? previousSessionId = _activeSessionId;
-    if (previousSessionId != null && previousSessionId.isNotEmpty) {
+    var hasPreviousSession = previousSessionId != null;
+    var isPreviousSessionNotEmpty = previousSessionId?.isNotEmpty ?? false;
+    if (hasPreviousSession && isPreviousSessionNotEmpty) {
       _setSessionMessages(previousSessionId, _messages);
       await _persistSessionState(
         previousSessionId,
@@ -120,9 +123,8 @@ class ChatProvider extends ChangeNotifier {
     _activeSessionId = null;
     _errorMessage = null;
 
-    if (_userDataProvider.isLoggedIn) {
-      await _chatPersistenceService.clearSessionId();
-    }
+    var isLoggedIn = _userDataProvider.isLoggedIn;
+    if (isLoggedIn) await _chatPersistenceService.clearSessionId();
 
     notifyListeners();
   }
@@ -136,9 +138,8 @@ class ChatProvider extends ChangeNotifier {
         ..clear()
         ..addAll(_sessionMessagesById[sessionId] ?? const <AssistantChatMessage>[]);
       _parentMessageIdsBySession[sessionId] ??= _deriveParentMessageId(_messages);
-      if (_userDataProvider.isLoggedIn) {
-        await _chatPersistenceService.saveSessionId(sessionId);
-      }
+      var isLoggedIn = _userDataProvider.isLoggedIn;
+      if (isLoggedIn) await _chatPersistenceService.saveSessionId(sessionId);
       notifyListeners();
       return;
     }
@@ -159,7 +160,8 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> sendMessage(String rawMessage) async {
     final String message = rawMessage.trim();
-    if (message.isEmpty || isStreaming) return;
+    var isMessageEmpty = message.isEmpty;
+    if (isMessageEmpty || isStreaming) return;
 
     _errorMessage = null;
     notifyListeners();
@@ -213,9 +215,8 @@ class ChatProvider extends ChangeNotifier {
         chatSessionId: sessionId,
         parentMessageId: _parentMessageIdsBySession[sessionId],
       )) {
-        if (chunk.messageId != null) {
-          reservedAssistantMessageId = chunk.messageId;
-        }
+        var hasMessageId = chunk.messageId != null;
+        if (hasMessageId) reservedAssistantMessageId = chunk.messageId;
 
         final int placeholderIndex =
             sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);
@@ -235,7 +236,7 @@ class ChatProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      final String userMessage = tgptErrorMessageFor(e);
+      final String userMessage = e is DioException ? await tgptErrorMessageForDio(e) : tgptErrorMessageFor(e);
       _errorMessage = userMessage;
       final int placeholderIndex =
           sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);
@@ -259,9 +260,8 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<String?> _ensureActiveSession() async {
-    if (_activeSessionId != null && _activeSessionId!.isNotEmpty) {
-      return _activeSessionId;
-    }
+    var hasActiveSession = _activeSessionId != null && _activeSessionId!.isNotEmpty;
+    if (hasActiveSession) return _activeSessionId;
 
     final session = await _chatSessionService.createChatSession();
     if (session == null) {
@@ -273,9 +273,8 @@ class ChatProvider extends ChangeNotifier {
     _parentMessageIdsBySession[_activeSessionId!] = null;
     _sessionMessagesById.putIfAbsent(_activeSessionId!, () => <AssistantChatMessage>[]);
 
-    if (_userDataProvider.isLoggedIn) {
-      await _chatPersistenceService.saveSessionId(_activeSessionId!);
-    }
+    var isLoggedIn = _userDataProvider.isLoggedIn;
+    if (isLoggedIn) await _chatPersistenceService.saveSessionId(_activeSessionId!);
 
     return _activeSessionId;
   }
@@ -297,9 +296,7 @@ class ChatProvider extends ChangeNotifier {
     _activeSessionId = sessionId;
     _parentMessageIdsBySession[sessionId] = _deriveParentMessageId(persistedMessages);
 
-    if (saveAsActive) {
-      await _chatPersistenceService.saveSessionId(sessionId);
-    }
+    if (saveAsActive) await _chatPersistenceService.saveSessionId(sessionId);
 
     notifyListeners();
   }
@@ -319,16 +316,14 @@ class ChatProvider extends ChangeNotifier {
             .map(
               (message) => message.toPersistent(
                 sessionId: sessionId,
-                authorId: message.isFromUser ? _userAuthorId : _assistantAuthorId,
+                authorId: message.isFromUser ? _userAuthorId : _ASSISTANT_AUTHOR_ID,
                 parentMessageId: message.isFromUser ? _parentMessageIdsBySession[sessionId]?.toString() : null,
               ),
             )
             .toList(),
       );
       await _chatPersistenceService.saveSessionsIndex(_persistedSessions);
-      if (saveAsActive) {
-        await _chatPersistenceService.saveSessionId(sessionId);
-      }
+      if (saveAsActive) await _chatPersistenceService.saveSessionId(sessionId);
       return;
     }
 
@@ -350,9 +345,7 @@ class ChatProvider extends ChangeNotifier {
       updatedAt: updatedAt,
     );
 
-    if (existingIndex != -1) {
-      target.removeAt(existingIndex);
-    }
+    if (existingIndex != -1) target.removeAt(existingIndex);
 
     target.insert(0, updatedSession);
     final List<ChatSessionMeta> dedupedSessions = _dedupeSessions(target);
@@ -377,13 +370,15 @@ class ChatProvider extends ChangeNotifier {
 
   String _sessionTitleForMessage(String text) {
     final String normalized = text.replaceAll(RegExp(r'\s+'), ' ').trim();
-    if (normalized.isEmpty) return _defaultSessionTitle;
+    if (normalized.isEmpty) return _DEFAULT_SESSION_TITLE;
     if (normalized.length <= 36) return normalized;
     return '${normalized.substring(0, 36).trimRight()}...';
   }
 
   String? _resolveSessionToOpen(String? savedSessionId) {
-    if (savedSessionId != null && savedSessionId.isNotEmpty) {
+    var hasSavedSessionId = savedSessionId != null;
+    var isSavedSessionIdNotEmpty = savedSessionId?.isNotEmpty ?? false;
+    if (hasSavedSessionId && isSavedSessionIdNotEmpty) {
       final bool hasSavedSession = _persistedSessions.any(
         (ChatSessionMeta session) => session.id == savedSessionId,
       );

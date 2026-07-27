@@ -89,14 +89,10 @@ class DiningConstants {
 
 class ErrorConstants {
   /// TritonGPT chat / streaming failures (user-facing; no stack traces).
-  static const TRITONGPT_UNAVAILABLE =
-      'Unable to reach TritonGPT right now. Please try again later.';
-  static const TRITONGPT_NOT_FOUND =
-      'TritonGPT could not be reached. Please try again later.';
-  static const TRITONGPT_SERVER_ERROR =
-      'TritonGPT is temporarily unavailable. Please try again later.';
-  static const TRITONGPT_BAD_REQUEST =
-      'Your message could not be processed. Please try again.';
+  static const TRITONGPT_UNAVAILABLE = 'Unable to reach TritonGPT right now. Please try again later.';
+  static const TRITONGPT_NOT_FOUND = 'TritonGPT could not be reached. Please try again later.';
+  static const TRITONGPT_SERVER_ERROR = 'TritonGPT is temporarily unavailable. Please try again later.';
+  static const TRITONGPT_BAD_REQUEST = 'Your message could not be processed. Please try again.';
 
   static const AUTHORIZED_POST_ERRORS = 'Failed to upload data: ';
   static const AUTHORIZED_PUT_ERRORS = 'Failed to update data: ';

@@ -156,16 +156,22 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList() {
-    final orderedCards = getOrderedCardsList(context.select((CardsDataProvider p) => p.cardOrder));
+    // Copy list so select() detects reorder: profile mutates _cardOrder in place (same ref).
+    final orderedCards = getOrderedCardsList(
+      context.select((CardsDataProvider p) => List<String>.from(p.cardOrder)),
+    );
     final noticesCards = getNoticesCardsList(context.select((NoticesDataProvider p) => p.noticesModel));
     return [...noticesCards, ...orderedCards];
   }
 
-  List<Widget> getNoticesCardsList(List<NoticesModel> notices) =>
-      notices.asMap().entries.map((e) => CardViewTrackingWrapper(
+  List<Widget> getNoticesCardsList(List<NoticesModel> notices) => notices
+      .asMap()
+      .entries
+      .map((e) => CardViewTrackingWrapper(
             cardId: 'notice_${e.key}',
             child: NoticesCard(notice: e.value),
-          )).toList();
+          ))
+      .toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
   static const _CARD_CTORS = {

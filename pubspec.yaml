@@ -3,7 +3,8 @@ description: Mobile app platform for campus.
 version: 1.0.0+1
 publish_to: none
 environment:
-  sdk: ^3.5.3
+  sdk: ">=3.10.0 <4.0.0"
+  flutter: ">=3.44.0"
 dependencies:
   barcode_widget: 2.0.4
   connectivity_plus: 7.0.0
@@ -22,10 +23,11 @@ dependencies:
       ref: master
   flutter_linkify: 6.0.0
   flutter_local_notifications: ^19.5.0
-  flutter_secure_storage: ^10.0.0
+  flutter_secure_storage: ^10.3.1
   flutter_sticky_header: ^0.8.0
   get: 4.7.2
   google_maps_flutter: ^2.14.0
+  google_maps_flutter_ios_sdk10: ^2.18.5
   hive: 2.2.3
   hive_flutter: 1.1.0
   intl: ^0.20.2

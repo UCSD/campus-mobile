@@ -29,16 +29,22 @@ class AvailabilityDetailedView extends StatelessWidget {
       Floor floor = subLocation.floors[i];
       floorTiles.add(
         ListTile(
-          title: Text(
-            "${floor.name}",
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: LOCATION_FONT_SIZE),
+          title: Semantics(
+            container: true,
+            child: Text(
+              "${floor.name}",
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: LOCATION_FONT_SIZE),
+            ),
           ),
           subtitle: Column(
             children: <Widget>[
               Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    (100 * percentAvailability(floor)).toInt().toString() + '% Busy',
+                  child: Semantics(
+                    container: true,
+                    child: Text(
+                      (100 * percentAvailability(floor)).toInt().toString() + '% Busy',
+                    ),
                   )),
               Align(
                 alignment: Alignment.centerLeft,
@@ -47,12 +53,14 @@ class AvailabilityDetailedView extends StatelessWidget {
                   width: PROGRESS_BAR_WIDTH,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(BORDER_RADIUS),
-                    child: LinearProgressIndicator(
-                      value: percentAvailability(floor) as double?,
-                      backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        setIndicatorColor(
-                          percentAvailability(floor),
+                    child: ExcludeSemantics(
+                      child: LinearProgressIndicator(
+                        value: percentAvailability(floor) as double?,
+                        backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          setIndicatorColor(
+                            percentAvailability(floor),
+                          ),
                         ),
                       ),
                     ),

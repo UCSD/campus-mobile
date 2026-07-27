@@ -15,13 +15,17 @@ class CardsModel {
       required this.initialURL,
       required this.isWebCard,
       required this.requireAuth,
-      required this.titleText});
+      required this.titleText,
+      this.externalLinkURL = '',
+      this.externalLinkText = ''});
 
   bool cardActive;
   String initialURL;
   bool isWebCard;
   bool requireAuth;
   String titleText;
+  String externalLinkURL;
+  String externalLinkText;
 
   factory CardsModel.fromJson(Map<String, dynamic> json) => CardsModel(
         cardActive: json["cardActive"]!,
@@ -29,6 +33,8 @@ class CardsModel {
         isWebCard: json["isWebCard"]!,
         requireAuth: json["requireAuth"]!,
         titleText: json["titleText"]!,
+        externalLinkURL: json["externalLinkURL"] as String? ?? '',
+        externalLinkText: json["externalLinkText"] as String? ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -37,5 +43,7 @@ class CardsModel {
         "isWebCard": isWebCard,
         "requireAuth": requireAuth,
         "titleText": titleText,
+        "externalLinkURL": externalLinkURL,
+        "externalLinkText": externalLinkText,
       };
 }

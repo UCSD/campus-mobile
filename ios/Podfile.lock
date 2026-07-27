@@ -220,28 +220,6 @@ DEPENDENCIES:
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
   - wifi_connection (from `.symlinks/plugins/wifi_connection/ios`)
 
-SPEC REPOS:
-  trunk:
-    - Firebase
-    - FirebaseAnalytics
-    - FirebaseCore
-    - FirebaseCoreExtension
-    - FirebaseCoreInternal
-    - FirebaseCrashlytics
-    - FirebaseInstallations
-    - FirebaseMessaging
-    - FirebaseRemoteConfigInterop
-    - FirebaseSessions
-    - Google-Maps-iOS-Utils
-    - GoogleAdsOnDeviceConversion
-    - GoogleAppMeasurement
-    - GoogleDataTransport
-    - GoogleMaps
-    - GoogleUtilities
-    - nanopb
-    - PromisesObjC
-    - PromisesSwift
-
 EXTERNAL SOURCES:
   app_links:
     :path: ".symlinks/plugins/app_links/ios"

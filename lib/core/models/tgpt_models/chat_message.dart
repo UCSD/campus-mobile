@@ -44,9 +44,7 @@ class AssistantMessageContent {
   final List<String> relatedQuestions;
 
   factory AssistantMessageContent.parse(String rawText) {
-    if (rawText.isEmpty) {
-      return const AssistantMessageContent(markdown: '');
-    }
+    if (rawText.isEmpty) return const AssistantMessageContent(markdown: '');
 
     final String normalized = rawText.replaceAll('\r\n', '\n');
     final List<String> relatedQuestions = <String>[];
@@ -63,26 +61,27 @@ class AssistantMessageContent {
         _addUniqueRelatedQuestion(relatedQuestions, rqLine.group(1) ?? '');
         continue;
       }
-      if (_bulletRqOnlyLine.hasMatch(line)) {
-        continue;
-      }
-      if (_isRelatedQuestionsHeadingLine(line)) {
-        continue;
-      }
+      if (_bulletRqOnlyLine.hasMatch(line)) continue;
+      if (_isRelatedQuestionsHeadingLine(line)) continue;
+      // Streaming: drop incomplete `[rq] ...` lines (widget avoids showing broken markers).
+      if (_isPartialLegacyRelatedQuestionLine(trimmedLeft)) continue;
       answerLines.add(line);
     }
 
     List<String> normalizedAnswerLines = _trimBlankLines(answerLines);
-    if (relatedQuestions.isNotEmpty && normalizedAnswerLines.isNotEmpty) {
+    var hasRelatedQuestions = relatedQuestions.isNotEmpty;
+    var hasAnswerLines = normalizedAnswerLines.isNotEmpty;
+    if (hasRelatedQuestions && hasAnswerLines) {
       final String trailingLine = normalizedAnswerLines.last.trim().toLowerCase();
-      if (trailingLine == 'related questions' || trailingLine == 'related questions:') {
+      var isTrailingRelatedQuestions = trailingLine == 'related questions' || trailingLine == 'related questions:';
+      if (isTrailingRelatedQuestions)
         normalizedAnswerLines.removeLast();
-      }
     }
 
     String markdown = _trimBlankLines(normalizedAnswerLines).join('\n');
     markdown = markdown.replaceAllMapped(_rqMarkdownLink, (Match m) => m.group(1)!.trim());
     markdown = _collapseBlankLines(markdown).trim();
+    markdown = _stripTrailingRelatedQuestionsFromMarkdown(markdown, relatedQuestions);
 
     return AssistantMessageContent(
       markdown: markdown,
@@ -90,29 +89,73 @@ class AssistantMessageContent {
     );
   }
 
+  /// TGPT web widget strips the related-questions block from the visible transcript; keep
+  /// questions only in the dedicated UI ([...](#rq) hydrated separately from markdown).
+  static String _stripTrailingRelatedQuestionsFromMarkdown(
+    String markdown,
+    List<String> relatedQuestions,
+  ) {
+    var isInvalidInput = relatedQuestions.isEmpty || markdown.trim().isEmpty;
+    if (isInvalidInput) return markdown;
+
+    final List<String> lines = markdown.split('\n');
+    int end = lines.length;
+    while (end > 0 && lines[end - 1].trim().isEmpty) {
+      end--;
+    }
+    if (end == 0) return '';
+
+    int scan = end - 1;
+    for (int rqIdx = relatedQuestions.length - 1; rqIdx >= 0; rqIdx--) {
+      final String expected = relatedQuestions[rqIdx].trim();
+      if (expected.isEmpty) return markdown;
+      while (scan >= 0 && lines[scan].trim().isEmpty) {
+        scan--;
+      }
+      var isMismatch = scan < 0 || lines[scan].trim() != expected;
+      if (isMismatch) return markdown;
+      scan--;
+    }
+    while (scan >= 0 && lines[scan].trim().isEmpty) {
+      scan--;
+    }
+    if (scan >= 0) {
+      final String candidate = lines[scan].trim();
+      if (RegExp(r'^-{3,}\s*$').hasMatch(candidate)) {
+        scan--;
+        while (scan >= 0 && lines[scan].trim().isEmpty) {
+          scan--;
+        }
+      }
+    }
+    if (scan < 0) return '';
+    final List<String> kept = lines.sublist(0, scan + 1);
+    return _collapseBlankLines(_trimBlankLines(kept).join('\n')).trim();
+  }
+
   static void _addUniqueRelatedQuestion(List<String> list, String raw) {
     final String q = raw.trim();
     if (q.isEmpty) return;
-    if (!list.contains(q)) {
-      list.add(q);
-    }
+    if (!list.contains(q)) list.add(q);
+  }
+
+  static bool _isPartialLegacyRelatedQuestionLine(String trimmedLeft) {
+    if (!trimmedLeft.startsWith('[rq')) return false;
+    if (_relatedQuestionPattern.hasMatch(trimmedLeft)) return false;
+    return true;
   }
 
   static bool _isRelatedQuestionsHeadingLine(String line) {
     final String t = line.trim();
     if (t.isEmpty) return false;
-    if (RegExp(r'^\*{0,2}\s*Related Questions\s*\*{0,2}\s*:?\s*$', caseSensitive: false).hasMatch(t)) {
-      return true;
-    }
-    if (RegExp(r'^#+\s*Related Questions\s*:?\s*$', caseSensitive: false).hasMatch(t)) {
-      return true;
-    }
+    var hasAsteriskHeading = RegExp(r'^\*{0,2}\s*Related Questions\s*\*{0,2}\s*:?\s*$', caseSensitive: false).hasMatch(t);
+    if (hasAsteriskHeading) return true;
+    var hasHashHeading = RegExp(r'^#+\s*Related Questions\s*:?\s*$', caseSensitive: false).hasMatch(t);
+    if (hasHashHeading) return true;
     return false;
   }
 
-  static String _collapseBlankLines(String text) {
-    return text.replaceAll(RegExp(r'\n{3,}'), '\n\n');
-  }
+  static String _collapseBlankLines(String text) => text.replaceAll(RegExp(r'\n{3,}'), '\n\n');
 
   static List<String> _trimBlankLines(List<String> lines) {
     final List<String> trimmedLines = List<String>.from(lines);

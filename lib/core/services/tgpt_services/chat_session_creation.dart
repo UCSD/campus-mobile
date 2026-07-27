@@ -9,6 +9,7 @@ import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_session.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_error_message.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Service for creating chat sessions via the TGPT API.
@@ -20,7 +21,7 @@ class ChatSessionService {
   bool _hasRetried = false;
 
   /// Default persona ID if not configured in environment
-  static const int _defaultPersonaId = 1;
+  static const int _DEFAULT_PERSONA_ID = 1;
 
   ChatSessionService(this._userDataProvider);
 
@@ -54,7 +55,7 @@ class ChatSessionService {
       final String createChatSessionEndpoint = dotenv.get('CHAT_CREATE_SESSION_ENDPOINT');
 
       // Read persona ID from environment, with fallback to default
-      final int personaId = int.tryParse(dotenv.get('TGPT_PERSONA_ID', fallback: '')) ?? _defaultPersonaId;
+      final int personaId = int.tryParse(dotenv.get('TGPT_PERSONA_ID', fallback: '')) ?? _DEFAULT_PERSONA_ID;
 
       // Build request payload
       final ChatSessionCreationRequest request = ChatSessionCreationRequest(personaId: personaId);
@@ -72,7 +73,9 @@ class ChatSessionService {
       return chatSessionId;
     } catch (e) {
       // Retry once on 401 with refreshed token
-      if (!_hasRetried && e.toString().contains("401")) {
+      var isNotRetried = !_hasRetried;
+      var has401Error = e.toString().contains("401");
+      if (isNotRetried && has401Error) {
         _hasRetried = true;
 
         final bool refreshed = await NetworkHelper.getNewToken(headers);
@@ -85,7 +88,7 @@ class ChatSessionService {
         }
       }
 
-      _error = tgptErrorMessageFor(e);
+      _error = e is DioException ? await tgptErrorMessageForDio(e) : tgptErrorMessageFor(e);
       _hasRetried = false;
       return null;
     } finally {

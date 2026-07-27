@@ -171,30 +171,30 @@ class DiningList extends StatelessWidget {
       minLeadingWidth: 0, // Reduce minimum width
       leading: ExcludeSemantics(
         child: SizedBox(
-        width: 48,
-        height: 48,
-        child: data.vendorLogo != null
-            ? Container(
-                decoration: Theme.of(context).brightness == Brightness.dark
-                    ? BoxDecoration(
-                        color: lightTextColor,
-                        borderRadius: BorderRadius.circular(8),
-                      )
-                    : null,
-                child: Image.network(
-                  data.vendorLogo!,
-                  width: 48,
-                  height: 48,
-                ),
-              )
-            : Icon(Icons.restaurant,
-                size: 32,
-                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
-      ),
+          width: 48,
+          height: 48,
+          child: data.vendorLogo != null
+              ? Container(
+                  decoration: Theme.of(context).brightness == Brightness.dark
+                      ? BoxDecoration(
+                          color: lightTextColor,
+                          borderRadius: BorderRadius.circular(8),
+                        )
+                      : null,
+                  child: Image.network(
+                    data.vendorLogo!,
+                    width: 48,
+                    height: 48,
+                  ),
+                )
+              : Icon(Icons.restaurant,
+                  size: 32,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
+        ),
       ),
       // Vendor Name
       title: Semantics(
-        label: 'Open link. ${data.name}',
+        label: 'Dining Location Name: ${data.name}',
         excludeSemantics: true,
         child: Text(
           data.name,
@@ -203,9 +203,14 @@ class DiningList extends StatelessWidget {
         ),
       ),
       // Vendor Hours
-      subtitle: Padding(
-        padding: EdgeInsets.only(top: 6),
-        child: getHoursForToday(data.regularHours, context),
+      subtitle: Semantics(
+        label:
+            'Business Hours: ${getHoursForToday(data.regularHours, context) is Text ? (getHoursForToday(data.regularHours, context) as Text).data : 'See details for hours'}',
+        excludeSemantics: true,
+        child: Padding(
+          padding: EdgeInsets.only(top: 6),
+          child: getHoursForToday(data.regularHours, context),
+        ),
       ),
       // Vendor's Distance and Directions
       trailing: buildIconWithDistance(data, context),
@@ -219,35 +224,36 @@ class DiningList extends StatelessWidget {
   // Builds the Right side of the ListTile containing the icon and distance
   Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
     String distanceText = data.distance != null
-        ? '${num.parse(data.distance!.toStringAsFixed(1))} miles, get directions'
+        ? 'This dining location is ${num.parse(data.distance!.toStringAsFixed(1))} miles away from you. Click here to get directions.'
         : 'Get directions';
     return Semantics(
       label: distanceText,
       excludeSemantics: true,
       child: TextButton(
-      style: TextButton.styleFrom(
-        foregroundColor: linkColorLight,
+        style: TextButton.styleFrom(
+          foregroundColor: linkColorLight,
+        ),
+        onPressed: () async {
+          try {
+            await DirectionsHelper.openDirections(data.coordinates!.lat!, data.coordinates!.lon!);
+          } catch (e) {
+            // an error occurred, do nothing
+          }
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.directions_walk,
+                size: 28, color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
+            Text(
+              data.distance != null ? (num.parse(data.distance!.toStringAsFixed(1)).toString() + ' mi') : '--',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
+            ),
+          ],
+        ),
       ),
-      onPressed: () async {
-        try {
-          await DirectionsHelper.openDirections(data.coordinates!.lat!, data.coordinates!.lon!);
-        } catch (e) {
-          // an error occurred, do nothing
-        }
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.directions_walk,
-              size: 28, color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
-          Text(
-            data.distance != null ? (num.parse(data.distance!.toStringAsFixed(1)).toString() + ' mi') : '--',
-            style: TextStyle(
-                fontSize: 13, color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
-          ),
-        ],
-      ),
-    ),
     );
   }
 }

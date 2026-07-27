@@ -28,7 +28,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
             Text("Hold and drag to reorder", textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
       ),
       children: createList(context),
-      onReorder: _onReorder,
+      onReorderItem: _onReorder,
     );
   }
 
@@ -49,7 +49,6 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
     List<AvailabilityModel> toRemove = [];
     newOrder.removeWhere((element) => toRemove.contains(element));
     AvailabilityModel? item = newOrder.removeAt(oldIndex);
-    if (newIndex > oldIndex) newIndex--;
     newOrder.insert(newIndex, item);
     List<String?> orderedLocationNames = [];
     for (AvailabilityModel? item in newOrder) {
@@ -105,7 +104,7 @@ class _ManageAvailabilityViewState extends State<ManageAvailabilityView> {
               child: Switch.adaptive(
                 value: Provider.of<AvailabilityDataProvider>(context).locationViewState[curName]!,
                 // activeColor: Theme.of(context).buttonColor,
-                activeColor: toggleActiveColor,
+                activeTrackColor: toggleActiveColor,
                 thumbColor: WidgetStateProperty.resolveWith((states) {
                   final bool isSelected = states.contains(WidgetState.selected);
                   if (isSelected) return Colors.white;

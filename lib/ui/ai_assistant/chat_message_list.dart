@@ -32,9 +32,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
         oldWidget.messages.isNotEmpty &&
         oldWidget.messages.last.text != widget.messages.last.text;
 
-    if (didChangeLength || didChangeLastMessage) {
-      _scheduleScrollToBottom();
-    }
+    if (didChangeLength || didChangeLastMessage) _scheduleScrollToBottom();
   }
 
   @override
@@ -60,7 +58,9 @@ class _ChatMessageListState extends State<ChatMessageList> {
 
   void _scheduleScrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_scrollController.hasClients) return;
+      var isUnmounted = !mounted;
+      var hasNoClients = !_scrollController.hasClients;
+      if (isUnmounted || hasNoClients) return;
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 220),

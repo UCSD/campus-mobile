@@ -29,6 +29,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
     if (await _availabilityService.fetchData()) {
       Map<String?, bool> newLocationViewState = {};
+
       /// setting the LocationViewState based on user data
       for (AvailabilityModel model in _availabilityService.data) {
         String curName = model.name;
@@ -43,10 +44,10 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
         if (hasNoSelectedLocations)
           newLocationViewState[curName] = _locationViewState[curName] ?? true;
+
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
-          newLocationViewState[curName] = _locationViewState[curName] ??
-              selectedLocations.contains(curName);
+          newLocationViewState[curName] = _locationViewState[curName] ?? selectedLocations.contains(curName);
         }
       }
 
