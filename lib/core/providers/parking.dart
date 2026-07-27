@@ -76,7 +76,8 @@ class ParkingDataProvider extends ChangeNotifier {
       for (Spot spot in _spotTypeModel.spots!) {
         _spotTypeMap[spot.spotKey] = spot;
       }
-      if (_userDataProvider.userProfileModel.selectedParkingSpots!.isNotEmpty) {
+      var hasSelectedParkingSpots = _userDataProvider.userProfileModel.selectedParkingSpots!.isNotEmpty;
+      if (hasSelectedParkingSpots) {
         // Load selected spots types from user Profile
         _selectedSpotTypesState = Map<String, bool>.from(
           _userDataProvider.userProfileModel.selectedParkingSpots!,

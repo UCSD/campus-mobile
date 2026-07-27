@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
+import 'package:campus_mobile_experimental/ui/common/card_header.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -188,14 +189,10 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            ListTile(
-              contentPadding: EdgeInsets.only(top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
-              visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-              title: Text(
-                widget.titleText,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            CardHeader(
+              titleText: widget.titleText,
               trailing: buildMenu(),
+              padding: EdgeInsets.only(top: 0.0, right: 6.0, bottom: 0.0, left: 12.0),
             ),
             buildBody(context),
             Padding(
@@ -232,9 +229,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
 
   Widget buildMenu() {
     if (widget.hideMenu) return Container();
-    return ButtonBar(
-      buttonPadding: EdgeInsets.all(0),
-      mainAxisSize: MainAxisSize.min,
+    return OverflowBar(
       children: [
         buildMenuOptions({
           CardMenuOptionConstants.RELOAD_CARD: _webViewController.reload,

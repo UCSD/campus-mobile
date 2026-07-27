@@ -133,17 +133,18 @@ class _ShuttleCardState extends State<ShuttleCard> {
               },
             ),
           ),
-          DotsIndicator(
-            position: _currentPage.toDouble(),
-            dotsCount: renderList.length,
-            decorator: DotsDecorator(
-              color: dotsUnselectedColor,
-              activeColor:
-                  Theme.of(context).brightness == Brightness.dark ? dotsSelectedColorDark : dotsSelectedColorLight,
-              activeSize: const Size(22.0, 22.0),
-              size: const Size(10.0, 10.0),
-            ),
-          )
+          if (renderList.length > 1)
+            DotsIndicator(
+              position: _currentPage.toDouble(),
+              dotsCount: renderList.length,
+              decorator: DotsDecorator(
+                color: dotsUnselectedColor,
+                activeColor:
+                    Theme.of(context).brightness == Brightness.dark ? dotsSelectedColorDark : dotsSelectedColorLight,
+                activeSize: const Size(22.0, 22.0),
+                size: const Size(10.0, 10.0),
+              ),
+            )
         ],
       );
     } catch (e) {

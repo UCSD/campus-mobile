@@ -20,6 +20,7 @@ class EventModel {
     this.id,
     this.tags,
     this.location,
+    this.imageAltText,
   });
 
   String title;
@@ -32,6 +33,7 @@ class EventModel {
   String? id;
   List<String>? tags; // unused, nullability not confirmed
   String? location;
+  String? imageAltText;
 
   EventModel.fromJson(Map<String, dynamic> json)
       : title = json["title"],
@@ -43,7 +45,8 @@ class EventModel {
         link = json["link"],
         id = json["id"],
         tags = json["tags"] == null ? null : List<String>.from(json["tags"].map((x) => x)),
-        location = json["location"];
+        location = json["location"],
+        imageAltText = json["imageAltText"];
 
   Map<String, dynamic> toJson() => {
         "title": title,
@@ -56,5 +59,6 @@ class EventModel {
         "id": id,
         "tags": tags == null ? null : List<dynamic>.from(tags!.map((x) => x)),
         "location": location,
+        "imageAltText": imageAltText,
       };
 }

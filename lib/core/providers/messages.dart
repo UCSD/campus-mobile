@@ -38,6 +38,10 @@ class MessagesDataProvider extends ChangeNotifier {
 
   // Fetch messages
   Future<bool> fetchMessages(bool clearMessages) async {
+    debugPrint(
+      '[Messages] fetchMessages start clear=$clearMessages '
+      'loggedIn=${userDataProvider?.isLoggedIn} raw=${_messages.length} visible=${messages.length}',
+    );
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -48,6 +52,11 @@ class MessagesDataProvider extends ChangeNotifier {
           : await retrieveMoreTopicMessages();
     } finally {
       _isLoading = false;
+      debugPrint(
+        '[Messages] fetchMessages done clear=$clearMessages error=$_error '
+        'raw=${_messages.length} visible=${messages.length}',
+      );
+      notifyListeners();
     }
   }
 
@@ -70,6 +79,8 @@ class MessagesDataProvider extends ChangeNotifier {
 
     if (await _messageService.fetchMyMessagesData(timestamp, headers)) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
+      final directCount = temp.where((message) => message.audience.topics == null).length;
+      debugPrint('[Messages] retrieveMoreMyMessages fetched=${temp.length} direct=$directCount timestamp=$timestamp');
       updateMessages(temp);
       makeOrderedMessagesList();
       returnedTimestamp = _messageService.messagingModels.next ?? 0;
@@ -81,6 +92,8 @@ class MessagesDataProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     }
+    _error = _messageService.error;
+    debugPrint('[Messages] retrieveMoreMyMessages failed: $_error');
     return false;
   }
 
@@ -90,10 +103,16 @@ class MessagesDataProvider extends ChangeNotifier {
     notifyListeners();
     int returnedTimestamp;
 
-    final bool topicDataFetched =
-        await _messageService.fetchTopicData(_previousTimestamp, userDataProvider!.subscribedTopics!);
+    final bool topicDataFetched = await _messageService.fetchTopicData(
+      _previousTimestamp,
+      userDataProvider!.subscribedTopics!,
+    );
     if (topicDataFetched) {
       List<MessageElement> temp = _messageService.messagingModels.messages;
+      debugPrint(
+        '[Messages] retrieveMoreTopicMessages fetched=${temp.length} '
+        'topics=${userDataProvider!.subscribedTopics}',
+      );
       updateMessages(temp);
       makeOrderedMessagesList();
       returnedTimestamp = _messageService.messagingModels.next ?? 0;
@@ -132,5 +151,12 @@ class MessagesDataProvider extends ChangeNotifier {
   get statusText => _statusText;
   get hasMoreMessagesToLoad => _hasMoreMessagesToLoad;
   ScrollController get scrollController => notificationScrollController;
-  List<MessageElement> get messages => _messages;
+  List<MessageElement> get messages {
+    final subscribedTopics = userDataProvider?.subscribedTopics ?? [];
+    return _messages.where((message) {
+      final topics = message.audience.topics;
+      if (topics == null) return userDataProvider?.isLoggedIn ?? false;
+      return topics.any(subscribedTopics.contains);
+    }).toList();
+  }
 }
