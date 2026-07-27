@@ -644,9 +644,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     // Insert at front
     _recentSearches.insert(0, result);
     // Trim to max
-    if (_recentSearches.length > _MAX_RECENT_SEARCHES) {
-      _recentSearches = _recentSearches.sublist(0, _MAX_RECENT_SEARCHES);
-    }
+    final hasMaxSearches = _recentSearches.length > _MAX_RECENT_SEARCHES;
+    if (hasMaxSearches) _recentSearches = _recentSearches.sublist(0, _MAX_RECENT_SEARCHES);
     _saveRecentSearches();
   }
 
@@ -665,9 +664,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Future<Map<String, dynamic>> _apiGet(String path, [Map<String, String>? params]) async {
     final uri = Uri.parse('$_BASE_URL/$path').replace(queryParameters: params);
     final response = await http.get(uri);
-    if (response.statusCode != 200) {
-      throw Exception('API error ${response.statusCode}: ${response.body}');
-    }
+    final isResNotOk = response.statusCode != 200;
+    if (isResNotOk) throw Exception('API error ${response.statusCode}: ${response.body}');
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
@@ -677,9 +675,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(body),
     );
-    if (response.statusCode != 200) {
-      throw Exception('API error ${response.statusCode}: ${response.body}');
-    }
+    final isResNotOk = response.statusCode != 200;
+    if (isResNotOk) throw Exception('API error ${response.statusCode}: ${response.body}');
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
@@ -751,9 +748,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     for (final cat in _categories) {
       final matchesCategory = cat.poiClassValue.toLowerCase().contains(q) && !matched.contains(cat.poiClassValue);
-      if (matchesCategory) {
-        matched.insert(0, cat.poiClassValue);
-      }
+      if (matchesCategory) matched.insert(0, cat.poiClassValue);
     }
 
     setState(() {

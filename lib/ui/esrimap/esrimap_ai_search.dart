@@ -140,9 +140,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
   IconData _iconForSubtitle(String subtitle) {
     final s = subtitle.toLowerCase();
     final isDining = s.contains('dining') || s.contains('food') || s.contains('coffee') || s.contains('cafe');
-    if (isDining) {
-      return Icons.restaurant;
-    }
+    if (isDining) return Icons.restaurant;
     final isLibrary = s.contains('library') || s.contains('academic');
     if (isLibrary) return Icons.menu_book;
     if (s.contains('parking')) return Icons.local_parking;
