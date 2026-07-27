@@ -57,10 +57,7 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       color: bgColor,
       child: Padding(
-        padding: EdgeInsets.only(
-          top: (showRouteFields && activeRouteField == 'from') ? 0 : 12,
-          bottom: 12,
-        ),
+        padding: EdgeInsets.only(top: (showRouteFields && activeRouteField == 'from') ? 0 : 12, bottom: 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

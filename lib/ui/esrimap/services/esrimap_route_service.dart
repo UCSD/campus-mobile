@@ -54,9 +54,7 @@ class EsriMapRouteService {
       // Match requested travel mode ('Walking', 'Accessible', etc.)
       final taskInfo = routeTask.getRouteTaskInfo();
       final matchingMode = taskInfo.travelModes.where((m) => m.name == travelMode).firstOrNull;
-      if (matchingMode != null) {
-        params.travelMode = matchingMode;
-      }
+      if (matchingMode != null) params.travelMode = matchingMode;
 
       // Configure origin and destination stops
       final origin = Stop(

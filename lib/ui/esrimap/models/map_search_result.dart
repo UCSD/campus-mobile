@@ -54,15 +54,15 @@ class MapSearchResult {
 
   /// Serializes the search result into a JSON-compatible map for storage in SharedPreferences.
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'subtitle': subtitle,
-        'latitude': latitude,
-        'longitude': longitude,
-        'source': source.index,
-        'address': address,
-        'description': description,
-        'websiteUrl': websiteUrl,
-      };
+    'name': name,
+    'subtitle': subtitle,
+    'latitude': latitude,
+    'longitude': longitude,
+    'source': source.index,
+    'address': address,
+    'description': description,
+    'websiteUrl': websiteUrl,
+  };
 
   /// Factory constructor to deserialize a [MapSearchResult] from a JSON map.
   factory MapSearchResult.fromJson(Map<String, dynamic> json) {

@@ -185,12 +185,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.arcGISMap = _map;
     _mapViewController.interactionOptions.rotateEnabled = true;
 
-    if (!_mapViewController.graphicsOverlays.contains(_graphicsOverlay)) {
+    if (!_mapViewController.graphicsOverlays.contains(_graphicsOverlay))
       _mapViewController.graphicsOverlays.add(_graphicsOverlay);
-    }
-    if (!_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay)) {
+    if (!_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay))
       _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
-    }
 
     // Configure location display settings
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
@@ -441,9 +439,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _addToRecentSearches(MapSearchResult result) {
     _recentSearches.removeWhere((r) => r.name == result.name && r.source == result.source);
     _recentSearches.insert(0, result);
-    if (_recentSearches.length > EsriMapSearchService.maxRecentSearches) {
+    if (_recentSearches.length > EsriMapSearchService.maxRecentSearches)
       _recentSearches = _recentSearches.sublist(0, EsriMapSearchService.maxRecentSearches);
-    }
     EsriMapSearchService.saveRecentSearches(_recentSearches);
   }
 
@@ -686,9 +683,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       if (identifyResult.graphics.isNotEmpty) {
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
-        if (index != null && index >= 0 && index < _mappedResults.length) {
-          _selectResultFromPin(_mappedResults[index]);
-        }
+        if (index != null && index >= 0 && index < _mappedResults.length) _selectResultFromPin(_mappedResults[index]);
       } else {
         if (_selectedResult != null) _closeDetail();
       }
@@ -976,9 +971,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       );
     }
 
-    if (routeRes.paddedExtent != null) {
+    if (routeRes.paddedExtent != null)
       _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(routeRes.paddedExtent!));
-    }
 
     _graphicsOverlay.graphics.clear();
     _mappedResults = [];
@@ -1120,9 +1114,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _showResults = false;
         }
       });
-      if (_detailSheetController.isAttached) {
+      if (_detailSheetController.isAttached)
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
     }
   }
 
@@ -1135,9 +1128,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _showResults = false;
         }
       });
-      if (_detailSheetController.isAttached) {
+      if (_detailSheetController.isAttached)
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
     }
   }
 
@@ -1147,14 +1139,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
     if (_showCategoryList && _selectedResult == null) {
-      if (_categorySheetController.isAttached) {
+      if (_categorySheetController.isAttached)
         _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
     }
     if (_selectedResult != null) {
-      if (_detailSheetController.isAttached) {
+      if (_detailSheetController.isAttached)
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
     }
   }
 
@@ -1245,9 +1235,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                               )
                             : null;
                       });
-                      if (_routeDestination != null && _fromLatLng != null) {
+                      if (_routeDestination != null && _fromLatLng != null)
                         _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-                      }
                     },
                     onTapSearchField: () {
                       if (_selectedResult != null) setState(() => _selectedResult = null);
@@ -1402,9 +1391,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 _solveRoute(res);
               },
               onTravelModeChanged: (mode) {
-                if (_selectedResult != null) {
-                  _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
-                }
+                if (_selectedResult != null) _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
               },
               onLaunchWebsite: _launchWebsite,
               onClose: _closeDetail,

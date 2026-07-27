@@ -31,9 +31,7 @@ class EsriMapSearchService {
   static Future<Map<String, dynamic>> apiGet(String path, [Map<String, String>? params]) async {
     final uri = Uri.parse('$baseUrl/$path').replace(queryParameters: params);
     final response = await http.get(uri);
-    if (response.statusCode != 200) {
-      throw Exception('API error ${response.statusCode}: ${response.body}');
-    }
+    if (response.statusCode != 200) throw Exception('API error ${response.statusCode}: ${response.body}');
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
@@ -44,9 +42,7 @@ class EsriMapSearchService {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(body),
     );
-    if (response.statusCode != 200) {
-      throw Exception('API error ${response.statusCode}: ${response.body}');
-    }
+    if (response.statusCode != 200) throw Exception('API error ${response.statusCode}: ${response.body}');
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
@@ -133,7 +129,8 @@ class EsriMapSearchService {
     const r = 6371000.0; // Earth radius in meters
     final dLat = (lat2 - lat1) * math.pi / 180;
     final dLng = (lng2 - lng1) * math.pi / 180;
-    final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+    final a =
+        math.sin(dLat / 2) * math.sin(dLat / 2) +
         math.cos(lat1 * math.pi / 180) * math.cos(lat2 * math.pi / 180) * math.sin(dLng / 2) * math.sin(dLng / 2);
     return r * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
   }
