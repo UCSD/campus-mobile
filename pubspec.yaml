@@ -61,6 +61,8 @@ dev_dependencies:
     sdk: flutter
   hive_generator: 1.1.3
 flutter:
+  config:
+    enable-swift-package-manager: false
   uses-material-design: true
   assets:
     - assets/images/
