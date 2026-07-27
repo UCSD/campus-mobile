@@ -4,7 +4,7 @@
 ///              including AI search trigger and dropdown results list.
 /// ============================================================================
 
-import 'package:campus_mobile_experimental/ui/esrimap/esrimap_config.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_config.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
 import 'package:flutter/material.dart';
 

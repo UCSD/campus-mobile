@@ -1,19 +1,46 @@
-import 'package:flutter/material.dart';
-import 'esrimap_basemaps.dart';
-import 'esrimap_config.dart';
+/// ============================================================================
+/// File: esrimap_layers_panel.dart
+/// Description: Floating panel widget allowing users to select basemaps (Default,
+///              Light, Dark, Satellite), toggle operational layers, and switch 3D scenes.
+/// ============================================================================
 
+import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_basemaps.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_config.dart';
+import 'package:flutter/material.dart';
+
+/// Bottom sheet widget rendering basemap choices, layer toggles, and 3D scene mode chips.
 class EsriMapLayersPanel extends StatelessWidget {
+  /// Map configuration containing basemap specs and layer definitions.
   final EsriMapConfig config;
+
+  /// Currently selected basemap type.
   final BasemapType currentBasemapType;
+
+  /// Currently selected scene mode key ('default', 'building3d', 'droneView').
   final String currentSceneKey;
+
+  /// Visibility status map keyed by operational layer key.
   final Map<String, bool> layerVisible;
+
+  /// Loading status map keyed by operational layer key.
   final Map<String, bool> layerLoading;
-  final void Function(BasemapType) onSwitchBasemap;
-  final void Function(String) onSetSceneMode;
-  final void Function(String) onToggleLayer;
+
+  /// Callback when a basemap option is selected.
+  final void Function(BasemapType type) onSwitchBasemap;
+
+  /// Callback when a 3D scene mode chip is selected.
+  final void Function(String key) onSetSceneMode;
+
+  /// Callback when an operational layer toggle is pressed.
+  final void Function(String key) onToggleLayer;
+
+  /// Callback when panel close button is pressed.
   final VoidCallback onClose;
+
+  /// Whether to hide the 3D scene switcher section.
   final bool hideSceneSwitcher;
 
+  /// Constructs an [EsriMapLayersPanel] instance.
   const EsriMapLayersPanel({
     Key? key,
     required this.config,
@@ -37,12 +64,12 @@ class EsriMapLayersPanel extends StatelessWidget {
     final accent = isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
 
     Widget sectionLabel(String text) => Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: subtitleColor),
-      ),
-    );
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: subtitleColor),
+          ),
+        );
 
     Widget imageTile({
       required String label,
@@ -95,32 +122,32 @@ class EsriMapLayersPanel extends StatelessWidget {
     }
 
     Widget networkImage(String url) => Image.network(
-      url,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.grey[700] : Colors.grey[300]),
-    );
+          url,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.grey[700] : Colors.grey[300]),
+        );
 
     Widget sceneChip(String key, String label, bool selected) => GestureDetector(
-      onTap: () => onSetSceneMode(key),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: selected
-              ? Border.all(color: accent, width: 2)
-              : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
-          color: selected ? accent.withOpacity(0.12) : (isDark ? Colors.grey[850] : Colors.grey[100]),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-            color: selected ? accent : textColor,
+          onTap: () => onSetSceneMode(key),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: selected
+                  ? Border.all(color: accent, width: 2)
+                  : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
+              color: selected ? accent.withValues(alpha: 0.12) : (isDark ? Colors.grey[850] : Colors.grey[100]),
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                color: selected ? accent : textColor,
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        );
 
     final bottomPad = MediaQuery.of(context).padding.bottom;
     final isDefault = currentSceneKey == 'default';
@@ -132,7 +159,8 @@ class EsriMapLayersPanel extends StatelessWidget {
       bottom: bottomPad + 12,
       child: GestureDetector(
         onVerticalDragEnd: (details) {
-          if (details.velocity.pixelsPerSecond.dy > 200) onClose();
+          final isSwipeDown = details.velocity.pixelsPerSecond.dy > 200;
+          if (isSwipeDown) onClose();
         },
         child: Material(
           elevation: 10,
@@ -161,7 +189,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                 ),
               ),
 
-              // Basemap + Layers — grayed out when not in default scene
+              // Basemap + Layers — grayed out when not in default 2D scene
               Opacity(
                 opacity: isDefault ? 1.0 : 0.35,
                 child: IgnorePointer(
@@ -183,7 +211,8 @@ class EsriMapLayersPanel extends StatelessWidget {
                                     selected: currentBasemapType == basemapTypeFromKey(entry.key),
                                     onTap: () {
                                       final t = basemapTypeFromKey(entry.key);
-                                      if (t != null) onSwitchBasemap(t);
+                                      final isTypeNotNull = t != null;
+                                      if (isTypeNotNull) onSwitchBasemap(t);
                                     },
                                     imageWidget: networkImage(entry.value.thumbnailAsset),
                                   ),

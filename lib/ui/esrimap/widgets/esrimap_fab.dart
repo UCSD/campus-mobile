@@ -1,17 +1,42 @@
+/// ============================================================================
+/// File: esrimap_fab.dart
+/// Description: Floating Action Button (FAB) cluster widget containing the
+///              compass needle, recenter on user/view, and layers toggle buttons.
+/// ============================================================================
+
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
+/// Floating action button cluster widget rendered in top-right of map view.
 class EsriMapFabCluster extends StatelessWidget {
+  /// Whether dark theme mode is active.
   final bool isDark;
+
+  /// Whether a 3D scene mode is active.
   final bool is3D;
+
+  /// Map rotation heading in degrees.
   final double mapRotation;
+
+  /// Whether location tracking button is active.
   final bool isLocationActive;
+
+  /// Whether recenter button is active.
   final bool isRecenterActive;
+
+  /// Callback when layers panel button is pressed.
   final VoidCallback onShowLayersPanel;
+
+  /// Callback when recenter on view button is pressed.
   final VoidCallback onRecenterOnView;
+
+  /// Callback when recenter on user location button is pressed.
   final VoidCallback onRecenterOnUser;
+
+  /// Callback when compass snap-to-north button is pressed.
   final VoidCallback onSnapToNorth;
 
+  /// Constructs an [EsriMapFabCluster] instance.
   const EsriMapFabCluster({
     Key? key,
     required this.isDark,
@@ -25,20 +50,29 @@ class EsriMapFabCluster extends StatelessWidget {
     required this.onSnapToNorth,
   }) : super(key: key);
 
-  static const _ACTIVE_COLOR = Color(0xFFC69214);
-  static const _SIZE = 48.0;
-  static const _BTN_HEIGHT = 44.0;
+  /// Active state highlight color.
+  static const Color ACTIVE_COLOR = Color(0xFFC69214);
+
+  /// Fixed button diameter size.
+  static const double SIZE = 48.0;
+
+  /// Height for individual pill button segments.
+  static const double BTN_HEIGHT = 44.0;
 
   @override
   Widget build(BuildContext context) {
     final bgColor = isDark ? Colors.grey[800]! : Colors.white;
     final fgColor = isDark ? Colors.white : Colors.grey[800]!;
 
+    final locationColor = isLocationActive ? ACTIVE_COLOR : fgColor;
+    final recenterColor = isRecenterActive ? ACTIVE_COLOR : fgColor;
+    final isNot3D = !is3D;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Compass — matches pill width
+        // Compass needle button
         Material(
           elevation: 4,
           color: bgColor,
@@ -48,8 +82,8 @@ class EsriMapFabCluster extends StatelessWidget {
             onTap: onSnapToNorth,
             behavior: HitTestBehavior.opaque,
             child: SizedBox(
-              width: _SIZE,
-              height: _SIZE,
+              width: SIZE,
+              height: SIZE,
               child: Center(
                 child: CustomPaint(
                   size: const Size(24, 24),
@@ -63,28 +97,28 @@ class EsriMapFabCluster extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        // Pill — my location, recenter, layers
+        // Pill container with action buttons
         Material(
           elevation: 4,
           color: bgColor,
-          borderRadius: BorderRadius.circular(_SIZE / 2),
+          borderRadius: BorderRadius.circular(SIZE / 2),
           clipBehavior: Clip.antiAlias,
           child: SizedBox(
-            width: _SIZE,
+            width: SIZE,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (!is3D)
+                  if (isNot3D)
                     _pillButton(
                       icon: Icons.my_location,
-                      color: isLocationActive ? _ACTIVE_COLOR : fgColor,
+                      color: locationColor,
                       onTap: onRecenterOnUser,
                     ),
                   _pillButton(
                     icon: Icons.center_focus_strong,
-                    color: isRecenterActive ? _ACTIVE_COLOR : fgColor,
+                    color: recenterColor,
                     onTap: onRecenterOnView,
                   ),
                   _pillButton(icon: Icons.layers_outlined, color: fgColor, onTap: onShowLayersPanel),
@@ -102,7 +136,7 @@ class EsriMapFabCluster extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        height: _BTN_HEIGHT,
+        height: BTN_HEIGHT,
         child: Center(child: Icon(icon, size: 22, color: color)),
       ),
     );
@@ -145,6 +179,9 @@ class _CompassNeedlePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CompassNeedlePainter old) =>
-      old.rotationDegrees != rotationDegrees || old.southColor != southColor;
+  bool shouldRepaint(_CompassNeedlePainter old) {
+    final isRotationChanged = old.rotationDegrees != rotationDegrees;
+    final isColorChanged = old.southColor != southColor;
+    return isRotationChanged || isColorChanged;
+  }
 }

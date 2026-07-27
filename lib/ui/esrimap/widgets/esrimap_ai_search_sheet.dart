@@ -1,81 +1,31 @@
+/// ============================================================================
+/// File: esrimap_ai_search_sheet.dart
+/// Description: Modal bottom sheet widget enabling AI natural language map queries
+///              (e.g., "coffee spots near Geisel Library").
+/// ============================================================================
+
 import 'dart:convert';
+import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_ai_search_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'esrimap_config.dart';
-
-class AiSearchResult {
-  final String name;
-  final String subtitle;
-  final String address;
-  final double latitude;
-  final double longitude;
-  final int? distanceFeet;
-  final String? distanceFormatted;
-
-  const AiSearchResult({
-    required this.name,
-    required this.subtitle,
-    required this.address,
-    required this.latitude,
-    required this.longitude,
-    this.distanceFeet,
-    this.distanceFormatted,
-  });
-
-  factory AiSearchResult.fromJson(Map<String, dynamic> j) => AiSearchResult(
-    name: j['name'] as String,
-    subtitle: j['subtitle'] as String? ?? '',
-    address: j['address'] as String? ?? '',
-    latitude: (j['latitude'] as num).toDouble(),
-    longitude: (j['longitude'] as num).toDouble(),
-    distanceFeet: j['distanceFeet'] as int?,
-    distanceFormatted: j['distanceFormatted'] as String?,
-  );
-}
-
-class AiSearchRouteStop {
-  final double lat;
-  final double lon;
-  const AiSearchRouteStop({required this.lat, required this.lon});
-  factory AiSearchRouteStop.fromJson(Map<String, dynamic> j) =>
-      AiSearchRouteStop(lat: (j['lat'] as num).toDouble(), lon: (j['lon'] as num).toDouble());
-}
-
-class AiSearchResponse {
-  final String message;
-  final List<AiSearchResult> results;
-  final List<String>? routeStopNames;
-  final List<AiSearchRouteStop>? routeStopCoords;
-
-  const AiSearchResponse({required this.message, required this.results, this.routeStopNames, this.routeStopCoords});
-
-  factory AiSearchResponse.fromJson(Map<String, dynamic> j) {
-    List<String>? stopNames;
-    List<AiSearchRouteStop>? stopCoords;
-    final route = j['suggestedRoute'];
-    if (route != null) {
-      stopNames = (route['stops'] as List).cast<String>();
-      stopCoords = (route['stopCoords'] as List)
-          .map((s) => AiSearchRouteStop.fromJson(s as Map<String, dynamic>))
-          .toList();
-    }
-    return AiSearchResponse(
-      message: j['message'] as String,
-      results: (j['results'] as List).map((r) => AiSearchResult.fromJson(r as Map<String, dynamic>)).toList(),
-      routeStopNames: stopNames,
-      routeStopCoords: stopCoords,
-    );
-  }
-}
 
 enum _AiSearchState { idle, loading, results, error }
 
+/// Modal bottom sheet widget for AI map search.
 class EsriAiSearchSheet extends StatefulWidget {
+  /// Optional current user latitude coordinate.
   final double? userLat;
+
+  /// Optional current user longitude coordinate.
   final double? userLon;
+
+  /// Callback when a location result is selected.
   final void Function(AiSearchResult result) onLocationSelected;
+
+  /// Callback when a multi-stop route is requested.
   final void Function(List<AiSearchResult> stops) onRouteRequested;
 
+  /// Constructs an [EsriAiSearchSheet] instance.
   const EsriAiSearchSheet({
     Key? key,
     this.userLat,
@@ -92,38 +42,43 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
   final _controller = TextEditingController();
   _AiSearchState _state = _AiSearchState.idle;
   AiSearchResponse? _response;
-  String? _errorMessage;
 
-  static const _BASE_URL = 'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
+  /// Base API URL endpoint.
+  static const String BASE_URL = 'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
 
   Future<void> _submit() async {
     final query = _controller.text.trim();
-    if (query.isEmpty) return;
+    final isQueryEmpty = query.isEmpty;
+    if (isQueryEmpty) return;
+
     setState(() {
       _state = _AiSearchState.loading;
       _response = null;
-      _errorMessage = null;
     });
+
     try {
       final body = <String, dynamic>{'query': query};
-      if (widget.userLat != null) body['lat'] = widget.userLat;
-      if (widget.userLon != null) body['lon'] = widget.userLon;
+      final hasUserLat = widget.userLat != null;
+      final hasUserLon = widget.userLon != null;
+      if (hasUserLat) body['lat'] = widget.userLat;
+      if (hasUserLon) body['lon'] = widget.userLon;
 
       final res = await http.post(
-        Uri.parse('$_BASE_URL/ai-search'),
+        Uri.parse('$BASE_URL/ai-search'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );
       final isResNotOk = res.statusCode != 200;
       if (isResNotOk) throw Exception('Request failed: ${res.statusCode}');
+
       final data = jsonDecode(res.body) as Map<String, dynamic>;
       setState(() {
         _response = AiSearchResponse.fromJson(data);
         _state = _AiSearchState.results;
       });
     } catch (e) {
+      debugPrint('AI search error: $e');
       setState(() {
-        _errorMessage = e.toString();
         _state = _AiSearchState.error;
       });
     }
@@ -135,7 +90,8 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
     if (isDining) return Icons.restaurant;
     final isLibrary = s.contains('library') || s.contains('academic');
     if (isLibrary) return Icons.menu_book;
-    if (s.contains('parking')) return Icons.local_parking;
+    final isParking = s.contains('parking');
+    if (isParking) return Icons.local_parking;
     final isRec = s.contains('recreation') || s.contains('gym') || s.contains('fitness');
     if (isRec) return Icons.fitness_center;
     final isTransit = s.contains('transit') || s.contains('shuttle');
@@ -157,7 +113,12 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
     final subtitleColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
     final accent = Theme.of(context).colorScheme.primary;
     final bottomPad = MediaQuery.of(context).viewInsets.bottom;
-    final hasResults = _state == _AiSearchState.results && _response != null;
+
+    final isResultsState = _state == _AiSearchState.results;
+    final hasResponse = _response != null;
+    final hasResults = isResultsState && hasResponse;
+    final isLoading = _state == _AiSearchState.loading;
+    final isError = _state == _AiSearchState.error;
 
     return Container(
       decoration: BoxDecoration(
@@ -169,7 +130,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Handle
+          // Drag handle bar
           Center(
             child: Container(
               margin: const EdgeInsets.only(top: 10, bottom: 6),
@@ -221,12 +182,12 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
                 ),
                 const SizedBox(width: 8),
                 FilledButton(
-                  onPressed: _state == _AiSearchState.loading ? null : _submit,
+                  onPressed: isLoading ? null : _submit,
                   style: FilledButton.styleFrom(
                     minimumSize: const Size(48, 48),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: _state == _AiSearchState.loading
+                  child: isLoading
                       ? const SizedBox(
                           width: 18,
                           height: 18,
@@ -238,7 +199,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
             ),
           ),
 
-          // Results
+          // Results section
           if (hasResults) ...[
             if (_response!.message.isNotEmpty)
               Padding(
@@ -264,9 +225,12 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
                     Divider(height: 1, indent: 56, color: isDark ? Colors.grey[800] : Colors.grey[200]),
                 itemBuilder: (context, i) {
                   final r = _response!.results[i];
+                  final hasDistance = r.distanceFormatted != null;
+                  final subtitleStr = hasDistance ? '${r.subtitle} · ${r.distanceFormatted}' : r.subtitle;
+
                   return ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: accent.withOpacity(0.12),
+                      backgroundColor: accent.withValues(alpha: 0.12),
                       child: Icon(_iconForSubtitle(r.subtitle), color: accent, size: 18),
                     ),
                     title: Text(
@@ -274,7 +238,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: textColor),
                     ),
                     subtitle: Text(
-                      r.distanceFormatted != null ? '${r.subtitle} · ${r.distanceFormatted}' : r.subtitle,
+                      subtitleStr,
                       style: TextStyle(fontSize: 12, color: subtitleColor),
                     ),
                     onTap: () {
@@ -307,7 +271,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
               const SizedBox(height: 16),
           ],
 
-          if (_state == _AiSearchState.error)
+          if (isError)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Text(

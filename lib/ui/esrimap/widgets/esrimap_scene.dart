@@ -1,18 +1,37 @@
+/// ============================================================================
+/// File: esrimap_scene.dart
+/// Description: Widget wrapper for rendering 3D ArcGIS WebScene portals,
+///              handling camera viewpoint controls, label scaling, and snap-to-north.
+/// ============================================================================
+
 import 'dart:async';
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:flutter/material.dart';
 
+/// Stateful widget encapsulating an [ArcGISSceneView] for 3D building and drone scene layers.
 class EsriSceneWidget extends StatefulWidget {
+  /// Portal URI key.
   final String portalUri;
+
+  /// WebScene Portal Item ID.
   final String itemId;
+
+  /// Callback when camera rotation heading changes.
   final void Function(double heading)? onHeadingChanged;
 
-  const EsriSceneWidget({super.key, required this.portalUri, required this.itemId, this.onHeadingChanged});
+  /// Constructs an [EsriSceneWidget] instance.
+  const EsriSceneWidget({
+    super.key,
+    required this.portalUri,
+    required this.itemId,
+    this.onHeadingChanged,
+  });
 
   @override
   State<EsriSceneWidget> createState() => EsriSceneWidgetState();
 }
 
+/// State object managing 3D camera controls and scene initialization.
 class EsriSceneWidgetState extends State<EsriSceneWidget> {
   late final ArcGISSceneViewController _sceneViewController;
   Camera? _initialCamera;
@@ -47,19 +66,22 @@ class EsriSceneWidgetState extends State<EsriSceneWidget> {
     );
     _sceneViewController.setViewpointCamera(_initialCamera!);
 
-    // Capture the lat offset between camera and look-at target once the
-    // viewpoint stabilizes — used by snapToNorth to rotate around target.
+    // Capture camera to target offset once viewpoint stabilizes
     Future.delayed(const Duration(milliseconds: 500), () {
-      if (!mounted) return;
+      final isNotMounted = !mounted;
+      if (isNotMounted) return;
       final vp = _sceneViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
       final pt = vp?.targetGeometry;
-      if (pt is ArcGISPoint) _camToTargetLatOffset = pt.y - _initialCamera!.location.y;
+      final isPoint = pt is ArcGISPoint;
+      if (isPoint) _camToTargetLatOffset = pt.y - _initialCamera!.location.y;
     });
 
     _viewpointSubscription = _sceneViewController.onViewpointChanged.listen((_) {
-      if (!mounted) return;
+      final isNotMounted = !mounted;
+      if (isNotMounted) return;
       final vp = _sceneViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
-      if (vp != null) widget.onHeadingChanged?.call(vp.rotation);
+      final isVpNotNull = vp != null;
+      if (isVpNotNull) widget.onHeadingChanged?.call(vp.rotation);
     });
 
     _applyLabelScales(scene);
@@ -73,34 +95,37 @@ class EsriSceneWidgetState extends State<EsriSceneWidget> {
 
   void _applyLabelScalesToLayers(List<Layer> layers) {
     for (final layer in layers) {
-      if (layer is FeatureLayer) {
+      final isFeatureLayer = layer is FeatureLayer;
+      final isGroupLayer = layer is GroupLayer;
+      if (isFeatureLayer) {
         for (final labelDef in layer.labelDefinitions) {
           labelDef.minScale = 4000;
         }
-      } else if (layer is GroupLayer) {
+      } else if (isGroupLayer) {
         _applyLabelScalesToLayers(layer.layers);
       }
     }
   }
 
+  /// Resets 3D camera to initial campus view coordinates.
   void resetCamera() {
-    if (_initialCamera == null) return;
+    final isInitialCameraNull = _initialCamera == null;
+    if (isInitialCameraNull) return;
     _sceneViewController.setViewpointCamera(_initialCamera!);
   }
 
-  /// Snaps heading to north by rotating the camera around the current
-  /// look-at target so the building/point stays centered on screen.
+  /// Snaps heading to north by rotating camera around current look-at target.
   void snapToNorth() {
-    if (_initialCamera == null) return;
+    final isInitialCameraNull = _initialCamera == null;
+    if (isInitialCameraNull) return;
     final vp = _sceneViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
     final target = vp?.targetGeometry;
-    if (target is! ArcGISPoint) {
+    final isNotPoint = target is! ArcGISPoint;
+    if (isNotPoint) {
       resetCamera();
       return;
     }
 
-    // Position camera due south of the current target at the same distance
-    // as the initial camera-to-target offset
     final pivotLat = target.y;
     final pivotLon = target.x;
     final camAlt = _initialCamera!.location.z ?? 1062.871;
