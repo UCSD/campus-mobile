@@ -34,22 +34,15 @@ class EsriMapLayersPanel extends StatelessWidget {
     final bgColor = isDark ? Colors.grey[900]! : Colors.white;
     final textColor = isDark ? Colors.white : Colors.grey[900]!;
     final subtitleColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
-    final accent = isDark
-        ? Colors.lightBlue[300]!
-        : Theme.of(context).colorScheme.primary;
+    final accent = isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
 
     Widget sectionLabel(String text) => Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.8,
-              color: subtitleColor,
-            ),
-          ),
-        );
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: subtitleColor),
+      ),
+    );
 
     Widget imageTile({
       required String label,
@@ -72,25 +65,15 @@ class EsriMapLayersPanel extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: selected
                       ? Border.all(color: accent, width: 2.5)
-                      : Border.all(
-                          color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                          width: 1,
-                        ),
+                      : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6.5),
                   child: loading
                       ? const Center(
-                          child: SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
+                          child: SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2)),
                         )
-                      : (imageWidget ??
-                          Container(
-                            color: isDark ? Colors.grey[700] : Colors.grey[300],
-                          )),
+                      : (imageWidget ?? Container(color: isDark ? Colors.grey[700] : Colors.grey[300])),
                 ),
               ),
               const SizedBox(height: 5),
@@ -112,40 +95,32 @@ class EsriMapLayersPanel extends StatelessWidget {
     }
 
     Widget networkImage(String url) => Image.network(
-          url,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => Container(
-            color: isDark ? Colors.grey[700] : Colors.grey[300],
-          ),
-        );
+      url,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.grey[700] : Colors.grey[300]),
+    );
 
-    Widget sceneChip(String key, String label, bool selected) =>
-        GestureDetector(
-          onTap: () => onSetSceneMode(key),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: selected
-                  ? Border.all(color: accent, width: 2)
-                  : Border.all(
-                      color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                      width: 1,
-                    ),
-              color: selected
-                  ? accent.withOpacity(0.12)
-                  : (isDark ? Colors.grey[850] : Colors.grey[100]),
-            ),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-                color: selected ? accent : textColor,
-              ),
-            ),
+    Widget sceneChip(String key, String label, bool selected) => GestureDetector(
+      onTap: () => onSetSceneMode(key),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: selected
+              ? Border.all(color: accent, width: 2)
+              : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
+          color: selected ? accent.withOpacity(0.12) : (isDark ? Colors.grey[850] : Colors.grey[100]),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+            color: selected ? accent : textColor,
           ),
-        );
+        ),
+      ),
+    );
 
     final bottomPad = MediaQuery.of(context).padding.bottom;
     final isDefault = currentSceneKey == 'default';
@@ -175,11 +150,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Map Display',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: textColor,
-                        ),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: textColor),
                       ),
                     ),
                     IconButton(
@@ -209,8 +180,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                                 if (basemapTypeFromKey(entry.key) != null) ...[
                                   imageTile(
                                     label: entry.value.label,
-                                    selected: currentBasemapType ==
-                                        basemapTypeFromKey(entry.key),
+                                    selected: currentBasemapType == basemapTypeFromKey(entry.key),
                                     onTap: () {
                                       final t = basemapTypeFromKey(entry.key);
                                       if (t != null) onSwitchBasemap(t);
@@ -263,11 +233,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                     spacing: 8,
                     children: [
                       for (final entry in config.scenes.entries)
-                        sceneChip(
-                          entry.key,
-                          entry.value.label,
-                          currentSceneKey == entry.key,
-                        ),
+                        sceneChip(entry.key, entry.value.label, currentSceneKey == entry.key),
                     ],
                   ),
                 ),

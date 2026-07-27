@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchHistoryList extends StatelessWidget {
-  const SearchHistoryList({
-    Key? key,
-  }) : super(key: key);
+  const SearchHistoryList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,8 @@ class SearchHistoryList extends StatelessWidget {
                 icon: Icon(Icons.cancel),
                 onPressed: () {
                   Provider.of<MapsDataProvider>(context, listen: false).removeFromSearchHistory(
-                      Provider.of<MapsDataProvider>(context, listen: false).searchHistory.reversed.toList()[index]);
+                    Provider.of<MapsDataProvider>(context, listen: false).searchHistory.reversed.toList()[index],
+                  );
                 },
               ),
               onTap: () {

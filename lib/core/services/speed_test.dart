@@ -14,9 +14,7 @@ class SpeedTestService {
   /// STATES
   bool _isLoading = false;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   SpeedTestModel? _speedTestModel;
@@ -46,8 +44,10 @@ class SpeedTestService {
     try {
       await NetworkHelper.getNewToken(headers);
       // Get download & upload urls
-      String? _downloadResponse =
-          await NetworkHelper.authorizedFetch(dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'), headers);
+      String? _downloadResponse = await NetworkHelper.authorizedFetch(
+        dotenv.get('SPEED_TEST_DOWNLOAD_ENDPOINT'),
+        headers,
+      );
       String? _uploadResponse = await NetworkHelper.authorizedFetch(dotenv.get('SPEED_TEST_UPLOAD_ENDPOINT'), headers);
 
       /// parse data

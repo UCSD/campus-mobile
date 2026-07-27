@@ -141,9 +141,7 @@ class _SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(covariant _SlideOverHeaderDelegate oldDelegate) {
-    return child != oldDelegate.child || height != oldDelegate.height || backgroundColor != oldDelegate.backgroundColor;
-  }
+  bool shouldRebuild(covariant _SlideOverHeaderDelegate oldDelegate) => child != oldDelegate.child || height != oldDelegate.height || backgroundColor != oldDelegate.backgroundColor;
 }
 
 // -----------------------------------------------------------------------------
@@ -337,12 +335,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _setupAgeAuthChallengeHandler();
     _mapViewController.arcGISMap = _map;
     _mapViewController.interactionOptions.rotateEnabled = true;
-    if (!_mapViewController.graphicsOverlays.contains(_graphicsOverlay)) {
-      _mapViewController.graphicsOverlays.add(_graphicsOverlay);
-    }
-    if (!_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay)) {
-      _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
-    }
+    if (!_mapViewController.graphicsOverlays.contains(_graphicsOverlay)) _mapViewController.graphicsOverlays.add(_graphicsOverlay);
+    if (!_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay)) _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
 
     // Wire up location display — blue dot, no auto-pan on start
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
@@ -484,9 +478,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   List<Layer?> _buildLayerInstances(LayerEntry entry) {
-    if (entry.hasSublayers) {
-      return entry.sublayers!.map(_layerFromSublayer).toList();
-    }
+    if (entry.hasSublayers) return entry.sublayers!.map(_layerFromSublayer).toList();
     return [_layerFromEntry(entry)];
   }
 
@@ -592,9 +584,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _showResults = false;
         }
       });
-      if (_detailSheetController.isAttached) {
-        _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
+      if (_detailSheetController.isAttached) _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
     }
   }
 
@@ -607,9 +597,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _showResults = false;
         }
       });
-      if (_detailSheetController.isAttached) {
-        _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
+      if (_detailSheetController.isAttached) _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
     }
   }
 
@@ -935,9 +923,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         });
         _fromFocusNode.unfocus();
         // Re-solve route if we already have a destination
-        if (_routeDestination != null) {
-          _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-        }
+        if (_routeDestination != null) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
       } else if (_activeRouteField == 'to') {
         _toController.text = result.name;
         _routeDestination = result;
@@ -1019,9 +1005,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
         final isValidResultIndex = index != null && index >= 0 && index < _mappedResults.length;
-        if (isValidResultIndex) {
-          _selectResultFromPin(_mappedResults[index]);
-        }
+        if (isValidResultIndex) _selectResultFromPin(_mappedResults[index]);
       } else {
         // Tapped empty space — close detail if open
         if (_selectedResult != null) _closeDetail();
@@ -1049,9 +1033,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _activeCategory = null;
         });
         _fromFocusNode.unfocus();
-        if (_routeDestination != null) {
-          _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-        }
+        if (_routeDestination != null) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
       } else {
         _toController.text = result.name;
         _routeDestination = result;
@@ -1204,9 +1186,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Future<void> _launchWebsite(String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
+    if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   // ---------------------------------------------------------------------------
@@ -1218,9 +1198,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       'https://www.google.com/maps/dir/?api=1'
       '&destination=${result.latitude},${result.longitude}',
     );
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
+    if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
   } */
 
   static const _ROUTE_SERVICE_URL =
@@ -1251,9 +1229,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       params.returnDirections = true;
       final taskInfo = routeTask.getRouteTaskInfo();
       final matchingMode = taskInfo.travelModes.where((m) => m.name == mode).firstOrNull;
-      if (matchingMode != null) {
-        params.travelMode = matchingMode;
-      }
+      if (matchingMode != null) params.travelMode = matchingMode;
 
       final origin = Stop(ArcGISPoint(x: userLatLng.$2, y: userLatLng.$1, spatialReference: SpatialReference.wgs84));
       final dest = Stop(
@@ -1450,9 +1426,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  IconData _iconForResult(MapSearchResult result) {
-    return result.source == MapSearchSource.building ? Icons.business : Icons.place;
-  }
+  IconData _iconForResult(MapSearchResult result) => result.source == MapSearchSource.building ? Icons.business : Icons.place;
 
   /// Returns the icon for a POI class — uses the hardcoded category icon if one
   /// exists, otherwise falls back to a generic place icon.
@@ -1504,9 +1478,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     _showResults = false;
                   });
                   _fromFocusNode.unfocus();
-                  if (_routeDestination != null) {
-                    _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-                  }
+                  if (_routeDestination != null) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -1627,14 +1599,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
     // Collapse whichever sheet is active to the minimum snap
     if (_showCategoryList && _selectedResult == null) {
-      if (_categorySheetController.isAttached) {
-        _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
+      if (_categorySheetController.isAttached) _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
     }
     if (_selectedResult != null) {
-      if (_detailSheetController.isAttached) {
-        _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
+      if (_detailSheetController.isAttached) _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
     }
   }
 
@@ -2385,9 +2353,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                                               )
                                             : null;
                                       });
-                                      if (_routeDestination != null && _fromLatLng != null) {
-                                        _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-                                      }
+                                      if (_routeDestination != null && _fromLatLng != null) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
                                     },
                                   ),
                                 ),
@@ -2434,9 +2400,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                                     final isCatMatched =
                                         cat.poiClassValue.toLowerCase().contains(q) &&
                                         !matched.contains(cat.poiClassValue);
-                                    if (isCatMatched) {
-                                      matched.insert(0, cat.poiClassValue);
-                                    }
+                                    if (isCatMatched) matched.insert(0, cat.poiClassValue);
                                   }
 
                                   setState(() {
@@ -2658,15 +2622,11 @@ class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
     if (isAgo) {
       if (_cachedAgoToken != null &&
           _agoTokenExpiry != null &&
-          DateTime.now().isBefore(_agoTokenExpiry!.subtract(const Duration(minutes: 5)))) {
-        return (_cachedAgoToken, _agoTokenExpiry);
-      }
+          DateTime.now().isBefore(_agoTokenExpiry!.subtract(const Duration(minutes: 5)))) => (_cachedAgoToken, _agoTokenExpiry);
     } else {
       if (_cachedAgeToken != null &&
           _ageTokenExpiry != null &&
-          DateTime.now().isBefore(_ageTokenExpiry!.subtract(const Duration(minutes: 5)))) {
-        return (_cachedAgeToken, _ageTokenExpiry);
-      }
+          DateTime.now().isBefore(_ageTokenExpiry!.subtract(const Duration(minutes: 5)))) => (_cachedAgeToken, _ageTokenExpiry);
     }
 
     final response = await http.get(Uri.parse(tokensUrl));

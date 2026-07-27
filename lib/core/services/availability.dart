@@ -10,9 +10,7 @@ class AvailabilityService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   late List<AvailabilityModel> _data;

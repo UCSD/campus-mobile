@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class QuickSearchIcons extends StatelessWidget {
-  const QuickSearchIcons({
-    Key? key,
-  }) : super(key: key);
+  const QuickSearchIcons({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +63,7 @@ class LabeledIconButton extends StatelessWidget {
           onPressed: onPressed as void Function()?,
           color: Color(0xFF00629B),
           textColor: Colors.white,
-          child: Icon(
-            icon,
-            size: 28,
-          ),
+          child: Icon(icon, size: 28),
           padding: EdgeInsets.all(12),
           shape: CircleBorder(),
         ),

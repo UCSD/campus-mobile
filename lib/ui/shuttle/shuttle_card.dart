@@ -59,14 +59,15 @@ class _ShuttleCardState extends State<ShuttleCard> {
         const SizedBox(height: 16),
       ],
       ActionLink(
-          buttonText: 'MANAGE SHUTTLE STOPS',
-          onPressed: () {
-            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage_stops'});
-            setState(() {
-              _currentPage = 0;
-            });
-            Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
-          }),
+        buttonText: 'MANAGE SHUTTLE STOPS',
+        onPressed: () {
+          analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage_stops'});
+          setState(() {
+            _currentPage = 0;
+          });
+          Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
+        },
+      ),
     ];
 
     return CardContainer(
@@ -116,9 +117,12 @@ class _ShuttleCardState extends State<ShuttleCard> {
 
       // Display all the shuttle stops with their respective arrivals
       for (var i = 0; i < _shuttleCardDataProvider.stopsToRender.length; i++) {
-        renderList.add(ShuttleDisplay(
+        renderList.add(
+          ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
-            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.stopsToRender[i].id]));
+            arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.stopsToRender[i].id],
+          ),
+        );
       }
       return Column(
         children: <Widget>[
@@ -139,20 +143,19 @@ class _ShuttleCardState extends State<ShuttleCard> {
               dotsCount: renderList.length,
               decorator: DotsDecorator(
                 color: dotsUnselectedColor,
-                activeColor:
-                    Theme.of(context).brightness == Brightness.dark ? dotsSelectedColorDark : dotsSelectedColorLight,
+                activeColor: Theme.of(context).brightness == Brightness.dark
+                    ? dotsSelectedColorDark
+                    : dotsSelectedColorLight,
                 activeSize: const Size(22.0, 22.0),
                 size: const Size(10.0, 10.0),
               ),
-            )
+            ),
         ],
       );
     } catch (e) {
       return Container(
         width: double.infinity,
-        child: Center(
-          child: Text('An error occurred, please try again. ${e.toString()}'),
-        ),
+        child: Center(child: Text('An error occurred, please try again. ${e.toString()}')),
       );
     }
   }

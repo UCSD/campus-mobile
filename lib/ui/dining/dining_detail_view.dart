@@ -59,13 +59,17 @@ class _DiningDetailViewState extends State<DiningDetailView> {
     final bool hasSpecialsTitle = specials?.specialTitle?.isNotEmpty == true;
     // Move variable declarations outside the list
     final bool hasModelOne = busynessDiningHallModelOne != null;
-    final bool modelOneMatches = hasModelOne &&
-        busynessDiningHallModelOne.subLocations
-            .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name));
+    final bool modelOneMatches =
+        hasModelOne &&
+        busynessDiningHallModelOne.subLocations.any(
+          (child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name),
+        );
     final bool hasModelTwo = busynessDiningHallModelTwo != null;
-    final bool modelTwoMatches = hasModelTwo &&
-        busynessDiningHallModelTwo.subLocations
-            .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name));
+    final bool modelTwoMatches =
+        hasModelTwo &&
+        busynessDiningHallModelTwo.subLocations.any(
+          (child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name),
+        );
 
     return [
       Row(
@@ -76,10 +80,7 @@ class _DiningDetailViewState extends State<DiningDetailView> {
             child: diningModel.vendorLogo != null
                 ? Container(
                     decoration: Theme.of(context).brightness == Brightness.dark
-                        ? BoxDecoration(
-                            color: lightTextColor,
-                            borderRadius: BorderRadius.circular(8),
-                          )
+                        ? BoxDecoration(color: lightTextColor, borderRadius: BorderRadius.circular(8))
                         : null,
                     child: Image.network(
                       diningModel.vendorLogo!,
@@ -88,9 +89,11 @@ class _DiningDetailViewState extends State<DiningDetailView> {
                       semanticLabel: 'Location logo',
                     ),
                   )
-                : Icon(Icons.restaurant,
+                : Icon(
+                    Icons.restaurant,
                     size: 56,
-                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
+                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  ),
           ),
           SizedBox(width: 8),
           Flexible(
@@ -133,9 +136,11 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       if (modelOneMatches || modelTwoMatches)
         DiningBusynessBar(
           diningModel: diningModel,
-          busynessDiningHallModel: (busynessDiningHallModelOne != null &&
-                  busynessDiningHallModelOne.subLocations
-                      .any((child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name)))
+          busynessDiningHallModel:
+              (busynessDiningHallModelOne != null &&
+                  busynessDiningHallModelOne.subLocations.any(
+                    (child) => child.name.contains(diningModel.name) || diningModel.name.contains(child.name),
+                  ))
               ? busynessDiningHallModelOne
               : busynessDiningHallModelTwo!,
         ),
@@ -148,14 +153,8 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       // Vendor Payment Options
       buildPaymentOptions(context, diningModel),
       // Vendor Location
-      Text(
-        'Location',
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      Transform.translate(
-        offset: const Offset(0, -15),
-        child: buildDirectionsButton(context, diningModel),
-      ),
+      Text('Location', style: Theme.of(context).textTheme.titleMedium),
+      Transform.translate(offset: const Offset(0, -15), child: buildDirectionsButton(context, diningModel)),
       Transform.translate(
         offset: const Offset(0, -12),
         child: Row(
@@ -174,22 +173,19 @@ class _DiningDetailViewState extends State<DiningDetailView> {
 
   ///////////// Hours Section /////////////
   Widget buildHours(BuildContext context, prefix0.DiningModel model) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SizedBox(height: 14),
-      Text(
-        "Hours",
-        textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      SizedBox(height: 8),
-      ...List.generate(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 14),
+        Text("Hours", textAlign: TextAlign.start, style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8),
+        ...List.generate(
           7,
-          (i) => [
-                HoursOfDay(day: i + 1, model: model),
-                if (i < 6) buildDivider(context),
-              ]).expand((widgetPair) => widgetPair).toList(),
-      SizedBox(height: 16),
-    ]);
+          (i) => [HoursOfDay(day: i + 1, model: model), if (i < 6) buildDivider(context)],
+        ).expand((widgetPair) => widgetPair).toList(),
+        SizedBox(height: 16),
+      ],
+    );
   }
 
   Widget buildDivider(BuildContext context) {
@@ -209,25 +205,16 @@ class _DiningDetailViewState extends State<DiningDetailView> {
           model.specialHours!.specialHoursValidFrom! + " to " + model.specialHours!.specialHoursValidTo! + "\n";
     }
     return Container(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(
-          "Special Hours",
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        SizedBox(height: 10),
-        Text(
-          model.specialHours!.specialHoursEvent,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        Text(
-          model.specialHours!.specialHoursEventDetails,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        Text(
-          specialHoursDuration,
-          style: Theme.of(context).textTheme.bodySmall,
-        )
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Special Hours", style: Theme.of(context).textTheme.titleMedium),
+          SizedBox(height: 10),
+          Text(model.specialHours!.specialHoursEvent, style: Theme.of(context).textTheme.bodySmall),
+          Text(model.specialHours!.specialHoursEventDetails, style: Theme.of(context).textTheme.bodySmall),
+          Text(specialHoursDuration, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
     );
   }
 
@@ -239,25 +226,20 @@ class _DiningDetailViewState extends State<DiningDetailView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Specials",
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text("Specials", style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         Text(
           model.specials?.specialTitle ?? '',
           style: TextStyle(
-              fontSize: 17,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? descriptiveTextColorLight
-                  : descriptiveTextColorDark,
-              fontWeight: FontWeight.w700),
+            fontSize: 17,
+            color: Theme.of(context).brightness == Brightness.light
+                ? descriptiveTextColorLight
+                : descriptiveTextColorDark,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         SizedBox(height: 4),
-        Text(
-          model.specials?.specialDescription ?? '',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        Text(model.specials?.specialDescription ?? '', style: Theme.of(context).textTheme.bodySmall),
       ],
     );
   }
@@ -270,15 +252,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Payment Options",
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text("Payment Options", style: Theme.of(context).textTheme.titleMedium),
           SizedBox(height: 10),
-          Text(
-            options,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          Text(options, style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
     );
@@ -316,12 +292,13 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
                     size: 32,
                   ),
                   model.distance != null
-                      ? Text(num.parse(model.distance!.toStringAsFixed(1)).toString() + ' mi',
+                      ? Text(
+                          num.parse(model.distance!.toStringAsFixed(1)).toString() + ' mi',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontSize: 18.0,
-                                color:
-                                    Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
-                              ))
+                            fontSize: 18.0,
+                            color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+                          ),
+                        )
                       : Text('--', style: TextStyle(color: linkColorLight)),
                 ],
               ),
@@ -335,16 +312,15 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
               debugPrint('Error opening directions: $e');
             }
           },
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.all(0.0),
-          ),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(0.0)),
         ),
       ),
     );
   } else {
     return Padding(
-        padding: const EdgeInsets.only(top: 12.0),
-        child: Text('Directions not available.', style: Theme.of(context).textTheme.bodySmall));
+      padding: const EdgeInsets.only(top: 12.0),
+      child: Text('Directions not available.', style: Theme.of(context).textTheme.bodySmall),
+    );
   }
 }
 
@@ -389,13 +365,7 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
       button: true,
       child: ExcludeSemantics(
         child: TextButton(
-          child: Row(
-            children: [
-              Text('View Menu'),
-              SizedBox(width: 5),
-              Icon(Icons.open_in_new, size: 16),
-            ],
-          ),
+          child: Row(children: [Text('View Menu'), SizedBox(width: 5), Icon(Icons.open_in_new, size: 16)]),
           onPressed: () {
             try {
               launchUrl(Uri.parse(model.menuWebsite!), mode: LaunchMode.inAppBrowserView);
@@ -439,65 +409,66 @@ class HoursOfDay extends StatelessWidget {
     final TextStyle hoursTextStyle = day == DateTime.now().weekday
         ? Theme.of(context).textTheme.bodySmall!.copyWith(
             fontWeight: FontWeight.w700,
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2)
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+          )
         : Theme.of(context).textTheme.bodySmall!;
 
     // Check if this is the current day
     final bool isToday = day == DateTime.now().weekday;
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Flexible(
-            flex: 3,
-            child: Row(
-              children: [
-                // Show the green dot for today
-                if (isToday) ...[
-                  SizedBox(
-                    width: 0,
-                    height: 0,
-                    child: OverflowBox(
-                      maxWidth: 10, // enough width and height to hold the dot
-                      maxHeight: 10,
-                      alignment: Alignment.centerLeft,
-                      child: Transform.translate(
-                        offset: const Offset(-11.5, 0),
-                        child: GreenDot(currHours: hoursText!),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Flexible(
+              flex: 3,
+              child: Row(
+                children: [
+                  // Show the green dot for today
+                  if (isToday) ...[
+                    SizedBox(
+                      width: 0,
+                      height: 0,
+                      child: OverflowBox(
+                        maxWidth: 10, // enough width and height to hold the dot
+                        maxHeight: 10,
+                        alignment: Alignment.centerLeft,
+                        child: Transform.translate(
+                          offset: const Offset(-11.5, 0),
+                          child: GreenDot(currHours: hoursText!),
+                        ),
                       ),
                     ),
+                    // SizedBox(width: 2),
+                  ],
+                  // "Monday" - Bold if today is Monday.
+                  Text(
+                    '$theDay',
+                    style: isToday
+                        ? Theme.of(context).textTheme.bodySmall!.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? lightPrimaryColor
+                                : darkPrimaryColor2,
+                          )
+                        : Theme.of(context).textTheme.bodySmall,
                   ),
-                  // SizedBox(width: 2),
                 ],
-                // "Monday" - Bold if today is Monday.
-                Text(
-                  '$theDay',
-                  style: isToday
-                      ? Theme.of(context).textTheme.bodySmall!.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color:
-                              Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2)
-                      : Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
+              ),
             ),
-          ),
-          // Display the hours text i.e. 9:30 AM - 4:30 PM (using the finals above)
-          Flexible(
-            flex: 5,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  hoursText!,
-                  style: hoursTextStyle,
-                ),
-              ],
+            // Display the hours text i.e. 9:30 AM - 4:30 PM (using the finals above)
+            Flexible(
+              flex: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [Text(hoursText!, style: hoursTextStyle)],
+              ),
             ),
-          )
-        ],
-      ),
-    ]);
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -554,10 +525,7 @@ class GreenDot extends StatelessWidget {
     return Container(
       width: 7,
       height: 7,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: _determineColor(),
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: _determineColor()),
     );
   }
 

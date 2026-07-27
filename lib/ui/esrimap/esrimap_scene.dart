@@ -7,12 +7,7 @@ class EsriSceneWidget extends StatefulWidget {
   final String itemId;
   final void Function(double heading)? onHeadingChanged;
 
-  const EsriSceneWidget({
-    super.key,
-    required this.portalUri,
-    required this.itemId,
-    this.onHeadingChanged,
-  });
+  const EsriSceneWidget({super.key, required this.portalUri, required this.itemId, this.onHeadingChanged});
 
   @override
   State<EsriSceneWidget> createState() => EsriSceneWidgetState();
@@ -38,10 +33,7 @@ class EsriSceneWidgetState extends State<EsriSceneWidget> {
 
   void _onSceneViewReady() {
     final portal = Portal(Uri.parse(widget.portalUri));
-    final portalItem = PortalItem.withPortalAndItemId(
-      portal: portal,
-      itemId: widget.itemId,
-    );
+    final portalItem = PortalItem.withPortalAndItemId(portal: portal, itemId: widget.itemId);
     final scene = ArcGISScene.withItem(portalItem);
     _sceneViewController.arcGISScene = scene;
 
@@ -59,23 +51,15 @@ class EsriSceneWidgetState extends State<EsriSceneWidget> {
     // viewpoint stabilizes — used by snapToNorth to rotate around target.
     Future.delayed(const Duration(milliseconds: 500), () {
       if (!mounted) return;
-      final vp = _sceneViewController.getCurrentViewpoint(
-        ViewpointType.centerAndScale,
-      );
+      final vp = _sceneViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
       final pt = vp?.targetGeometry;
-      if (pt is ArcGISPoint) {
-        _camToTargetLatOffset = pt.y - _initialCamera!.location.y;
-      }
+      if (pt is ArcGISPoint) _camToTargetLatOffset = pt.y - _initialCamera!.location.y;
     });
 
     _viewpointSubscription = _sceneViewController.onViewpointChanged.listen((_) {
       if (!mounted) return;
-      final vp = _sceneViewController.getCurrentViewpoint(
-        ViewpointType.centerAndScale,
-      );
-      if (vp != null) {
-        widget.onHeadingChanged?.call(vp.rotation);
-      }
+      final vp = _sceneViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
+      if (vp != null) widget.onHeadingChanged?.call(vp.rotation);
     });
 
     _applyLabelScales(scene);
@@ -108,9 +92,7 @@ class EsriSceneWidgetState extends State<EsriSceneWidget> {
   /// look-at target so the building/point stays centered on screen.
   void snapToNorth() {
     if (_initialCamera == null) return;
-    final vp = _sceneViewController.getCurrentViewpoint(
-      ViewpointType.centerAndScale,
-    );
+    final vp = _sceneViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
     final target = vp?.targetGeometry;
     if (target is! ArcGISPoint) {
       resetCamera();
@@ -143,9 +125,6 @@ class EsriSceneWidgetState extends State<EsriSceneWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ArcGISSceneView(
-      controllerProvider: () => _sceneViewController,
-      onSceneViewReady: _onSceneViewReady,
-    );
+    return ArcGISSceneView(controllerProvider: () => _sceneViewController, onSceneViewReady: _onSceneViewReady);
   }
 }

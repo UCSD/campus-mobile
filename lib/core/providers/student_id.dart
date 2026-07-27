@@ -33,7 +33,7 @@ class StudentIdDataProvider extends ChangeNotifier {
     if (_userDataProvider.isLoggedIn) {
       /// Initialize header
       final Map<String, String> header = {
-        'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+        'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}',
       };
 
       /// Fetch Name

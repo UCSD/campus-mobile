@@ -33,9 +33,7 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
         final url = layer.serviceKey != null
             ? config.serviceUrls[layer.serviceKey!]
             : null;
-        if (url != null) {
-          basemap.baseLayers.add(ArcGISTiledLayer.withUri(Uri.parse(url)));
-        }
+        if (url != null) basemap.baseLayers.add(ArcGISTiledLayer.withUri(Uri.parse(url)));
         break;
 
       case 'arcgisVectorTiled':
@@ -59,11 +57,8 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
         final url = layer.serviceKey != null
             ? config.serviceUrls[layer.serviceKey!]
             : null;
-        if (url != null) {
-          basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(url)));
-        }
+        if (url != null) basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(url)));
         break;
     }
   }
   return basemap;
-}

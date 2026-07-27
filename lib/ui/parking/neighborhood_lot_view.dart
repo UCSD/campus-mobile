@@ -52,10 +52,7 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
         ListTile(
           title: Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-            child: Text(
-              lotName,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            child: Text(lotName, style: Theme.of(context).textTheme.bodyMedium),
           ),
           trailing: Transform.scale(
             scale: 0.9,

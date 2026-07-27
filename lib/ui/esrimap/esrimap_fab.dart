@@ -87,11 +87,7 @@ class EsriMapFabCluster extends StatelessWidget {
                     color: isRecenterActive ? _ACTIVE_COLOR : fgColor,
                     onTap: onRecenterOnView,
                   ),
-                  _pillButton(
-                    icon: Icons.layers_outlined,
-                    color: fgColor,
-                    onTap: onShowLayersPanel,
-                  ),
+                  _pillButton(icon: Icons.layers_outlined, color: fgColor, onTap: onShowLayersPanel),
                 ],
               ),
             ),
@@ -101,19 +97,13 @@ class EsriMapFabCluster extends StatelessWidget {
     );
   }
 
-  Widget _pillButton({
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
+  Widget _pillButton({required IconData icon, required Color color, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
         height: _BTN_HEIGHT,
-        child: Center(
-          child: Icon(icon, size: 22, color: color),
-        ),
+        child: Center(child: Icon(icon, size: 22, color: color)),
       ),
     );
   }
@@ -123,10 +113,7 @@ class _CompassNeedlePainter extends CustomPainter {
   final double rotationDegrees;
   final Color southColor;
 
-  const _CompassNeedlePainter({
-    required this.rotationDegrees,
-    required this.southColor,
-  });
+  const _CompassNeedlePainter({required this.rotationDegrees, required this.southColor});
 
   @override
   void paint(Canvas canvas, Size size) {

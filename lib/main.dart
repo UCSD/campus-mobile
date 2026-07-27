@@ -105,14 +105,14 @@ class CampusMobile extends StatelessWidget {
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        surface: lightButtonColor,
-        brightness: Brightness.light,
-      ),
+      colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: ColorPrimary,
+      ).copyWith(surface: lightButtonColor, brightness: Brightness.light),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          unselectedItemColor: unselectedIconLightColor,
-          selectedItemColor: Colors.white,
-          backgroundColor: bottomTabBarColorLight),
+        unselectedItemColor: unselectedIconLightColor,
+        selectedItemColor: Colors.white,
+        backgroundColor: bottomTabBarColorLight,
+      ),
     );
 
     final darkTheme = ThemeData(
@@ -133,14 +133,14 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        surface: darkButtonColor,
-        brightness: Brightness.dark,
-      ),
+      colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: ColorPrimary,
+      ).copyWith(surface: darkButtonColor, brightness: Brightness.dark),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          unselectedItemColor: unselectedIconDarkColor,
-          selectedItemColor: Colors.white,
-          backgroundColor: bottomTabBarColorDark),
+        unselectedItemColor: unselectedIconDarkColor,
+        selectedItemColor: Colors.white,
+        backgroundColor: bottomTabBarColorDark,
+      ),
     );
 
     return MultiProvider(
@@ -148,22 +148,14 @@ class CampusMobile extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
-        theme: lightTheme.copyWith(
-          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
-        ),
-        darkTheme: darkTheme.copyWith(
-          colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
-        ),
+        theme: lightTheme.copyWith(colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor)),
+        darkTheme: darkTheme.copyWith(colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor)),
         themeMode: ThemeMode.system,
         initialRoute: showOnboardingScreen ? RoutePaths.ONBOARDING_LOGIN : RoutePaths.BOTTOM_NAVIGATION_BAR,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
         builder: (context, child) {
-          return SafeArea(
-            top: false,
-            bottom: Platform.isAndroid,
-            child: child!,
-          );
+          return SafeArea(top: false, bottom: Platform.isAndroid, child: child!);
         },
       ),
     );

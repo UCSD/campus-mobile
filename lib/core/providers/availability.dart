@@ -44,7 +44,6 @@ class AvailabilityDataProvider extends ChangeNotifier {
 
         if (hasNoSelectedLocations)
           newLocationViewState[curName] = _locationViewState[curName] ?? true;
-
         /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
         else {
           newLocationViewState[curName] = _locationViewState[curName] ?? selectedLocations.contains(curName);

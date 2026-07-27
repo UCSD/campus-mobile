@@ -14,10 +14,7 @@ class EventsAll extends StatelessWidget {
         ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
         : Padding(
             padding: const EdgeInsets.only(top: 16.0),
-            child: buildEventsList(
-              Provider.of<EventsDataProvider>(context).eventsModels,
-              context,
-            ),
+            child: buildEventsList(Provider.of<EventsDataProvider>(context).eventsModels, context),
           );
   }
 
@@ -39,11 +36,7 @@ class EventsAll extends StatelessWidget {
         childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1.4),
       );
     } else {
-      return ContainerView(
-        child: Center(
-          child: Text('No events found.'),
-        ),
-      );
+      return ContainerView(child: Center(child: Text('No events found.')));
     }
   }
 }
