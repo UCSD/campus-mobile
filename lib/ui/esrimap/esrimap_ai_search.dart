@@ -101,7 +101,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
   AiSearchResponse? _response;
   String? _errorMessage;
 
-  static const _baseUrl =
+  static const _BASE_URL =
       'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
 
   Future<void> _submit() async {
@@ -118,11 +118,12 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
       if (widget.userLon != null) body['lon'] = widget.userLon;
 
       final res = await http.post(
-        Uri.parse('$_baseUrl/ai-search'),
+        Uri.parse('$_BASE_URL/ai-search'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );
-      if (res.statusCode != 200) throw Exception('Request failed: ${res.statusCode}');
+      final isResNotOk = res.statusCode != 200;
+      if (isResNotOk) throw Exception('Request failed: ${res.statusCode}');
       final data = jsonDecode(res.body) as Map<String, dynamic>;
       setState(() {
         _response = AiSearchResponse.fromJson(data);
@@ -138,13 +139,17 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
 
   IconData _iconForSubtitle(String subtitle) {
     final s = subtitle.toLowerCase();
-    if (s.contains('dining') || s.contains('food') || s.contains('coffee') || s.contains('cafe')) {
+    final isDining = s.contains('dining') || s.contains('food') || s.contains('coffee') || s.contains('cafe');
+    if (isDining) {
       return Icons.restaurant;
     }
-    if (s.contains('library') || s.contains('academic')) return Icons.menu_book;
+    final isLibrary = s.contains('library') || s.contains('academic');
+    if (isLibrary) return Icons.menu_book;
     if (s.contains('parking')) return Icons.local_parking;
-    if (s.contains('recreation') || s.contains('gym') || s.contains('fitness')) return Icons.fitness_center;
-    if (s.contains('transit') || s.contains('shuttle')) return Icons.directions_bus;
+    final isRec = s.contains('recreation') || s.contains('gym') || s.contains('fitness');
+    if (isRec) return Icons.fitness_center;
+    final isTransit = s.contains('transit') || s.contains('shuttle');
+    if (isTransit) return Icons.directions_bus;
     return Icons.place;
   }
 
@@ -162,6 +167,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
     final subtitleColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
     final accent = Theme.of(context).colorScheme.primary;
     final bottomPad = MediaQuery.of(context).viewInsets.bottom;
+    final hasResults = _state == _AiSearchState.results && _response != null;
 
     return Container(
       decoration: BoxDecoration(
@@ -241,7 +247,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
           ),
 
           // Results
-          if (_state == _AiSearchState.results && _response != null) ...[
+          if (hasResults) ...[
             if (_response!.message.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),

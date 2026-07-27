@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'esrimap_basemaps.dart';
 import 'esrimap_fab.dart';
 import 'esrimap_layers_panel.dart';
@@ -42,15 +41,15 @@ class MapSearchResult {
 
   /// Serialize to JSON for SharedPreferences storage.
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'subtitle': subtitle,
-        'latitude': latitude,
-        'longitude': longitude,
-        'source': source.index,
-        'address': address,
-        'description': description,
-        'websiteUrl': websiteUrl,
-      };
+    'name': name,
+    'subtitle': subtitle,
+    'latitude': latitude,
+    'longitude': longitude,
+    'source': source.index,
+    'address': address,
+    'description': description,
+    'websiteUrl': websiteUrl,
+  };
 
   /// Deserialize from JSON.
   factory MapSearchResult.fromJson(Map<String, dynamic> json) {
@@ -89,17 +88,24 @@ class _SearchCategory {
 
 IconData _iconDataForName(String name) {
   switch (name) {
-    case 'restaurant':     return Icons.restaurant;
-    case 'menu_book':      return Icons.menu_book;
-    case 'local_parking':  return Icons.local_parking;
-    case 'fitness_center': return Icons.fitness_center;
-    case 'directions_bus': return Icons.directions_bus;
-    default:               return Icons.place;
+    case 'restaurant':
+      return Icons.restaurant;
+    case 'menu_book':
+      return Icons.menu_book;
+    case 'local_parking':
+      return Icons.local_parking;
+    case 'fitness_center':
+      return Icons.fitness_center;
+    case 'directions_bus':
+      return Icons.directions_bus;
+    default:
+      return Icons.place;
   }
 }
 
 Color _colorFromHex(String? hex) {
-  if (hex == null || hex.isEmpty) return const Color(0xFFF5F0E6);
+  final isHexEmpty = hex == null || hex.isEmpty;
+  if (isHexEmpty) return const Color(0xFFF5F0E6);
   final stripped = hex.replaceFirst('#', '');
   final value = int.tryParse(stripped, radix: 16);
   if (value == null) return const Color(0xFFF5F0E6);
@@ -115,11 +121,7 @@ class _SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double height;
   final Color backgroundColor;
 
-  _SlideOverHeaderDelegate({
-    required this.child,
-    required this.height,
-    required this.backgroundColor,
-  });
+  _SlideOverHeaderDelegate({required this.child, required this.height, required this.backgroundColor});
 
   @override
   double get minExtent => height;
@@ -127,15 +129,12 @@ class _SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => height;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       height: height,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: shrinkOffset == 0
-            ? const BorderRadius.vertical(top: Radius.circular(16))
-            : null,
+        borderRadius: shrinkOffset == 0 ? const BorderRadius.vertical(top: Radius.circular(16)) : null,
       ),
       child: child,
     );
@@ -143,9 +142,7 @@ class _SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(covariant _SlideOverHeaderDelegate oldDelegate) {
-    return child != oldDelegate.child ||
-        height != oldDelegate.height ||
-        backgroundColor != oldDelegate.backgroundColor;
+    return child != oldDelegate.child || height != oldDelegate.height || backgroundColor != oldDelegate.backgroundColor;
   }
 }
 
@@ -172,19 +169,19 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _detailSheetController = DraggableScrollableController();
 
   // Service base URL
-  static const _baseUrl = 'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
+  static const _BASE_URL = 'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
 
   // Config -- loaded on init, gates map setup
   EsriMapConfig? _config;
 
   // SharedPreferences key for recent searches
-  static const _recentSearchesKey = 'esri_map_recent_searches';
-  static const _maxRecentSearches = 5;
+  static const _RECENT_SEARCHES_KEY = 'esri_map_recent_searches';
+  static const _MAX_RECENT_SEARCHES = 5;
 
   // Search state
   List<MapSearchResult> _searchResults = [];
-  List<String> _allPoiClasses = [];        // all distinct Class values from the server
-  List<String> _matchingPoiClasses = [];   // live-filtered subset while typing
+  List<String> _allPoiClasses = []; // all distinct Class values from the server
+  List<String> _matchingPoiClasses = []; // live-filtered subset while typing
   bool _showResults = false;
   bool _isSearching = false;
   bool _showSuggestions = false;
@@ -255,12 +252,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   List<_SearchCategory> get _categories {
     if (_config == null) return [];
     return _config!.searchCategories
-        .map((c) => _SearchCategory(
-              label: c.label,
-              icon: _iconDataForName(c.icon),
-              poiClassValue: c.poiClass,
-              color: _colorFromHex(c.color),
-            ))
+        .map(
+          (c) => _SearchCategory(
+            label: c.label,
+            icon: _iconDataForName(c.icon),
+            poiClassValue: c.poiClass,
+            color: _colorFromHex(c.color),
+          ),
+        )
         .toList();
   }
 
@@ -315,11 +314,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _setupAgeAuthChallengeHandler() {
-    ArcGISEnvironment
-        .authenticationManager
-        .arcGISAuthenticationChallengeHandler = _AgeAuthChallengeHandler(
-          EsriMapConfigService.instance.tokensUrl,
-        );
+    ArcGISEnvironment.authenticationManager.arcGISAuthenticationChallengeHandler = _AgeAuthChallengeHandler(
+      EsriMapConfigService.instance.tokensUrl,
+    );
   }
 
   void _initMap(EsriMapConfig config) {
@@ -329,11 +326,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     _map = ArcGISMap.withBasemap(_basemaps[_currentBasemapType]!);
     _map.initialViewpoint = Viewpoint.fromCenter(
-      ArcGISPoint(
-        x: -117.2340,
-        y: 32.8801,
-        spatialReference: SpatialReference.wgs84,
-      ),
+      ArcGISPoint(x: -117.2340, y: 32.8801, spatialReference: SpatialReference.wgs84),
       scale: 24000,
     );
     _mapReadyCompleter.complete();
@@ -353,21 +346,18 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     // Wire up location display — blue dot, no auto-pan on start
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
-    _mapViewController.locationDisplay.autoPanMode =
-        LocationDisplayAutoPanMode.off;
+    _mapViewController.locationDisplay.autoPanMode = LocationDisplayAutoPanMode.off;
 
     _startLocationDisplay();
     _preloadAlternateBasemaps();
 
-    _viewpointChangedSubscription =
-        _mapViewController.onViewpointChanged.listen((_) {
-      final vp = _mapViewController.getCurrentViewpoint(
-        ViewpointType.centerAndScale,
-      );
+    _viewpointChangedSubscription = _mapViewController.onViewpointChanged.listen((_) {
+      final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
       if (vp != null && mounted) {
         setState(() {
           _mapRotation = vp.rotation;
-          if (!_ignoreViewpointReset && (_isLocationActive || _isRecenterActive)) {
+          final shouldResetVP = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
+          if (shouldResetVP) {
             _isLocationActive = false;
             _isRecenterActive = false;
           }
@@ -417,11 +407,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       if (key != 'default') _showLayersPanel = false;
       if (_config == null) return;
       final scene = _config!.scenes[key];
-      if (scene == null || scene.type != 'scene') return;
-      final portalUrl = scene.portalKey != null
-          ? _config!.portals[scene.portalKey!]
-          : null;
-      if (portalUrl == null || scene.itemId == null) return;
+      final isInvalidScene = scene == null || scene.type != 'scene';
+      if (isInvalidScene) return;
+      final portalUrl = scene.portalKey != null ? _config!.portals[scene.portalKey!] : null;
+      final isMissingPortalItem = portalUrl == null || scene.itemId == null;
+      if (isMissingPortalItem) return;
       if (key == 'building3d' && _scene3DWidget == null) {
         _scene3DWidget = EsriSceneWidget(
           key: _scene3DKey,
@@ -429,7 +419,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           itemId: scene.itemId!,
           onHeadingChanged: (h) => setState(() {
             _mapRotation = h;
-            if (!_ignoreViewpointReset && (_isLocationActive || _isRecenterActive)) {
+            final shouldResetVP3D = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
+            if (shouldResetVP3D) {
               _isLocationActive = false;
               _isRecenterActive = false;
             }
@@ -442,7 +433,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           itemId: scene.itemId!,
           onHeadingChanged: (h) => setState(() {
             _mapRotation = h;
-            if (!_ignoreViewpointReset && (_isLocationActive || _isRecenterActive)) {
+            final shouldResetVPDrone = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
+            if (shouldResetVPDrone) {
               _isLocationActive = false;
               _isRecenterActive = false;
             }
@@ -452,7 +444,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
-void _toggleLayer(String key) async {
+  void _toggleLayer(String key) async {
     final entry = _config?.layers[key];
     if (entry == null) return;
 
@@ -499,20 +491,20 @@ void _toggleLayer(String key) async {
   }
 
   Layer? _layerFromSublayer(SublayerEntry sub) {
-    if (sub.source == 'url' && sub.url != null) {
+    final isUrlSub = sub.source == 'url' && sub.url != null;
+    if (isUrlSub) {
       return sub.url!.contains('FeatureServer')
-          ? FeatureLayer.withFeatureTable(
-              ServiceFeatureTable.withUri(Uri.parse(sub.url!)))
+          ? FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse(sub.url!)))
           : ArcGISMapImageLayer.withUri(Uri.parse(sub.url!));
     }
     return null;
   }
 
   Layer? _layerFromEntry(LayerEntry entry) {
-    if (entry.source == 'url' && entry.url != null) {
+    final isUrlEntry = entry.source == 'url' && entry.url != null;
+    if (isUrlEntry) {
       return entry.url!.contains('FeatureServer')
-          ? FeatureLayer.withFeatureTable(
-              ServiceFeatureTable.withUri(Uri.parse(entry.url!)))
+          ? FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse(entry.url!)))
           : ArcGISMapImageLayer.withUri(Uri.parse(entry.url!));
     }
     return null;
@@ -520,9 +512,9 @@ void _toggleLayer(String key) async {
 
   void _applyLayerSpecialCases(String key, List<Layer?> instances) {
     // campusDistricts: show only sublayer id 4
-    if (key == 'campusDistricts' &&
-        instances.isNotEmpty &&
-        instances.first is ArcGISMapImageLayer) {
+    final isCampusDistricts =
+        key == 'campusDistricts' && instances.isNotEmpty && instances.first is ArcGISMapImageLayer;
+    if (isCampusDistricts) {
       final imageLayer = instances.first as ArcGISMapImageLayer;
       for (final sub in imageLayer.mapImageSublayers) {
         sub.isVisible = sub.id == 4;
@@ -551,7 +543,8 @@ void _toggleLayer(String key) async {
     _layerTimers[key] = Timer.periodic(Duration(seconds: interval), (_) async {
       if (!mounted) return;
       final instances = _layerInstances[key];
-      if (instances == null || idx >= instances.length) return;
+      final isInvalidIndex = instances == null || idx >= instances.length;
+      if (isInvalidIndex) return;
 
       final oldLayer = instances[idx];
       if (oldLayer != null) _map.operationalLayers.remove(oldLayer);
@@ -581,7 +574,8 @@ void _toggleLayer(String key) async {
   }
 
   void _onFocusChanged() {
-    if (_focusNode.hasFocus && _searchController.text.isEmpty) {
+    final isSearchFocusEmpty = _focusNode.hasFocus && _searchController.text.isEmpty;
+    if (isSearchFocusEmpty) {
       setState(() {
         _showSuggestions = true;
         _showResults = false;
@@ -599,11 +593,7 @@ void _toggleLayer(String key) async {
         }
       });
       if (_detailSheetController.isAttached) {
-        _detailSheetController.animateTo(
-          0.15,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
+        _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
       }
     }
   }
@@ -618,11 +608,7 @@ void _toggleLayer(String key) async {
         }
       });
       if (_detailSheetController.isAttached) {
-        _detailSheetController.animateTo(
-          0.15,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
+        _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
       }
     }
   }
@@ -633,15 +619,12 @@ void _toggleLayer(String key) async {
 
   Future<void> _loadRecentSearches() async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonStr = prefs.getString(_recentSearchesKey);
+    final jsonStr = prefs.getString(_RECENT_SEARCHES_KEY);
     if (jsonStr != null) {
       try {
         final list = jsonDecode(jsonStr) as List<dynamic>;
         setState(() {
-          _recentSearches = list
-              .map((e) =>
-                  MapSearchResult.fromJson(e as Map<String, dynamic>))
-              .toList();
+          _recentSearches = list.map((e) => MapSearchResult.fromJson(e as Map<String, dynamic>)).toList();
         });
       } catch (_) {
         // ignore corrupted data
@@ -651,20 +634,18 @@ void _toggleLayer(String key) async {
 
   Future<void> _saveRecentSearches() async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonStr =
-        jsonEncode(_recentSearches.map((r) => r.toJson()).toList());
-    await prefs.setString(_recentSearchesKey, jsonStr);
+    final jsonStr = jsonEncode(_recentSearches.map((r) => r.toJson()).toList());
+    await prefs.setString(_RECENT_SEARCHES_KEY, jsonStr);
   }
 
   void _addToRecentSearches(MapSearchResult result) {
     // Remove duplicate if exists (match by name + source)
-    _recentSearches.removeWhere(
-        (r) => r.name == result.name && r.source == result.source);
+    _recentSearches.removeWhere((r) => r.name == result.name && r.source == result.source);
     // Insert at front
     _recentSearches.insert(0, result);
     // Trim to max
-    if (_recentSearches.length > _maxRecentSearches) {
-      _recentSearches = _recentSearches.sublist(0, _maxRecentSearches);
+    if (_recentSearches.length > _MAX_RECENT_SEARCHES) {
+      _recentSearches = _recentSearches.sublist(0, _MAX_RECENT_SEARCHES);
     }
     _saveRecentSearches();
   }
@@ -682,7 +663,7 @@ void _toggleLayer(String key) async {
 
   /// GET from the REST API.
   Future<Map<String, dynamic>> _apiGet(String path, [Map<String, String>? params]) async {
-    final uri = Uri.parse('$_baseUrl/$path').replace(queryParameters: params);
+    final uri = Uri.parse('$_BASE_URL/$path').replace(queryParameters: params);
     final response = await http.get(uri);
     if (response.statusCode != 200) {
       throw Exception('API error ${response.statusCode}: ${response.body}');
@@ -692,7 +673,7 @@ void _toggleLayer(String key) async {
 
   Future<Map<String, dynamic>> _apiPost(String path, Map<String, dynamic> body) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/$path'),
+      Uri.parse('$_BASE_URL/$path'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(body),
     );
@@ -704,24 +685,25 @@ void _toggleLayer(String key) async {
 
   Future<List<MapSearchResult>> _queryBuildings(String query) async {
     final data = await _apiGet('buildings', {'q': query});
-    return (data['results'] as List<dynamic>? ?? []).map<MapSearchResult>((r) {
-      return MapSearchResult(
-        name: r['name'] as String? ?? 'Unknown Building',
-        subtitle: r['subtitle'] as String? ?? 'Building',
-        latitude: (r['latitude'] as num?)?.toDouble() ?? 0.0,
-        longitude: (r['longitude'] as num?)?.toDouble() ?? 0.0,
-        source: MapSearchSource.building,
-        address: r['address'] as String? ?? '',
-      );
-    }).where((r) => r.latitude != 0.0 && r.longitude != 0.0).toList();
+    return (data['results'] as List<dynamic>? ?? [])
+        .map<MapSearchResult>((r) {
+          return MapSearchResult(
+            name: r['name'] as String? ?? 'Unknown Building',
+            subtitle: r['subtitle'] as String? ?? 'Building',
+            latitude: (r['latitude'] as num?)?.toDouble() ?? 0.0,
+            longitude: (r['longitude'] as num?)?.toDouble() ?? 0.0,
+            source: MapSearchSource.building,
+            address: r['address'] as String? ?? '',
+          );
+        })
+        .where((r) => r.latitude != 0.0 && r.longitude != 0.0)
+        .toList();
   }
 
   Future<void> _fetchAllPoiClasses() async {
     try {
       final data = await _apiGet('poi/classes');
-      final classes = (data['classes'] as List<dynamic>? ?? [])
-          .map((c) => c as String)
-          .toList();
+      final classes = (data['classes'] as List<dynamic>? ?? []).map((c) => c as String).toList();
       setState(() => _allPoiClasses = classes);
     } catch (e) {
       debugPrint('Failed to fetch POI classes: $e');
@@ -739,17 +721,20 @@ void _toggleLayer(String key) async {
   }
 
   List<MapSearchResult> _parsePOIResults(Map<String, dynamic> data) {
-    return (data['results'] as List<dynamic>? ?? []).map<MapSearchResult>((r) {
-      return MapSearchResult(
-        name: r['name'] as String? ?? 'Unknown POI',
-        subtitle: r['subtitle'] as String? ?? '',
-        latitude: (r['latitude'] as num?)?.toDouble() ?? 0.0,
-        longitude: (r['longitude'] as num?)?.toDouble() ?? 0.0,
-        source: MapSearchSource.poi,
-        description: r['description'] as String? ?? '',
-        websiteUrl: r['websiteUrl'] as String?,
-      );
-    }).where((r) => r.latitude != 0.0 && r.longitude != 0.0).toList();
+    return (data['results'] as List<dynamic>? ?? [])
+        .map<MapSearchResult>((r) {
+          return MapSearchResult(
+            name: r['name'] as String? ?? 'Unknown POI',
+            subtitle: r['subtitle'] as String? ?? '',
+            latitude: (r['latitude'] as num?)?.toDouble() ?? 0.0,
+            longitude: (r['longitude'] as num?)?.toDouble() ?? 0.0,
+            source: MapSearchSource.poi,
+            description: r['description'] as String? ?? '',
+            websiteUrl: r['websiteUrl'] as String?,
+          );
+        })
+        .where((r) => r.latitude != 0.0 && r.longitude != 0.0)
+        .toList();
   }
 
   // ---------------------------------------------------------------------------
@@ -762,13 +747,11 @@ void _toggleLayer(String key) async {
 
     // Recompute category matches on submit
     final q = query.toLowerCase();
-    final matched = _allPoiClasses
-        .where((c) => c.toLowerCase().contains(q))
-        .toList();
+    final matched = _allPoiClasses.where((c) => c.toLowerCase().contains(q)).toList();
 
     for (final cat in _categories) {
-      if (cat.poiClassValue.toLowerCase().contains(q) &&
-          !matched.contains(cat.poiClassValue)) {
+      final matchesCategory = cat.poiClassValue.toLowerCase().contains(q) && !matched.contains(cat.poiClassValue);
+      if (matchesCategory) {
         matched.insert(0, cat.poiClassValue);
       }
     }
@@ -782,10 +765,7 @@ void _toggleLayer(String key) async {
     });
 
     try {
-      final results = await Future.wait([
-        _queryBuildings(query),
-        _queryPOIs(query),
-      ]);
+      final results = await Future.wait([_queryBuildings(query), _queryPOIs(query)]);
       final merged = <MapSearchResult>[...results[0], ...results[1]];
       setState(() {
         _searchResults = merged;
@@ -802,16 +782,11 @@ void _toggleLayer(String key) async {
 
   /// Returns the current visible map extent projected to WGS84.
   Envelope? _getViewportEnvelopeWGS84() {
-    final vp = _mapViewController.getCurrentViewpoint(
-      ViewpointType.boundingGeometry,
-    );
+    final vp = _mapViewController.getCurrentViewpoint(ViewpointType.boundingGeometry);
     if (vp == null) return null;
     final geom = vp.targetGeometry;
     if (geom == null) return null;
-    final projected = GeometryEngine.project(
-      geom,
-      outputSpatialReference: SpatialReference.wgs84,
-    );
+    final projected = GeometryEngine.project(geom, outputSpatialReference: SpatialReference.wgs84);
     return projected as Envelope?;
   }
 
@@ -821,24 +796,18 @@ void _toggleLayer(String key) async {
     final env = _getViewportEnvelopeWGS84();
     if (env == null) return results;
     return results.where((r) {
-      return r.latitude  >= env.yMin &&
-            r.latitude  <= env.yMax &&
-            r.longitude >= env.xMin &&
-            r.longitude <= env.xMax;
+      return r.latitude >= env.yMin && r.latitude <= env.yMax && r.longitude >= env.xMin && r.longitude <= env.xMax;
     }).toList();
   }
 
   /// distance in meters between two WGS84 points
-  double _distanceMeters(
-      double lat1, double lng1, double lat2, double lng2) {
+  double _distanceMeters(double lat1, double lng1, double lat2, double lng2) {
     const r = 6371000.0;
     final dLat = (lat2 - lat1) * math.pi / 180;
     final dLng = (lng2 - lng1) * math.pi / 180;
-    final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
-        math.cos(lat1 * math.pi / 180) *
-            math.cos(lat2 * math.pi / 180) *
-            math.sin(dLng / 2) *
-            math.sin(dLng / 2);
+    final a =
+        math.sin(dLat / 2) * math.sin(dLat / 2) +
+        math.cos(lat1 * math.pi / 180) * math.cos(lat2 * math.pi / 180) * math.sin(dLng / 2) * math.sin(dLng / 2);
     return r * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
   }
 
@@ -846,10 +815,7 @@ void _toggleLayer(String key) async {
   (double lat, double lng)? _getUserLatLng() {
     final pos = _mapViewController.locationDisplay.location?.position;
     if (pos == null) return null;
-    final wgs = GeometryEngine.project(
-      pos,
-      outputSpatialReference: SpatialReference.wgs84,
-    ) as ArcGISPoint?;
+    final wgs = GeometryEngine.project(pos, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
     if (wgs == null) return null;
     return (wgs.y, wgs.x);
   }
@@ -860,18 +826,10 @@ void _toggleLayer(String key) async {
     _mappedResults = results;
     for (int i = 0; i < results.length; i++) {
       final result = results[i];
-      final point = ArcGISPoint(
-        x: result.longitude,
-        y: result.latitude,
-        spatialReference: SpatialReference.wgs84,
-      );
+      final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
       final graphic = Graphic(
         geometry: point,
-        symbol: SimpleMarkerSymbol(
-          style: SimpleMarkerSymbolStyle.circle,
-          color: Colors.red,
-          size: 14,
-        ),
+        symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.red, size: 14),
       );
       // Store the list index so we can retrieve the result on tap
       graphic.attributes['resultIndex'] = i;
@@ -887,11 +845,7 @@ void _toggleLayer(String key) async {
       final r = results.first;
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
-          ArcGISPoint(
-            x: r.longitude,
-            y: r.latitude,
-            spatialReference: SpatialReference.wgs84,
-          ),
+          ArcGISPoint(x: r.longitude, y: r.latitude, spatialReference: SpatialReference.wgs84),
           scale: 5000,
         ),
       );
@@ -911,9 +865,7 @@ void _toggleLayer(String key) async {
       yMax: maxLat + padding,
       spatialReference: SpatialReference.wgs84,
     );
-    _mapViewController.setViewpointAnimated(
-      Viewpoint.fromTargetExtent(envelope),
-    );
+    _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(envelope));
   }
 
   /// Category search: query POIs filtered by Class.
@@ -1014,27 +966,19 @@ void _toggleLayer(String key) async {
 
     _graphicsOverlay.graphics.clear();
 
-    final point = ArcGISPoint(
-      x: result.longitude,
-      y: result.latitude,
-      spatialReference: SpatialReference.wgs84,
-    );
+    final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
 
     final graphic = Graphic(
       geometry: point,
       symbol: SimpleMarkerSymbol(
         style: SimpleMarkerSymbolStyle.circle,
-        color: result.source == MapSearchSource.building
-            ? Colors.blue
-            : Colors.red,
+        color: result.source == MapSearchSource.building ? Colors.blue : Colors.red,
         size: 14,
       ),
     );
     _graphicsOverlay.graphics.add(graphic);
 
-    _mapViewController.setViewpointAnimated(
-      Viewpoint.fromCenter(point, scale: 5000),
-    );
+    _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(point, scale: 5000));
 
     setState(() {
       _showResults = false;
@@ -1079,7 +1023,8 @@ void _toggleLayer(String key) async {
       if (identifyResult.graphics.isNotEmpty) {
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
-        if (index != null && index >= 0 && index < _mappedResults.length) {
+        final isValidResultIndex = index != null && index >= 0 && index < _mappedResults.length;
+        if (isValidResultIndex) {
           _selectResultFromPin(_mappedResults[index]);
         }
       } else {
@@ -1133,15 +1078,9 @@ void _toggleLayer(String key) async {
       return;
     }
 
-    final point = ArcGISPoint(
-      x: result.longitude,
-      y: result.latitude,
-      spatialReference: SpatialReference.wgs84,
-    );
+    final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
 
-    _mapViewController.setViewpointAnimated(
-      Viewpoint.fromCenter(point, scale: 5000),
-    );
+    _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(point, scale: 5000));
 
     setState(() {
       _selectedResult = result;
@@ -1157,8 +1096,8 @@ void _toggleLayer(String key) async {
 
   void _closeDetail() {
     // If a category search is active and not in routing mode, reopen the list view
-    if (_allCategoryResults.isNotEmpty &&
-        !_showRouteFields && !_hasRoute && !_routeFailed) {
+    final canShowCategoryResults = _allCategoryResults.isNotEmpty && !_showRouteFields && !_hasRoute && !_routeFailed;
+    if (canShowCategoryResults) {
       setState(() {
         _selectedResult = null;
         _showCategoryList = true;
@@ -1177,15 +1116,13 @@ void _toggleLayer(String key) async {
     if (loc == null) return;
 
     // Briefly snap to recenter mode, then release back to free pan
-    _mapViewController.locationDisplay.autoPanMode =
-        LocationDisplayAutoPanMode.recenter;
+    _mapViewController.locationDisplay.autoPanMode = LocationDisplayAutoPanMode.recenter;
     _ignoreViewpointReset = true;
     setState(() => _isLocationActive = true);
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) {
         _ignoreViewpointReset = false;
-        _mapViewController.locationDisplay.autoPanMode =
-            LocationDisplayAutoPanMode.off;
+        _mapViewController.locationDisplay.autoPanMode = LocationDisplayAutoPanMode.off;
       }
     });
   }
@@ -1204,6 +1141,7 @@ void _toggleLayer(String key) async {
       }
       return;
     }
+    final hasLastResultNoMapped = _lastSelectedResult != null && _mappedResults.isEmpty;
     if (_selectedResult != null) {
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
@@ -1215,7 +1153,7 @@ void _toggleLayer(String key) async {
           scale: 5000,
         ),
       );
-    } else if (_lastSelectedResult != null && _mappedResults.isEmpty) {
+    } else if (hasLastResultNoMapped) {
       // Single pin on map, slide-over closed
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
@@ -1233,11 +1171,7 @@ void _toggleLayer(String key) async {
     } else {
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
-          ArcGISPoint(
-            x: -117.2340,
-            y: 32.8801,
-            spatialReference: SpatialReference.wgs84,
-          ),
+          ArcGISPoint(x: -117.2340, y: 32.8801, spatialReference: SpatialReference.wgs84),
           scale: 24000,
         ),
       );
@@ -1284,7 +1218,7 @@ void _toggleLayer(String key) async {
   // Routing
   // ---------------------------------------------------------------------------
 
-/*   Future<void> _launchDirections(MapSearchResult result) async {                                                                
+  /*   Future<void> _launchDirections(MapSearchResult result) async {
     final uri = Uri.parse(
       'https://www.google.com/maps/dir/?api=1'
       '&destination=${result.latitude},${result.longitude}',
@@ -1294,7 +1228,7 @@ void _toggleLayer(String key) async {
     }
   } */
 
-  static const _routeServiceUrl =
+  static const _ROUTE_SERVICE_URL =
       'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
       'Wayfinding/Campus_Wayfinding_Network/NAServer/Route';
 
@@ -1315,29 +1249,21 @@ void _toggleLayer(String key) async {
     });
 
     try {
-      final routeTask = RouteTask.withUri(Uri.parse(_routeServiceUrl));
+      final routeTask = RouteTask.withUri(Uri.parse(_ROUTE_SERVICE_URL));
       await routeTask.load();
 
       final params = await routeTask.createDefaultParameters();
       params.returnDirections = true;
       final taskInfo = routeTask.getRouteTaskInfo();
-      final matchingMode = taskInfo.travelModes
-          .where((m) => m.name == mode)
-          .firstOrNull;
+      final matchingMode = taskInfo.travelModes.where((m) => m.name == mode).firstOrNull;
       if (matchingMode != null) {
         params.travelMode = matchingMode;
       }
 
-      final origin = Stop(ArcGISPoint(
-        x: userLatLng.$2,
-        y: userLatLng.$1,
-        spatialReference: SpatialReference.wgs84,
-      ));
-      final dest = Stop(ArcGISPoint(
-        x: destination.longitude,
-        y: destination.latitude,
-        spatialReference: SpatialReference.wgs84,
-      ));
+      final origin = Stop(ArcGISPoint(x: userLatLng.$2, y: userLatLng.$1, spatialReference: SpatialReference.wgs84));
+      final dest = Stop(
+        ArcGISPoint(x: destination.longitude, y: destination.latitude, spatialReference: SpatialReference.wgs84),
+      );
       params.setStops([origin, dest]);
 
       final result = await routeTask.solveRoute(params);
@@ -1365,47 +1291,33 @@ void _toggleLayer(String key) async {
       _routeGraphicsOverlay.graphics.clear();
       final routeGraphic = Graphic(
         geometry: routeGeometry,
-        symbol: SimpleLineSymbol(
-          style: SimpleLineSymbolStyle.solid,
-          color: Colors.blue,
-          width: 4,
-        ),
+        symbol: SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.blue, width: 4),
       );
       _routeGraphicsOverlay.graphics.add(routeGraphic);
 
       // End point marker
-      final whiteOutline = SimpleLineSymbol(
-        style: SimpleLineSymbolStyle.solid,
-        color: Colors.white,
-        width: 2,
-      );
-      _routeGraphicsOverlay.graphics.add(Graphic(
-        geometry: ArcGISPoint(
-          x: destination.longitude,
-          y: destination.latitude,
-          spatialReference: SpatialReference.wgs84,
+      final whiteOutline = SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.white, width: 2);
+      _routeGraphicsOverlay.graphics.add(
+        Graphic(
+          geometry: ArcGISPoint(
+            x: destination.longitude,
+            y: destination.latitude,
+            spatialReference: SpatialReference.wgs84,
+          ),
+          symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.red, size: 12)
+            ..outline = whiteOutline,
         ),
-        symbol: SimpleMarkerSymbol(
-          style: SimpleMarkerSymbolStyle.circle,
-          color: Colors.red,
-          size: 12,
-        )..outline = whiteOutline,
-      ));
+      );
 
       // Start point marker (only when origin is not GPS)
       if (originLatLng != null) {
-        _routeGraphicsOverlay.graphics.add(Graphic(
-          geometry: ArcGISPoint(
-            x: originLatLng.$2,
-            y: originLatLng.$1,
-            spatialReference: SpatialReference.wgs84,
+        _routeGraphicsOverlay.graphics.add(
+          Graphic(
+            geometry: ArcGISPoint(x: originLatLng.$2, y: originLatLng.$1, spatialReference: SpatialReference.wgs84),
+            symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.blue, size: 12)
+              ..outline = whiteOutline,
           ),
-          symbol: SimpleMarkerSymbol(
-            style: SimpleMarkerSymbolStyle.circle,
-            color: Colors.blue,
-            size: 12,
-          )..outline = whiteOutline,
-        ));
+        );
       }
 
       // Zoom to the route extent with extra bottom padding so the line
@@ -1422,9 +1334,7 @@ void _toggleLayer(String key) async {
         spatialReference: extent.spatialReference,
       );
       _routePaddedExtent = paddedExtent;
-      _mapViewController.setViewpointAnimated(
-        Viewpoint.fromTargetExtent(paddedExtent),
-      );
+      _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(paddedExtent));
 
       _graphicsOverlay.graphics.clear();
       _mappedResults = [];
@@ -1449,23 +1359,15 @@ void _toggleLayer(String key) async {
 
   void _onAiLocationSelected(AiSearchResult result) {
     _searchController.text = result.name;
-    final point = ArcGISPoint(
-      x: result.longitude,
-      y: result.latitude,
-      spatialReference: SpatialReference.wgs84,
-    );
+    final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
     _graphicsOverlay.graphics.clear();
-    _graphicsOverlay.graphics.add(Graphic(
-      geometry: point,
-      symbol: SimpleMarkerSymbol(
-        style: SimpleMarkerSymbolStyle.circle,
-        color: Colors.red,
-        size: 14,
+    _graphicsOverlay.graphics.add(
+      Graphic(
+        geometry: point,
+        symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.red, size: 14),
       ),
-    ));
-    _mapViewController.setViewpointAnimated(
-      Viewpoint.fromCenter(point, scale: 5000),
     );
+    _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(point, scale: 5000));
     final mapResult = MapSearchResult(
       name: result.name,
       subtitle: result.subtitle,
@@ -1527,19 +1429,17 @@ void _toggleLayer(String key) async {
         spatialReference: SpatialReference.wgs84,
       );
       _graphicsOverlay.graphics.clear();
-      _graphicsOverlay.graphics.add(Graphic(
-        geometry: point,
-        symbol: SimpleMarkerSymbol(
-          style: SimpleMarkerSymbolStyle.circle,
-          color: destination.source == MapSearchSource.building
-              ? Colors.blue
-              : Colors.red,
-          size: 14,
+      _graphicsOverlay.graphics.add(
+        Graphic(
+          geometry: point,
+          symbol: SimpleMarkerSymbol(
+            style: SimpleMarkerSymbolStyle.circle,
+            color: destination.source == MapSearchSource.building ? Colors.blue : Colors.red,
+            size: 14,
+          ),
         ),
-      ));
-      _mapViewController.setViewpointAnimated(
-        Viewpoint.fromCenter(point, scale: 5000),
       );
+      _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(point, scale: 5000));
     }
 
     setState(() {
@@ -1556,9 +1456,7 @@ void _toggleLayer(String key) async {
   }
 
   IconData _iconForResult(MapSearchResult result) {
-    return result.source == MapSearchSource.building
-        ? Icons.business
-        : Icons.place;
+    return result.source == MapSearchSource.building ? Icons.business : Icons.place;
   }
 
   /// Returns the icon for a POI class — uses the hardcoded category icon if one
@@ -1567,8 +1465,7 @@ void _toggleLayer(String key) async {
     return _categories
         .firstWhere(
           (c) => c.poiClassValue.toLowerCase() == classValue.toLowerCase(),
-          orElse: () => const _SearchCategory(
-              label: '', icon: Icons.place, poiClassValue: ''),
+          orElse: () => const _SearchCategory(label: '', icon: Icons.place, poiClassValue: ''),
         )
         .icon;
   }
@@ -1576,8 +1473,7 @@ void _toggleLayer(String key) async {
   /// Converts a raw class value like "Food and Beverage" into a display label.
   /// Uses the hardcoded category label if available, otherwise returns as-is.
   String _labelForClass(String classValue) {
-    final match = _categories.where(
-        (c) => c.poiClassValue.toLowerCase() == classValue.toLowerCase());
+    final match = _categories.where((c) => c.poiClassValue.toLowerCase() == classValue.toLowerCase());
     return match.isNotEmpty ? match.first.label : classValue;
   }
 
@@ -1594,10 +1490,7 @@ void _toggleLayer(String key) async {
       borderRadius: BorderRadius.circular(8),
       color: bgColor,
       child: Padding(
-        padding: EdgeInsets.only(
-          top: (_showRouteFields && _activeRouteField == 'from') ? 0 : 12,
-          bottom: 12,
-        ),
+        padding: EdgeInsets.only(top: (_showRouteFields && _activeRouteField == 'from') ? 0 : 12, bottom: 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1664,9 +1557,7 @@ void _toggleLayer(String key) async {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: _categories
-                    .map((cat) => _buildCategoryChip(context, cat))
-                    .toList(),
+                children: _categories.map((cat) => _buildCategoryChip(context, cat)).toList(),
               ),
             ),
 
@@ -1692,23 +1583,11 @@ void _toggleLayer(String key) async {
                 return ListTile(
                   splashColor: Colors.transparent,
                   dense: true,
-                  leading: Icon(
-                    Icons.history,
-                    size: 20,
-                    color: isDark ? Colors.grey[500] : Colors.grey[400],
-                  ),
-                  title: Text(
-                    recent.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  leading: Icon(Icons.history, size: 20, color: isDark ? Colors.grey[500] : Colors.grey[400]),
+                  title: Text(recent.name, maxLines: 1, overflow: TextOverflow.ellipsis),
                   trailing: GestureDetector(
                     onTap: () => _removeFromRecentSearches(index),
-                    child: Icon(
-                      Icons.close,
-                      size: 16,
-                      color: isDark ? Colors.grey[500] : Colors.grey[400],
-                    ),
+                    child: Icon(Icons.close, size: 16, color: isDark ? Colors.grey[500] : Colors.grey[400]),
                   ),
                   onTap: () => _selectResult(recent),
                 );
@@ -1731,24 +1610,11 @@ void _toggleLayer(String key) async {
           Container(
             width: 56,
             height: 56,
-            decoration: BoxDecoration(
-              color: category.color,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              category.icon,
-              size: 24,
-              color: Colors.black,
-            ),
+            decoration: BoxDecoration(color: category.color, shape: BoxShape.circle),
+            child: Icon(category.icon, size: 24, color: Colors.black),
           ),
           SizedBox(height: 6),
-          Text(
-            category.label,
-            style: TextStyle(
-              fontSize: 13,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
-          ),
+          Text(category.label, style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600])),
         ],
       ),
     );
@@ -1767,20 +1633,12 @@ void _toggleLayer(String key) async {
     // Collapse whichever sheet is active to the minimum snap
     if (_showCategoryList && _selectedResult == null) {
       if (_categorySheetController.isAttached) {
-        _categorySheetController.animateTo(
-          0.15,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
+        _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
       }
     }
     if (_selectedResult != null) {
       if (_detailSheetController.isAttached) {
-        _detailSheetController.animateTo(
-          0.15,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
+        _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
       }
     }
   }
@@ -1794,7 +1652,7 @@ void _toggleLayer(String key) async {
   /// [onClose] is called when the X button is tapped.
   /// [trailing] is an optional widget shown before the close button (e.g. "Search here").
   /// [sliverBody] is the scrollable content below the header.
-  static const _slideOverHeaderHeight = 80.0;
+  static const _SLIDE_OVER_HEADER_HEIGHT = 80.0;
 
   Widget _buildSlideOverContent({
     required BuildContext context,
@@ -1819,7 +1677,7 @@ void _toggleLayer(String key) async {
           SliverPersistentHeader(
             pinned: true,
             delegate: _SlideOverHeaderDelegate(
-              height: _slideOverHeaderHeight,
+              height: _SLIDE_OVER_HEADER_HEIGHT,
               backgroundColor: bgColor,
               child: Column(
                 children: [
@@ -1841,11 +1699,7 @@ void _toggleLayer(String key) async {
                     child: Row(
                       children: [
                         if (headerIcon != null) ...[
-                          Icon(
-                            headerIcon,
-                            size: 18,
-                            color: isDark ? Colors.white70 : Colors.grey[700],
-                          ),
+                          Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
                           const SizedBox(width: 8),
                         ],
                         Expanded(
@@ -1866,14 +1720,9 @@ void _toggleLayer(String key) async {
                             height: 34,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color:
-                                  isDark ? Colors.grey[800] : Colors.grey[200],
+                              color: isDark ? Colors.grey[800] : Colors.grey[200],
                             ),
-                            child: Icon(
-                              Icons.close,
-                              size: 18,
-                              color: isDark ? Colors.white70 : Colors.grey[700],
-                            ),
+                            child: Icon(Icons.close, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
                           ),
                         ),
                       ],
@@ -1884,9 +1733,7 @@ void _toggleLayer(String key) async {
             ),
           ),
           // Divider below header
-          SliverToBoxAdapter(
-            child: Divider(height: 1),
-          ),
+          SliverToBoxAdapter(child: Divider(height: 1)),
           ...sliverBody,
         ],
       ),
@@ -1904,21 +1751,22 @@ void _toggleLayer(String key) async {
     final userPos = _getUserLatLng();
     final results = List<MapSearchResult>.from(viewport);
     if (userPos != null) {
-      results.sort((a, b) =>
-          _distanceMeters(userPos.$1, userPos.$2, a.latitude, a.longitude)
-              .compareTo(
-                  _distanceMeters(
-                      userPos.$1, userPos.$2, b.latitude, b.longitude)));
+      results.sort(
+        (a, b) => _distanceMeters(
+          userPos.$1,
+          userPos.$2,
+          a.latitude,
+          a.longitude,
+        ).compareTo(_distanceMeters(userPos.$1, userPos.$2, b.latitude, b.longitude)),
+      );
     }
 
     // Content-aware sizing: estimate content height as fraction of screen
     final screenHeight = MediaQuery.of(context).size.height;
     // Each list tile ~56px + header ~80px + divider
-    final contentHeight =
-        _slideOverHeaderHeight + (results.length * 56.0).clamp(56.0, 600.0);
+    final contentHeight = _SLIDE_OVER_HEADER_HEIGHT + (results.length * 56.0).clamp(56.0, 600.0);
     final contentFraction = (contentHeight / screenHeight).clamp(0.15, 0.80);
-    final initialSize =
-        contentFraction < 0.45 ? contentFraction : 0.45;
+    final initialSize = contentFraction < 0.45 ? contentFraction : 0.45;
     final maxSize = contentFraction < 0.80 ? contentFraction.clamp(0.45, 0.80) : 0.80;
     // Snap sizes must be strictly increasing and within [min, max]
     final snaps = <double>[0.15];
@@ -1932,9 +1780,7 @@ void _toggleLayer(String key) async {
       snap: true,
       snapSizes: snaps,
       builder: (context, scrollController) {
-        final headerTitle = results.isEmpty
-            ? '$label - None in view'
-            : '$label - ${results.length} in view';
+        final headerTitle = results.isEmpty ? '$label - None in view' : '$label - ${results.length} in view';
 
         return _buildSlideOverContent(
           context: context,
@@ -1944,17 +1790,10 @@ void _toggleLayer(String key) async {
           onClose: _clearSearch,
           trailing: _allCategoryResults.length > results.length
               ? TextButton.icon(
-                  icon: Icon(
-                    Icons.layers_outlined,
-                    size: 16,
-                    color: isDark ? Colors.white54 : Colors.grey[600],
-                  ),
+                  icon: Icon(Icons.layers_outlined, size: 16, color: isDark ? Colors.white54 : Colors.grey[600]),
                   label: Text(
                     'See all ${_allCategoryResults.length} results',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: isDark ? Colors.white54 : Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 13, color: isDark ? Colors.white54 : Colors.grey[600]),
                   ),
                   style: TextButton.styleFrom(
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -1972,21 +1811,12 @@ void _toggleLayer(String key) async {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.location_off,
-                              size: 32,
-                              color: isDark
-                                  ? Colors.grey[600]
-                                  : Colors.grey[400]),
+                          Icon(Icons.location_off, size: 32, color: isDark ? Colors.grey[600] : Colors.grey[400]),
                           const SizedBox(height: 8),
                           Text(
                             'No $label in current view.\nPan the map to see results.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: isDark
-                                  ? Colors.grey[500]
-                                  : Colors.grey[600],
-                            ),
+                            style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[500] : Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -1995,59 +1825,49 @@ void _toggleLayer(String key) async {
                 ]
               : [
                   SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final r = results[index];
-                        final dist = userPos != null
-                            ? _distanceMeters(userPos.$1, userPos.$2,
-                                r.latitude, r.longitude)
-                            : null;
-                        final distLabel = dist == null
-                            ? null
-                            : dist < 1000
-                                ? '${dist.round()} m away'
-                                : '${(dist / 1000).toStringAsFixed(1)} km away';
-
-                        return Column(
-                          children: [
-                            ListTile(
-                              splashColor: Colors.transparent,
-                              leading: Icon(
-                                _iconForResult(r),
-                                size: 20,
-                                color: isDark
-                                    ? Colors.grey[400]
-                                    : Colors.grey[600],
-                              ),
-                              title: Text(
-                                r.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              subtitle: distLabel != null
-                                  ? Text(distLabel,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.grey[500],
-                                      ))
-                                  : (r.subtitle.isNotEmpty
-                                      ? Text(r.subtitle,
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final r = results[index];
+                      final dist = userPos != null
+                          ? _distanceMeters(userPos.$1, userPos.$2, r.latitude, r.longitude)
+                          : null;
+                      final distLabel = dist == null
+                          ? null
+                          : dist < 1000
+                          ? '${dist.round()} m away'
+                          : '${(dist / 1000).toStringAsFixed(1)} km away';
+                      final isNotLastResult = index < results.length - 1;
+                      return Column(
+                        children: [
+                          ListTile(
+                            splashColor: Colors.transparent,
+                            leading: Icon(
+                              _iconForResult(r),
+                              size: 20,
+                              color: isDark ? Colors.grey[400] : Colors.grey[600],
+                            ),
+                            title: Text(
+                              r.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            subtitle: distLabel != null
+                                ? Text(distLabel, style: TextStyle(fontSize: 13, color: Colors.grey[500]))
+                                : (r.subtitle.isNotEmpty
+                                      ? Text(
+                                          r.subtitle,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style:
-                                              const TextStyle(fontSize: 13))
+                                          style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                                        )
                                       : null),
-                              dense: true,
-                              onTap: () => _selectResultFromPin(r),
-                            ),
-                            if (index < results.length - 1)
-                              const Divider(height: 1),
-                          ],
-                        );
-                      },
-                      childCount: results.length,
-                    ),
+                            dense: true,
+                            onTap: () => _selectResultFromPin(r),
+                          ),
+                          if (isNotLastResult) const Divider(height: 1),
+                        ],
+                      );
+                    }, childCount: results.length),
                   ),
                 ],
         );
@@ -2063,25 +1883,19 @@ void _toggleLayer(String key) async {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isRouting = _showRouteFields || _hasRoute || _routeFailed;
 
-    final detailText = result.source == MapSearchSource.building
-        ? result.address
-        : result.description;
-    final categoryLabel = result.source == MapSearchSource.building
-        ? 'Building'
-        : result.subtitle;
+    final detailText = result.source == MapSearchSource.building ? result.address : result.description;
+    final categoryLabel = result.source == MapSearchSource.building ? 'Building' : result.subtitle;
 
     // Content-aware sizing: estimate how tall the detail content is
     final screenHeight = MediaQuery.of(context).size.height;
     // header ~80 + name ~30 + detail ~20 + buttons ~48 + padding ~40
-    double contentEst = _slideOverHeaderHeight + 30 + 48 + 40;
+    double contentEst = _SLIDE_OVER_HEADER_HEIGHT + 30 + 48 + 40;
     if (detailText.isNotEmpty) contentEst += 60;
-    if (_hasRoute && _routeManeuvers.isNotEmpty) contentEst += _routeManeuvers.length * 52.0;
+    final hasRouteManeuvers = _hasRoute && _routeManeuvers.isNotEmpty;
+    if (hasRouteManeuvers) contentEst += _routeManeuvers.length * 52.0;
     final contentFraction = (contentEst / screenHeight).clamp(0.15, 0.80);
-    final initialSize =
-        _hasRoute ? 0.35 : (contentFraction < 0.30 ? contentFraction : 0.30);
-    final maxSize = _hasRoute
-        ? 0.80
-        : (contentFraction < 0.80 ? contentFraction.clamp(0.30, 0.80) : 0.80);
+    final initialSize = _hasRoute ? 0.35 : (contentFraction < 0.30 ? contentFraction : 0.30);
+    final maxSize = _hasRoute ? 0.80 : (contentFraction < 0.80 ? contentFraction.clamp(0.30, 0.80) : 0.80);
     // Snap sizes must be strictly increasing and within [min, max]
     final snaps = <double>[0.15];
     if (initialSize > 0.15 + 0.01) snaps.add(initialSize);
@@ -2094,12 +1908,11 @@ void _toggleLayer(String key) async {
       snap: true,
       snapSizes: snaps,
       builder: (context, scrollController) {
+        final shouldShowDetailText = !isRouting && detailText.isNotEmpty;
         return _buildSlideOverContent(
           context: context,
           scrollController: scrollController,
-          headerTitle: isRouting
-              ? 'Directions to ${result.name}'
-              : result.name,
+          headerTitle: isRouting ? 'Directions to ${result.name}' : result.name,
           headerIcon: _iconForResult(result),
           onClose: isRouting ? _clearRoute : _closeDetail,
           sliverBody: [
@@ -2113,22 +1926,15 @@ void _toggleLayer(String key) async {
                     if (!isRouting)
                       Text(
                         categoryLabel,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 14, color: isDark ? Colors.grey[400] : Colors.grey[600]),
                       ),
 
                     // Detail text (hidden in routing mode)
-                    if (!isRouting && detailText.isNotEmpty) ...[
+                    if (shouldShowDetailText) ...[
                       const SizedBox(height: 8),
                       Text(
                         detailText,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color:
-                              isDark ? Colors.grey[400] : Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[400] : Colors.grey[600]),
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -2139,10 +1945,7 @@ void _toggleLayer(String key) async {
                     if (_routeFailed) ...[
                       Text(
                         'No route available from your current location.',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[400] : Colors.grey[600]),
                       ),
                       const SizedBox(height: 12),
                       SizedBox(
@@ -2157,11 +1960,8 @@ void _toggleLayer(String key) async {
                           icon: const Icon(Icons.map_outlined, size: 18),
                           label: const Text('Navigate in Google Maps'),
                           style: FilledButton.styleFrom(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                         ),
                       ),
@@ -2169,16 +1969,10 @@ void _toggleLayer(String key) async {
                       // Travel time
                       Row(
                         children: [
-                          Icon(
-                            Icons.schedule,
-                            size: 18,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
-                          ),
+                          Icon(Icons.schedule, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
                           const SizedBox(width: 6),
                           Text(
-                            _routeTravelTimeMinutes < 1
-                                ? '< 1 min'
-                                : '${_routeTravelTimeMinutes.ceil()} min',
+                            _routeTravelTimeMinutes < 1 ? '< 1 min' : '${_routeTravelTimeMinutes.ceil()} min',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -2199,33 +1993,22 @@ void _toggleLayer(String key) async {
                                   ? null
                                   : () => _solveRoute(result, travelMode: mode, originLatLng: _fromLatLng),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 8),
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                                 decoration: BoxDecoration(
                                   color: mode == _travelMode
-                                      ? (isDark
-                                          ? Colors.white
-                                          : Colors.grey[900])
-                                      : (isDark
-                                          ? Colors.grey[800]
-                                          : Colors.grey[100]),
+                                      ? (isDark ? Colors.white : Colors.grey[900])
+                                      : (isDark ? Colors.grey[800] : Colors.grey[100]),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(
-                                      mode == 'Walking'
-                                          ? Icons.directions_walk
-                                          : Icons.accessible,
+                                      mode == 'Walking' ? Icons.directions_walk : Icons.accessible,
                                       size: 16,
                                       color: mode == _travelMode
-                                          ? (isDark
-                                              ? Colors.grey[900]
-                                              : Colors.white)
-                                          : (isDark
-                                              ? Colors.white70
-                                              : Colors.grey[700]),
+                                          ? (isDark ? Colors.grey[900] : Colors.white)
+                                          : (isDark ? Colors.white70 : Colors.grey[700]),
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
@@ -2234,12 +2017,8 @@ void _toggleLayer(String key) async {
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: mode == _travelMode
-                                            ? (isDark
-                                                ? Colors.grey[900]
-                                                : Colors.white)
-                                            : (isDark
-                                                ? Colors.white70
-                                                : Colors.grey[700]),
+                                            ? (isDark ? Colors.grey[900] : Colors.white)
+                                            : (isDark ? Colors.white70 : Colors.grey[700]),
                                       ),
                                     ),
                                   ],
@@ -2264,18 +2043,10 @@ void _toggleLayer(String key) async {
                           icon: const Icon(Icons.map_outlined, size: 18),
                           label: const Text('Navigate in Google Maps'),
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: isDark
-                                ? const Color(0xFFFFCD00)
-                                : null,
-                            side: isDark
-                                ? const BorderSide(
-                                    color: Color(0xFFFFCD00))
-                                : null,
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                            foregroundColor: isDark ? const Color(0xFFFFCD00) : null,
+                            side: isDark ? const BorderSide(color: Color(0xFFFFCD00)) : null,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                         ),
                       ),
@@ -2285,23 +2056,14 @@ void _toggleLayer(String key) async {
                           if (result.websiteUrl != null) ...[
                             Expanded(
                               child: OutlinedButton.icon(
-                                onPressed: () =>
-                                    _launchWebsite(result.websiteUrl!),
+                                onPressed: () => _launchWebsite(result.websiteUrl!),
                                 icon: const Icon(Icons.language, size: 18),
                                 label: const Text('View website'),
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: isDark
-                                      ? const Color(0xFFFFCD00)
-                                      : null,
-                                  side: isDark
-                                      ? const BorderSide(
-                                          color: Color(0xFFFFCD00))
-                                      : null,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                                  foregroundColor: isDark ? const Color(0xFFFFCD00) : null,
+                                  side: isDark ? const BorderSide(color: Color(0xFFFFCD00)) : null,
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
                               ),
                             ),
@@ -2313,8 +2075,7 @@ void _toggleLayer(String key) async {
                                   ? null
                                   : () {
                                       final gps = _getUserLatLng();
-                                      _fromController.text =
-                                          gps != null ? 'My Location' : '';
+                                      _fromController.text = gps != null ? 'My Location' : '';
                                       _toController.text = result.name;
                                       _routeDestination = result;
                                       _graphicsOverlay.graphics.clear();
@@ -2332,20 +2093,13 @@ void _toggleLayer(String key) async {
                                   ? const SizedBox(
                                       width: 18,
                                       height: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                                     )
                                   : const Icon(Icons.directions, size: 18),
-                              label: Text(
-                                  _isRouting ? 'Routing...' : 'Get Directions'),
+                              label: Text(_isRouting ? 'Routing...' : 'Get Directions'),
                               style: FilledButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
                             ),
                           ),
@@ -2356,48 +2110,37 @@ void _toggleLayer(String key) async {
               ),
             ),
             // Direction maneuver steps (when route is active)
-            if (_hasRoute && _routeManeuvers.isNotEmpty)
+            if (hasRouteManeuvers)
               SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final step = _routeManeuvers[index];
-                    final distMeters = step.length;
-                    final distLabel = distMeters < 1000
-                        ? '${distMeters.round()} m'
-                        : '${(distMeters / 1000).toStringAsFixed(1)} km';
-                    return Column(
-                      children: [
-                        if (index == 0) const Divider(height: 1),
-                        ListTile(
-                          leading: Icon(
-                            Icons.subdirectory_arrow_right,
-                            size: 20,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
-                          ),
-                          title: Text(
-                            step.directionText,
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          trailing: distMeters > 0
-                              ? Text(
-                                  distLabel,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: isDark
-                                        ? Colors.grey[500]
-                                        : Colors.grey[500],
-                                  ),
-                                )
-                              : null,
-                          dense: true,
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final step = _routeManeuvers[index];
+                  final distMeters = step.length;
+                  final distLabel = distMeters < 1000
+                      ? '${distMeters.round()} m'
+                      : '${(distMeters / 1000).toStringAsFixed(1)} km';
+                  final isNotLastManeuver = index < _routeManeuvers.length - 1;
+                  return Column(
+                    children: [
+                      if (index == 0) const Divider(height: 1),
+                      ListTile(
+                        leading: Icon(
+                          Icons.subdirectory_arrow_right,
+                          size: 20,
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
                         ),
-                        if (index < _routeManeuvers.length - 1)
-                          const Divider(height: 1),
-                      ],
-                    );
-                  },
-                  childCount: _routeManeuvers.length,
-                ),
+                        title: Text(step.directionText, style: const TextStyle(fontSize: 14)),
+                        trailing: distMeters > 0
+                            ? Text(
+                                distLabel,
+                                style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[500] : Colors.grey[500]),
+                              )
+                            : null,
+                        dense: true,
+                      ),
+                      if (isNotLastManeuver) const Divider(height: 1),
+                    ],
+                  );
+                }, childCount: _routeManeuvers.length),
               ),
           ],
         );
@@ -2414,6 +2157,8 @@ void _toggleLayer(String key) async {
     super.build(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    final shouldShowResultsDivider = _showResults && (_isSearching || _searchResults.isNotEmpty);
+    final shouldShowCatListPanel = _showCategoryList && _selectedResult == null && _allCategoryResults.isNotEmpty;
 
     return Scaffold(
       body: Stack(
@@ -2423,9 +2168,11 @@ void _toggleLayer(String key) async {
             children: [
               Expanded(
                 child: IndexedStack(
-                  index: _sceneMode == 'building3d' ? 1
-                       : _sceneMode == 'droneView'  ? 2
-                       : 0,
+                  index: _sceneMode == 'building3d'
+                      ? 1
+                      : _sceneMode == 'droneView'
+                      ? 2
+                      : 0,
                   children: [
                     Listener(
                       onPointerDown: _onMapPointerDown,
@@ -2445,418 +2192,385 @@ void _toggleLayer(String key) async {
 
           // Floating search bar + dropdown — hidden in 3D/Drone View modes
           if (_sceneMode == 'default')
-          Positioned(
-            top: 8,
-            left: 12,
-            right: 12,
-            child: Column(
-              children: [
-                // Search bar / route fields
-                if (_showRouteFields)
-                  Material(
-                    elevation: 4,
-                    borderRadius: BorderRadius.circular(8),
-                    color: isDark ? Colors.grey[850] : Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // Left dot column
-                          Padding(
-                            padding: const EdgeInsets.only(left: 14),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.circle_outlined,
-                                    size: 12,
-                                    color: Colors.blue),
-                                Container(
-                                  width: 1.5,
-                                  height: 24,
-                                  color: isDark
-                                      ? Colors.grey[600]
-                                      : Colors.grey[300],
-                                ),
-                                Icon(Icons.circle,
-                                    size: 12,
-                                    color: Colors.red),
-                              ],
+            Positioned(
+              top: 8,
+              left: 12,
+              right: 12,
+              child: Column(
+                children: [
+                  // Search bar / route fields
+                  if (_showRouteFields)
+                    Material(
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(8),
+                      color: isDark ? Colors.grey[850] : Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Left dot column
+                            Padding(
+                              padding: const EdgeInsets.only(left: 14),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.circle_outlined, size: 12, color: Colors.blue),
+                                  Container(
+                                    width: 1.5,
+                                    height: 24,
+                                    color: isDark ? Colors.grey[600] : Colors.grey[300],
+                                  ),
+                                  Icon(Icons.circle, size: 12, color: Colors.red),
+                                ],
+                              ),
                             ),
-                          ),
-                          // Text fields
-                          Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _fromController,
-                                        focusNode: _fromFocusNode,
-                                        style: const TextStyle(fontSize: 16),
-                                        decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                              EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 14),
-                                          hintText: 'From',
-                                          isDense: true,
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _activeRouteField = 'from';
-                                            _showSuggestions = true;
-                                            _showResults = false;
-                                          });
-                                        },
-                                        onChanged: (text) {
-                                          _fromLatLng = null;
-                                          if (text.length >= 3) {
-                                            _performSearch(text);
-                                          } else if (text.isEmpty) {
+                            // Text fields
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _fromController,
+                                          focusNode: _fromFocusNode,
+                                          style: const TextStyle(fontSize: 16),
+                                          decoration: const InputDecoration(
+                                            border: InputBorder.none,
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                                            hintText: 'From',
+                                            isDense: true,
+                                          ),
+                                          onTap: () {
                                             setState(() {
-                                              _showResults = false;
+                                              _activeRouteField = 'from';
                                               _showSuggestions = true;
-                                            });
-                                          } else {
-                                            setState(() {
                                               _showResults = false;
-                                              _showSuggestions = false;
                                             });
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    if (_fromController.text.isNotEmpty)
-                                      SizedBox(
-                                        width: 28,
-                                        height: 28,
-                                        child: IconButton(
-                                          padding: EdgeInsets.zero,
-                                          icon: Icon(Icons.close,
-                                              size: 16,
-                                              color: isDark
-                                                  ? Colors.white70
-                                                  : Colors.grey[600]),
-                                          onPressed: () {
-                                            _fromController.clear();
+                                          },
+                                          onChanged: (text) {
                                             _fromLatLng = null;
-                                            setState(() =>
-                                                _showSuggestions = true);
+                                            if (text.length >= 3) {
+                                              _performSearch(text);
+                                            } else if (text.isEmpty) {
+                                              setState(() {
+                                                _showResults = false;
+                                                _showSuggestions = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                _showResults = false;
+                                                _showSuggestions = false;
+                                              });
+                                            }
                                           },
                                         ),
                                       ),
-                                  ],
-                                ),
-                                Divider(height: 1, indent: 10, endIndent: 10),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _toController,
-                                        focusNode: _toFocusNode,
-                                        style: const TextStyle(fontSize: 16),
-                                        decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                              EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 14),
-                                          hintText: 'To',
-                                          isDense: true,
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _activeRouteField = 'to';
-                                            _showSuggestions = true;
-                                            _showResults = false;
-                                          });
-                                        },
-                                        onChanged: (text) {
-                                          if (text.length >= 3) {
-                                            _performSearch(text);
-                                          } else if (text.isEmpty) {
-                                            setState(() {
-                                              _showResults = false;
-                                              _showSuggestions = true;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              _showResults = false;
-                                              _showSuggestions = false;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    if (_toController.text.isNotEmpty)
-                                      SizedBox(
-                                        width: 28,
-                                        height: 28,
-                                        child: IconButton(
-                                          padding: EdgeInsets.zero,
-                                          icon: Icon(Icons.close,
+                                      if (_fromController.text.isNotEmpty)
+                                        SizedBox(
+                                          width: 28,
+                                          height: 28,
+                                          child: IconButton(
+                                            padding: EdgeInsets.zero,
+                                            icon: Icon(
+                                              Icons.close,
                                               size: 16,
-                                              color: isDark
-                                                  ? Colors.white70
-                                                  : Colors.grey[600]),
-                                          onPressed: () {
-                                            _toController.clear();
-                                            setState(() =>
-                                                _showSuggestions = true);
+                                              color: isDark ? Colors.white70 : Colors.grey[600],
+                                            ),
+                                            onPressed: () {
+                                              _fromController.clear();
+                                              _fromLatLng = null;
+                                              setState(() => _showSuggestions = true);
+                                            },
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  Divider(height: 1, indent: 10, endIndent: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _toController,
+                                          focusNode: _toFocusNode,
+                                          style: const TextStyle(fontSize: 16),
+                                          decoration: const InputDecoration(
+                                            border: InputBorder.none,
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                                            hintText: 'To',
+                                            isDense: true,
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _activeRouteField = 'to';
+                                              _showSuggestions = true;
+                                              _showResults = false;
+                                            });
+                                          },
+                                          onChanged: (text) {
+                                            if (text.length >= 3) {
+                                              _performSearch(text);
+                                            } else if (text.isEmpty) {
+                                              setState(() {
+                                                _showResults = false;
+                                                _showSuggestions = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                _showResults = false;
+                                                _showSuggestions = false;
+                                              });
+                                            }
                                           },
                                         ),
                                       ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Close + Swap buttons
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                width: 36,
-                                height: 36,
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: Icon(Icons.close,
-                                      size: 20,
-                                      color: Colors.redAccent),
-                                  onPressed: _clearRoute,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 36,
-                                height: 36,
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: Icon(Icons.swap_vert,
-                                      size: 20,
-                                      color: isDark
-                                          ? Colors.white70
-                                          : Colors.grey[600]),
-                              onPressed: () {
-                                final tmpText = _fromController.text;
-                                final tmpLatLng = _fromLatLng;
-                                _fromController.text = _toController.text;
-                                _toController.text = tmpText;
-                                setState(() {
-                                  _fromLatLng = _routeDestination != null
-                                      ? (_routeDestination!.latitude, _routeDestination!.longitude)
-                                      : null;
-                                  _routeDestination = tmpLatLng != null
-                                      ? MapSearchResult(
-                                          name: tmpText,
-                                          subtitle: '',
-                                          latitude: tmpLatLng.$1,
-                                          longitude: tmpLatLng.$2,
-                                          source: MapSearchSource.building,
-                                        )
-                                      : null;
-                                });
-                                if (_routeDestination != null && _fromLatLng != null) {
-                                  _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-                                }
-                              },
-                            ),
-                          ),
-                            ],
-                          ),
-                          const SizedBox(width: 4),
-                        ],
-                      ),
-                    ),
-                  )
-                else
-                  Material(
-                    elevation: 4,
-                    borderRadius: BorderRadius.circular(8),
-                    color: isDark ? Colors.grey[850] : Colors.white,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 12),
-                          child: Icon(
-                            Icons.search,
-                            color: isDark ? Colors.white70 : Colors.grey[600],
-                          ),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            controller: _searchController,
-                            focusNode: _focusNode,
-                            textInputAction: TextInputAction.search,
-                            onSubmitted: _performSearch,
-                            onChanged: (text) {
-                              if (text.isEmpty) {
-                                setState(() {
-                                  _showResults = false;
-                                  _searchResults = [];
-                                  _matchingPoiClasses = [];
-                                  _showSuggestions = _focusNode.hasFocus;
-                                });
-                              } else {
-                                final q = text.toLowerCase();
-                                // Match against server-fetched classes
-                                final matched = _allPoiClasses
-                                    .where((c) => c.toLowerCase().contains(q))
-                                    .toList();
-
-                                // Always include hardcoded category class values as a fallback
-                                // so chips appear even if the server fetch is still in flight
-                                for (final cat in _categories) {
-                                  if (cat.poiClassValue.toLowerCase().contains(q) &&
-                                      !matched.contains(cat.poiClassValue)) {
-                                    matched.insert(0, cat.poiClassValue);
-                                  }
-                                }
-
-                                setState(() {
-                                  _showSuggestions = false;
-                                  _matchingPoiClasses = matched;
-                                });
-                              }
-                            },
-                            onTap: () {
-                              // Close detail panel when user taps search bar
-                              if (_selectedResult != null) {
-                                setState(() {
-                                  _selectedResult = null;
-                                });
-                              }
-                              // Show suggestions if text is empty
-                              if (_searchController.text.isEmpty) {
-                                setState(() {
-                                  _showSuggestions = true;
-                                  _showResults = false;
-                                });
-                              }
-                            },
-                            style: TextStyle(fontSize: 16),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 16,
-                              ),
-                              hintText: 'Search buildings, places...',
-                            ),
-                          ),
-                        ),
-                        if (_searchController.text.isNotEmpty)
-                          IconButton(
-                            icon: Icon(Icons.clear),
-                            onPressed: _clearSearch,
-                          ),
-                        if (_config?.features.aiSearch ?? false)
-                          IconButton(
-                            icon: Icon(
-                              Icons.auto_awesome,
-                              color: isDark
-                                  ? Colors.amber[300]
-                                  : Theme.of(context).colorScheme.primary,
-                              size: 20,
-                            ),
-                            onPressed: () => showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (_) => EsriAiSearchSheet(
-                                userLat: _getUserLatLng()?.$1,
-                                userLon: _getUserLatLng()?.$2,
-                                onLocationSelected: _onAiLocationSelected,
-                                onRouteRequested: _onAiRouteRequested,
+                                      if (_toController.text.isNotEmpty)
+                                        SizedBox(
+                                          width: 28,
+                                          height: 28,
+                                          child: IconButton(
+                                            padding: EdgeInsets.zero,
+                                            icon: Icon(
+                                              Icons.close,
+                                              size: 16,
+                                              color: isDark ? Colors.white70 : Colors.grey[600],
+                                            ),
+                                            onPressed: () {
+                                              _toController.clear();
+                                              setState(() => _showSuggestions = true);
+                                            },
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                      ],
-                    ),
-                  ),
-
-                SizedBox(height: 4),
-
-                // Suggestions panel (categories + recents)
-                if (_showSuggestions && !_showResults)
-                  _buildSuggestionsPanel(context),
-
-                // Search results dropdown
-                if (_showResults || (_matchingPoiClasses.isNotEmpty && _searchController.text.isNotEmpty && !_showSuggestions))
-                  Material(
-                    elevation: 4,
-                    borderRadius: BorderRadius.circular(8),
-                    color: isDark ? Colors.grey[850] : Colors.white,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // ── Category matches (always at top) ──────────────────────────
-                        if (_matchingPoiClasses.isNotEmpty) ...[
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
-                            child: Row(
+                            // Close + Swap buttons
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.category_outlined,
-                                    size: 13,
-                                    color: isDark ? Colors.grey[500] : Colors.grey[500]),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'CATEGORIES',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 0.6,
-                                    color: isDark ? Colors.grey[500] : Colors.grey[500],
+                                SizedBox(
+                                  width: 36,
+                                  height: 36,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(Icons.close, size: 20, color: Colors.redAccent),
+                                    onPressed: _clearRoute,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 36,
+                                  height: 36,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(
+                                      Icons.swap_vert,
+                                      size: 20,
+                                      color: isDark ? Colors.white70 : Colors.grey[600],
+                                    ),
+                                    onPressed: () {
+                                      final tmpText = _fromController.text;
+                                      final tmpLatLng = _fromLatLng;
+                                      _fromController.text = _toController.text;
+                                      _toController.text = tmpText;
+                                      setState(() {
+                                        _fromLatLng = _routeDestination != null
+                                            ? (_routeDestination!.latitude, _routeDestination!.longitude)
+                                            : null;
+                                        _routeDestination = tmpLatLng != null
+                                            ? MapSearchResult(
+                                                name: tmpText,
+                                                subtitle: '',
+                                                latitude: tmpLatLng.$1,
+                                                longitude: tmpLatLng.$2,
+                                                source: MapSearchSource.building,
+                                              )
+                                            : null;
+                                      });
+                                      if (_routeDestination != null && _fromLatLng != null) {
+                                        _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+                                      }
+                                    },
                                   ),
                                 ),
                               ],
                             ),
+                            const SizedBox(width: 4),
+                          ],
+                        ),
+                      ),
+                    )
+                  else
+                    Material(
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(8),
+                      color: isDark ? Colors.grey[850] : Colors.white,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 12),
+                            child: Icon(Icons.search, color: isDark ? Colors.white70 : Colors.grey[600]),
                           ),
-                          ..._matchingPoiClasses.map(
-                            (classValue) => ListTile(
-                              splashColor: Colors.transparent,
-                              leading: Icon(
-                                _iconForClass(classValue),
-                                size: 20,
-                                color: isDark ? Colors.white70 : Colors.grey[700],
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              focusNode: _focusNode,
+                              textInputAction: TextInputAction.search,
+                              onSubmitted: _performSearch,
+                              onChanged: (text) {
+                                if (text.isEmpty) {
+                                  setState(() {
+                                    _showResults = false;
+                                    _searchResults = [];
+                                    _matchingPoiClasses = [];
+                                    _showSuggestions = _focusNode.hasFocus;
+                                  });
+                                } else {
+                                  final q = text.toLowerCase();
+                                  // Match against server-fetched classes
+                                  final matched = _allPoiClasses.where((c) => c.toLowerCase().contains(q)).toList();
+
+                                  // Always include hardcoded category class values as a fallback
+                                  // so chips appear even if the server fetch is still in flight
+                                  for (final cat in _categories) {
+                                    final isCatMatched =
+                                        cat.poiClassValue.toLowerCase().contains(q) &&
+                                        !matched.contains(cat.poiClassValue);
+                                    if (isCatMatched) {
+                                      matched.insert(0, cat.poiClassValue);
+                                    }
+                                  }
+
+                                  setState(() {
+                                    _showSuggestions = false;
+                                    _matchingPoiClasses = matched;
+                                  });
+                                }
+                              },
+                              onTap: () {
+                                // Close detail panel when user taps search bar
+                                if (_selectedResult != null) {
+                                  setState(() {
+                                    _selectedResult = null;
+                                  });
+                                }
+                                // Show suggestions if text is empty
+                                if (_searchController.text.isEmpty) {
+                                  setState(() {
+                                    _showSuggestions = true;
+                                    _showResults = false;
+                                  });
+                                }
+                              },
+                              style: TextStyle(fontSize: 16),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                                hintText: 'Search buildings, places...',
                               ),
-                              title: Text(_labelForClass(classValue)),
-                              subtitle: Text(
-                                classValue,
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    color: isDark ? Colors.grey[500] : Colors.grey[500]),
-                              ),
-                              dense: true,
-                              onTap: () => _performClassSearch(classValue),
                             ),
                           ),
-                          if (_showResults && (_isSearching || _searchResults.isNotEmpty))
-                            const Divider(height: 1),
+                          if (_searchController.text.isNotEmpty)
+                            IconButton(icon: Icon(Icons.clear), onPressed: _clearSearch),
+                          if (_config?.features.aiSearch ?? false)
+                            IconButton(
+                              icon: Icon(
+                                Icons.auto_awesome,
+                                color: isDark ? Colors.amber[300] : Theme.of(context).colorScheme.primary,
+                                size: 20,
+                              ),
+                              onPressed: () => showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (_) => EsriAiSearchSheet(
+                                  userLat: _getUserLatLng()?.$1,
+                                  userLon: _getUserLatLng()?.$2,
+                                  onLocationSelected: _onAiLocationSelected,
+                                  onRouteRequested: _onAiRouteRequested,
+                                ),
+                              ),
+                            ),
                         ],
+                      ),
+                    ),
 
-                        // ── POI / building results ─────────────────────────────────────
-                        if (_showResults)
-                          _isSearching
-                              ? const Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Center(child: CircularProgressIndicator()),
-                                )
-                              : _searchResults.isEmpty
-                                  // Only show "no results" if there are also no category matches
-                                  ? (_matchingPoiClasses.isEmpty
-                                    ? const Padding(
-                                        padding: EdgeInsets.all(16),
-                                        child: Text('No results found'),
-                                      )
-                                    : const SizedBox.shrink())
-                                  : ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxHeight: MediaQuery.of(context).size.height * 0.4,
+                  SizedBox(height: 4),
+
+                  // Suggestions panel (categories + recents)
+                  if (_showSuggestions && !_showResults) _buildSuggestionsPanel(context),
+
+                  // Search results dropdown
+                  if (_showResults ||
+                      (_matchingPoiClasses.isNotEmpty && _searchController.text.isNotEmpty && !_showSuggestions))
+                    Material(
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(8),
+                      color: isDark ? Colors.grey[850] : Colors.white,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // ── Category matches (always at top) ──────────────────────────
+                          if (_matchingPoiClasses.isNotEmpty) ...[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.category_outlined,
+                                    size: 13,
+                                    color: isDark ? Colors.grey[500] : Colors.grey[500],
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'CATEGORIES',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.6,
+                                      color: isDark ? Colors.grey[500] : Colors.grey[500],
                                     ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ..._matchingPoiClasses.map(
+                              (classValue) => ListTile(
+                                splashColor: Colors.transparent,
+                                leading: Icon(
+                                  _iconForClass(classValue),
+                                  size: 20,
+                                  color: isDark ? Colors.white70 : Colors.grey[700],
+                                ),
+                                title: Text(_labelForClass(classValue)),
+                                subtitle: Text(
+                                  classValue,
+                                  style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[500] : Colors.grey[500]),
+                                ),
+                                dense: true,
+                                onTap: () => _performClassSearch(classValue),
+                              ),
+                            ),
+                            if (shouldShowResultsDivider) const Divider(height: 1),
+                          ],
+
+                          // ── POI / building results ─────────────────────────────────────
+                          if (_showResults)
+                            _isSearching
+                                ? const Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Center(child: CircularProgressIndicator()),
+                                  )
+                                : _searchResults.isEmpty
+                                // Only show "no results" if there are also no category matches
+                                ? (_matchingPoiClasses.isEmpty
+                                      ? const Padding(padding: EdgeInsets.all(16), child: Text('No results found'))
+                                      : const SizedBox.shrink())
+                                : ConstrainedBox(
+                                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
                                     child: ListView.separated(
                                       shrinkWrap: true,
                                       padding: EdgeInsets.zero,
@@ -2867,42 +2581,38 @@ void _toggleLayer(String key) async {
                                         return ListTile(
                                           splashColor: Colors.transparent,
                                           leading: Icon(_iconForResult(result)),
-                                          title: Text(result.name,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis),
+                                          title: Text(result.name, maxLines: 1, overflow: TextOverflow.ellipsis),
                                           subtitle: result.subtitle.isNotEmpty
-                                              ? Text(result.subtitle,
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis)
+                                              ? Text(result.subtitle, maxLines: 1, overflow: TextOverflow.ellipsis)
                                               : null,
                                           dense: true,
-                                              onTap: () => _selectResult(result),
+                                          onTap: () => _selectResult(result),
                                         );
                                       },
                                     ),
                                   ),
-
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          
           // Category list panel — shown when list button is toggled
-          if (_showCategoryList && _selectedResult == null && _allCategoryResults.isNotEmpty)
-            _buildCategoryListPanel(context),
+          if (shouldShowCatListPanel) _buildCategoryListPanel(context),
 
           // Detail slide-over
-          if (_selectedResult != null)
-            _buildDetailSlideOver(context, _selectedResult!),
+          if (_selectedResult != null) _buildDetailSlideOver(context, _selectedResult!),
 
           // Top-right FAB cluster — hidden when keyboard or layers panel is active
-          if (!keyboardVisible && !_focusNode.hasFocus && !_fromFocusNode.hasFocus && !_toFocusNode.hasFocus && !_showLayersPanel)
+          if (!keyboardVisible &&
+              !_focusNode.hasFocus &&
+              !_fromFocusNode.hasFocus &&
+              !_toFocusNode.hasFocus &&
+              !_showLayersPanel)
             Positioned(
-              right: 12,
-              top: _showRouteFields ? 120 : 68,
+              top: MediaQuery.of(context).padding.top + 68,
+              right: 16,
               child: EsriMapFabCluster(
                 isDark: isDark,
                 is3D: _sceneMode != 'default',
@@ -2924,7 +2634,7 @@ void _toggleLayer(String key) async {
               currentSceneKey: _sceneMode,
               layerVisible: _layerVisible,
               layerLoading: _layerLoading,
-              hideSceneSwitcher: _selectedResult != null,
+              hideSceneSwitcher: _selectedResult != null || _showCategoryList,
               onSwitchBasemap: _switchBasemap,
               onSetSceneMode: _setSceneMode,
               onToggleLayer: _toggleLayer,
@@ -2965,9 +2675,9 @@ class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
     }
 
     final response = await http.get(Uri.parse(tokensUrl));
-    if (response.statusCode != 200) throw Exception('Token fetch failed: ${response.statusCode}');
+    final isTokenFetchNotOk = response.statusCode != 200;
+    if (isTokenFetchNotOk) throw Exception('Token fetch failed: ${response.statusCode}');
     final data = jsonDecode(response.body) as Map<String, dynamic>;
-
 
     _cachedAgeToken = data['age']?['token'] as String?;
     final ageExpiresIn = data['age']?['expires_in'] as int? ?? 7200;
@@ -2981,9 +2691,7 @@ class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
   }
 
   @override
-  Future<void> handleArcGISAuthenticationChallenge(
-    ArcGISAuthenticationChallenge challenge,
-  ) async {
+  Future<void> handleArcGISAuthenticationChallenge(ArcGISAuthenticationChallenge challenge) async {
     try {
       final host = challenge.requestUri.host;
       final (token, expiry) = await _getTokenForHost(host);
@@ -2991,20 +2699,12 @@ class _AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
         challenge.continueAndFail();
         return;
       }
-      final tokenInfo = TokenInfo.create(
-        accessToken: token,
-        expirationDate: expiry,
-        isSslRequired: true,
-      );
+      final tokenInfo = TokenInfo.create(accessToken: token, expirationDate: expiry, isSslRequired: true);
       if (tokenInfo == null) {
         challenge.continueAndFail();
         return;
       }
-      final credential = PregeneratedTokenCredential(
-        uri: challenge.requestUri,
-        tokenInfo: tokenInfo,
-        referer: '',
-      );
+      final credential = PregeneratedTokenCredential(uri: challenge.requestUri, tokenInfo: tokenInfo, referer: '');
       challenge.continueWithCredential(credential);
     } catch (e) {
       debugPrint('Auth challenge failed: $e');

@@ -25,9 +25,9 @@ class EsriMapFabCluster extends StatelessWidget {
     required this.onSnapToNorth,
   }) : super(key: key);
 
-  static const _activeColor = Color(0xFFC69214);
-  static const _size = 48.0;
-  static const _btnHeight = 44.0;
+  static const _ACTIVE_COLOR = Color(0xFFC69214);
+  static const _SIZE = 48.0;
+  static const _BTN_HEIGHT = 44.0;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,8 @@ class EsriMapFabCluster extends StatelessWidget {
             onTap: onSnapToNorth,
             behavior: HitTestBehavior.opaque,
             child: SizedBox(
-              width: _size,
-              height: _size,
+              width: _SIZE,
+              height: _SIZE,
               child: Center(
                 child: CustomPaint(
                   size: const Size(24, 24),
@@ -67,10 +67,10 @@ class EsriMapFabCluster extends StatelessWidget {
         Material(
           elevation: 4,
           color: bgColor,
-          borderRadius: BorderRadius.circular(_size / 2),
+          borderRadius: BorderRadius.circular(_SIZE / 2),
           clipBehavior: Clip.antiAlias,
           child: SizedBox(
-            width: _size,
+            width: _SIZE,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
@@ -79,12 +79,12 @@ class EsriMapFabCluster extends StatelessWidget {
                   if (!is3D)
                     _pillButton(
                       icon: Icons.my_location,
-                      color: isLocationActive ? _activeColor : fgColor,
+                      color: isLocationActive ? _ACTIVE_COLOR : fgColor,
                       onTap: onRecenterOnUser,
                     ),
                   _pillButton(
                     icon: Icons.center_focus_strong,
-                    color: isRecenterActive ? _activeColor : fgColor,
+                    color: isRecenterActive ? _ACTIVE_COLOR : fgColor,
                     onTap: onRecenterOnView,
                   ),
                   _pillButton(
@@ -110,7 +110,7 @@ class EsriMapFabCluster extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        height: _btnHeight,
+        height: _BTN_HEIGHT,
         child: Center(
           child: Icon(icon, size: 22, color: color),
         ),

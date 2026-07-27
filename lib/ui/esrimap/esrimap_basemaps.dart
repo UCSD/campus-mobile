@@ -42,7 +42,8 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
         final portalUrl = layer.portalKey != null
             ? config.portals[layer.portalKey!]
             : null;
-        if (portalUrl != null && layer.itemId != null) {
+        final hasPortalAndItem = portalUrl != null && layer.itemId != null;
+        if (hasPortalAndItem) {
           basemap.baseLayers.add(
             ArcGISVectorTiledLayer.withItem(
               PortalItem.withPortalAndItemId(

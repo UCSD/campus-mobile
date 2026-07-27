@@ -235,7 +235,7 @@ class EsriMapConfigService {
   static final EsriMapConfigService instance = EsriMapConfigService._();
   EsriMapConfigService._();
 
-  static const _baseUrl =
+  static const _BASE_URL =
       'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
 
   EsriMapConfig? _config;
@@ -245,10 +245,10 @@ class EsriMapConfigService {
 
   EsriMapConfig? get cached => _config;
 
-  String get tokensUrl => '$_baseUrl/tokens';
+  String get tokensUrl => '$_BASE_URL/tokens';
 
   Future<EsriMapConfig> _doFetch() async {
-    final response = await http.get(Uri.parse('$_baseUrl/config'));
+    final response = await http.get(Uri.parse('$_BASE_URL/config'));
     if (response.statusCode != 200) {
       throw Exception('Config fetch failed: ${response.statusCode}');
     }

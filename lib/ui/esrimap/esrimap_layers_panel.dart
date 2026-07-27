@@ -149,6 +149,7 @@ class EsriMapLayersPanel extends StatelessWidget {
 
     final bottomPad = MediaQuery.of(context).padding.bottom;
     final isDefault = currentSceneKey == 'default';
+    final showSceneSwitcher = config.features.scenes && !hideSceneSwitcher;
 
     return Positioned(
       left: 12,
@@ -253,7 +254,7 @@ class EsriMapLayersPanel extends StatelessWidget {
               ),
 
               // Scene chips — gated by features flag, hidden when slide-over is active
-              if (config.features.scenes && !hideSceneSwitcher) ...[
+              if (showSceneSwitcher) ...[
                 const Divider(height: 24, indent: 16, endIndent: 16),
                 sectionLabel('SCENE'),
                 Padding(
