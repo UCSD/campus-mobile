@@ -33,12 +33,13 @@ dependencies:
   intl: ^0.20.2
   liquid_progress_indicator_v2: 0.5.0
   measured_size: 1.0.0
-  geolocator: ^13.0.4
-  package_info_plus: ^8.3.1
+  geolocator: ^14.0.0
+  package_info_plus: ^9.0.0
   flutter_markdown: ^0.6.18
   flutter_svg: ^2.2.0
   percent_indicator: ^4.2.5
-  pointycastle: ^3.9.0
+  permission_handler: ^12.0.1
+  pointycastle: ^4.0.0
   provider: ^6.1.5+1
   shared_preferences: ^2.5.3
   app_links: ^3.0.0
@@ -49,7 +50,9 @@ dependencies:
     git:
       url: https://github.com/UCSD/wifi_connection.git
       ref: e0fb416f81daedeabb1eedef22041e67f30f792b
-  device_info_plus: ^11.5.0
+  device_info_plus: ^12.1.0
+  arcgis_maps: ^300.0.0
+  google_maps_flutter_ios: 2.15.7
 dependency_overrides:
   value_layout_builder: ^0.5.0 # Fix Flutter 3.32.0 compatibility
 dev_dependencies:
