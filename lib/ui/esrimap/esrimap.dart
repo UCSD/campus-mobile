@@ -26,7 +26,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Re-export MapSearchResult so callers importing esrimap.dart retain access
-export 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart' show MapSearchResult, MapSearchSource;
+export 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart'
+    show MapSearchResult, MapSearchSource;
 
 /// Primary StatefulWidget for the interactive Esri Campus Map screen.
 class EsriMap extends StatefulWidget {
@@ -188,13 +189,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.interactionOptions.rotateEnabled = true;
 
     final isGraphicsOverlayMissing = !_mapViewController.graphicsOverlays.contains(_graphicsOverlay);
-    if (isGraphicsOverlayMissing) {
-      _mapViewController.graphicsOverlays.add(_graphicsOverlay);
-    }
+    if (isGraphicsOverlayMissing) _mapViewController.graphicsOverlays.add(_graphicsOverlay);
     final isRouteOverlayMissing = !_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay);
-    if (isRouteOverlayMissing) {
-      _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
-    }
+    if (isRouteOverlayMissing) _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
 
     // Configure location display settings
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
@@ -410,7 +407,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _applyLayerSpecialCases(String key, List<Layer?> instances) {
-    final isCampusDistricts = key == 'campusDistricts' && instances.isNotEmpty && instances.first is ArcGISMapImageLayer;
+    final isCampusDistricts =
+        key == 'campusDistricts' && instances.isNotEmpty && instances.first is ArcGISMapImageLayer;
     if (isCampusDistricts) {
       final imageLayer = instances.first as ArcGISMapImageLayer;
       for (final sub in imageLayer.mapImageSublayers) {
@@ -479,9 +477,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _recentSearches.removeWhere((r) => r.name == result.name && r.source == result.source);
     _recentSearches.insert(0, result);
     final isExceedingMax = _recentSearches.length > EsriMapSearchService.MAX_RECENT_SEARCHES;
-    if (isExceedingMax) {
-      _recentSearches = _recentSearches.sublist(0, EsriMapSearchService.MAX_RECENT_SEARCHES);
-    }
+    if (isExceedingMax) _recentSearches = _recentSearches.sublist(0, EsriMapSearchService.MAX_RECENT_SEARCHES);
     EsriMapSearchService.saveRecentSearches(_recentSearches);
   }
 
@@ -743,9 +739,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
         final isValidResultIndex = index != null && index >= 0 && index < _mappedResults.length;
-        if (isValidResultIndex) {
-          _selectResultFromPin(_mappedResults[index]);
-        }
+        if (isValidResultIndex) _selectResultFromPin(_mappedResults[index]);
       } else {
         final isSelectedResultNotNull = _selectedResult != null;
         if (isSelectedResultNotNull) _closeDetail();
@@ -1054,9 +1048,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     final hasPaddedExtent = routeRes.paddedExtent != null;
-    if (hasPaddedExtent) {
-      _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(routeRes.paddedExtent!));
-    }
+    if (hasPaddedExtent) _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(routeRes.paddedExtent!));
 
     _graphicsOverlay.graphics.clear();
     _mappedResults = [];
@@ -1213,9 +1205,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         }
       });
       final isAttached = _detailSheetController.isAttached;
-      if (isAttached) {
+      if (isAttached)
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
     }
   }
 
@@ -1231,9 +1222,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         }
       });
       final isAttached = _detailSheetController.isAttached;
-      if (isAttached) {
+      if (isAttached)
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
     }
   }
 
@@ -1245,16 +1235,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isCategoryListOpen = _showCategoryList && _selectedResult == null;
     if (isCategoryListOpen) {
       final isAttached = _categorySheetController.isAttached;
-      if (isAttached) {
+      if (isAttached)
         _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
     }
     final isSelectedResultOpen = _selectedResult != null;
     if (isSelectedResultOpen) {
       final isAttached = _detailSheetController.isAttached;
-      if (isAttached) {
+      if (isAttached)
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
     }
   }
 
@@ -1275,7 +1263,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     final indexedStackIndex = isBuilding3dScene ? 1 : (isDroneViewScene ? 2 : 0);
 
-    final isFabVisible = !keyboardVisible &&
+    final isFabVisible =
+        !keyboardVisible &&
         !_focusNode.hasFocus &&
         !_fromFocusNode.hasFocus &&
         !_toFocusNode.hasFocus &&
@@ -1358,9 +1347,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                             : null;
                       });
                       final canSolveRoute = _routeDestination != null && _fromLatLng != null;
-                      if (canSolveRoute) {
-                        _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-                      }
+                      if (canSolveRoute) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
                     },
                     onTapSearchField: () {
                       final hasSelectedResult = _selectedResult != null;
@@ -1525,9 +1512,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               },
               onTravelModeChanged: (mode) {
                 final hasSelectedResult = _selectedResult != null;
-                if (hasSelectedResult) {
-                  _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
-                }
+                if (hasSelectedResult) _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
               },
               onLaunchWebsite: _launchWebsite,
               onClose: _closeDetail,

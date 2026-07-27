@@ -20,11 +20,7 @@ class SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
   final Color backgroundColor;
 
   /// Constructs a [SlideOverHeaderDelegate] instance.
-  SlideOverHeaderDelegate({
-    required this.child,
-    required this.height,
-    required this.backgroundColor,
-  });
+  SlideOverHeaderDelegate({required this.child, required this.height, required this.backgroundColor});
 
   @override
   double get minExtent => height;

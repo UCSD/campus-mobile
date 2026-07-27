@@ -68,14 +68,7 @@ class EsriMapCategoryListPanel extends StatelessWidget {
           userLocation!.$2,
           a.latitude,
           a.longitude,
-        ).compareTo(
-          EsriMapSearchService.distanceMeters(
-            userLocation!.$1,
-            userLocation!.$2,
-            b.latitude,
-            b.longitude,
-          ),
-        ),
+        ).compareTo(EsriMapSearchService.distanceMeters(userLocation!.$1, userLocation!.$2, b.latitude, b.longitude)),
       );
     }
 

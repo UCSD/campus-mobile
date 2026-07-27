@@ -165,11 +165,7 @@ class EsriMapSearchBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(Icons.circle_outlined, size: 12, color: Colors.blue),
-                        Container(
-                          width: 1.5,
-                          height: 24,
-                          color: isDark ? Colors.grey[600] : Colors.grey[300],
-                        ),
+                        Container(width: 1.5, height: 24, color: isDark ? Colors.grey[600] : Colors.grey[300]),
                         const Icon(Icons.circle, size: 12, color: Colors.red),
                       ],
                     ),
@@ -203,11 +199,7 @@ class EsriMapSearchBar extends StatelessWidget {
                                 height: 28,
                                 child: IconButton(
                                   padding: EdgeInsets.zero,
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 16,
-                                    color: isDark ? Colors.white70 : Colors.grey[600],
-                                  ),
+                                  icon: Icon(Icons.close, size: 16, color: isDark ? Colors.white70 : Colors.grey[600]),
                                   onPressed: onClearFromField,
                                 ),
                               ),
@@ -238,11 +230,7 @@ class EsriMapSearchBar extends StatelessWidget {
                                 height: 28,
                                 child: IconButton(
                                   padding: EdgeInsets.zero,
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 16,
-                                    color: isDark ? Colors.white70 : Colors.grey[600],
-                                  ),
+                                  icon: Icon(Icons.close, size: 16, color: isDark ? Colors.white70 : Colors.grey[600]),
                                   onPressed: onClearToField,
                                 ),
                               ),
@@ -269,11 +257,7 @@ class EsriMapSearchBar extends StatelessWidget {
                         height: 36,
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          icon: Icon(
-                            Icons.swap_vert,
-                            size: 20,
-                            color: isDark ? Colors.white70 : Colors.grey[600],
-                          ),
+                          icon: Icon(Icons.swap_vert, size: 20, color: isDark ? Colors.white70 : Colors.grey[600]),
                           onPressed: onSwapRouteFields,
                         ),
                       ),
@@ -319,8 +303,7 @@ class EsriMapSearchBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (isSearchNotEmpty)
-                  IconButton(icon: const Icon(Icons.clear), onPressed: onClearSearch),
+                if (isSearchNotEmpty) IconButton(icon: const Icon(Icons.clear), onPressed: onClearSearch),
                 if (config?.features.aiSearch ?? false)
                   IconButton(
                     icon: Icon(
@@ -351,11 +334,7 @@ class EsriMapSearchBar extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.category_outlined,
-                            size: 13,
-                            color: isDark ? Colors.grey[500] : Colors.grey[500],
-                          ),
+                          Icon(Icons.category_outlined, size: 13, color: isDark ? Colors.grey[500] : Colors.grey[500]),
                           const SizedBox(width: 6),
                           Text(
                             'CATEGORIES',
