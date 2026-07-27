@@ -4,11 +4,11 @@
 ///              results for an active category search, sorted by distance.
 /// ============================================================================
 
+import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_search_category.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/services/esrimap_search_service.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/widgets/esrimap_detail_slide_over.dart';
 import 'package:flutter/material.dart';
-import '../models/esrimap_search_category.dart';
-import '../models/map_search_result.dart';
-import '../services/esrimap_search_service.dart';
-import 'esrimap_detail_slide_over.dart';
 
 /// Bottom sheet widget rendering plotted category search results in a list.
 class EsriMapCategoryListPanel extends StatelessWidget {
@@ -60,14 +60,22 @@ class EsriMapCategoryListPanel extends StatelessWidget {
 
     // Sort results by distance from user if position is available
     final results = List<MapSearchResult>.from(viewportResults);
-    if (userLocation != null) {
+    final hasUserLocation = userLocation != null;
+    if (hasUserLocation) {
       results.sort(
         (a, b) => EsriMapSearchService.distanceMeters(
           userLocation!.$1,
           userLocation!.$2,
           a.latitude,
           a.longitude,
-        ).compareTo(EsriMapSearchService.distanceMeters(userLocation!.$1, userLocation!.$2, b.latitude, b.longitude)),
+        ).compareTo(
+          EsriMapSearchService.distanceMeters(
+            userLocation!.$1,
+            userLocation!.$2,
+            b.latitude,
+            b.longitude,
+          ),
+        ),
       );
     }
 
@@ -78,7 +86,8 @@ class EsriMapCategoryListPanel extends StatelessWidget {
     final initialSize = contentFraction < 0.45 ? contentFraction : 0.45;
     final maxSize = contentFraction < 0.80 ? contentFraction.clamp(0.45, 0.80) : 0.80;
     final snaps = <double>[0.15];
-    if (initialSize > 0.15 + 0.01) snaps.add(initialSize);
+    final isInitialSizeLarger = initialSize > 0.15 + 0.01;
+    if (isInitialSizeLarger) snaps.add(initialSize);
 
     return DraggableScrollableSheet(
       controller: controller,
@@ -88,7 +97,9 @@ class EsriMapCategoryListPanel extends StatelessWidget {
       snap: true,
       snapSizes: snaps,
       builder: (context, scrollController) {
-        final headerTitle = results.isEmpty ? '$label - None in view' : '$label - ${results.length} in view';
+        final isResultsEmpty = results.isEmpty;
+        final headerTitle = isResultsEmpty ? '$label - None in view' : '$label - ${results.length} in view';
+        final hasMoreTotalResults = allCategoryResults.length > results.length;
 
         return buildSlideOverContent(
           context: context,
@@ -96,7 +107,7 @@ class EsriMapCategoryListPanel extends StatelessWidget {
           headerTitle: headerTitle,
           headerIcon: activeCategory?.icon ?? Icons.place,
           onClose: onClearSearch,
-          trailing: allCategoryResults.length > results.length
+          trailing: hasMoreTotalResults
               ? TextButton.icon(
                   icon: Icon(Icons.layers_outlined, size: 16, color: isDark ? Colors.white54 : Colors.grey[600]),
                   label: Text(
@@ -111,7 +122,7 @@ class EsriMapCategoryListPanel extends StatelessWidget {
                   onPressed: onSeeAllResults,
                 )
               : null,
-          sliverBody: results.isEmpty
+          sliverBody: isResultsEmpty
               ? [
                   SliverToBoxAdapter(
                     child: Padding(
@@ -135,7 +146,7 @@ class EsriMapCategoryListPanel extends StatelessWidget {
                   SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final r = results[index];
-                      final dist = userLocation != null
+                      final dist = hasUserLocation
                           ? EsriMapSearchService.distanceMeters(
                               userLocation!.$1,
                               userLocation!.$2,

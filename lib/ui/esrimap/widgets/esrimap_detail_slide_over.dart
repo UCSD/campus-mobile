@@ -5,8 +5,8 @@
 /// ============================================================================
 
 import 'package:arcgis_maps/arcgis_maps.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
 import 'package:flutter/material.dart';
-import '../models/map_search_result.dart';
 
 /// Persistent header delegate for pinned slide-over bottom sheet headers.
 class SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
@@ -20,7 +20,11 @@ class SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
   final Color backgroundColor;
 
   /// Constructs a [SlideOverHeaderDelegate] instance.
-  SlideOverHeaderDelegate({required this.child, required this.height, required this.backgroundColor});
+  SlideOverHeaderDelegate({
+    required this.child,
+    required this.height,
+    required this.backgroundColor,
+  });
 
   @override
   double get minExtent => height;
@@ -30,11 +34,12 @@ class SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final isTopPositioned = shrinkOffset == 0;
     return Container(
       height: height,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: shrinkOffset == 0 ? const BorderRadius.vertical(top: Radius.circular(16)) : null,
+        borderRadius: isTopPositioned ? const BorderRadius.vertical(top: Radius.circular(16)) : null,
       ),
       child: child,
     );
@@ -58,6 +63,8 @@ Widget buildSlideOverContent({
 }) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
   final bgColor = isDark ? Colors.grey[900]! : Colors.white;
+  final hasHeaderIcon = headerIcon != null;
+  final hasTrailing = trailing != null;
 
   return Material(
     elevation: 8,
@@ -91,7 +98,7 @@ Widget buildSlideOverContent({
                   padding: const EdgeInsets.fromLTRB(20, 6, 20, 8),
                   child: Row(
                     children: [
-                      if (headerIcon != null) ...[
+                      if (hasHeaderIcon) ...[
                         Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
                         const SizedBox(width: 8),
                       ],
@@ -105,7 +112,7 @@ Widget buildSlideOverContent({
                           ),
                         ),
                       ),
-                      if (trailing != null) trailing,
+                      if (hasTrailing) trailing,
                       GestureDetector(
                         onTap: onClose,
                         child: Container(
@@ -204,9 +211,10 @@ class EsriMapDetailSlideOver extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isRouting = isRoutingMode || hasRoute || routeFailed;
+    final isBuilding = result.source == MapSearchSource.building;
 
-    final detailText = result.source == MapSearchSource.building ? result.address : result.description;
-    final categoryLabel = result.source == MapSearchSource.building ? 'Building' : result.subtitle;
+    final detailText = isBuilding ? result.address : result.description;
+    final categoryLabel = isBuilding ? 'Building' : result.subtitle;
 
     // Content-aware sheet sizing
     final screenHeight = MediaQuery.of(context).size.height;
@@ -219,7 +227,8 @@ class EsriMapDetailSlideOver extends StatelessWidget {
     final initialSize = hasRoute ? 0.35 : (contentFraction < 0.30 ? contentFraction : 0.30);
     final maxSize = hasRoute ? 0.80 : (contentFraction < 0.80 ? contentFraction.clamp(0.30, 0.80) : 0.80);
     final snaps = <double>[0.15];
-    if (initialSize > 0.15 + 0.01) snaps.add(initialSize);
+    final isInitialLarger = initialSize > 0.15 + 0.01;
+    if (isInitialLarger) snaps.add(initialSize);
 
     return DraggableScrollableSheet(
       controller: controller,
@@ -230,6 +239,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
       snapSizes: snaps,
       builder: (context, scrollController) {
         final shouldShowDetailText = !isRouting && detailText.isNotEmpty;
+        final hasWebsiteUrl = result.websiteUrl != null;
 
         return buildSlideOverContent(
           context: context,
@@ -273,12 +283,15 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton.icon(
-                          onPressed: () => onLaunchWebsite(
-                            'https://www.google.com/maps/dir/?api=1'
-                            '&destination=${result.latitude},${result.longitude}'
-                            '&travelmode=walking'
-                            '${fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : ''}',
-                          ),
+                          onPressed: () {
+                            final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
+                            onLaunchWebsite(
+                              'https://www.google.com/maps/dir/?api=1'
+                              '&destination=${result.latitude},${result.longitude}'
+                              '&travelmode=walking'
+                              '$originParam',
+                            );
+                          },
                           icon: const Icon(Icons.map_outlined, size: 18),
                           label: const Text('Navigate in Google Maps'),
                           style: FilledButton.styleFrom(
@@ -354,12 +367,15 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: OutlinedButton.icon(
-                          onPressed: () => onLaunchWebsite(
-                            'https://www.google.com/maps/dir/?api=1'
-                            '&destination=${result.latitude},${result.longitude}'
-                            '&travelmode=walking'
-                            '${fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : ''}',
-                          ),
+                          onPressed: () {
+                            final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
+                            onLaunchWebsite(
+                              'https://www.google.com/maps/dir/?api=1'
+                              '&destination=${result.latitude},${result.longitude}'
+                              '&travelmode=walking'
+                              '$originParam',
+                            );
+                          },
                           icon: const Icon(Icons.map_outlined, size: 18),
                           label: const Text('Navigate in Google Maps'),
                           style: OutlinedButton.styleFrom(
@@ -374,7 +390,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                       // Directions + Website buttons
                       Row(
                         children: [
-                          if (result.websiteUrl != null) ...[
+                          if (hasWebsiteUrl) ...[
                             Expanded(
                               child: OutlinedButton.icon(
                                 onPressed: () => onLaunchWebsite(result.websiteUrl!),
@@ -424,9 +440,11 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                       ? '${distMeters.round()} m'
                       : '${(distMeters / 1000).toStringAsFixed(1)} km';
                   final isNotLastManeuver = index < routeManeuvers.length - 1;
+                  final isFirstIndex = index == 0;
+
                   return Column(
                     children: [
-                      if (index == 0) const Divider(height: 1),
+                      if (isFirstIndex) const Divider(height: 1),
                       ListTile(
                         leading: Icon(
                           Icons.subdirectory_arrow_right,

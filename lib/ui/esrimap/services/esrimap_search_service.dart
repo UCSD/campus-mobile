@@ -7,21 +7,21 @@
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:arcgis_maps/arcgis_maps.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/map_search_result.dart';
 
 /// Service class managing location queries, POI class lookup, and local search history.
 class EsriMapSearchService {
   /// Base API URL endpoint.
-  static const String baseUrl = 'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
+  static const String BASE_URL = 'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
 
   /// SharedPreferences key used to persist recent searches.
-  static const String recentSearchesKey = 'esri_map_recent_searches';
+  static const String RECENT_SEARCHES_KEY = 'esri_map_recent_searches';
 
   /// Maximum number of recent searches retained.
-  static const int maxRecentSearches = 5;
+  static const int MAX_RECENT_SEARCHES = 5;
 
   // ---------------------------------------------------------------------------
   // REST API Helpers
@@ -29,20 +29,26 @@ class EsriMapSearchService {
 
   /// Performs an HTTP GET request to the specified [path] with optional query [params].
   static Future<Map<String, dynamic>> apiGet(String path, [Map<String, String>? params]) async {
-    final uri = Uri.parse('$baseUrl/$path').replace(queryParameters: params);
+    final uri = Uri.parse('$BASE_URL/$path').replace(queryParameters: params);
     final response = await http.get(uri);
-    if (response.statusCode != 200) throw Exception('API error ${response.statusCode}: ${response.body}');
+    final isResNotOk = response.statusCode != 200;
+    if (isResNotOk) {
+      throw Exception('API error ${response.statusCode}: ${response.body}');
+    }
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
   /// Performs an HTTP POST request to the specified [path] with a JSON [body].
   static Future<Map<String, dynamic>> apiPost(String path, Map<String, dynamic> body) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/$path'),
+      Uri.parse('$BASE_URL/$path'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(body),
     );
-    if (response.statusCode != 200) throw Exception('API error ${response.statusCode}: ${response.body}');
+    final isResNotOk = response.statusCode != 200;
+    if (isResNotOk) {
+      throw Exception('API error ${response.statusCode}: ${response.body}');
+    }
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
@@ -115,7 +121,8 @@ class EsriMapSearchService {
 
   /// Filters a list of [results] down to those located within the specified [envelope].
   static List<MapSearchResult> filterToViewport(List<MapSearchResult> results, Envelope? envelope) {
-    if (envelope == null) return results;
+    final isEnvelopeNull = envelope == null;
+    if (isEnvelopeNull) return results;
     return results.where((r) {
       return r.latitude >= envelope.yMin &&
           r.latitude <= envelope.yMax &&
@@ -129,8 +136,7 @@ class EsriMapSearchService {
     const r = 6371000.0; // Earth radius in meters
     final dLat = (lat2 - lat1) * math.pi / 180;
     final dLng = (lng2 - lng1) * math.pi / 180;
-    final a =
-        math.sin(dLat / 2) * math.sin(dLat / 2) +
+    final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
         math.cos(lat1 * math.pi / 180) * math.cos(lat2 * math.pi / 180) * math.sin(dLng / 2) * math.sin(dLng / 2);
     return r * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
   }
@@ -142,8 +148,9 @@ class EsriMapSearchService {
   /// Loads stored recent searches from [SharedPreferences].
   static Future<List<MapSearchResult>> loadRecentSearches() async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonStr = prefs.getString(recentSearchesKey);
-    if (jsonStr != null) {
+    final jsonStr = prefs.getString(RECENT_SEARCHES_KEY);
+    final hasJsonStr = jsonStr != null;
+    if (hasJsonStr) {
       try {
         final list = jsonDecode(jsonStr) as List<dynamic>;
         return list.map((e) => MapSearchResult.fromJson(e as Map<String, dynamic>)).toList();
@@ -158,6 +165,6 @@ class EsriMapSearchService {
   static Future<void> saveRecentSearches(List<MapSearchResult> searches) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonStr = jsonEncode(searches.map((r) => r.toJson()).toList());
-    await prefs.setString(recentSearchesKey, jsonStr);
+    await prefs.setString(RECENT_SEARCHES_KEY, jsonStr);
   }
 }

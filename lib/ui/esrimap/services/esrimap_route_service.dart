@@ -5,8 +5,8 @@
 /// ============================================================================
 
 import 'package:arcgis_maps/arcgis_maps.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
 import 'package:flutter/material.dart';
-import '../models/map_search_result.dart';
 
 /// Result data structure holding the outcome of a solved route calculation.
 class EsriRouteResult {
@@ -34,7 +34,7 @@ class EsriRouteResult {
 /// Service class encapsulating ArcGIS Route Task execution.
 class EsriMapRouteService {
   /// Endpoint URL for the UCSD Campus Wayfinding Network service.
-  static const String routeServiceUrl =
+  static const String ROUTE_SERVICE_URL =
       'https://admin-enterprise-gis.ucsd.edu/server/rest/services/'
       'Wayfinding/Campus_Wayfinding_Network/NAServer/Route';
 
@@ -45,7 +45,7 @@ class EsriMapRouteService {
     required String travelMode,
   }) async {
     try {
-      final routeTask = RouteTask.withUri(Uri.parse(routeServiceUrl));
+      final routeTask = RouteTask.withUri(Uri.parse(ROUTE_SERVICE_URL));
       await routeTask.load();
 
       final params = await routeTask.createDefaultParameters();
@@ -67,11 +67,13 @@ class EsriMapRouteService {
 
       // Solve route
       final result = await routeTask.solveRoute(params);
-      if (result.routes.isEmpty) return null;
+      final isResultEmpty = result.routes.isEmpty;
+      if (isResultEmpty) return null;
 
       final route = result.routes.first;
       final routeGeometry = route.routeGeometry;
-      if (routeGeometry == null) return null;
+      final isGeometryNull = routeGeometry == null;
+      if (isGeometryNull) return null;
 
       // Compute padded extent so the route line stays visible above bottom sheets
       final extent = routeGeometry.extent;

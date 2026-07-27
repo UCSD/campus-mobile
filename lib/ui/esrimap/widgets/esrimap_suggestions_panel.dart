@@ -4,9 +4,9 @@
 ///              chips and recent search history items.
 /// ============================================================================
 
+import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_search_category.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
 import 'package:flutter/material.dart';
-import '../models/esrimap_search_category.dart';
-import '../models/map_search_result.dart';
 
 /// Suggestions panel widget rendered below the search bar when focused.
 class EsriMapSuggestionsPanel extends StatelessWidget {
@@ -51,19 +51,24 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? Colors.grey[850] : Colors.white;
+    final isFromRouteFieldActive = showRouteFields && activeRouteField == 'from';
+    final topPadding = isFromRouteFieldActive ? 0.0 : 12.0;
 
     return Material(
       elevation: 4,
       borderRadius: BorderRadius.circular(8),
       color: bgColor,
       child: Padding(
-        padding: EdgeInsets.only(top: (showRouteFields && activeRouteField == 'from') ? 0 : 12, bottom: 12),
+        padding: EdgeInsets.only(
+          top: topPadding,
+          bottom: 12,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // "Current Location" shortcut option when 'From' field is active
-            if (showRouteFields && activeRouteField == 'from') ...[
+            if (isFromRouteFieldActive) ...[
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: onSelectCurrentLocation,

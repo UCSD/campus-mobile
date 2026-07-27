@@ -7,26 +7,26 @@
 
 import 'dart:async';
 import 'package:arcgis_maps/arcgis_maps.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esrimap_ai_search.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esrimap_basemaps.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esrimap_config.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esrimap_fab.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esrimap_layers_panel.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esrimap_scene.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_search_category.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/services/esrimap_auth_handler.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/services/esrimap_route_service.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/services/esrimap_search_service.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/widgets/esrimap_category_list_panel.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/widgets/esrimap_detail_slide_over.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/widgets/esrimap_search_bar.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/widgets/esrimap_suggestions_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'esrimap_ai_search.dart';
-import 'esrimap_basemaps.dart';
-import 'esrimap_config.dart';
-import 'esrimap_fab.dart';
-import 'esrimap_layers_panel.dart';
-import 'esrimap_scene.dart';
-import 'models/esrimap_search_category.dart';
-import 'models/map_search_result.dart';
-import 'services/esrimap_auth_handler.dart';
-import 'services/esrimap_route_service.dart';
-import 'services/esrimap_search_service.dart';
-import 'widgets/esrimap_category_list_panel.dart';
-import 'widgets/esrimap_detail_slide_over.dart';
-import 'widgets/esrimap_search_bar.dart';
-import 'widgets/esrimap_suggestions_panel.dart';
 
 // Re-export MapSearchResult so callers importing esrimap.dart retain access
-export 'models/map_search_result.dart' show MapSearchResult, MapSearchSource;
+export 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart' show MapSearchResult, MapSearchSource;
 
 /// Primary StatefulWidget for the interactive Esri Campus Map screen.
 class EsriMap extends StatefulWidget {
@@ -120,7 +120,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   /// Returns list of mapped search categories constructed from server configuration.
   List<EsriSearchCategory> get _categories {
-    if (_config == null) return [];
+    final isConfigNull = _config == null;
+    if (isConfigNull) return [];
     return _config!.searchCategories
         .map(
           (c) => EsriSearchCategory(
@@ -154,7 +155,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Future<void> _fetchConfigThenInit() async {
     try {
       final config = await EsriMapConfigService.instance.fetch();
-      if (!mounted) return;
+      final isNotMounted = !mounted;
+      if (isNotMounted) return;
       setState(() => _config = config);
       _initMap(config);
       _fetchAllPoiClasses();
@@ -185,10 +187,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.arcGISMap = _map;
     _mapViewController.interactionOptions.rotateEnabled = true;
 
-    if (!_mapViewController.graphicsOverlays.contains(_graphicsOverlay))
+    final isGraphicsOverlayMissing = !_mapViewController.graphicsOverlays.contains(_graphicsOverlay);
+    if (isGraphicsOverlayMissing) {
       _mapViewController.graphicsOverlays.add(_graphicsOverlay);
-    if (!_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay))
+    }
+    final isRouteOverlayMissing = !_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay);
+    if (isRouteOverlayMissing) {
       _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
+    }
 
     // Configure location display settings
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
@@ -200,7 +206,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     // Track map heading rotation changes
     _viewpointChangedSubscription = _mapViewController.onViewpointChanged.listen((_) {
       final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
-      if (vp != null && mounted) {
+      final isVpValid = vp != null && mounted;
+      if (isVpValid) {
         setState(() {
           _mapRotation = vp.rotation;
           final shouldResetVP = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
@@ -256,7 +263,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   /// Preloads non-active basemaps into memory.
   void _preloadAlternateBasemaps() {
     for (final entry in _basemaps.entries) {
-      if (entry.key == _currentBasemapType) continue;
+      final isCurrent = entry.key == _currentBasemapType;
+      if (isCurrent) continue;
       entry.value.load().catchError((Object e) {
         debugPrint('Failed to preload basemap ${entry.key}: $e');
       });
@@ -265,9 +273,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   /// Switches active basemap without resetting viewpoint frame.
   void _switchBasemap(BasemapType newType) {
-    if (newType == _currentBasemapType) return;
+    final isSameType = newType == _currentBasemapType;
+    if (isSameType) return;
     final newBasemap = _basemaps[newType];
-    if (newBasemap == null) return;
+    final isBasemapNull = newBasemap == null;
+    if (isBasemapNull) return;
 
     setState(() {
       _map.basemap = newBasemap;
@@ -277,37 +287,49 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   /// Switches between 2D map view and 3D portal scene views.
   void _setSceneMode(String key) {
-    if (key == _sceneMode) return;
+    final isSameMode = key == _sceneMode;
+    if (isSameMode) return;
     setState(() {
       _sceneMode = key;
-      if (key != 'default') _showLayersPanel = false;
-      if (_config == null) return;
-      final scene = _config!.scenes[key];
-      if (scene == null || scene.type != 'scene') return;
-      final portalUrl = scene.portalKey != null ? _config!.portals[scene.portalKey!] : null;
-      if (portalUrl == null || scene.itemId == null) return;
+      final isNotDefault = key != 'default';
+      if (isNotDefault) _showLayersPanel = false;
+      final isConfigNull = _config == null;
+      if (isConfigNull) return;
 
-      if (key == 'building3d' && _scene3DWidget == null) {
+      final scene = _config!.scenes[key];
+      final isInvalidScene = scene == null || scene.type != 'scene';
+      if (isInvalidScene) return;
+
+      final portalUrl = scene.portalKey != null ? _config!.portals[scene.portalKey!] : null;
+      final isMissingPortalItem = portalUrl == null || scene.itemId == null;
+      if (isMissingPortalItem) return;
+
+      final isBuilding3DMode = key == 'building3d' && _scene3DWidget == null;
+      final isDroneViewMode = key == 'droneView' && _sceneDroneWidget == null;
+
+      if (isBuilding3DMode) {
         _scene3DWidget = EsriSceneWidget(
           key: _scene3DKey,
           portalUri: portalUrl,
           itemId: scene.itemId!,
           onHeadingChanged: (h) => setState(() {
             _mapRotation = h;
-            if (!_ignoreViewpointReset && (_isLocationActive || _isRecenterActive)) {
+            final shouldResetVP3D = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
+            if (shouldResetVP3D) {
               _isLocationActive = false;
               _isRecenterActive = false;
             }
           }),
         );
-      } else if (key == 'droneView' && _sceneDroneWidget == null) {
+      } else if (isDroneViewMode) {
         _sceneDroneWidget = EsriSceneWidget(
           key: _sceneDroneKey,
           portalUri: portalUrl,
           itemId: scene.itemId!,
           onHeadingChanged: (h) => setState(() {
             _mapRotation = h;
-            if (!_ignoreViewpointReset && (_isLocationActive || _isRecenterActive)) {
+            final shouldResetVPDrone = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
+            if (shouldResetVPDrone) {
               _isLocationActive = false;
               _isRecenterActive = false;
             }
@@ -320,13 +342,16 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   /// Toggles visibility of operational layers configured in map settings.
   void _toggleLayer(String key) async {
     final entry = _config?.layers[key];
-    if (entry == null) return;
+    final isEntryNull = entry == null;
+    if (isEntryNull) return;
 
-    if (_layerVisible[key] == true) {
+    final isAlreadyVisible = _layerVisible[key] == true;
+    if (isAlreadyVisible) {
       _layerTimers[key]?.cancel();
       _layerTimers.remove(key);
       for (final layer in _layerInstances[key] ?? []) {
-        if (layer != null) _map.operationalLayers.remove(layer);
+        final isLayerNotNull = layer != null;
+        if (isLayerNotNull) _map.operationalLayers.remove(layer);
       }
       _layerInstances.remove(key);
       setState(() => _layerVisible[key] = false);
@@ -338,7 +363,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _layerInstances[key] = instances;
 
     for (final layer in instances) {
-      if (layer != null) _map.operationalLayers.add(layer);
+      final isLayerNotNull = layer != null;
+      if (isLayerNotNull) _map.operationalLayers.add(layer);
     }
 
     try {
@@ -362,8 +388,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   Layer? _layerFromSublayer(SublayerEntry sub) {
-    if (sub.source == 'url' && sub.url != null) {
-      return sub.url!.contains('FeatureServer')
+    final isUrlSub = sub.source == 'url' && sub.url != null;
+    if (isUrlSub) {
+      final isFeatureServer = sub.url!.contains('FeatureServer');
+      return isFeatureServer
           ? FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse(sub.url!)))
           : ArcGISMapImageLayer.withUri(Uri.parse(sub.url!));
     }
@@ -371,8 +399,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   Layer? _layerFromEntry(LayerEntry entry) {
-    if (entry.source == 'url' && entry.url != null) {
-      return entry.url!.contains('FeatureServer')
+    final isUrlEntry = entry.source == 'url' && entry.url != null;
+    if (isUrlEntry) {
+      final isFeatureServer = entry.url!.contains('FeatureServer');
+      return isFeatureServer
           ? FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse(entry.url!)))
           : ArcGISMapImageLayer.withUri(Uri.parse(entry.url!));
     }
@@ -380,43 +410,52 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _applyLayerSpecialCases(String key, List<Layer?> instances) {
-    if (key == 'campusDistricts' && instances.isNotEmpty && instances.first is ArcGISMapImageLayer) {
+    final isCampusDistricts = key == 'campusDistricts' && instances.isNotEmpty && instances.first is ArcGISMapImageLayer;
+    if (isCampusDistricts) {
       final imageLayer = instances.first as ArcGISMapImageLayer;
       for (final sub in imageLayer.mapImageSublayers) {
-        sub.isVisible = sub.id == 4;
+        final isSublayerFour = sub.id == 4;
+        sub.isVisible = isSublayerFour;
       }
     }
   }
 
   void _startLayerRefreshTimer(String key, LayerEntry entry) {
     final subs = entry.sublayers;
-    if (subs == null) return;
+    final isSubsNull = subs == null;
+    if (isSubsNull) return;
 
     int? capturedIdx;
     int? interval;
     for (int i = 0; i < subs.length; i++) {
-      if (subs[i].refreshInterval > 0) {
+      final hasRefresh = subs[i].refreshInterval > 0;
+      if (hasRefresh) {
         capturedIdx = i;
         interval = subs[i].refreshInterval;
         break;
       }
     }
-    if (capturedIdx == null || interval == null) return;
+    final isInvalidRefreshConfig = capturedIdx == null || interval == null;
+    if (isInvalidRefreshConfig) return;
 
     final idx = capturedIdx;
     final sub = subs[idx];
 
     _layerTimers[key] = Timer.periodic(Duration(seconds: interval), (_) async {
-      if (!mounted) return;
+      final isNotMounted = !mounted;
+      if (isNotMounted) return;
       final instances = _layerInstances[key];
-      if (instances == null || idx >= instances.length) return;
+      final isInvalidInstances = instances == null || idx >= instances.length;
+      if (isInvalidInstances) return;
 
       final oldLayer = instances[idx];
-      if (oldLayer != null) _map.operationalLayers.remove(oldLayer);
+      final isOldLayerNotNull = oldLayer != null;
+      if (isOldLayerNotNull) _map.operationalLayers.remove(oldLayer);
 
       final newLayer = _layerFromSublayer(sub);
       instances[idx] = newLayer;
-      if (newLayer != null) {
+      final isNewLayerNotNull = newLayer != null;
+      if (isNewLayerNotNull) {
         _map.operationalLayers.add(newLayer);
         try {
           await newLayer.load();
@@ -439,8 +478,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _addToRecentSearches(MapSearchResult result) {
     _recentSearches.removeWhere((r) => r.name == result.name && r.source == result.source);
     _recentSearches.insert(0, result);
-    if (_recentSearches.length > EsriMapSearchService.maxRecentSearches)
-      _recentSearches = _recentSearches.sublist(0, EsriMapSearchService.maxRecentSearches);
+    final isExceedingMax = _recentSearches.length > EsriMapSearchService.MAX_RECENT_SEARCHES;
+    if (isExceedingMax) {
+      _recentSearches = _recentSearches.sublist(0, EsriMapSearchService.MAX_RECENT_SEARCHES);
+    }
     EsriMapSearchService.saveRecentSearches(_recentSearches);
   }
 
@@ -456,7 +497,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   /// Text search: queries buildings and POIs concurrently.
   Future<void> _performSearch(String query) async {
-    if (query.trim().isEmpty) return;
+    final isQueryEmpty = query.trim().isEmpty;
+    if (isQueryEmpty) return;
 
     final q = query.toLowerCase();
     final matched = _allPoiClasses.where((c) => c.toLowerCase().contains(q)).toList();
@@ -551,9 +593,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     for (int i = 0; i < results.length; i++) {
       final result = results[i];
       final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
+      final isBuilding = result.source == MapSearchSource.building;
       final graphic = Graphic(
         geometry: point,
-        symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.red, size: 14),
+        symbol: SimpleMarkerSymbol(
+          style: SimpleMarkerSymbolStyle.circle,
+          color: isBuilding ? Colors.blue : Colors.red,
+          size: 14,
+        ),
       );
       graphic.attributes['resultIndex'] = i;
       _graphicsOverlay.graphics.add(graphic);
@@ -561,9 +608,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _zoomToResults(List<MapSearchResult> results) {
-    if (results.isEmpty) return;
+    final isResultsEmpty = results.isEmpty;
+    if (isResultsEmpty) return;
 
-    if (results.length == 1) {
+    final isSingleResult = results.length == 1;
+    if (isSingleResult) {
       final r = results.first;
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
@@ -591,13 +640,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _seeAllCategoryResults() {
-    if (_allCategoryResults.isEmpty) return;
+    final isAllCategoryResultsEmpty = _allCategoryResults.isEmpty;
+    if (isAllCategoryResultsEmpty) return;
     _zoomToResults(_allCategoryResults);
   }
 
   void _selectResult(MapSearchResult result) {
-    if (_showRouteFields && _activeRouteField != null) {
-      if (_activeRouteField == 'from') {
+    final isRouteModeActive = _showRouteFields && _activeRouteField != null;
+    if (isRouteModeActive) {
+      final isFromActive = _activeRouteField == 'from';
+      final isToActive = _activeRouteField == 'to';
+      if (isFromActive) {
         _fromController.text = result.name;
         _fromLatLng = (result.latitude, result.longitude);
         _graphicsOverlay.graphics.clear();
@@ -610,8 +663,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _activeCategory = null;
         });
         _fromFocusNode.unfocus();
-        if (_routeDestination != null) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-      } else if (_activeRouteField == 'to') {
+        final hasRouteDestination = _routeDestination != null;
+        if (hasRouteDestination) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+      } else if (isToActive) {
         _toController.text = result.name;
         _routeDestination = result;
         _graphicsOverlay.graphics.clear();
@@ -634,11 +688,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     _graphicsOverlay.graphics.clear();
     final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
+    final isBuilding = result.source == MapSearchSource.building;
     final graphic = Graphic(
       geometry: point,
       symbol: SimpleMarkerSymbol(
         style: SimpleMarkerSymbolStyle.circle,
-        color: result.source == MapSearchSource.building ? Colors.blue : Colors.red,
+        color: isBuilding ? Colors.blue : Colors.red,
         size: 14,
       ),
     );
@@ -658,7 +713,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   Future<void> _onMapTap(Offset screenPoint) async {
-    if (_showSuggestions || _showResults) {
+    final isDropdownVisible = _showSuggestions || _showResults;
+    if (isDropdownVisible) {
       setState(() {
         _showSuggestions = false;
         _showResults = false;
@@ -667,8 +723,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
 
-    if (_mappedResults.isEmpty) {
-      if (_selectedResult != null) _closeDetail();
+    final isMappedResultsEmpty = _mappedResults.isEmpty;
+    if (isMappedResultsEmpty) {
+      final isSelectedResultNotNull = _selectedResult != null;
+      if (isSelectedResultNotNull) _closeDetail();
       return;
     }
 
@@ -680,12 +738,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         maximumResults: 1,
       );
 
-      if (identifyResult.graphics.isNotEmpty) {
+      final hasGraphics = identifyResult.graphics.isNotEmpty;
+      if (hasGraphics) {
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
-        if (index != null && index >= 0 && index < _mappedResults.length) _selectResultFromPin(_mappedResults[index]);
+        final isValidResultIndex = index != null && index >= 0 && index < _mappedResults.length;
+        if (isValidResultIndex) {
+          _selectResultFromPin(_mappedResults[index]);
+        }
       } else {
-        if (_selectedResult != null) _closeDetail();
+        final isSelectedResultNotNull = _selectedResult != null;
+        if (isSelectedResultNotNull) _closeDetail();
       }
     } catch (e) {
       debugPrint('Identify error: $e');
@@ -694,7 +757,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   void _selectResultFromPin(MapSearchResult result) {
     if (_showRouteFields) {
-      if (_activeRouteField == 'from') {
+      final isFromActive = _activeRouteField == 'from';
+      if (isFromActive) {
         _fromController.text = result.name;
         _fromLatLng = (result.latitude, result.longitude);
         _graphicsOverlay.graphics.clear();
@@ -707,7 +771,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _activeCategory = null;
         });
         _fromFocusNode.unfocus();
-        if (_routeDestination != null) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+        final hasRouteDestination = _routeDestination != null;
+        if (hasRouteDestination) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
       } else {
         _toController.text = result.name;
         _routeDestination = result;
@@ -757,12 +822,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _recenterOnUser() {
-    if (!_locationStarted) {
+    final isLocationNotStarted = !_locationStarted;
+    if (isLocationNotStarted) {
       _startLocationDisplay();
       return;
     }
     final loc = _mapViewController.locationDisplay.location;
-    if (loc == null) return;
+    final isLocationNull = loc == null;
+    if (isLocationNull) return;
 
     _mapViewController.locationDisplay.autoPanMode = LocationDisplayAutoPanMode.recenter;
     _ignoreViewpointReset = true;
@@ -781,16 +848,23 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) _ignoreViewpointReset = false;
     });
-    if (_sceneMode != 'default') {
-      if (_sceneMode == 'building3d') {
-        _scene3DKey.currentState?.resetCamera();
+
+    final isNotDefaultScene = _sceneMode != 'default';
+    if (isNotDefaultScene) {
+      final isBuilding3D = _sceneMode == 'building3d';
+      if (isBuilding3D) {
+        _scene3DKey.currentState?.snapToNorth();
       } else {
-        _sceneDroneKey.currentState?.resetCamera();
+        _sceneDroneKey.currentState?.snapToNorth();
       }
       return;
     }
 
-    if (_selectedResult != null) {
+    final isSelectedResultNotNull = _selectedResult != null;
+    final hasLastResultNoMapped = _lastSelectedResult != null && _mappedResults.isEmpty;
+    final hasMappedResults = _mappedResults.isNotEmpty;
+
+    if (isSelectedResultNotNull) {
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
           ArcGISPoint(
@@ -801,7 +875,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           scale: 5000,
         ),
       );
-    } else if (_lastSelectedResult != null && _mappedResults.isEmpty) {
+    } else if (hasLastResultNoMapped) {
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
           ArcGISPoint(
@@ -812,7 +886,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           scale: 5000,
         ),
       );
-    } else if (_mappedResults.isNotEmpty) {
+    } else if (hasMappedResults) {
       _zoomToResults(_mappedResults);
     } else {
       _mapViewController.setViewpointAnimated(
@@ -825,8 +899,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _snapToNorth() {
-    if (_sceneMode != 'default') {
-      if (_sceneMode == 'building3d') {
+    final isNotDefaultScene = _sceneMode != 'default';
+    if (isNotDefaultScene) {
+      final isBuilding3D = _sceneMode == 'building3d';
+      if (isBuilding3D) {
         _scene3DKey.currentState?.snapToNorth();
       } else {
         _sceneDroneKey.currentState?.snapToNorth();
@@ -868,19 +944,21 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _clearRoute() {
     _routeGraphicsOverlay.graphics.clear();
     final destination = _selectedResult;
-    if (destination != null) {
+    final isDestinationNotNull = destination != null;
+    if (isDestinationNotNull) {
       final point = ArcGISPoint(
         x: destination.longitude,
         y: destination.latitude,
         spatialReference: SpatialReference.wgs84,
       );
+      final isBuilding = destination.source == MapSearchSource.building;
       _graphicsOverlay.graphics.clear();
       _graphicsOverlay.graphics.add(
         Graphic(
           geometry: point,
           symbol: SimpleMarkerSymbol(
             style: SimpleMarkerSymbolStyle.circle,
-            color: destination.source == MapSearchSource.building ? Colors.blue : Colors.red,
+            color: isBuilding ? Colors.blue : Colors.red,
             size: 14,
           ),
         ),
@@ -907,7 +985,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Future<void> _solveRoute(MapSearchResult destination, {String? travelMode, (double, double)? originLatLng}) async {
     final userLatLng = originLatLng ?? _getUserLatLng();
-    if (userLatLng == null) {
+    final isUserLatLngNull = userLatLng == null;
+    if (isUserLatLngNull) {
       setState(() => _isRouting = false);
       return;
     }
@@ -925,7 +1004,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       travelMode: mode,
     );
 
-    if (routeRes == null) {
+    final isRouteResNull = routeRes == null;
+    if (isRouteResNull) {
       if (mounted) {
         setState(() {
           _isRouting = false;
@@ -939,7 +1019,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _routeManeuvers = routeRes.directionManeuvers;
 
     _routeGraphicsOverlay.graphics.clear();
-    if (routeRes.routeGeometry != null) {
+    final hasRouteGeometry = routeRes.routeGeometry != null;
+    if (hasRouteGeometry) {
       _routeGraphicsOverlay.graphics.add(
         Graphic(
           geometry: routeRes.routeGeometry!,
@@ -961,7 +1042,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       ),
     );
 
-    if (originLatLng != null) {
+    final hasOriginLatLng = originLatLng != null;
+    if (hasOriginLatLng) {
       _routeGraphicsOverlay.graphics.add(
         Graphic(
           geometry: ArcGISPoint(x: originLatLng.$2, y: originLatLng.$1, spatialReference: SpatialReference.wgs84),
@@ -971,8 +1053,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       );
     }
 
-    if (routeRes.paddedExtent != null)
+    final hasPaddedExtent = routeRes.paddedExtent != null;
+    if (hasPaddedExtent) {
       _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(routeRes.paddedExtent!));
+    }
 
     _graphicsOverlay.graphics.clear();
     _mappedResults = [];
@@ -994,22 +1078,27 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   (double lat, double lng)? _getUserLatLng() {
     final pos = _mapViewController.locationDisplay.location?.position;
-    if (pos == null) return null;
+    final isPosNull = pos == null;
+    if (isPosNull) return null;
     final wgs = GeometryEngine.project(pos, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
-    if (wgs == null) return null;
+    final isWgsNull = wgs == null;
+    if (isWgsNull) return null;
     return (wgs.y, wgs.x);
   }
 
   Envelope? _getViewportEnvelopeWGS84() {
     final vp = _mapViewController.getCurrentViewpoint(ViewpointType.boundingGeometry);
     final geom = vp?.targetGeometry;
-    if (geom == null) return null;
+    final isGeomNull = geom == null;
+    if (isGeomNull) return null;
     final projected = GeometryEngine.project(geom, outputSpatialReference: SpatialReference.wgs84);
     return projected as Envelope?;
   }
 
-  IconData _iconForResult(MapSearchResult result) =>
-      result.source == MapSearchSource.building ? Icons.business : Icons.place;
+  IconData _iconForResult(MapSearchResult result) {
+    final isBuilding = result.source == MapSearchSource.building;
+    return isBuilding ? Icons.business : Icons.place;
+  }
 
   IconData _iconForClass(String classValue) {
     return _categories
@@ -1022,12 +1111,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   String _labelForClass(String classValue) {
     final match = _categories.where((c) => c.poiClassValue.toLowerCase() == classValue.toLowerCase());
-    return match.isNotEmpty ? match.first.label : classValue;
+    final hasMatch = match.isNotEmpty;
+    return hasMatch ? match.first.label : classValue;
   }
 
   Future<void> _launchWebsite(String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
+    final canLaunch = await canLaunchUrl(uri);
+    if (canLaunch) await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   void _onAiLocationSelected(AiSearchResult result) {
@@ -1059,10 +1150,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _onAiRouteRequested(List<AiSearchResult> stops) {
-    if (stops.isEmpty) return;
+    final isStopsEmpty = stops.isEmpty;
+    if (isStopsEmpty) return;
 
     final AiSearchResult destination = stops.last;
-    final AiSearchResult? origin = stops.length >= 2 ? stops.first : null;
+    final hasMultipleStops = stops.length >= 2;
+    final AiSearchResult? origin = hasMultipleStops ? stops.first : null;
 
     final destResult = MapSearchResult(
       name: destination.name,
@@ -1073,12 +1166,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       address: destination.address,
     );
 
-    if (origin != null) {
+    final hasOrigin = origin != null;
+    if (hasOrigin) {
       _fromController.text = origin.name;
       _fromLatLng = (origin.latitude, origin.longitude);
     } else {
       final gps = _getUserLatLng();
-      _fromController.text = gps != null ? 'My Location' : '';
+      final hasGps = gps != null;
+      _fromController.text = hasGps ? 'My Location' : '';
       _fromLatLng = gps;
     }
 
@@ -1097,7 +1192,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _onFocusChanged() {
-    if (_focusNode.hasFocus && _searchController.text.isEmpty) {
+    final isSearchFocusEmpty = _focusNode.hasFocus && _searchController.text.isEmpty;
+    if (isSearchFocusEmpty) {
       setState(() {
         _showSuggestions = true;
         _showResults = false;
@@ -1106,30 +1202,38 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _onFromFocusChanged() {
-    if (_fromFocusNode.hasFocus) {
+    final hasFromFocus = _fromFocusNode.hasFocus;
+    if (hasFromFocus) {
       setState(() {
         _activeRouteField = 'from';
-        if (_fromController.text.isEmpty) {
+        final isFromEmpty = _fromController.text.isEmpty;
+        if (isFromEmpty) {
           _showSuggestions = true;
           _showResults = false;
         }
       });
-      if (_detailSheetController.isAttached)
+      final isAttached = _detailSheetController.isAttached;
+      if (isAttached) {
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      }
     }
   }
 
   void _onToFocusChanged() {
-    if (_toFocusNode.hasFocus) {
+    final hasToFocus = _toFocusNode.hasFocus;
+    if (hasToFocus) {
       setState(() {
         _activeRouteField = 'to';
-        if (_toController.text.isEmpty) {
+        final isToEmpty = _toController.text.isEmpty;
+        if (isToEmpty) {
           _showSuggestions = true;
           _showResults = false;
         }
       });
-      if (_detailSheetController.isAttached)
+      final isAttached = _detailSheetController.isAttached;
+      if (isAttached) {
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      }
     }
   }
 
@@ -1138,13 +1242,19 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       setState(() => _showLayersPanel = false);
       return;
     }
-    if (_showCategoryList && _selectedResult == null) {
-      if (_categorySheetController.isAttached)
+    final isCategoryListOpen = _showCategoryList && _selectedResult == null;
+    if (isCategoryListOpen) {
+      final isAttached = _categorySheetController.isAttached;
+      if (isAttached) {
         _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      }
     }
-    if (_selectedResult != null) {
-      if (_detailSheetController.isAttached)
+    final isSelectedResultOpen = _selectedResult != null;
+    if (isSelectedResultOpen) {
+      final isAttached = _detailSheetController.isAttached;
+      if (isAttached) {
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      }
     }
   }
 
@@ -1159,6 +1269,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final shouldShowCatListPanel = _showCategoryList && _selectedResult == null && _allCategoryResults.isNotEmpty;
 
+    final isDefaultScene = _sceneMode == 'default';
+    final isBuilding3dScene = _sceneMode == 'building3d';
+    final isDroneViewScene = _sceneMode == 'droneView';
+
+    final indexedStackIndex = isBuilding3dScene ? 1 : (isDroneViewScene ? 2 : 0);
+
+    final isFabVisible = !keyboardVisible &&
+        !_focusNode.hasFocus &&
+        !_fromFocusNode.hasFocus &&
+        !_toFocusNode.hasFocus &&
+        !_showLayersPanel;
+
+    final isLayersPanelVisible = _showLayersPanel && _config != null;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -1167,11 +1291,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             children: [
               Expanded(
                 child: IndexedStack(
-                  index: _sceneMode == 'building3d'
-                      ? 1
-                      : _sceneMode == 'droneView'
-                      ? 2
-                      : 0,
+                  index: indexedStackIndex,
                   children: [
                     Listener(
                       onPointerDown: _onMapPointerDown,
@@ -1190,7 +1310,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           ),
 
           // Floating top search bar & suggestion panel
-          if (_sceneMode == 'default')
+          if (isDefaultScene)
             Positioned(
               top: 8,
               left: 12,
@@ -1222,10 +1342,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                       _fromController.text = _toController.text;
                       _toController.text = tmpText;
                       setState(() {
-                        _fromLatLng = _routeDestination != null
+                        final hasRouteDestination = _routeDestination != null;
+                        _fromLatLng = hasRouteDestination
                             ? (_routeDestination!.latitude, _routeDestination!.longitude)
                             : null;
-                        _routeDestination = tmpLatLng != null
+                        final hasTmpLatLng = tmpLatLng != null;
+                        _routeDestination = hasTmpLatLng
                             ? MapSearchResult(
                                 name: tmpText,
                                 subtitle: '',
@@ -1235,12 +1357,16 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                               )
                             : null;
                       });
-                      if (_routeDestination != null && _fromLatLng != null)
+                      final canSolveRoute = _routeDestination != null && _fromLatLng != null;
+                      if (canSolveRoute) {
                         _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+                      }
                     },
                     onTapSearchField: () {
-                      if (_selectedResult != null) setState(() => _selectedResult = null);
-                      if (_searchController.text.isEmpty) {
+                      final hasSelectedResult = _selectedResult != null;
+                      if (hasSelectedResult) setState(() => _selectedResult = null);
+                      final isSearchTextEmpty = _searchController.text.isEmpty;
+                      if (isSearchTextEmpty) {
                         setState(() {
                           _showSuggestions = true;
                           _showResults = false;
@@ -1263,9 +1389,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     },
                     onChangedFromField: (text) {
                       _fromLatLng = null;
-                      if (text.length >= 3) {
+                      final isLongEnough = text.length >= 3;
+                      final isTextEmpty = text.isEmpty;
+                      if (isLongEnough) {
                         _performSearch(text);
-                      } else if (text.isEmpty) {
+                      } else if (isTextEmpty) {
                         setState(() {
                           _showResults = false;
                           _showSuggestions = true;
@@ -1278,9 +1406,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                       }
                     },
                     onChangedToField: (text) {
-                      if (text.length >= 3) {
+                      final isLongEnough = text.length >= 3;
+                      final isTextEmpty = text.isEmpty;
+                      if (isLongEnough) {
                         _performSearch(text);
-                      } else if (text.isEmpty) {
+                      } else if (isTextEmpty) {
                         setState(() {
                           _showResults = false;
                           _showSuggestions = true;
@@ -1328,7 +1458,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         activeRouteField: _activeRouteField,
                         onSelectCurrentLocation: () {
                           final gps = _getUserLatLng();
-                          if (gps == null) return;
+                          final isGpsNull = gps == null;
+                          if (isGpsNull) return;
                           _fromController.text = 'My Location';
                           _fromLatLng = gps;
                           setState(() {
@@ -1336,7 +1467,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                             _showResults = false;
                           });
                           _fromFocusNode.unfocus();
-                          if (_routeDestination != null) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+                          final hasRouteDestination = _routeDestination != null;
+                          if (hasRouteDestination) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
                         },
                         onSelectCategory: _performCategorySearch,
                         onSelectRecent: _selectResult,
@@ -1376,7 +1508,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               fromLatLng: _fromLatLng,
               onGetDirections: (res) {
                 final gps = _getUserLatLng();
-                _fromController.text = gps != null ? 'My Location' : '';
+                final hasGps = gps != null;
+                _fromController.text = hasGps ? 'My Location' : '';
                 _toController.text = res.name;
                 _routeDestination = res;
                 _graphicsOverlay.graphics.clear();
@@ -1391,7 +1524,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 _solveRoute(res);
               },
               onTravelModeChanged: (mode) {
-                if (_selectedResult != null) _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
+                final hasSelectedResult = _selectedResult != null;
+                if (hasSelectedResult) {
+                  _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
+                }
               },
               onLaunchWebsite: _launchWebsite,
               onClose: _closeDetail,
@@ -1399,11 +1535,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             ),
 
           // Top-right FAB cluster (Compass, Recenter, Location, Layers)
-          if (!keyboardVisible &&
-              !_focusNode.hasFocus &&
-              !_fromFocusNode.hasFocus &&
-              !_toFocusNode.hasFocus &&
-              !_showLayersPanel)
+          if (isFabVisible)
             Positioned(
               top: MediaQuery.of(context).padding.top + 68,
               right: 16,
@@ -1421,7 +1553,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             ),
 
           // Basemap & Operational Layer Selector Panel
-          if (_showLayersPanel && _config != null)
+          if (isLayersPanelVisible)
             EsriMapLayersPanel(
               config: _config!,
               currentBasemapType: _currentBasemapType,
