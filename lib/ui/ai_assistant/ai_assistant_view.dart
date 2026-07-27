@@ -20,7 +20,7 @@ class AIAssistantView extends StatefulWidget {
 
 class _AIAssistantViewState extends State<AIAssistantView> {
   static const Color _sidebarIconColor = Color(0xFF747678);
-  static const Color _newChatIconColor = Color(0xFF00629B);
+  static const Color _newChatIconColor = Color(0xFF5496BC);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isSidebarOpen = false;

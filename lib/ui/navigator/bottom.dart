@@ -134,7 +134,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
 
   Widget _buildAIAssistantIcon(bool isSelected, ThemeData theme) {
     return Container(
-      height: 34,
+      height: 40,
       margin: const EdgeInsets.only(top: 4),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -144,7 +144,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
       child: Image.asset(
         'assets/images/tgpt/center-icon2.png',
         width: 34,
-        height: 34,
+        height: 40,
         color: isSelected
             ? theme.bottomNavigationBarTheme.selectedItemColor
             : theme.bottomNavigationBarTheme.unselectedItemColor,
