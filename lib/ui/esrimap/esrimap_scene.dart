@@ -124,7 +124,6 @@ class EsriSceneWidgetState extends State<EsriSceneWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ArcGISSceneView(controllerProvider: () => _sceneViewController, onSceneViewReady: _onSceneViewReady);
-  }
+  Widget build(BuildContext context) =>
+      ArcGISSceneView(controllerProvider: () => _sceneViewController, onSceneViewReady: _onSceneViewReady);
 }

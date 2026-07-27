@@ -22,9 +22,8 @@ class CreateChatSessionID {
 
   CreateChatSessionID({required this.chatSessionId});
 
-  factory CreateChatSessionID.fromJson(Map<String, dynamic> json) {
-    return CreateChatSessionID(chatSessionId: json['chat_session_id'] as String);
-  }
+  factory CreateChatSessionID.fromJson(Map<String, dynamic> json) =>
+      CreateChatSessionID(chatSessionId: json['chat_session_id'] as String);
 
   /// Defensive factory that handles both Map and JSON String responses.
   /// Use this when the response format from the API is uncertain.

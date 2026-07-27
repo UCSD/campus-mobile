@@ -10,9 +10,7 @@ class ManageParkingView extends StatefulWidget {
 
 class _ManageParkingViewState extends State<ManageParkingView> {
   @override
-  Widget build(BuildContext context) {
-    return ContainerView(child: buildLocationsList(context));
-  }
+  Widget build(BuildContext context) => ContainerView(child: buildLocationsList(context));
 
   Widget buildLocationsList(BuildContext context) {
     const List<String> parkingType = ["Neighborhoods", "Parking Structures"];

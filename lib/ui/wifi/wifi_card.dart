@@ -65,12 +65,9 @@ class _WiFiCardState extends State<WiFiCard> with AutomaticKeepAliveClientMixin 
   // Wifi card changes its contents based on the state i.e.
   // initial, speedTest, finished, unavailableState, simulated
   Widget buildCardContent(BuildContext context) {
-    if (!_speedTestProvider.isUCSDWiFi!) {
+    if (!_speedTestProvider.isUCSDWiFi!)
       return Padding(padding: const EdgeInsets.only(left: 8, right: 8, top: 8), child: unavailableState());
-    }
-    if (timedOut) {
-      return Padding(padding: const EdgeInsets.only(left: 8, right: 8, top: 8), child: finishedState());
-    }
+    if (timedOut) return Padding(padding: const EdgeInsets.only(left: 8, right: 8, top: 8), child: finishedState());
 
     _speedTestProvider.addListener(() {
       try {

@@ -9,9 +9,7 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 
 class ClassList extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return ContainerView(child: buildSchedule(context));
-  }
+  Widget build(BuildContext context) => ContainerView(child: buildSchedule(context));
 
   Widget buildSchedule(BuildContext context) {
     List<Widget> list = [];

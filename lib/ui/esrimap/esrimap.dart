@@ -1598,12 +1598,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
     // Collapse whichever sheet is active to the minimum snap
-    if (_showCategoryList && _selectedResult == null) {
-      if (_categorySheetController.isAttached) _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-    }
-    if (_selectedResult != null) {
-      if (_detailSheetController.isAttached) _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-    }
+    if (_showCategoryList && _selectedResult == null) if (_categorySheetController.isAttached) _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+    if (_selectedResult != null) if (_detailSheetController.isAttached) _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
   }
 
   // ---------------------------------------------------------------------------
