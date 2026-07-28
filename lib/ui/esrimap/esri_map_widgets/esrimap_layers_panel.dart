@@ -151,7 +151,8 @@ class EsriMapLayersPanel extends StatelessWidget {
 
     final bottomPad = MediaQuery.of(context).padding.bottom;
     final isDefault = currentSceneKey == 'default';
-    final showSceneSwitcher = config.features.scenes && !hideSceneSwitcher;
+    // Hide scenes entirely from the UI. SET to TRUE when ready to show drone view and 3D view to the user.
+    final showSceneSwitcher = false; // config.features.scenes && !hideSceneSwitcher;
 
     return Positioned(
       left: 12,
@@ -205,7 +206,10 @@ class EsriMapLayersPanel extends StatelessWidget {
                           child: Row(
                             children: [
                               for (final entry in config.basemaps.entries) ...[
-                                if (basemapTypeFromKey(entry.key) != null) ...[
+                                // Preventing Light and Dark Basemaps from rendering. Uncomment when ready to use.
+                                if (basemapTypeFromKey(entry.key) != null &&
+                                    basemapTypeFromKey(entry.key) != BasemapType.light &&
+                                    basemapTypeFromKey(entry.key) != BasemapType.dark) ...[
                                   imageTile(
                                     label: entry.value.label,
                                     selected: currentBasemapType == basemapTypeFromKey(entry.key),
