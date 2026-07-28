@@ -27,6 +27,7 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_s
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_search_bar.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_suggestions_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Re-export MapSearchResult so callers importing esrimap.dart retain access
@@ -67,7 +68,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
   EsriMapConfig? _config;
   final _locationDataSource = SystemLocationDataSource();
-  bool _locationStarted = false;
 
   // Search State
   List<MapSearchResult> _searchResults = [];
@@ -256,7 +256,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (!FeatureFlags.mapLocationTrackingEnabled) return;
     try {
       await _locationDataSource.start();
-      setState(() => _locationStarted = true);
     } on ArcGISException catch (e) {
       debugPrint('Location error: ${e.message}');
     } catch (e) {
@@ -822,25 +821,29 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
   }
 
-  void _recenterOnUser() {
-    final isLocationNotStarted = !_locationStarted;
-    if (isLocationNotStarted) {
-      _startLocationDisplay();
-      return;
-    }
-    final loc = _mapViewController.locationDisplay.location;
-    final isLocationNull = loc == null;
-    if (isLocationNull) return;
+  Future<void> _recenterOnUser() async {
+    try {
+      final location = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(timeLimit: Duration(seconds: 10)),
+      );
+      if (!mounted) return;
 
-    _mapViewController.locationDisplay.autoPanMode = LocationDisplayAutoPanMode.recenter;
-    _ignoreViewpointReset = true;
-    setState(() => _isLocationActive = true);
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      if (mounted) {
-        _ignoreViewpointReset = false;
-        _mapViewController.locationDisplay.autoPanMode = LocationDisplayAutoPanMode.off;
-      }
-    });
+      _ignoreViewpointReset = true;
+      setState(() => _isLocationActive = true);
+      _mapViewController.setViewpointAnimated(
+        Viewpoint.fromCenter(
+          ArcGISPoint(x: location.longitude, y: location.latitude, spatialReference: SpatialReference.wgs84),
+          scale: 10000,
+        ),
+      );
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        if (mounted) _ignoreViewpointReset = false;
+      });
+    } catch (e) {
+      debugPrint('Location error: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+    }
   }
 
   void _recenterOnView() {
