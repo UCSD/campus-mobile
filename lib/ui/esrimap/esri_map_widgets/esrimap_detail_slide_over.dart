@@ -5,7 +5,7 @@
 /// ============================================================================
 
 import 'package:arcgis_maps/arcgis_maps.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/map_search_result.dart';
 import 'package:flutter/material.dart';
 
 /// Persistent header delegate for pinned slide-over bottom sheet headers.

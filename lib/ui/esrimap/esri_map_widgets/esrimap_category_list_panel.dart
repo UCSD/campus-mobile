@@ -4,10 +4,10 @@
 ///              results for an active category search, sorted by distance.
 /// ============================================================================
 
-import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_search_category.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/services/esrimap_search_service.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/widgets/esrimap_detail_slide_over.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_search_category.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/map_search_result.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_services/esrimap_search_service.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_detail_slide_over.dart';
 import 'package:flutter/material.dart';
 
 /// Bottom sheet widget rendering plotted category search results in a list.

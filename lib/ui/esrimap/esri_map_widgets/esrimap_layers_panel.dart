@@ -4,8 +4,8 @@
 ///              Light, Dark, Satellite), toggle operational layers, and switch 3D scenes.
 /// ============================================================================
 
-import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_basemaps.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_config.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_basemaps.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_config.dart';
 import 'package:flutter/material.dart';
 
 /// Bottom sheet widget rendering basemap choices, layer toggles, and 3D scene mode chips.

@@ -5,7 +5,7 @@
 /// ============================================================================
 
 import 'dart:convert';
-import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_ai_search_model.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_ai_search_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 

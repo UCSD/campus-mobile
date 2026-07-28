@@ -4,8 +4,8 @@
 ///              chips and recent search history items.
 /// ============================================================================
 
-import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_search_category.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_search_category.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/map_search_result.dart';
 import 'package:flutter/material.dart';
 
 /// Suggestions panel widget rendered below the search bar when focused.

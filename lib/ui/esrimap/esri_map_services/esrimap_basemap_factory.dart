@@ -5,8 +5,8 @@
 /// ============================================================================
 
 import 'package:arcgis_maps/arcgis_maps.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_basemaps.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_config.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_basemaps.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_config.dart';
 
 /// Constructs an ArcGIS [Basemap] for the requested [type] using configuration settings in [config].
 Basemap buildBasemap(BasemapType type, EsriMapConfig config) {

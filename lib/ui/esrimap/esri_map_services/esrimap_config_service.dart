@@ -6,7 +6,7 @@
 /// ============================================================================
 
 import 'dart:convert';
-import 'package:campus_mobile_experimental/ui/esrimap/models/esrimap_config.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;

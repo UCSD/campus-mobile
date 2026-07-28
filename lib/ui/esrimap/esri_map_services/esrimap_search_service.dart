@@ -7,7 +7,7 @@
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:arcgis_maps/arcgis_maps.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/models/map_search_result.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/map_search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
