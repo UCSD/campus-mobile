@@ -68,6 +68,7 @@ flutter:
     - assets/images/
     - assets/images/onboarding/
     - assets/images/tgpt/
+    - lib/ui/esrimap/esri_map_assets/
     - .env
   fonts:
     - family: Refrigerator Deluxe
