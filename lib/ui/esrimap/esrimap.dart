@@ -17,7 +17,7 @@ import 'package:campus_mobile_experimental/core/services/esri_map_services/esrim
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_config_service.dart';
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_route_service.dart';
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_search_service.dart';
-import 'package:campus_mobile_experimental/core/utils/feature_flags.dart';
+import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_ai_search_sheet.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_category_list_panel.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_detail_slide_over.dart';
@@ -254,6 +254,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   /// Starts the device location data source.
   Future<void> _startLocationDisplay() async {
+    if (!FeatureFlags.mapLocationTrackingEnabled) return;
     try {
       await _locationDataSource.start();
       setState(() => _locationStarted = true);
@@ -985,6 +986,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
 
   Future<void> _solveRoute(MapSearchResult destination, {String? travelMode, (double, double)? originLatLng}) async {
+    if (!FeatureFlags.mapRoutingEnabled) return;
     final userLatLng = originLatLng ?? _getUserLatLng();
     final isUserLatLngNull = userLatLng == null;
     if (isUserLatLngNull) {
@@ -1306,7 +1308,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           ),
 
           // Floating top search bar & suggestion panel
-          if (isDefaultScene)
+          if (FeatureFlags.mapSearchEnabled && isDefaultScene)
             Positioned(
               top: 8,
               left: 12,

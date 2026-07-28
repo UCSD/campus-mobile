@@ -6,6 +6,7 @@
 
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
+import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
 import 'package:flutter/material.dart';
 
 /// Persistent header delegate for pinned slide-over bottom sheet headers.
@@ -402,23 +403,24 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                             ),
                             const SizedBox(width: 12),
                           ],
-                          Expanded(
-                            child: FilledButton.icon(
-                              onPressed: isRoutingMode ? null : () => onGetDirections(result),
-                              icon: isRoutingMode
-                                  ? const SizedBox(
-                                      width: 18,
-                                      height: 18,
-                                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                    )
-                                  : const Icon(Icons.directions, size: 18),
-                              label: Text(isRoutingMode ? 'Routing...' : 'Get Directions'),
-                              style: FilledButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          if (FeatureFlags.mapRoutingEnabled)
+                            Expanded(
+                              child: FilledButton.icon(
+                                onPressed: isRoutingMode ? null : () => onGetDirections(result),
+                                icon: isRoutingMode
+                                    ? const SizedBox(
+                                        width: 18,
+                                        height: 18,
+                                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                      )
+                                    : const Icon(Icons.directions, size: 18),
+                                label: Text(isRoutingMode ? 'Routing...' : 'Get Directions'),
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                   ],

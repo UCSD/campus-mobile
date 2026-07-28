@@ -6,6 +6,7 @@
 
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
+import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
 import 'package:flutter/material.dart';
 
 /// Search input bar and route directions header widget.
@@ -142,7 +143,11 @@ class EsriMapSearchBar extends StatelessWidget {
     final shouldShowResultsDivider = showResults && hasSearchResults;
 
     final isSearchNotEmpty = searchController.text.isNotEmpty;
-    final hasClassMatches = matchingPoiClasses.isNotEmpty && isSearchNotEmpty && !showSuggestions;
+    final hasClassMatches =
+        FeatureFlags.mapSearchCategoriesEnabled &&
+        matchingPoiClasses.isNotEmpty &&
+        isSearchNotEmpty &&
+        !showSuggestions;
     final shouldShowDropdown = showResults || hasClassMatches;
 
     return Column(
@@ -304,7 +309,7 @@ class EsriMapSearchBar extends StatelessWidget {
                   ),
                 ),
                 if (isSearchNotEmpty) IconButton(icon: const Icon(Icons.clear), onPressed: onClearSearch),
-                if (config?.features.aiSearch ?? false)
+                if (FeatureFlags.mapAiSearchEnabled && (config?.features.aiSearch ?? false))
                   IconButton(
                     icon: Icon(
                       Icons.auto_awesome,

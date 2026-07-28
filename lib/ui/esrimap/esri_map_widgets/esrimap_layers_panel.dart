@@ -6,7 +6,7 @@
 
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_basemaps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
-import 'package:campus_mobile_experimental/core/utils/feature_flags.dart';
+import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
 import 'package:flutter/material.dart';
 
 /// Bottom sheet widget rendering basemap choices, layer toggles, and 3D scene mode chips.
@@ -229,29 +229,40 @@ class EsriMapLayersPanel extends StatelessWidget {
                         ),
                       ),
 
-                      const Divider(height: 24, indent: 16, endIndent: 16),
+                      if (FeatureFlags.mapOperationalLayersEnabled) ...[
+                        const Divider(height: 24, indent: 16, endIndent: 16),
 
-                      sectionLabel('LAYERS'),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              for (final entry in config.layers.entries) ...[
-                                imageTile(
-                                  label: entry.value.label,
-                                  selected: layerVisible[entry.key] ?? false,
-                                  loading: layerLoading[entry.key] ?? false,
-                                  onTap: () => onToggleLayer(entry.key),
-                                  imageWidget: networkImage(entry.value.thumbnailAsset),
-                                ),
-                                const SizedBox(width: 8),
+                        sectionLabel('LAYERS'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                for (final entry in config.layers.entries) ...[
+                                  if ((entry.key == 'tritonTransit' && FeatureFlags.transitOperationalLayerEnabled) ||
+                                      (entry.key == 'campusDistricts' &&
+                                          FeatureFlags.districtsOperationalLayerEnabled) ||
+                                      (entry.key == 'construction' &&
+                                          FeatureFlags.constructionOperationalLayerEnabled) ||
+                                      (entry.key != 'tritonTransit' &&
+                                          entry.key != 'campusDistricts' &&
+                                          entry.key != 'construction')) ...[
+                                    imageTile(
+                                      label: entry.value.label,
+                                      selected: layerVisible[entry.key] ?? false,
+                                      loading: layerLoading[entry.key] ?? false,
+                                      onTap: () => onToggleLayer(entry.key),
+                                      imageWidget: networkImage(entry.value.thumbnailAsset),
+                                    ),
+                                    const SizedBox(width: 8),
+                                  ],
+                                ],
                               ],
-                            ],
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
@@ -267,7 +278,11 @@ class EsriMapLayersPanel extends StatelessWidget {
                     spacing: 8,
                     children: [
                       for (final entry in config.scenes.entries)
-                        sceneChip(entry.key, entry.value.label, currentSceneKey == entry.key),
+                        if ((entry.key == 'default' && FeatureFlags.defaultSceneEnabled) ||
+                            (entry.key == 'building3d' && FeatureFlags.threeDimensionalSceneEnabled) ||
+                            (entry.key == 'droneView' && FeatureFlags.droneViewSceneEnabled) ||
+                            (entry.key != 'default' && entry.key != 'building3d' && entry.key != 'droneView'))
+                          sceneChip(entry.key, entry.value.label, currentSceneKey == entry.key),
                     ],
                   ),
                 ),
