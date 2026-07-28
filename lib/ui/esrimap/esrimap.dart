@@ -17,6 +17,7 @@ import 'package:campus_mobile_experimental/core/services/esri_map_services/esrim
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_config_service.dart';
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_route_service.dart';
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_search_service.dart';
+import 'package:campus_mobile_experimental/core/utils/feature_flags.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_ai_search_sheet.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_category_list_panel.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_detail_slide_over.dart';
@@ -173,6 +174,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   /// Constructs initial basemaps and sets initial campus viewpoint.
   void _initMap(EsriMapConfig config) {
     for (final type in BasemapType.values) {
+      if (!FeatureFlags.mapAlternateBasemapsEnabled && (type == BasemapType.light || type == BasemapType.dark)) {
+        continue;
+      }
       _basemaps[type] = buildBasemap(type, config);
     }
 

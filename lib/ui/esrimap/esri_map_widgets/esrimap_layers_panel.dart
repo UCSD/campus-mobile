@@ -6,6 +6,7 @@
 
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_basemaps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
+import 'package:campus_mobile_experimental/core/utils/feature_flags.dart';
 import 'package:flutter/material.dart';
 
 /// Bottom sheet widget rendering basemap choices, layer toggles, and 3D scene mode chips.
@@ -151,8 +152,8 @@ class EsriMapLayersPanel extends StatelessWidget {
 
     final bottomPad = MediaQuery.of(context).padding.bottom;
     final isDefault = currentSceneKey == 'default';
-    // Hide scenes entirely from the UI. SET to TRUE when ready to show drone view and 3D view to the user.
-    final showSceneSwitcher = false; // config.features.scenes && !hideSceneSwitcher;
+    // Hide SCENES entirely from the UI. SET to TRUE when ready to show drone view and 3D view to the user.
+    final showSceneSwitcher = FeatureFlags.mapScenesEnabled && config.features.scenes && !hideSceneSwitcher;
 
     return Positioned(
       left: 12,
@@ -206,10 +207,10 @@ class EsriMapLayersPanel extends StatelessWidget {
                           child: Row(
                             children: [
                               for (final entry in config.basemaps.entries) ...[
-                                // Preventing Light and Dark Basemaps from rendering. Uncomment when ready to use.
                                 if (basemapTypeFromKey(entry.key) != null &&
-                                    basemapTypeFromKey(entry.key) != BasemapType.light &&
-                                    basemapTypeFromKey(entry.key) != BasemapType.dark) ...[
+                                    (FeatureFlags.mapAlternateBasemapsEnabled ||
+                                        (basemapTypeFromKey(entry.key) != BasemapType.light &&
+                                            basemapTypeFromKey(entry.key) != BasemapType.dark))) ...[
                                   imageTile(
                                     label: entry.value.label,
                                     selected: currentBasemapType == basemapTypeFromKey(entry.key),
