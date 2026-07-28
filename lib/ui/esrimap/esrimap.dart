@@ -174,9 +174,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   /// Constructs initial basemaps and sets initial campus viewpoint.
   void _initMap(EsriMapConfig config) {
     for (final type in BasemapType.values) {
-      if (!FeatureFlags.mapAlternateBasemapsEnabled && (type == BasemapType.light || type == BasemapType.dark)) {
+      if (!FeatureFlags.mapAlternateBasemapsEnabled && (type == BasemapType.light || type == BasemapType.dark))
         continue;
-      }
       _basemaps[type] = buildBasemap(type, config);
     }
 
