@@ -31,13 +31,17 @@ class AgeAuthChallengeHandler implements ArcGISAuthenticationChallengeHandler {
 
     // Return cached token if valid and not expiring within 5 minutes
     if (isAgo) {
-      if (_cachedAgoToken != null &&
+      final isAgoCachedValid =
+          _cachedAgoToken != null &&
           _agoTokenExpiry != null &&
-          DateTime.now().isBefore(_agoTokenExpiry!.subtract(const Duration(minutes: 5)))) => (_cachedAgoToken, _agoTokenExpiry);
+          DateTime.now().isBefore(_agoTokenExpiry!.subtract(const Duration(minutes: 5)));
+      if (isAgoCachedValid) return (_cachedAgoToken, _agoTokenExpiry);
     } else {
-      if (_cachedAgeToken != null &&
+      final isAgeCachedValid =
+          _cachedAgeToken != null &&
           _ageTokenExpiry != null &&
-          DateTime.now().isBefore(_ageTokenExpiry!.subtract(const Duration(minutes: 5)))) => (_cachedAgeToken, _ageTokenExpiry);
+          DateTime.now().isBefore(_ageTokenExpiry!.subtract(const Duration(minutes: 5)));
+      if (isAgeCachedValid) return (_cachedAgeToken, _ageTokenExpiry);
     }
 
     // Request fresh authentication tokens from server endpoint

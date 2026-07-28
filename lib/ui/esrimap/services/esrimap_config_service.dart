@@ -36,9 +36,7 @@ class EsriMapConfigService {
   Future<EsriMapConfig> _doFetch() async {
     final response = await http.get(Uri.parse('$BASE_URL/config'));
     final isResNotOk = response.statusCode != 200;
-    if (isResNotOk) {
-      throw Exception('Config fetch failed: ${response.statusCode}');
-    }
+    if (isResNotOk) throw Exception('Config fetch failed: ${response.statusCode}');
     _config = EsriMapConfig.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     return _config!;
   }

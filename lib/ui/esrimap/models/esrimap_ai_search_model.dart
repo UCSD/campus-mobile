@@ -40,14 +40,14 @@ class AiSearchResult {
 
   /// Factory constructor to deserialize [AiSearchResult] from a JSON map.
   factory AiSearchResult.fromJson(Map<String, dynamic> j) => AiSearchResult(
-        name: j['name'] as String,
-        subtitle: j['subtitle'] as String? ?? '',
-        address: j['address'] as String? ?? '',
-        latitude: (j['latitude'] as num).toDouble(),
-        longitude: (j['longitude'] as num).toDouble(),
-        distanceFeet: j['distanceFeet'] as int?,
-        distanceFormatted: j['distanceFormatted'] as String?,
-      );
+    name: j['name'] as String,
+    subtitle: j['subtitle'] as String? ?? '',
+    address: j['address'] as String? ?? '',
+    latitude: (j['latitude'] as num).toDouble(),
+    longitude: (j['longitude'] as num).toDouble(),
+    distanceFeet: j['distanceFeet'] as int?,
+    distanceFormatted: j['distanceFormatted'] as String?,
+  );
 }
 
 /// Geographical coordinate stop along a multi-stop AI route.
@@ -81,12 +81,7 @@ class AiSearchResponse {
   final List<AiSearchRouteStop>? routeStopCoords;
 
   /// Constructs an [AiSearchResponse] instance.
-  const AiSearchResponse({
-    required this.message,
-    required this.results,
-    this.routeStopNames,
-    this.routeStopCoords,
-  });
+  const AiSearchResponse({required this.message, required this.results, this.routeStopNames, this.routeStopCoords});
 
   /// Factory constructor to deserialize [AiSearchResponse] from a JSON map.
   factory AiSearchResponse.fromJson(Map<String, dynamic> j) {

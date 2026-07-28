@@ -19,20 +19,15 @@ class BaseLayerSpec {
   final String? itemId;
 
   /// Constructs a [BaseLayerSpec] instance.
-  const BaseLayerSpec({
-    required this.type,
-    this.serviceKey,
-    this.portalKey,
-    this.itemId,
-  });
+  const BaseLayerSpec({required this.type, this.serviceKey, this.portalKey, this.itemId});
 
   /// Factory constructor to deserialize [BaseLayerSpec] from a JSON map.
   factory BaseLayerSpec.fromJson(Map<String, dynamic> json) => BaseLayerSpec(
-        type: json['type'] as String,
-        serviceKey: json['serviceKey'] as String?,
-        portalKey: json['portalKey'] as String?,
-        itemId: json['itemId'] as String?,
-      );
+    type: json['type'] as String,
+    serviceKey: json['serviceKey'] as String?,
+    portalKey: json['portalKey'] as String?,
+    itemId: json['itemId'] as String?,
+  );
 }
 
 /// Configuration structure for a basemap option.
@@ -47,20 +42,14 @@ class BasemapConfig {
   final List<BaseLayerSpec> baseLayers;
 
   /// Constructs a [BasemapConfig] instance.
-  const BasemapConfig({
-    required this.label,
-    required this.thumbnailAsset,
-    required this.baseLayers,
-  });
+  const BasemapConfig({required this.label, required this.thumbnailAsset, required this.baseLayers});
 
   /// Factory constructor to deserialize [BasemapConfig] from a JSON map.
   factory BasemapConfig.fromJson(Map<String, dynamic> json) => BasemapConfig(
-        label: json['label'] as String,
-        thumbnailAsset: json['thumbnailAsset'] as String,
-        baseLayers: (json['baseLayers'] as List)
-            .map((e) => BaseLayerSpec.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    label: json['label'] as String,
+    thumbnailAsset: json['thumbnailAsset'] as String,
+    baseLayers: (json['baseLayers'] as List).map((e) => BaseLayerSpec.fromJson(e as Map<String, dynamic>)).toList(),
+  );
 }
 
 /// Configuration structure for a sublayer inside a map image layer.
@@ -103,15 +92,15 @@ class SublayerEntry {
 
   /// Factory constructor to deserialize [SublayerEntry] from a JSON map.
   factory SublayerEntry.fromJson(Map<String, dynamic> json) => SublayerEntry(
-        name: json['name'] as String,
-        source: json['source'] as String,
-        url: json['url'] as String?,
-        portalKey: json['portalKey'] as String?,
-        itemId: json['itemId'] as String?,
-        refreshInterval: (json['refreshInterval'] as num?)?.toInt() ?? 0,
-        popup: json['popup'] as bool? ?? false,
-        popupTemplate: json['popupTemplate'] as String?,
-      );
+    name: json['name'] as String,
+    source: json['source'] as String,
+    url: json['url'] as String?,
+    portalKey: json['portalKey'] as String?,
+    itemId: json['itemId'] as String?,
+    refreshInterval: (json['refreshInterval'] as num?)?.toInt() ?? 0,
+    popup: json['popup'] as bool? ?? false,
+    popupTemplate: json['popupTemplate'] as String?,
+  );
 }
 
 /// Configuration structure for an operational layer toggle.
@@ -203,20 +192,15 @@ class SceneConfig {
   final String? itemId;
 
   /// Constructs a [SceneConfig] instance.
-  const SceneConfig({
-    required this.label,
-    required this.type,
-    this.portalKey,
-    this.itemId,
-  });
+  const SceneConfig({required this.label, required this.type, this.portalKey, this.itemId});
 
   /// Factory constructor to deserialize [SceneConfig] from a JSON map.
   factory SceneConfig.fromJson(Map<String, dynamic> json) => SceneConfig(
-        label: json['label'] as String,
-        type: json['type'] as String,
-        portalKey: json['portalKey'] as String?,
-        itemId: json['itemId'] as String?,
-      );
+    label: json['label'] as String,
+    type: json['type'] as String,
+    portalKey: json['portalKey'] as String?,
+    itemId: json['itemId'] as String?,
+  );
 }
 
 /// Feature flags controlling availability of experimental app capabilities remotely.
@@ -228,16 +212,11 @@ class FeaturesConfig {
   final bool scenes;
 
   /// Constructs a [FeaturesConfig] instance.
-  const FeaturesConfig({
-    required this.aiSearch,
-    required this.scenes,
-  });
+  const FeaturesConfig({required this.aiSearch, required this.scenes});
 
   /// Factory constructor to deserialize [FeaturesConfig] from a JSON map.
-  factory FeaturesConfig.fromJson(Map<String, dynamic> json) => FeaturesConfig(
-        aiSearch: json['aiSearch'] as bool? ?? false,
-        scenes: json['scenes'] as bool? ?? false,
-      );
+  factory FeaturesConfig.fromJson(Map<String, dynamic> json) =>
+      FeaturesConfig(aiSearch: json['aiSearch'] as bool? ?? false, scenes: json['scenes'] as bool? ?? false);
 }
 
 /// Configuration structure for a search category quick-filter chip.
@@ -255,20 +234,15 @@ class SearchCategoryConfig {
   final String? color;
 
   /// Constructs a [SearchCategoryConfig] instance.
-  const SearchCategoryConfig({
-    required this.label,
-    required this.poiClass,
-    required this.icon,
-    this.color,
-  });
+  const SearchCategoryConfig({required this.label, required this.poiClass, required this.icon, this.color});
 
   /// Factory constructor to deserialize [SearchCategoryConfig] from a JSON map.
   factory SearchCategoryConfig.fromJson(Map<String, dynamic> json) => SearchCategoryConfig(
-        label: json['label'] as String,
-        poiClass: json['poiClass'] as String,
-        icon: json['icon'] as String,
-        color: json['color'] as String?,
-      );
+    label: json['label'] as String,
+    poiClass: json['poiClass'] as String,
+    icon: json['icon'] as String,
+    color: json['color'] as String?,
+  );
 }
 
 /// Root configuration container object holding all map settings.
@@ -307,20 +281,20 @@ class EsriMapConfig {
 
   /// Factory constructor to deserialize root [EsriMapConfig] from a JSON map.
   factory EsriMapConfig.fromJson(Map<String, dynamic> json) => EsriMapConfig(
-        portals: (json['portals'] as Map<String, dynamic>).cast<String, String>(),
-        serviceUrls: (json['serviceUrls'] as Map<String, dynamic>).cast<String, String>(),
-        basemaps: (json['basemaps'] as Map<String, dynamic>).map(
-          (k, v) => MapEntry(k, BasemapConfig.fromJson(v as Map<String, dynamic>)),
-        ),
-        layers: (json['layers'] as Map<String, dynamic>).map(
-          (k, v) => MapEntry(k, LayerEntry.fromJson(v as Map<String, dynamic>)),
-        ),
-        scenes: (json['scenes'] as Map<String, dynamic>).map(
-          (k, v) => MapEntry(k, SceneConfig.fromJson(v as Map<String, dynamic>)),
-        ),
-        features: FeaturesConfig.fromJson(json['features'] as Map<String, dynamic>),
-        searchCategories: (json['searchCategories'] as List)
-            .map((e) => SearchCategoryConfig.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    portals: (json['portals'] as Map<String, dynamic>).cast<String, String>(),
+    serviceUrls: (json['serviceUrls'] as Map<String, dynamic>).cast<String, String>(),
+    basemaps: (json['basemaps'] as Map<String, dynamic>).map(
+      (k, v) => MapEntry(k, BasemapConfig.fromJson(v as Map<String, dynamic>)),
+    ),
+    layers: (json['layers'] as Map<String, dynamic>).map(
+      (k, v) => MapEntry(k, LayerEntry.fromJson(v as Map<String, dynamic>)),
+    ),
+    scenes: (json['scenes'] as Map<String, dynamic>).map(
+      (k, v) => MapEntry(k, SceneConfig.fromJson(v as Map<String, dynamic>)),
+    ),
+    features: FeaturesConfig.fromJson(json['features'] as Map<String, dynamic>),
+    searchCategories: (json['searchCategories'] as List)
+        .map((e) => SearchCategoryConfig.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
 }

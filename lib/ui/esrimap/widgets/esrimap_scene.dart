@@ -20,12 +20,7 @@ class EsriSceneWidget extends StatefulWidget {
   final void Function(double heading)? onHeadingChanged;
 
   /// Constructs an [EsriSceneWidget] instance.
-  const EsriSceneWidget({
-    super.key,
-    required this.portalUri,
-    required this.itemId,
-    this.onHeadingChanged,
-  });
+  const EsriSceneWidget({super.key, required this.portalUri, required this.itemId, this.onHeadingChanged});
 
   @override
   State<EsriSceneWidget> createState() => EsriSceneWidgetState();

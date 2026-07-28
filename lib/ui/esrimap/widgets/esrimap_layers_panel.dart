@@ -64,12 +64,12 @@ class EsriMapLayersPanel extends StatelessWidget {
     final accent = isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
 
     Widget sectionLabel(String text) => Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: subtitleColor),
-          ),
-        );
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: subtitleColor),
+      ),
+    );
 
     Widget imageTile({
       required String label,
@@ -122,32 +122,32 @@ class EsriMapLayersPanel extends StatelessWidget {
     }
 
     Widget networkImage(String url) => Image.network(
-          url,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.grey[700] : Colors.grey[300]),
-        );
+      url,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.grey[700] : Colors.grey[300]),
+    );
 
     Widget sceneChip(String key, String label, bool selected) => GestureDetector(
-          onTap: () => onSetSceneMode(key),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: selected
-                  ? Border.all(color: accent, width: 2)
-                  : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
-              color: selected ? accent.withValues(alpha: 0.12) : (isDark ? Colors.grey[850] : Colors.grey[100]),
-            ),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-                color: selected ? accent : textColor,
-              ),
-            ),
+      onTap: () => onSetSceneMode(key),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: selected
+              ? Border.all(color: accent, width: 2)
+              : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
+          color: selected ? accent.withValues(alpha: 0.12) : (isDark ? Colors.grey[850] : Colors.grey[100]),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+            color: selected ? accent : textColor,
           ),
-        );
+        ),
+      ),
+    );
 
     final bottomPad = MediaQuery.of(context).padding.bottom;
     final isDefault = currentSceneKey == 'default';

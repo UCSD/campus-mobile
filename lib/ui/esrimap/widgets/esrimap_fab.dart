@@ -110,17 +110,8 @@ class EsriMapFabCluster extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (isNot3D)
-                    _pillButton(
-                      icon: Icons.my_location,
-                      color: locationColor,
-                      onTap: onRecenterOnUser,
-                    ),
-                  _pillButton(
-                    icon: Icons.center_focus_strong,
-                    color: recenterColor,
-                    onTap: onRecenterOnView,
-                  ),
+                  if (isNot3D) _pillButton(icon: Icons.my_location, color: locationColor, onTap: onRecenterOnUser),
+                  _pillButton(icon: Icons.center_focus_strong, color: recenterColor, onTap: onRecenterOnView),
                   _pillButton(icon: Icons.layers_outlined, color: fgColor, onTap: onShowLayersPanel),
                 ],
               ),

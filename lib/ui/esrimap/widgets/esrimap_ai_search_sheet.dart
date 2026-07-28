@@ -237,10 +237,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
                       r.name,
                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: textColor),
                     ),
-                    subtitle: Text(
-                      subtitleStr,
-                      style: TextStyle(fontSize: 12, color: subtitleColor),
-                    ),
+                    subtitle: Text(subtitleStr, style: TextStyle(fontSize: 12, color: subtitleColor)),
                     onTap: () {
                       Navigator.pop(context);
                       widget.onLocationSelected(r);
