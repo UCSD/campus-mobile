@@ -6,7 +6,7 @@
 /// ============================================================================
 
 import 'dart:convert';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_config.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
@@ -21,7 +21,7 @@ class EsriMapConfigService {
   static const String BASE_URL = 'https://appzxi70zi.execute-api.us-west-2.amazonaws.com/test/ArcGIS-Map';
 
   /// Asset bundle path for offline fallback map configuration JSON.
-  static const String ASSET_FALLBACK_PATH = 'lib/ui/esrimap/esri_map_assets/mapConfig.json';
+  static const String ASSET_FALLBACK_PATH = 'assets/esri_map_assets/mapConfig.json';
 
   EsriMapConfig? _config;
   Future<EsriMapConfig>? _pending;

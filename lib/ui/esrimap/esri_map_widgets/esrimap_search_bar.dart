@@ -4,8 +4,8 @@
 ///              including AI search trigger and dropdown results list.
 /// ============================================================================
 
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_config.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/map_search_result.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
 import 'package:flutter/material.dart';
 
 /// Search input bar and route directions header widget.

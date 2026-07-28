@@ -7,16 +7,16 @@
 
 import 'dart:async';
 import 'package:arcgis_maps/arcgis_maps.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_ai_search_model.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_basemaps.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_config.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/esrimap_search_category.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/map_search_result.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_services/esrimap_auth_handler.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_services/esrimap_basemap_factory.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_services/esrimap_config_service.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_services/esrimap_route_service.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_services/esrimap_search_service.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_ai_search_model.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_basemaps.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_search_category.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
+import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_auth_handler.dart';
+import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_basemap_factory.dart';
+import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_config_service.dart';
+import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_route_service.dart';
+import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_search_service.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_ai_search_sheet.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_category_list_panel.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_detail_slide_over.dart';
@@ -29,7 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Re-export MapSearchResult so callers importing esrimap.dart retain access
-export 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/map_search_result.dart'
+export 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart'
     show MapSearchResult, MapSearchSource;
 
 /// Primary StatefulWidget for the interactive Esri Campus Map screen.

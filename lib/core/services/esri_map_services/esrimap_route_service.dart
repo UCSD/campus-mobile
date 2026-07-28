@@ -5,7 +5,7 @@
 /// ============================================================================
 
 import 'package:arcgis_maps/arcgis_maps.dart';
-import 'package:campus_mobile_experimental/ui/esrimap/esri_map_models/map_search_result.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
 import 'package:flutter/material.dart';
 
 /// Result data structure holding the outcome of a solved route calculation.
