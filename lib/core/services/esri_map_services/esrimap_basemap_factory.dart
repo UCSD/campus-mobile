@@ -10,6 +10,20 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_c
 
 /// Constructs an ArcGIS [Basemap] for the requested [type] using configuration settings in [config].
 Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
+  // Intercept the satellite basemap to forcefully inject the global World Imagery layer,
+  // since the backend remote config might still be serving the old lightGrayBase street map.
+  if (type == BasemapType.satellite) {
+    final basemap = Basemap();
+    basemap.baseLayers.add(
+      ArcGISTiledLayer.withUri(
+        Uri.parse('https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer'),
+      ),
+    );
+    // Removed the detailed satellite image that would load every 5 seconds to avoid making unnecessary requests,
+    // and increase performance since the detailed image would go blurry the moment you move in the map.
+    return basemap;
+  }
+
   final entry = config.basemaps[basemapKey(type)];
   final isEntryNull = entry == null;
   if (isEntryNull) return Basemap();
