@@ -205,6 +205,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     _startLocationDisplay();
     _preloadAlternateBasemaps();
+    _preloadHeavyLayers();
 
     // Track map heading rotation changes
     _viewpointChangedSubscription = _mapViewController.onViewpointChanged.listen((_) {
@@ -221,6 +222,30 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         });
       }
     });
+  }
+
+  /// Silently preloads computationally expensive operational layers (e.g. portalItem Web Maps) 
+  /// in the background to ensure instantaneous layer toggling later.
+  void _preloadHeavyLayers() async {
+    if (_config == null) return;
+    for (final entry in _config!.layers.entries) {
+      if (entry.value.source == 'portalItem' && !_layerInstances.containsKey(entry.key)) {
+        final instances = await _buildLayerInstances(entry.value);
+        _layerInstances[entry.key] = instances;
+        for (final layer in instances) {
+          if (layer != null) {
+            layer.isVisible = false;
+            _map.operationalLayers.add(layer);
+          }
+        }
+        try {
+          await Future.wait(instances.whereType<Layer>().map((l) => l.load()));
+          _applyLayerSpecialCases(entry.key, instances);
+        } catch (e) {
+          debugPrint('Preload layer error: $e');
+        }
+      }
+    }
   }
 
   /// Sets authentication manager challenge handler for Enterprise token retrieval.
@@ -353,29 +378,40 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (isAlreadyVisible) {
       _layerTimers[key]?.cancel();
       _layerTimers.remove(key);
+      
+      // Hide layers instead of destroying them to cache their loaded state
       for (final layer in _layerInstances[key] ?? []) {
-        final isLayerNotNull = layer != null;
-        if (isLayerNotNull) _map.operationalLayers.remove(layer);
+        if (layer != null) layer.isVisible = false;
       }
-      _layerInstances.remove(key);
+      
       setState(() => _layerVisible[key] = false);
       return;
     }
 
     setState(() => _layerLoading[key] = true);
-    final instances = await _buildLayerInstances(entry);
-    _layerInstances[key] = instances;
 
-    for (final layer in instances) {
-      final isLayerNotNull = layer != null;
-      if (isLayerNotNull) _map.operationalLayers.add(layer);
-    }
+    // Retrieve cached layers, or build them if they don't exist yet
+    List<Layer?> instances = _layerInstances[key] ?? [];
+    
+    if (instances.isEmpty) {
+      instances = await _buildLayerInstances(entry);
+      _layerInstances[key] = instances;
 
-    try {
-      await Future.wait(instances.whereType<Layer>().map((l) => l.load()));
-      _applyLayerSpecialCases(key, instances);
-    } catch (e) {
-      debugPrint('Layer $key load error: $e');
+      for (final layer in instances) {
+        if (layer != null) _map.operationalLayers.add(layer);
+      }
+
+      try {
+        await Future.wait(instances.whereType<Layer>().map((l) => l.load()));
+        _applyLayerSpecialCases(key, instances);
+      } catch (e) {
+        debugPrint('Layer $key load error: $e');
+      }
+    } else {
+      // Re-enable visibility for cached layers
+      for (final layer in instances) {
+        if (layer != null) layer.isVisible = true;
+      }
     }
 
     _startLayerRefreshTimer(key, entry);
