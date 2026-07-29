@@ -286,6 +286,27 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   /// Starts the device location data source.
   Future<void> _startLocationDisplay() async {
     if (!FeatureFlags.mapLocationTrackingEnabled) return;
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      debugPrint('Location services are disabled.');
+      return;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        debugPrint('Location permissions are denied');
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      debugPrint('Location permissions are permanently denied');
+      return;
+    }
+
     try {
       await _locationDataSource.start();
     } on ArcGISException catch (e) {
@@ -969,6 +990,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Future<void> _recenterOnUser() async {
     try {
+      await _startLocationDisplay();
       final location = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(timeLimit: Duration(seconds: 10)),
       );
@@ -1135,7 +1157,22 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Future<void> _solveRoute(MapSearchResult destination, {String? travelMode, (double, double)? originLatLng}) async {
     if (!FeatureFlags.mapRoutingEnabled) return;
-    final userLatLng = originLatLng ?? _getUserLatLng();
+
+    if (originLatLng == null && _getUserLatLng() == null) {
+      await _startLocationDisplay();
+    }
+
+    var userLatLng = originLatLng ?? _getUserLatLng();
+    if (userLatLng == null && await Geolocator.isLocationServiceEnabled()) {
+      final permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+        try {
+          final loc = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(timeLimit: Duration(seconds: 3)));
+          userLatLng = (loc.latitude, loc.longitude);
+        } catch (_) {}
+      }
+    }
+
     final isUserLatLngNull = userLatLng == null;
     if (isUserLatLngNull) {
       setState(() => _isRouting = false);
