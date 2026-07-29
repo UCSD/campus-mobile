@@ -303,7 +303,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                       const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
-                        child: FilledButton.icon(
+                        child: OutlinedButton.icon(
                           onPressed: () {
                             final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
                             onLaunchWebsite(
@@ -314,8 +314,10 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                             );
                           },
                           icon: const Icon(Icons.directions_car, size: 18),
-                          label: const Text('Open Google Maps Driving'),
-                          style: FilledButton.styleFrom(
+                          label: const Text('Drive With Google Maps'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor,
+                            side: BorderSide(color: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor),
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
@@ -345,11 +347,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  Icons.directions_walk,
-                                  size: 16,
-                                  color: isDark ? Colors.grey[900] : Colors.white,
-                                ),
+                                Icon(Icons.directions_walk, size: 16, color: isDark ? Colors.grey[900] : Colors.white),
                                 const SizedBox(width: 6),
                                 Text(
                                   'Walking',
