@@ -1181,25 +1181,45 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     final whiteOutline = SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.white, width: 2);
+    final destPoint = ArcGISPoint(
+      x: destination.longitude,
+      y: destination.latitude,
+      spatialReference: SpatialReference.wgs84,
+    );
     _routeGraphicsOverlay.graphics.add(
       Graphic(
-        geometry: ArcGISPoint(
-          x: destination.longitude,
-          y: destination.latitude,
-          spatialReference: SpatialReference.wgs84,
-        ),
+        geometry: destPoint,
         symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.red, size: 12)
           ..outline = whiteOutline,
+      ),
+    );
+    _routeGraphicsOverlay.graphics.add(
+      Graphic(
+        geometry: destPoint,
+        symbol: TextSymbol(text: 'Destination', color: Colors.black, size: 14)
+          ..haloColor = Colors.white
+          ..haloWidth = 2
+          ..offsetY = -15, // Negative offsetY usually moves text up
       ),
     );
 
     final hasOriginLatLng = originLatLng != null;
     if (hasOriginLatLng) {
+      final originPoint = ArcGISPoint(x: originLatLng.$2, y: originLatLng.$1, spatialReference: SpatialReference.wgs84);
       _routeGraphicsOverlay.graphics.add(
         Graphic(
-          geometry: ArcGISPoint(x: originLatLng.$2, y: originLatLng.$1, spatialReference: SpatialReference.wgs84),
-          symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.blue, size: 12)
+          geometry: originPoint,
+          symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.green, size: 12)
             ..outline = whiteOutline,
+        ),
+      );
+      _routeGraphicsOverlay.graphics.add(
+        Graphic(
+          geometry: originPoint,
+          symbol: TextSymbol(text: 'Start', color: Colors.black, size: 14)
+            ..haloColor = Colors.white
+            ..haloWidth = 2
+            ..offsetY = -15,
         ),
       );
     }
