@@ -119,6 +119,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   List<LegendInfo> _transitLegend = [];
   Map<String, ui.Image> _transitLegendSwatches = {};
   bool _isTransitLegendLoading = false;
+  bool _isTransitLegendMinimized = false;
 
   // 3D Scene Widgets & Keys
   String _sceneMode = 'default';
@@ -1410,32 +1411,48 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       color: Theme.of(context).cardColor.withOpacity(0.9),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-            const SizedBox(height: 6),
-            for (final info in _transitLegend)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (_transitLegendSwatches[info.name] != null)
-                      RawImage(
-                        image: _transitLegendSwatches[info.name],
-                        width: 16,
-                        height: 16,
-                      ),
-                    const SizedBox(width: 8),
-                    Text(info.name, style: const TextStyle(fontSize: 12)),
-                  ],
-                ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () => setState(() => _isTransitLegendMinimized = !_isTransitLegendMinimized),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                  const SizedBox(width: 8),
+                  Icon(
+                    _isTransitLegendMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    size: 18,
+                  ),
+                ],
               ),
-          ],
+              if (!_isTransitLegendMinimized) ...[
+                const SizedBox(height: 6),
+                for (final info in _transitLegend)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (_transitLegendSwatches[info.name] != null)
+                          RawImage(
+                            image: _transitLegendSwatches[info.name],
+                            width: 16,
+                            height: 16,
+                          ),
+                        const SizedBox(width: 8),
+                        Text(info.name, style: const TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                  ),
+              ],
+            ],
+          ),
         ),
       ),
     );
