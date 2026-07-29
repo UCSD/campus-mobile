@@ -244,7 +244,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
           headerTitle: isRouting ? 'Directions to ${result.name}' : result.name,
           headerIcon: resultIcon,
           onClose: isRouting ? onClearRoute : onClose,
-          trailing: isRouting
+          trailing: isRouting && !routeFailed
               ? Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: TextButton.icon(
