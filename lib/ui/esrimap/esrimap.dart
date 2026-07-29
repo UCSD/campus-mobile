@@ -363,7 +363,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     setState(() => _layerLoading[key] = true);
-    final instances = _buildLayerInstances(entry);
+    final instances = await _buildLayerInstances(entry);
     _layerInstances[key] = instances;
 
     for (final layer in instances) {
@@ -386,7 +386,31 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  List<Layer?> _buildLayerInstances(LayerEntry entry) {
+  Future<List<Layer?>> _buildLayerInstances(LayerEntry entry) async {
+    if (entry.source == 'portalItem' && entry.portalKey != null && entry.itemId != null) {
+      final portalUrl = _config?.portals[entry.portalKey!];
+      if (portalUrl != null) {
+        final portalItem = PortalItem.withPortalAndItemId(
+          portal: Portal(Uri.parse(portalUrl)),
+          itemId: entry.itemId!,
+        );
+        try {
+          await portalItem.load();
+          if (portalItem.type == PortalItemType.webMap) {
+            final tempMap = ArcGISMap.withItem(portalItem);
+            await tempMap.load();
+            final layers = tempMap.operationalLayers.toList();
+            tempMap.operationalLayers.clear(); // Un-own the layers so they can be added to the main map
+            return layers;
+          } else {
+            return [FeatureLayer.withItem(item: portalItem, layerId: 0)];
+          }
+        } catch (e) {
+          debugPrint('Portal item load error: $e');
+        }
+      }
+    }
+    
     if (entry.hasSublayers) return entry.sublayers!.map(_layerFromSublayer).toList();
     return [_layerFromEntry(entry)];
   }
