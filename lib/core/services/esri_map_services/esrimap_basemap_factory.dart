@@ -14,13 +14,13 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
   // since the backend remote config might still be serving the old lightGrayBase street map.
   if (type == BasemapType.satellite) {
     final basemap = Basemap();
-    basemap.baseLayers.add(ArcGISTiledLayer.withUri(
-      Uri.parse('https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer'),
-    ));
-    final nearmapUrl = config.serviceUrls['nearmap'];
-    if (nearmapUrl != null) {
-      basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(nearmapUrl)));
-    }
+    basemap.baseLayers.add(
+      ArcGISTiledLayer.withUri(
+        Uri.parse('https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer'),
+      ),
+    );
+    // Removed the detailed satellite image that would load every 5 seconds to avoid making unnecessary requests,
+    // and increase performance since the detailed image would go blurry the moment you move in the map.
     return basemap;
   }
 
