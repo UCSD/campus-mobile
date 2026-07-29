@@ -28,6 +28,7 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_s
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_suggestions_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:ui' as ui;
 
 // Re-export MapSearchResult so callers importing esrimap.dart retain access
 export 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart'
@@ -113,6 +114,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final Map<String, bool> _layerLoading = {};
   final Map<String, List<Layer?>> _layerInstances = {};
   final Map<String, Timer> _layerTimers = {};
+
+  // Legend State
+  List<LegendInfo> _transitLegend = [];
+  Map<String, ui.Image> _transitLegendSwatches = {};
+  bool _isTransitLegendLoading = false;
 
   // 3D Scene Widgets & Keys
   String _sceneMode = 'default';
@@ -416,10 +422,60 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     _startLayerRefreshTimer(key, entry);
 
+    if (key == 'tritonTransit') {
+      _fetchTransitLegendInfos(instances);
+    }
+
     setState(() {
       _layerVisible[key] = true;
       _layerLoading[key] = false;
     });
+  }
+
+  Future<void> _fetchTransitLegendInfos(List<Layer?> instances) async {
+    if (_transitLegend.isNotEmpty) return;
+    if (mounted) setState(() => _isTransitLegendLoading = true);
+    
+    try {
+      final uniqueInfosMap = <String, LegendInfo>{};
+      for (final layer in instances.whereType<Layer>()) {
+        final layerInfos = await layer.fetchLegendInfos();
+        for (final info in layerInfos) {
+          String name = info.name.trim();
+          if (name.isEmpty) continue;
+          
+          // Normalize the SIO typo so the shuttle/line overwrites the pin
+          name = name.replaceAll('Institute of', 'Institution of');
+          
+          // By overwriting, we naturally keep the later entries (lines/shuttles)
+          // instead of the earlier entries (stop pins).
+          uniqueInfosMap[name] = info;
+        }
+      }
+      
+      final uniqueInfos = uniqueInfosMap.values.toList();
+      
+      final swatches = <String, ui.Image>{};
+      for (final info in uniqueInfos) {
+        final swatchImage = await info.symbol?.createSwatch(screenScale: 2.0);
+        if (swatchImage != null) {
+          swatches[info.name] = await swatchImage.toImage();
+        }
+      }
+      
+      if (mounted) {
+        setState(() {
+          _transitLegend = uniqueInfos
+              .where((info) => swatches.containsKey(info.name))
+              .toList();
+          _transitLegendSwatches = swatches;
+        });
+      }
+    } catch (e) {
+      debugPrint('Failed to fetch transit legend: $e');
+    } finally {
+      if (mounted) setState(() => _isTransitLegendLoading = false);
+    }
   }
 
   Future<List<Layer?>> _buildLayerInstances(String key, LayerEntry entry) async {
@@ -1331,6 +1387,60 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // Build Method
   // ---------------------------------------------------------------------------
 
+  Widget _buildTransitLegend() {
+    if (_isTransitLegendLoading) {
+      return Card(
+        color: Theme.of(context).cardColor.withOpacity(0.9),
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: const Padding(
+          padding: EdgeInsets.all(12),
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+    
+    if (_transitLegend.isEmpty) return const SizedBox.shrink();
+    
+    return Card(
+      color: Theme.of(context).cardColor.withOpacity(0.9),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            const SizedBox(height: 6),
+            for (final info in _transitLegend)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_transitLegendSwatches[info.name] != null)
+                      RawImage(
+                        image: _transitLegendSwatches[info.name],
+                        width: 16,
+                        height: 16,
+                      ),
+                    const SizedBox(width: 8),
+                    Text(info.name, style: const TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -1616,6 +1726,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 onRecenterOnUser: _recenterOnUser,
                 onSnapToNorth: _snapToNorth,
               ),
+            ),
+
+          // Transit Legend
+          if (_layerVisible['tritonTransit'] == true)
+            Positioned(
+              bottom: 24,
+              left: 16,
+              child: _buildTransitLegend(),
             ),
 
           // Basemap & Operational Layer Selector Panel
