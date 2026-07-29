@@ -8,7 +8,8 @@
     "hillshade":     "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer",
     "lightGrayBase": "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer",
     "darkGrayBase":  "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer",
-    "nearmap":       "https://admin-enterprise-gis.ucsd.edu/server/rest/services/Campus_Imagery_Nearmap_9in_2025_0423_0514/MapServer"
+    "nearmap":       "https://admin-enterprise-gis.ucsd.edu/server/rest/services/Campus_Imagery_Nearmap_9in_2025_0423_0514/MapServer",
+    "worldImagery":  "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer"
   },
 
   "basemaps": {
@@ -75,7 +76,7 @@
       "baseLayers": [
         {
           "type": "arcgisTiled",
-          "serviceKey": "lightGrayBase"
+          "serviceKey": "worldImagery"
         },
         {
           "type": "arcgisMapImage",

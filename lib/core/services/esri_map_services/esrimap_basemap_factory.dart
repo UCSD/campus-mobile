@@ -10,6 +10,20 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_c
 
 /// Constructs an ArcGIS [Basemap] for the requested [type] using configuration settings in [config].
 Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
+  // Intercept the satellite basemap to forcefully inject the global World Imagery layer,
+  // since the backend remote config might still be serving the old lightGrayBase street map.
+  if (type == BasemapType.satellite) {
+    final basemap = Basemap();
+    basemap.baseLayers.add(ArcGISTiledLayer.withUri(
+      Uri.parse('https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer'),
+    ));
+    final nearmapUrl = config.serviceUrls['nearmap'];
+    if (nearmapUrl != null) {
+      basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(nearmapUrl)));
+    }
+    return basemap;
+  }
+
   final entry = config.basemaps[basemapKey(type)];
   final isEntryNull = entry == null;
   if (isEntryNull) return Basemap();
