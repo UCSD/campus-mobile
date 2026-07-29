@@ -231,7 +231,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  /// Silently preloads computationally expensive operational layers (e.g. portalItem Web Maps) 
+  /// Silently preloads computationally expensive operational layers (e.g. portalItem Web Maps)
   /// in the background to ensure instantaneous layer toggling later.
   void _preloadHeavyLayers() async {
     if (_config == null) return;
@@ -384,12 +384,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (isAlreadyVisible) {
       _layerTimers[key]?.cancel();
       _layerTimers.remove(key);
-      
+
       // Hide layers instead of destroying them to cache their loaded state
       for (final layer in _layerInstances[key] ?? []) {
         if (layer != null) layer.isVisible = false;
       }
-      
+
       setState(() => _layerVisible[key] = false);
       return;
     }
@@ -398,7 +398,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     // Retrieve cached layers, or build them if they don't exist yet
     List<Layer?> instances = _layerInstances[key] ?? [];
-    
+
     if (instances.isEmpty) {
       instances = await _buildLayerInstances(key, entry);
       _layerInstances[key] = instances;
@@ -422,9 +422,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     _startLayerRefreshTimer(key, entry);
 
-    if (key == 'tritonTransit') {
-      _fetchTransitLegendInfos(instances);
-    }
+    if (key == 'tritonTransit') _fetchTransitLegendInfos(instances);
 
     setState(() {
       _layerVisible[key] = true;
@@ -435,7 +433,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Future<void> _fetchTransitLegendInfos(List<Layer?> instances) async {
     if (_transitLegend.isNotEmpty) return;
     if (mounted) setState(() => _isTransitLegendLoading = true);
-    
+
     try {
       final uniqueInfosMap = <String, LegendInfo>{};
       for (final layer in instances.whereType<Layer>()) {
@@ -443,31 +441,27 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         for (final info in layerInfos) {
           String name = info.name.trim();
           if (name.isEmpty) continue;
-          
+
           // Normalize the SIO typo so the shuttle/line overwrites the pin
           name = name.replaceAll('Institute of', 'Institution of');
-          
+
           // By overwriting, we naturally keep the later entries (lines/shuttles)
           // instead of the earlier entries (stop pins).
           uniqueInfosMap[name] = info;
         }
       }
-      
+
       final uniqueInfos = uniqueInfosMap.values.toList();
-      
+
       final swatches = <String, ui.Image>{};
       for (final info in uniqueInfos) {
         final swatchImage = await info.symbol?.createSwatch(screenScale: 2.0);
-        if (swatchImage != null) {
-          swatches[info.name] = await swatchImage.toImage();
-        }
+        if (swatchImage != null) swatches[info.name] = await swatchImage.toImage();
       }
-      
+
       if (mounted) {
         setState(() {
-          _transitLegend = uniqueInfos
-              .where((info) => swatches.containsKey(info.name))
-              .toList();
+          _transitLegend = uniqueInfos.where((info) => swatches.containsKey(info.name)).toList();
           _transitLegendSwatches = swatches;
         });
       }
@@ -479,26 +473,48 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   Future<List<Layer?>> _buildLayerInstances(String key, LayerEntry entry) async {
-    // Intercept specific layers to forcefully inject vector sublayers, bypassing 
+    // Intercept specific layers to forcefully inject vector sublayers, bypassing
     // the remote backend config which still requests slow MapImageLayers.
-    if (key == 'campusDistricts') {
-      return [FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Areas_and_Boundaries/MapServer/4')))];
-    }
+    if (key == 'campusDistricts')
+      return [
+        FeatureLayer.withFeatureTable(
+          ServiceFeatureTable.withUri(
+            Uri.parse(
+              'https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Areas_and_Boundaries/MapServer/4',
+            ),
+          ),
+        ),
+      ];
     if (key == 'construction') {
       return [
-        FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/0'))),
-        FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/1'))),
-        FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/2'))),
+        FeatureLayer.withFeatureTable(
+          ServiceFeatureTable.withUri(
+            Uri.parse(
+              'https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/0',
+            ),
+          ),
+        ),
+        FeatureLayer.withFeatureTable(
+          ServiceFeatureTable.withUri(
+            Uri.parse(
+              'https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/1',
+            ),
+          ),
+        ),
+        FeatureLayer.withFeatureTable(
+          ServiceFeatureTable.withUri(
+            Uri.parse(
+              'https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/2',
+            ),
+          ),
+        ),
       ];
     }
 
     if (entry.source == 'portalItem' && entry.portalKey != null && entry.itemId != null) {
       final portalUrl = _config?.portals[entry.portalKey!];
       if (portalUrl != null) {
-        final portalItem = PortalItem.withPortalAndItemId(
-          portal: Portal(Uri.parse(portalUrl)),
-          itemId: entry.itemId!,
-        );
+        final portalItem = PortalItem.withPortalAndItemId(portal: Portal(Uri.parse(portalUrl)), itemId: entry.itemId!);
         try {
           await portalItem.load();
           if (portalItem.type == PortalItemType.webMap) {
@@ -515,7 +531,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         }
       }
     }
-    
+
     if (entry.hasSublayers) return entry.sublayers!.map(_layerFromSublayer).toList();
     return [_layerFromEntry(entry)];
   }
@@ -1399,17 +1415,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: const Padding(
           padding: EdgeInsets.all(12),
-          child: SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
+          child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2)),
         ),
       );
     }
-    
+
     if (_transitLegend.isEmpty) return const SizedBox.shrink();
-    
+
     return Card(
       color: Theme.of(context).cardColor.withOpacity(0.9),
       elevation: 4,
@@ -1428,10 +1440,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 children: [
                   const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                   const SizedBox(width: 8),
-                  Icon(
-                    _isTransitLegendMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    size: 18,
-                  ),
+                  Icon(_isTransitLegendMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 18),
                 ],
               ),
               if (!_isTransitLegendMinimized) ...[
@@ -1443,11 +1452,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (_transitLegendSwatches[info.name] != null)
-                          RawImage(
-                            image: _transitLegendSwatches[info.name],
-                            width: 16,
-                            height: 16,
-                          ),
+                          RawImage(image: _transitLegendSwatches[info.name], width: 16, height: 16),
                         const SizedBox(width: 8),
                         Text(info.name, style: const TextStyle(fontSize: 12)),
                       ],
@@ -1749,12 +1754,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             ),
 
           // Transit Legend
-          if (_layerVisible['tritonTransit'] == true)
-            Positioned(
-              bottom: 24,
-              left: 16,
-              child: _buildTransitLegend(),
-            ),
+          if (_layerVisible['tritonTransit'] == true) Positioned(bottom: 24, left: 16, child: _buildTransitLegend()),
 
           // Basemap & Operational Layer Selector Panel
           if (isLayersPanelVisible)
