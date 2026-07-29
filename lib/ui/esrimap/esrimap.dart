@@ -1206,6 +1206,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         setState(() {
           _isRouting = false;
           _routeFailed = true;
+          _showRouteFields = true;
+          _selectedResult = destination;
+          _lastSelectedResult = destination;
         });
       }
       return;

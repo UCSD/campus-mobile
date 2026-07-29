@@ -297,8 +297,29 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                     // Routing or Action Buttons
                     if (routeFailed) ...[
                       Text(
-                        'No route available from your current location.',
+                        'You are too far from campus for walking navigation.',
                         style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          onPressed: () {
+                            final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
+                            onLaunchWebsite(
+                              'https://www.google.com/maps/dir/?api=1'
+                              '&destination=${result.latitude},${result.longitude}'
+                              '&travelmode=driving'
+                              '$originParam',
+                            );
+                          },
+                          icon: const Icon(Icons.directions_car, size: 18),
+                          label: const Text('Open Google Maps Driving'),
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
                       ),
                     ] else if (hasRoute) ...[
                       // Travel time estimate and mode indicator
