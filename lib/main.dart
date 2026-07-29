@@ -141,6 +141,10 @@ class CampusMobile extends StatelessWidget {
         selectedItemColor: Colors.white,
         backgroundColor: bottomTabBarColorDark,
       ),
+      snackBarTheme: const SnackBarThemeData(
+        contentTextStyle: TextStyle(color: Colors.white),
+        backgroundColor: Color(0xFF323232),
+      ),
     );
 
     return MultiProvider(

@@ -1139,6 +1139,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isUserLatLngNull = userLatLng == null;
     if (isUserLatLngNull) {
       setState(() => _isRouting = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please enable location or manually enter starting location'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
       return;
     }
 
