@@ -230,7 +230,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (_config == null) return;
     for (final entry in _config!.layers.entries) {
       if (entry.value.source == 'portalItem' && !_layerInstances.containsKey(entry.key)) {
-        final instances = await _buildLayerInstances(entry.value);
+        final instances = await _buildLayerInstances(entry.key, entry.value);
         _layerInstances[entry.key] = instances;
         for (final layer in instances) {
           if (layer != null) {
@@ -394,7 +394,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     List<Layer?> instances = _layerInstances[key] ?? [];
     
     if (instances.isEmpty) {
-      instances = await _buildLayerInstances(entry);
+      instances = await _buildLayerInstances(key, entry);
       _layerInstances[key] = instances;
 
       for (final layer in instances) {
@@ -422,7 +422,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  Future<List<Layer?>> _buildLayerInstances(LayerEntry entry) async {
+  Future<List<Layer?>> _buildLayerInstances(String key, LayerEntry entry) async {
+    // Intercept specific layers to forcefully inject vector sublayers, bypassing 
+    // the remote backend config which still requests slow MapImageLayers.
+    if (key == 'campusDistricts') {
+      return [FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/AdministrationServices/Areas_and_Boundaries/MapServer/4')))];
+    }
+    if (key == 'construction') {
+      return [
+        FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/0'))),
+        FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/1'))),
+        FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/2'))),
+      ];
+    }
+
     if (entry.source == 'portalItem' && entry.portalKey != null && entry.itemId != null) {
       final portalUrl = _config?.portals[entry.portalKey!];
       if (portalUrl != null) {
@@ -454,8 +467,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Layer? _layerFromSublayer(SublayerEntry sub) {
     final isUrlSub = sub.source == 'url' && sub.url != null;
     if (isUrlSub) {
-      final isFeatureServer = sub.url!.contains('FeatureServer');
-      return isFeatureServer
+      final isVectorSource = sub.url!.contains('FeatureServer') || RegExp(r'MapServer\/\d+').hasMatch(sub.url!);
+      return isVectorSource
           ? FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse(sub.url!)))
           : ArcGISMapImageLayer.withUri(Uri.parse(sub.url!));
     }
@@ -465,8 +478,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Layer? _layerFromEntry(LayerEntry entry) {
     final isUrlEntry = entry.source == 'url' && entry.url != null;
     if (isUrlEntry) {
-      final isFeatureServer = entry.url!.contains('FeatureServer');
-      return isFeatureServer
+      final isVectorSource = entry.url!.contains('FeatureServer') || RegExp(r'MapServer\/\d+').hasMatch(entry.url!);
+      return isVectorSource
           ? FeatureLayer.withFeatureTable(ServiceFeatureTable.withUri(Uri.parse(entry.url!)))
           : ArcGISMapImageLayer.withUri(Uri.parse(entry.url!));
     }
