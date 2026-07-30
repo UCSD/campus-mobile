@@ -60,8 +60,12 @@ void main() {
 
     final indicator = tester.widget<CircularProgressIndicator>(find.byType(CircularProgressIndicator));
     final searchField = tester.widget<TextField>(find.byType(TextField));
+    final hintPadding = searchField.decoration!.hint! as Padding;
+    final hintText = hintPadding.child as Text;
     expect(indicator.semanticsLabel, 'Searching');
     expect(indicator.color, searchField.style?.color);
+    expect(hintPadding.padding, const EdgeInsets.only(left: 4));
+    expect(hintText.style?.fontSize, searchField.style?.fontSize);
     expect(find.byIcon(Icons.search), findsNothing);
     expect(find.text('No results found'), findsNothing);
   });

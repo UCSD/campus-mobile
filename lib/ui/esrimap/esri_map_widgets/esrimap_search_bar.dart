@@ -138,6 +138,7 @@ class EsriMapSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const searchFontSize = 16.0;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final searchTextColor = Theme.of(context).textTheme.titleMedium?.color;
     final hasSearchResults = isSearching || searchResults.isNotEmpty;
@@ -307,11 +308,14 @@ class EsriMapSearchBar extends StatelessWidget {
                       }
                     },
                     onTap: onTapSearchField,
-                    style: TextStyle(fontSize: 16, color: searchTextColor),
+                    style: TextStyle(fontSize: searchFontSize, color: searchTextColor),
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                      hintText: 'Search buildings, places...',
+                      hint: Padding(
+                        padding: EdgeInsets.only(left: 4),
+                        child: Text('Search buildings, places...', style: TextStyle(fontSize: searchFontSize)),
+                      ),
                     ),
                   ),
                 ),
