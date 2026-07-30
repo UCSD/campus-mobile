@@ -447,10 +447,14 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                                         ? const SizedBox(
                                             width: 18,
                                             height: 18,
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.white,
+                                              semanticsLabel: 'Calculating route',
+                                            ),
                                           )
                                         : const Icon(Icons.directions, size: 18),
-                                    label: Text(isRoutingMode ? 'Routing...' : 'Get Directions'),
+                                    label: Text(isRoutingMode ? 'Calculating...' : 'Get Directions'),
                                     style: FilledButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(vertical: 12),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

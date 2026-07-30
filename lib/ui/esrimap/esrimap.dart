@@ -1317,6 +1317,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Future<void> _solveRoute(MapSearchResult destination, {String? travelMode, (double, double)? originLatLng}) async {
     if (!FeatureFlags.mapRoutingEnabled) return;
 
+    final mode = travelMode ?? _travelMode;
+    setState(() {
+      _isRouting = true;
+      _routeFailed = false;
+      _travelMode = mode;
+    });
+
     if (originLatLng == null && _getUserLatLng() == null) await _startLocationDisplay();
 
     var userLatLng = originLatLng ?? _getUserLatLng();
@@ -1345,13 +1352,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
       return;
     }
-
-    final mode = travelMode ?? _travelMode;
-    setState(() {
-      _isRouting = true;
-      _routeFailed = false;
-      _travelMode = mode;
-    });
 
     final routeRes = await EsriMapRouteService.solveRoute(
       originLatLng: userLatLng,
@@ -2034,7 +2034,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   _graphicsOverlay.graphics.clear();
                   setState(() {
                     _showRouteFields = true;
-                    _selectedResult = null;
                     _mappedResults = [];
                     _allCategoryResults = [];
                     _showCategoryList = false;
