@@ -763,8 +763,26 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       final allResults = (await Future.wait(searches)).expand((results) => results).toList();
       final isStale = !mounted || requestId != _searchRequestId;
       if (isStale) return;
-      _plotResultsOnMap(allResults);
-      _zoomToResults(allResults);
+
+      final userLoc = _getUserLatLng();
+      if (userLoc != null) {
+        allResults.sort((a, b) {
+          final distA = EsriMapSearchService.distanceMeters(userLoc.$1, userLoc.$2, a.latitude, a.longitude);
+          final distB = EsriMapSearchService.distanceMeters(userLoc.$1, userLoc.$2, b.latitude, b.longitude);
+          return distA.compareTo(distB);
+        });
+        _plotResultsOnMap(allResults);
+        if (allResults.isNotEmpty) {
+          final closest = allResults.first;
+          final p = ArcGISPoint(x: closest.longitude, y: closest.latitude, spatialReference: SpatialReference.wgs84);
+          _showCalloutForGraphic(closest, _graphicsOverlay.graphics.first);
+          _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(p, scale: 5000));
+        }
+      } else {
+        allResults.sort((a, b) => a.name.compareTo(b.name));
+        _plotResultsOnMap(allResults);
+        _zoomToResults(allResults);
+      }
 
       setState(() {
         _allCategoryResults = allResults;
