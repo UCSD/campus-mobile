@@ -987,7 +987,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isBuilding = result.source == MapSearchSource.building;
     final detail = isBuilding ? 'Building' : result.subtitle;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     _graphicsOverlay.clearSelection();
     graphic.isSelected = true;
     _mapViewController.callout.showCalloutForGeoElement(
