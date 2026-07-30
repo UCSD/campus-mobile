@@ -1158,16 +1158,16 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Future<void> _solveRoute(MapSearchResult destination, {String? travelMode, (double, double)? originLatLng}) async {
     if (!FeatureFlags.mapRoutingEnabled) return;
 
-    if (originLatLng == null && _getUserLatLng() == null) {
-      await _startLocationDisplay();
-    }
+    if (originLatLng == null && _getUserLatLng() == null) await _startLocationDisplay();
 
     var userLatLng = originLatLng ?? _getUserLatLng();
     if (userLatLng == null && await Geolocator.isLocationServiceEnabled()) {
       final permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
         try {
-          final loc = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(timeLimit: Duration(seconds: 3)));
+          final loc = await Geolocator.getCurrentPosition(
+            locationSettings: const LocationSettings(timeLimit: Duration(seconds: 3)),
+          );
           userLatLng = (loc.latitude, loc.longitude);
         } catch (_) {}
       }
@@ -1207,12 +1207,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     _routeGraphicsOverlay.graphics.clear();
-    
+
     if (isRouteResNull) {
       final builder = PolylineBuilder(spatialReference: SpatialReference.wgs84);
       builder.addPoint(ArcGISPoint(x: userLatLng.$2, y: userLatLng.$1, spatialReference: SpatialReference.wgs84));
-      builder.addPoint(ArcGISPoint(x: destination.longitude, y: destination.latitude, spatialReference: SpatialReference.wgs84));
-      
+      builder.addPoint(
+        ArcGISPoint(x: destination.longitude, y: destination.latitude, spatialReference: SpatialReference.wgs84),
+      );
+
       _routeGraphicsOverlay.graphics.add(
         Graphic(
           geometry: builder.toGeometry(),
@@ -1269,7 +1271,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           ..haloColor = Colors.white
           ..haloWidth = 2
           ..offsetY = -15,
-    ),
+      ),
     );
 
     if (isRouteResNull) {
@@ -1764,9 +1766,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                           }
                           if (gps == null) {
                             if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Unable to get your current location.')),
-                              );
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
                             }
                             return;
                           }
@@ -1864,7 +1866,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 onSnapToNorth: _snapToNorth,
               ),
             ),
-
 
           // Basemap & Operational Layer Selector Panel
           if (isLayersPanelVisible)
