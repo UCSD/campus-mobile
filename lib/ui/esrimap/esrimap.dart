@@ -1201,31 +1201,34 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     );
 
     final isRouteResNull = routeRes == null;
-    if (isRouteResNull) {
-      if (mounted) {
-        setState(() {
-          _isRouting = false;
-          _routeFailed = true;
-          _showRouteFields = true;
-          _selectedResult = destination;
-          _lastSelectedResult = destination;
-        });
-      }
-      return;
+    if (!isRouteResNull) {
+      _routeTravelTimeMinutes = routeRes.travelTimeMinutes;
+      _routeManeuvers = routeRes.directionManeuvers;
     }
 
-    _routeTravelTimeMinutes = routeRes.travelTimeMinutes;
-    _routeManeuvers = routeRes.directionManeuvers;
-
     _routeGraphicsOverlay.graphics.clear();
-    final hasRouteGeometry = routeRes.routeGeometry != null;
-    if (hasRouteGeometry) {
+    
+    if (isRouteResNull) {
+      final builder = PolylineBuilder(spatialReference: SpatialReference.wgs84);
+      builder.addPoint(ArcGISPoint(x: userLatLng.$2, y: userLatLng.$1, spatialReference: SpatialReference.wgs84));
+      builder.addPoint(ArcGISPoint(x: destination.longitude, y: destination.latitude, spatialReference: SpatialReference.wgs84));
+      
       _routeGraphicsOverlay.graphics.add(
         Graphic(
-          geometry: routeRes.routeGeometry!,
-          symbol: SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.blue, width: 4),
+          geometry: builder.toGeometry(),
+          symbol: SimpleLineSymbol(style: SimpleLineSymbolStyle.dash, color: Colors.blue, width: 3),
         ),
       );
+    } else {
+      final hasRouteGeometry = routeRes.routeGeometry != null;
+      if (hasRouteGeometry) {
+        _routeGraphicsOverlay.graphics.add(
+          Graphic(
+            geometry: routeRes.routeGeometry!,
+            symbol: SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.blue, width: 4),
+          ),
+        );
+      }
     }
 
     final whiteOutline = SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.white, width: 2);
@@ -1247,46 +1250,62 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         symbol: TextSymbol(text: 'Destination', color: Colors.black, size: 14)
           ..haloColor = Colors.white
           ..haloWidth = 2
-          ..offsetY = -15, // Negative offsetY usually moves text up
+          ..offsetY = -15,
       ),
     );
 
-    final hasOriginLatLng = originLatLng != null;
-    if (hasOriginLatLng) {
-      final originPoint = ArcGISPoint(x: originLatLng.$2, y: originLatLng.$1, spatialReference: SpatialReference.wgs84);
-      _routeGraphicsOverlay.graphics.add(
-        Graphic(
-          geometry: originPoint,
-          symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.green, size: 12)
-            ..outline = whiteOutline,
-        ),
-      );
-      _routeGraphicsOverlay.graphics.add(
-        Graphic(
-          geometry: originPoint,
-          symbol: TextSymbol(text: 'Start', color: Colors.black, size: 14)
-            ..haloColor = Colors.white
-            ..haloWidth = 2
-            ..offsetY = -15,
-        ),
-      );
-    }
+    final originPoint = ArcGISPoint(x: userLatLng.$2, y: userLatLng.$1, spatialReference: SpatialReference.wgs84);
+    _routeGraphicsOverlay.graphics.add(
+      Graphic(
+        geometry: originPoint,
+        symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.green, size: 12)
+          ..outline = whiteOutline,
+      ),
+    );
+    _routeGraphicsOverlay.graphics.add(
+      Graphic(
+        geometry: originPoint,
+        symbol: TextSymbol(text: 'Start', color: Colors.black, size: 14)
+          ..haloColor = Colors.white
+          ..haloWidth = 2
+          ..offsetY = -15,
+    ),
+    );
 
-    final hasPaddedExtent = routeRes.paddedExtent != null;
-    if (hasPaddedExtent) _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(routeRes.paddedExtent!));
+    if (isRouteResNull) {
+      final builder = PolylineBuilder(spatialReference: SpatialReference.wgs84);
+      builder.addPoint(originPoint);
+      builder.addPoint(destPoint);
+      final extent = builder.toGeometry().extent;
+      final padded = Envelope.fromXY(
+        xMin: extent.xMin - 0.005,
+        yMin: extent.yMin - 0.005,
+        xMax: extent.xMax + 0.005,
+        yMax: extent.yMax + 0.005,
+        spatialReference: SpatialReference.wgs84,
+      );
+      _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(padded));
+    } else {
+      final hasPaddedExtent = routeRes.paddedExtent != null;
+      if (hasPaddedExtent) _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(routeRes.paddedExtent!));
+    }
 
     _graphicsOverlay.graphics.clear();
     _mappedResults = [];
     _allCategoryResults = [];
 
-    setState(() {
-      _isRouting = false;
-      _hasRoute = true;
-      _showCategoryList = false;
-      _activeCategory = null;
-      _selectedResult = destination;
-      _lastSelectedResult = destination;
-    });
+    if (mounted) {
+      setState(() {
+        _isRouting = false;
+        _routeFailed = isRouteResNull;
+        _hasRoute = !isRouteResNull;
+        _showRouteFields = true;
+        _showCategoryList = false;
+        _activeCategory = null;
+        _selectedResult = destination;
+        _lastSelectedResult = destination;
+      });
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -1409,11 +1428,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _onFocusChanged() {
-    final isSearchFocusEmpty = _focusNode.hasFocus && _searchController.text.isEmpty;
-    if (isSearchFocusEmpty) {
+    final hasFocus = _focusNode.hasFocus;
+    if (hasFocus) {
       setState(() {
-        _showSuggestions = true;
-        _showResults = false;
+        _isTransitLegendMinimized = true;
+        if (_searchController.text.isEmpty) {
+          _showSuggestions = true;
+          _showResults = false;
+        }
       });
     }
   }
@@ -1422,6 +1444,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final hasFromFocus = _fromFocusNode.hasFocus;
     if (hasFromFocus) {
       setState(() {
+        _isTransitLegendMinimized = true;
         _activeRouteField = 'from';
         final isFromEmpty = _fromController.text.isEmpty;
         if (isFromEmpty) {
@@ -1439,6 +1462,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final hasToFocus = _toFocusNode.hasFocus;
     if (hasToFocus) {
       setState(() {
+        _isTransitLegendMinimized = true;
         _activeRouteField = 'to';
         final isToEmpty = _toController.text.isEmpty;
         if (isToEmpty) {
@@ -1727,16 +1751,33 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         recentSearches: _recentSearches,
                         showRouteFields: _showRouteFields,
                         activeRouteField: _activeRouteField,
-                        onSelectCurrentLocation: () {
-                          final gps = _getUserLatLng();
-                          final isGpsNull = gps == null;
-                          if (isGpsNull) return;
+                        onSelectCurrentLocation: () async {
+                          await _startLocationDisplay();
+                          (double, double)? gps = _getUserLatLng();
+                          if (gps == null) {
+                            try {
+                              final pos = await Geolocator.getCurrentPosition(
+                                locationSettings: const LocationSettings(timeLimit: Duration(seconds: 10)),
+                              );
+                              gps = (pos.latitude, pos.longitude);
+                            } catch (_) {}
+                          }
+                          if (gps == null) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Unable to get your current location.')),
+                              );
+                            }
+                            return;
+                          }
                           _fromController.text = 'My Location';
                           _fromLatLng = gps;
-                          setState(() {
-                            _showSuggestions = false;
-                            _showResults = false;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              _showSuggestions = false;
+                              _showResults = false;
+                            });
+                          }
                           _fromFocusNode.unfocus();
                           final hasRouteDestination = _routeDestination != null;
                           if (hasRouteDestination) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
@@ -1763,6 +1804,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               onSelectResult: _selectResultFromPin,
               iconForResult: _iconForResult,
             ),
+
+          // Transit Legend
+          if (_layerVisible['tritonTransit'] == true) Positioned(bottom: 24, left: 16, child: _buildTransitLegend()),
 
           // Selected Result Detail Slide-over
           if (_selectedResult != null)
@@ -1821,8 +1865,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               ),
             ),
 
-          // Transit Legend
-          if (_layerVisible['tritonTransit'] == true) Positioned(bottom: 24, left: 16, child: _buildTransitLegend()),
 
           // Basemap & Operational Layer Selector Panel
           if (isLayersPanelVisible)
