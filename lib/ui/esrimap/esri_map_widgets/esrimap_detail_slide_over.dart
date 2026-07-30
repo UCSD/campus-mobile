@@ -3,8 +3,6 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/map_searc
 import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
 import 'package:flutter/material.dart';
 
-
-
 Widget buildSlideOverContent({
   required BuildContext context,
   required ScrollController scrollController,
@@ -97,7 +95,6 @@ Widget buildSlideOverContent({
 ///              travel time, navigation buttons, and turn-by-turn directions.
 /// ============================================================================
 
-
 /// Persistent header delegate for pinned slide-over bottom sheet headers.
 class SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
   /// Header widget content.
@@ -171,46 +168,40 @@ Widget buildDetailSlideOverContent({
           },
           child: InkWell(
             onTap: onToggle,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-            child: Row(
-              children: [
-                if (hasHeaderIcon) ...[
-                  Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
-                  const SizedBox(width: 8),
-                ],
-                Expanded(
-                  child: Text(
-                    headerTitle,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.grey[900],
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+              child: Row(
+                children: [
+                  if (hasHeaderIcon) ...[
+                    Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
+                    const SizedBox(width: 8),
+                  ],
+                  Expanded(
+                    child: Text(
+                      headerTitle,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.grey[900],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                if (hasTrailing && !isMinimized) trailing,
-                const SizedBox(width: 8),
-                Icon(
-                  isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                  size: 24,
-                  color: isDark ? Colors.white70 : Colors.grey[700],
-                ),
-              ],
+                  if (hasTrailing && !isMinimized) trailing,
+                  const SizedBox(width: 8),
+                  Icon(
+                    isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    size: 24,
+                    color: isDark ? Colors.white70 : Colors.grey[700],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
         ),
         if (!isMinimized) const Divider(height: 1),
-        if (!isMinimized)
-          Flexible(
-            child: CustomScrollView(
-              shrinkWrap: true,
-              slivers: sliverBody,
-            ),
-          ),
+        if (!isMinimized) Flexible(child: CustomScrollView(shrinkWrap: true, slivers: sliverBody)),
       ],
     ),
   );
@@ -261,7 +252,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
     final isBuilding = result.source == MapSearchSource.building;
 
     String detailText = isBuilding ? result.address : result.description;
-    
+
     if (!isBuilding) {
       detailText = detailText.replaceAll(RegExp(r'https?://[^\s]+'), '');
       detailText = detailText.replaceAllMapped(RegExp(r'\.([A-Za-z])'), (m) => '. ${m.group(1)}');
@@ -327,8 +318,8 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                           Text(
                             categoryLabel,
                             style: TextStyle(
-                              fontSize: 17, 
-                              fontWeight: FontWeight.w600, 
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
                               color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
@@ -337,14 +328,14 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                           Text(
                             detailText,
                             style: TextStyle(
-                              fontSize: 15, 
+                              fontSize: 15,
                               height: 1.4,
                               color: isDark ? Colors.grey[300] : Colors.grey[700],
                             ),
                           ),
                         ],
                         if (!isRouting) const SizedBox(height: 20),
-                        
+
                         if (routeFailed) ...[
                           Text(
                             'You are too far from campus for walking navigation.',
@@ -355,7 +346,9 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                             width: double.infinity,
                             child: OutlinedButton.icon(
                               onPressed: () {
-                                final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
+                                final originParam = fromLatLng != null
+                                    ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}'
+                                    : '';
                                 onLaunchWebsite(
                                   'https://www.google.com/maps/dir/?api=1'
                                   '&destination=${result.latitude},${result.longitude}'
@@ -367,7 +360,9 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                               label: const Text('Drive With Google Maps'),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor,
-                                side: BorderSide(color: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor),
+                                side: BorderSide(
+                                  color: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor,
+                                ),
                                 padding: const EdgeInsets.symmetric(vertical: 12),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
@@ -396,7 +391,11 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.directions_walk, size: 16, color: isDark ? Colors.grey[900] : Colors.white),
+                                    Icon(
+                                      Icons.directions_walk,
+                                      size: 16,
+                                      color: isDark ? Colors.grey[900] : Colors.white,
+                                    ),
                                     const SizedBox(width: 6),
                                     Text(
                                       'Walking',
@@ -424,10 +423,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                                             TextSpan(
                                               children: [
                                                 const TextSpan(text: 'Visit Website\n'),
-                                                TextSpan(
-                                                  text: websiteHost,
-                                                  style: const TextStyle(fontSize: 11),
-                                                ),
+                                                TextSpan(text: websiteHost, style: const TextStyle(fontSize: 11)),
                                               ],
                                             ),
                                             textAlign: TextAlign.center,
