@@ -88,6 +88,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _selectedResultValue = value;
     if (value != null) _detailSheetMinimized.value = false;
   }
+
   MapSearchResult? _lastSelectedResult;
   List<MapSearchResult> _mappedResults = [];
   List<MapSearchResult> _allCategoryResults = [];
@@ -1637,9 +1638,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
     }
     final isSelectedResultOpen = _selectedResult != null;
-    if (isSelectedResultOpen) {
-      _detailSheetMinimized.value = true;
-    }
+    if (isSelectedResultOpen) _detailSheetMinimized.value = true;
   }
 
   // ---------------------------------------------------------------------------
