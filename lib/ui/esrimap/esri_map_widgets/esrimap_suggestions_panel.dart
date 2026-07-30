@@ -8,36 +8,17 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_s
 import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
 import 'package:flutter/material.dart';
 
-/// Suggestions panel widget rendered below the search bar when focused.
-class EsriMapSuggestionsPanel extends StatelessWidget {
-  /// List of category items to display as icon chips.
+class EsriMapSuggestionsPanel extends StatefulWidget {
   final List<EsriSearchCategory> categories;
-
-  /// List of recently viewed search results.
   final List<MapSearchResult> recentSearches;
-
-  /// Whether route directions fields are currently active.
   final bool showRouteFields;
-
-  /// Which route field is active ('from' or 'to').
   final String? activeRouteField;
-
-  /// Callback when "Current Location" option is tapped in routing mode.
   final VoidCallback onSelectCurrentLocation;
-
-  /// Callback when a category chip is selected.
   final void Function(EsriSearchCategory category) onSelectCategory;
-
-  /// Callback when a recent search item is tapped.
   final void Function(MapSearchResult result) onSelectRecent;
-
-  /// Callback when the clear 'X' button on a recent search item is tapped.
   final void Function(int index) onRemoveRecent;
-
-  /// Callback when all recent searches are cleared.
   final VoidCallback onClearRecent;
 
-  /// Constructs an [EsriMapSuggestionsPanel] instance.
   const EsriMapSuggestionsPanel({
     Key? key,
     required this.categories,
@@ -52,10 +33,17 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<EsriMapSuggestionsPanel> createState() => _EsriMapSuggestionsPanelState();
+}
+
+class _EsriMapSuggestionsPanelState extends State<EsriMapSuggestionsPanel> {
+  bool _isHistoryExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? Colors.grey[850] : Colors.white;
-    final isFromRouteFieldActive = showRouteFields && activeRouteField == 'from';
+    final isFromRouteFieldActive = widget.showRouteFields && widget.activeRouteField == 'from';
     final topPadding = isFromRouteFieldActive ? 0.0 : 12.0;
     final availableHeight = MediaQuery.sizeOf(context).height - MediaQuery.viewInsetsOf(context).bottom;
 
@@ -87,12 +75,12 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
                       color: isDark ? Colors.white : Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  onTap: onSelectCurrentLocation,
+                  onTap: widget.onSelectCurrentLocation,
                 ),
                 const Divider(height: 1),
                 const SizedBox(height: 12),
               ],
-              if (categories.isNotEmpty) ...[
+              if (widget.categories.isNotEmpty) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
@@ -110,12 +98,12 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (final category in categories) Expanded(child: _buildCategoryChip(context, category)),
+                      for (final category in widget.categories) Expanded(child: _buildCategoryChip(context, category)),
                     ],
                   ),
                 ),
               ],
-              if (recentSearches.isNotEmpty) ...[
+              if (widget.recentSearches.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 const Divider(height: 1),
                 Padding(
@@ -132,30 +120,17 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
                           ),
                         ),
                       ),
-                      TextButton(onPressed: onClearRecent, child: const Text('Clear')),
+                      TextButton(
+                        onPressed: widget.onClearRecent,
+                        style: TextButton.styleFrom(
+                          foregroundColor: isDark ? Colors.grey[400] : Colors.grey[600],
+                        ),
+                        child: const Text('Clear'),
+                      ),
                     ],
                   ),
                 ),
-                ...List.generate(recentSearches.length, (index) {
-                  final recent = recentSearches[index];
-                  final subtitle = recent.address.isNotEmpty ? recent.address : recent.subtitle;
-                  return ListTile(
-                    contentPadding: const EdgeInsets.only(left: 16, right: 4),
-                    leading: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
-                      child: Icon(Icons.history, size: 19, color: isDark ? Colors.grey[400] : Colors.grey[600]),
-                    ),
-                    title: Text(recent.name, maxLines: 1, overflow: TextOverflow.ellipsis),
-                    subtitle: subtitle.isEmpty ? null : Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
-                    trailing: IconButton(
-                      tooltip: 'Remove ${recent.name} from recents',
-                      onPressed: () => onRemoveRecent(index),
-                      icon: Icon(Icons.close, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
-                    ),
-                    onTap: () => onSelectRecent(recent),
-                  );
-                }),
+                _buildRecentSearchesList(isDark),
               ],
             ],
           ),
@@ -164,14 +139,80 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
     );
   }
 
-  /// Builds a single quick-search category icon.
+  Widget _buildRecentSearchesList(bool isDark) {
+    final maxTotal = widget.recentSearches.length > 10 ? 10 : widget.recentSearches.length;
+    final displayCount = _isHistoryExpanded ? maxTotal : (maxTotal > 2 ? 2 : maxTotal);
+    
+    // ListTile height is approximately 64. 5 items = 320.
+    final double listHeight = _isHistoryExpanded && maxTotal > 5 ? (5 * 64.0) : (displayCount * 64.0);
+
+    return Column(
+      children: [
+        ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: listHeight),
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            physics: _isHistoryExpanded ? const ClampingScrollPhysics() : const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: displayCount,
+            itemBuilder: (context, index) {
+              final recent = widget.recentSearches[index];
+              final subtitle = recent.address.isNotEmpty ? recent.address : recent.subtitle;
+              return SizedBox(
+                height: 64,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.only(left: 16, right: 4),
+                  leading: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                    child: Icon(Icons.history, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                  ),
+                  title: Text(
+                    recent.name, 
+                    maxLines: 1, 
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 14, color: isDark ? Colors.white : Colors.black87),
+                  ),
+                  subtitle: subtitle.isEmpty ? null : Text(
+                    subtitle, 
+                    maxLines: 1, 
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                  ),
+                  trailing: IconButton(
+                    tooltip: 'Remove ${recent.name} from recents',
+                    onPressed: () => widget.onRemoveRecent(index),
+                    icon: Icon(Icons.close, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                  ),
+                  onTap: () => widget.onSelectRecent(recent),
+                ),
+              );
+            },
+          ),
+        ),
+        if (maxTotal > 2)
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: isDark ? Colors.grey[400] : Colors.grey[600],
+            ),
+            onPressed: () {
+              setState(() {
+                _isHistoryExpanded = !_isHistoryExpanded;
+              });
+            },
+            child: Text(_isHistoryExpanded ? 'Show Less' : 'Show More'),
+          ),
+      ],
+    );
+  }
+
   Widget _buildCategoryChip(BuildContext context, EsriSearchCategory category) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Tooltip(
       message: 'Search ${category.label}',
       child: GestureDetector(
-        onTap: () => onSelectCategory(category),
+        onTap: () => widget.onSelectCategory(category),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -195,3 +236,4 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
     );
   }
 }
+

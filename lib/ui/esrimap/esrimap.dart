@@ -1560,16 +1560,19 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   void _onFocusChanged() {
     _hideSearchOverlayWhenUnfocused();
-    if (_focusNode.hasFocus) _dismissCallout();
-    final isSearchFocusEmpty = _focusNode.hasFocus && _searchController.text.isEmpty;
-    if (isSearchFocusEmpty) {
+    if (_focusNode.hasFocus) {
+      _dismissCallout();
       setState(() {
+        _showLayersPanel = false;
         _isTransitLegendMinimized = true;
-        if (_searchController.text.isEmpty) {
+      });
+      final isSearchFocusEmpty = _searchController.text.isEmpty;
+      if (isSearchFocusEmpty) {
+        setState(() {
           _showSuggestions = true;
           _showResults = false;
-        }
-      });
+        });
+      }
     }
   }
 
@@ -1578,6 +1581,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final hasFromFocus = _fromFocusNode.hasFocus;
     if (hasFromFocus) {
       setState(() {
+        _showLayersPanel = false;
         _isTransitLegendMinimized = true;
         _activeRouteField = 'from';
         final isFromEmpty = _fromController.text.isEmpty;
@@ -1597,6 +1601,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final hasToFocus = _toFocusNode.hasFocus;
     if (hasToFocus) {
       setState(() {
+        _showLayersPanel = false;
         _isTransitLegendMinimized = true;
         _activeRouteField = 'to';
         final isToEmpty = _toController.text.isEmpty;
