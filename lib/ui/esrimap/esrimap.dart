@@ -290,6 +290,27 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   /// Starts the device location data source.
   Future<void> _startLocationDisplay() async {
     if (!FeatureFlags.mapLocationTrackingEnabled) return;
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      debugPrint('Location services are disabled.');
+      return;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        debugPrint('Location permissions are denied');
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      debugPrint('Location permissions are permanently denied');
+      return;
+    }
+
     try {
       await _locationDataSource.start();
     } on ArcGISException catch (e) {
@@ -1092,6 +1113,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Future<void> _recenterOnUser() async {
     try {
+      await _startLocationDisplay();
       final location = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(timeLimit: Duration(seconds: 10)),
       );
@@ -1264,10 +1286,33 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Future<void> _solveRoute(MapSearchResult destination, {String? travelMode, (double, double)? originLatLng}) async {
     if (!FeatureFlags.mapRoutingEnabled) return;
-    final userLatLng = originLatLng ?? _getUserLatLng();
+
+    if (originLatLng == null && _getUserLatLng() == null) await _startLocationDisplay();
+
+    var userLatLng = originLatLng ?? _getUserLatLng();
+    if (userLatLng == null && await Geolocator.isLocationServiceEnabled()) {
+      final permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+        try {
+          final loc = await Geolocator.getCurrentPosition(
+            locationSettings: const LocationSettings(timeLimit: Duration(seconds: 3)),
+          );
+          userLatLng = (loc.latitude, loc.longitude);
+        } catch (_) {}
+      }
+    }
+
     final isUserLatLngNull = userLatLng == null;
     if (isUserLatLngNull) {
       setState(() => _isRouting = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please enable location or manually enter starting location'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
       return;
     }
 
@@ -1285,69 +1330,113 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     );
 
     final isRouteResNull = routeRes == null;
-    if (isRouteResNull) {
-      if (mounted) {
-        setState(() {
-          _isRouting = false;
-          _routeFailed = true;
-        });
-      }
-      return;
+    if (!isRouteResNull) {
+      _routeTravelTimeMinutes = routeRes.travelTimeMinutes;
+      _routeManeuvers = routeRes.directionManeuvers;
     }
 
-    _routeTravelTimeMinutes = routeRes.travelTimeMinutes;
-    _routeManeuvers = routeRes.directionManeuvers;
-
     _routeGraphicsOverlay.graphics.clear();
-    final hasRouteGeometry = routeRes.routeGeometry != null;
-    if (hasRouteGeometry) {
+
+    if (isRouteResNull) {
+      final builder = PolylineBuilder(spatialReference: SpatialReference.wgs84);
+      builder.addPoint(ArcGISPoint(x: userLatLng.$2, y: userLatLng.$1, spatialReference: SpatialReference.wgs84));
+      builder.addPoint(
+        ArcGISPoint(x: destination.longitude, y: destination.latitude, spatialReference: SpatialReference.wgs84),
+      );
+
       _routeGraphicsOverlay.graphics.add(
         Graphic(
-          geometry: routeRes.routeGeometry!,
-          symbol: SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.blue, width: 4),
+          geometry: builder.toGeometry(),
+          symbol: SimpleLineSymbol(style: SimpleLineSymbolStyle.dash, color: Colors.blue, width: 3),
         ),
       );
+    } else {
+      final hasRouteGeometry = routeRes.routeGeometry != null;
+      if (hasRouteGeometry) {
+        _routeGraphicsOverlay.graphics.add(
+          Graphic(
+            geometry: routeRes.routeGeometry!,
+            symbol: SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.blue, width: 4),
+          ),
+        );
+      }
     }
 
     final whiteOutline = SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.white, width: 2);
+    final destPoint = ArcGISPoint(
+      x: destination.longitude,
+      y: destination.latitude,
+      spatialReference: SpatialReference.wgs84,
+    );
     _routeGraphicsOverlay.graphics.add(
       Graphic(
-        geometry: ArcGISPoint(
-          x: destination.longitude,
-          y: destination.latitude,
-          spatialReference: SpatialReference.wgs84,
-        ),
+        geometry: destPoint,
         symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.red, size: 12)
           ..outline = whiteOutline,
       ),
     );
+    _routeGraphicsOverlay.graphics.add(
+      Graphic(
+        geometry: destPoint,
+        symbol: TextSymbol(text: 'Destination', color: Colors.black, size: 14)
+          ..haloColor = Colors.white
+          ..haloWidth = 2
+          ..offsetY = -15,
+      ),
+    );
 
-    final hasOriginLatLng = originLatLng != null;
-    if (hasOriginLatLng) {
-      _routeGraphicsOverlay.graphics.add(
-        Graphic(
-          geometry: ArcGISPoint(x: originLatLng.$2, y: originLatLng.$1, spatialReference: SpatialReference.wgs84),
-          symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.blue, size: 12)
-            ..outline = whiteOutline,
-        ),
+    final originPoint = ArcGISPoint(x: userLatLng.$2, y: userLatLng.$1, spatialReference: SpatialReference.wgs84);
+    _routeGraphicsOverlay.graphics.add(
+      Graphic(
+        geometry: originPoint,
+        symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.green, size: 12)
+          ..outline = whiteOutline,
+      ),
+    );
+    _routeGraphicsOverlay.graphics.add(
+      Graphic(
+        geometry: originPoint,
+        symbol: TextSymbol(text: 'Start', color: Colors.black, size: 14)
+          ..haloColor = Colors.white
+          ..haloWidth = 2
+          ..offsetY = -15,
+      ),
+    );
+
+    if (isRouteResNull) {
+      final builder = PolylineBuilder(spatialReference: SpatialReference.wgs84);
+      builder.addPoint(originPoint);
+      builder.addPoint(destPoint);
+      final extent = builder.toGeometry().extent;
+      final padded = Envelope.fromXY(
+        xMin: extent.xMin - 0.005,
+        yMin: extent.yMin - 0.005,
+        xMax: extent.xMax + 0.005,
+        yMax: extent.yMax + 0.005,
+        spatialReference: SpatialReference.wgs84,
       );
+      _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(padded));
+    } else {
+      final hasPaddedExtent = routeRes.paddedExtent != null;
+      if (hasPaddedExtent) _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(routeRes.paddedExtent!));
     }
-
-    final hasPaddedExtent = routeRes.paddedExtent != null;
-    if (hasPaddedExtent) _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(routeRes.paddedExtent!));
 
     _graphicsOverlay.graphics.clear();
     _mappedResults = [];
     _allCategoryResults = [];
 
-    setState(() {
-      _isRouting = false;
-      _hasRoute = true;
-      _showCategoryList = false;
-      _activeCategory = null;
-      _selectedResult = destination;
-      _lastSelectedResult = destination;
-    });
+    if (mounted) {
+      setState(() {
+        _isRouting = false;
+        _routeFailed = isRouteResNull;
+        _hasRoute = !isRouteResNull;
+        _showRouteFields = true;
+        _showCategoryList = false;
+        _activeCategory = null;
+        _selectedResult = destination;
+        _lastSelectedResult = destination;
+      });
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -1475,8 +1564,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isSearchFocusEmpty = _focusNode.hasFocus && _searchController.text.isEmpty;
     if (isSearchFocusEmpty) {
       setState(() {
-        _showSuggestions = true;
-        _showResults = false;
+        _isTransitLegendMinimized = true;
+        if (_searchController.text.isEmpty) {
+          _showSuggestions = true;
+          _showResults = false;
+        }
       });
     }
   }
@@ -1486,6 +1578,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final hasFromFocus = _fromFocusNode.hasFocus;
     if (hasFromFocus) {
       setState(() {
+        _isTransitLegendMinimized = true;
         _activeRouteField = 'from';
         final isFromEmpty = _fromController.text.isEmpty;
         if (isFromEmpty) {
@@ -1504,6 +1597,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final hasToFocus = _toFocusNode.hasFocus;
     if (hasToFocus) {
       setState(() {
+        _isTransitLegendMinimized = true;
         _activeRouteField = 'to';
         final isToEmpty = _toController.text.isEmpty;
         if (isToEmpty) {
@@ -1831,16 +1925,33 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         recentSearches: _recentSearches,
                         showRouteFields: _showRouteFields,
                         activeRouteField: _activeRouteField,
-                        onSelectCurrentLocation: () {
-                          final gps = _getUserLatLng();
-                          final isGpsNull = gps == null;
-                          if (isGpsNull) return;
+                        onSelectCurrentLocation: () async {
+                          await _startLocationDisplay();
+                          (double, double)? gps = _getUserLatLng();
+                          if (gps == null) {
+                            try {
+                              final pos = await Geolocator.getCurrentPosition(
+                                locationSettings: const LocationSettings(timeLimit: Duration(seconds: 10)),
+                              );
+                              gps = (pos.latitude, pos.longitude);
+                            } catch (_) {}
+                          }
+                          if (gps == null) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+                            }
+                            return;
+                          }
                           _fromController.text = 'My Location';
                           _fromLatLng = gps;
-                          setState(() {
-                            _showSuggestions = false;
-                            _showResults = false;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              _showSuggestions = false;
+                              _showResults = false;
+                            });
+                          }
                           _fromFocusNode.unfocus();
                           final hasRouteDestination = _routeDestination != null;
                           if (hasRouteDestination) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
@@ -1868,6 +1979,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               onSelectResult: _selectResultFromList,
               iconForResult: _iconForResult,
             ),
+
+          // Transit Legend
+          if (_layerVisible['tritonTransit'] == true) Positioned(bottom: 24, left: 16, child: _buildTransitLegend()),
 
           // Selected Result Detail Slide-over
           if (_selectedResult != null)
@@ -1910,9 +2024,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 onClearRoute: _clearRoute,
               ),
             ),
-
-          // Transit Legend
-          if (_layerVisible['tritonTransit'] == true) Positioned(bottom: 24, left: 16, child: _buildTransitLegend()),
 
           // Basemap & Operational Layer Selector Panel
           if (isLayersPanelVisible)

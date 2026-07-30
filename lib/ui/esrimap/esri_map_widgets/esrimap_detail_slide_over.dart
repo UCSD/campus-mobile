@@ -256,6 +256,30 @@ class EsriMapDetailSlideOver extends StatelessWidget {
           headerTitle: isRouting ? 'Directions to ${result.name}' : result.name,
           headerIcon: resultIcon,
           onClose: isRouting ? onClearRoute : onClose,
+          trailing: isRouting && !routeFailed
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: TextButton.icon(
+                    onPressed: () {
+                      final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
+                      onLaunchWebsite(
+                        'https://www.google.com/maps/dir/?api=1'
+                        '&destination=${result.latitude},${result.longitude}'
+                        '&travelmode=walking'
+                        '$originParam',
+                      );
+                    },
+                    icon: const Icon(Icons.map_outlined, size: 16),
+                    label: const Text('Open Google Maps', style: TextStyle(fontSize: 12)),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      foregroundColor: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor,
+                    ),
+                  ),
+                )
+              : null,
           sliverBody: [
             SliverToBoxAdapter(
               child: Padding(
@@ -283,32 +307,34 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                     // Routing or Action Buttons
                     if (routeFailed) ...[
                       Text(
-                        'No route available from your current location.',
+                        'You are too far from campus for walking navigation.',
                         style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[400] : Colors.grey[600]),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
-                        child: FilledButton.icon(
+                        child: OutlinedButton.icon(
                           onPressed: () {
                             final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
                             onLaunchWebsite(
                               'https://www.google.com/maps/dir/?api=1'
                               '&destination=${result.latitude},${result.longitude}'
-                              '&travelmode=walking'
+                              '&travelmode=driving'
                               '$originParam',
                             );
                           },
-                          icon: const Icon(Icons.map_outlined, size: 18),
-                          label: const Text('Navigate in Google Maps'),
-                          style: FilledButton.styleFrom(
+                          icon: const Icon(Icons.directions_car, size: 18),
+                          label: const Text('Drive With Google Maps'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor,
+                            side: BorderSide(color: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor),
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                         ),
                       ),
                     ] else if (hasRoute) ...[
-                      // Travel time estimate
+                      // Travel time estimate and mode indicator
                       Row(
                         children: [
                           Icon(Icons.schedule, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
@@ -321,77 +347,30 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                               color: isDark ? Colors.white : Colors.grey[900],
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Travel mode toggle chips
-                      Row(
-                        children: [
-                          for (final mode in ['Walking', 'Accessible']) ...[
-                            if (mode != 'Walking') const SizedBox(width: 8),
-                            GestureDetector(
-                              onTap: mode == travelMode ? null : () => onTravelModeChanged(mode),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: mode == travelMode
-                                      ? (isDark ? Colors.white : Colors.grey[900])
-                                      : (isDark ? Colors.grey[800] : Colors.grey[100]),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      mode == 'Walking' ? Icons.directions_walk : Icons.accessible,
-                                      size: 16,
-                                      color: mode == travelMode
-                                          ? (isDark ? Colors.grey[900] : Colors.white)
-                                          : (isDark ? Colors.white70 : Colors.grey[700]),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      mode,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: mode == travelMode
-                                            ? (isDark ? Colors.grey[900] : Colors.white)
-                                            : (isDark ? Colors.white70 : Colors.grey[700]),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                          const SizedBox(width: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.white : Colors.grey[900],
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                          ],
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Google Maps fallback button
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
-                            onLaunchWebsite(
-                              'https://www.google.com/maps/dir/?api=1'
-                              '&destination=${result.latitude},${result.longitude}'
-                              '&travelmode=walking'
-                              '$originParam',
-                            );
-                          },
-                          icon: const Icon(Icons.map_outlined, size: 18),
-                          label: const Text('Navigate in Google Maps'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: isDark ? const Color(0xFFFFCD00) : null,
-                            side: isDark ? const BorderSide(color: Color(0xFFFFCD00)) : null,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.directions_walk, size: 16, color: isDark ? Colors.grey[900] : Colors.white),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Walking',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDark ? Colors.grey[900] : Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ] else
                       // Directions + Website buttons
@@ -450,6 +429,10 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                   final isNotLastManeuver = index < routeManeuvers.length - 1;
                   final isFirstIndex = index == 0;
 
+                  String directionText = step.directionText;
+                  directionText = directionText.replaceAll('Location 1', 'My Location');
+                  directionText = directionText.replaceAll('Location 2', result.name);
+
                   return Column(
                     children: [
                       if (isFirstIndex) const Divider(height: 1),
@@ -459,7 +442,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                           size: 20,
                           color: isDark ? Colors.grey[400] : Colors.grey[600],
                         ),
-                        title: Text(step.directionText, style: const TextStyle(fontSize: 14)),
+                        title: Text(directionText, style: const TextStyle(fontSize: 14)),
                         trailing: distMeters > 0
                             ? Text(
                                 distLabel,
