@@ -923,7 +923,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       ),
     );
     _graphicsOverlay.graphics.add(graphic);
-
+    _showCalloutForGraphic(result, graphic);
     _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(point, scale: 5000));
 
     setState(() {
@@ -981,15 +981,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   /// Shows a place name above a plotted map pin without changing the search.
-  void _handlePinTap(MapSearchResult result, Graphic graphic) {
-    if (_showRouteFields) {
-      _selectResultFromPin(result);
-      return;
-    }
 
+  void _showCalloutForGraphic(MapSearchResult result, Graphic graphic) {
     final isBuilding = result.source == MapSearchSource.building;
     final detail = isBuilding ? 'Building' : result.subtitle;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     _graphicsOverlay.clearSelection();
     graphic.isSelected = true;
     _mapViewController.callout.showCalloutForGeoElement(
@@ -1037,6 +1034,15 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         ),
       ),
     );
+  }
+
+  void _handlePinTap(MapSearchResult result, Graphic graphic) {
+    if (_showRouteFields) {
+      _selectResultFromPin(result);
+      return;
+    }
+
+    _showCalloutForGraphic(result, graphic);
     _selectResultFromPin(result, updateSearchText: false);
   }
 
