@@ -142,6 +142,9 @@ class EsriMapDetailSlideOver extends StatelessWidget {
   /// Controller for managing sheet drag height.
   final DraggableScrollableController controller;
 
+  /// Height available to the sheet above the app's bottom navigation.
+  final double availableHeight;
+
   /// Selected location search result.
   final MapSearchResult result;
 
@@ -188,6 +191,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
   const EsriMapDetailSlideOver({
     Key? key,
     required this.controller,
+    required this.availableHeight,
     required this.result,
     required this.resultIcon,
     required this.isRoutingMode,
@@ -214,15 +218,21 @@ class EsriMapDetailSlideOver extends StatelessWidget {
     final categoryLabel = isBuilding ? 'Building' : result.subtitle;
 
     // Content-aware sheet sizing
-    final screenHeight = MediaQuery.of(context).size.height;
-    double contentEst = 80.0 + 30 + 48 + 40;
-    if (detailText.isNotEmpty) contentEst += 60;
+    double contentEst = isRouting ? 230 : 198;
+    if (!isRouting && detailText.isNotEmpty) {
+      final detailTextPainter = TextPainter(
+        text: TextSpan(text: detailText, style: const TextStyle(fontSize: 16)),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+      )..layout(maxWidth: MediaQuery.sizeOf(context).width - 40);
+      contentEst += 8 + detailTextPainter.height;
+    }
     final hasRouteManeuvers = hasRoute && routeManeuvers.isNotEmpty;
     if (hasRouteManeuvers) contentEst += routeManeuvers.length * 52.0;
 
-    final contentFraction = (contentEst / screenHeight).clamp(0.15, 0.80);
+    final contentFraction = (contentEst / availableHeight).clamp(0.15, 1.0);
     final initialSize = hasRoute ? 0.35 : (contentFraction < 0.30 ? contentFraction : 0.30);
-    final maxSize = hasRoute ? 0.80 : (contentFraction < 0.80 ? contentFraction.clamp(0.30, 0.80) : 0.80);
+    final maxSize = contentFraction.clamp(initialSize, 1.0);
     final snaps = <double>[0.15];
     final isInitialLarger = initialSize > 0.15 + 0.01;
     if (isInitialLarger) snaps.add(initialSize);
@@ -236,7 +246,9 @@ class EsriMapDetailSlideOver extends StatelessWidget {
       snapSizes: snaps,
       builder: (context, scrollController) {
         final shouldShowDetailText = !isRouting && detailText.isNotEmpty;
-        final hasWebsiteUrl = result.websiteUrl != null;
+        final websiteUrl = result.websiteUrl?.trim();
+        final hasWebsiteUrl = websiteUrl?.isNotEmpty == true;
+        final websiteHost = hasWebsiteUrl ? Uri.tryParse(websiteUrl!)?.host.replaceFirst('www.', '') : null;
 
         return buildSlideOverContent(
           context: context,
@@ -288,8 +300,6 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                       Text(
                         detailText,
                         style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[400] : Colors.grey[600]),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                     if (!isRouting) const SizedBox(height: 16),
@@ -369,9 +379,9 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                           if (hasWebsiteUrl) ...[
                             Expanded(
                               child: OutlinedButton.icon(
-                                onPressed: () => onLaunchWebsite(result.websiteUrl!),
+                                onPressed: () => onLaunchWebsite(websiteUrl!),
                                 icon: const Icon(Icons.language, size: 18),
-                                label: const Text('View website'),
+                                label: Text(websiteHost?.isNotEmpty == true ? 'Visit $websiteHost' : 'View website'),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: isDark ? const Color(0xFFFFCD00) : null,
                                   side: isDark ? const BorderSide(color: Color(0xFFFFCD00)) : null,

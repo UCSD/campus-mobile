@@ -322,6 +322,12 @@ class EsriMapSearchBar extends StatelessWidget {
             ),
           ),
 
+        if (isSearching && !showResults)
+          const Padding(
+            padding: EdgeInsets.only(top: 4),
+            child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(2)), child: LinearProgressIndicator()),
+          ),
+
         // Search Results Dropdown List
         if (shouldShowDropdown)
           Padding(

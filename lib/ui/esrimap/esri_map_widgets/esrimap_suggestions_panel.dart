@@ -34,6 +34,9 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
   /// Callback when the clear 'X' button on a recent search item is tapped.
   final void Function(int index) onRemoveRecent;
 
+  /// Callback when all recent searches are cleared.
+  final VoidCallback onClearRecent;
+
   /// Constructs an [EsriMapSuggestionsPanel] instance.
   const EsriMapSuggestionsPanel({
     Key? key,
@@ -45,6 +48,7 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
     required this.onSelectCategory,
     required this.onSelectRecent,
     required this.onRemoveRecent,
+    required this.onClearRecent,
   }) : super(key: key);
 
   @override
@@ -53,127 +57,140 @@ class EsriMapSuggestionsPanel extends StatelessWidget {
     final bgColor = isDark ? Colors.grey[850] : Colors.white;
     final isFromRouteFieldActive = showRouteFields && activeRouteField == 'from';
     final topPadding = isFromRouteFieldActive ? 0.0 : 12.0;
+    final availableHeight = MediaQuery.sizeOf(context).height - MediaQuery.viewInsetsOf(context).bottom;
 
     return Material(
       elevation: 4,
       borderRadius: BorderRadius.circular(8),
       color: bgColor,
-      child: Padding(
-        padding: EdgeInsets.only(top: topPadding, bottom: 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // "Current Location" shortcut option when 'From' field is active
-            if (isFromRouteFieldActive) ...[
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: onSelectCurrentLocation,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: availableHeight * 0.55),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(top: topPadding, bottom: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isFromRouteFieldActive) ...[
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  leading: Icon(
+                    Icons.my_location,
+                    size: 20,
+                    color: isDark ? Colors.grey[400] : Theme.of(context).colorScheme.primary,
+                  ),
+                  title: Text(
+                    'Current Location',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? Colors.white : Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  onTap: onSelectCurrentLocation,
+                ),
+                const Divider(height: 1),
+                const SizedBox(height: 12),
+              ],
+              if (categories.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Quick search',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.my_location,
-                        size: 20,
-                        color: isDark ? Colors.grey[500] : Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        'Current Location',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: isDark ? Colors.white : Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
+                      for (final category in categories) Expanded(child: _buildCategoryChip(context, category)),
                     ],
                   ),
                 ),
-              ),
-              const Divider(height: 1),
-              const SizedBox(height: 12),
-            ],
-
-            // Suggested categories section header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Suggested',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Category circular icon chips row
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: categories.map((cat) => _buildCategoryChip(context, cat)).toList(),
-              ),
-            ),
-
-            // Recent searches history list
-            if (recentSearches.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              const Divider(height: 1),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  'Recently viewed',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+              ],
+              if (recentSearches.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 8, 0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Recently viewed',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                      TextButton(onPressed: onClearRecent, child: const Text('Clear')),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              ...List.generate(recentSearches.length, (index) {
-                final recent = recentSearches[index];
-                return ListTile(
-                  splashColor: Colors.transparent,
-                  dense: true,
-                  leading: Icon(Icons.history, size: 20, color: isDark ? Colors.grey[500] : Colors.grey[400]),
-                  title: Text(recent.name, maxLines: 1, overflow: TextOverflow.ellipsis),
-                  trailing: GestureDetector(
-                    onTap: () => onRemoveRecent(index),
-                    child: Icon(Icons.close, size: 16, color: isDark ? Colors.grey[500] : Colors.grey[400]),
-                  ),
-                  onTap: () => onSelectRecent(recent),
-                );
-              }),
+                ...List.generate(recentSearches.length, (index) {
+                  final recent = recentSearches[index];
+                  final subtitle = recent.address.isNotEmpty ? recent.address : recent.subtitle;
+                  return ListTile(
+                    contentPadding: const EdgeInsets.only(left: 16, right: 4),
+                    leading: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                      child: Icon(Icons.history, size: 19, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                    ),
+                    title: Text(recent.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    subtitle: subtitle.isEmpty ? null : Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    trailing: IconButton(
+                      tooltip: 'Remove ${recent.name} from recents',
+                      onPressed: () => onRemoveRecent(index),
+                      icon: Icon(Icons.close, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                    ),
+                    onTap: () => onSelectRecent(recent),
+                  );
+                }),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
   }
 
-  /// Builds a single circular category quick-search chip.
+  /// Builds a single quick-search category icon.
   Widget _buildCategoryChip(BuildContext context, EsriSearchCategory category) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return GestureDetector(
-      onTap: () => onSelectCategory(category),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(color: category.color, shape: BoxShape.circle),
-            child: Icon(category.icon, size: 24, color: Colors.black),
-          ),
-          const SizedBox(height: 6),
-          Text(category.label, style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600])),
-        ],
+    return Tooltip(
+      message: 'Search ${category.label}',
+      child: GestureDetector(
+        onTap: () => onSelectCategory(category),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(color: category.color, shape: BoxShape.circle),
+              child: Icon(category.icon, size: 22, color: Colors.black),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              category.label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+            ),
+          ],
+        ),
       ),
     );
   }
