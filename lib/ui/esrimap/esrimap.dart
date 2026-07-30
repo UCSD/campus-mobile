@@ -62,7 +62,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _toFocusNode = FocusNode();
 
   final _categorySheetController = DraggableScrollableController();
-  final _detailSheetController = DraggableScrollableController();
+  final _detailSheetMinimized = ValueNotifier<bool>(false);
 
   // ---------------------------------------------------------------------------
   // Map State & Services
@@ -82,7 +82,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   int _searchRequestId = 0;
 
   // Active Category & Pin Plotting State
-  MapSearchResult? _selectedResult;
+  MapSearchResult? _selectedResultValue;
+  MapSearchResult? get _selectedResult => _selectedResultValue;
+  set _selectedResult(MapSearchResult? value) {
+    _selectedResultValue = value;
+    if (value != null) _detailSheetMinimized.value = false;
+  }
   MapSearchResult? _lastSelectedResult;
   List<MapSearchResult> _mappedResults = [];
   List<MapSearchResult> _allCategoryResults = [];
@@ -269,7 +274,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void dispose() {
     _searchDebounce?.cancel();
     _categorySheetController.dispose();
-    _detailSheetController.dispose();
+    _detailSheetMinimized.dispose();
     _searchController.dispose();
     _fromController.dispose();
     _toController.dispose();
@@ -1590,9 +1595,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _showResults = false;
         }
       });
-      final isAttached = _detailSheetController.isAttached;
-      if (isAttached)
-        _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      _detailSheetMinimized.value = true;
     }
   }
 
@@ -1610,9 +1613,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _showResults = false;
         }
       });
-      final isAttached = _detailSheetController.isAttached;
-      if (isAttached)
-        _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      _detailSheetMinimized.value = true;
     }
   }
 
@@ -1637,9 +1638,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
     final isSelectedResultOpen = _selectedResult != null;
     if (isSelectedResultOpen) {
-      final isAttached = _detailSheetController.isAttached;
-      if (isAttached)
-        _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      _detailSheetMinimized.value = true;
     }
   }
 
@@ -1992,7 +1991,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           if (_selectedResult != null)
             LayoutBuilder(
               builder: (context, constraints) => EsriMapDetailSlideOver(
-                controller: _detailSheetController,
+                minimizedNotifier: _detailSheetMinimized,
                 availableHeight: constraints.maxHeight,
                 result: _selectedResult!,
                 resultIcon: _iconForResult(_selectedResult!),

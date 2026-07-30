@@ -1,13 +1,102 @@
+import 'package:arcgis_maps/arcgis_maps.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
+import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
+import 'package:flutter/material.dart';
+
+
+
+Widget buildSlideOverContent({
+  required BuildContext context,
+  required ScrollController scrollController,
+  required String headerTitle,
+  IconData? headerIcon,
+  required VoidCallback onClose,
+  Widget? trailing,
+  required List<Widget> sliverBody,
+  double headerHeight = 80.0,
+}) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final bgColor = isDark ? Colors.grey[900]! : Colors.white;
+  final hasHeaderIcon = headerIcon != null;
+  final hasTrailing = trailing != null;
+
+  return Material(
+    elevation: 8,
+    color: bgColor,
+    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+    clipBehavior: Clip.antiAlias,
+    child: CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: SlideOverHeaderDelegate(
+            height: headerHeight,
+            backgroundColor: bgColor,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 4),
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.grey[700] : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 8),
+                  child: Row(
+                    children: [
+                      if (hasHeaderIcon) ...[
+                        Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
+                        const SizedBox(width: 8),
+                      ],
+                      Expanded(
+                        child: Text(
+                          headerTitle,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? Colors.white : Colors.grey[900],
+                          ),
+                        ),
+                      ),
+                      if (hasTrailing) trailing,
+                      GestureDetector(
+                        onTap: onClose,
+                        child: Container(
+                          width: 34,
+                          height: 34,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isDark ? Colors.grey[800] : Colors.grey[200],
+                          ),
+                          child: Icon(Icons.close, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(child: Divider(height: 1)),
+        ...sliverBody,
+      ],
+    ),
+  );
+}
+
 /// ============================================================================
 /// File: esrimap_detail_slide_over.dart
 /// Description: Draggable slide-over sheet displaying building/POI details,
 ///              travel time, navigation buttons, and turn-by-turn directions.
 /// ============================================================================
 
-import 'package:arcgis_maps/arcgis_maps.dart';
-import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
-import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
-import 'package:flutter/material.dart';
 
 /// Persistent header delegate for pinned slide-over bottom sheet headers.
 class SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
@@ -48,15 +137,15 @@ class SlideOverHeaderDelegate extends SliverPersistentHeaderDelegate {
 }
 
 /// Helper function building a consistent DraggableScrollableSheet template with a pinned header.
-Widget buildSlideOverContent({
+Widget buildDetailSlideOverContent({
   required BuildContext context,
-  required ScrollController scrollController,
   required String headerTitle,
   IconData? headerIcon,
   required VoidCallback onClose,
+  required VoidCallback onToggle,
+  required bool isMinimized,
   Widget? trailing,
   required List<Widget> sliverBody,
-  double headerHeight = 80.0,
 }) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
   final bgColor = isDark ? Colors.grey[900]! : Colors.white;
@@ -68,129 +157,86 @@ Widget buildSlideOverContent({
     color: bgColor,
     borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
     clipBehavior: Clip.antiAlias,
-    child: CustomScrollView(
-      controller: scrollController,
-      slivers: [
-        SliverPersistentHeader(
-          pinned: true,
-          delegate: SlideOverHeaderDelegate(
-            height: headerHeight,
-            backgroundColor: bgColor,
-            child: Column(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Header
+        GestureDetector(
+          onVerticalDragEnd: (details) {
+            if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
+              if (!isMinimized) onToggle();
+            } else if (details.primaryVelocity != null && details.primaryVelocity! < 0) {
+              if (isMinimized) onToggle();
+            }
+          },
+          child: InkWell(
+            onTap: onToggle,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+            child: Row(
               children: [
-                // Drag handle bar
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 4),
-                  child: Container(
-                    width: 36,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.grey[700] : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(2),
+                if (hasHeaderIcon) ...[
+                  Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
+                  const SizedBox(width: 8),
+                ],
+                Expanded(
+                  child: Text(
+                    headerTitle,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.grey[900],
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                // Header title row with icon & close button
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 8),
-                  child: Row(
-                    children: [
-                      if (hasHeaderIcon) ...[
-                        Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
-                        const SizedBox(width: 8),
-                      ],
-                      Expanded(
-                        child: Text(
-                          headerTitle,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.white : Colors.grey[900],
-                          ),
-                        ),
-                      ),
-                      if (hasTrailing) trailing,
-                      GestureDetector(
-                        onTap: onClose,
-                        child: Container(
-                          width: 34,
-                          height: 34,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isDark ? Colors.grey[800] : Colors.grey[200],
-                          ),
-                          child: Icon(Icons.close, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
-                        ),
-                      ),
-                    ],
-                  ),
+                if (hasTrailing && !isMinimized) trailing,
+                const SizedBox(width: 8),
+                Icon(
+                  isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  size: 24,
+                  color: isDark ? Colors.white70 : Colors.grey[700],
                 ),
               ],
             ),
           ),
         ),
-        // Divider below header
-        const SliverToBoxAdapter(child: Divider(height: 1)),
-        ...sliverBody,
+        ),
+        if (!isMinimized) const Divider(height: 1),
+        if (!isMinimized)
+          Flexible(
+            child: CustomScrollView(
+              shrinkWrap: true,
+              slivers: sliverBody,
+            ),
+          ),
       ],
     ),
   );
 }
 
-/// Slide-over drawer widget presenting location details, route options, and maneuvers.
 class EsriMapDetailSlideOver extends StatelessWidget {
-  /// Controller for managing sheet drag height.
-  final DraggableScrollableController controller;
-
-  /// Height available to the sheet above the app's bottom navigation.
+  final ValueNotifier<bool> minimizedNotifier;
   final double availableHeight;
-
-  /// Selected location search result.
   final MapSearchResult result;
-
-  /// Icon visual representation for the location.
   final IconData resultIcon;
-
-  /// Whether routing or direction mode is active.
   final bool isRoutingMode;
-
-  /// Whether a calculated route is currently active.
   final bool hasRoute;
-
-  /// Whether route calculation failed.
   final bool routeFailed;
-
-  /// Selected travel mode (e.g. 'Walking', 'Accessible').
   final String travelMode;
-
-  /// Estimated route travel duration in minutes.
   final double routeTravelTimeMinutes;
-
-  /// Turn-by-turn direction maneuvers.
   final List<DirectionManeuver> routeManeuvers;
-
-  /// Origin coordinates for route navigation, if custom.
   final (double, double)? fromLatLng;
-
-  /// Callback when "Get Directions" is tapped.
   final void Function(MapSearchResult result) onGetDirections;
-
-  /// Callback when travel mode toggle chip is tapped.
   final void Function(String mode) onTravelModeChanged;
-
-  /// Callback when external website button is tapped.
   final void Function(String url) onLaunchWebsite;
-
-  /// Callback when clear/close button is tapped.
   final VoidCallback onClose;
-
-  /// Callback when route is cleared.
   final VoidCallback onClearRoute;
 
-  /// Constructs an [EsriMapDetailSlideOver] instance.
   const EsriMapDetailSlideOver({
     Key? key,
-    required this.controller,
+    required this.minimizedNotifier,
     required this.availableHeight,
     required this.result,
     required this.resultIcon,
@@ -216,271 +262,255 @@ class EsriMapDetailSlideOver extends StatelessWidget {
 
     String detailText = isBuilding ? result.address : result.description;
     
-    // Format the detail text nicely
     if (!isBuilding) {
-      // Remove any URLs from the description since we have a dedicated button
       detailText = detailText.replaceAll(RegExp(r'https?://[^\s]+'), '');
-      // Add a space after a period if it is immediately followed by a letter
       detailText = detailText.replaceAllMapped(RegExp(r'\.([A-Za-z])'), (m) => '. ${m.group(1)}');
       detailText = detailText.trim();
     }
 
     final categoryLabel = isBuilding ? 'Building' : result.subtitle;
 
-    // Content-aware sheet sizing (added 80 for bottom nav bar padding)
-    double contentEst = (isRouting ? 230 : 198) + 80;
-    if (!isRouting && detailText.isNotEmpty) {
-      final detailTextPainter = TextPainter(
-        text: TextSpan(text: detailText, style: const TextStyle(fontSize: 15)),
-        textDirection: Directionality.of(context),
-        textScaler: MediaQuery.textScalerOf(context),
-      )..layout(maxWidth: MediaQuery.sizeOf(context).width - 40);
-      contentEst += 16 + detailTextPainter.height;
-    }
-    final hasRouteManeuvers = hasRoute && routeManeuvers.isNotEmpty;
-    if (hasRouteManeuvers) contentEst += routeManeuvers.length * 52.0;
+    // Constrain height to a maximum of 50% of screen height
+    final maxHeight = availableHeight * 0.50;
 
-    final contentFraction = (contentEst / availableHeight).clamp(0.15, 1.0);
-    final initialSize = hasRoute ? 0.35 : (contentFraction < 0.30 ? contentFraction : 0.30);
-    // Allow the sheet to be dragged up past its initial content size to prevent it from getting stuck
-    final maxSize = isRouting ? 1.0 : (contentFraction < 0.6 ? 0.6 : contentFraction.clamp(0.6, 1.0));
-    final snaps = <double>[0.15];
-    final isInitialLarger = initialSize > 0.15 + 0.01;
-    if (isInitialLarger) snaps.add(initialSize);
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ValueListenableBuilder<bool>(
+        valueListenable: minimizedNotifier,
+        builder: (context, isMinimized, child) {
+          final shouldShowDetailText = !isRouting && detailText.isNotEmpty;
+          final websiteUrl = result.websiteUrl?.trim();
+          final hasWebsiteUrl = websiteUrl?.isNotEmpty == true;
+          final websiteHost = hasWebsiteUrl ? Uri.tryParse(websiteUrl!)?.host.replaceFirst('www.', '') : null;
 
-    return DraggableScrollableSheet(
-      controller: controller,
-      initialChildSize: initialSize,
-      minChildSize: 0.15,
-      maxChildSize: maxSize,
-      snap: true,
-      snapSizes: snaps,
-      builder: (context, scrollController) {
-        final shouldShowDetailText = !isRouting && detailText.isNotEmpty;
-        final websiteUrl = result.websiteUrl?.trim();
-        final hasWebsiteUrl = websiteUrl?.isNotEmpty == true;
-        final websiteHost = hasWebsiteUrl ? Uri.tryParse(websiteUrl!)?.host.replaceFirst('www.', '') : null;
-
-        return buildSlideOverContent(
-          context: context,
-          scrollController: scrollController,
-          headerTitle: isRouting ? 'Directions to ${result.name}' : result.name,
-          headerIcon: resultIcon,
-          onClose: isRouting ? onClearRoute : onClose,
-          trailing: isRouting && !routeFailed
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: TextButton.icon(
-                    onPressed: () {
-                      final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
-                      onLaunchWebsite(
-                        'https://www.google.com/maps/dir/?api=1'
-                        '&destination=${result.latitude},${result.longitude}'
-                        '&travelmode=walking'
-                        '$originParam',
-                      );
-                    },
-                    icon: const Icon(Icons.map_outlined, size: 16),
-                    label: const Text('Open Google Maps', style: TextStyle(fontSize: 12)),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      foregroundColor: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor,
-                    ),
-                  ),
-                )
-              : null,
-          sliverBody: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Category label (hidden in routing mode)
-                    if (!isRouting)
-                      Text(
-                        categoryLabel,
-                        style: TextStyle(
-                          fontSize: 17, 
-                          fontWeight: FontWeight.w600, 
-                          color: isDark ? Colors.white : Colors.black87,
+          return ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: maxHeight),
+            child: buildDetailSlideOverContent(
+              context: context,
+              headerTitle: isRouting ? 'Directions to ${result.name}' : result.name,
+              headerIcon: resultIcon,
+              onClose: isRouting ? onClearRoute : onClose,
+              onToggle: () => minimizedNotifier.value = !isMinimized,
+              isMinimized: isMinimized,
+              trailing: isRouting && !routeFailed
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
+                          onLaunchWebsite(
+                            'https://www.google.com/maps/dir/?api=1'
+                            '&destination=${result.latitude},${result.longitude}'
+                            '&travelmode=walking'
+                            '$originParam',
+                          );
+                        },
+                        icon: const Icon(Icons.map_outlined, size: 16),
+                        label: const Text('Open Google Maps', style: TextStyle(fontSize: 12)),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          foregroundColor: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor,
                         ),
                       ),
-
-                    // Detail description text (hidden in routing mode)
-                    if (shouldShowDetailText) ...[
-                      const SizedBox(height: 10),
-                      Text(
-                        detailText,
-                        style: TextStyle(
-                          fontSize: 15, 
-                          height: 1.4,
-                          color: isDark ? Colors.grey[300] : Colors.grey[700],
-                        ),
-                      ),
-                    ],
-                    if (!isRouting) const SizedBox(height: 20),
-
-                    // Routing or Action Buttons
-                    if (routeFailed) ...[
-                      Text(
-                        'You are too far from campus for walking navigation.',
-                        style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[400] : Colors.grey[600]),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
-                            onLaunchWebsite(
-                              'https://www.google.com/maps/dir/?api=1'
-                              '&destination=${result.latitude},${result.longitude}'
-                              '&travelmode=driving'
-                              '$originParam',
-                            );
-                          },
-                          icon: const Icon(Icons.directions_car, size: 18),
-                          label: const Text('Drive With Google Maps'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor,
-                            side: BorderSide(color: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                        ),
-                      ),
-                    ] else if (hasRoute) ...[
-                      // Travel time estimate and mode indicator
-                      Row(
-                        children: [
-                          Icon(Icons.schedule, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
-                          const SizedBox(width: 6),
+                    )
+                  : null,
+              sliverBody: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (!isRouting)
                           Text(
-                            routeTravelTimeMinutes < 1 ? '< 1 min' : '${routeTravelTimeMinutes.ceil()} min',
+                            categoryLabel,
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: isDark ? Colors.white : Colors.grey[900],
+                              fontSize: 17, 
+                              fontWeight: FontWeight.w600, 
+                              color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: isDark ? Colors.white : Colors.grey[900],
-                              borderRadius: BorderRadius.circular(16),
+                        if (shouldShowDetailText) ...[
+                          const SizedBox(height: 10),
+                          Text(
+                            detailText,
+                            style: TextStyle(
+                              fontSize: 15, 
+                              height: 1.4,
+                              color: isDark ? Colors.grey[300] : Colors.grey[700],
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.directions_walk, size: 16, color: isDark ? Colors.grey[900] : Colors.white),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'Walking',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: isDark ? Colors.grey[900] : Colors.white,
+                          ),
+                        ],
+                        if (!isRouting) const SizedBox(height: 20),
+                        
+                        if (routeFailed) ...[
+                          Text(
+                            'You are too far from campus for walking navigation.',
+                            style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                          ),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: () {
+                                final originParam = fromLatLng != null ? '&origin=${fromLatLng!.$1},${fromLatLng!.$2}' : '';
+                                onLaunchWebsite(
+                                  'https://www.google.com/maps/dir/?api=1'
+                                  '&destination=${result.latitude},${result.longitude}'
+                                  '&travelmode=driving'
+                                  '$originParam',
+                                );
+                              },
+                              icon: const Icon(Icons.directions_car, size: 18),
+                              label: const Text('Drive With Google Maps'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor,
+                                side: BorderSide(color: isDark ? const Color(0xFFFFCD00) : Theme.of(context).primaryColor),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                            ),
+                          ),
+                        ] else if (hasRoute) ...[
+                          Row(
+                            children: [
+                              Icon(Icons.schedule, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                              const SizedBox(width: 6),
+                              Text(
+                                routeTravelTimeMinutes < 1 ? '< 1 min' : '${routeTravelTimeMinutes.ceil()} min',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark ? Colors.white : Colors.grey[900],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: isDark ? Colors.white : Colors.grey[900],
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.directions_walk, size: 16, color: isDark ? Colors.grey[900] : Colors.white),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Walking',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: isDark ? Colors.grey[900] : Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ] else
+                          Row(
+                            children: [
+                              if (hasWebsiteUrl) ...[
+                                Expanded(
+                                  child: OutlinedButton.icon(
+                                    onPressed: () => onLaunchWebsite(websiteUrl!),
+                                    icon: const Icon(Icons.language, size: 18),
+                                    label: websiteHost?.isNotEmpty == true
+                                        ? Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                const TextSpan(text: 'Visit Website\n'),
+                                                TextSpan(
+                                                  text: websiteHost,
+                                                  style: const TextStyle(fontSize: 11),
+                                                ),
+                                              ],
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          )
+                                        : const Text('View website'),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: isDark ? const Color(0xFFFFCD00) : null,
+                                      side: isDark ? const BorderSide(color: Color(0xFFFFCD00)) : null,
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
                                   ),
                                 ),
+                                const SizedBox(width: 12),
                               ],
-                            ),
+                              if (FeatureFlags.mapRoutingEnabled)
+                                Expanded(
+                                  child: FilledButton.icon(
+                                    onPressed: isRoutingMode ? null : () => onGetDirections(result),
+                                    icon: isRoutingMode
+                                        ? const SizedBox(
+                                            width: 18,
+                                            height: 18,
+                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                          )
+                                        : const Icon(Icons.directions, size: 18),
+                                    label: Text(isRoutingMode ? 'Routing...' : 'Get Directions'),
+                                    style: FilledButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ] else
-                      // Directions + Website buttons
-                      Row(
-                        children: [
-                          if (hasWebsiteUrl) ...[
-                            Expanded(
-                              child: OutlinedButton.icon(
-                                onPressed: () => onLaunchWebsite(websiteUrl!),
-                                icon: const Icon(Icons.language, size: 18),
-                                label: Text(websiteHost?.isNotEmpty == true ? 'Visit $websiteHost' : 'View website'),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: isDark ? const Color(0xFFFFCD00) : null,
-                                  side: isDark ? const BorderSide(color: Color(0xFFFFCD00)) : null,
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                          ],
-                          if (FeatureFlags.mapRoutingEnabled)
-                            Expanded(
-                              child: FilledButton.icon(
-                                onPressed: isRoutingMode ? null : () => onGetDirections(result),
-                                icon: isRoutingMode
-                                    ? const SizedBox(
-                                        width: 18,
-                                        height: 18,
-                                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                      )
-                                    : const Icon(Icons.directions, size: 18),
-                                label: Text(isRoutingMode ? 'Routing...' : 'Get Directions'),
-                                style: FilledButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                if (routeManeuvers.isNotEmpty)
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final step = routeManeuvers[index];
+                      final distMeters = step.length;
+                      final distLabel = distMeters < 1000
+                          ? '${distMeters.round()} m'
+                          : '${(distMeters / 1000).toStringAsFixed(1)} km';
+                      final isNotLastManeuver = index < routeManeuvers.length - 1;
+                      final isFirstIndex = index == 0;
+
+                      String directionText = step.directionText;
+                      directionText = directionText.replaceAll('Location 1', 'My Location');
+                      directionText = directionText.replaceAll('Location 2', result.name);
+
+                      return Column(
+                        children: [
+                          if (isFirstIndex) const Divider(height: 1),
+                          ListTile(
+                            leading: Icon(
+                              Icons.subdirectory_arrow_right,
+                              size: 20,
+                              color: isDark ? Colors.grey[400] : Colors.grey[600],
+                            ),
+                            title: Text(directionText, style: const TextStyle(fontSize: 14)),
+                            trailing: distMeters > 0
+                                ? Text(
+                                    distLabel,
+                                    style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[500] : Colors.grey[500]),
+                                  )
+                                : null,
+                            dense: true,
+                          ),
+                          if (isNotLastManeuver) const Divider(height: 1, indent: 56),
+                        ],
+                      );
+                    }, childCount: routeManeuvers.length),
+                  ),
+                const SliverToBoxAdapter(child: SizedBox(height: 80)),
+              ],
             ),
-
-            // Turn-by-turn maneuver list
-            if (hasRouteManeuvers)
-              SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  final step = routeManeuvers[index];
-                  final distMeters = step.length;
-                  final distLabel = distMeters < 1000
-                      ? '${distMeters.round()} m'
-                      : '${(distMeters / 1000).toStringAsFixed(1)} km';
-                  final isNotLastManeuver = index < routeManeuvers.length - 1;
-                  final isFirstIndex = index == 0;
-
-                  String directionText = step.directionText;
-                  directionText = directionText.replaceAll('Location 1', 'My Location');
-                  directionText = directionText.replaceAll('Location 2', result.name);
-
-                  return Column(
-                    children: [
-                      if (isFirstIndex) const Divider(height: 1),
-                      ListTile(
-                        leading: Icon(
-                          Icons.subdirectory_arrow_right,
-                          size: 20,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
-                        ),
-                        title: Text(directionText, style: const TextStyle(fontSize: 14)),
-                        trailing: distMeters > 0
-                            ? Text(
-                                distLabel,
-                                style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[500] : Colors.grey[500]),
-                              )
-                            : null,
-                        dense: true,
-                      ),
-                      if (isNotLastManeuver) const Divider(height: 1, indent: 56),
-                    ],
-                  );
-                }, childCount: routeManeuvers.length),
-              ),
-
-            // Bottom padding for navigation bar
-            const SliverToBoxAdapter(child: SizedBox(height: 80)),
-          ],
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
