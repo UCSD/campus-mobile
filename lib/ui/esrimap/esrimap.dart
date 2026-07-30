@@ -78,6 +78,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   bool _isSearching = false;
   bool _showSuggestions = false;
   List<MapSearchResult> _recentSearches = [];
+  Timer? _searchDebounce;
+  int _searchRequestId = 0;
 
   // Active Category & Pin Plotting State
   MapSearchResult? _selectedResult;
@@ -199,6 +201,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     await _mapReadyCompleter.future;
     _setupAgeAuthChallengeHandler();
     _mapViewController.arcGISMap = _map;
+    _mapViewController.selectionProperties = SelectionProperties(color: const Color(0xFF34C759));
     _mapViewController.interactionOptions.rotateEnabled = true;
 
     final isGraphicsOverlayMissing = !_mapViewController.graphicsOverlays.contains(_graphicsOverlay);
@@ -264,6 +267,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
     _categorySheetController.dispose();
     _detailSheetController.dispose();
     _searchController.dispose();
@@ -638,16 +642,35 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     EsriMapSearchService.saveRecentSearches(_recentSearches);
   }
 
+  void _clearRecentSearches() {
+    setState(_recentSearches.clear);
+    EsriMapSearchService.saveRecentSearches(_recentSearches);
+  }
+
   Future<void> _fetchAllPoiClasses() async {
     final classes = await EsriMapSearchService.fetchAllPoiClasses();
     if (mounted) setState(() => _allPoiClasses = classes);
   }
 
-  /// Text search: queries buildings and POIs concurrently.
-  Future<void> _performSearch(String query) async {
-    final isQueryEmpty = query.trim().isEmpty;
-    if (isQueryEmpty) return;
+  void _queueSearch(String query) {
+    _searchDebounce?.cancel();
+    final requestId = ++_searchRequestId;
+    final trimmedQuery = query.trim();
+    if (trimmedQuery.isEmpty) return;
+    _searchDebounce = Timer(const Duration(milliseconds: 250), () {
+      _searchDebounce = null;
+      _performSearch(trimmedQuery, requestId);
+    });
+  }
 
+  void _cancelPendingSearch() {
+    _searchDebounce?.cancel();
+    _searchDebounce = null;
+    _searchRequestId++;
+  }
+
+  /// Text search: queries buildings and POIs concurrently.
+  Future<void> _performSearch(String query, int requestId) async {
     final q = query.toLowerCase();
     final matched = _allPoiClasses.where((c) => c.toLowerCase().contains(q)).toList();
 
@@ -670,25 +693,27 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         EsriMapSearchService.queryPOIs(query),
       ]);
       final merged = <MapSearchResult>[...results[0], ...results[1]];
-      if (mounted) {
-        setState(() {
-          _searchResults = merged;
-          _isSearching = false;
-        });
-      }
+      final isStale = !mounted || requestId != _searchRequestId;
+      if (isStale) return;
+      setState(() {
+        _searchResults = merged;
+        _isSearching = false;
+      });
     } catch (e) {
       debugPrint('Search error: $e');
-      if (mounted) {
-        setState(() {
-          _searchResults = [];
-          _isSearching = false;
-        });
-      }
+      final isStale = !mounted || requestId != _searchRequestId;
+      if (isStale) return;
+      setState(() {
+        _searchResults = [];
+        _isSearching = false;
+      });
     }
   }
 
-  /// Category search: queries POIs filtered by class and plots pins on the map.
+  /// Category search: queries matching locations and plots pins on the map.
   Future<void> _performCategorySearch(EsriSearchCategory category) async {
+    _cancelPendingSearch();
+    final requestId = _searchRequestId;
     setState(() {
       _isSearching = true;
       _showResults = false;
@@ -704,21 +729,38 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _toFocusNode.unfocus();
 
     try {
-      final allResults = await EsriMapSearchService.queryPOIsByClass(category.poiClassValue);
+      final searches = <Future<List<MapSearchResult>>>[
+        EsriMapSearchService.queryPOIsByClass(category.poiClassValue),
+        if (category.poiClassValue == 'Recreation Facilities') EsriMapSearchService.queryBuildings('gym'),
+      ];
+      final allResults = (await Future.wait(searches)).expand((results) => results).toList();
+      final isStale = !mounted || requestId != _searchRequestId;
+      if (isStale) return;
       _plotResultsOnMap(allResults);
+      _zoomToResults(allResults);
 
       setState(() {
         _allCategoryResults = allResults;
         _showCategoryList = allResults.isNotEmpty;
         _isSearching = false;
       });
+      if (allResults.isEmpty) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
+      }
     } catch (e) {
       debugPrint('Category search error: $e');
+      final isStale = !mounted || requestId != _searchRequestId;
+      if (isStale) return;
       setState(() {
         _mappedResults = [];
         _allCategoryResults = [];
         _isSearching = false;
       });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
     }
   }
 
@@ -736,6 +778,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
 
   void _plotResultsOnMap(List<MapSearchResult> results) {
+    _dismissCallout();
     _graphicsOverlay.graphics.clear();
     _mappedResults = results;
     for (int i = 0; i < results.length; i++) {
@@ -787,6 +830,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(envelope));
   }
 
+  /// Dismisses the active map pin callout, if any.
+  void _dismissCallout() {
+    _mapViewController.callout.dismiss();
+    _graphicsOverlay.clearSelection();
+  }
+
   void _seeAllCategoryResults() {
     final isAllCategoryResultsEmpty = _allCategoryResults.isEmpty;
     if (isAllCategoryResultsEmpty) return;
@@ -794,6 +843,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _selectResult(MapSearchResult result) {
+    _cancelPendingSearch();
+    _dismissCallout();
     final isRouteModeActive = _showRouteFields && _activeRouteField != null;
     if (isRouteModeActive) {
       final isFromActive = _activeRouteField == 'from';
@@ -873,6 +924,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     final isMappedResultsEmpty = _mappedResults.isEmpty;
     if (isMappedResultsEmpty) {
+      _dismissCallout();
       final isSelectedResultNotNull = _selectedResult != null;
       if (isSelectedResultNotNull) _closeDetail();
       return;
@@ -891,8 +943,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
         final isValidResultIndex = index != null && index >= 0 && index < _mappedResults.length;
-        if (isValidResultIndex) _selectResultFromPin(_mappedResults[index]);
+        if (isValidResultIndex) _handlePinTap(_mappedResults[index], tappedGraphic);
       } else {
+        _dismissCallout();
         final isSelectedResultNotNull = _selectedResult != null;
         if (isSelectedResultNotNull) _closeDetail();
       }
@@ -901,7 +954,76 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
   }
 
-  void _selectResultFromPin(MapSearchResult result) {
+  /// Shows a place name above a plotted map pin without changing the search.
+  void _handlePinTap(MapSearchResult result, Graphic graphic) {
+    if (_showRouteFields) {
+      _selectResultFromPin(result);
+      return;
+    }
+
+    final isBuilding = result.source == MapSearchSource.building;
+    final detail = isBuilding ? 'Building' : result.subtitle;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    _graphicsOverlay.clearSelection();
+    graphic.isSelected = true;
+    _mapViewController.callout.showCalloutForGeoElement(
+      graphic,
+      leaderPosition: LeaderPosition.bottom,
+      style: CalloutStyle(
+        backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
+        borderColor: isDark ? Colors.white24 : Colors.black26,
+        borderRadius: 12,
+        borderWidth: 0.5,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+        minWidth: 96,
+        maxWidth: 220,
+        offset: const Offset(0, -10),
+      ),
+      contentBuilder: (_, __) => Semantics(
+        label: detail.isEmpty ? result.name : '${result.name}. $detail',
+        excludeSemantics: true,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              result.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: isDark ? Colors.white : Colors.black87,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                height: 1.15,
+              ),
+            ),
+            if (detail.isNotEmpty) ...[
+              const SizedBox(height: 3),
+              Text(
+                detail,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12, height: 1.15),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+    _selectResultFromPin(result, updateSearchText: false);
+  }
+
+  void _selectResultFromList(MapSearchResult result) {
+    final index = _mappedResults.indexOf(result);
+    if (index < 0 || index >= _graphicsOverlay.graphics.length) {
+      _selectResultFromPin(result);
+      return;
+    }
+    _handlePinTap(result, _graphicsOverlay.graphics[index]);
+  }
+
+  void _selectResultFromPin(MapSearchResult result, {bool updateSearchText = true}) {
     if (_showRouteFields) {
       final isFromActive = _activeRouteField == 'from';
       if (isFromActive) {
@@ -946,7 +1068,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     setState(() {
       _selectedResult = result;
       _lastSelectedResult = result;
-      _searchController.text = result.name;
+      if (updateSearchText) _searchController.text = result.name;
       _showResults = false;
       _showSuggestions = false;
       _showCategoryList = false;
@@ -956,6 +1078,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _closeDetail() {
+    _dismissCallout();
     final canShowCategoryResults = _allCategoryResults.isNotEmpty && !_showRouteFields && !_hasRoute && !_routeFailed;
     if (canShowCategoryResults) {
       setState(() {
@@ -1063,6 +1186,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _clearSearch() {
+    _cancelPendingSearch();
+    _dismissCallout();
     _searchController.clear();
     _fromController.clear();
     _toController.clear();
@@ -1080,6 +1205,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _mappedResults = [];
       _allCategoryResults = [];
       _showResults = false;
+      _isSearching = false;
       _showSuggestions = false;
       _showCategoryList = false;
       _activeCategory = null;
@@ -1092,6 +1218,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _clearRoute() {
+    _cancelPendingSearch();
+    _dismissCallout();
     _routeGraphicsOverlay.graphics.clear();
     final destination = _selectedResult;
     final isDestinationNotNull = destination != null;
@@ -1117,6 +1245,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     setState(() {
+      _isSearching = false;
       _hasRoute = false;
       _routeFailed = false;
       _travelMode = 'Walking';
@@ -1341,6 +1470,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _onFocusChanged() {
+    _hideSearchOverlayWhenUnfocused();
+    if (_focusNode.hasFocus) _dismissCallout();
     final isSearchFocusEmpty = _focusNode.hasFocus && _searchController.text.isEmpty;
     if (isSearchFocusEmpty) {
       setState(() {
@@ -1351,6 +1482,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _onFromFocusChanged() {
+    _hideSearchOverlayWhenUnfocused();
     final hasFromFocus = _fromFocusNode.hasFocus;
     if (hasFromFocus) {
       setState(() {
@@ -1368,6 +1500,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _onToFocusChanged() {
+    _hideSearchOverlayWhenUnfocused();
     final hasToFocus = _toFocusNode.hasFocus;
     if (hasToFocus) {
       setState(() {
@@ -1382,6 +1515,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       if (isAttached)
         _detailSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
     }
+  }
+
+  void _hideSearchOverlayWhenUnfocused() {
+    if (_focusNode.hasFocus || _fromFocusNode.hasFocus || _toFocusNode.hasFocus) return;
+    setState(() {
+      _showSuggestions = false;
+      _showResults = false;
+    });
   }
 
   void _onMapPointerDown(PointerDownEvent _) {
@@ -1479,12 +1620,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     final indexedStackIndex = isBuilding3dScene ? 1 : (isDroneViewScene ? 2 : 0);
 
-    final isFabVisible =
-        !keyboardVisible &&
-        !_focusNode.hasFocus &&
-        !_fromFocusNode.hasFocus &&
-        !_toFocusNode.hasFocus &&
-        !_showLayersPanel;
+    final isFabVisible = !keyboardVisible && !_showLayersPanel;
 
     final isLayersPanelVisible = _showLayersPanel && _config != null;
 
@@ -1514,6 +1650,24 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             ],
           ),
 
+          // Map controls stay behind search and slide-over panels.
+          if (isFabVisible)
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 68,
+              right: 16,
+              child: EsriMapFabCluster(
+                isDark: isDark,
+                is3D: _sceneMode != 'default',
+                mapRotation: _mapRotation,
+                isLocationActive: _isLocationActive,
+                isRecenterActive: _isRecenterActive,
+                onShowLayersPanel: () => setState(() => _showLayersPanel = true),
+                onRecenterOnView: _recenterOnView,
+                onRecenterOnUser: _recenterOnUser,
+                onSnapToNorth: _snapToNorth,
+              ),
+            ),
+
           // Floating top search bar & suggestion panel
           if (FeatureFlags.mapSearchEnabled && isDefaultScene)
             Positioned(
@@ -1536,7 +1690,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     isSearching: _isSearching,
                     searchResults: _searchResults,
                     matchingPoiClasses: _matchingPoiClasses,
-                    onPerformSearch: _performSearch,
+                    onPerformSearch: _queueSearch,
                     onPerformClassSearch: _performClassSearch,
                     onSelectResult: _selectResult,
                     onClearSearch: _clearSearch,
@@ -1595,14 +1749,18 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                       final isLongEnough = text.length >= 3;
                       final isTextEmpty = text.isEmpty;
                       if (isLongEnough) {
-                        _performSearch(text);
+                        _queueSearch(text);
                       } else if (isTextEmpty) {
+                        _cancelPendingSearch();
                         setState(() {
+                          _isSearching = false;
                           _showResults = false;
                           _showSuggestions = true;
                         });
                       } else {
+                        _cancelPendingSearch();
                         setState(() {
+                          _isSearching = false;
                           _showResults = false;
                           _showSuggestions = false;
                         });
@@ -1612,27 +1770,41 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                       final isLongEnough = text.length >= 3;
                       final isTextEmpty = text.isEmpty;
                       if (isLongEnough) {
-                        _performSearch(text);
+                        _queueSearch(text);
                       } else if (isTextEmpty) {
+                        _cancelPendingSearch();
                         setState(() {
+                          _isSearching = false;
                           _showResults = false;
                           _showSuggestions = true;
                         });
                       } else {
+                        _cancelPendingSearch();
                         setState(() {
+                          _isSearching = false;
                           _showResults = false;
                           _showSuggestions = false;
                         });
                       }
                     },
                     onClearFromField: () {
+                      _cancelPendingSearch();
                       _fromController.clear();
                       _fromLatLng = null;
-                      setState(() => _showSuggestions = true);
+                      setState(() {
+                        _isSearching = false;
+                        _showResults = false;
+                        _showSuggestions = true;
+                      });
                     },
                     onClearToField: () {
+                      _cancelPendingSearch();
                       _toController.clear();
-                      setState(() => _showSuggestions = true);
+                      setState(() {
+                        _isSearching = false;
+                        _showResults = false;
+                        _showSuggestions = true;
+                      });
                     },
                     onOpenAiSearch: () => showModalBottomSheet(
                       context: context,
@@ -1676,6 +1848,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         onSelectCategory: _performCategorySearch,
                         onSelectRecent: _selectResult,
                         onRemoveRecent: _removeFromRecentSearches,
+                        onClearRecent: _clearRecentSearches,
                       ),
                     ),
                 ],
@@ -1692,64 +1865,49 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               userLocation: _getUserLatLng(),
               onClearSearch: _clearSearch,
               onSeeAllResults: _seeAllCategoryResults,
-              onSelectResult: _selectResultFromPin,
+              onSelectResult: _selectResultFromList,
               iconForResult: _iconForResult,
             ),
 
           // Selected Result Detail Slide-over
           if (_selectedResult != null)
-            EsriMapDetailSlideOver(
-              controller: _detailSheetController,
-              result: _selectedResult!,
-              resultIcon: _iconForResult(_selectedResult!),
-              isRoutingMode: _isRouting,
-              hasRoute: _hasRoute,
-              routeFailed: _routeFailed,
-              travelMode: _travelMode,
-              routeTravelTimeMinutes: _routeTravelTimeMinutes,
-              routeManeuvers: _routeManeuvers,
-              fromLatLng: _fromLatLng,
-              onGetDirections: (res) {
-                final gps = _getUserLatLng();
-                final hasGps = gps != null;
-                _fromController.text = hasGps ? 'My Location' : '';
-                _toController.text = res.name;
-                _routeDestination = res;
-                _graphicsOverlay.graphics.clear();
-                setState(() {
-                  _showRouteFields = true;
-                  _selectedResult = null;
-                  _mappedResults = [];
-                  _allCategoryResults = [];
-                  _showCategoryList = false;
-                  _activeCategory = null;
-                });
-                _solveRoute(res);
-              },
-              onTravelModeChanged: (mode) {
-                final hasSelectedResult = _selectedResult != null;
-                if (hasSelectedResult) _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
-              },
-              onLaunchWebsite: _launchWebsite,
-              onClose: _closeDetail,
-              onClearRoute: _clearRoute,
-            ),
-
-          // Top-right FAB cluster (Compass, Recenter, Location, Layers)
-          if (isFabVisible)
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 68,
-              right: 16,
-              child: EsriMapFabCluster(
-                isDark: isDark,
-                is3D: _sceneMode != 'default',
-                mapRotation: _mapRotation,
-                isLocationActive: _isLocationActive,
-                isRecenterActive: _isRecenterActive,
-                onShowLayersPanel: () => setState(() => _showLayersPanel = true),
-                onRecenterOnView: _recenterOnView,
-                onRecenterOnUser: _recenterOnUser,
-                onSnapToNorth: _snapToNorth,
+            LayoutBuilder(
+              builder: (context, constraints) => EsriMapDetailSlideOver(
+                controller: _detailSheetController,
+                availableHeight: constraints.maxHeight,
+                result: _selectedResult!,
+                resultIcon: _iconForResult(_selectedResult!),
+                isRoutingMode: _isRouting,
+                hasRoute: _hasRoute,
+                routeFailed: _routeFailed,
+                travelMode: _travelMode,
+                routeTravelTimeMinutes: _routeTravelTimeMinutes,
+                routeManeuvers: _routeManeuvers,
+                fromLatLng: _fromLatLng,
+                onGetDirections: (res) {
+                  final gps = _getUserLatLng();
+                  final hasGps = gps != null;
+                  _fromController.text = hasGps ? 'My Location' : '';
+                  _toController.text = res.name;
+                  _routeDestination = res;
+                  _graphicsOverlay.graphics.clear();
+                  setState(() {
+                    _showRouteFields = true;
+                    _selectedResult = null;
+                    _mappedResults = [];
+                    _allCategoryResults = [];
+                    _showCategoryList = false;
+                    _activeCategory = null;
+                  });
+                  _solveRoute(res);
+                },
+                onTravelModeChanged: (mode) {
+                  final hasSelectedResult = _selectedResult != null;
+                  if (hasSelectedResult) _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
+                },
+                onLaunchWebsite: _launchWebsite,
+                onClose: _closeDetail,
+                onClearRoute: _clearRoute,
               ),
             ),
 
