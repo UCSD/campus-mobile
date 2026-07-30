@@ -139,6 +139,7 @@ class EsriMapSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final searchTextColor = Theme.of(context).textTheme.titleMedium?.color;
     final hasSearchResults = isSearching || searchResults.isNotEmpty;
     final shouldShowResultsDivider = showResults && hasSearchResults;
 
@@ -148,7 +149,7 @@ class EsriMapSearchBar extends StatelessWidget {
         matchingPoiClasses.isNotEmpty &&
         isSearchNotEmpty &&
         !showSuggestions;
-    final shouldShowDropdown = showResults || hasClassMatches;
+    final shouldShowDropdown = isSearching ? showRouteFields && showResults : showResults || hasClassMatches;
 
     return Column(
       children: [
@@ -283,7 +284,13 @@ class EsriMapSearchBar extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 12),
-                  child: Icon(Icons.search, color: isDark ? Colors.white70 : Colors.grey[600]),
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: isSearching
+                        ? CircularProgressIndicator(strokeWidth: 2, color: searchTextColor, semanticsLabel: 'Searching')
+                        : Icon(Icons.search, color: isDark ? Colors.white70 : Colors.grey[600]),
+                  ),
                 ),
                 Expanded(
                   child: TextField(
@@ -300,7 +307,7 @@ class EsriMapSearchBar extends StatelessWidget {
                       }
                     },
                     onTap: onTapSearchField,
-                    style: const TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16, color: searchTextColor),
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),

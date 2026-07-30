@@ -71,6 +71,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _locationDataSource = SystemLocationDataSource();
 
   // Search State
+  static const _minimumSearchLoadingDuration = Duration(milliseconds: 400);
   List<MapSearchResult> _searchResults = [];
   List<String> _allPoiClasses = [];
   List<String> _matchingPoiClasses = [];
@@ -696,8 +697,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _searchRequestId++;
   }
 
+  Future<void> _waitForMinimumSearchLoadingTime(Stopwatch stopwatch) async {
+    final remaining = _minimumSearchLoadingDuration - stopwatch.elapsed;
+    if (remaining > Duration.zero) await Future.delayed(remaining);
+  }
+
   /// Text search: queries buildings and POIs concurrently.
   Future<void> _performSearch(String query, int requestId) async {
+    final loadingStopwatch = Stopwatch()..start();
     final q = query.toLowerCase();
     final matched = _allPoiClasses.where((c) => c.toLowerCase().contains(q)).toList();
 
@@ -714,32 +721,29 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _matchingPoiClasses = matched;
     });
 
+    var merged = <MapSearchResult>[];
     try {
       final results = await Future.wait([
         EsriMapSearchService.queryBuildings(query),
         EsriMapSearchService.queryPOIs(query),
       ]);
-      final merged = <MapSearchResult>[...results[0], ...results[1]];
-      final isStale = !mounted || requestId != _searchRequestId;
-      if (isStale) return;
-      setState(() {
-        _searchResults = merged;
-        _isSearching = false;
-      });
+      merged = [...results[0], ...results[1]];
     } catch (e) {
       debugPrint('Search error: $e');
-      final isStale = !mounted || requestId != _searchRequestId;
-      if (isStale) return;
-      setState(() {
-        _searchResults = [];
-        _isSearching = false;
-      });
     }
+    await _waitForMinimumSearchLoadingTime(loadingStopwatch);
+    final isStale = !mounted || requestId != _searchRequestId;
+    if (isStale) return;
+    setState(() {
+      _searchResults = merged;
+      _isSearching = false;
+    });
   }
 
   /// Category search: queries matching locations and plots pins on the map.
   Future<void> _performCategorySearch(EsriSearchCategory category) async {
     _cancelPendingSearch();
+    final loadingStopwatch = Stopwatch()..start();
     final requestId = _searchRequestId;
     setState(() {
       _isSearching = true;
@@ -761,6 +765,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         if (category.poiClassValue == 'Recreation Facilities') EsriMapSearchService.queryBuildings('gym'),
       ];
       final allResults = (await Future.wait(searches)).expand((results) => results).toList();
+      await _waitForMinimumSearchLoadingTime(loadingStopwatch);
       final isStale = !mounted || requestId != _searchRequestId;
       if (isStale) return;
 
@@ -796,6 +801,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
     } catch (e) {
       debugPrint('Category search error: $e');
+      await _waitForMinimumSearchLoadingTime(loadingStopwatch);
       final isStale = !mounted || requestId != _searchRequestId;
       if (isStale) return;
       setState(() {
