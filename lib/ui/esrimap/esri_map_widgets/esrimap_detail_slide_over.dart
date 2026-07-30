@@ -214,25 +214,36 @@ class EsriMapDetailSlideOver extends StatelessWidget {
     final isRouting = isRoutingMode || hasRoute || routeFailed;
     final isBuilding = result.source == MapSearchSource.building;
 
-    final detailText = isBuilding ? result.address : result.description;
+    String detailText = isBuilding ? result.address : result.description;
+    
+    // Format the detail text nicely
+    if (!isBuilding) {
+      // Remove any URLs from the description since we have a dedicated button
+      detailText = detailText.replaceAll(RegExp(r'https?://[^\s]+'), '');
+      // Add a space after a period if it is immediately followed by a letter
+      detailText = detailText.replaceAllMapped(RegExp(r'\.([A-Za-z])'), (m) => '. ${m.group(1)}');
+      detailText = detailText.trim();
+    }
+
     final categoryLabel = isBuilding ? 'Building' : result.subtitle;
 
-    // Content-aware sheet sizing
-    double contentEst = isRouting ? 230 : 198;
+    // Content-aware sheet sizing (added 80 for bottom nav bar padding)
+    double contentEst = (isRouting ? 230 : 198) + 80;
     if (!isRouting && detailText.isNotEmpty) {
       final detailTextPainter = TextPainter(
-        text: TextSpan(text: detailText, style: const TextStyle(fontSize: 16)),
+        text: TextSpan(text: detailText, style: const TextStyle(fontSize: 15)),
         textDirection: Directionality.of(context),
         textScaler: MediaQuery.textScalerOf(context),
       )..layout(maxWidth: MediaQuery.sizeOf(context).width - 40);
-      contentEst += 8 + detailTextPainter.height;
+      contentEst += 16 + detailTextPainter.height;
     }
     final hasRouteManeuvers = hasRoute && routeManeuvers.isNotEmpty;
     if (hasRouteManeuvers) contentEst += routeManeuvers.length * 52.0;
 
     final contentFraction = (contentEst / availableHeight).clamp(0.15, 1.0);
     final initialSize = hasRoute ? 0.35 : (contentFraction < 0.30 ? contentFraction : 0.30);
-    final maxSize = contentFraction.clamp(initialSize, 1.0);
+    // Allow the sheet to be dragged up past its initial content size to prevent it from getting stuck
+    final maxSize = isRouting ? 1.0 : (contentFraction < 0.6 ? 0.6 : contentFraction.clamp(0.6, 1.0));
     final snaps = <double>[0.15];
     final isInitialLarger = initialSize > 0.15 + 0.01;
     if (isInitialLarger) snaps.add(initialSize);
@@ -291,18 +302,26 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                     if (!isRouting)
                       Text(
                         categoryLabel,
-                        style: TextStyle(fontSize: 14, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                        style: TextStyle(
+                          fontSize: 17, 
+                          fontWeight: FontWeight.w600, 
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
                       ),
 
                     // Detail description text (hidden in routing mode)
                     if (shouldShowDetailText) ...[
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Text(
                         detailText,
-                        style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                        style: TextStyle(
+                          fontSize: 15, 
+                          height: 1.4,
+                          color: isDark ? Colors.grey[300] : Colors.grey[700],
+                        ),
                       ),
                     ],
-                    if (!isRouting) const SizedBox(height: 16),
+                    if (!isRouting) const SizedBox(height: 20),
 
                     // Routing or Action Buttons
                     if (routeFailed) ...[
@@ -451,11 +470,14 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                             : null,
                         dense: true,
                       ),
-                      if (isNotLastManeuver) const Divider(height: 1),
+                      if (isNotLastManeuver) const Divider(height: 1, indent: 56),
                     ],
                   );
                 }, childCount: routeManeuvers.length),
               ),
+
+            // Bottom padding for navigation bar
+            const SliverToBoxAdapter(child: SizedBox(height: 80)),
           ],
         );
       },
