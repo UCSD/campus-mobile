@@ -82,4 +82,15 @@ else
     echo "$BUILD_ENV Environment Build (Branch: $FCI_BRANCH)" > ./release_notes.txt
 fi
 
+# ArcGIS native iOS frameworks are downloaded outside the Git repository.
+# Install them before CocoaPods resolves the local podspec paths in ios/Podfile.
+if [ "$BUILD_PLATFORM" = "IOS" ]; then
+    echo "Installing ArcGIS native SDK for iOS ..."
+    flutter pub get
+    dart run arcgis_maps install
+
+    test -f ./arcgis_maps_core/ios/Runtimecore.podspec
+    test -f ./arcgis_maps_core/ios/arcgis_maps_ffi.podspec
+fi
+
 echo "End: post-clone.sh"
