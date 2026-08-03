@@ -75,6 +75,8 @@ echo $FIREBASE_IOS | base64 --decode > ./ios/Runner/GoogleService-Info.plist
 echo "./android/app/google-services.json --> $BUILD_ENV"
 echo $FIREBASE_ANDROID | base64 --decode > ./android/app/google-services.json
 
+dart run arcgis_maps install
+
 # Write release notes
 if [ -n "$FCI_PULL_REQUEST_NUMBER" ]; then
     echo "$BUILD_ENV Environment Build (PR: $FCI_PULL_REQUEST_NUMBER)" > ./release_notes.txt
