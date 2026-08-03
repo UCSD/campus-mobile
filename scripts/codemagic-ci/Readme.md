@@ -42,7 +42,8 @@
 ## iv. Build for Platforms
 1. Select the desired build platform OS (Android and/or iOS)
 2. Choose the build mode (Release)
-3. Add build arguements: `--build-name=$APP_VERSION --build-number=$PROJECT_BUILD_NUMBER`
+3. For Android, choose the Android App Bundle (`.aab`) build format
+4. Add build arguments: `--build-name=$APP_VERSION --build-number=$PROJECT_BUILD_NUMBER`
 
 
 ## v. Publish
@@ -79,8 +80,6 @@
 
 ## vi. Post-Publish Script
 1. Copy and paste the contents of `post-publish.sh` from `campus-mobile/scripts/codemagic-ci`
-
-
 
 
 

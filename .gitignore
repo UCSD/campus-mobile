@@ -62,6 +62,8 @@ env-vars*.json
 node_modules/
 
 # Android related
+*.apk
+*.aab
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/

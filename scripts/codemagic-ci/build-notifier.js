@@ -106,7 +106,7 @@ const buildNotify = async () => {
 		const buildTimestamp = moment().format('YYYY-MM-DD h:mm A')
 		const fciProjectLink = 'https://codemagic.io/app/' + ENV_VARS.fciProjectId + '/build/' + ENV_VARS.fciBuildId
 		let buildSuccess = (ENV_VARS.fciBuildStepStatus === 'success') ? true : false
-		let buildApkFile = 'app-release.apk'
+		let buildArtifactFile = 'app-release.aab'
 		let prAuthor = ''
 		let testPlanFilename = ''
 		let testPlanUrl = ''
@@ -126,7 +126,7 @@ const buildNotify = async () => {
 			;({ testPlanFilename, testPlanUrl } = await generateTestPlan(prAuthor))
 		}
 
-		const androidApkUrl = findArtifactLink(ENV_VARS.fciArtifactLinks, buildApkFile)
+		const androidArtifactUrl = findArtifactLink(ENV_VARS.fciArtifactLinks, buildArtifactFile)
 		const successEmojiList = ['🥇','🏆','🎖','🎉','🎊','🚀','🛫','🏋','💪','👏','💯']
 		const failedEmojiList = ['🙀','😱','😵']
 		let buildStatusText = ''
@@ -186,13 +186,13 @@ const buildNotify = async () => {
 		} else if (ENV_VARS.buildPlatform === 'ANDROID') {
 			teamsFacts.push({
 				'title': 'Android:',
-				'value': androidApkUrl ? buildApkFile : 'N/A',
+				'value': androidArtifactUrl ? buildArtifactFile : 'N/A',
 			})
-			if (androidApkUrl) {
+			if (androidArtifactUrl) {
 				teamsActions.push({
 					'type': 'Action.OpenUrl',
-					'title': 'Download Android APK',
-					'url': androidApkUrl,
+					'title': 'Download Android App Bundle',
+					'url': androidArtifactUrl,
 				})
 			}
 		}
@@ -218,8 +218,8 @@ const buildNotify = async () => {
 
 		// Send notification via webhook integration
 		console.log('Sending Teams notification for UC San Diego ' + ENV_VARS.appVersion + ' (' + finalBuildNumber + ')\n')
-		if (ENV_VARS.buildPlatform === 'ANDROID' && androidApkUrl) {
-			console.log('Android APK CodeMagic artifact URL: ' + androidApkUrl)
+		if (ENV_VARS.buildPlatform === 'ANDROID' && androidArtifactUrl) {
+			console.log('Android App Bundle CodeMagic artifact URL: ' + androidArtifactUrl)
 		}
 		if (!teamsWebhookUrl) {
 			throw 'Error: MS Teams webhook URL unavailable'
