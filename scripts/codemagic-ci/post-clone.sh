@@ -53,7 +53,7 @@ fi
 
 # 7. BUILD_PLATFORM
 if [ -n "$BUILD_PLATFORM" ]; then
-    echo "BUILD_PLATFORM: Found"
+    echo "BUILD_PLATFORM: $BUILD_PLATFORM"
 else
     echo "Error: BUILD_PLATFORM not found, exiting."
     exit 1
@@ -84,13 +84,25 @@ fi
 
 # ArcGIS native iOS frameworks are downloaded outside the Git repository.
 # Install them before CocoaPods resolves the local podspec paths in ios/Podfile.
-if [ "$BUILD_PLATFORM" = "IOS" ]; then
+# Normalize the value so both "IOS" and "iOS" select the iOS setup.
+BUILD_PLATFORM_NORMALIZED=$(printf '%s' "$BUILD_PLATFORM" | tr '[:lower:]' '[:upper:]')
+if [ "$BUILD_PLATFORM_NORMALIZED" = "IOS" ]; then
     echo "Installing ArcGIS native SDK for iOS ..."
+    echo "Repository root: $(pwd)"
     flutter pub get
     dart run arcgis_maps install
 
-    test -f ./arcgis_maps_core/ios/Runtimecore.podspec
-    test -f ./arcgis_maps_core/ios/arcgis_maps_ffi.podspec
+    echo "Verifying ArcGIS CocoaPods podspecs ..."
+    for podspec in \
+        ./arcgis_maps_core/ios/Runtimecore.podspec \
+        ./arcgis_maps_core/ios/arcgis_maps_ffi.podspec
+    do
+        if [ ! -f "$podspec" ]; then
+            echo "Error: ArcGIS installation did not create $podspec"
+            exit 1
+        fi
+        echo "Found: $podspec"
+    done
 fi
 
 echo "End: post-clone.sh"
