@@ -46,8 +46,8 @@ class Router {
       case RoutePaths.ONBOARDING_LOGIN:
         return MaterialPageRoute(builder: (_) => OnboardingLogin());
       case RoutePaths.HOME:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(null);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(null);
           return Home();
         });
       case RoutePaths.MAP:
@@ -55,15 +55,15 @@ class Router {
       case RoutePaths.MAP_SEARCH:
         return MaterialPageRoute(builder: (_) => MapSearchView());
       case RoutePaths.NOTIFICATIONS:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsListView();
         });
       case RoutePaths.PROFILE:
         return MaterialPageRoute(builder: (_) => Profile());
       case RoutePaths.NEWS_VIEW_ALL:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NewsList();
         });
       case RoutePaths.EVENTS_VIEW_ALL:
@@ -73,20 +73,20 @@ class Router {
         });
       case RoutePaths.NEWS_DETAIL_VIEW:
         Item newsItem = settings.arguments as Item;
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NewsDetailView(data: newsItem);
         });
       case RoutePaths.TGPT_CITATION_WEB:
         final String citationUrl = settings.arguments as String;
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return CitationWebView(initialUrl: citationUrl);
         });
       case RoutePaths.EVENT_DETAIL_VIEW:
         EventModel data = settings.arguments as EventModel;
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return EventDetailView(data: data);
         });
       case RoutePaths.EVENTS_ALL:
@@ -95,25 +95,25 @@ class Router {
           return EventsAll();
         });
       case RoutePaths.MANAGE_AVAILABILITY_VIEW:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageAvailabilityView();
         });
       case RoutePaths.AVAILABILITY_DETAILED_VIEW:
         SubLocations subLocation = settings.arguments as SubLocations;
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return AvailabilityDetailedView(subLocation: subLocation);
         });
       case RoutePaths.DINING_VIEW_ALL_DINING_OPTIONS:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return DiningList();
         });
       case RoutePaths.DINING_OPTION_DETAIL_VIEW:
         DiningModel data = settings.arguments as DiningModel;
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return DiningDetailView(data: data);
         });
       case RoutePaths.DINING_PAYMENT_FILTER_VIEW:
@@ -132,59 +132,59 @@ class Router {
       //             disclaimerEmail: disclaimerEmail,
       //           ));
       case RoutePaths.MANAGE_PARKING_VIEW:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageParkingView();
         });
       case RoutePaths.SPOT_TYPES_VIEW:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return SpotTypesView();
         });
       case RoutePaths.MANAGE_SHUTTLE_VIEW:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ManageShuttleView();
         });
       case RoutePaths.ADD_SHUTTLE_STOPS_VIEW:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return AddShuttleStopsView();
         });
       case RoutePaths.CARDS_VIEW:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return CardsView();
         });
       case RoutePaths.NOTIFICATIONS_FILTER:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return NotificationsFilterView();
         });
       case RoutePaths.CLASS_SCHEDULE_VIEW_ALL:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name);
           return ClassList();
         });
       case RoutePaths.PARKING_STRUCTURE_VIEW:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name, done: true);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return ParkingStructureView();
         });
       case RoutePaths.NEIGHBORHOODS_VIEW:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name, done: true);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return NeighborhoodsView();
         });
       case RoutePaths.NEIGHBORHOODS_LOTS_VIEW:
         List<String> data = settings.arguments as List<String>;
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(settings.name, done: true);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(settings.name, done: true);
           return NeighborhoodLotsView(data);
         });
       default:
-        return MaterialPageRoute(builder: (context) {
-          Provider.of<CustomAppBar>(context).changeTitle(null);
+        return MaterialPageRoute(builder: (_) {
+          Provider.of<CustomAppBar>(_).changeTitle(null);
           return Home();
         });
     }

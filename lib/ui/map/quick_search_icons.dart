@@ -63,7 +63,7 @@ class LabeledIconButton extends StatelessWidget {
       children: <Widget>[
         MaterialButton(
           onPressed: onPressed as void Function()?,
-          color: Color(0xFF00629B),
+          color: Colors.red,
           textColor: Colors.white,
           child: Icon(
             icon,

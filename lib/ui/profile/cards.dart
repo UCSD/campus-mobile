@@ -28,15 +28,15 @@ class _CardsViewState extends State<CardsView> {
   }
 
   Widget buildCardsList() {
-    bool isAccessibleNavigation = MediaQuery.of(context).accessibleNavigation;
     var tempView = ReorderableListView(
         header: Padding(
           padding: const EdgeInsets.only(top: 10),
-          child: Text(isAccessibleNavigation ? "Press up or down to reorder" : "Hold and drag to reorder",
+          child: Text("Hold and drag to reorder",
               textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ),
-        children: createList(context),
-        onReorderItem: (int oldIndex, int newIndex) {
+        children: createList(),
+        onReorder: (int oldIndex, int newIndex) {
+          if (newIndex > oldIndex) newIndex -= 1;
           var order = _cardsDataProvider.cardOrder;
           order.insert(newIndex, order.removeAt(oldIndex));
           setState(() {
@@ -48,9 +48,8 @@ class _CardsViewState extends State<CardsView> {
     return tempView;
   }
 
-  List<Widget> createList(BuildContext context) {
+  List<Widget> createList() {
     List<Widget> list = [];
-    bool isAccessibleNavigation = MediaQuery.of(context).accessibleNavigation; // is a screen reader on?
 
     // Check if cards failed to load (likely due to internet issues)
     var hasCardsInOrder = _cardsDataProvider.cardOrder.isNotEmpty;
@@ -75,13 +74,10 @@ class _CardsViewState extends State<CardsView> {
       return list;
     }
 
-    for (int i = 0; i < _cardsDataProvider.cardOrder.length; i++) {
-      String card = _cardsDataProvider.cardOrder[i];
+    for (String card in _cardsDataProvider.cardOrder) {
       try {
         // Skip cards that aren't available
         if (_cardsDataProvider.availableCards[card] == null) continue;
-
-        String title = _cardsDataProvider.availableCards[card]!.titleText;
 
         list.add(
           Card(
@@ -89,55 +85,10 @@ class _CardsViewState extends State<CardsView> {
             elevation: 2.0,
             margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
             child: ListTile(
-              leading: isAccessibleNavigation
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Semantics(
-                          label: i == 0
-                              ? 'Disabled since this card is already at the top, cannot move further up'
-                              : 'Move $title up',
-                          button: true,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-                            icon: const Icon(Icons.arrow_upward),
-                            onPressed: i == 0
-                                ? null
-                                : () {
-                                    var order = _cardsDataProvider.cardOrder;
-                                    order.insert(i - 1, order.removeAt(i));
-                                    setState(() {
-                                      _cardsDataProvider.updateCardOrder(isUserReorder: true);
-                                    });
-                                  },
-                          ),
-                        ),
-                        Semantics(
-                          label: i == _cardsDataProvider.cardOrder.length - 1
-                              ? 'Disabled since this card is already at the bottom, cannot move further down'
-                              : 'Move $title down',
-                          button: true,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-                            icon: const Icon(Icons.arrow_downward),
-                            onPressed: i == _cardsDataProvider.cardOrder.length - 1
-                                ? null
-                                : () {
-                                    var order = _cardsDataProvider.cardOrder;
-                                    order.insert(i + 1, order.removeAt(i));
-                                    setState(() {
-                                      _cardsDataProvider.updateCardOrder(isUserReorder: true);
-                                    });
-                                  },
-                          ),
-                        ),
-                      ],
-                    )
-                  : Icon(Icons.drag_handle,
-                      color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
-              title: Text(title, style: Theme.of(context).textTheme.bodyMedium),
+              leading: Icon(Icons.drag_handle,
+                  color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
+              title: Text(_cardsDataProvider.availableCards[card]!.titleText,
+                  style: Theme.of(context).textTheme.bodyMedium),
               trailing: Transform.scale(
                 scale: 0.9, // Adjust the scale as needed
                 child: Switch.adaptive(
@@ -145,7 +96,7 @@ class _CardsViewState extends State<CardsView> {
                   onChanged: (_) {
                     _cardsDataProvider.toggleCard(card);
                   },
-                  activeTrackColor: toggleActiveColor, // Ensure this is a solid color
+                  activeColor: toggleActiveColor, // Ensure this is a solid color
                   thumbColor: WidgetStateProperty.resolveWith((states) {
                     final bool isSelected = states.contains(WidgetState.selected);
                     if (isSelected) return Colors.white;

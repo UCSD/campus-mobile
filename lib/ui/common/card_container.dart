@@ -1,7 +1,6 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/ui/common/card_header.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
@@ -56,8 +55,13 @@ class CardContainer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CardHeader(
-              titleText: titleText,
+            ListTile(
+              contentPadding: EdgeInsets.only(top: 0.0, right: 8.0, bottom: 0.0, left: 8.0),
+              visualDensity: VisualDensity(horizontal: 0, vertical: 0),
+              title: Text(
+                titleText,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               trailing: buildMenu(),
             ),
             buildBody(context),
@@ -155,7 +159,9 @@ class CardContainer extends StatelessWidget {
   Widget buildMenu() {
     if (hideMenu) return Container();
 
-    return OverflowBar(
+    return ButtonBar(
+      buttonPadding: const EdgeInsets.all(0),
+      mainAxisSize: MainAxisSize.min,
       children: [
         buildMenuOptions(
           {
@@ -182,24 +188,16 @@ class CardContainer extends StatelessWidget {
       menu.add(item as DropdownMenuItem<String>);
     });
 
-    return Semantics(
-      label: '$titleText Card Menu',
-      button: true,
-      child: DropdownButton(
-        items: menu,
-        iconSize: 36,
-        iconEnabledColor: dotsUnselectedColor,
-        underline: Container(),
-        icon: Transform.translate(
-          offset: Offset(6, -3),
-          child: Icon(
-            Icons.more_vert,
-            color: dotsUnselectedColor,
-            semanticLabel: '$titleText Card Menu',
-          ),
-        ),
-        onChanged: (String? selectedMenuItem) => onMenuItemPressed(selectedMenuItem),
+    return DropdownButton(
+      items: menu,
+      iconSize: 36,
+      iconEnabledColor: dotsUnselectedColor,
+      underline: Container(),
+      icon: Transform.translate(
+        offset: Offset(6, -3),
+        child: Icon(Icons.more_vert, color: dotsUnselectedColor),
       ),
+      onChanged: (String? selectedMenuItem) => onMenuItemPressed(selectedMenuItem),
     );
   }
 

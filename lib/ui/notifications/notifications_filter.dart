@@ -52,7 +52,7 @@ class NotificationsFilterView extends StatelessWidget {
             trailing: Transform.scale(
               scale: 0.9,
               child: Switch.adaptive(
-                value: Provider.of<UserDataProvider>(context).subscribedTopics?.contains(topic) ?? false,
+                value: Provider.of<PushNotificationDataProvider>(context).topicSubscriptionState[topic]!,
                 onChanged: (_) {
                   Provider.of<UserDataProvider>(context, listen: false).toggleNotifications(topic);
                 },
@@ -61,7 +61,7 @@ class NotificationsFilterView extends StatelessWidget {
                   if (isSelected) return Colors.white;
                   return null;
                 }),
-                activeTrackColor: toggleActiveColor,
+                activeColor: toggleActiveColor,
               ),
             ),
           ),

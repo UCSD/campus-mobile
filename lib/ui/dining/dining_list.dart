@@ -194,7 +194,7 @@ class DiningList extends StatelessWidget {
       ),
       // Vendor Name
       title: Semantics(
-        label: 'Dining Location Name: ${data.name}',
+        label: 'Open link. ${data.name}',
         excludeSemantics: true,
         child: Text(
           data.name,
@@ -203,14 +203,9 @@ class DiningList extends StatelessWidget {
         ),
       ),
       // Vendor Hours
-      subtitle: Semantics(
-        label:
-            'Business Hours: ${getHoursForToday(data.regularHours, context) is Text ? (getHoursForToday(data.regularHours, context) as Text).data : 'See details for hours'}',
-        excludeSemantics: true,
-        child: Padding(
-          padding: EdgeInsets.only(top: 6),
-          child: getHoursForToday(data.regularHours, context),
-        ),
+      subtitle: Padding(
+        padding: EdgeInsets.only(top: 6),
+        child: getHoursForToday(data.regularHours, context),
       ),
       // Vendor's Distance and Directions
       trailing: buildIconWithDistance(data, context),
@@ -224,7 +219,7 @@ class DiningList extends StatelessWidget {
   // Builds the Right side of the ListTile containing the icon and distance
   Widget buildIconWithDistance(dining_model.DiningModel data, BuildContext context) {
     String distanceText = data.distance != null
-        ? 'This dining location is ${num.parse(data.distance!.toStringAsFixed(1))} miles away from you. Click here to get directions.'
+        ? '${num.parse(data.distance!.toStringAsFixed(1))} miles, get directions'
         : 'Get directions';
     return Semantics(
       label: distanceText,

@@ -19,13 +19,13 @@ android {
     ndkVersion = "27.0.12077973"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
         coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     lintOptions {
@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId = "edu.ucsd"
-        minSdkVersion = flutter.minSdkVersion
+        minSdkVersion = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

@@ -69,12 +69,10 @@ class AssistantMessageContent {
     }
 
     List<String> normalizedAnswerLines = _trimBlankLines(answerLines);
-    var hasRelatedQuestions = relatedQuestions.isNotEmpty;
-    var hasAnswerLines = normalizedAnswerLines.isNotEmpty;
-    if (hasRelatedQuestions && hasAnswerLines) {
+    if (relatedQuestions.isNotEmpty && normalizedAnswerLines.isNotEmpty) {
       final String trailingLine = normalizedAnswerLines.last.trim().toLowerCase();
-      var isTrailingRelatedQuestions = trailingLine == 'related questions' || trailingLine == 'related questions:';
-      if (isTrailingRelatedQuestions) normalizedAnswerLines.removeLast();
+      if (trailingLine == 'related questions' || trailingLine == 'related questions:')
+        normalizedAnswerLines.removeLast();
     }
 
     String markdown = _trimBlankLines(normalizedAnswerLines).join('\n');
@@ -94,8 +92,7 @@ class AssistantMessageContent {
     String markdown,
     List<String> relatedQuestions,
   ) {
-    var isInvalidInput = relatedQuestions.isEmpty || markdown.trim().isEmpty;
-    if (isInvalidInput) return markdown;
+    if (relatedQuestions.isEmpty || markdown.trim().isEmpty) return markdown;
 
     final List<String> lines = markdown.split('\n');
     int end = lines.length;
@@ -111,8 +108,7 @@ class AssistantMessageContent {
       while (scan >= 0 && lines[scan].trim().isEmpty) {
         scan--;
       }
-      var isMismatch = scan < 0 || lines[scan].trim() != expected;
-      if (isMismatch) return markdown;
+      if (scan < 0 || lines[scan].trim() != expected) return markdown;
       scan--;
     }
     while (scan >= 0 && lines[scan].trim().isEmpty) {
@@ -147,11 +143,8 @@ class AssistantMessageContent {
   static bool _isRelatedQuestionsHeadingLine(String line) {
     final String t = line.trim();
     if (t.isEmpty) return false;
-    var hasAsteriskHeading =
-        RegExp(r'^\*{0,2}\s*Related Questions\s*\*{0,2}\s*:?\s*$', caseSensitive: false).hasMatch(t);
-    if (hasAsteriskHeading) return true;
-    var hasHashHeading = RegExp(r'^#+\s*Related Questions\s*:?\s*$', caseSensitive: false).hasMatch(t);
-    if (hasHashHeading) return true;
+    if (RegExp(r'^\*{0,2}\s*Related Questions\s*\*{0,2}\s*:?\s*$', caseSensitive: false).hasMatch(t)) return true;
+    if (RegExp(r'^#+\s*Related Questions\s*:?\s*$', caseSensitive: false).hasMatch(t)) return true;
     return false;
   }
 

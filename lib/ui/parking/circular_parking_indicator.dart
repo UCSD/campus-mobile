@@ -65,10 +65,6 @@ class CircularParkingIndicators extends StatelessWidget {
 
     return locationData != null
         ? Expanded(
-            child: Semantics(
-            label:
-                'For ${spotType?.name ?? "Unknown"} parking spots, ${((open / total).isNaN ? "Not applicable" : ((open / total) * 100).round().toString() + "% available")}',
-            excludeSemantics: true,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -123,12 +119,8 @@ class CircularParkingIndicators extends StatelessWidget {
                 )
               ],
             ),
-          ) // close Semantics
-            ) // close Expanded
+          )
         : Expanded(
-            child: Semantics(
-            label: 'For ${spotType?.name ?? "Unknown"} parking, Not applicable',
-            excludeSemantics: true,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -180,7 +172,7 @@ class CircularParkingIndicators extends StatelessWidget {
                 )
               ],
             ),
-          ));
+          );
   }
 
   static Color getColor(double value) {
@@ -191,7 +183,7 @@ class CircularParkingIndicators extends StatelessWidget {
 
   Widget buildLocationTitle(BuildContext context) {
     return Semantics(
-      label: 'Parking Name: ${model.locationName.toUpperCase()}',
+      label: '${model.locationName.toUpperCase()}. Swipe left or right to view other parking areas',
       excludeSemantics: true,
       child: Text(
         model.locationName.toUpperCase(),
@@ -207,26 +199,23 @@ class CircularParkingIndicators extends StatelessWidget {
       padding: const EdgeInsets.only(top: 6.0),
       child: Text(
         model.locationContext.toUpperCase(),
-        semanticsLabel: 'Located at: ${model.locationContext}',
         style: Theme.of(context).textTheme.titleSmall,
       ),
     );
   }
 
   Widget buildSpotsAvailableText(BuildContext context) {
-    final openSpots =
-        Provider.of<ParkingDataProvider>(context).getApproxNumOfOpenSpots(model.locationName)["Open"].toString();
-    final totalSpots =
-        Provider.of<ParkingDataProvider>(context).getApproxNumOfOpenSpots(model.locationName)["Total"].toString();
-    final visualText = "~$openSpots of $totalSpots Spots Available";
-    final semanticText = "Approximately $openSpots of $totalSpots Spots Available";
-
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Center(
         child: Text(
-          visualText,
-          semanticsLabel: semanticText,
+          "~" +
+              Provider.of<ParkingDataProvider>(context).getApproxNumOfOpenSpots(model.locationName)["Open"].toString() +
+              " of " +
+              Provider.of<ParkingDataProvider>(context)
+                  .getApproxNumOfOpenSpots(model.locationName)["Total"]
+                  .toString() +
+              " Spots Available",
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       ),

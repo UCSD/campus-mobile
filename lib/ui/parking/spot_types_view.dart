@@ -79,7 +79,7 @@ class _SpotTypesViewState extends State<SpotTypesView> {
                                 color: textColor,
                                 fontFamily: 'Brix Sans',
                                 fontWeight: FontWeight.w700,
-                                fontSize: data.logoText.length > 1 ? 18 : 28,
+                                fontSize: 28,
                               ),
                             )
                           : SizedBox.shrink()))),

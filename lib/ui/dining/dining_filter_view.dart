@@ -86,7 +86,7 @@ class DiningFilterView extends StatelessWidget {
                   if (isSelected) return Colors.white;
                   return null;
                 }),
-                activeTrackColor: toggleActiveColor,
+                activeColor: toggleActiveColor,
               ),
             ),
           ),

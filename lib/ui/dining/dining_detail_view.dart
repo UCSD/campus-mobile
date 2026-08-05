@@ -71,57 +71,44 @@ class _DiningDetailViewState extends State<DiningDetailView> {
       Row(
         children: [
           // Vendor Logo
-          Semantics(
-            container: true,
-            child: diningModel.vendorLogo != null
-                ? Container(
-                    decoration: Theme.of(context).brightness == Brightness.dark
-                        ? BoxDecoration(
-                            color: lightTextColor,
-                            borderRadius: BorderRadius.circular(8),
-                          )
-                        : null,
-                    child: Image.network(
-                      diningModel.vendorLogo!,
-                      width: 80,
-                      height: 80,
-                      semanticLabel: 'Location logo',
-                    ),
-                  )
-                : Icon(Icons.restaurant,
-                    size: 56,
-                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
-          ),
+          diningModel.vendorLogo != null
+              ? Container(
+                  decoration: Theme.of(context).brightness == Brightness.dark
+                      ? BoxDecoration(
+                          color: lightTextColor,
+                          borderRadius: BorderRadius.circular(8),
+                        )
+                      : null,
+                  child: Image.network(
+                    diningModel.vendorLogo!,
+                    width: 80,
+                    height: 80,
+                  ),
+                )
+              : Icon(Icons.restaurant,
+                  size: 56,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
           SizedBox(width: 8),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Vendor Name
-                Semantics(
-                  container: true,
-                  label: 'Location Title: ${diningModel.name}',
-                  excludeSemantics: true,
-                  child: Text(
-                    diningModel.name,
-                    textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+                Text(
+                  diningModel.name,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 SizedBox(height: 4),
                 // Vendor Description
-                Semantics(
-                  container: true,
-                  label: 'Location Description: ${diningModel.description}',
-                  child: Text(
-                    diningModel.description,
-                    textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.bodySmall,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                    softWrap: true,
-                    textWidthBasis: TextWidthBasis.parent,
-                  ),
+                Text(
+                  diningModel.description,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  softWrap: true,
+                  textWidthBasis: TextWidthBasis.parent,
                 ),
               ],
             ),
@@ -293,7 +280,7 @@ Widget buildDirectionsButton(BuildContext context, prefix0.DiningModel model) {
   if (hasCoordinates && hasLatitude && hasLongitude) {
     return Semantics(
       label:
-          'The dining location ${model.name} is ${model.distance != null ? "${model.distance!.toStringAsFixed(1)} miles away from you" : "distance unknown"}',
+          'Get directions to ${model.name}, ${model.distance != null ? "${model.distance!.toStringAsFixed(1)} miles away" : "distance unknown"}',
       hint: 'Double tap to open in Maps',
       button: true,
       child: ExcludeSemantics(
@@ -398,7 +385,7 @@ Widget buildMenuButton(BuildContext context, prefix0.DiningModel model) {
           ),
           onPressed: () {
             try {
-              launchUrl(Uri.parse(model.menuWebsite!), mode: LaunchMode.inAppBrowserView);
+              launch(model.menuWebsite!, forceSafariVC: true);
             } catch (e) {
               // an error occurred, do nothing
             }

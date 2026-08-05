@@ -61,8 +61,8 @@ class _NeighborhoodLotsViewState extends State<NeighborhoodLotsView> {
             scale: 0.9,
             child: CupertinoSwitch(
               value: lotState,
-              activeTrackColor: toggleActiveColor,
-              inactiveTrackColor: Colors.grey.shade400,
+              activeColor: toggleActiveColor,
+              trackColor: Colors.grey.shade400,
               onChanged: (bool newValue) {
                 if (selectedLots == 10 && !lotState && !showedScaffold) {
                   showDialog(

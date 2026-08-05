@@ -58,9 +58,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
 
   void _scheduleScrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var isUnmounted = !mounted;
-      var hasNoClients = !_scrollController.hasClients;
-      if (isUnmounted || hasNoClients) return;
+      if (!mounted || !_scrollController.hasClients) return;
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 220),

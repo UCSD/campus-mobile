@@ -14,7 +14,7 @@ class _PushNotificationWrapperState extends State<PushNotificationWrapper> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Provider.of<PushNotificationDataProvider>(context, listen: false).initPlatformState(context);
+    Provider.of<PushNotificationDataProvider>(context).initPlatformState(context);
   }
 
   @override

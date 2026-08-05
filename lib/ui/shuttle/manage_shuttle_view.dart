@@ -38,12 +38,13 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
               textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ),
         children: createList(context),
-        onReorderItem: _onReorder,
+        onReorder: _onReorder,
       );
     }
   }
 
   void _onReorder(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) newIndex -= 1;
     List<ShuttleStopModel?> newOrder = _shuttleDataProvider.stopsToRender;
     List<ShuttleStopModel> toRemove = [];
 

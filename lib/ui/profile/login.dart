@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
   void executeLogout() {
     _passwordTextFieldController.clear();
     _emailTextFieldController.clear();
-    _userDataProvider.logout(clearChatHistory: true);
+    _userDataProvider.logout();
   }
 
   Widget buildLoginWidget() {
@@ -228,7 +228,7 @@ class _LoginState extends State<Login> {
                   onTap: () async {
                     try {
                       String link = 'https://acms.ucsd.edu/students/accounts-and-passwords/index.html';
-                      await launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
+                      await launch(link, forceSafariVC: true);
                     } catch (e) {
                       // an error occurred, do nothing
                     }

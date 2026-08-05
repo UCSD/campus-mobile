@@ -1,6 +1,2 @@
-analyzer:
-  exclude:
-    - build/**
-
 formatter:
   page_width: 120

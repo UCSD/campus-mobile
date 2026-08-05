@@ -44,6 +44,9 @@ class UserDataProvider extends ChangeNotifier {
     iOptions: IOSOptions(
       accessibility: KeychainAccessibility.first_unlock_this_device,
     ),
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
+    ),
   );
 
   /// Update the [AuthenticationModel] stored in state
@@ -256,9 +259,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Logs out user
   /// Unregisters device from direct push notification using [_pushNotificationDataProvider]
   /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage
-  /// [clearChatHistory] must be true to delete local TGPT chat history; pass true only from
-  /// the explicit user-initiated logout action, not from automated auth-refresh paths.
-  void logout({bool clearChatHistory = false}) async {
+  void logout() async {
     _error = null;
     _isLoading = true;
     notifyListeners();
@@ -266,7 +267,7 @@ class UserDataProvider extends ChangeNotifier {
     resetAllCardHeights();
     resetNotificationsScrollOffset();
     _pushNotificationDataProvider.unregisterDevice(_authenticationModel.accessToken);
-    if (clearChatHistory) await _chatPersistenceService.clearUserChatData();
+    await _chatPersistenceService.clearUserChatData();
     updateAuthenticationModel(AuthenticationModel.fromJson({}));
     updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
     _deletePasswordFromDevice();
