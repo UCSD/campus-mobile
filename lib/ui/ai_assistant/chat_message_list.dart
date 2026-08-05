@@ -32,7 +32,9 @@ class _ChatMessageListState extends State<ChatMessageList> {
         oldWidget.messages.isNotEmpty &&
         oldWidget.messages.last.text != widget.messages.last.text;
 
-    if (didChangeLength || didChangeLastMessage) _scheduleScrollToBottom();
+    if (didChangeLength || didChangeLastMessage) {
+      _scheduleScrollToBottom();
+    }
   }
 
   @override

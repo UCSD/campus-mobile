@@ -15,7 +15,9 @@ class ChatMessageBubble extends StatelessWidget {
   final AssistantChatMessage message;
 
   @override
-  Widget build(BuildContext context) => message.isFromUser ? _buildUserBubble(context) : _buildAssistantBubble(context);
+  Widget build(BuildContext context) {
+    return message.isFromUser ? _buildUserBubble(context) : _buildAssistantBubble(context);
+  }
 
   Widget _buildUserBubble(BuildContext context) {
     final double maxBubbleWidth = MediaQuery.sizeOf(context).width * 0.72;

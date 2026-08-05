@@ -41,7 +41,9 @@ class _AssistantSidebarState extends State<AssistantSidebar> {
 
   Future<void> _loadExpandedPreferences() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
 
     setState(() {
       _isPrevious7DaysExpanded = preferences.getBool(_previous7DaysExpandedKey) ?? true;
