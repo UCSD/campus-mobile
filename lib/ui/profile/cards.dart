@@ -40,8 +40,7 @@ class _CardsViewState extends State<CardsView> {
               style: Theme.of(context).textTheme.bodySmall),
         ),
         children: createList(context),
-        onReorder: (int oldIndex, int newIndex) {
-          if (newIndex > oldIndex) newIndex -= 1;
+        onReorderItem: (int oldIndex, int newIndex) {
           var order = _cardsDataProvider.cardOrder;
           order.insert(newIndex, order.removeAt(oldIndex));
           setState(() {
@@ -150,7 +149,7 @@ class _CardsViewState extends State<CardsView> {
                   onChanged: (_) {
                     _cardsDataProvider.toggleCard(card);
                   },
-                  activeColor: toggleActiveColor, // Ensure this is a solid color
+                  activeTrackColor: toggleActiveColor, // Ensure this is a solid color
                   thumbColor: WidgetStateProperty.resolveWith((states) {
                     final bool isSelected = states.contains(WidgetState.selected);
                     if (isSelected) return Colors.white;

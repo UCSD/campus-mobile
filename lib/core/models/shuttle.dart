@@ -91,7 +91,7 @@ class ShuttleModel {
         "shortName": shortName == null ? null : shortName,
         "description": description == null ? null : description,
         "routeType": routeType == null ? null : routeType,
-        "color": color == null ? null : '#${color!.value.toRadixString(16)}',
+        "color": color == null ? null : '#${color!.toARGB32().toRadixString(16)}',
         "stops": stops == null ? null : List<dynamic>.from(stops!.map((x) => x.toJson()))
       };
 }
