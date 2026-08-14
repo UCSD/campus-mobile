@@ -365,7 +365,8 @@ class ChatProvider extends ChangeNotifier {
 
   String get _userAuthorId {
     final profile = _userDataProvider.userProfileModel;
-    return profile.pid ?? profile.username ?? 'user';
+    // MA-477: local author identity follows current QA TSN
+    return profile.tsn ?? profile.username ?? 'user';
   }
 
   String _sessionTitleForMessage(String text) {

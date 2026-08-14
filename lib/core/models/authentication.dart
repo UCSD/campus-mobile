@@ -17,7 +17,7 @@ class AuthenticationModel extends HiveObject {
   // @HiveField(1)
   // String refreshToken;
   @HiveField(2)
-  String? pid;
+  String? tsn;
   @HiveField(3)
   String? ucsdaffiliation;
   @HiveField(4)
@@ -25,7 +25,7 @@ class AuthenticationModel extends HiveObject {
 
   AuthenticationModel({
     this.accessToken,
-    this.pid,
+    this.tsn,
     this.ucsdaffiliation,
     this.expiration,
   });
@@ -33,7 +33,8 @@ class AuthenticationModel extends HiveObject {
   factory AuthenticationModel.fromJson(Map<String, dynamic> json) {
     return AuthenticationModel(
       accessToken: json["access_token"] == null ? null : json["access_token"],
-      pid: json["pid"] == null ? null : json["pid"],
+      // MA-477: QA returns TSN in legacy pid field
+      tsn: json["pid"] == null ? null : json["pid"],
       ucsdaffiliation: json["ucsdaffiliation"] == null ? "" : json["ucsdaffiliation"],
       expiration: json["expiration"] == null ? 0 : json["expiration"],
     );
@@ -41,7 +42,7 @@ class AuthenticationModel extends HiveObject {
 
   Map<String, dynamic> toJson() => {
         "access_token": accessToken == null ? null : accessToken,
-        "pid": pid == null ? null : pid,
+        "pid": tsn == null ? null : tsn,
         "ucsdaffiliation": ucsdaffiliation == null ? "" : ucsdaffiliation,
         "expiration": expiration == null ? null : expiration,
       };

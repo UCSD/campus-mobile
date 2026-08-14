@@ -13,7 +13,7 @@ String userProfileModelToJson(UserProfileModel data) => json.encode(data.toJson(
 class UserProfileModel extends HiveObject {
   Classifications? classifications;
   int? latestTimeStamp;
-  String? pid;
+  String? tsn;
   String? ucsdAffiliation;
   String? username;
 
@@ -37,7 +37,7 @@ class UserProfileModel extends HiveObject {
   UserProfileModel(
       {this.classifications,
       this.latestTimeStamp,
-      this.pid,
+      this.tsn,
       this.selectedLots,
       this.selectedOccuspaceLocations,
       this.subscribedTopics,
@@ -52,7 +52,8 @@ class UserProfileModel extends HiveObject {
   factory UserProfileModel.fromJson(Map<String, dynamic> json) => UserProfileModel(
         classifications: json["classifications"] == null ? null : Classifications.fromJson(json["classifications"]),
         latestTimeStamp: json["latestTimeStamp"] == null ? null : json["latestTimeStamp"],
-        pid: json["pid"] == null ? null : json["pid"],
+        // MA-477: QA keeps TSN value under pid key
+        tsn: json["pid"] == null ? null : json["pid"],
         selectedLots: json["selectedLots"] == null ? [] : List<String>.from(json["selectedLots"].map((x) => x)),
         selectedOccuspaceLocations: json["selectedOccuspaceLocations"] == null
             ? []
@@ -78,7 +79,7 @@ class UserProfileModel extends HiveObject {
   Map<String, dynamic> toJson() => {
         "classifications": classifications == null ? null : classifications!.toJson(),
         "latestTimeStamp": latestTimeStamp == null ? null : latestTimeStamp,
-        "pid": pid == null ? null : pid,
+        "pid": tsn == null ? null : tsn,
         "selectedLots": selectedLots == null ? null : List<dynamic>.from(selectedLots!.map((x) => x)),
         "selectedOccuspaceLocations":
             selectedOccuspaceLocations == null ? null : List<dynamic>.from(selectedOccuspaceLocations!.map((x) => x)),

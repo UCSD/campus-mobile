@@ -1,6 +1,7 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'authentication.dart';
 
-// GENERATED CODE - DO NOT MODIFY BY HAND
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
@@ -17,7 +18,7 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
     };
     return AuthenticationModel(
       accessToken: fields[0] as String?,
-      pid: fields[2] as String?,
+      tsn: fields[2] as String?,
       ucsdaffiliation: fields[3] as String?,
       expiration: fields[4] as int?,
     );
@@ -30,7 +31,7 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
       ..writeByte(0)
       ..write(obj.accessToken)
       ..writeByte(2)
-      ..write(obj.pid)
+      ..write(obj.tsn)
       ..writeByte(3)
       ..write(obj.ucsdaffiliation)
       ..writeByte(4)
@@ -43,5 +44,7 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AuthenticationModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is AuthenticationModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

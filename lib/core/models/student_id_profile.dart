@@ -8,7 +8,7 @@ StudentIdProfileModel studentIdProfileModelFromJson(String str) => StudentIdProf
 String studentIdProfileModelToJson(StudentIdProfileModel data) => json.encode(data.toJson());
 
 class StudentIdProfileModel {
-  String studentPid;
+  String studentTsn;
   String termYear;
   String studentLevelCurrent;
   String collegeCurrent;
@@ -21,7 +21,7 @@ class StudentIdProfileModel {
   int issueNumber;
 
   StudentIdProfileModel(
-      {this.studentPid = '',
+      {this.studentTsn = '',
       this.termYear = '',
       this.studentLevelCurrent = '',
       this.collegeCurrent = '',
@@ -34,7 +34,8 @@ class StudentIdProfileModel {
       this.issueNumber = 0});
 
   factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) => StudentIdProfileModel(
-      studentPid: json["Student_PID"],
+      // MA-477: MyStudentProfile currently returns TSN as Student_PID
+      studentTsn: json["Student_PID"],
       termYear: json["Term_Year"],
       studentLevelCurrent: json["Student_Level_Current"] == null ? "" : json["Student_Level_Current"],
       collegeCurrent: json["College_Current"] == null ? "" : json["College_Current"],
@@ -48,7 +49,7 @@ class StudentIdProfileModel {
       issueNumber: json["Issue_Number"]);
 
   Map<String, dynamic> toJson() => {
-        "Student_PID": studentPid,
+        "Student_PID": studentTsn,
         "Term_Year": termYear,
         "Student_Level_Current": studentLevelCurrent,
         "College_Current": collegeCurrent,

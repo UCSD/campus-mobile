@@ -16,7 +16,8 @@ class ChatMessagePersistent extends HiveObject {
   @HiveField(1)
   final String text;
 
-  /// Author identifier (user PID or assistant ID)
+  /// MA:477 Author identifier (user TSN or assistant ID)
+  /// Before: Author identifier (user PID or assistant ID)
   @HiveField(2)
   final String authorId;
 
