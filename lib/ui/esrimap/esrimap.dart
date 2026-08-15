@@ -104,6 +104,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   bool _ignoreViewpointReset = false;
   double _mapRotation = 0.0;
   double _currentScale = 24000.0;
+  bool _isDisposed = false;
   StreamSubscription<void>? _viewpointChangedSubscription;
 
   // Routing State
@@ -200,7 +201,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     _map = ArcGISMap.withBasemap(_basemaps[_currentBasemapType]!);
     _map.maxScale = 38.4; // Limit zoom in to scale 1:38.4 (~23.88 max zoom level)
-    _map.minScale = 158846130.2; // Limit zoom out to scale 1:158846130.2 (~1.90 min zoom level)
+    _map.minScale = 70000000.0; // Limit zoom out to scale 1:70000000.0 (~3.08 min zoom level)
+    _map.maxExtent = Envelope.fromXY(
+      xMin: -180.0,
+      yMin: -55.0,
+      xMax: 180.0,
+      yMax: 55.0,
+      spatialReference: SpatialReference.wgs84,
+    );
     _map.initialViewpoint = Viewpoint.fromCenter(
       ArcGISPoint(x: -117.2340, y: 32.8801, spatialReference: SpatialReference.wgs84),
       scale: 24000,
@@ -238,6 +246,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         final zoomLevel = scale > 0 ? (math.log(591657550.5 / scale) / math.ln2) : 0.0;
         // Print current zoom scale and estimated level in PINK ANSI color (\x1B[38;2;255;105;180m)
         debugPrint('\x1B[38;2;255;105;180m🔍 [MAP ZOOM] Scale: 1:${scale.toStringAsFixed(1)} | Zoom Level: ~${zoomLevel.toStringAsFixed(2)}\x1B[0m');
+
+        // Print current center coordinates in GREEN ANSI color (\x1B[38;2;46;204;113m)
+        final centerPoint = vp.targetGeometry as ArcGISPoint?;
+        if (centerPoint != null) {
+          final wgs84Point = centerPoint.spatialReference == SpatialReference.wgs84
+              ? centerPoint
+              : (GeometryEngine.project(centerPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?);
+          final xVal = wgs84Point?.x ?? centerPoint.x;
+          final yVal = wgs84Point?.y ?? centerPoint.y;
+          debugPrint('\x1B[38;2;46;204;113m📍 [MAP LOCATION] X: ${xVal.toStringAsFixed(6)}, Y: ${yVal.toStringAsFixed(6)}\x1B[0m');
+        }
 
         setState(() {
           _mapRotation = vp.rotation;
@@ -360,7 +379,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     setState(() {
       _map.basemap = newBasemap;
       _map.maxScale = 38.4;
-      _map.minScale = 158846130.2;
+      _map.minScale = 70000000.0;
+      _map.maxExtent = Envelope.fromXY(
+        xMin: -180.0,
+        yMin: -55.0,
+        xMax: 180.0,
+        yMax: 55.0,
+        spatialReference: SpatialReference.wgs84,
+      );
       _currentBasemapType = newType;
     });
   }
