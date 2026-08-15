@@ -9,9 +9,13 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_b
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
 
 /// Constructs an ArcGIS [Basemap] for the requested [type] using configuration settings in [config].
+///
+/// Vector Tile Basemaps ([BasemapStyle.arcGISLightGrayBase] and [BasemapStyle.arcGISDarkGrayBase])
+/// are used as the foundation layer because they provide seamless worldwide vector coverage down
+/// to room/building level (Level 22+) without triggering "Map data not yet available" raster tile cutoffs.
+/// Custom UCSD campus vector tile layers are layered on top.
 Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
-  // Intercept the satellite basemap to forcefully inject the global World Imagery layer,
-  // since the backend remote config might still be serving the old lightGrayBase street map.
+  // 1. Satellite Basemap: Use global World Imagery layer.
   if (type == BasemapType.satellite) {
     final basemap = Basemap();
     basemap.baseLayers.add(
@@ -19,45 +23,55 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
         Uri.parse('https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer'),
       ),
     );
-    // Removed the detailed satellite image that would load every 5 seconds to avoid making unnecessary requests,
-    // and increase performance since the detailed image would go blurry the moment you move in the map.
     return basemap;
   }
 
+  // 2. Vector Basemaps: Initialize with global vector tile base styles.
+  // arcGISLightGrayBase for Default/Light, and arcGISDarkGrayBase for Dark mode.
+  final basemap = switch (type) {
+    BasemapType.dark => Basemap.withStyle(BasemapStyle.arcGISDarkGrayBase),
+    _ => Basemap.withStyle(BasemapStyle.arcGISLightGrayBase),
+  };
+
+  // 3. Retrieve campus vector tile layer specifications from configuration.
   final entry = config.basemaps[basemapKey(type)];
-  final isEntryNull = entry == null;
-  if (isEntryNull) return Basemap();
+  final portalUrl = config.portals['age'] ?? 'https://admin-enterprise-gis.ucsd.edu/portal';
 
-  final basemap = Basemap();
-  for (final layer in entry.baseLayers) {
-    switch (layer.type) {
-      case 'arcgisTiled':
-        final hasServiceKey = layer.serviceKey != null;
-        final url = hasServiceKey ? config.serviceUrls[layer.serviceKey!] : null;
-        final isUrlNotNull = url != null;
-        if (isUrlNotNull) basemap.baseLayers.add(ArcGISTiledLayer.withUri(Uri.parse(url)));
-        break;
+  // Extract vector layers from config entry if present (ignoring legacy raster arcgisTiled layers)
+  final vectorLayers = entry?.baseLayers.where((l) => l.type == 'arcgisVectorTiled').toList() ?? [];
 
-      case 'arcgisVectorTiled':
-        final hasPortalKey = layer.portalKey != null;
-        final portalUrl = hasPortalKey ? config.portals[layer.portalKey!] : null;
-        final hasPortalAndItem = portalUrl != null && layer.itemId != null;
-        if (hasPortalAndItem) {
-          basemap.baseLayers.add(
-            ArcGISVectorTiledLayer.withItem(
-              PortalItem.withPortalAndItemId(portal: Portal(Uri.parse(portalUrl)), itemId: layer.itemId!),
+  if (vectorLayers.isNotEmpty) {
+    for (final layer in vectorLayers) {
+      final pUrl = layer.portalKey != null ? config.portals[layer.portalKey!] : portalUrl;
+      if (pUrl != null && layer.itemId != null) {
+        basemap.baseLayers.add(
+          ArcGISVectorTiledLayer.withItem(
+            PortalItem.withPortalAndItemId(
+              portal: Portal(Uri.parse(pUrl)),
+              itemId: layer.itemId!,
             ),
-          );
-        }
-        break;
-
-      case 'arcgisMapImage':
-        final hasServiceKey = layer.serviceKey != null;
-        final url = hasServiceKey ? config.serviceUrls[layer.serviceKey!] : null;
-        final isUrlNotNull = url != null;
-        if (isUrlNotNull) basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(url)));
-        break;
+          ),
+        );
+      }
     }
+  } else {
+    // Fallback: Use known default UCSD campus vector layer item IDs if config entry is missing
+    final fallbackItemId = switch (type) {
+      BasemapType.light => '6643ee62af494f5bafe7dfdb8eb3f857',
+      BasemapType.dark => '09d7b3934b6c4c2cad8380c04e08c1b1',
+      _ => 'e19f33d2c1f44967aef673306c483913',
+    };
+
+    basemap.baseLayers.add(
+      ArcGISVectorTiledLayer.withItem(
+        PortalItem.withPortalAndItemId(
+          portal: Portal(Uri.parse(portalUrl)),
+          itemId: fallbackItemId,
+        ),
+      ),
+    );
   }
+
   return basemap;
 }
+
