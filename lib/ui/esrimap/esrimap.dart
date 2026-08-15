@@ -199,7 +199,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     _map = ArcGISMap.withBasemap(_basemaps[_currentBasemapType]!);
-    _map.maxScale = 38.4; // Limit zoom to scale 1:38.4 (~23.88 max zoom level)
+    _map.maxScale = 38.4; // Limit zoom in to scale 1:38.4 (~23.88 max zoom level)
+    _map.minScale = 158846130.2; // Limit zoom out to scale 1:158846130.2 (~1.90 min zoom level)
     _map.initialViewpoint = Viewpoint.fromCenter(
       ArcGISPoint(x: -117.2340, y: 32.8801, spatialReference: SpatialReference.wgs84),
       scale: 24000,
@@ -359,6 +360,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     setState(() {
       _map.basemap = newBasemap;
       _map.maxScale = 38.4;
+      _map.minScale = 158846130.2;
       _currentBasemapType = newType;
     });
   }
