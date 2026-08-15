@@ -6,6 +6,7 @@
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// Floating action button cluster widget rendered in top-right of map view.
 class EsriMapFabCluster extends StatelessWidget {
@@ -98,7 +99,7 @@ class EsriMapFabCluster extends StatelessWidget {
         
         // Center Map (Center on Campus)
         _circleButton(
-          icon: Icons.center_focus_strong,
+          svgAsset: 'assets/esri_map_assets/Center-Trident.svg',
           color: recenterColor,
           bgColor: bgColor,
           onTap: onRecenterOnView,
@@ -117,11 +118,24 @@ class EsriMapFabCluster extends StatelessWidget {
   }
 
   Widget _circleButton({
-    required IconData icon,
+    IconData? icon,
+    String? svgAsset,
     required Color color,
     required Color bgColor,
     required VoidCallback onTap,
   }) {
+    Widget iconWidget;
+    if (svgAsset != null) {
+      iconWidget = SvgPicture.asset(
+        svgAsset,
+        width: 22,
+        height: 22,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else {
+      iconWidget = Icon(icon, size: 22, color: color);
+    }
+
     return Material(
       elevation: 4,
       color: bgColor,
@@ -132,7 +146,7 @@ class EsriMapFabCluster extends StatelessWidget {
         child: SizedBox(
           width: SIZE,
           height: SIZE,
-          child: Center(child: Icon(icon, size: 22, color: color)),
+          child: Center(child: iconWidget),
         ),
       ),
     );
