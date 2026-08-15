@@ -6,6 +6,7 @@
 /// ============================================================================
 
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_ai_search_model.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_basemaps.dart';
@@ -24,6 +25,7 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_c
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_detail_slide_over.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_fab.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_layers_panel.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_scale_bar.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_scene.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_search_bar.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_suggestions_panel.dart';
@@ -104,6 +106,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   bool _isRecenterActive = false;
   bool _ignoreViewpointReset = false;
   double _mapRotation = 0.0;
+  double _currentScale = 24000.0;
   StreamSubscription<void>? _viewpointChangedSubscription;
 
   // Routing State
@@ -199,6 +202,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     _map = ArcGISMap.withBasemap(_basemaps[_currentBasemapType]!);
+    _map.maxScale = 38.4; // Limit zoom to scale 1:38.4 (~23.88 max zoom level)
     _map.initialViewpoint = Viewpoint.fromCenter(
       ArcGISPoint(x: -117.2340, y: 32.8801, spatialReference: SpatialReference.wgs84),
       scale: 24000,
@@ -230,13 +234,19 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _preloadAlternateBasemaps();
     _preloadHeavyLayers();
 
-    // Track map heading rotation changes
+    // Track map heading rotation and zoom level changes
     _viewpointChangedSubscription = _mapViewController.onViewpointChanged.listen((_) {
       final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
       final isVpValid = vp != null && mounted;
       if (isVpValid) {
+        final scale = vp.targetScale;
+        final zoomLevel = scale > 0 ? (math.log(591657550.5 / scale) / math.ln2) : 0.0;
+        // Print current zoom scale and estimated level in PINK ANSI color (\x1B[38;2;255;105;180m)
+        debugPrint('\x1B[38;2;255;105;180m🔍 [MAP ZOOM] Scale: 1:${scale.toStringAsFixed(1)} | Zoom Level: ~${zoomLevel.toStringAsFixed(2)}\x1B[0m');
+
         setState(() {
           _mapRotation = vp.rotation;
+          _currentScale = scale;
           final shouldResetVP = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
           if (shouldResetVP) {
             _isLocationActive = false;
@@ -377,6 +387,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     setState(() {
       _map.basemap = newBasemap;
+      _map.maxScale = 38.4;
       _currentBasemapType = newType;
       _updateVignetteGraphics();
     });
@@ -2041,6 +2052,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               onSeeAllResults: _seeAllCategoryResults,
               onSelectResult: _selectResultFromList,
               iconForResult: _iconForResult,
+            ),
+
+          // Dynamic Google Maps-style Scale Bar Indicator
+          if (_sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel)
+            Positioned(
+              bottom: 24,
+              right: 16,
+              child: EsriMapScaleBar(
+                scale: _currentScale,
+                isDark: isDark,
+              ),
             ),
 
           // Transit Legend

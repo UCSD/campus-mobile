@@ -1,7 +1,7 @@
 {
   "portals": {
     "age": "https://admin-enterprise-gis.ucsd.edu/portal",
-    "ago": "https://ucsd-admin.maps.arcgis.com"
+    "ago": "https://www.arcgis.com"
   },
 
   "serviceUrls": {
@@ -18,12 +18,9 @@
       "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/default-thumbnail.png",
       "baseLayers": [
         {
-          "type": "arcgisTiled",
-          "serviceKey": "hillshade"
-        },
-        {
-          "type": "arcgisTiled",
-          "serviceKey": "lightGrayBase"
+          "type": "arcgisVectorTiled",
+          "portalKey": "ago",
+          "itemId": "291da5eab3a0412593b66d384379f89f"
         },
         {
           "type": "arcgisVectorTiled",
@@ -37,12 +34,9 @@
       "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/light-thumbnail.png",
       "baseLayers": [
         {
-          "type": "arcgisTiled",
-          "serviceKey": "hillshade"
-        },
-        {
-          "type": "arcgisTiled",
-          "serviceKey": "lightGrayBase"
+          "type": "arcgisVectorTiled",
+          "portalKey": "ago",
+          "itemId": "291da5eab3a0412593b66d384379f89f"
         },
         {
           "type": "arcgisVectorTiled",
@@ -56,12 +50,9 @@
       "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/dark-thumbnail.png",
       "baseLayers": [
         {
-          "type": "arcgisTiled",
-          "serviceKey": "hillshade"
-        },
-        {
-          "type": "arcgisTiled",
-          "serviceKey": "darkGrayBase"
+          "type": "arcgisVectorTiled",
+          "portalKey": "ago",
+          "itemId": "5e9b3685f4c24d8781073dd928ebda50"
         },
         {
           "type": "arcgisVectorTiled",

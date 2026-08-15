@@ -10,77 +10,68 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_c
 
 /// Constructs an ArcGIS [Basemap] for the requested [type] using configuration settings in [config].
 ///
-/// Public ArcGIS tiled MapServer layers (e.g. World_Light_Gray_Base, World_Hillshade, World_Dark_Gray_Base)
-/// provide the geographical base imagery (coastlines, islands, terrain, ocean) as a background.
-///
-/// To prevent the "Map data not yet available" raster watermark tiles from ever appearing when zooming in
-/// closer than Level 16 (scale ~1:9,000), [NoDataTileBehavior.upSample] and [maxScale] = 0 are configured
-/// on each tiled layer. This automatically stretches and resamples the coarser tiles smoothly in the background,
-/// while the custom UCSD campus vector tile layer draws sharp building and street details on top.
+/// To provide complete geographical background (coastlines, ocean, islands, regional streets)
+/// without ever displaying "Map data not yet available" raster watermarks or requiring API keys:
+/// 1. Public Esri Living Atlas Vector Tile base layers are used as the foundation (Light Gray / Dark Gray Canvas Base).
+///    Vector tiles scale seamlessly to building/room level (Level 22+) without tile cutoff watermarks.
+/// 2. Custom UC San Diego campus vector tile layers are layered directly on top to display campus-specific facilities.
 Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
-  // 1. Satellite Basemap: Use global World Imagery layer with tile upsampling.
+  // 1. Satellite Basemap: Use global World Imagery layer.
   if (type == BasemapType.satellite) {
     final basemap = Basemap();
-    final tiledLayer = ArcGISTiledLayer.withUri(
-      Uri.parse('https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer'),
+    basemap.baseLayers.add(
+      ArcGISTiledLayer.withUri(
+        Uri.parse('https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer'),
+      ),
     );
-    tiledLayer.noDataTileBehavior = NoDataTileBehavior.upSample;
-    tiledLayer.maxScale = 0;
-    basemap.baseLayers.add(tiledLayer);
     return basemap;
   }
 
-  final entry = config.basemaps[basemapKey(type)];
-  final isEntryNull = entry == null;
-  if (isEntryNull) return Basemap();
-
   final basemap = Basemap();
+
+  // 2. Global Public Vector Tile Base (Coastlines, ocean, off-campus streets, islands)
+  // Living Atlas Item IDs (100% public, keyless vector tile services hosted by Esri):
+  // - Light Gray Canvas Base: 291da5eab3a0412593b66d384379f89f
+  // - Dark Gray Canvas Base:  5e9b3685f4c24d8781073dd928ebda50
+  final globalBaseItemId = switch (type) {
+    BasemapType.dark => '5e9b3685f4c24d8781073dd928ebda50',
+    _ => '291da5eab3a0412593b66d384379f89f',
+  };
+
+  basemap.baseLayers.add(
+    ArcGISVectorTiledLayer.withItem(
+      PortalItem.withPortalAndItemId(
+        portal: Portal.arcGISOnline(),
+        itemId: globalBaseItemId,
+      ),
+    ),
+  );
+
+  // 3. Custom UC San Diego Campus Vector Tile Layer (campus buildings, walkways, landscaping)
+  final entry = config.basemaps[basemapKey(type)];
   final portalUrl = config.portals['age'] ?? 'https://admin-enterprise-gis.ucsd.edu/portal';
+  final vectorLayers = entry?.baseLayers.where((l) => l.type == 'arcgisVectorTiled').toList() ?? [];
 
-  // 2. Iterate through configured base layers
-  for (final layer in entry.baseLayers) {
-    switch (layer.type) {
-      case 'arcgisTiled':
-        final hasServiceKey = layer.serviceKey != null;
-        final url = hasServiceKey ? config.serviceUrls[layer.serviceKey!] : null;
-        final isUrlNotNull = url != null;
-        if (isUrlNotNull) {
-          final tiledLayer = ArcGISTiledLayer.withUri(Uri.parse(url));
-          // Key fix: Upsample coarser tiles instead of displaying "Map data not yet available" watermark
-          tiledLayer.noDataTileBehavior = NoDataTileBehavior.upSample;
-          tiledLayer.maxScale = 0;
-          basemap.baseLayers.add(tiledLayer);
-        }
-        break;
+  // Filter out any duplicate reference to the global base item ID
+  final campusVectorLayers = vectorLayers.where((l) => l.itemId != globalBaseItemId).toList();
 
-      case 'arcgisVectorTiled':
-        final pUrl = layer.portalKey != null ? config.portals[layer.portalKey!] : portalUrl;
-        if (pUrl != null && layer.itemId != null) {
-          basemap.baseLayers.add(
-            ArcGISVectorTiledLayer.withItem(
-              PortalItem.withPortalAndItemId(
-                portal: Portal(Uri.parse(pUrl)),
-                itemId: layer.itemId!,
-              ),
+  if (campusVectorLayers.isNotEmpty) {
+    for (final layer in campusVectorLayers) {
+      final pUrl = layer.portalKey != null ? config.portals[layer.portalKey!] : portalUrl;
+      if (pUrl != null && layer.itemId != null) {
+        final portal = pUrl.contains('arcgis.com') ? Portal.arcGISOnline() : Portal(Uri.parse(pUrl));
+        basemap.baseLayers.add(
+          ArcGISVectorTiledLayer.withItem(
+            PortalItem.withPortalAndItemId(
+              portal: portal,
+              itemId: layer.itemId!,
             ),
-          );
-        }
-        break;
-
-      case 'arcgisMapImage':
-        final hasServiceKey = layer.serviceKey != null;
-        final url = hasServiceKey ? config.serviceUrls[layer.serviceKey!] : null;
-        final isUrlNotNull = url != null;
-        if (isUrlNotNull) {
-          basemap.baseLayers.add(ArcGISMapImageLayer.withUri(Uri.parse(url)));
-        }
-        break;
+          ),
+        );
+      }
     }
-  }
-
-  // 3. Fallback: If no vector layer was present in the config, append known UCSD vector layer
-  final hasVectorLayer = basemap.baseLayers.any((l) => l is ArcGISVectorTiledLayer);
-  if (!hasVectorLayer) {
+  } else {
+    // Fallback: Append known UCSD campus vector tile layer IDs
     final fallbackItemId = switch (type) {
       BasemapType.light => '6643ee62af494f5bafe7dfdb8eb3f857',
       BasemapType.dark => '09d7b3934b6c4c2cad8380c04e08c1b1',
