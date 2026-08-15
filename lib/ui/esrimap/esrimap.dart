@@ -253,25 +253,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _preloadHeavyLayers();
 
     // Track map heading rotation and zoom level changes
+    DateTime? lastUpdateTime;
+    
     _viewpointChangedSubscription = _mapViewController.onViewpointChanged.listen((_) {
+      final now = DateTime.now();
+      if (lastUpdateTime != null && now.difference(lastUpdateTime!).inMilliseconds < 32) {
+        return; // Throttle to ~30 FPS to prevent heavy jitter
+      }
+      lastUpdateTime = now;
+
       final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
       final isVpValid = vp != null && mounted;
       if (isVpValid) {
         final scale = vp.targetScale;
-        final zoomLevel = scale > 0 ? (math.log(591657550.5 / scale) / math.ln2) : 0.0;
-        // Print current zoom scale and estimated level in PINK ANSI color (\x1B[38;2;255;105;180m)
-        debugPrint('\x1B[38;2;255;105;180m🔍 [MAP ZOOM] Scale: 1:${scale.toStringAsFixed(1)} | Zoom Level: ~${zoomLevel.toStringAsFixed(2)}\x1B[0m');
-
-        // Print current center coordinates in GREEN ANSI color (\x1B[38;2;46;204;113m)
         final centerPoint = vp.targetGeometry as ArcGISPoint?;
-        if (centerPoint != null) {
-          final wgs84Point = centerPoint.spatialReference == SpatialReference.wgs84
-              ? centerPoint
-              : (GeometryEngine.project(centerPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?);
-          final xVal = wgs84Point?.x ?? centerPoint.x;
-          final yVal = wgs84Point?.y ?? centerPoint.y;
-          debugPrint('\x1B[38;2;46;204;113m📍 [MAP LOCATION] X: ${xVal.toStringAsFixed(6)}, Y: ${yVal.toStringAsFixed(6)}\x1B[0m');
-        }
 
         setState(() {
           _mapRotation = vp.rotation;
