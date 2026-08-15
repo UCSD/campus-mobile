@@ -92,8 +92,8 @@ class SublayerEntry {
 
   /// Factory constructor to deserialize [SublayerEntry] from a JSON map.
   factory SublayerEntry.fromJson(Map<String, dynamic> json) => SublayerEntry(
-    name: json['name'] as String,
-    source: json['source'] as String,
+    name: json['name'] as String? ?? '',
+    source: json['source'] as String? ?? '',
     url: json['url'] as String?,
     portalKey: json['portalKey'] as String?,
     itemId: json['itemId'] as String?,

@@ -6,6 +6,7 @@
 /// ============================================================================
 
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_ai_search_model.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_basemaps.dart';
@@ -23,6 +24,7 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_c
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_detail_slide_over.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_fab.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_layers_panel.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_scale_bar.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_scene.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_search_bar.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_suggestions_panel.dart';
@@ -101,6 +103,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   bool _isRecenterActive = false;
   bool _ignoreViewpointReset = false;
   double _mapRotation = 0.0;
+  double _currentScale = 24000.0;
+  bool _isDisposed = false;
   StreamSubscription<void>? _viewpointChangedSubscription;
 
   // Routing State
@@ -136,8 +140,23 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   EsriSceneWidget? _sceneDroneWidget;
   final _scene3DKey = GlobalKey<EsriSceneWidgetState>();
   final _sceneDroneKey = GlobalKey<EsriSceneWidgetState>();
+  
+  (double lat, double lng)? _currentMapCenter;
 
   final _mapReadyCompleter = Completer<void>();
+
+  double _calculateBearing(double startLat, double startLng, double endLat, double endLng) {
+    final startLatRad = startLat * math.pi / 180;
+    final startLngRad = startLng * math.pi / 180;
+    final endLatRad = endLat * math.pi / 180;
+    final endLngRad = endLng * math.pi / 180;
+
+    final dLng = endLngRad - startLngRad;
+    final y = math.sin(dLng) * math.cos(endLatRad);
+    final x = math.cos(startLatRad) * math.sin(endLatRad) -
+              math.sin(startLatRad) * math.cos(endLatRad) * math.cos(dLng);
+    return math.atan2(y, x);
+  }
 
   /// Returns list of mapped search categories constructed from server configuration.
   List<EsriSearchCategory> get _categories {
@@ -196,6 +215,15 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     _map = ArcGISMap.withBasemap(_basemaps[_currentBasemapType]!);
+    _map.maxScale = 38.4; // Limit zoom in to scale 1:38.4 (~23.88 max zoom level)
+    _map.minScale = 70000000.0; // Limit zoom out to scale 1:70000000.0 (~3.08 min zoom level)
+    _map.maxExtent = Envelope.fromXY(
+      xMin: -180.0,
+      yMin: -55.0,
+      xMax: 180.0,
+      yMax: 55.0,
+      spatialReference: SpatialReference.wgs84,
+    );
     _map.initialViewpoint = Viewpoint.fromCenter(
       ArcGISPoint(x: -117.2340, y: 32.8801, spatialReference: SpatialReference.wgs84),
       scale: 24000,
@@ -224,13 +252,33 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _preloadAlternateBasemaps();
     _preloadHeavyLayers();
 
-    // Track map heading rotation changes
+    // Track map heading rotation and zoom level changes
+    DateTime? lastUpdateTime;
+    
     _viewpointChangedSubscription = _mapViewController.onViewpointChanged.listen((_) {
+      final now = DateTime.now();
+      if (lastUpdateTime != null && now.difference(lastUpdateTime!).inMilliseconds < 32) {
+        return; // Throttle to ~30 FPS to prevent heavy jitter
+      }
+      lastUpdateTime = now;
+
       final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
       final isVpValid = vp != null && mounted;
       if (isVpValid) {
+        final scale = vp.targetScale;
+        final centerPoint = vp.targetGeometry as ArcGISPoint?;
+
         setState(() {
           _mapRotation = vp.rotation;
+          _currentScale = scale;
+          if (centerPoint != null) {
+            final wgs84Point = centerPoint.spatialReference == SpatialReference.wgs84
+                ? centerPoint
+                : (GeometryEngine.project(centerPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?);
+            final xVal = wgs84Point?.x ?? centerPoint.x;
+            final yVal = wgs84Point?.y ?? centerPoint.y;
+            _currentMapCenter = (yVal, xVal);
+          }
           final shouldResetVP = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
           if (shouldResetVP) {
             _isLocationActive = false;
@@ -348,6 +396,15 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     setState(() {
       _map.basemap = newBasemap;
+      _map.maxScale = 38.4;
+      _map.minScale = 70000000.0;
+      _map.maxExtent = Envelope.fromXY(
+        xMin: -180.0,
+        yMin: -55.0,
+        xMax: 180.0,
+        yMax: 55.0,
+        spatialReference: SpatialReference.wgs84,
+      );
       _currentBasemapType = newType;
     });
   }
@@ -1157,15 +1214,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
       _ignoreViewpointReset = true;
       setState(() => _isLocationActive = true);
-      _mapViewController.setViewpointAnimated(
+      await _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
           ArcGISPoint(x: location.longitude, y: location.latitude, spatialReference: SpatialReference.wgs84),
           scale: 10000,
         ),
       );
-      Future.delayed(const Duration(milliseconds: 1500), () {
-        if (mounted) _ignoreViewpointReset = false;
-      });
+      if (mounted) {
+        setState(() {
+          _ignoreViewpointReset = false;
+        });
+      }
     } catch (e) {
       debugPrint('Location error: $e');
       if (!mounted) return;
@@ -1176,8 +1235,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _recenterOnView() {
     _ignoreViewpointReset = true;
     setState(() => _isRecenterActive = true);
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      if (mounted) _ignoreViewpointReset = false;
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) {
+        setState(() {
+          _ignoreViewpointReset = false;
+          _isRecenterActive = false;
+        });
+      }
     });
 
     final isNotDefaultScene = _sceneMode != 'default';
@@ -1794,6 +1858,37 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 onSnapToNorth: _snapToNorth,
               ),
             ),
+            
+          // Bottom-right center-on-me button
+          if (isFabVisible && _sceneMode == 'default')
+            Builder(
+              builder: (context) {
+                double? bearing;
+                if (!_isLocationActive && _currentMapCenter != null) {
+                  final userLoc = _getUserLatLng();
+                  if (userLoc != null) {
+                    final mapLat = _currentMapCenter!.$1;
+                    final mapLng = _currentMapCenter!.$2;
+                    final userLat = userLoc.$1;
+                    final userLng = userLoc.$2;
+                    // Bearing pointing FROM map center TO user location
+                    bearing = _calculateBearing(mapLat, mapLng, userLat, userLng);
+                  }
+                }
+                
+                return Positioned(
+                  bottom: 100,
+                  right: 16,
+                  child: EsriMapLocationFab(
+                    isDark: isDark,
+                    isLocationActive: _isLocationActive,
+                    bearingToUser: bearing,
+                    mapRotation: _mapRotation,
+                    onRecenterOnUser: _recenterOnUser,
+                  ),
+                );
+              }
+            ),
 
           // Floating top search bar & suggestion panel
           if (FeatureFlags.mapSearchEnabled && isDefaultScene)
@@ -2011,6 +2106,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               onSeeAllResults: _seeAllCategoryResults,
               onSelectResult: _selectResultFromList,
               iconForResult: _iconForResult,
+            ),
+
+          // Dynamic Google Maps-style Scale Bar Indicator
+          if (_sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel)
+            Positioned(
+              bottom: 24,
+              right: 16,
+              child: EsriMapScaleBar(
+                scale: _currentScale,
+                isDark: isDark,
+              ),
             ),
 
           // Transit Legend

@@ -65,10 +65,10 @@ class EsriMapLayersPanel extends StatelessWidget {
     final accent = isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
 
     Widget sectionLabel(String text) => Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
       child: Text(
         text,
-        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: subtitleColor),
+        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: textColor),
       ),
     );
 
@@ -82,36 +82,36 @@ class EsriMapLayersPanel extends StatelessWidget {
       return GestureDetector(
         onTap: onTap,
         child: SizedBox(
-          width: 72,
+          width: 86,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 56,
-                height: 56,
+                width: 68,
+                height: 68,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                   border: selected
                       ? Border.all(color: accent, width: 2.5)
                       : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6.5),
+                  borderRadius: BorderRadius.circular(8.5),
                   child: loading
                       ? const Center(
-                          child: SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: SizedBox(width: 26, height: 26, child: CircularProgressIndicator(strokeWidth: 2)),
                         )
                       : (imageWidget ?? Container(color: isDark ? Colors.grey[700] : Colors.grey[300])),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 6),
               Text(
                 label,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 13,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
                   color: selected ? accent : textColor,
                 ),
@@ -172,25 +172,6 @@ class EsriMapLayersPanel extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 8, 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Map Display',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: textColor),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close, size: 20, color: subtitleColor),
-                      onPressed: onClose,
-                    ),
-                  ],
-                ),
-              ),
-
               // Basemap + Layers — grayed out when not in default 2D scene
               Opacity(
                 opacity: isDefault ? 1.0 : 0.35,
@@ -199,7 +180,26 @@ class EsriMapLayersPanel extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      sectionLabel('BASEMAP'),
+                      // Map Type Header (with Close Button)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 14, 8, 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Map Type',
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: textColor),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.close, size: 20, color: subtitleColor),
+                              onPressed: onClose,
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                            ),
+                          ],
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: SingleChildScrollView(
@@ -232,7 +232,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                       if (FeatureFlags.mapOperationalLayersEnabled) ...[
                         const Divider(height: 24, indent: 16, endIndent: 16),
 
-                        sectionLabel('LAYERS'),
+                        sectionLabel('Map Details'),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: SingleChildScrollView(
@@ -271,7 +271,7 @@ class EsriMapLayersPanel extends StatelessWidget {
               // Scene chips — gated by features flag, hidden when slide-over is active
               if (showSceneSwitcher) ...[
                 const Divider(height: 24, indent: 16, endIndent: 16),
-                sectionLabel('SCENE'),
+                sectionLabel('Scene'),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
                   child: Wrap(

@@ -6,6 +6,7 @@
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// Floating action button cluster widget rendered in top-right of map view.
 class EsriMapFabCluster extends StatelessWidget {
@@ -64,10 +65,8 @@ class EsriMapFabCluster extends StatelessWidget {
     final bgColor = isDark ? Colors.grey[800]! : Colors.white;
     final fgColor = isDark ? Colors.white : Colors.grey[800]!;
 
-    final locationColor = isLocationActive ? ACTIVE_COLOR : fgColor;
     final recenterColor = isRecenterActive ? ACTIVE_COLOR : fgColor;
-    final isNot3D = !is3D;
-
+    
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,40 +96,239 @@ class EsriMapFabCluster extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        // Pill container with action buttons
-        Material(
-          elevation: 4,
-          color: bgColor,
-          borderRadius: BorderRadius.circular(SIZE / 2),
-          clipBehavior: Clip.antiAlias,
-          child: SizedBox(
-            width: SIZE,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (isNot3D) _pillButton(icon: Icons.my_location, color: locationColor, onTap: onRecenterOnUser),
-                  _pillButton(icon: Icons.center_focus_strong, color: recenterColor, onTap: onRecenterOnView),
-                  _pillButton(icon: Icons.layers_outlined, color: fgColor, onTap: onShowLayersPanel),
-                ],
-              ),
-            ),
+        
+        // Center Map (Center on Campus)
+        _circleButton(
+          svgAsset: 'assets/esri_map_assets/Center-Trident.svg',
+          color: recenterColor,
+          bgColor: bgColor,
+          onTap: onRecenterOnView,
+        ),
+        const SizedBox(height: 10),
+        
+        // Map displays (Layers)
+        _circleButton(
+          customIcon: CustomPaint(
+            size: const Size(20, 20),
+            painter: _MapDisplaysIconPainter(color: fgColor),
           ),
+          color: fgColor,
+          bgColor: bgColor,
+          onTap: onShowLayersPanel,
         ),
       ],
     );
   }
 
-  Widget _pillButton({required IconData icon, required Color color, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        height: BTN_HEIGHT,
-        child: Center(child: Icon(icon, size: 22, color: color)),
+  Widget _circleButton({
+    IconData? icon,
+    String? svgAsset,
+    Widget? customIcon,
+    required Color color,
+    required Color bgColor,
+    required VoidCallback onTap,
+  }) {
+    Widget iconWidget;
+    if (customIcon != null) {
+      iconWidget = customIcon;
+    } else if (svgAsset != null) {
+      iconWidget = SvgPicture.asset(
+        svgAsset,
+        width: 22,
+        height: 22,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else {
+      iconWidget = Icon(icon, size: 22, color: color);
+    }
+
+    return Material(
+      elevation: 4,
+      color: bgColor,
+      shape: const CircleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          width: SIZE,
+          height: SIZE,
+          child: Center(child: iconWidget),
+        ),
       ),
     );
+  }
+}
+
+class _MapDisplaysIconPainter extends CustomPainter {
+  final Color color;
+  _MapDisplaysIconPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..strokeJoin = StrokeJoin.miter
+      ..strokeCap = StrokeCap.square;
+
+    final double w = size.width;
+    final double h = size.height;
+
+    final path = Path();
+    
+    // Top Diamond
+    // Stop the diamond much earlier to leave a clear gap for the + sign
+    path.moveTo(w * 0.40, h * 0.20); // Start at top, slightly left
+    path.lineTo(w * 0.15, h * 0.40); // Down-left to left point
+    path.lineTo(w * 0.50, h * 0.65); // Down-right to bottom point
+    path.lineTo(w * 0.70, h * 0.50); // Up-right, stopping early
+    
+    // Bottom Diamond (V shape)
+    path.moveTo(w * 0.15, h * 0.60); // Left start
+    path.lineTo(w * 0.50, h * 0.85); // Bottom point
+    path.lineTo(w * 0.85, h * 0.60); // Right end
+
+    canvas.drawPath(path, paint);
+
+    // Plus sign
+    // Positioned solidly in the top right
+    final cx = w * 0.80;
+    final cy = h * 0.20;
+    final r = w * 0.14;
+    
+    final plusPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.square;
+
+    canvas.drawLine(Offset(cx - r, cy), Offset(cx + r, cy), plusPaint);
+    canvas.drawLine(Offset(cx, cy - r), Offset(cx, cy + r), plusPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _MapDisplaysIconPainter oldDelegate) {
+    return oldDelegate.color != color;
+  }
+}
+
+/// Floating action button for "Center on Me" rendered in bottom-right of map view.
+class EsriMapLocationFab extends StatelessWidget {
+  final bool isDark;
+  final bool isLocationActive;
+  final double? bearingToUser;
+  final double mapRotation;
+  final VoidCallback onRecenterOnUser;
+
+  const EsriMapLocationFab({
+    Key? key,
+    required this.isDark,
+    this.isLocationActive = false,
+    this.bearingToUser,
+    this.mapRotation = 0.0,
+    required this.onRecenterOnUser,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final bgColor = isDark ? Colors.grey[800]! : Colors.white;
+    final fgColor = isDark ? Colors.white : Colors.grey[800]!;
+    
+    final activeBgColor = isDark ? Colors.blue[900]!.withValues(alpha: 0.5) : const Color(0xFFE8F0FE);
+    
+    Widget iconWidget;
+    if (isLocationActive || bearingToUser != null) {
+      double totalRotation = 0;
+      if (!isLocationActive && bearingToUser != null) {
+        final mapRotRad = mapRotation * math.pi / 180.0;
+        totalRotation = bearingToUser! - mapRotRad;
+      }
+      
+      iconWidget = Stack(
+        alignment: Alignment.center,
+        children: [
+          // Light blue halo
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: activeBgColor,
+            ),
+          ),
+          // Directional Triangle (only if inactive)
+          if (!isLocationActive && bearingToUser != null)
+            Transform.rotate(
+              angle: totalRotation,
+              child: Container(
+                width: 30,
+                height: 30,
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: CustomPaint(
+                    size: const Size(10, 8),
+                    painter: _DirectionArrowPainter(color: Colors.blue[600]!),
+                  ),
+                ),
+              ),
+            ),
+          // The blue dot
+          Container(
+            width: 16,
+            height: 16,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.blue[600],
+              border: Border.all(color: Colors.white, width: 2.5),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 2)
+              ],
+            ),
+          ),
+        ],
+      );
+    } else {
+      iconWidget = Icon(Icons.explore_outlined, size: 26, color: fgColor);
+    }
+    
+    return Material(
+      elevation: 4,
+      color: bgColor,
+      shape: const CircleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onRecenterOnUser,
+        child: SizedBox(
+          width: EsriMapFabCluster.SIZE,
+          height: EsriMapFabCluster.SIZE,
+          child: Center(
+            child: iconWidget,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DirectionArrowPainter extends CustomPainter {
+  final Color color;
+  _DirectionArrowPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(size.width / 2, 0)
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+    canvas.drawPath(path, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(covariant _DirectionArrowPainter oldDelegate) {
+    return oldDelegate.color != color;
   }
 }
 
