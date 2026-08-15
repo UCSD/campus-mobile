@@ -1202,8 +1202,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           scale: 10000,
         ),
       );
-      Future.delayed(const Duration(milliseconds: 1500), () {
-        if (mounted) _ignoreViewpointReset = false;
+      Future.delayed(const Duration(milliseconds: 600), () {
+        if (mounted) {
+          setState(() {
+            _ignoreViewpointReset = false;
+            _isLocationActive = false;
+          });
+        }
       });
     } catch (e) {
       debugPrint('Location error: $e');
@@ -1215,8 +1220,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _recenterOnView() {
     _ignoreViewpointReset = true;
     setState(() => _isRecenterActive = true);
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      if (mounted) _ignoreViewpointReset = false;
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) {
+        setState(() {
+          _ignoreViewpointReset = false;
+          _isRecenterActive = false;
+        });
+      }
     });
 
     final isNotDefaultScene = _sceneMode != 'default';

@@ -39,6 +39,17 @@ void main() async {
     // dotenv loading
     await dotenv.load(isOptional: true);
 
+    // Uncomment to remove the "Licensed for Developer Use Only" watermark in the ESRI Map
+    // final esriApiKey = dotenv.env['ESRI_API_KEY'];
+    // if (esriApiKey != null && esriApiKey.isNotEmpty) {
+    //   ArcGISEnvironment.apiKey = esriApiKey;
+    // }
+    //
+    // final esriLicenseKey = dotenv.env['ESRI_LICENSE_KEY'];
+    // if (esriLicenseKey != null && esriLicenseKey.isNotEmpty) {
+    //   ArcGISEnvironment.setLicense(esriLicenseKey);
+    // }
+
     /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
