@@ -15,7 +15,6 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_s
 import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_auth_handler.dart';
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_basemap_factory.dart';
-import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_boundary_service.dart';
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_config_service.dart';
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_route_service.dart';
 import 'package:campus_mobile_experimental/core/services/esri_map_services/esrimap_search_service.dart';
@@ -53,10 +52,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
   final _mapViewController = ArcGISMapView.createController();
   late final ArcGISMap _map;
-  final _vignetteGraphicsOverlay = GraphicsOverlay();
   final _graphicsOverlay = GraphicsOverlay();
   final _routeGraphicsOverlay = GraphicsOverlay();
-  List<Polygon> _campusBoundaries = [];
 
   final _searchController = TextEditingController();
   final _fromController = TextEditingController();
@@ -218,8 +215,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.selectionProperties = SelectionProperties(color: const Color(0xFF34C759));
     _mapViewController.interactionOptions.rotateEnabled = true;
 
-    final isVignetteOverlayMissing = !_mapViewController.graphicsOverlays.contains(_vignetteGraphicsOverlay);
-    if (isVignetteOverlayMissing) _mapViewController.graphicsOverlays.add(_vignetteGraphicsOverlay);
     final isGraphicsOverlayMissing = !_mapViewController.graphicsOverlays.contains(_graphicsOverlay);
     if (isGraphicsOverlayMissing) _mapViewController.graphicsOverlays.add(_graphicsOverlay);
     final isRouteOverlayMissing = !_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay);
@@ -230,7 +225,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.locationDisplay.autoPanMode = LocationDisplayAutoPanMode.off;
 
     _startLocationDisplay();
-    _initCampusBoundaryVignette();
     _preloadAlternateBasemaps();
     _preloadHeavyLayers();
 
@@ -354,29 +348,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
   }
 
-  /// Loads campus boundary polygons and renders the stylized off-campus vignette mask.
-  Future<void> _initCampusBoundaryVignette() async {
-    try {
-      final boundaries = await EsriMapBoundaryService.instance.loadCampusBoundaries();
-      if (!mounted || boundaries.isEmpty) return;
-      _campusBoundaries = boundaries;
-      _updateVignetteGraphics();
-    } catch (e) {
-      debugPrint('Failed to load campus boundary vignette: $e');
-    }
-  }
-
-  /// Updates vignette graphics based on the current basemap theme (Default, Light, Dark, Satellite).
-  void _updateVignetteGraphics() {
-    if (_campusBoundaries.isEmpty) return;
-    final graphics = EsriMapBoundaryService.instance.createVignetteGraphics(
-      basemapType: _currentBasemapType,
-      campusBoundaries: _campusBoundaries,
-    );
-    _vignetteGraphicsOverlay.graphics.clear();
-    _vignetteGraphicsOverlay.graphics.addAll(graphics);
-  }
-
   /// Switches active basemap without resetting viewpoint frame.
   void _switchBasemap(BasemapType newType) {
     final isSameType = newType == _currentBasemapType;
@@ -389,7 +360,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _map.basemap = newBasemap;
       _map.maxScale = 38.4;
       _currentBasemapType = newType;
-      _updateVignetteGraphics();
     });
   }
 
