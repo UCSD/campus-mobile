@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
+
 import 'dining_busyness_bar.dart';
 
 class DiningDetailView extends StatefulWidget {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:hive/hive.dart';
 part 'user_profile.g.dart';
 

@@ -5,6 +5,7 @@
 /// ============================================================================
 
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -66,7 +67,7 @@ class EsriMapFabCluster extends StatelessWidget {
     final fgColor = isDark ? Colors.white : Colors.grey[800]!;
 
     final recenterColor = isRecenterActive ? ACTIVE_COLOR : fgColor;
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -96,7 +97,7 @@ class EsriMapFabCluster extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        
+
         // Center Map (Center on Campus)
         _circleButton(
           svgAsset: 'assets/esri_map_assets/Center-Trident.svg',
@@ -105,7 +106,7 @@ class EsriMapFabCluster extends StatelessWidget {
           onTap: onRecenterOnView,
         ),
         const SizedBox(height: 10),
-        
+
         // Map displays (Layers)
         _circleButton(
           customIcon: CustomPaint(
@@ -176,14 +177,14 @@ class _MapDisplaysIconPainter extends CustomPainter {
     final double h = size.height;
 
     final path = Path();
-    
+
     // Top Diamond
     // Stop the diamond much earlier to leave a clear gap for the + sign
     path.moveTo(w * 0.40, h * 0.20); // Start at top, slightly left
     path.lineTo(w * 0.15, h * 0.40); // Down-left to left point
     path.lineTo(w * 0.50, h * 0.65); // Down-right to bottom point
     path.lineTo(w * 0.70, h * 0.50); // Up-right, stopping early
-    
+
     // Bottom Diamond (V shape)
     path.moveTo(w * 0.15, h * 0.60); // Left start
     path.lineTo(w * 0.50, h * 0.85); // Bottom point
@@ -196,7 +197,7 @@ class _MapDisplaysIconPainter extends CustomPainter {
     final cx = w * 0.80;
     final cy = h * 0.20;
     final r = w * 0.14;
-    
+
     final plusPaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
@@ -208,9 +209,7 @@ class _MapDisplaysIconPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MapDisplaysIconPainter oldDelegate) {
-    return oldDelegate.color != color;
-  }
+  bool shouldRepaint(covariant _MapDisplaysIconPainter oldDelegate) => oldDelegate.color != color;
 }
 
 /// Floating action button for "Center on Me" rendered in bottom-right of map view.
@@ -234,9 +233,9 @@ class EsriMapLocationFab extends StatelessWidget {
   Widget build(BuildContext context) {
     final bgColor = isDark ? Colors.grey[800]! : Colors.white;
     final fgColor = isDark ? Colors.white : Colors.grey[800]!;
-    
+
     final activeBgColor = isDark ? Colors.blue[900]!.withValues(alpha: 0.5) : const Color(0xFFE8F0FE);
-    
+
     Widget iconWidget;
     if (isLocationActive || bearingToUser != null) {
       double totalRotation = 0;
@@ -244,7 +243,7 @@ class EsriMapLocationFab extends StatelessWidget {
         final mapRotRad = mapRotation * math.pi / 180.0;
         totalRotation = bearingToUser! - mapRotRad;
       }
-      
+
       iconWidget = Stack(
         alignment: Alignment.center,
         children: [
@@ -252,10 +251,7 @@ class EsriMapLocationFab extends StatelessWidget {
           Container(
             width: 30,
             height: 30,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: activeBgColor,
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: activeBgColor),
           ),
           // Directional Triangle (only if inactive)
           if (!isLocationActive && bearingToUser != null)
@@ -282,9 +278,7 @@ class EsriMapLocationFab extends StatelessWidget {
               shape: BoxShape.circle,
               color: Colors.blue[600],
               border: Border.all(color: Colors.white, width: 2.5),
-              boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 2)
-              ],
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 2)],
             ),
           ),
         ],
@@ -292,7 +286,7 @@ class EsriMapLocationFab extends StatelessWidget {
     } else {
       iconWidget = Icon(Icons.explore_outlined, size: 26, color: fgColor);
     }
-    
+
     return Material(
       elevation: 4,
       color: bgColor,
@@ -303,9 +297,7 @@ class EsriMapLocationFab extends StatelessWidget {
         child: SizedBox(
           width: EsriMapFabCluster.SIZE,
           height: EsriMapFabCluster.SIZE,
-          child: Center(
-            child: iconWidget,
-          ),
+          child: Center(child: iconWidget),
         ),
       ),
     );
@@ -327,9 +319,7 @@ class _DirectionArrowPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _DirectionArrowPainter oldDelegate) {
-    return oldDelegate.color != color;
-  }
+  bool shouldRepaint(covariant _DirectionArrowPainter oldDelegate) => oldDelegate.color != color;
 }
 
 class _CompassNeedlePainter extends CustomPainter {

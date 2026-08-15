@@ -6,6 +6,7 @@
 /// ============================================================================
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// Dynamic scale bar widget modeled after Google Maps' scale indicator.
@@ -67,9 +68,7 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
   void initState() {
     super.initState();
     _lastScale = widget.scale;
-    if (!widget.autoFade) {
-      _isVisible = true;
-    }
+    if (!widget.autoFade) _isVisible = true;
   }
 
   @override
@@ -78,9 +77,7 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
     // Detect zoom/scale changes
     if (widget.scale > 0 && (widget.scale - _lastScale).abs() > 0.05) {
       _lastScale = widget.scale;
-      if (widget.autoFade) {
-        _triggerZoomFade();
-      }
+      if (widget.autoFade) _triggerZoomFade();
     }
   }
 
@@ -162,8 +159,8 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
     final String metricLabel = chosenMetricMeters >= 1000
         ? '${(chosenMetricMeters / 1000).toStringAsFixed(chosenMetricMeters % 1000 == 0 ? 0 : 1)} km'
         : (chosenMetricMeters < 1
-            ? '${(chosenMetricMeters * 100).round()} cm'
-            : '${chosenMetricMeters % 1 == 0 ? chosenMetricMeters.toInt() : chosenMetricMeters.toStringAsFixed(1)} m');
+              ? '${(chosenMetricMeters * 100).round()} cm'
+              : '${chosenMetricMeters % 1 == 0 ? chosenMetricMeters.toInt() : chosenMetricMeters.toStringAsFixed(1)} m');
 
     final textColor = widget.isDark ? Colors.white70 : const Color(0xFF3C4043);
     final lineColor = widget.isDark ? Colors.white70 : const Color(0xFF5F6368);
@@ -195,9 +192,7 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
           SizedBox(
             width: chosenWidthPx,
             height: 6,
-            child: CustomPaint(
-              painter: _ScaleBarBracketPainter(color: lineColor),
-            ),
+            child: CustomPaint(painter: _ScaleBarBracketPainter(color: lineColor)),
           ),
           const SizedBox(height: 1),
 
@@ -250,7 +245,5 @@ class _ScaleBarBracketPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _ScaleBarBracketPainter oldDelegate) {
-    return oldDelegate.color != color;
-  }
+  bool shouldRepaint(covariant _ScaleBarBracketPainter oldDelegate) => oldDelegate.color != color;
 }

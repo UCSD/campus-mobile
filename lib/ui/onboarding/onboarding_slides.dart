@@ -3,6 +3,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
+
 import 'onboarding_slide_template.dart';
 
 class OnboardingSlides extends StatefulWidget {

@@ -17,9 +17,7 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_c
 /// 2. Custom UC San Diego campus vector tile layers are layered directly on top to display campus-specific facilities.
 Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
   // 1. Satellite Basemap: Use modern BasemapStyle for optimized CDN routing and faster raster loading.
-  if (type == BasemapType.satellite) {
-    return Basemap.withStyle(BasemapStyle.arcGISImagery);
-  }
+  if (type == BasemapType.satellite) return Basemap.withStyle(BasemapStyle.arcGISImagery);
 
   final basemap = Basemap();
 
@@ -34,10 +32,7 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
 
   basemap.baseLayers.add(
     ArcGISVectorTiledLayer.withItem(
-      PortalItem.withPortalAndItemId(
-        portal: Portal.arcGISOnline(),
-        itemId: globalBaseItemId,
-      ),
+      PortalItem.withPortalAndItemId(portal: Portal.arcGISOnline(), itemId: globalBaseItemId),
     ),
   );
 
@@ -55,12 +50,7 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
       if (pUrl != null && layer.itemId != null) {
         final portal = pUrl.contains('arcgis.com') ? Portal.arcGISOnline() : Portal(Uri.parse(pUrl));
         basemap.baseLayers.add(
-          ArcGISVectorTiledLayer.withItem(
-            PortalItem.withPortalAndItemId(
-              portal: portal,
-              itemId: layer.itemId!,
-            ),
-          ),
+          ArcGISVectorTiledLayer.withItem(PortalItem.withPortalAndItemId(portal: portal, itemId: layer.itemId!)),
         );
       }
     }
@@ -74,10 +64,7 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
 
     basemap.baseLayers.add(
       ArcGISVectorTiledLayer.withItem(
-        PortalItem.withPortalAndItemId(
-          portal: Portal(Uri.parse(portalUrl)),
-          itemId: fallbackItemId,
-        ),
+        PortalItem.withPortalAndItemId(portal: Portal(Uri.parse(portalUrl)), itemId: fallbackItemId),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
@@ -182,9 +183,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
                 }
               },
               options: LinkifyOptions(humanize: false),
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400),
             ),
             freefoodProvider.isFreeFood(data.messageId) ? FreeFoodNotification(messageId: data.messageId) : Container(),
           ],
@@ -197,9 +197,8 @@ class _NotificationsListViewState extends State<NotificationsListView> {
             padding: const EdgeInsets.only(top: 6.0),
             child: Text(
               _readTimestamp(data.timestamp),
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700),
             ),
           ),
         ],

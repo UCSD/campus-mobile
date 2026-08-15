@@ -7,6 +7,7 @@
 
 import 'dart:async';
 import 'dart:math' as math;
+
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_ai_search_model.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_basemaps.dart';
@@ -31,6 +32,7 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_s
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'dart:ui' as ui;
 
 // Re-export MapSearchResult so callers importing esrimap.dart retain access
@@ -140,7 +142,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   EsriSceneWidget? _sceneDroneWidget;
   final _scene3DKey = GlobalKey<EsriSceneWidgetState>();
   final _sceneDroneKey = GlobalKey<EsriSceneWidgetState>();
-  
+
   (double lat, double lng)? _currentMapCenter;
 
   final _mapReadyCompleter = Completer<void>();
@@ -153,8 +155,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     final dLng = endLngRad - startLngRad;
     final y = math.sin(dLng) * math.cos(endLatRad);
-    final x = math.cos(startLatRad) * math.sin(endLatRad) -
-              math.sin(startLatRad) * math.cos(endLatRad) * math.cos(dLng);
+    final x =
+        math.cos(startLatRad) * math.sin(endLatRad) - math.sin(startLatRad) * math.cos(endLatRad) * math.cos(dLng);
     return math.atan2(y, x);
   }
 
@@ -254,12 +256,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     // Track map heading rotation and zoom level changes
     DateTime? lastUpdateTime;
-    
+
     _viewpointChangedSubscription = _mapViewController.onViewpointChanged.listen((_) {
       final now = DateTime.now();
-      if (lastUpdateTime != null && now.difference(lastUpdateTime!).inMilliseconds < 32) {
+      if (lastUpdateTime != null && now.difference(lastUpdateTime!).inMilliseconds < 32)
         return; // Throttle to ~30 FPS to prevent heavy jitter
-      }
       lastUpdateTime = now;
 
       final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
@@ -852,9 +853,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _isSearching = false;
       });
       if (allResults.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
       }
     } catch (e) {
       debugPrint('Category search error: $e');
@@ -866,9 +866,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _allCategoryResults = [];
         _isSearching = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
     }
   }
 
@@ -1858,7 +1857,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 onSnapToNorth: _snapToNorth,
               ),
             ),
-            
+
           // Bottom-right center-on-me button
           if (isFabVisible && _sceneMode == 'default')
             Builder(
@@ -1875,7 +1874,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     bearing = _calculateBearing(mapLat, mapLng, userLat, userLng);
                   }
                 }
-                
+
                 return Positioned(
                   bottom: 100,
                   right: 16,
@@ -1887,7 +1886,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     onRecenterOnUser: _recenterOnUser,
                   ),
                 );
-              }
+              },
             ),
 
           // Floating top search bar & suggestion panel
@@ -2066,9 +2065,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                           }
                           if (gps == null) {
                             if (mounted) {
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
                             }
                             return;
                           }
@@ -2113,10 +2111,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             Positioned(
               bottom: 24,
               right: 16,
-              child: EsriMapScaleBar(
-                scale: _currentScale,
-                isDark: isDark,
-              ),
+              child: EsriMapScaleBar(scale: _currentScale, isDark: isDark),
             ),
 
           // Transit Legend
