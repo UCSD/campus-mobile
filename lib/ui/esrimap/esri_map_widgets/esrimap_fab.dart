@@ -108,7 +108,10 @@ class EsriMapFabCluster extends StatelessWidget {
         
         // Map displays (Layers)
         _circleButton(
-          icon: Icons.layers_outlined,
+          customIcon: CustomPaint(
+            size: const Size(20, 20),
+            painter: _MapDisplaysIconPainter(color: fgColor),
+          ),
           color: fgColor,
           bgColor: bgColor,
           onTap: onShowLayersPanel,
@@ -120,12 +123,15 @@ class EsriMapFabCluster extends StatelessWidget {
   Widget _circleButton({
     IconData? icon,
     String? svgAsset,
+    Widget? customIcon,
     required Color color,
     required Color bgColor,
     required VoidCallback onTap,
   }) {
     Widget iconWidget;
-    if (svgAsset != null) {
+    if (customIcon != null) {
+      iconWidget = customIcon;
+    } else if (svgAsset != null) {
       iconWidget = SvgPicture.asset(
         svgAsset,
         width: 22,
@@ -150,6 +156,60 @@ class EsriMapFabCluster extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _MapDisplaysIconPainter extends CustomPainter {
+  final Color color;
+  _MapDisplaysIconPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..strokeJoin = StrokeJoin.miter
+      ..strokeCap = StrokeCap.square;
+
+    final double w = size.width;
+    final double h = size.height;
+
+    final path = Path();
+    
+    // Top Diamond
+    // Stop the diamond much earlier to leave a clear gap for the + sign
+    path.moveTo(w * 0.40, h * 0.20); // Start at top, slightly left
+    path.lineTo(w * 0.15, h * 0.40); // Down-left to left point
+    path.lineTo(w * 0.50, h * 0.65); // Down-right to bottom point
+    path.lineTo(w * 0.70, h * 0.50); // Up-right, stopping early
+    
+    // Bottom Diamond (V shape)
+    path.moveTo(w * 0.15, h * 0.60); // Left start
+    path.lineTo(w * 0.50, h * 0.85); // Bottom point
+    path.lineTo(w * 0.85, h * 0.60); // Right end
+
+    canvas.drawPath(path, paint);
+
+    // Plus sign
+    // Positioned solidly in the top right
+    final cx = w * 0.80;
+    final cy = h * 0.20;
+    final r = w * 0.14;
+    
+    final plusPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.square;
+
+    canvas.drawLine(Offset(cx - r, cy), Offset(cx + r, cy), plusPaint);
+    canvas.drawLine(Offset(cx, cy - r), Offset(cx, cy + r), plusPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _MapDisplaysIconPainter oldDelegate) {
+    return oldDelegate.color != color;
   }
 }
 
