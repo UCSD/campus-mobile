@@ -82,36 +82,36 @@ class EsriMapLayersPanel extends StatelessWidget {
       return GestureDetector(
         onTap: onTap,
         child: SizedBox(
-          width: 72,
+          width: 86,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 56,
-                height: 56,
+                width: 68,
+                height: 68,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                   border: selected
                       ? Border.all(color: accent, width: 2.5)
                       : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6.5),
+                  borderRadius: BorderRadius.circular(8.5),
                   child: loading
                       ? const Center(
-                          child: SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: SizedBox(width: 26, height: 26, child: CircularProgressIndicator(strokeWidth: 2)),
                         )
                       : (imageWidget ?? Container(color: isDark ? Colors.grey[700] : Colors.grey[300])),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 6),
               Text(
                 label,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 13,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
                   color: selected ? accent : textColor,
                 ),
