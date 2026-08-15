@@ -64,14 +64,21 @@ class EsriMapFabCluster extends StatelessWidget {
     final bgColor = isDark ? Colors.grey[800]! : Colors.white;
     final fgColor = isDark ? Colors.white : Colors.grey[800]!;
 
-    final locationColor = isLocationActive ? ACTIVE_COLOR : fgColor;
     final recenterColor = isRecenterActive ? ACTIVE_COLOR : fgColor;
-    final isNot3D = !is3D;
-
+    
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        // Map displays (Layers)
+        _circleButton(
+          icon: Icons.layers_outlined,
+          color: fgColor,
+          bgColor: bgColor,
+          onTap: onShowLayersPanel,
+        ),
+        const SizedBox(height: 10),
+        
         // Compass needle button
         Material(
           elevation: 4,
@@ -97,38 +104,91 @@ class EsriMapFabCluster extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        // Pill container with action buttons
-        Material(
-          elevation: 4,
-          color: bgColor,
-          borderRadius: BorderRadius.circular(SIZE / 2),
-          clipBehavior: Clip.antiAlias,
-          child: SizedBox(
-            width: SIZE,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (isNot3D) _pillButton(icon: Icons.my_location, color: locationColor, onTap: onRecenterOnUser),
-                  _pillButton(icon: Icons.center_focus_strong, color: recenterColor, onTap: onRecenterOnView),
-                  _pillButton(icon: Icons.layers_outlined, color: fgColor, onTap: onShowLayersPanel),
-                ],
-              ),
-            ),
-          ),
+        
+        // Center Map (Center on Campus)
+        _circleButton(
+          icon: Icons.center_focus_strong,
+          color: recenterColor,
+          bgColor: bgColor,
+          onTap: onRecenterOnView,
         ),
       ],
     );
   }
 
-  Widget _pillButton({required IconData icon, required Color color, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        height: BTN_HEIGHT,
-        child: Center(child: Icon(icon, size: 22, color: color)),
+  Widget _circleButton({
+    required IconData icon,
+    required Color color,
+    required Color bgColor,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      elevation: 4,
+      color: bgColor,
+      shape: const CircleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          width: SIZE,
+          height: SIZE,
+          child: Center(child: Icon(icon, size: 22, color: color)),
+        ),
+      ),
+    );
+  }
+}
+
+/// Floating action button for "Center on Me" rendered in bottom-right of map view.
+class EsriMapLocationFab extends StatelessWidget {
+  final bool isDark;
+  final bool isLocationActive;
+  final VoidCallback onRecenterOnUser;
+
+  const EsriMapLocationFab({
+    Key? key,
+    required this.isDark,
+    this.isLocationActive = false,
+    required this.onRecenterOnUser,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final bgColor = isDark ? Colors.grey[800]! : Colors.white;
+    final fgColor = isDark ? Colors.white : Colors.grey[800]!;
+    
+    // Inactive state uses the compass needle icon (Icons.explore_outlined)
+    // Active state uses a custom blue dot container with a white border and light blue background.
+    final activeBgColor = isDark ? Colors.blue[900]!.withValues(alpha: 0.5) : const Color(0xFFE8F0FE);
+    final currentBgColor = isLocationActive ? bgColor : activeBgColor;
+    
+    return Material(
+      elevation: 4,
+      color: currentBgColor,
+      shape: const CircleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onRecenterOnUser,
+        child: SizedBox(
+          width: EsriMapFabCluster.SIZE,
+          height: EsriMapFabCluster.SIZE,
+          child: Center(
+            child: isLocationActive
+                ? Icon(Icons.explore_outlined, size: 26, color: fgColor)
+                : Container(
+                    width: 14,
+                    height: 14,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue[600],
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 2)
+                      ],
+                    ),
+                  ),
+          ),
+        ),
       ),
     );
   }

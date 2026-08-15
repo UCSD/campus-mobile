@@ -1196,20 +1196,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
       _ignoreViewpointReset = true;
       setState(() => _isLocationActive = true);
-      _mapViewController.setViewpointAnimated(
+      await _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
           ArcGISPoint(x: location.longitude, y: location.latitude, spatialReference: SpatialReference.wgs84),
           scale: 10000,
         ),
       );
-      Future.delayed(const Duration(milliseconds: 600), () {
-        if (mounted) {
-          setState(() {
-            _ignoreViewpointReset = false;
-            _isLocationActive = false;
-          });
-        }
-      });
+      if (mounted) {
+        setState(() {
+          _ignoreViewpointReset = false;
+        });
+      }
     } catch (e) {
       debugPrint('Location error: $e');
       if (!mounted) return;
@@ -1841,6 +1838,18 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 onRecenterOnView: _recenterOnView,
                 onRecenterOnUser: _recenterOnUser,
                 onSnapToNorth: _snapToNorth,
+              ),
+            ),
+            
+          // Bottom-right center-on-me button
+          if (isFabVisible && _sceneMode == 'default')
+            Positioned(
+              bottom: 100,
+              right: 16,
+              child: EsriMapLocationFab(
+                isDark: isDark,
+                isLocationActive: _isLocationActive,
+                onRecenterOnUser: _recenterOnUser,
               ),
             ),
 
