@@ -70,15 +70,6 @@ class EsriMapFabCluster extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Map displays (Layers)
-        _circleButton(
-          icon: Icons.layers_outlined,
-          color: fgColor,
-          bgColor: bgColor,
-          onTap: onShowLayersPanel,
-        ),
-        const SizedBox(height: 10),
-        
         // Compass needle button
         Material(
           elevation: 4,
@@ -111,6 +102,15 @@ class EsriMapFabCluster extends StatelessWidget {
           color: recenterColor,
           bgColor: bgColor,
           onTap: onRecenterOnView,
+        ),
+        const SizedBox(height: 10),
+        
+        // Map displays (Layers)
+        _circleButton(
+          icon: Icons.layers_outlined,
+          color: fgColor,
+          bgColor: bgColor,
+          onTap: onShowLayersPanel,
         ),
       ],
     );
