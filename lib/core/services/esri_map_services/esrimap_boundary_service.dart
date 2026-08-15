@@ -147,38 +147,38 @@ class EsriMapBoundaryService {
       try {
         final polyline = boundary.toPolyline();
 
-        // Outer glow layer 2 (Widest, most diffuse feather ring)
+        // Outer glow layer 2 (Widest, most diffuse feather ring - reduced by 60%)
         graphics.add(
           Graphic(
             geometry: polyline,
             symbol: SimpleLineSymbol(
               style: SimpleLineSymbolStyle.solid,
               color: glow2Color,
-              width: 8.0,
+              width: 3.2,
             ),
           ),
         );
 
-        // Outer glow layer 1 (Medium feather ring)
+        // Outer glow layer 1 (Medium feather ring - reduced by 60%)
         graphics.add(
           Graphic(
             geometry: polyline,
             symbol: SimpleLineSymbol(
               style: SimpleLineSymbolStyle.solid,
               color: glow1Color,
-              width: 4.5,
+              width: 1.8,
             ),
           ),
         );
 
-        // Crisp primary boundary stroke (UCSD Navy / Brand Accent)
+        // Crisp primary boundary stroke (UCSD Navy / Brand Accent - reduced by 60%)
         graphics.add(
           Graphic(
             geometry: polyline,
             symbol: SimpleLineSymbol(
               style: SimpleLineSymbolStyle.solid,
               color: primaryStrokeColor,
-              width: 1.8,
+              width: 0.72,
             ),
           ),
         );
