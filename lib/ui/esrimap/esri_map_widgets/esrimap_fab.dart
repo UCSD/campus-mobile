@@ -157,12 +157,16 @@ class EsriMapFabCluster extends StatelessWidget {
 class EsriMapLocationFab extends StatelessWidget {
   final bool isDark;
   final bool isLocationActive;
+  final double? bearingToUser;
+  final double mapRotation;
   final VoidCallback onRecenterOnUser;
 
   const EsriMapLocationFab({
     Key? key,
     required this.isDark,
     this.isLocationActive = false,
+    this.bearingToUser,
+    this.mapRotation = 0.0,
     required this.onRecenterOnUser,
   }) : super(key: key);
 
@@ -171,14 +175,67 @@ class EsriMapLocationFab extends StatelessWidget {
     final bgColor = isDark ? Colors.grey[800]! : Colors.white;
     final fgColor = isDark ? Colors.white : Colors.grey[800]!;
     
-    // Inactive state uses the compass needle icon (Icons.explore_outlined)
-    // Active state uses a custom blue dot container with a white border and light blue background.
     final activeBgColor = isDark ? Colors.blue[900]!.withValues(alpha: 0.5) : const Color(0xFFE8F0FE);
-    final currentBgColor = isLocationActive ? bgColor : activeBgColor;
+    
+    Widget iconWidget;
+    if (isLocationActive || bearingToUser != null) {
+      double totalRotation = 0;
+      if (!isLocationActive && bearingToUser != null) {
+        final mapRotRad = mapRotation * math.pi / 180.0;
+        totalRotation = bearingToUser! - mapRotRad;
+      }
+      
+      iconWidget = Stack(
+        alignment: Alignment.center,
+        children: [
+          // Light blue halo
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: activeBgColor,
+            ),
+          ),
+          // Directional Triangle (only if inactive)
+          if (!isLocationActive && bearingToUser != null)
+            Transform.rotate(
+              angle: totalRotation,
+              child: Container(
+                width: 30,
+                height: 30,
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: CustomPaint(
+                    size: const Size(10, 8),
+                    painter: _DirectionArrowPainter(color: Colors.blue[600]!),
+                  ),
+                ),
+              ),
+            ),
+          // The blue dot
+          Container(
+            width: 16,
+            height: 16,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.blue[600],
+              border: Border.all(color: Colors.white, width: 2.5),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 2)
+              ],
+            ),
+          ),
+        ],
+      );
+    } else {
+      iconWidget = Icon(Icons.explore_outlined, size: 26, color: fgColor);
+    }
     
     return Material(
       elevation: 4,
-      color: currentBgColor,
+      color: bgColor,
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -187,24 +244,31 @@ class EsriMapLocationFab extends StatelessWidget {
           width: EsriMapFabCluster.SIZE,
           height: EsriMapFabCluster.SIZE,
           child: Center(
-            child: isLocationActive
-                ? Icon(Icons.explore_outlined, size: 26, color: fgColor)
-                : Container(
-                    width: 14,
-                    height: 14,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue[600],
-                      border: Border.all(color: Colors.white, width: 2),
-                      boxShadow: [
-                        BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 2)
-                      ],
-                    ),
-                  ),
+            child: iconWidget,
           ),
         ),
       ),
     );
+  }
+}
+
+class _DirectionArrowPainter extends CustomPainter {
+  final Color color;
+  _DirectionArrowPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(size.width / 2, 0)
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+    canvas.drawPath(path, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(covariant _DirectionArrowPainter oldDelegate) {
+    return oldDelegate.color != color;
   }
 }
 

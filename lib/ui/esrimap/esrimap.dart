@@ -140,8 +140,23 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   EsriSceneWidget? _sceneDroneWidget;
   final _scene3DKey = GlobalKey<EsriSceneWidgetState>();
   final _sceneDroneKey = GlobalKey<EsriSceneWidgetState>();
+  
+  (double lat, double lng)? _currentMapCenter;
 
   final _mapReadyCompleter = Completer<void>();
+
+  double _calculateBearing(double startLat, double startLng, double endLat, double endLng) {
+    final startLatRad = startLat * math.pi / 180;
+    final startLngRad = startLng * math.pi / 180;
+    final endLatRad = endLat * math.pi / 180;
+    final endLngRad = endLng * math.pi / 180;
+
+    final dLng = endLngRad - startLngRad;
+    final y = math.sin(dLng) * math.cos(endLatRad);
+    final x = math.cos(startLatRad) * math.sin(endLatRad) -
+              math.sin(startLatRad) * math.cos(endLatRad) * math.cos(dLng);
+    return math.atan2(y, x);
+  }
 
   /// Returns list of mapped search categories constructed from server configuration.
   List<EsriSearchCategory> get _categories {
@@ -261,6 +276,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         setState(() {
           _mapRotation = vp.rotation;
           _currentScale = scale;
+          if (centerPoint != null) {
+            final wgs84Point = centerPoint.spatialReference == SpatialReference.wgs84
+                ? centerPoint
+                : (GeometryEngine.project(centerPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?);
+            final xVal = wgs84Point?.x ?? centerPoint.x;
+            final yVal = wgs84Point?.y ?? centerPoint.y;
+            _currentMapCenter = (yVal, xVal);
+          }
           final shouldResetVP = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
           if (shouldResetVP) {
             _isLocationActive = false;
@@ -1843,14 +1866,33 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             
           // Bottom-right center-on-me button
           if (isFabVisible && _sceneMode == 'default')
-            Positioned(
-              bottom: 100,
-              right: 16,
-              child: EsriMapLocationFab(
-                isDark: isDark,
-                isLocationActive: _isLocationActive,
-                onRecenterOnUser: _recenterOnUser,
-              ),
+            Builder(
+              builder: (context) {
+                double? bearing;
+                if (!_isLocationActive && _currentMapCenter != null) {
+                  final userLoc = _getUserLatLng();
+                  if (userLoc != null) {
+                    final mapLat = _currentMapCenter!.$1;
+                    final mapLng = _currentMapCenter!.$2;
+                    final userLat = userLoc.$1;
+                    final userLng = userLoc.$2;
+                    // Bearing pointing FROM map center TO user location
+                    bearing = _calculateBearing(mapLat, mapLng, userLat, userLng);
+                  }
+                }
+                
+                return Positioned(
+                  bottom: 100,
+                  right: 16,
+                  child: EsriMapLocationFab(
+                    isDark: isDark,
+                    isLocationActive: _isLocationActive,
+                    bearingToUser: bearing,
+                    mapRotation: _mapRotation,
+                    onRecenterOnUser: _recenterOnUser,
+                  ),
+                );
+              }
             ),
 
           // Floating top search bar & suggestion panel
