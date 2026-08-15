@@ -7,32 +7,35 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('EsriMapConfig & Vector Tile Basemaps', () {
-    test('mapConfig.json parses vector tile basemap configurations correctly', () async {
+  group('EsriMapConfig & Vector/Tiled Basemaps', () {
+    test('mapConfig.json parses geographical basemap configurations correctly', () async {
       final configString = await rootBundle.loadString('assets/esri_map_assets/mapConfig.json');
       final jsonMap = jsonDecode(configString) as Map<String, dynamic>;
       final config = EsriMapConfig.fromJson(jsonMap);
 
-      // Verify Default basemap uses vector tiled layer without legacy raster layers
+      // Verify Default basemap includes hillshade, lightGrayBase, and campus vector tile
       final defaultBasemap = config.basemaps['defaultMap'];
       expect(defaultBasemap, isNotNull);
-      expect(defaultBasemap!.baseLayers.length, 1);
-      expect(defaultBasemap.baseLayers.first.type, 'arcgisVectorTiled');
-      expect(defaultBasemap.baseLayers.first.itemId, 'e19f33d2c1f44967aef673306c483913');
+      expect(defaultBasemap!.baseLayers.length, 3);
+      expect(defaultBasemap.baseLayers.any((l) => l.serviceKey == 'hillshade'), isTrue);
+      expect(defaultBasemap.baseLayers.any((l) => l.serviceKey == 'lightGrayBase'), isTrue);
+      expect(defaultBasemap.baseLayers.any((l) => l.itemId == 'e19f33d2c1f44967aef673306c483913'), isTrue);
 
-      // Verify Light basemap uses vector tiled layer
+      // Verify Light basemap includes hillshade, lightGrayBase, and campus vector tile
       final lightBasemap = config.basemaps['light'];
       expect(lightBasemap, isNotNull);
-      expect(lightBasemap!.baseLayers.length, 1);
-      expect(lightBasemap.baseLayers.first.type, 'arcgisVectorTiled');
-      expect(lightBasemap.baseLayers.first.itemId, '6643ee62af494f5bafe7dfdb8eb3f857');
+      expect(lightBasemap!.baseLayers.length, 3);
+      expect(lightBasemap.baseLayers.any((l) => l.serviceKey == 'hillshade'), isTrue);
+      expect(lightBasemap.baseLayers.any((l) => l.serviceKey == 'lightGrayBase'), isTrue);
+      expect(lightBasemap.baseLayers.any((l) => l.itemId == '6643ee62af494f5bafe7dfdb8eb3f857'), isTrue);
 
-      // Verify Dark basemap uses vector tiled layer
+      // Verify Dark basemap includes hillshade, darkGrayBase, and campus vector tile
       final darkBasemap = config.basemaps['dark'];
       expect(darkBasemap, isNotNull);
-      expect(darkBasemap!.baseLayers.length, 1);
-      expect(darkBasemap.baseLayers.first.type, 'arcgisVectorTiled');
-      expect(darkBasemap.baseLayers.first.itemId, '09d7b3934b6c4c2cad8380c04e08c1b1');
+      expect(darkBasemap!.baseLayers.length, 3);
+      expect(darkBasemap.baseLayers.any((l) => l.serviceKey == 'hillshade'), isTrue);
+      expect(darkBasemap.baseLayers.any((l) => l.serviceKey == 'darkGrayBase'), isTrue);
+      expect(darkBasemap.baseLayers.any((l) => l.itemId == '09d7b3934b6c4c2cad8380c04e08c1b1'), isTrue);
 
       // Verify Satellite basemap uses worldImagery
       final satelliteBasemap = config.basemaps['satellite'];

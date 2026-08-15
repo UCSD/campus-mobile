@@ -18,6 +18,14 @@
       "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/default-thumbnail.png",
       "baseLayers": [
         {
+          "type": "arcgisTiled",
+          "serviceKey": "hillshade"
+        },
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "lightGrayBase"
+        },
+        {
           "type": "arcgisVectorTiled",
           "portalKey": "age",
           "itemId": "e19f33d2c1f44967aef673306c483913"
@@ -29,6 +37,14 @@
       "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/light-thumbnail.png",
       "baseLayers": [
         {
+          "type": "arcgisTiled",
+          "serviceKey": "hillshade"
+        },
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "lightGrayBase"
+        },
+        {
           "type": "arcgisVectorTiled",
           "portalKey": "age",
           "itemId": "6643ee62af494f5bafe7dfdb8eb3f857"
@@ -39,6 +55,14 @@
       "label": "Dark",
       "thumbnailAsset": "https://dvsbke0idzv4u.cloudfront.net/thumbnails/dark-thumbnail.png",
       "baseLayers": [
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "hillshade"
+        },
+        {
+          "type": "arcgisTiled",
+          "serviceKey": "darkGrayBase"
+        },
         {
           "type": "arcgisVectorTiled",
           "portalKey": "age",
