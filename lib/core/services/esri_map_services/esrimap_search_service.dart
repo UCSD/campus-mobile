@@ -112,6 +112,66 @@ class EsriMapSearchService {
         .toList();
   }
 
+  /// Identifies a building by performing a spatial intersection query at the given WGS84 coordinate.
+  static Future<MapSearchResult?> identifyBuildingAtCoordinate(double lat, double lng) async {
+    try {
+      final uri = Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/Buildings/Buildings_Campus_Map/MapServer/2/query');
+      final response = await http.get(uri.replace(queryParameters: {
+        'geometry': '$lng,$lat',
+        'geometryType': 'esriGeometryPoint',
+        'inSR': '4326',
+        'spatialRel': 'esriSpatialRelIntersects',
+        'distance': '15',
+        'units': 'esriSRUnit_Foot',
+        'outFields': '*',
+        'returnGeometry': 'true',
+        'outSR': '4326',
+        'f': 'json',
+      }));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final features = data['features'] as List<dynamic>?;
+        if (features != null && features.isNotEmpty) {
+          final attr = features.first['attributes'] as Map<String, dynamic>;
+          
+          final longName = attr['GIS.facTririgaBuildingInfo.FacilityLongName'] as String?;
+          final shortName = attr['GIS.facTririgaBuildingInfo.FacilityShortName'] as String?;
+          final name = (longName != null && longName.isNotEmpty) ? longName : (shortName ?? 'Unknown Building');
+          
+          final address = attr['GIS.facTririgaBuildingInfo.StreetAddress'] as String? ?? '';
+          
+          // Try to extract center of geometry if it's returned, otherwise fallback to tap location
+          double resLat = lat;
+          double resLng = lng;
+          final geom = features.first['geometry'] as Map<String, dynamic>?;
+          if (geom != null) {
+            final rings = geom['rings'] as List<dynamic>?;
+            if (rings != null && rings.isNotEmpty) {
+              final firstRing = rings.first as List<dynamic>?;
+              if (firstRing != null && firstRing.isNotEmpty) {
+                 resLng = firstRing.first[0] as double;
+                 resLat = firstRing.first[1] as double;
+              }
+            }
+          }
+
+          return MapSearchResult(
+            name: name,
+            subtitle: 'Building',
+            latitude: resLat,
+            longitude: resLng,
+            source: MapSearchSource.building,
+            address: address,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Failed to identify building at coordinate: $e');
+    }
+    return null;
+  }
+
   // ---------------------------------------------------------------------------
   // Viewport & Geographic Helpers
   // ---------------------------------------------------------------------------

@@ -1060,14 +1060,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
 
-    final isMappedResultsEmpty = _mappedResults.isEmpty;
-    if (isMappedResultsEmpty) {
-      _dismissCallout();
-      final isSelectedResultNotNull = _selectedResult != null;
-      if (isSelectedResultNotNull) _closeDetail();
-      return;
-    }
-
     try {
       final identifyResult = await _mapViewController.identifyGraphicsOverlay(
         _graphicsOverlay,
@@ -1082,14 +1074,30 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         final index = tappedGraphic.attributes['resultIndex'] as int?;
         final isValidResultIndex = index != null && index >= 0 && index < _mappedResults.length;
         if (isValidResultIndex) _handlePinTap(_mappedResults[index], tappedGraphic);
-      } else {
-        _dismissCallout();
-        final isSelectedResultNotNull = _selectedResult != null;
-        if (isSelectedResultNotNull) _closeDetail();
+        return;
       }
     } catch (e) {
       debugPrint('Identify error: $e');
     }
+
+    final mapPoint = _mapViewController.screenToLocation(screen: screenPoint);
+    if (mapPoint != null) {
+      final wgs84Point = GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
+      if (wgs84Point != null && !wgs84Point.x.isNaN && !wgs84Point.y.isNaN) {
+        final buildingResult = await EsriMapSearchService.identifyBuildingAtCoordinate(wgs84Point.y, wgs84Point.x);
+        if (buildingResult != null) {
+          _plotResultsOnMap([buildingResult]);
+          if (_graphicsOverlay.graphics.isNotEmpty) {
+            _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
+          }
+          return;
+        }
+      }
+    }
+
+    _dismissCallout();
+    final isSelectedResultNotNull = _selectedResult != null;
+    if (isSelectedResultNotNull) _closeDetail();
   }
 
   /// Shows a place name above a plotted map pin without changing the search.
