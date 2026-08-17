@@ -147,22 +147,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _scene3DKey = GlobalKey<EsriSceneWidgetState>();
   final _sceneDroneKey = GlobalKey<EsriSceneWidgetState>();
 
-  (double lat, double lng)? _currentMapCenter;
-
   var _mapReadyCompleter = Completer<void>();
-
-  double _calculateBearing(double startLat, double startLng, double endLat, double endLng) {
-    final startLatRad = startLat * math.pi / 180;
-    final startLngRad = startLng * math.pi / 180;
-    final endLatRad = endLat * math.pi / 180;
-    final endLngRad = endLng * math.pi / 180;
-
-    final dLng = endLngRad - startLngRad;
-    final y = math.sin(dLng) * math.cos(endLatRad);
-    final x =
-        math.cos(startLatRad) * math.sin(endLatRad) - math.sin(startLatRad) * math.cos(endLatRad) * math.cos(dLng);
-    return math.atan2(y, x);
-  }
 
   /// Returns list of mapped search categories constructed from server configuration.
   List<EsriSearchCategory> get _categories {
@@ -263,7 +248,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.locationDisplay.onLocationChanged.listen((event) {
       final pos = event.position;
       final wgs = GeometryEngine.project(pos, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
-      if (wgs != null) {
+      if (wgs != null && !wgs.x.isNaN && !wgs.y.isNaN) {
         _saveLocationToHive(wgs.y, wgs.x);
       }
     });
@@ -289,16 +274,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         setState(() {
           _mapRotation = vp.rotation.isNaN ? 0.0 : vp.rotation;
           _currentScale = scale;
-          if (centerPoint != null) {
-            final wgs84Point = centerPoint.spatialReference == SpatialReference.wgs84
-                ? centerPoint
-                : (GeometryEngine.project(centerPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?);
-            final xVal = wgs84Point?.x ?? centerPoint.x;
-            final yVal = wgs84Point?.y ?? centerPoint.y;
-            if (!xVal.isNaN && !yVal.isNaN) {
-              _currentMapCenter = (yVal, xVal);
-            }
-          }
           final shouldResetVP = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
           if (shouldResetVP) {
             _isLocationActive = false;
@@ -1913,384 +1888,400 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final shouldShowScaleBar = _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // Map View Stack (2D Map View vs 3D Scene View)
-          Column(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
             children: [
-              Expanded(
-                child: _hasNetworkError
-                    ? Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.wifi_off, size: 48, color: Colors.grey),
-                            const SizedBox(height: 16),
-                            const Text('Network error. Please try again.', style: TextStyle(fontSize: 16)),
-                            const SizedBox(height: 16),
-                            ElevatedButton(onPressed: _fetchConfigThenInit, child: const Text('Reload')),
-                          ],
-                        ),
-                      )
-                    : IndexedStack(
-                        index: indexedStackIndex,
-                        children: [
-                          Listener(
-                            onPointerDown: _onMapPointerDown,
-                            child: ArcGISMapView(
-                              controllerProvider: () => _mapViewController,
-                              onMapViewReady: _onMapViewReady,
-                              onTap: _onMapTap,
-                            ),
-                          ),
-                          _scene3DWidget ?? const SizedBox.shrink(),
-                          _sceneDroneWidget ?? const SizedBox.shrink(),
-                        ],
-                      ),
-              ),
-            ],
-          ),
-
-          // Map controls stay behind search and slide-over panels.
-          if (isFabVisible)
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 68,
-              right: 16,
-              child: EsriMapFabCluster(
-                isDark: isDark,
-                is3D: _sceneMode != 'default',
-                mapRotation: _mapRotation,
-                isLocationActive: _isLocationActive,
-                isRecenterActive: _isRecenterActive,
-                onShowLayersPanel: () => setState(() => _showLayersPanel = true),
-                onRecenterOnView: _recenterOnView,
-                onRecenterOnUser: _recenterOnUser,
-                onSnapToNorth: _snapToNorth,
-              ),
-            ),
-
-          // Bottom-right center-on-me button
-          if (isFabVisible && _sceneMode == 'default')
-            Builder(
-              builder: (context) {
-                double? bearing;
-                bool isUserVisible = false;
-                if (!_isLocationActive && _currentMapCenter != null) {
-                  final userLoc = _getUserLatLng();
-                  if (userLoc != null) {
-                    final mapLat = _currentMapCenter!.$1;
-                    final mapLng = _currentMapCenter!.$2;
-                    final userLat = userLoc.$1;
-                    final userLng = userLoc.$2;
-
-                    try {
-                      final pos = _mapViewController.locationDisplay.location?.position;
-                      final vp = _mapViewController.getCurrentViewpoint(ViewpointType.boundingGeometry);
-                      final geom = vp?.targetGeometry;
-                      if (pos != null && geom != null) {
-                        isUserVisible = GeometryEngine.intersects(geometry1: pos, geometry2: geom);
-                      }
-                    } catch (_) {}
-
-                    if (!isUserVisible) {
-                      // Bearing pointing FROM map center TO user location
-                      bearing = _calculateBearing(mapLat, mapLng, userLat, userLng);
-                    }
-                  }
-                }
-
-                return Positioned(
-                  bottom: 100,
-                  right: 16,
-                  child: EsriMapLocationFab(
-                    isDark: isDark,
-                    isLocationActive: _isLocationActive,
-                    isUserVisible: isUserVisible,
-                    isLoading: _isLocatingUser,
-                    bearingToUser: bearing,
-                    mapRotation: _mapRotation,
-                    onRecenterOnUser: _recenterOnUser,
-                  ),
-                );
-              },
-            ),
-
-          // Floating top search bar & suggestion panel
-          if (isSearchEnabledAndDefault)
-            Positioned(
-              top: 8,
-              left: 12,
-              right: 12,
-              child: Column(
+              // Map View Stack (2D Map View vs 3D Scene View)
+              Column(
                 children: [
-                  EsriMapSearchBar(
-                    config: _config,
-                    showRouteFields: _showRouteFields,
-                    searchController: _searchController,
-                    focusNode: _focusNode,
-                    fromController: _fromController,
-                    fromFocusNode: _fromFocusNode,
-                    toController: _toController,
-                    toFocusNode: _toFocusNode,
-                    showSuggestions: _showSuggestions,
-                    showResults: _showResults,
-                    isSearching: _isSearching,
-                    searchResults: _searchResults,
-                    matchingPoiClasses: _matchingPoiClasses,
-                    onPerformSearch: _queueSearch,
-                    onPerformClassSearch: _performClassSearch,
-                    onSelectResult: _selectResult,
-                    onClearSearch: _clearSearch,
-                    onClearRoute: _clearRoute,
-                    onSwapRouteFields: () {
-                      final tmpText = _fromController.text;
-                      final tmpLatLng = _fromLatLng;
-                      _fromController.text = _toController.text;
-                      _toController.text = tmpText;
-                      setState(() {
-                        final hasRouteDestination = _routeDestination != null;
-                        _fromLatLng = hasRouteDestination
-                            ? (_routeDestination!.latitude, _routeDestination!.longitude)
-                            : null;
-                        final hasTmpLatLng = tmpLatLng != null;
-                        _routeDestination = hasTmpLatLng
-                            ? MapSearchResult(
-                                name: tmpText,
-                                subtitle: '',
-                                latitude: tmpLatLng.$1,
-                                longitude: tmpLatLng.$2,
-                                source: MapSearchSource.building,
-                              )
-                            : null;
-                      });
-                      final canSolveRoute = _routeDestination != null && _fromLatLng != null;
-                      if (canSolveRoute) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-                    },
-                    onTapSearchField: () {
-                      final hasSelectedResult = _selectedResult != null;
-                      if (hasSelectedResult) setState(() => _selectedResult = null);
-                      final isSearchTextEmpty = _searchController.text.isEmpty;
-                      if (isSearchTextEmpty) {
-                        setState(() {
-                          _showSuggestions = true;
-                          _showResults = false;
-                        });
-                      }
-                    },
-                    onTapFromField: () {
-                      setState(() {
-                        _activeRouteField = 'from';
-                        _showSuggestions = true;
-                        _showResults = false;
-                      });
-                    },
-                    onTapToField: () {
-                      setState(() {
-                        _activeRouteField = 'to';
-                        _showSuggestions = true;
-                        _showResults = false;
-                      });
-                    },
-                    onChangedFromField: (text) {
-                      _fromLatLng = null;
-                      final isLongEnough = text.length >= 3;
-                      final isTextEmpty = text.isEmpty;
-                      if (isLongEnough) {
-                        _queueSearch(text);
-                      } else if (isTextEmpty) {
-                        _cancelPendingSearch();
-                        setState(() {
-                          _isSearching = false;
-                          _showResults = false;
-                          _showSuggestions = true;
-                        });
-                      } else {
-                        _cancelPendingSearch();
-                        setState(() {
-                          _isSearching = false;
-                          _showResults = false;
-                          _showSuggestions = false;
-                        });
-                      }
-                    },
-                    onChangedToField: (text) {
-                      final isLongEnough = text.length >= 3;
-                      final isTextEmpty = text.isEmpty;
-                      if (isLongEnough) {
-                        _queueSearch(text);
-                      } else if (isTextEmpty) {
-                        _cancelPendingSearch();
-                        setState(() {
-                          _isSearching = false;
-                          _showResults = false;
-                          _showSuggestions = true;
-                        });
-                      } else {
-                        _cancelPendingSearch();
-                        setState(() {
-                          _isSearching = false;
-                          _showResults = false;
-                          _showSuggestions = false;
-                        });
-                      }
-                    },
-                    onClearFromField: () {
-                      _cancelPendingSearch();
-                      _fromController.clear();
-                      _fromLatLng = null;
-                      setState(() {
-                        _isSearching = false;
-                        _showResults = false;
-                        _showSuggestions = true;
-                      });
-                    },
-                    onClearToField: () {
-                      _cancelPendingSearch();
-                      _toController.clear();
-                      setState(() {
-                        _isSearching = false;
-                        _showResults = false;
-                        _showSuggestions = true;
-                      });
-                    },
-                    onOpenAiSearch: () => showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (_) => EsriAiSearchSheet(
-                        userLat: _getUserLatLng()?.$1,
-                        userLon: _getUserLatLng()?.$2,
-                        onLocationSelected: _onAiLocationSelected,
-                        onRouteRequested: _onAiRouteRequested,
-                      ),
-                    ),
-                    iconForClass: _iconForClass,
-                    labelForClass: _labelForClass,
-                    iconForResult: _iconForResult,
+                  Expanded(
+                    child: _hasNetworkError
+                        ? Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.wifi_off, size: 48, color: Colors.grey),
+                                const SizedBox(height: 16),
+                                const Text('Network error. Please try again.', style: TextStyle(fontSize: 16)),
+                                const SizedBox(height: 16),
+                                ElevatedButton(onPressed: _fetchConfigThenInit, child: const Text('Reload')),
+                              ],
+                            ),
+                          )
+                        : IndexedStack(
+                            index: indexedStackIndex,
+                            children: [
+                              Listener(
+                                onPointerDown: _onMapPointerDown,
+                                child: ArcGISMapView(
+                                  controllerProvider: () => _mapViewController,
+                                  onMapViewReady: _onMapViewReady,
+                                  onTap: _onMapTap,
+                                ),
+                              ),
+                              _scene3DWidget ?? const SizedBox.shrink(),
+                              _sceneDroneWidget ?? const SizedBox.shrink(),
+                            ],
+                          ),
                   ),
+                ],
+              ),
 
-                  // Suggestions panel (Category icons + Recent Search History)
-                  if (_showSuggestions && !_showResults)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: EsriMapSuggestionsPanel(
-                        categories: _categories,
-                        recentSearches: _recentSearches,
-                        showRouteFields: _showRouteFields,
-                        activeRouteField: _activeRouteField,
-                        onSelectCurrentLocation: () async {
-                          (double, double)? gps = await _getDeviceLocationEfficiently();
-                          if (gps == null) {
-                            if (mounted) {
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+              // Map controls stay behind search and slide-over panels.
+              if (isFabVisible)
+                Positioned(
+                  top: MediaQuery.of(context).padding.top + 68,
+                  right: 16,
+                  child: EsriMapFabCluster(
+                    isDark: isDark,
+                    is3D: _sceneMode != 'default',
+                    mapRotation: _mapRotation,
+                    isLocationActive: _isLocationActive,
+                    isRecenterActive: _isRecenterActive,
+                    onShowLayersPanel: () => setState(() => _showLayersPanel = true),
+                    onRecenterOnView: _recenterOnView,
+                    onRecenterOnUser: _recenterOnUser,
+                    onSnapToNorth: _snapToNorth,
+                  ),
+                ),
+
+              // Bottom-right center-on-me button
+              if (isFabVisible && _sceneMode == 'default')
+                Builder(
+                  builder: (context) {
+                    double? screenAngle;
+                    bool isUserVisible = false;
+
+                    if (!_isLocationActive) {
+                      try {
+                        final pos = _mapViewController.locationDisplay.location?.position;
+                        final vp = _mapViewController.getCurrentViewpoint(ViewpointType.boundingGeometry);
+                        final geom = vp?.targetGeometry;
+                        if (pos != null && geom != null) {
+                          final projectedPos = GeometryEngine.project(
+                            pos,
+                            outputSpatialReference: geom.spatialReference!,
+                          );
+                          if (projectedPos != null) {
+                            isUserVisible = GeometryEngine.intersects(geometry1: projectedPos, geometry2: geom);
+
+                            if (!isUserVisible) {
+                              final screenPoint = _mapViewController.locationToScreen(
+                                mapPoint: projectedPos as ArcGISPoint,
+                              );
+                              // FAB center is bottom: 100, right: 16, size: 48x48 -> center is 24px inwards
+                              final fabX = constraints.maxWidth - 16 - 24;
+                              final fabY = constraints.maxHeight - 100 - 24;
+
+                              final dx = screenPoint.dx - fabX;
+                              final dy = screenPoint.dy - fabY;
+                              // angle from UP (negative Y)
+                              screenAngle = math.atan2(dx, -dy);
                             }
-                            return;
                           }
-                          _fromController.text = 'My Location';
-                          _fromLatLng = gps;
-                          if (mounted) {
+                        }
+                      } catch (_) {}
+                    }
+
+                    return Positioned(
+                      bottom: 100,
+                      right: 16,
+                      child: EsriMapLocationFab(
+                        isDark: isDark,
+                        isLocationActive: _isLocationActive,
+                        isUserVisible: isUserVisible,
+                        isLoading: _isLocatingUser,
+                        bearingToUser: screenAngle,
+                        mapRotation: _mapRotation,
+                        onRecenterOnUser: _recenterOnUser,
+                      ),
+                    );
+                  },
+                ),
+
+              // Floating top search bar & suggestion panel
+              if (isSearchEnabledAndDefault)
+                Positioned(
+                  top: 8,
+                  left: 12,
+                  right: 12,
+                  child: Column(
+                    children: [
+                      EsriMapSearchBar(
+                        config: _config,
+                        showRouteFields: _showRouteFields,
+                        searchController: _searchController,
+                        focusNode: _focusNode,
+                        fromController: _fromController,
+                        fromFocusNode: _fromFocusNode,
+                        toController: _toController,
+                        toFocusNode: _toFocusNode,
+                        showSuggestions: _showSuggestions,
+                        showResults: _showResults,
+                        isSearching: _isSearching,
+                        searchResults: _searchResults,
+                        matchingPoiClasses: _matchingPoiClasses,
+                        onPerformSearch: _queueSearch,
+                        onPerformClassSearch: _performClassSearch,
+                        onSelectResult: _selectResult,
+                        onClearSearch: _clearSearch,
+                        onClearRoute: _clearRoute,
+                        onSwapRouteFields: () {
+                          final tmpText = _fromController.text;
+                          final tmpLatLng = _fromLatLng;
+                          _fromController.text = _toController.text;
+                          _toController.text = tmpText;
+                          setState(() {
+                            final hasRouteDestination = _routeDestination != null;
+                            _fromLatLng = hasRouteDestination
+                                ? (_routeDestination!.latitude, _routeDestination!.longitude)
+                                : null;
+                            final hasTmpLatLng = tmpLatLng != null;
+                            _routeDestination = hasTmpLatLng
+                                ? MapSearchResult(
+                                    name: tmpText,
+                                    subtitle: '',
+                                    latitude: tmpLatLng.$1,
+                                    longitude: tmpLatLng.$2,
+                                    source: MapSearchSource.building,
+                                  )
+                                : null;
+                          });
+                          final canSolveRoute = _routeDestination != null && _fromLatLng != null;
+                          if (canSolveRoute) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+                        },
+                        onTapSearchField: () {
+                          final hasSelectedResult = _selectedResult != null;
+                          if (hasSelectedResult) setState(() => _selectedResult = null);
+                          final isSearchTextEmpty = _searchController.text.isEmpty;
+                          if (isSearchTextEmpty) {
                             setState(() {
-                              _showSuggestions = false;
+                              _showSuggestions = true;
                               _showResults = false;
                             });
                           }
-                          _fromFocusNode.unfocus();
-                          final hasRouteDestination = _routeDestination != null;
-                          if (hasRouteDestination) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
                         },
-                        onSelectCategory: _performCategorySearch,
-                        onSelectRecent: _selectResult,
-                        onRemoveRecent: _removeFromRecentSearches,
-                        onClearRecent: _clearRecentSearches,
+                        onTapFromField: () {
+                          setState(() {
+                            _activeRouteField = 'from';
+                            _showSuggestions = true;
+                            _showResults = false;
+                          });
+                        },
+                        onTapToField: () {
+                          setState(() {
+                            _activeRouteField = 'to';
+                            _showSuggestions = true;
+                            _showResults = false;
+                          });
+                        },
+                        onChangedFromField: (text) {
+                          _fromLatLng = null;
+                          final isLongEnough = text.length >= 3;
+                          final isTextEmpty = text.isEmpty;
+                          if (isLongEnough) {
+                            _queueSearch(text);
+                          } else if (isTextEmpty) {
+                            _cancelPendingSearch();
+                            setState(() {
+                              _isSearching = false;
+                              _showResults = false;
+                              _showSuggestions = true;
+                            });
+                          } else {
+                            _cancelPendingSearch();
+                            setState(() {
+                              _isSearching = false;
+                              _showResults = false;
+                              _showSuggestions = false;
+                            });
+                          }
+                        },
+                        onChangedToField: (text) {
+                          final isLongEnough = text.length >= 3;
+                          final isTextEmpty = text.isEmpty;
+                          if (isLongEnough) {
+                            _queueSearch(text);
+                          } else if (isTextEmpty) {
+                            _cancelPendingSearch();
+                            setState(() {
+                              _isSearching = false;
+                              _showResults = false;
+                              _showSuggestions = true;
+                            });
+                          } else {
+                            _cancelPendingSearch();
+                            setState(() {
+                              _isSearching = false;
+                              _showResults = false;
+                              _showSuggestions = false;
+                            });
+                          }
+                        },
+                        onClearFromField: () {
+                          _cancelPendingSearch();
+                          _fromController.clear();
+                          _fromLatLng = null;
+                          setState(() {
+                            _isSearching = false;
+                            _showResults = false;
+                            _showSuggestions = true;
+                          });
+                        },
+                        onClearToField: () {
+                          _cancelPendingSearch();
+                          _toController.clear();
+                          setState(() {
+                            _isSearching = false;
+                            _showResults = false;
+                            _showSuggestions = true;
+                          });
+                        },
+                        onOpenAiSearch: () => showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => EsriAiSearchSheet(
+                            userLat: _getUserLatLng()?.$1,
+                            userLon: _getUserLatLng()?.$2,
+                            onLocationSelected: _onAiLocationSelected,
+                            onRouteRequested: _onAiRouteRequested,
+                          ),
+                        ),
+                        iconForClass: _iconForClass,
+                        labelForClass: _labelForClass,
+                        iconForResult: _iconForResult,
                       ),
-                    ),
-                ],
-              ),
-            ),
 
-          // Category results list panel
-          if (shouldShowCatListPanel)
-            EsriMapCategoryListPanel(
-              controller: _categorySheetController,
-              activeCategory: _activeCategory,
-              allCategoryResults: _allCategoryResults,
-              viewportResults: EsriMapSearchService.filterToViewport(_allCategoryResults, _getViewportEnvelopeWGS84()),
-              userLocation: _getUserLatLng(),
-              onClearSearch: _clearSearch,
-              onSeeAllResults: _seeAllCategoryResults,
-              onSelectResult: _selectResultFromList,
-              iconForResult: _iconForResult,
-            ),
+                      // Suggestions panel (Category icons + Recent Search History)
+                      if (_showSuggestions && !_showResults)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: EsriMapSuggestionsPanel(
+                            categories: _categories,
+                            recentSearches: _recentSearches,
+                            showRouteFields: _showRouteFields,
+                            activeRouteField: _activeRouteField,
+                            onSelectCurrentLocation: () async {
+                              (double, double)? gps = await _getDeviceLocationEfficiently();
+                              if (gps == null) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(
+                                    context,
+                                  ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+                                }
+                                return;
+                              }
+                              _fromController.text = 'My Location';
+                              _fromLatLng = gps;
+                              if (mounted) {
+                                setState(() {
+                                  _showSuggestions = false;
+                                  _showResults = false;
+                                });
+                              }
+                              _fromFocusNode.unfocus();
+                              final hasRouteDestination = _routeDestination != null;
+                              if (hasRouteDestination) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+                            },
+                            onSelectCategory: _performCategorySearch,
+                            onSelectRecent: _selectResult,
+                            onRemoveRecent: _removeFromRecentSearches,
+                            onClearRecent: _clearRecentSearches,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
 
-          // Dynamic Google Maps-style Scale Bar Indicator
-          if (shouldShowScaleBar)
-            Positioned(
-              bottom: 24,
-              right: 16,
-              child: EsriMapScaleBar(scale: _currentScale, isDark: isDark),
-            ),
+              // Category results list panel
+              if (shouldShowCatListPanel)
+                EsriMapCategoryListPanel(
+                  controller: _categorySheetController,
+                  activeCategory: _activeCategory,
+                  allCategoryResults: _allCategoryResults,
+                  viewportResults: EsriMapSearchService.filterToViewport(
+                    _allCategoryResults,
+                    _getViewportEnvelopeWGS84(),
+                  ),
+                  userLocation: _getUserLatLng(),
+                  onClearSearch: _clearSearch,
+                  onSeeAllResults: _seeAllCategoryResults,
+                  onSelectResult: _selectResultFromList,
+                  iconForResult: _iconForResult,
+                ),
 
-          // Transit Legend
-          if (_layerVisible['tritonTransit'] == true) Positioned(bottom: 24, left: 16, child: _buildTransitLegend()),
+              // Dynamic Google Maps-style Scale Bar Indicator
+              if (shouldShowScaleBar)
+                Positioned(
+                  bottom: 24,
+                  right: 16,
+                  child: EsriMapScaleBar(scale: _currentScale, isDark: isDark),
+                ),
 
-          // Selected Result Detail Slide-over
-          if (_selectedResult != null)
-            LayoutBuilder(
-              builder: (context, constraints) => EsriMapDetailSlideOver(
-                minimizedNotifier: _detailSheetMinimized,
-                availableHeight: constraints.maxHeight,
-                result: _selectedResult!,
-                resultIcon: _iconForResult(_selectedResult!),
-                isRoutingMode: _isRouting,
-                hasRoute: _hasRoute,
-                routeFailed: _routeFailed,
-                travelMode: _travelMode,
-                routeTravelTimeMinutes: _routeTravelTimeMinutes,
-                routeManeuvers: _routeManeuvers,
-                fromLatLng: _fromLatLng,
-                onGetDirections: (res) {
-                  final gps = _getUserLatLng();
-                  final hasGps = gps != null;
-                  _fromController.text = hasGps ? 'My Location' : '';
-                  _toController.text = res.name;
-                  _routeDestination = res;
-                  _graphicsOverlay.graphics.clear();
-                  setState(() {
-                    _showRouteFields = true;
-                    _mappedResults = [];
-                    _allCategoryResults = [];
-                    _showCategoryList = false;
-                    _activeCategory = null;
-                  });
-                  _solveRoute(res);
-                },
-                onTravelModeChanged: (mode) {
-                  final hasSelectedResult = _selectedResult != null;
-                  if (hasSelectedResult) _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
-                },
-                onLaunchWebsite: _launchWebsite,
-                onClose: _closeDetail,
-                onClearRoute: _clearRoute,
-              ),
-            ),
+              // Transit Legend
+              if (_layerVisible['tritonTransit'] == true)
+                Positioned(bottom: 24, left: 16, child: _buildTransitLegend()),
 
-          // Basemap & Operational Layer Selector Panel
-          if (isLayersPanelVisible)
-            EsriMapLayersPanel(
-              config: _config!,
-              currentBasemapType: _currentBasemapType,
-              currentSceneKey: _sceneMode,
-              layerVisible: _layerVisible,
-              layerLoading: _layerLoading,
-              hideSceneSwitcher: _selectedResult != null || _showCategoryList,
-              onSwitchBasemap: _switchBasemap,
-              onSetSceneMode: _setSceneMode,
-              onToggleLayer: _toggleLayer,
-              onClose: () => setState(() => _showLayersPanel = false),
-            ),
-        ],
+              // Selected Result Detail Slide-over
+              if (_selectedResult != null)
+                LayoutBuilder(
+                  builder: (context, constraints) => EsriMapDetailSlideOver(
+                    minimizedNotifier: _detailSheetMinimized,
+                    availableHeight: constraints.maxHeight,
+                    result: _selectedResult!,
+                    resultIcon: _iconForResult(_selectedResult!),
+                    isRoutingMode: _isRouting,
+                    hasRoute: _hasRoute,
+                    routeFailed: _routeFailed,
+                    travelMode: _travelMode,
+                    routeTravelTimeMinutes: _routeTravelTimeMinutes,
+                    routeManeuvers: _routeManeuvers,
+                    fromLatLng: _fromLatLng,
+                    onGetDirections: (res) {
+                      final gps = _getUserLatLng();
+                      final hasGps = gps != null;
+                      _fromController.text = hasGps ? 'My Location' : '';
+                      _toController.text = res.name;
+                      _routeDestination = res;
+                      _graphicsOverlay.graphics.clear();
+                      setState(() {
+                        _showRouteFields = true;
+                        _mappedResults = [];
+                        _allCategoryResults = [];
+                        _showCategoryList = false;
+                        _activeCategory = null;
+                      });
+                      _solveRoute(res);
+                    },
+                    onTravelModeChanged: (mode) {
+                      final hasSelectedResult = _selectedResult != null;
+                      if (hasSelectedResult) _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
+                    },
+                    onLaunchWebsite: _launchWebsite,
+                    onClose: _closeDetail,
+                    onClearRoute: _clearRoute,
+                  ),
+                ),
+
+              // Basemap & Operational Layer Selector Panel
+              if (isLayersPanelVisible)
+                EsriMapLayersPanel(
+                  config: _config!,
+                  currentBasemapType: _currentBasemapType,
+                  currentSceneKey: _sceneMode,
+                  layerVisible: _layerVisible,
+                  layerLoading: _layerLoading,
+                  hideSceneSwitcher: _selectedResult != null || _showCategoryList,
+                  onSwitchBasemap: _switchBasemap,
+                  onSetSceneMode: _setSceneMode,
+                  onToggleLayer: _toggleLayer,
+                  onClose: () => setState(() => _showLayersPanel = false),
+                ),
+            ],
+          );
+        },
       ),
     );
   }

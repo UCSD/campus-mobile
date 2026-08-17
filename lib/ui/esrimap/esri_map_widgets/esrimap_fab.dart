@@ -253,8 +253,7 @@ class EsriMapLocationFab extends StatelessWidget {
     } else if (isLocationActive || isUserVisible || bearingToUser != null) {
       double totalRotation = 0;
       if (!isLocationActive && bearingToUser != null) {
-        final mapRotRad = mapRotation * math.pi / 180.0;
-        totalRotation = bearingToUser! - mapRotRad;
+        totalRotation = bearingToUser!;
       }
 
       iconWidget = Stack(
