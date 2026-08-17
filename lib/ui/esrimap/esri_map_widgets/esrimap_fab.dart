@@ -216,6 +216,7 @@ class _MapDisplaysIconPainter extends CustomPainter {
 class EsriMapLocationFab extends StatelessWidget {
   final bool isDark;
   final bool isLocationActive;
+  final bool isUserVisible;
   final bool isLoading;
   final double? bearingToUser;
   final double mapRotation;
@@ -225,6 +226,7 @@ class EsriMapLocationFab extends StatelessWidget {
     Key? key,
     required this.isDark,
     this.isLocationActive = false,
+    this.isUserVisible = false,
     this.isLoading = false,
     this.bearingToUser,
     this.mapRotation = 0.0,
@@ -248,7 +250,7 @@ class EsriMapLocationFab extends StatelessWidget {
           valueColor: AlwaysStoppedAnimation<Color>(Colors.blue[600]!),
         ),
       );
-    } else if (isLocationActive || bearingToUser != null) {
+    } else if (isLocationActive || isUserVisible || bearingToUser != null) {
       double totalRotation = 0;
       if (!isLocationActive && bearingToUser != null) {
         final mapRotRad = mapRotation * math.pi / 180.0;
@@ -264,8 +266,8 @@ class EsriMapLocationFab extends StatelessWidget {
             height: 30,
             decoration: BoxDecoration(shape: BoxShape.circle, color: activeBgColor),
           ),
-          // Directional Triangle (only if inactive)
-          if (!isLocationActive && bearingToUser != null)
+          // Directional Triangle (only if inactive and user is not visible)
+          if (!isLocationActive && !isUserVisible && bearingToUser != null)
             Transform.rotate(
               angle: totalRotation,
               child: Container(

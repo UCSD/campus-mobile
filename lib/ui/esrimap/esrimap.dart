@@ -31,6 +31,7 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_s
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_suggestions_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'dart:ui' as ui;
@@ -101,8 +102,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   EsriSearchCategory? _activeCategory;
 
   // FAB & Viewpoint State
-  bool _isLocationDataSourceStarted = false;
-  bool _isStartingLocationDataSource = false;
+  // FAB & Viewpoint State
   bool _isLocatingUser = false;
   bool _isLocationActive = false;
   bool _isRecenterActive = false;
@@ -111,6 +111,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   double _currentScale = 24000.0;
   bool _isDisposed = false;
   StreamSubscription<void>? _viewpointChangedSubscription;
+  bool _hasNetworkError = false;
 
   // Routing State
   bool _isRouting = false;
@@ -148,7 +149,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   (double lat, double lng)? _currentMapCenter;
 
-  final _mapReadyCompleter = Completer<void>();
+  var _mapReadyCompleter = Completer<void>();
 
   double _calculateBearing(double startLat, double startLng, double endLat, double endLng) {
     final startLatRad = startLat * math.pi / 180;
@@ -196,18 +197,21 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _toFocusNode.addListener(_onToFocusChanged);
   }
 
-  /// Fetches remote configuration JSON before initializing the map.
   Future<void> _fetchConfigThenInit() async {
+    setState(() => _hasNetworkError = false);
+    if (_mapReadyCompleter.isCompleted) {
+      _mapReadyCompleter = Completer<void>();
+    }
     try {
       final config = await EsriMapConfigService.instance.fetch();
-      final isNotMounted = !mounted;
-      if (isNotMounted) return;
+      if (!mounted) return;
       setState(() => _config = config);
       _initMap(config);
       _fetchAllPoiClasses();
     } catch (e) {
       debugPrint('Config fetch failed: $e');
-      _mapReadyCompleter.completeError(e);
+      if (mounted) setState(() => _hasNetworkError = true);
+      if (!_mapReadyCompleter.isCompleted) _mapReadyCompleter.completeError(e);
     }
   }
 
@@ -255,6 +259,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.locationDisplay.autoPanMode = LocationDisplayAutoPanMode.off;
 
     _startLocationDisplay();
+    _mapViewController.locationDisplay.onLocationChanged.listen((event) {
+      final pos = event.position;
+      final wgs = GeometryEngine.project(pos, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
+      if (wgs != null) {
+        _saveLocationToHive(wgs.y, wgs.x);
+      }
+    });
+
     _preloadAlternateBasemaps();
     _preloadHeavyLayers();
 
@@ -347,43 +359,38 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
   // Location & Basemaps Helpers
   // ---------------------------------------------------------------------------
+  bool _isStartingLocationDataSource = false;
 
   /// Starts the device location data source.
   Future<void> _startLocationDisplay() async {
     if (!FeatureFlags.MAP_LOCATION_TRACKING_ENABLED) return;
-    if (_isLocationDataSourceStarted || _isStartingLocationDataSource) return;
+    if (_isStartingLocationDataSource) return;
     _isStartingLocationDataSource = true;
 
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      debugPrint('Location services are disabled.');
-      _isStartingLocationDataSource = false;
-      return;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        debugPrint('Location permissions are denied');
-        _isStartingLocationDataSource = false;
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        debugPrint('Location services are disabled.');
         return;
       }
-    }
 
-    if (permission == LocationPermission.deniedForever) {
-      debugPrint('Location permissions are permanently denied');
-      _isStartingLocationDataSource = false;
-      return;
-    }
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          debugPrint('Location permissions are denied');
+          return;
+        }
+      }
 
-    try {
+      if (permission == LocationPermission.deniedForever) {
+        debugPrint('Location permissions are permanently denied');
+        return;
+      }
+
       await _locationDataSource.start();
-      _isLocationDataSourceStarted = true;
-    } on ArcGISException catch (e) {
-      debugPrint('Location error: ${e.message}');
-    } catch (e) {
-      debugPrint('Location error: $e');
+    } catch (_) {
+      // Ignore if already started
     } finally {
       _isStartingLocationDataSource = false;
     }
@@ -397,7 +404,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     var gps = _getUserLatLng();
     if (gps != null) return gps;
 
-    // 2. Fallback to Geolocator last known position
+    // 2. Try Fallback to Geolocator last known position
     try {
       final lastKnown = await Geolocator.getLastKnownPosition();
       if (lastKnown != null) {
@@ -405,7 +412,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
     } catch (_) {}
 
-    // 3. Fallback to a fresh fetch
+    // 3. Try Hive cached location
+    final hiveLocation = await _loadLocationFromHive();
+    if (hiveLocation != null) return hiveLocation;
+
+    // 4. Fallback to a fresh fetch
     try {
       final pos = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(timeLimit: Duration(seconds: 5)),
@@ -1604,6 +1615,26 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     return projected as Envelope?;
   }
 
+  Future<void> _saveLocationToHive(double lat, double lng) async {
+    try {
+      final box = await Hive.openBox('mapLocationCache');
+      await box.put('lat', lat);
+      await box.put('lng', lng);
+    } catch (_) {}
+  }
+
+  Future<(double, double)?> _loadLocationFromHive() async {
+    try {
+      final box = await Hive.openBox('mapLocationCache');
+      final lat = box.get('lat') as double?;
+      final lng = box.get('lng') as double?;
+      if (lat != null && lng != null) {
+        return (lat, lng);
+      }
+    } catch (_) {}
+    return null;
+  }
+
   IconData _iconForResult(MapSearchResult result) {
     final isBuilding = result.source == MapSearchSource.building;
     return isBuilding ? Icons.business : Icons.place;
@@ -1854,10 +1885,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     final indexedStackIndex = isBuilding3dScene ? 1 : (isDroneViewScene ? 2 : 0);
 
-    final isFabVisible = !keyboardVisible && !_showLayersPanel;
+    final isFabVisible = !_hasNetworkError && !keyboardVisible && !_showLayersPanel;
 
     final isLayersPanelVisible = _showLayersPanel && _config != null;
-    final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene;
+    final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene && !_hasNetworkError;
     final shouldShowScaleBar = _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel;
 
     return Scaffold(
@@ -1867,21 +1898,34 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           Column(
             children: [
               Expanded(
-                child: IndexedStack(
-                  index: indexedStackIndex,
-                  children: [
-                    Listener(
-                      onPointerDown: _onMapPointerDown,
-                      child: ArcGISMapView(
-                        controllerProvider: () => _mapViewController,
-                        onMapViewReady: _onMapViewReady,
-                        onTap: _onMapTap,
+                child: _hasNetworkError
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.wifi_off, size: 48, color: Colors.grey),
+                            const SizedBox(height: 16),
+                            const Text('Network error. Please try again.', style: TextStyle(fontSize: 16)),
+                            const SizedBox(height: 16),
+                            ElevatedButton(onPressed: _fetchConfigThenInit, child: const Text('Reload')),
+                          ],
+                        ),
+                      )
+                    : IndexedStack(
+                        index: indexedStackIndex,
+                        children: [
+                          Listener(
+                            onPointerDown: _onMapPointerDown,
+                            child: ArcGISMapView(
+                              controllerProvider: () => _mapViewController,
+                              onMapViewReady: _onMapViewReady,
+                              onTap: _onMapTap,
+                            ),
+                          ),
+                          _scene3DWidget ?? const SizedBox.shrink(),
+                          _sceneDroneWidget ?? const SizedBox.shrink(),
+                        ],
                       ),
-                    ),
-                    _scene3DWidget ?? const SizedBox.shrink(),
-                    _sceneDroneWidget ?? const SizedBox.shrink(),
-                  ],
-                ),
               ),
             ],
           ),
@@ -1909,6 +1953,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             Builder(
               builder: (context) {
                 double? bearing;
+                bool isUserVisible = false;
                 if (!_isLocationActive && _currentMapCenter != null) {
                   final userLoc = _getUserLatLng();
                   if (userLoc != null) {
@@ -1916,8 +1961,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     final mapLng = _currentMapCenter!.$2;
                     final userLat = userLoc.$1;
                     final userLng = userLoc.$2;
-                    // Bearing pointing FROM map center TO user location
-                    bearing = _calculateBearing(mapLat, mapLng, userLat, userLng);
+
+                    try {
+                      final pos = _mapViewController.locationDisplay.location?.position;
+                      final vp = _mapViewController.getCurrentViewpoint(ViewpointType.boundingGeometry);
+                      final geom = vp?.targetGeometry;
+                      if (pos != null && geom != null) {
+                        isUserVisible = GeometryEngine.intersects(geometry1: pos, geometry2: geom);
+                      }
+                    } catch (_) {}
+
+                    if (!isUserVisible) {
+                      // Bearing pointing FROM map center TO user location
+                      bearing = _calculateBearing(mapLat, mapLng, userLat, userLng);
+                    }
                   }
                 }
 
@@ -1927,6 +1984,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   child: EsriMapLocationFab(
                     isDark: isDark,
                     isLocationActive: _isLocationActive,
+                    isUserVisible: isUserVisible,
                     isLoading: _isLocatingUser,
                     bearingToUser: bearing,
                     mapRotation: _mapRotation,
