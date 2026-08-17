@@ -7,6 +7,7 @@
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
 import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:flutter/material.dart';
 
 /// Search input bar and route directions header widget.
@@ -140,7 +141,7 @@ class EsriMapSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     const searchFontSize = 16.0;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final searchTextColor = Theme.of(context).textTheme.titleMedium?.color;
+    final searchTextColor = isDark ? descriptiveTextColorDark : descriptiveTextColorLight;
     final hasSearchResults = isSearching || searchResults.isNotEmpty;
     final shouldShowResultsDivider = showResults && hasSearchResults;
 
@@ -309,12 +310,15 @@ class EsriMapSearchBar extends StatelessWidget {
                     },
                     onTap: onTapSearchField,
                     style: TextStyle(fontSize: searchFontSize, color: searchTextColor),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       hint: Padding(
-                        padding: EdgeInsets.only(left: 4),
-                        child: Text('Search buildings, places...', style: TextStyle(fontSize: searchFontSize)),
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Text(
+                          'Search buildings, places...',
+                          style: TextStyle(fontSize: searchFontSize, color: searchTextColor),
+                        ),
                       ),
                     ),
                   ),
