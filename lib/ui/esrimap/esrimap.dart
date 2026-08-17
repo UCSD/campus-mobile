@@ -1251,13 +1251,15 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Future<void> _recenterOnUser() async {
     if (_isLocatingUser) return;
-    _isLocatingUser = true;
+    setState(() => _isLocatingUser = true);
 
     try {
       final gps = await _getDeviceLocationEfficiently();
       if (gps == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
         }
         return;
       }
@@ -1266,10 +1268,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _ignoreViewpointReset = true;
       setState(() => _isLocationActive = true);
       await _mapViewController.setViewpointAnimated(
-        Viewpoint.fromCenter(
-          ArcGISPoint(x: gps.$2, y: gps.$1, spatialReference: SpatialReference.wgs84),
-          scale: 10000,
-        ),
+        Viewpoint.fromCenter(ArcGISPoint(x: gps.$2, y: gps.$1, spatialReference: SpatialReference.wgs84), scale: 10000),
       );
       if (mounted) {
         setState(() {
@@ -1281,7 +1280,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
     } finally {
-      if (mounted) _isLocatingUser = false;
+      if (mounted) setState(() => _isLocatingUser = false);
     }
   }
 
@@ -1928,6 +1927,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   child: EsriMapLocationFab(
                     isDark: isDark,
                     isLocationActive: _isLocationActive,
+                    isLoading: _isLocatingUser,
                     bearingToUser: bearing,
                     mapRotation: _mapRotation,
                     onRecenterOnUser: _recenterOnUser,
