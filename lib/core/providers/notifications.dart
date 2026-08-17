@@ -144,9 +144,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
             NavigatorConstants.NOTIFICATIONS_TAB;
 
         /// Navigate to Notifications tab
-        Navigator.of(
-          context,
-        ).pushNamedAndRemoveUntil(RoutePaths.BOTTOM_NAVIGATION_BAR, (Route<dynamic> route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(RoutePaths.BOTTOM_NAVIGATION_BAR, (Route<dynamic> route) => false);
       });
     } on PlatformException {
       _error = 'Failed to get platform info.';
@@ -160,9 +159,8 @@ class PushNotificationDataProvider extends ChangeNotifier {
     Provider.of<MessagesDataProvider>(this.context, listen: false).fetchMessages(true);
 
     /// Navigate to Notifications tab
-    Navigator.of(
-      this.context,
-    ).pushNamedAndRemoveUntil(RoutePaths.BOTTOM_NAVIGATION_BAR, (Route<dynamic> route) => false);
+    Navigator.of(this.context)
+        .pushNamedAndRemoveUntil(RoutePaths.BOTTOM_NAVIGATION_BAR, (Route<dynamic> route) => false);
 
     /// Set tab bar index to the Notifications tab
     Provider.of<BottomNavigationBarProvider>(this.context, listen: false).currentIndex =
