@@ -249,7 +249,7 @@ class UserDataProvider extends ChangeNotifier {
       }
     }
 
-    logout();
+    await logout();
     return false;
   }
 
@@ -258,7 +258,7 @@ class UserDataProvider extends ChangeNotifier {
   /// Resets all [AuthenticationModel] and [UserProfileModel] data from persistent storage
   /// [clearChatHistory] must be true to delete local TGPT chat history; pass true only from
   /// the explicit user-initiated logout action, not from automated auth-refresh paths.
-  void logout({bool clearChatHistory = false}) async {
+  Future<void> logout({bool clearChatHistory = false}) async {
     _error = null;
     _isLoading = true;
     notifyListeners();
