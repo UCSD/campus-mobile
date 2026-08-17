@@ -184,9 +184,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   Future<void> _fetchConfigThenInit() async {
     setState(() => _hasNetworkError = false);
-    if (_mapReadyCompleter.isCompleted) {
-      _mapReadyCompleter = Completer<void>();
-    }
+    if (_mapReadyCompleter.isCompleted) _mapReadyCompleter = Completer<void>();
     try {
       final config = await EsriMapConfigService.instance.fetch();
       if (!mounted) return;
@@ -248,9 +246,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.locationDisplay.onLocationChanged.listen((event) {
       final pos = event.position;
       final wgs = GeometryEngine.project(pos, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
-      if (wgs != null && !wgs.x.isNaN && !wgs.y.isNaN) {
-        _saveLocationToHive(wgs.y, wgs.x);
-      }
+      if (wgs != null && !wgs.x.isNaN && !wgs.y.isNaN) _saveLocationToHive(wgs.y, wgs.x);
     });
 
     _preloadAlternateBasemaps();
@@ -390,9 +386,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     // 2. Try Fallback to Geolocator last known position
     try {
       final lastKnown = await Geolocator.getLastKnownPosition();
-      if (lastKnown != null) {
-        return (lastKnown.latitude, lastKnown.longitude);
-      }
+      if (lastKnown != null) return (lastKnown.latitude, lastKnown.longitude);
     } catch (_) {}
 
     // 3. Try Hive cached location
@@ -890,9 +884,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _isSearching = false;
       });
       if (allResults.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
       }
     } catch (e) {
       debugPrint('Category search error: $e');
@@ -904,9 +897,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _allCategoryResults = [];
         _isSearching = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
     }
   }
 
@@ -1251,9 +1243,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       final gps = await _getDeviceLocationEfficiently();
       if (gps == null) {
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
         }
         return;
       }
@@ -1453,9 +1444,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
 
     var userLatLng = originLatLng;
-    if (userLatLng == null) {
-      userLatLng = await _getDeviceLocationEfficiently();
-    }
+    if (userLatLng == null) userLatLng = await _getDeviceLocationEfficiently();
 
     final isUserLatLngNull = userLatLng == null;
     if (isUserLatLngNull) {
@@ -1624,9 +1613,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       final box = await Hive.openBox('mapLocationCache');
       final lat = box.get('lat') as double?;
       final lng = box.get('lng') as double?;
-      if (lat != null && lng != null) {
-        return (lat, lng);
-      }
+      if (lat != null && lng != null) return (lat, lng);
     } catch (_) {}
     return null;
   }
