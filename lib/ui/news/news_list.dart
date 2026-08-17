@@ -106,8 +106,11 @@ class NewsList extends StatelessWidget {
                             ),
                             TextSpan(
                               text: ' - ',
-                              style: Theme.of(context).textTheme.headlineMedium!
-                                  .copyWith(height: 1.42, fontSize: 16.0, decoration: TextDecoration.none),
+                              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                height: 1.42,
+                                fontSize: 16.0,
+                                decoration: TextDecoration.none,
+                              ),
                             ),
                             TextSpan(
                               text: newsItem.title,

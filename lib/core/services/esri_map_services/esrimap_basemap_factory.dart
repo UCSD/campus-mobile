@@ -17,7 +17,8 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_c
 /// 2. Custom UC San Diego campus vector tile layers are layered directly on top to display campus-specific facilities.
 Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
   // 1. Satellite Basemap: Use modern BasemapStyle for optimized CDN routing and faster raster loading.
-  if (type == BasemapType.satellite) return Basemap.withStyle(BasemapStyle.arcGISImagery);
+  var isSatellite = type == BasemapType.satellite;
+  if (isSatellite) return Basemap.withStyle(BasemapStyle.arcGISImagery);
 
   final basemap = Basemap();
 
@@ -47,7 +48,8 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
   if (campusVectorLayers.isNotEmpty) {
     for (final layer in campusVectorLayers) {
       final pUrl = layer.portalKey != null ? config.portals[layer.portalKey!] : portalUrl;
-      if (pUrl != null && layer.itemId != null) {
+      var hasValidUrlAndId = pUrl != null && layer.itemId != null;
+      if (hasValidUrlAndId) {
         final portal = pUrl.contains('arcgis.com') ? Portal.arcGISOnline() : Portal(Uri.parse(pUrl));
         basemap.baseLayers.add(
           ArcGISVectorTiledLayer.withItem(PortalItem.withPortalAndItemId(portal: portal, itemId: layer.itemId!)),

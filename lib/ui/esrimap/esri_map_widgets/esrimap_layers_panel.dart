@@ -153,7 +153,7 @@ class EsriMapLayersPanel extends StatelessWidget {
     final bottomPad = MediaQuery.of(context).padding.bottom;
     final isDefault = currentSceneKey == 'default';
     // Hide SCENES entirely from the UI. SET to TRUE when ready to show drone view and 3D view to the user.
-    final showSceneSwitcher = FeatureFlags.mapScenesEnabled && config.features.scenes && !hideSceneSwitcher;
+    final showSceneSwitcher = FeatureFlags.MAP_SCENES_ENABLED && config.features.scenes && !hideSceneSwitcher;
 
     return Positioned(
       left: 12,
@@ -206,30 +206,34 @@ class EsriMapLayersPanel extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              for (final entry in config.basemaps.entries) ...[
-                                if (basemapTypeFromKey(entry.key) != null &&
-                                    (FeatureFlags.mapAlternateBasemapsEnabled ||
-                                        (basemapTypeFromKey(entry.key) != BasemapType.light &&
-                                            basemapTypeFromKey(entry.key) != BasemapType.dark))) ...[
-                                  imageTile(
-                                    label: entry.value.label,
-                                    selected: currentBasemapType == basemapTypeFromKey(entry.key),
-                                    onTap: () {
-                                      final t = basemapTypeFromKey(entry.key);
-                                      final isTypeNotNull = t != null;
-                                      if (isTypeNotNull) onSwitchBasemap(t);
-                                    },
-                                    imageWidget: networkImage(entry.value.thumbnailAsset),
-                                  ),
-                                  const SizedBox(width: 8),
-                                ],
+                              for (final entry in config.basemaps.entries.where((e) {
+                                final t = basemapTypeFromKey(e.key);
+                                var tIsNull = t == null;
+                                if (tIsNull) return false;
+                                var isAlt = FeatureFlags.MAP_ALTERNATE_BASEMAPS_ENABLED;
+                                if (isAlt) return true;
+                                var notLight = t != BasemapType.light;
+                                var notDark = t != BasemapType.dark;
+                                return notLight && notDark;
+                              })) ...[
+                                imageTile(
+                                  label: entry.value.label,
+                                  selected: currentBasemapType == basemapTypeFromKey(entry.key),
+                                  onTap: () {
+                                    final t = basemapTypeFromKey(entry.key);
+                                    final isTypeNotNull = t != null;
+                                    if (isTypeNotNull) onSwitchBasemap(t);
+                                  },
+                                  imageWidget: networkImage(entry.value.thumbnailAsset),
+                                ),
+                                const SizedBox(width: 8),
                               ],
                             ],
                           ),
                         ),
                       ),
 
-                      if (FeatureFlags.mapOperationalLayersEnabled) ...[
+                      if (FeatureFlags.MAP_OPERATIONAL_LAYERS_ENABLED) ...[
                         const Divider(height: 24, indent: 16, endIndent: 16),
 
                         sectionLabel('Map Details'),
@@ -239,24 +243,24 @@ class EsriMapLayersPanel extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
-                                for (final entry in config.layers.entries) ...[
-                                  if ((entry.key == 'tritonTransit' && FeatureFlags.transitOperationalLayerEnabled) ||
-                                      (entry.key == 'campusDistricts' &&
-                                          FeatureFlags.districtsOperationalLayerEnabled) ||
-                                      (entry.key == 'construction' &&
-                                          FeatureFlags.constructionOperationalLayerEnabled) ||
-                                      (entry.key != 'tritonTransit' &&
-                                          entry.key != 'campusDistricts' &&
-                                          entry.key != 'construction')) ...[
-                                    imageTile(
-                                      label: entry.value.label,
-                                      selected: layerVisible[entry.key] ?? false,
-                                      loading: layerLoading[entry.key] ?? false,
-                                      onTap: () => onToggleLayer(entry.key),
-                                      imageWidget: networkImage(entry.value.thumbnailAsset),
-                                    ),
-                                    const SizedBox(width: 8),
-                                  ],
+                                for (final entry in config.layers.entries.where((e) {
+                                  var key = e.key;
+                                  var isTransit = key == 'tritonTransit';
+                                  if (isTransit) return FeatureFlags.TRANSIT_OPERATIONAL_LAYER_ENABLED;
+                                  var isDist = key == 'campusDistricts';
+                                  if (isDist) return FeatureFlags.DISTRICTS_OPERATIONAL_LAYER_ENABLED;
+                                  var isConst = key == 'construction';
+                                  if (isConst) return FeatureFlags.CONSTRUCTION_OPERATIONAL_LAYER_ENABLED;
+                                  return true;
+                                })) ...[
+                                  imageTile(
+                                    label: entry.value.label,
+                                    selected: layerVisible[entry.key] ?? false,
+                                    loading: layerLoading[entry.key] ?? false,
+                                    onTap: () => onToggleLayer(entry.key),
+                                    imageWidget: networkImage(entry.value.thumbnailAsset),
+                                  ),
+                                  const SizedBox(width: 8),
                                 ],
                               ],
                             ),
@@ -277,12 +281,17 @@ class EsriMapLayersPanel extends StatelessWidget {
                   child: Wrap(
                     spacing: 8,
                     children: [
-                      for (final entry in config.scenes.entries)
-                        if ((entry.key == 'default' && FeatureFlags.defaultSceneEnabled) ||
-                            (entry.key == 'building3d' && FeatureFlags.threeDimensionalSceneEnabled) ||
-                            (entry.key == 'droneView' && FeatureFlags.droneViewSceneEnabled) ||
-                            (entry.key != 'default' && entry.key != 'building3d' && entry.key != 'droneView'))
-                          sceneChip(entry.key, entry.value.label, currentSceneKey == entry.key),
+                      for (final entry in config.scenes.entries.where((e) {
+                        var key = e.key;
+                        var isDef = key == 'default';
+                        if (isDef) return FeatureFlags.DEFAULT_SCENE_ENABLED;
+                        var is3d = key == 'building3d';
+                        if (is3d) return FeatureFlags.THREE_DIMENSIONAL_SCENE_ENABLED;
+                        var isDrone = key == 'droneView';
+                        if (isDrone) return FeatureFlags.DRONE_VIEW_SCENE_ENABLED;
+                        return true;
+                      }))
+                        sceneChip(entry.key, entry.value.label, currentSceneKey == entry.key),
                     ],
                   ),
                 ),

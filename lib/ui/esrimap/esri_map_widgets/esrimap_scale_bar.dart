@@ -42,7 +42,7 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
   double _lastScale = 0.0;
 
   /// Standard round imperial distances in feet.
-  static const List<double> _imperialDistances = [
+  static const List<double> _IMPERIAL_DISTANCES = [
     1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000,
     5280, // 1 mi
     10560, // 2 mi
@@ -53,7 +53,7 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
   ];
 
   /// Standard round metric distances in meters.
-  static const List<double> _metricDistances = [
+  static const List<double> _METRIC_DISTANCES = [
     0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500,
     1000, // 1 km
     2000, // 2 km
@@ -75,7 +75,8 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
   void didUpdateWidget(covariant EsriMapScaleBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Detect zoom/scale changes
-    if (widget.scale > 0 && (widget.scale - _lastScale).abs() > 0.05) {
+    var hasSignificantScaleChange = widget.scale > 0 && (widget.scale - _lastScale).abs() > 0.05;
+    if (hasSignificantScaleChange) {
       _lastScale = widget.scale;
       if (widget.autoFade) _triggerZoomFade();
     }
@@ -121,10 +122,10 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
     if (metersPerPx <= 0) return const SizedBox.shrink();
 
     // Target scale bar width between 40 and 100 logical pixels
-    double chosenImperialFt = _imperialDistances.first;
+    double chosenImperialFt = _IMPERIAL_DISTANCES.first;
     double chosenWidthPx = 60.0;
 
-    for (final ft in _imperialDistances) {
+    for (final ft in _IMPERIAL_DISTANCES) {
       final meters = ft * 0.3048;
       final px = meters / metersPerPx;
       if (px >= 40 && px <= 100) {
@@ -146,8 +147,8 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
 
     // Find matching metric distance for the chosen width
     final barMeters = chosenWidthPx * metersPerPx;
-    double chosenMetricMeters = _metricDistances.first;
-    for (final m in _metricDistances) {
+    double chosenMetricMeters = _METRIC_DISTANCES.first;
+    for (final m in _METRIC_DISTANCES) {
       if (m <= barMeters * 1.3) {
         chosenMetricMeters = m;
       } else {

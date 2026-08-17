@@ -216,6 +216,8 @@ class _MapDisplaysIconPainter extends CustomPainter {
 class EsriMapLocationFab extends StatelessWidget {
   final bool isDark;
   final bool isLocationActive;
+  final bool isUserVisible;
+  final bool isLoading;
   final double? bearingToUser;
   final double mapRotation;
   final VoidCallback onRecenterOnUser;
@@ -224,6 +226,8 @@ class EsriMapLocationFab extends StatelessWidget {
     Key? key,
     required this.isDark,
     this.isLocationActive = false,
+    this.isUserVisible = false,
+    this.isLoading = false,
     this.bearingToUser,
     this.mapRotation = 0.0,
     required this.onRecenterOnUser,
@@ -237,11 +241,19 @@ class EsriMapLocationFab extends StatelessWidget {
     final activeBgColor = isDark ? Colors.blue[900]!.withValues(alpha: 0.5) : const Color(0xFFE8F0FE);
 
     Widget iconWidget;
-    if (isLocationActive || bearingToUser != null) {
+    if (isLoading) {
+      iconWidget = SizedBox(
+        width: 24,
+        height: 24,
+        child: CircularProgressIndicator(
+          strokeWidth: 2.5,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue[600]!),
+        ),
+      );
+    } else if (isLocationActive || isUserVisible || bearingToUser != null) {
       double totalRotation = 0;
       if (!isLocationActive && bearingToUser != null) {
-        final mapRotRad = mapRotation * math.pi / 180.0;
-        totalRotation = bearingToUser! - mapRotRad;
+        totalRotation = bearingToUser!;
       }
 
       iconWidget = Stack(
@@ -253,10 +265,10 @@ class EsriMapLocationFab extends StatelessWidget {
             height: 30,
             decoration: BoxDecoration(shape: BoxShape.circle, color: activeBgColor),
           ),
-          // Directional Triangle (only if inactive)
-          if (!isLocationActive && bearingToUser != null)
+          // Directional Triangle (only if inactive and user is not visible)
+          if (!isLocationActive && !isUserVisible && bearingToUser != null)
             Transform.rotate(
-              angle: totalRotation,
+              angle: totalRotation.isNaN ? 0.0 : totalRotation,
               child: Container(
                 width: 30,
                 height: 30,

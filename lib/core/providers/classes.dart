@@ -216,11 +216,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       /// if no classes are scheduled for today then find the next day with classes
       var daysToAdd = 1;
       while (_enrolledClasses[today]!.isEmpty && daysToAdd <= 7) {
-        today = DateFormat('EEEE')
-            .format(DateTime.now().add(Duration(days: daysToAdd)))
-            .toString()
-            .toUpperCase()
-            .substring(0, 2);
+        today = DateFormat(
+          'EEEE',
+        ).format(DateTime.now().add(Duration(days: daysToAdd))).toString().toUpperCase().substring(0, 2);
         nextDayWithClass = DateFormat('EEEE').format(DateTime.now().add(Duration(days: daysToAdd)));
         daysToAdd += 1;
       }
