@@ -101,6 +101,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   EsriSearchCategory? _activeCategory;
 
   // FAB & Viewpoint State
+  bool _isLocationDataSourceStarted = false;
+  bool _isStartingLocationDataSource = false;
+  bool _isLocatingUser = false;
   bool _isLocationActive = false;
   bool _isRecenterActive = false;
   bool _ignoreViewpointReset = false;
@@ -348,10 +351,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   /// Starts the device location data source.
   Future<void> _startLocationDisplay() async {
     if (!FeatureFlags.MAP_LOCATION_TRACKING_ENABLED) return;
+    if (_isLocationDataSourceStarted || _isStartingLocationDataSource) return;
+    _isStartingLocationDataSource = true;
 
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       debugPrint('Location services are disabled.');
+      _isStartingLocationDataSource = false;
       return;
     }
 
@@ -360,22 +366,54 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         debugPrint('Location permissions are denied');
+        _isStartingLocationDataSource = false;
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       debugPrint('Location permissions are permanently denied');
+      _isStartingLocationDataSource = false;
       return;
     }
 
     try {
       await _locationDataSource.start();
+      _isLocationDataSourceStarted = true;
     } on ArcGISException catch (e) {
       debugPrint('Location error: ${e.message}');
     } catch (e) {
       debugPrint('Location error: $e');
+    } finally {
+      _isStartingLocationDataSource = false;
     }
+  }
+
+  /// Efficiently fetches device location falling back from fastest to slowest
+  Future<(double, double)?> _getDeviceLocationEfficiently() async {
+    await _startLocationDisplay();
+
+    // 1. Try internal ArcGIS cached position first
+    var gps = _getUserLatLng();
+    if (gps != null) return gps;
+
+    // 2. Fallback to Geolocator last known position
+    try {
+      final lastKnown = await Geolocator.getLastKnownPosition();
+      if (lastKnown != null) {
+        return (lastKnown.latitude, lastKnown.longitude);
+      }
+    } catch (_) {}
+
+    // 3. Fallback to a fresh fetch
+    try {
+      final pos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(timeLimit: Duration(seconds: 5)),
+      );
+      return (pos.latitude, pos.longitude);
+    } catch (_) {}
+
+    return null;
   }
 
   /// Preloads non-active basemaps into memory.
@@ -1212,18 +1250,24 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   Future<void> _recenterOnUser() async {
+    if (_isLocatingUser) return;
+    _isLocatingUser = true;
+
     try {
-      await _startLocationDisplay();
-      final location = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(timeLimit: Duration(seconds: 10)),
-      );
+      final gps = await _getDeviceLocationEfficiently();
+      if (gps == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+        }
+        return;
+      }
       if (!mounted) return;
 
       _ignoreViewpointReset = true;
       setState(() => _isLocationActive = true);
       await _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
-          ArcGISPoint(x: location.longitude, y: location.latitude, spatialReference: SpatialReference.wgs84),
+          ArcGISPoint(x: gps.$2, y: gps.$1, spatialReference: SpatialReference.wgs84),
           scale: 10000,
         ),
       );
@@ -1236,6 +1280,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       debugPrint('Location error: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+    } finally {
+      if (mounted) _isLocatingUser = false;
     }
   }
 
@@ -1401,22 +1447,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _travelMode = mode;
     });
 
-    var noOriginOrUserLocation = originLatLng == null && _getUserLatLng() == null;
-    if (noOriginOrUserLocation) await _startLocationDisplay();
-
-    var userLatLng = originLatLng ?? _getUserLatLng();
-    var isServiceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (userLatLng == null && isServiceEnabled) {
-      final permission = await Geolocator.checkPermission();
-      var isGranted = permission == LocationPermission.whileInUse || permission == LocationPermission.always;
-      if (isGranted) {
-        try {
-          final loc = await Geolocator.getCurrentPosition(
-            locationSettings: const LocationSettings(timeLimit: Duration(seconds: 3)),
-          );
-          userLatLng = (loc.latitude, loc.longitude);
-        } catch (_) {}
-      }
+    var userLatLng = originLatLng;
+    if (userLatLng == null) {
+      userLatLng = await _getDeviceLocationEfficiently();
     }
 
     final isUserLatLngNull = userLatLng == null;
@@ -2067,16 +2100,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         showRouteFields: _showRouteFields,
                         activeRouteField: _activeRouteField,
                         onSelectCurrentLocation: () async {
-                          await _startLocationDisplay();
-                          (double, double)? gps = _getUserLatLng();
-                          if (gps == null) {
-                            try {
-                              final pos = await Geolocator.getCurrentPosition(
-                                locationSettings: const LocationSettings(timeLimit: Duration(seconds: 10)),
-                              );
-                              gps = (pos.latitude, pos.longitude);
-                            } catch (_) {}
-                          }
+                          (double, double)? gps = await _getDeviceLocationEfficiently();
                           if (gps == null) {
                             if (mounted) {
                               ScaffoldMessenger.of(
