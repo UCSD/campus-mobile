@@ -269,7 +269,7 @@ class EsriMapLocationFab extends StatelessWidget {
           // Directional Triangle (only if inactive and user is not visible)
           if (!isLocationActive && !isUserVisible && bearingToUser != null)
             Transform.rotate(
-              angle: totalRotation,
+              angle: totalRotation.isNaN ? 0.0 : totalRotation,
               child: Container(
                 width: 30,
                 height: 30,

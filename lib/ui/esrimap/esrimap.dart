@@ -73,7 +73,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // Map State & Services
   // ---------------------------------------------------------------------------
   EsriMapConfig? _config;
-  final _locationDataSource = SystemLocationDataSource();
+  var _locationDataSource = SystemLocationDataSource();
 
   // Search State
   static const _MINIMUM_SEARCH_LOADING_DURATION = Duration(milliseconds: 400);
@@ -257,6 +257,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     // Configure location display settings
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
     _mapViewController.locationDisplay.autoPanMode = LocationDisplayAutoPanMode.off;
+    _mapViewController.locationDisplay.showLocation = true;
 
     _startLocationDisplay();
     _mapViewController.locationDisplay.onLocationChanged.listen((event) {
@@ -286,7 +287,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         final centerPoint = vp.targetGeometry as ArcGISPoint?;
 
         setState(() {
-          _mapRotation = vp.rotation;
+          _mapRotation = vp.rotation.isNaN ? 0.0 : vp.rotation;
           _currentScale = scale;
           if (centerPoint != null) {
             final wgs84Point = centerPoint.spatialReference == SpatialReference.wgs84
@@ -294,7 +295,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 : (GeometryEngine.project(centerPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?);
             final xVal = wgs84Point?.x ?? centerPoint.x;
             final yVal = wgs84Point?.y ?? centerPoint.y;
-            _currentMapCenter = (yVal, xVal);
+            if (!xVal.isNaN && !yVal.isNaN) {
+              _currentMapCenter = (yVal, xVal);
+            }
           }
           final shouldResetVP = !_ignoreViewpointReset && (_isLocationActive || _isRecenterActive);
           if (shouldResetVP) {
@@ -388,9 +391,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         return;
       }
 
-      await _locationDataSource.start();
-    } catch (_) {
-      // Ignore if already started
+      await _locationDataSource.start().timeout(const Duration(seconds: 5));
+    } catch (e) {
+      debugPrint('Location DataSource Start Error: $e');
+      if (e is TimeoutException || e.toString().toLowerCase().contains('fail')) {
+        _locationDataSource = SystemLocationDataSource();
+        _mapViewController.locationDisplay.dataSource = _locationDataSource;
+        _locationDataSource.start().catchError((_) {});
+      }
     } finally {
       _isStartingLocationDataSource = false;
     }
@@ -398,7 +406,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   /// Efficiently fetches device location falling back from fastest to slowest
   Future<(double, double)?> _getDeviceLocationEfficiently() async {
-    await _startLocationDisplay();
+    _startLocationDisplay();
 
     // 1. Try internal ArcGIS cached position first
     var gps = _getUserLatLng();
@@ -1274,18 +1282,27 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         }
         return;
       }
+      debugPrint('\x1B[32m[Center on Me] Coordinates obtained: Lat: ${gps.$1}, Lng: ${gps.$2}\x1B[0m');
       if (!mounted) return;
 
       _ignoreViewpointReset = true;
       setState(() => _isLocationActive = true);
-      await _mapViewController.setViewpointAnimated(
-        Viewpoint.fromCenter(ArcGISPoint(x: gps.$2, y: gps.$1, spatialReference: SpatialReference.wgs84), scale: 10000),
-      );
-      if (mounted) {
-        setState(() {
-          _ignoreViewpointReset = false;
-        });
-      }
+
+      // Do not await the animation, as it can occasionally hang and stall the UI spinner
+      _mapViewController
+          .setViewpointAnimated(
+            Viewpoint.fromCenter(
+              ArcGISPoint(x: gps.$2, y: gps.$1, spatialReference: SpatialReference.wgs84),
+              scale: 10000,
+            ),
+          )
+          .then((_) {
+            if (mounted) {
+              setState(() {
+                _ignoreViewpointReset = false;
+              });
+            }
+          });
     } catch (e) {
       debugPrint('Location error: $e');
       if (!mounted) return;
@@ -1297,7 +1314,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   void _recenterOnView() {
     _ignoreViewpointReset = true;
-    setState(() => _isRecenterActive = true);
+    setState(() {
+      _isRecenterActive = true;
+      _isLocationActive = false;
+    });
     Future.delayed(const Duration(milliseconds: 600), () {
       if (mounted) {
         setState(() {
@@ -1603,6 +1623,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final wgs = GeometryEngine.project(pos, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
     final isWgsNull = wgs == null;
     if (isWgsNull) return null;
+    if (wgs.x.isNaN || wgs.y.isNaN) return null;
     return (wgs.y, wgs.x);
   }
 
