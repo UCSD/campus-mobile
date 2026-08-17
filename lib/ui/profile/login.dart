@@ -97,10 +97,10 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void executeLogout() {
+  Future<void> executeLogout() async {
     _passwordTextFieldController.clear();
     _emailTextFieldController.clear();
-    _userDataProvider.logout(clearChatHistory: true);
+    await _userDataProvider.logout(clearChatHistory: true);
   }
 
   Widget buildLoginWidget() {
