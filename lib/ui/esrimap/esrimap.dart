@@ -580,7 +580,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         FeatureLayer.withFeatureTable(
           ServiceFeatureTable.withUri(
             Uri.parse(
-              'https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/0',
+              'https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/2',
             ),
           ),
         ),
@@ -594,7 +594,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         FeatureLayer.withFeatureTable(
           ServiceFeatureTable.withUri(
             Uri.parse(
-              'https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/2',
+              'https://admin-enterprise-gis.ucsd.edu/server/rest/services/Construction/Construction_Alert_Approved/MapServer/0',
             ),
           ),
         ),
