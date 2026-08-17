@@ -20,7 +20,7 @@ class AIAssistantView extends StatefulWidget {
 
 class _AIAssistantViewState extends State<AIAssistantView> {
   static const Color _SIDEBAR_ICON_COLOR = Color(0xFF747678);
-  static const Color _NEW_CHAT_ICON_COLOR = Color(0xFF00629B);
+  static const Color _NEW_CHAT_ICON_COLOR = Color(0xFF6C95B8);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isSidebarOpen = false;
@@ -98,20 +98,13 @@ class _AIAssistantViewState extends State<AIAssistantView> {
             AbsorbPointer(
               absorbing: _isSidebarOpen,
               child: ImageFiltered(
-                imageFilter: ImageFilter.blur(
-                  sigmaX: _isSidebarOpen ? 8 : 0,
-                  sigmaY: _isSidebarOpen ? 8 : 0,
-                ),
+                imageFilter: ImageFilter.blur(sigmaX: _isSidebarOpen ? 8 : 0, sigmaY: _isSidebarOpen ? 8 : 0),
                 child: _buildMainContent(chatProvider),
               ),
             ),
             if (_isSidebarOpen)
               Positioned.fill(
-                child: IgnorePointer(
-                  child: Container(
-                    color: const Color(0xFF182B49).withValues(alpha: 0.10),
-                  ),
-                ),
+                child: IgnorePointer(child: Container(color: const Color(0xFF182B49).withValues(alpha: 0.10))),
               ),
           ],
         ),
@@ -160,8 +153,9 @@ class _AIAssistantViewState extends State<AIAssistantView> {
           ),
         ),
         Expanded(
-          child:
-              chatProvider.hasMessages ? ChatMessageList(messages: chatProvider.messages) : const AssistantEmptyState(),
+          child: chatProvider.hasMessages
+              ? ChatMessageList(messages: chatProvider.messages)
+              : const AssistantEmptyState(),
         ),
       ],
     );
@@ -179,9 +173,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
     _lastShownError = errorMessage;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
     });
   }
 
