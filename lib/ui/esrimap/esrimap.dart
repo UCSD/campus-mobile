@@ -75,7 +75,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _locationDataSource = SystemLocationDataSource();
 
   // Search State
-  static const _minimumSearchLoadingDuration = Duration(milliseconds: 400);
+  static const _MINIMUM_SEARCH_LOADING_DURATION = Duration(milliseconds: 400);
   List<MapSearchResult> _searchResults = [];
   List<String> _allPoiClasses = [];
   List<String> _matchingPoiClasses = [];
@@ -211,8 +211,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   /// Constructs initial basemaps and sets initial campus viewpoint.
   void _initMap(EsriMapConfig config) {
     for (final type in BasemapType.values) {
-      if (!FeatureFlags.mapAlternateBasemapsEnabled && (type == BasemapType.light || type == BasemapType.dark))
-        continue;
+      var shouldSkipBasemap =
+          !FeatureFlags.MAP_ALTERNATE_BASEMAPS_ENABLED && (type == BasemapType.light || type == BasemapType.dark);
+      if (shouldSkipBasemap) continue;
       _basemaps[type] = buildBasemap(type, config);
     }
 
@@ -259,8 +260,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     _viewpointChangedSubscription = _mapViewController.onViewpointChanged.listen((_) {
       final now = DateTime.now();
-      if (lastUpdateTime != null && now.difference(lastUpdateTime!).inMilliseconds < 32)
-        return; // Throttle to ~30 FPS to prevent heavy jitter
+      var isRecentUpdate = lastUpdateTime != null && now.difference(lastUpdateTime!).inMilliseconds < 32;
+      if (isRecentUpdate) return; // Throttle to ~30 FPS to prevent heavy jitter
       lastUpdateTime = now;
 
       final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
@@ -295,7 +296,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _preloadHeavyLayers() async {
     if (_config == null) return;
     for (final entry in _config!.layers.entries) {
-      if (entry.value.source == 'portalItem' && !_layerInstances.containsKey(entry.key)) {
+      var needsPreload = entry.value.source == 'portalItem' && !_layerInstances.containsKey(entry.key);
+      if (needsPreload) {
         final instances = await _buildLayerInstances(entry.key, entry.value);
         _layerInstances[entry.key] = instances;
         for (final layer in instances) {
@@ -345,7 +347,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   /// Starts the device location data source.
   Future<void> _startLocationDisplay() async {
-    if (!FeatureFlags.mapLocationTrackingEnabled) return;
+    if (!FeatureFlags.MAP_LOCATION_TRACKING_ENABLED) return;
 
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -601,7 +603,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       ];
     }
 
-    if (entry.source == 'portalItem' && entry.portalKey != null && entry.itemId != null) {
+    var isPortalItem = entry.source == 'portalItem' && entry.portalKey != null && entry.itemId != null;
+    if (isPortalItem) {
       final portalUrl = _config?.portals[entry.portalKey!];
       if (portalUrl != null) {
         final portalItem = PortalItem.withPortalAndItemId(portal: Portal(Uri.parse(portalUrl)), itemId: entry.itemId!);
@@ -622,7 +625,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
     }
 
-    if (entry.hasSublayers) return entry.sublayers!.map(_layerFromSublayer).toList();
+    var hasSub = entry.hasSublayers;
+    if (hasSub) return entry.sublayers!.map(_layerFromSublayer).toList();
     return [_layerFromEntry(entry)];
   }
 
@@ -756,7 +760,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   Future<void> _waitForMinimumSearchLoadingTime(Stopwatch stopwatch) async {
-    final remaining = _minimumSearchLoadingDuration - stopwatch.elapsed;
+    final remaining = _MINIMUM_SEARCH_LOADING_DURATION - stopwatch.elapsed;
     if (remaining > Duration.zero) await Future.delayed(remaining);
   }
 
@@ -818,9 +822,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _toFocusNode.unfocus();
 
     try {
+      var isRec = category.poiClassValue == 'Recreation Facilities';
       final searches = <Future<List<MapSearchResult>>>[
         EsriMapSearchService.queryPOIsByClass(category.poiClassValue),
-        if (category.poiClassValue == 'Recreation Facilities') EsriMapSearchService.queryBuildings('gym'),
+        if (isRec) EsriMapSearchService.queryBuildings('gym'),
       ];
       final allResults = (await Future.wait(searches)).expand((results) => results).toList();
       await _waitForMinimumSearchLoadingTime(loadingStopwatch);
@@ -853,8 +858,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _isSearching = false;
       });
       if (allResults.isEmpty) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
       }
     } catch (e) {
       debugPrint('Category search error: $e');
@@ -866,8 +872,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _allCategoryResults = [];
         _isSearching = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
     }
   }
 
@@ -1129,7 +1136,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   void _selectResultFromList(MapSearchResult result) {
     final index = _mappedResults.indexOf(result);
-    if (index < 0 || index >= _graphicsOverlay.graphics.length) {
+    var isOutOfBounds = index < 0 || index >= _graphicsOverlay.graphics.length;
+    if (isOutOfBounds) {
       _selectResultFromPin(result);
       return;
     }
@@ -1384,7 +1392,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
 
   Future<void> _solveRoute(MapSearchResult destination, {String? travelMode, (double, double)? originLatLng}) async {
-    if (!FeatureFlags.mapRoutingEnabled) return;
+    if (!FeatureFlags.MAP_ROUTING_ENABLED) return;
 
     final mode = travelMode ?? _travelMode;
     setState(() {
@@ -1393,12 +1401,15 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _travelMode = mode;
     });
 
-    if (originLatLng == null && _getUserLatLng() == null) await _startLocationDisplay();
+    var noOriginOrUserLocation = originLatLng == null && _getUserLatLng() == null;
+    if (noOriginOrUserLocation) await _startLocationDisplay();
 
     var userLatLng = originLatLng ?? _getUserLatLng();
-    if (userLatLng == null && await Geolocator.isLocationServiceEnabled()) {
+    var isServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (userLatLng == null && isServiceEnabled) {
       final permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+      var isGranted = permission == LocationPermission.whileInUse || permission == LocationPermission.always;
+      if (isGranted) {
         try {
           final loc = await Geolocator.getCurrentPosition(
             locationSettings: const LocationSettings(timeLimit: Duration(seconds: 3)),
@@ -1712,7 +1723,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   void _hideSearchOverlayWhenUnfocused() {
-    if (_focusNode.hasFocus || _fromFocusNode.hasFocus || _toFocusNode.hasFocus) return;
+    var hasFocus = _focusNode.hasFocus || _fromFocusNode.hasFocus || _toFocusNode.hasFocus;
+    if (hasFocus) return;
     setState(() {
       _showSuggestions = false;
       _showResults = false;
@@ -1813,6 +1825,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isFabVisible = !keyboardVisible && !_showLayersPanel;
 
     final isLayersPanelVisible = _showLayersPanel && _config != null;
+    final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene;
+    final shouldShowScaleBar = _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel;
 
     return Scaffold(
       body: Stack(
@@ -1890,7 +1904,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             ),
 
           // Floating top search bar & suggestion panel
-          if (FeatureFlags.mapSearchEnabled && isDefaultScene)
+          if (isSearchEnabledAndDefault)
             Positioned(
               top: 8,
               left: 12,
@@ -2065,8 +2079,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                           }
                           if (gps == null) {
                             if (mounted) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
                             }
                             return;
                           }
@@ -2107,7 +2122,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             ),
 
           // Dynamic Google Maps-style Scale Bar Indicator
-          if (_sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel)
+          if (shouldShowScaleBar)
             Positioned(
               bottom: 24,
               right: 16,

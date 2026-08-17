@@ -139,6 +139,7 @@ class EsriMapSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var isAiSearchEnabled = FeatureFlags.MAP_AI_SEARCH_ENABLED && (config?.features.aiSearch ?? false);
     const searchFontSize = 16.0;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final searchTextColor = isDark ? descriptiveTextColorDark : descriptiveTextColorLight;
@@ -147,7 +148,7 @@ class EsriMapSearchBar extends StatelessWidget {
 
     final isSearchNotEmpty = searchController.text.isNotEmpty;
     final hasClassMatches =
-        FeatureFlags.mapSearchCategoriesEnabled &&
+        FeatureFlags.MAP_SEARCH_CATEGORIES_ENABLED &&
         matchingPoiClasses.isNotEmpty &&
         isSearchNotEmpty &&
         !showSuggestions;
@@ -324,7 +325,7 @@ class EsriMapSearchBar extends StatelessWidget {
                   ),
                 ),
                 if (isSearchNotEmpty) IconButton(icon: const Icon(Icons.clear), onPressed: onClearSearch),
-                if (FeatureFlags.mapAiSearchEnabled && (config?.features.aiSearch ?? false))
+                if (isAiSearchEnabled)
                   IconButton(
                     icon: Icon(
                       Icons.auto_awesome,

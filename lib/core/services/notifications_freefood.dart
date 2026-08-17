@@ -75,8 +75,10 @@ class FreeFoodService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.toString().contains("401"))
-        if (await NetworkHelper.getNewToken(headers)) return await updateCount(id, body);
+      if (e.toString().contains("401")) {
+        var isNewTokenObtained = await NetworkHelper.getNewToken(headers);
+        if (isNewTokenObtained) return await updateCount(id, body);
+      }
       _error = e.toString();
       return false;
     } finally {

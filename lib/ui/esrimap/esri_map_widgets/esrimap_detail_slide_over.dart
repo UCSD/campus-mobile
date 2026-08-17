@@ -160,9 +160,11 @@ Widget buildDetailSlideOverContent({
         // Header
         GestureDetector(
           onVerticalDragEnd: (details) {
-            if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
+            var isSwipingDown = details.primaryVelocity != null && details.primaryVelocity! > 0;
+            var isSwipingUp = details.primaryVelocity != null && details.primaryVelocity! < 0;
+            if (isSwipingDown) {
               if (!isMinimized) onToggle();
-            } else if (details.primaryVelocity != null && details.primaryVelocity! < 0) {
+            } else if (isSwipingUp) {
               if (isMinimized) onToggle();
             }
           },
@@ -439,7 +441,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 12),
                               ],
-                              if (FeatureFlags.mapRoutingEnabled)
+                              if (FeatureFlags.MAP_ROUTING_ENABLED)
                                 Expanded(
                                   child: FilledButton.icon(
                                     onPressed: isRoutingMode ? null : () => onGetDirections(result),
