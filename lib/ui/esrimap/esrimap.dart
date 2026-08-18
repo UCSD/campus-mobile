@@ -124,6 +124,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   String? _activeRouteField;
   (double, double)? _fromLatLng;
   MapSearchResult? _routeDestination;
+  Offset? _loadingPoint;
 
   // Basemaps & Operational Layers State
   BasemapType _currentBasemapType = BasemapType.defaultMap;
@@ -1079,31 +1080,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     final mapPoint = _mapViewController.screenToLocation(screen: screenPoint);
-    
-    // Show the loading callout immediately to provide instant feedback
-    if (mapPoint != null) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
-      _mapViewController.callout.showAt(
-        mapPoint,
-        leaderPosition: LeaderPosition.bottom,
-        style: CalloutStyle(
-          backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
-          borderColor: isDark ? Colors.white24 : Colors.black26,
-          borderRadius: 12,
-          borderWidth: 0.5,
-          contentPadding: const EdgeInsets.all(12),
-          offset: const Offset(0, -10),
-        ),
-        contentBuilder: (_, __) => SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: isDark ? Colors.white : null,
-          ),
-        ),
-      );
-    }
+    // Show the loading indicator immediately as a Flutter overlay
+    setState(() {
+      _loadingPoint = screenPoint;
+    });
 
     try {
       final identifyResult = await _mapViewController.identifyGraphicsOverlay(
@@ -1115,6 +1095,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
       final hasGraphics = identifyResult.graphics.isNotEmpty;
       if (hasGraphics) {
+        if (mounted) setState(() { _loadingPoint = null; });
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
         final isValidResultIndex = index != null && index >= 0 && index < _mappedResults.length;
@@ -1129,6 +1110,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       final wgs84Point = GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
       if (wgs84Point != null && !wgs84Point.x.isNaN && !wgs84Point.y.isNaN) {
         final buildingResult = await EsriMapSearchService.identifyBuildingAtCoordinate(wgs84Point.y, wgs84Point.x);
+        if (mounted) setState(() { _loadingPoint = null; });
         if (buildingResult != null) {
           _plotResultsOnMap([buildingResult]);
           if (_graphicsOverlay.graphics.isNotEmpty) {
@@ -1141,6 +1123,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
     }
 
+    if (mounted) setState(() { _loadingPoint = null; });
     _dismissCallout();
     final isSelectedResultNotNull = _selectedResult != null;
     if (isSelectedResultNotNull) _closeDetail();
@@ -2039,6 +2022,28 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                       ),
                     );
                   },
+                ),
+
+              if (_loadingPoint != null)
+                Positioned(
+                  left: _loadingPoint!.dx - 12,
+                  top: _loadingPoint!.dy - 12,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF242424) : Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: const [
+                        BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                    ),
+                  ),
                 ),
 
               // Floating top search bar & suggestion panel
