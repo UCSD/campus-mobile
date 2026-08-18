@@ -151,8 +151,19 @@ class EsriMapSearchService {
             if (rings != null && rings.isNotEmpty) {
               final firstRing = rings.first as List<dynamic>?;
               if (firstRing != null && firstRing.isNotEmpty) {
-                 resLng = firstRing.first[0] as double;
-                 resLat = firstRing.first[1] as double;
+                double minX = double.infinity, maxX = double.negativeInfinity;
+                double minY = double.infinity, maxY = double.negativeInfinity;
+                for (final point in firstRing) {
+                  final coords = point as List<dynamic>;
+                  final x = (coords[0] as num).toDouble();
+                  final y = (coords[1] as num).toDouble();
+                  if (x < minX) minX = x;
+                  if (x > maxX) maxX = x;
+                  if (y < minY) minY = y;
+                  if (y > maxY) maxY = y;
+                }
+                resLng = (minX + maxX) / 2;
+                resLat = (minY + maxY) / 2;
               }
               
               try {
