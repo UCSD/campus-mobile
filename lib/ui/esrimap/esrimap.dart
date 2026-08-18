@@ -124,6 +124,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   String? _activeRouteField;
   (double, double)? _fromLatLng;
   MapSearchResult? _routeDestination;
+  Offset? _loadingPoint;
 
   // Basemaps & Operational Layers State
   BasemapType _currentBasemapType = BasemapType.defaultMap;
@@ -921,8 +922,26 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mappedResults = results;
     for (int i = 0; i < results.length; i++) {
       final result = results[i];
-      final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
       final isBuilding = result.source == MapSearchSource.building;
+
+      if (result.footprint is Polygon) {
+        final footprintGraphic = Graphic(
+          geometry: result.footprint as Polygon,
+          symbol: SimpleFillSymbol(
+            style: SimpleFillSymbolStyle.solid,
+            color: Colors.blue.withOpacity(0.3),
+            outline: SimpleLineSymbol(
+              style: SimpleLineSymbolStyle.solid,
+              color: Colors.blue,
+              width: 2,
+            ),
+          ),
+        );
+        footprintGraphic.attributes['resultIndex'] = i;
+        _graphicsOverlay.graphics.add(footprintGraphic);
+      }
+
+      final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
       final graphic = Graphic(
         geometry: point,
         symbol: SimpleMarkerSymbol(
@@ -1060,13 +1079,11 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
 
-    final isMappedResultsEmpty = _mappedResults.isEmpty;
-    if (isMappedResultsEmpty) {
-      _dismissCallout();
-      final isSelectedResultNotNull = _selectedResult != null;
-      if (isSelectedResultNotNull) _closeDetail();
-      return;
-    }
+    final mapPoint = _mapViewController.screenToLocation(screen: screenPoint);
+    // Show the loading indicator immediately as a Flutter overlay
+    setState(() {
+      _loadingPoint = screenPoint;
+    });
 
     try {
       final identifyResult = await _mapViewController.identifyGraphicsOverlay(
@@ -1078,25 +1095,45 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
       final hasGraphics = identifyResult.graphics.isNotEmpty;
       if (hasGraphics) {
+        if (mounted) setState(() { _loadingPoint = null; });
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
         final isValidResultIndex = index != null && index >= 0 && index < _mappedResults.length;
         if (isValidResultIndex) _handlePinTap(_mappedResults[index], tappedGraphic);
-      } else {
-        _dismissCallout();
-        final isSelectedResultNotNull = _selectedResult != null;
-        if (isSelectedResultNotNull) _closeDetail();
+        return;
       }
     } catch (e) {
       debugPrint('Identify error: $e');
     }
+
+    if (mapPoint != null) {
+      final wgs84Point = GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
+      if (wgs84Point != null && !wgs84Point.x.isNaN && !wgs84Point.y.isNaN) {
+        final buildingResult = await EsriMapSearchService.identifyBuildingAtCoordinate(wgs84Point.y, wgs84Point.x);
+        if (mounted) setState(() { _loadingPoint = null; });
+        if (buildingResult != null) {
+          _plotResultsOnMap([buildingResult]);
+          if (_graphicsOverlay.graphics.isNotEmpty) {
+            _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
+          }
+          return;
+        } else {
+          _dismissCallout();
+        }
+      }
+    }
+
+    if (mounted) setState(() { _loadingPoint = null; });
+    _dismissCallout();
+    final isSelectedResultNotNull = _selectedResult != null;
+    if (isSelectedResultNotNull) _closeDetail();
   }
 
   /// Shows a place name above a plotted map pin without changing the search.
 
   void _showCalloutForGraphic(MapSearchResult result, Graphic graphic) {
     final isBuilding = result.source == MapSearchSource.building;
-    final detail = isBuilding ? 'Building' : result.subtitle;
+    final detail = (isBuilding && result.address.isNotEmpty) ? result.address : result.subtitle;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     _graphicsOverlay.clearSelection();
@@ -1985,6 +2022,28 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                       ),
                     );
                   },
+                ),
+
+              if (_loadingPoint != null)
+                Positioned(
+                  left: _loadingPoint!.dx - 12,
+                  top: _loadingPoint!.dy - 12,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF242424) : Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: const [
+                        BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                    ),
+                  ),
                 ),
 
               // Floating top search bar & suggestion panel

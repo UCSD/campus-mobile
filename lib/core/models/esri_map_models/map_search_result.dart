@@ -40,6 +40,9 @@ class MapSearchResult {
   /// Optional website URL associated with this location.
   final String? websiteUrl;
 
+  /// Optional polygon geometry for the building footprint. Not serialized to JSON.
+  final dynamic footprint;
+
   /// Constructs a [MapSearchResult] instance.
   const MapSearchResult({
     required this.name,
@@ -50,6 +53,7 @@ class MapSearchResult {
     this.address = '',
     this.description = '',
     this.websiteUrl,
+    this.footprint,
   });
 
   /// Serializes the search result into a JSON-compatible map for storage in SharedPreferences.

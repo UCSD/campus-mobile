@@ -112,6 +112,130 @@ class EsriMapSearchService {
         .toList();
   }
 
+  /// Identifies a building by performing a spatial intersection query at the given WGS84 coordinate.
+  static Future<MapSearchResult?> identifyBuildingAtCoordinate(double lat, double lng) async {
+    try {
+      final uri = Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/Buildings/Buildings_Campus_Map/MapServer/2/query');
+      final response = await http.get(uri.replace(queryParameters: {
+        'geometry': '$lng,$lat',
+        'geometryType': 'esriGeometryPoint',
+        'inSR': '4326',
+        'spatialRel': 'esriSpatialRelIntersects',
+        'distance': '15',
+        'units': 'esriSRUnit_Foot',
+        'outFields': '*',
+        'returnGeometry': 'true',
+        'outSR': '4326',
+        'f': 'json',
+      }));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final features = data['features'] as List<dynamic>?;
+        if (features != null && features.isNotEmpty) {
+          final attr = features.first['attributes'] as Map<String, dynamic>;
+          
+          final longName = attr['GIS.facTririgaBuildingInfo.FacilityLongName'] as String?;
+          final shortName = attr['GIS.facTririgaBuildingInfo.FacilityShortName'] as String?;
+          String name = (longName != null && longName.isNotEmpty) ? longName : (shortName ?? 'Unknown Building');
+          String address = attr['GIS.facTririgaBuildingInfo.StreetAddress'] as String? ?? '';
+          
+          // Try to extract center of geometry if it's returned, otherwise fallback to tap location
+          double resLat = lat;
+          double resLng = lng;
+          Polygon? footprintPolygon;
+          
+          final geom = features.first['geometry'] as Map<String, dynamic>?;
+          if (geom != null) {
+            final rings = geom['rings'] as List<dynamic>?;
+            if (rings != null && rings.isNotEmpty) {
+              final firstRing = rings.first as List<dynamic>?;
+              if (firstRing != null && firstRing.isNotEmpty) {
+                double minX = double.infinity, maxX = double.negativeInfinity;
+                double minY = double.infinity, maxY = double.negativeInfinity;
+                for (final point in firstRing) {
+                  final coords = point as List<dynamic>;
+                  final x = (coords[0] as num).toDouble();
+                  final y = (coords[1] as num).toDouble();
+                  if (x < minX) minX = x;
+                  if (x > maxX) maxX = x;
+                  if (y < minY) minY = y;
+                  if (y > maxY) maxY = y;
+                }
+                resLng = (minX + maxX) / 2;
+                resLat = (minY + maxY) / 2;
+              }
+              
+              try {
+                final builder = PolygonBuilder(spatialReference: SpatialReference.wgs84);
+                for (final ring in rings) {
+                  final part = MutablePart(spatialReference: SpatialReference.wgs84);
+                  final ringPoints = ring as List<dynamic>;
+                  for (final point in ringPoints) {
+                    final coords = point as List<dynamic>;
+                    part.addPointXY(x: (coords[0] as num).toDouble(), y: (coords[1] as num).toDouble());
+                  }
+                  builder.parts.addPart(part);
+                }
+                footprintPolygon = builder.toGeometry() as Polygon?;
+              } catch (e) {
+                debugPrint('Failed to parse polygon geometry: $e');
+              }
+            }
+          }
+          
+          if (name == 'Unknown Building') {
+            final fallbackUrl = Uri.parse('https://admin-enterprise-gis.ucsd.edu/server/rest/services/Buildings/Buildings_Campus_Map/MapServer/0/query');
+            try {
+              final fallbackRes = await http.get(fallbackUrl.replace(queryParameters: {
+                'geometry': '$resLng,$resLat',
+                'geometryType': 'esriGeometryPoint',
+                'inSR': '4326',
+                'spatialRel': 'esriSpatialRelIntersects',
+                'distance': '100', // 100 feet from center of footprint
+                'units': 'esriSRUnit_Foot',
+                'outFields': '*',
+                'returnGeometry': 'false',
+                'f': 'json',
+              }));
+              if (fallbackRes.statusCode == 200) {
+                final fallbackData = jsonDecode(fallbackRes.body);
+                final fallbackFeatures = fallbackData['features'] as List<dynamic>?;
+                if (fallbackFeatures != null && fallbackFeatures.isNotEmpty) {
+                  final fbAttr = fallbackFeatures.first['attributes'] as Map<String, dynamic>;
+                  final fbLong = fbAttr['GIS.facTririgaBuildingInfo.FacilityLongName'] as String?;
+                  final fbShort = fbAttr['GIS.facTririgaBuildingInfo.FacilityShortName'] as String?;
+                  if (fbLong != null && fbLong.isNotEmpty) {
+                    name = fbLong;
+                  } else if (fbShort != null && fbShort.isNotEmpty) {
+                    name = fbShort;
+                  }
+                  final fbAddr = fbAttr['GIS.facTririgaBuildingInfo.StreetAddress'] as String?;
+                  if (fbAddr != null && fbAddr.isNotEmpty) {
+                    address = fbAddr;
+                  }
+                }
+              }
+            } catch (_) {}
+          }
+
+          return MapSearchResult(
+            name: name,
+            subtitle: 'Building',
+            latitude: resLat,
+            longitude: resLng,
+            source: MapSearchSource.building,
+            address: address,
+            footprint: footprintPolygon,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Failed to identify building at coordinate: $e');
+    }
+    return null;
+  }
+
   // ---------------------------------------------------------------------------
   // Viewport & Geographic Helpers
   // ---------------------------------------------------------------------------
