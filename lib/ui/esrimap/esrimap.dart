@@ -921,8 +921,26 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mappedResults = results;
     for (int i = 0; i < results.length; i++) {
       final result = results[i];
-      final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
       final isBuilding = result.source == MapSearchSource.building;
+
+      if (result.footprint is Polygon) {
+        final footprintGraphic = Graphic(
+          geometry: result.footprint as Polygon,
+          symbol: SimpleFillSymbol(
+            style: SimpleFillSymbolStyle.solid,
+            color: Colors.blue.withOpacity(0.3),
+            outline: SimpleLineSymbol(
+              style: SimpleLineSymbolStyle.solid,
+              color: Colors.blue,
+              width: 2,
+            ),
+          ),
+        );
+        footprintGraphic.attributes['resultIndex'] = i;
+        _graphicsOverlay.graphics.add(footprintGraphic);
+      }
+
+      final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
       final graphic = Graphic(
         geometry: point,
         symbol: SimpleMarkerSymbol(
@@ -1060,6 +1078,33 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
 
+    final mapPoint = _mapViewController.screenToLocation(screen: screenPoint);
+    
+    // Show the loading callout immediately to provide instant feedback
+    if (mapPoint != null) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+      _mapViewController.callout.showAt(
+        mapPoint,
+        leaderPosition: LeaderPosition.bottom,
+        style: CalloutStyle(
+          backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
+          borderColor: isDark ? Colors.white24 : Colors.black26,
+          borderRadius: 12,
+          borderWidth: 0.5,
+          contentPadding: const EdgeInsets.all(12),
+          offset: const Offset(0, -10),
+        ),
+        contentBuilder: (_, __) => SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: isDark ? Colors.white : null,
+          ),
+        ),
+      );
+    }
+
     try {
       final identifyResult = await _mapViewController.identifyGraphicsOverlay(
         _graphicsOverlay,
@@ -1080,7 +1125,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       debugPrint('Identify error: $e');
     }
 
-    final mapPoint = _mapViewController.screenToLocation(screen: screenPoint);
     if (mapPoint != null) {
       final wgs84Point = GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
       if (wgs84Point != null && !wgs84Point.x.isNaN && !wgs84Point.y.isNaN) {
@@ -1091,6 +1135,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
           }
           return;
+        } else {
+          _dismissCallout();
         }
       }
     }
@@ -1104,7 +1150,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   void _showCalloutForGraphic(MapSearchResult result, Graphic graphic) {
     final isBuilding = result.source == MapSearchSource.building;
-    final detail = isBuilding ? 'Building' : result.subtitle;
+    final detail = (isBuilding && result.address.isNotEmpty) ? result.address : result.subtitle;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     _graphicsOverlay.clearSelection();
