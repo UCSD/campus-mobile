@@ -930,11 +930,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           symbol: SimpleFillSymbol(
             style: SimpleFillSymbolStyle.solid,
             color: Colors.blue.withOpacity(0.3),
-            outline: SimpleLineSymbol(
-              style: SimpleLineSymbolStyle.solid,
-              color: Colors.blue,
-              width: 2,
-            ),
+            outline: SimpleLineSymbol(style: SimpleLineSymbolStyle.solid, color: Colors.blue, width: 2),
           ),
         );
         footprintGraphic.attributes['resultIndex'] = i;
@@ -1095,7 +1091,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
       final hasGraphics = identifyResult.graphics.isNotEmpty;
       if (hasGraphics) {
-        if (mounted) setState(() { _loadingPoint = null; });
+        if (mounted)
+          setState(() {
+            _loadingPoint = null;
+          });
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
         final isValidResultIndex = index != null && index >= 0 && index < _mappedResults.length;
@@ -1107,15 +1106,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     if (mapPoint != null) {
-      final wgs84Point = GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
+      final wgs84Point =
+          GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
       if (wgs84Point != null && !wgs84Point.x.isNaN && !wgs84Point.y.isNaN) {
         final buildingResult = await EsriMapSearchService.identifyBuildingAtCoordinate(wgs84Point.y, wgs84Point.x);
-        if (mounted) setState(() { _loadingPoint = null; });
+        if (mounted)
+          setState(() {
+            _loadingPoint = null;
+          });
         if (buildingResult != null) {
           _plotResultsOnMap([buildingResult]);
-          if (_graphicsOverlay.graphics.isNotEmpty) {
-            _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
-          }
+          if (_graphicsOverlay.graphics.isNotEmpty) _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
           return;
         } else {
           _dismissCallout();
@@ -1123,7 +1124,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
     }
 
-    if (mounted) setState(() { _loadingPoint = null; });
+    if (mounted)
+      setState(() {
+        _loadingPoint = null;
+      });
     _dismissCallout();
     final isSelectedResultNotNull = _selectedResult != null;
     if (isSelectedResultNotNull) _closeDetail();
@@ -2034,9 +2038,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     decoration: BoxDecoration(
                       color: isDark ? const Color(0xFF242424) : Colors.white,
                       shape: BoxShape.circle,
-                      boxShadow: const [
-                        BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
-                      ],
+                      boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
                     ),
                     padding: const EdgeInsets.all(4),
                     child: CircularProgressIndicator(
