@@ -168,45 +168,53 @@ Widget buildDetailSlideOverContent({
               if (isMinimized) onToggle();
             }
           },
-          child: InkWell(
-            onTap: onToggle,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: onClose,
-                    behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  color: isDark ? Colors.white70 : Colors.grey[800],
+                  onPressed: onClose,
+                  tooltip: 'Back',
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: onToggle,
+                    borderRadius: BorderRadius.circular(8),
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 12, top: 4, bottom: 4),
-                      child: Icon(Icons.arrow_back, size: 24, color: isDark ? Colors.white70 : Colors.grey[800]),
-                    ),
-                  ),
-                  if (hasHeaderIcon) ...[
-                    Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
-                    const SizedBox(width: 8),
-                  ],
-                  Expanded(
-                    child: Text(
-                      headerTitle,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.grey[900],
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      child: Row(
+                        children: [
+                          if (hasHeaderIcon) ...[
+                            Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
+                            const SizedBox(width: 8),
+                          ],
+                          Expanded(
+                            child: Text(
+                              headerTitle,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : Colors.grey[900],
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (hasTrailing && !isMinimized) trailing,
+                          const SizedBox(width: 8),
+                          Icon(
+                            isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                            size: 24,
+                            color: isDark ? Colors.white70 : Colors.grey[700],
+                          ),
+                        ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (hasTrailing && !isMinimized) trailing,
-                  const SizedBox(width: 8),
-                  Icon(
-                    isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    size: 24,
-                    color: isDark ? Colors.white70 : Colors.grey[700],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -302,7 +310,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                           onLaunchWebsite(
                             'https://www.google.com/maps/dir/?api=1'
                             '&destination=${result.latitude},${result.longitude}'
-                            '&travelmode=walking'
+                            '&travelmode=walking&dirflg=w'
                             '$originParam',
                           );
                         },
@@ -362,7 +370,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                                 onLaunchWebsite(
                                   'https://www.google.com/maps/dir/?api=1'
                                   '&destination=${result.latitude},${result.longitude}'
-                                  '&travelmode=driving'
+                                  '&travelmode=driving&dirflg=d'
                                   '$originParam',
                                 );
                               },
