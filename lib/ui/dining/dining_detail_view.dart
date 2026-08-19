@@ -92,7 +92,9 @@ class _DiningDetailViewState extends State<DiningDetailView> {
                         return Icon(
                           Icons.restaurant,
                           size: 56,
-                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : darkPrimaryColor2,
                         );
                       },
                     ),
