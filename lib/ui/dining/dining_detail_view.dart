@@ -88,6 +88,13 @@ class _DiningDetailViewState extends State<DiningDetailView> {
                       width: 80,
                       height: 80,
                       semanticLabel: 'Location logo',
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          Icons.restaurant,
+                          size: 56,
+                          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                        );
+                      },
                     ),
                   )
                 : Icon(

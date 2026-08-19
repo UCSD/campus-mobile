@@ -742,6 +742,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
 
   Future<void> _loadRecentSearches() async {
+    await EsriMapSearchService.loadCachedBuildings();
     final searches = await EsriMapSearchService.loadRecentSearches();
     if (mounted) setState(() => _recentSearches = searches);
   }
@@ -804,7 +805,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     setState(() {
       _isSearching = true;
-      _showResults = true;
+      _showResults = _showRouteFields;
       _showSuggestions = false;
       _selectedResult = null;
       _matchingPoiClasses = matched;
@@ -823,10 +824,39 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     await _waitForMinimumSearchLoadingTime(loadingStopwatch);
     final isStale = !mounted || requestId != _searchRequestId;
     if (isStale) return;
-    setState(() {
-      _searchResults = merged;
-      _isSearching = false;
-    });
+
+    if (_showRouteFields) {
+      setState(() {
+        _searchResults = merged;
+        _isSearching = false;
+      });
+    } else {
+      final userLoc = _getUserLatLng();
+      if (userLoc != null) {
+        merged.sort((a, b) {
+          final distA = EsriMapSearchService.distanceMeters(userLoc.$1, userLoc.$2, a.latitude, a.longitude);
+          final distB = EsriMapSearchService.distanceMeters(userLoc.$1, userLoc.$2, b.latitude, b.longitude);
+          return distA.compareTo(distB);
+        });
+      } else {
+        merged.sort((a, b) => a.name.compareTo(b.name));
+      }
+
+      _plotResultsOnMap(merged);
+
+      setState(() {
+        _searchResults = [];
+        _allCategoryResults = merged;
+        _showCategoryList = merged.isNotEmpty;
+        _showResults = false;
+        _activeCategory = null;
+        _isSearching = false;
+      });
+
+      if (merged.isEmpty && query.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No locations found.')));
+      }
+    }
   }
 
   /// Category search: queries matching locations and plots pins on the map.
@@ -850,11 +880,79 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     try {
       var isRec = category.poiClassValue == 'Recreation Facilities';
-      final searches = <Future<List<MapSearchResult>>>[
-        EsriMapSearchService.queryPOIsByClass(category.poiClassValue),
-        if (isRec) EsriMapSearchService.queryBuildings('gym'),
-      ];
-      final allResults = (await Future.wait(searches)).expand((results) => results).toList();
+      var allResults = <MapSearchResult>[];
+      
+      if (isRec) {
+        final baseSearch = EsriMapSearchService.queryPOIsByClass(category.poiClassValue);
+        final extraSearches = <Future<List<MapSearchResult>>>[
+          EsriMapSearchService.queryBuildings('gym'),
+          EsriMapSearchService.queryBuildings('rimac'),
+          EsriMapSearchService.queryBuildings('track'),
+          EsriMapSearchService.queryBuildings('canyonview'),
+          EsriMapSearchService.queryBuildings('pool'),
+          EsriMapSearchService.queryBuildings('natatorium'),
+          EsriMapSearchService.queryPOIs('park'),
+          EsriMapSearchService.queryPOIs('beach'),
+          EsriMapSearchService.queryPOIs('amphitheater'),
+          EsriMapSearchService.queryPOIs('amphitheatre'),
+          EsriMapSearchService.queryBuildings('amphitheater'),
+          EsriMapSearchService.queryBuildings('arena'),
+          EsriMapSearchService.queryPOIs('field'),
+          EsriMapSearchService.queryPOIs('court'),
+          EsriMapSearchService.queryBuildings('fitness'),
+          EsriMapSearchService.queryBuildings('athletic'),
+          EsriMapSearchService.queryBuildings('aquatic'),
+          EsriMapSearchService.queryBuildings('rec'),
+          EsriMapSearchService.queryBuildings('theater'),
+          EsriMapSearchService.queryPOIs('theater'),
+          EsriMapSearchService.queryBuildings('theatre'),
+          EsriMapSearchService.queryPOIs('theatre'),
+          EsriMapSearchService.queryBuildings('wellness'),
+        ];
+        
+        final baseResults = await baseSearch;
+        final extraResultsLists = await Future.wait(extraSearches);
+        
+        final validTerms = [
+          'gym', 'rimac', 'track', 'canyonview', 'pool', 'natatorium', 
+          'park', 'beach', 'amphitheater', 'amphitheatre', 'arena', 'field', 
+          'court', 'fitness', 'athletic', 'aquatic', 'rec', 'theater', 'theatre', 'wellness'
+        ];
+        
+        final validExtraResults = extraResultsLists.expand((r) => r).where((r) {
+          final textLower = '${r.name} ${r.subtitle} ${r.description}'.toLowerCase();
+          for (final term in validTerms) {
+            // Match word boundary to avoid substring matches (e.g. field in Gusfield)
+            if (RegExp(r'\b' + term).hasMatch(textLower)) return true;
+          }
+          return false;
+        });
+        
+        allResults = [...baseResults, ...validExtraResults];
+      } else {
+        allResults = await EsriMapSearchService.queryPOIsByClass(category.poiClassValue);
+      }
+      
+      // Deduplicate results by name to avoid showing the same place twice
+      final uniqueNames = <String>{};
+      allResults = allResults.where((r) {
+        if (!uniqueNames.add(r.name)) return false;
+        
+        // Filter out false positives for Recreation
+        if (isRec) {
+          final textLower = '${r.name} ${r.subtitle} ${r.description}'.toLowerCase();
+          final excluded = [
+            'emergency', 'restroom', 'parking', 'call box', 'office', 
+            'elevator', 'atm ', ' atm', 'conference', 'room ', ' room', 
+            'reception', 'director', 'academic', 'admin', 'lecture', 'institute'
+          ];
+          for (final term in excluded) {
+            if (textLower.contains(term)) return false;
+          }
+        }
+        return true;
+      }).toList();
+      
       await _waitForMinimumSearchLoadingTime(loadingStopwatch);
       final isStale = !mounted || requestId != _searchRequestId;
       if (isStale) return;
@@ -871,7 +969,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           final closest = allResults.first;
           final p = ArcGISPoint(x: closest.longitude, y: closest.latitude, spatialReference: SpatialReference.wgs84);
           _showCalloutForGraphic(closest, _graphicsOverlay.graphics.first);
-          _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(p, scale: 5000));
+          _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(p, scale: 18000));
         }
       } else {
         allResults.sort((a, b) => a.name.compareTo(b.name));
@@ -885,8 +983,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _isSearching = false;
       });
       if (allResults.isEmpty) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
       }
     } catch (e) {
       debugPrint('Category search error: $e');
@@ -898,8 +997,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _allCategoryResults = [];
         _isSearching = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
     }
   }
 
@@ -961,26 +1061,25 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
           ArcGISPoint(x: r.longitude, y: r.latitude, spatialReference: SpatialReference.wgs84),
-          scale: 5000,
+          scale: 18000,
         ),
       );
       return;
     }
 
-    double minLat = results.map((r) => r.latitude).reduce((a, b) => a < b ? a : b);
-    double maxLat = results.map((r) => r.latitude).reduce((a, b) => a > b ? a : b);
-    double minLng = results.map((r) => r.longitude).reduce((a, b) => a < b ? a : b);
-    double maxLng = results.map((r) => r.longitude).reduce((a, b) => a > b ? a : b);
+    // Find the median coordinate to locate the densest cluster, ignoring outliers
+    final lats = results.map((r) => r.latitude).toList()..sort();
+    final lngs = results.map((r) => r.longitude).toList()..sort();
 
-    const padding = 0.005;
-    final envelope = Envelope.fromXY(
-      xMin: minLng - padding,
-      yMin: minLat - padding,
-      xMax: maxLng + padding,
-      yMax: maxLat + padding,
-      spatialReference: SpatialReference.wgs84,
+    final medianLat = lats[lats.length ~/ 2];
+    final medianLng = lngs[lngs.length ~/ 2];
+
+    _mapViewController.setViewpointAnimated(
+      Viewpoint.fromCenter(
+        ArcGISPoint(x: medianLng, y: medianLat, spatialReference: SpatialReference.wgs84),
+        scale: 24000,
+      ),
     );
-    _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(envelope));
   }
 
   /// Dismisses the active map pin callout, if any.
@@ -1065,20 +1164,28 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   Future<void> _onMapTap(Offset screenPoint) async {
-    final isDropdownVisible = _showSuggestions || _showResults;
+    final hasClassMatches = _matchingPoiClasses.isNotEmpty && _searchController.text.isNotEmpty;
+    final isDropdownVisible = _showSuggestions || _showResults || hasClassMatches;
     if (isDropdownVisible) {
       setState(() {
         _showSuggestions = false;
         _showResults = false;
+        _matchingPoiClasses = [];
       });
       _focusNode.unfocus();
       return;
     }
 
     final mapPoint = _mapViewController.screenToLocation(screen: screenPoint);
-    // Show the loading indicator immediately as a Flutter overlay
-    setState(() {
-      _loadingPoint = screenPoint;
+
+    // Delay the loading indicator so fast responses (like empty taps) don't flash it
+    bool isRequestFinished = false;
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (!isRequestFinished && mounted) {
+        setState(() {
+          _loadingPoint = screenPoint;
+        });
+      }
     });
 
     try {
@@ -1091,6 +1198,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
       final hasGraphics = identifyResult.graphics.isNotEmpty;
       if (hasGraphics) {
+        isRequestFinished = true;
         if (mounted)
           setState(() {
             _loadingPoint = null;
@@ -1110,11 +1218,15 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
       if (wgs84Point != null && !wgs84Point.x.isNaN && !wgs84Point.y.isNaN) {
         final buildingResult = await EsriMapSearchService.identifyBuildingAtCoordinate(wgs84Point.y, wgs84Point.x);
+        isRequestFinished = true;
         if (mounted)
           setState(() {
             _loadingPoint = null;
           });
         if (buildingResult != null) {
+          if (_allCategoryResults.isNotEmpty) {
+            _clearSearch();
+          }
           _plotResultsOnMap([buildingResult]);
           if (_graphicsOverlay.graphics.isNotEmpty) _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
           return;
@@ -1124,6 +1236,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
     }
 
+    isRequestFinished = true;
     if (mounted)
       setState(() {
         _loadingPoint = null;
@@ -1195,7 +1308,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
 
-    _showCalloutForGraphic(result, graphic);
+    if (_allCategoryResults.isEmpty) {
+      _showCalloutForGraphic(result, graphic);
+    } else {
+      // Ensure any existing callout is dismissed if we're in a list context
+      _dismissCallout();
+    }
+
     _selectResultFromPin(result, updateSearchText: false);
   }
 
@@ -1284,8 +1403,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       final gps = await _getDeviceLocationEfficiently();
       if (gps == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
         }
         return;
       }
@@ -1815,6 +1935,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     setState(() {
       _showSuggestions = false;
       _showResults = false;
+      _matchingPoiClasses = [];
     });
   }
 
@@ -2246,6 +2367,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Category results list panel
               if (shouldShowCatListPanel)
                 EsriMapCategoryListPanel(
+                  key: const Key('category_list_panel'),
                   controller: _categorySheetController,
                   activeCategory: _activeCategory,
                   allCategoryResults: _allCategoryResults,

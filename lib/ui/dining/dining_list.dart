@@ -171,7 +171,18 @@ class DiningList extends StatelessWidget {
                   decoration: Theme.of(context).brightness == Brightness.dark
                       ? BoxDecoration(color: lightTextColor, borderRadius: BorderRadius.circular(8))
                       : null,
-                  child: Image.network(data.vendorLogo!, width: 48, height: 48),
+                  child: Image.network(
+                    data.vendorLogo!,
+                    width: 48,
+                    height: 48,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        Icons.restaurant,
+                        size: 32,
+                        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                      );
+                    },
+                  ),
                 )
               : Icon(
                   Icons.restaurant,

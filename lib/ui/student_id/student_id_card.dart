@@ -89,6 +89,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
                 photoModel.photoUrl,
                 fit: BoxFit.contain,
                 height: ScalingUtility.verticalSafeBlock * 21,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: ScalingUtility.verticalSafeBlock * 21,
+                    width: ScalingUtility.verticalSafeBlock * 21 * 0.75, // approximate aspect ratio
+                    color: Colors.grey[300],
+                    child: Icon(Icons.person, size: 50, color: Colors.grey[600]),
+                  );
+                },
               ),
             ),
             SizedBox(width: cardMargin * 1.5),
