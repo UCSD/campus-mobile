@@ -29,21 +29,17 @@ class EsriMapCalloutContent extends StatelessWidget {
 
     // 1. Try to match Dining
     final diningMatch = _findDiningMatch(queryName, diningModels);
-    if (diningMatch != null) {
-      return _buildCalloutContainer(context, child: _buildDiningContent(context, diningMatch));
-    }
+    if (diningMatch != null) return _buildCalloutContainer(context, child: _buildDiningContent(context, diningMatch));
 
     // 2. Try to match Parking
     final parkingMatch = _findParkingMatch(queryName, parkingModels);
-    if (parkingMatch != null) {
+    if (parkingMatch != null)
       return _buildCalloutContainer(context, child: _buildParkingContent(context, parkingMatch));
-    }
 
     // 3. Try to match Availability
     final availabilityMatch = _findAvailabilityMatch(queryName, availabilityModels);
-    if (availabilityMatch != null) {
+    if (availabilityMatch != null)
       return _buildCalloutContainer(context, child: _buildAvailabilityContent(context, availabilityMatch));
-    }
 
     // 4. Fallback to generic subtitle if no contextual data is found
     return _buildCalloutContainer(context, child: _buildFallbackContent(context));
@@ -231,9 +227,8 @@ class EsriMapCalloutContent extends StatelessWidget {
         totalCapacity += total;
       }
 
-      if (totalCapacity == 0) {
+      if (totalCapacity == 0)
         return Text("No space data", style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12));
-      }
 
       double percent = totalOpen / totalCapacity;
       if (percent.isNaN) percent = 0.0;
