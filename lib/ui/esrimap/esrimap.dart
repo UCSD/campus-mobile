@@ -1113,7 +1113,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     // Delay the loading indicator so fast responses (like empty taps) don't flash it
     bool isRequestFinished = false;
-    Future.delayed(const Duration(milliseconds: 350), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       if (!isRequestFinished && mounted) {
         setState(() {
           _loadingPoint = screenPoint;
@@ -2300,6 +2300,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Category results list panel
               if (shouldShowCatListPanel)
                 EsriMapCategoryListPanel(
+                  key: const Key('category_list_panel'),
                   controller: _categorySheetController,
                   activeCategory: _activeCategory,
                   allCategoryResults: _allCategoryResults,

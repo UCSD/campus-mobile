@@ -73,19 +73,15 @@ class EsriMapCategoryListPanel extends StatelessWidget {
     }
 
     // Content-aware sizing calculation
-    final screenHeight = MediaQuery.of(context).size.height;
-    final contentHeight = 80.0 + (results.length * 56.0).clamp(56.0, 600.0);
-    final contentFraction = (contentHeight / screenHeight).clamp(0.15, 0.80);
-    final initialSize = contentFraction < 0.45 ? contentFraction : 0.45;
-    final maxSize = contentFraction < 0.80 ? contentFraction.clamp(0.45, 0.80) : 0.80;
-    final snaps = <double>[0.15];
-    final isInitialSizeLarger = initialSize > 0.15 + 0.01;
-    if (isInitialSizeLarger) snaps.add(initialSize);
+    final initialSize = 0.45;
+    final minSize = 0.15;
+    final maxSize = 0.90;
+    final snaps = <double>[minSize, initialSize, maxSize];
 
     return DraggableScrollableSheet(
       controller: controller,
       initialChildSize: initialSize,
-      minChildSize: 0.15,
+      minChildSize: minSize,
       maxChildSize: maxSize,
       snap: true,
       snapSizes: snaps,
