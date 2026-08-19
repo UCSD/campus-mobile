@@ -22,7 +22,7 @@ class EsriMapSearchService {
   static const String RECENT_SEARCHES_KEY = 'esri_map_recent_searches';
 
   /// SharedPreferences key used to persist cached building footprints.
-  static const String _cachedBuildingsKey = 'esrimap_cached_buildings';
+  static const String _CACHED_BUILDINGS_KEY = 'esrimap_cached_buildings';
 
   static List<MapSearchResult> _searches = [];
   static List<MapSearchResult> _cachedBuildings = [];
@@ -121,7 +121,7 @@ class EsriMapSearchService {
   /// Loads cached building footprints from SharedPreferences.
   static Future<void> loadCachedBuildings() async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonStr = prefs.getString(_cachedBuildingsKey);
+    final jsonStr = prefs.getString(_CACHED_BUILDINGS_KEY);
     if (jsonStr != null) {
       try {
         final list = jsonDecode(jsonStr) as List<dynamic>;
@@ -169,7 +169,7 @@ class EsriMapSearchService {
   static Future<void> _saveCachedBuildings() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonList = _cachedBuildings.map((c) => c.toJson()).toList();
-    await prefs.setString(_cachedBuildingsKey, jsonEncode(jsonList));
+    await prefs.setString(_CACHED_BUILDINGS_KEY, jsonEncode(jsonList));
   }
 
   /// Identifies a building by performing a spatial intersection query at the given WGS84 coordinate.
@@ -181,7 +181,8 @@ class EsriMapSearchService {
       for (int i = 0; i < _cachedBuildings.length; i++) {
         final cached = _cachedBuildings[i];
         if (cached.footprint != null) {
-          if (GeometryEngine.intersects(geometry1: point, geometry2: cached.footprint as Geometry)) {
+          final intersects = GeometryEngine.intersects(geometry1: point, geometry2: cached.footprint as Geometry);
+          if (intersects) {
             // Check if cache is older than 30 days (30L * 24 * 60 * 60 * 1000)
             final isExpired = cached.fetchedAt == null || (now - cached.fetchedAt!) > 2592000000;
             if (!isExpired) {
@@ -218,7 +219,8 @@ class EsriMapSearchService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final features = data['features'] as List<dynamic>?;
-        if (features != null && features.isNotEmpty) {
+        final hasFeatures = features != null && features.isNotEmpty;
+        if (hasFeatures) {
           final attr = features.first['attributes'] as Map<String, dynamic>;
 
           final longName = attr['GIS.facTririgaBuildingInfo.FacilityLongName'] as String?;
@@ -234,9 +236,11 @@ class EsriMapSearchService {
           final geom = features.first['geometry'] as Map<String, dynamic>?;
           if (geom != null) {
             final rings = geom['rings'] as List<dynamic>?;
-            if (rings != null && rings.isNotEmpty) {
+            final hasRings = rings != null && rings.isNotEmpty;
+            if (hasRings) {
               final firstRing = rings.first as List<dynamic>?;
-              if (firstRing != null && firstRing.isNotEmpty) {
+              final hasFirstRing = firstRing != null && firstRing.isNotEmpty;
+              if (hasFirstRing) {
                 double minX = double.infinity, maxX = double.negativeInfinity;
                 double minY = double.infinity, maxY = double.negativeInfinity;
                 for (final point in firstRing) {
@@ -293,17 +297,21 @@ class EsriMapSearchService {
               if (fallbackRes.statusCode == 200) {
                 final fallbackData = jsonDecode(fallbackRes.body);
                 final fallbackFeatures = fallbackData['features'] as List<dynamic>?;
-                if (fallbackFeatures != null && fallbackFeatures.isNotEmpty) {
+                final hasFallbackFeatures = fallbackFeatures != null && fallbackFeatures.isNotEmpty;
+                if (hasFallbackFeatures) {
                   final fbAttr = fallbackFeatures.first['attributes'] as Map<String, dynamic>;
                   final fbLong = fbAttr['GIS.facTririgaBuildingInfo.FacilityLongName'] as String?;
                   final fbShort = fbAttr['GIS.facTririgaBuildingInfo.FacilityShortName'] as String?;
-                  if (fbLong != null && fbLong.isNotEmpty) {
+                  final hasFbLong = fbLong != null && fbLong.isNotEmpty;
+                  final hasFbShort = fbShort != null && fbShort.isNotEmpty;
+                  if (hasFbLong) {
                     name = fbLong;
-                  } else if (fbShort != null && fbShort.isNotEmpty) {
+                  } else if (hasFbShort) {
                     name = fbShort;
                   }
                   final fbAddr = fbAttr['GIS.facTririgaBuildingInfo.StreetAddress'] as String?;
-                  if (fbAddr != null && fbAddr.isNotEmpty) address = fbAddr;
+                  final hasFbAddr = fbAddr != null && fbAddr.isNotEmpty;
+                  if (hasFbAddr) address = fbAddr;
                 }
               }
             } catch (_) {}

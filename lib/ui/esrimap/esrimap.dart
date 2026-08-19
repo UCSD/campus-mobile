@@ -247,7 +247,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.locationDisplay.onLocationChanged.listen((event) {
       final pos = event.position;
       final wgs = GeometryEngine.project(pos, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
-      if (wgs != null && !wgs.x.isNaN && !wgs.y.isNaN) _saveLocationToHive(wgs.y, wgs.x);
+      final isValidWgs = wgs != null && !wgs.x.isNaN && !wgs.y.isNaN;
+      if (isValidWgs) _saveLocationToHive(wgs.y, wgs.x);
     });
 
     _preloadAlternateBasemaps();
@@ -366,7 +367,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       await _locationDataSource.start().timeout(const Duration(seconds: 5));
     } catch (e) {
       debugPrint('Location DataSource Start Error: $e');
-      if (e is TimeoutException || e.toString().toLowerCase().contains('fail')) {
+      final isTimeoutOrFail = e is TimeoutException || e.toString().toLowerCase().contains('fail');
+      if (isTimeoutOrFail) {
         _locationDataSource = SystemLocationDataSource();
         _mapViewController.locationDisplay.dataSource = _locationDataSource;
         _locationDataSource.start().catchError((_) {});
@@ -853,7 +855,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _isSearching = false;
       });
 
-      if (merged.isEmpty && query.isNotEmpty)
+      final isSearchEmpty = merged.isEmpty && query.isNotEmpty;
+      if (isSearchEmpty)
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No locations found.')));
     }
   }
@@ -1244,7 +1247,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (mapPoint != null) {
       final wgs84Point =
           GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
-      if (wgs84Point != null && !wgs84Point.x.isNaN && !wgs84Point.y.isNaN) {
+      final isValidPoint = wgs84Point != null && !wgs84Point.x.isNaN && !wgs84Point.y.isNaN;
+      if (isValidPoint) {
         final buildingResult = await EsriMapSearchService.identifyBuildingAtCoordinate(wgs84Point.y, wgs84Point.x);
         isRequestFinished = true;
         if (mounted)
@@ -1254,7 +1258,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         if (buildingResult != null) {
           if (_allCategoryResults.isNotEmpty) _clearSearch();
           _plotResultsOnMap([buildingResult]);
-          if (_graphicsOverlay.graphics.isNotEmpty) _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
+          final hasGraphics = _graphicsOverlay.graphics.isNotEmpty;
+          if (hasGraphics) _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
           return;
         } else {
           _dismissCallout();
@@ -1773,7 +1778,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final wgs = GeometryEngine.project(pos, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
     final isWgsNull = wgs == null;
     if (isWgsNull) return null;
-    if (wgs.x.isNaN || wgs.y.isNaN) return null;
+    final isWgsNaN = wgs.x.isNaN || wgs.y.isNaN;
+    if (isWgsNaN) return null;
     return (wgs.y, wgs.x);
   }
 
