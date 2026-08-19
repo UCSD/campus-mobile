@@ -804,7 +804,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     setState(() {
       _isSearching = true;
-      _showResults = true;
+      _showResults = _showRouteFields;
       _showSuggestions = false;
       _selectedResult = null;
       _matchingPoiClasses = matched;
@@ -823,10 +823,40 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     await _waitForMinimumSearchLoadingTime(loadingStopwatch);
     final isStale = !mounted || requestId != _searchRequestId;
     if (isStale) return;
-    setState(() {
-      _searchResults = merged;
-      _isSearching = false;
-    });
+
+    if (_showRouteFields) {
+      setState(() {
+        _searchResults = merged;
+        _isSearching = false;
+      });
+    } else {
+      final userLoc = _getUserLatLng();
+      if (userLoc != null) {
+        merged.sort((a, b) {
+          final distA = EsriMapSearchService.distanceMeters(userLoc.$1, userLoc.$2, a.latitude, a.longitude);
+          final distB = EsriMapSearchService.distanceMeters(userLoc.$1, userLoc.$2, b.latitude, b.longitude);
+          return distA.compareTo(distB);
+        });
+      } else {
+        merged.sort((a, b) => a.name.compareTo(b.name));
+      }
+      
+      _plotResultsOnMap(merged);
+
+      setState(() {
+        _searchResults = [];
+        _allCategoryResults = merged;
+        _showCategoryList = merged.isNotEmpty;
+        _showResults = false;
+        _activeCategory = null;
+        _isSearching = false;
+      });
+      
+      if (merged.isEmpty && query.isNotEmpty) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('No locations found.')));
+      }
+    }
   }
 
   /// Category search: queries matching locations and plots pins on the map.
@@ -1065,11 +1095,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   }
 
   Future<void> _onMapTap(Offset screenPoint) async {
-    final isDropdownVisible = _showSuggestions || _showResults;
+    final hasClassMatches = _matchingPoiClasses.isNotEmpty && _searchController.text.isNotEmpty;
+    final isDropdownVisible = _showSuggestions || _showResults || hasClassMatches;
     if (isDropdownVisible) {
       setState(() {
         _showSuggestions = false;
         _showResults = false;
+        _matchingPoiClasses = [];
       });
       _focusNode.unfocus();
       return;
@@ -1815,6 +1847,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     setState(() {
       _showSuggestions = false;
       _showResults = false;
+      _matchingPoiClasses = [];
     });
   }
 

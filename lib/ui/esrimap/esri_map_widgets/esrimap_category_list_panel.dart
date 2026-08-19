@@ -147,11 +147,12 @@ class EsriMapCategoryListPanel extends StatelessWidget {
                               r.longitude,
                             )
                           : null;
-                      final distLabel = dist == null
+                      final distFeet = dist != null ? dist * 3.28084 : null;
+                      final distLabel = distFeet == null
                           ? null
-                          : dist < 1000
-                          ? '${dist.round()} m away'
-                          : '${(dist / 1000).toStringAsFixed(1)} km away';
+                          : distFeet < 1000
+                          ? '${distFeet.round()} ft away'
+                          : '${(distFeet / 5280).toStringAsFixed(1)} mi away';
                       final isNotLastResult = index < results.length - 1;
                       return Column(
                         children: [
