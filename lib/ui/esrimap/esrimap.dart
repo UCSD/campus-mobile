@@ -880,11 +880,79 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     try {
       var isRec = category.poiClassValue == 'Recreation Facilities';
-      final searches = <Future<List<MapSearchResult>>>[
-        EsriMapSearchService.queryPOIsByClass(category.poiClassValue),
-        if (isRec) EsriMapSearchService.queryBuildings('gym'),
-      ];
-      final allResults = (await Future.wait(searches)).expand((results) => results).toList();
+      var allResults = <MapSearchResult>[];
+      
+      if (isRec) {
+        final baseSearch = EsriMapSearchService.queryPOIsByClass(category.poiClassValue);
+        final extraSearches = <Future<List<MapSearchResult>>>[
+          EsriMapSearchService.queryBuildings('gym'),
+          EsriMapSearchService.queryBuildings('rimac'),
+          EsriMapSearchService.queryBuildings('track'),
+          EsriMapSearchService.queryBuildings('canyonview'),
+          EsriMapSearchService.queryBuildings('pool'),
+          EsriMapSearchService.queryBuildings('natatorium'),
+          EsriMapSearchService.queryPOIs('park'),
+          EsriMapSearchService.queryPOIs('beach'),
+          EsriMapSearchService.queryPOIs('amphitheater'),
+          EsriMapSearchService.queryPOIs('amphitheatre'),
+          EsriMapSearchService.queryBuildings('amphitheater'),
+          EsriMapSearchService.queryBuildings('arena'),
+          EsriMapSearchService.queryPOIs('field'),
+          EsriMapSearchService.queryPOIs('court'),
+          EsriMapSearchService.queryBuildings('fitness'),
+          EsriMapSearchService.queryBuildings('athletic'),
+          EsriMapSearchService.queryBuildings('aquatic'),
+          EsriMapSearchService.queryBuildings('rec'),
+          EsriMapSearchService.queryBuildings('theater'),
+          EsriMapSearchService.queryPOIs('theater'),
+          EsriMapSearchService.queryBuildings('theatre'),
+          EsriMapSearchService.queryPOIs('theatre'),
+          EsriMapSearchService.queryBuildings('wellness'),
+        ];
+        
+        final baseResults = await baseSearch;
+        final extraResultsLists = await Future.wait(extraSearches);
+        
+        final validTerms = [
+          'gym', 'rimac', 'track', 'canyonview', 'pool', 'natatorium', 
+          'park', 'beach', 'amphitheater', 'amphitheatre', 'arena', 'field', 
+          'court', 'fitness', 'athletic', 'aquatic', 'rec', 'theater', 'theatre', 'wellness'
+        ];
+        
+        final validExtraResults = extraResultsLists.expand((r) => r).where((r) {
+          final textLower = '${r.name} ${r.subtitle} ${r.description}'.toLowerCase();
+          for (final term in validTerms) {
+            // Match word boundary to avoid substring matches (e.g. field in Gusfield)
+            if (RegExp(r'\b' + term).hasMatch(textLower)) return true;
+          }
+          return false;
+        });
+        
+        allResults = [...baseResults, ...validExtraResults];
+      } else {
+        allResults = await EsriMapSearchService.queryPOIsByClass(category.poiClassValue);
+      }
+      
+      // Deduplicate results by name to avoid showing the same place twice
+      final uniqueNames = <String>{};
+      allResults = allResults.where((r) {
+        if (!uniqueNames.add(r.name)) return false;
+        
+        // Filter out false positives for Recreation
+        if (isRec) {
+          final textLower = '${r.name} ${r.subtitle} ${r.description}'.toLowerCase();
+          final excluded = [
+            'emergency', 'restroom', 'parking', 'call box', 'office', 
+            'elevator', 'atm ', ' atm', 'conference', 'room ', ' room', 
+            'reception', 'director', 'academic', 'admin', 'lecture', 'institute'
+          ];
+          for (final term in excluded) {
+            if (textLower.contains(term)) return false;
+          }
+        }
+        return true;
+      }).toList();
+      
       await _waitForMinimumSearchLoadingTime(loadingStopwatch);
       final isStale = !mounted || requestId != _searchRequestId;
       if (isStale) return;
