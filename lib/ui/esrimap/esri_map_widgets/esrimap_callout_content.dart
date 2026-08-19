@@ -55,7 +55,10 @@ class EsriMapCalloutContent extends StatelessWidget {
     if (query.isEmpty) return null;
     for (var model in models) {
       final name = model.name.toLowerCase().trim();
-      if (name == query || query.contains(name) || name.contains(query)) return model;
+      final isExactMatch = name == query;
+      final queryContainsName = query.contains(name);
+      final nameContainsQuery = name.contains(query);
+      if (isExactMatch || queryContainsName || nameContainsQuery) return model;
     }
     return null;
   }
@@ -65,7 +68,10 @@ class EsriMapCalloutContent extends StatelessWidget {
     for (var model in models) {
       final locName = model.locationName.toLowerCase().trim();
       // Use bidirectional containment to catch cases where the map says "Gilman Parking Structure" but the model says "Gilman"
-      if (locName == query || query.contains(locName) || locName.contains(query)) return model;
+      final isExactMatch = locName == query;
+      final queryContainsLocName = query.contains(locName);
+      final locNameContainsQuery = locName.contains(query);
+      if (isExactMatch || queryContainsLocName || locNameContainsQuery) return model;
     }
     return null;
   }
@@ -76,7 +82,10 @@ class EsriMapCalloutContent extends StatelessWidget {
       if (model != null) {
         for (var sub in model.subLocations) {
           final subName = sub.name.toLowerCase().trim();
-          if (subName == query || query.contains(subName) || subName.contains(query)) return sub;
+          final isExactMatch = subName == query;
+          final queryContainsSubName = query.contains(subName);
+          final subNameContainsQuery = subName.contains(query);
+          if (isExactMatch || queryContainsSubName || subNameContainsQuery) return sub;
         }
       }
     }
@@ -196,7 +205,10 @@ class EsriMapCalloutContent extends StatelessWidget {
         break;
     }
 
-    if (dayHours == null || dayHours == 'Closed-Closed' || dayHours == 'Invalid Date-Invalid Date') return false;
+    final isNull = dayHours == null;
+    final isClosed = dayHours == 'Closed-Closed';
+    final isInvalid = dayHours == 'Invalid Date-Invalid Date';
+    if (isNull || isClosed || isInvalid) return false;
 
     return true;
   }
