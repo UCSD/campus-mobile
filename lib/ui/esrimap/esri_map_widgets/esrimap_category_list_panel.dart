@@ -96,6 +96,15 @@ class EsriMapCategoryListPanel extends StatelessWidget {
           headerTitle: headerTitle,
           headerIcon: activeCategory?.icon ?? Icons.place,
           onClose: onClearSearch,
+          onHeaderTap: () {
+            if (controller.isAttached) {
+              if (controller.size < 0.85) {
+                controller.animateTo(maxSize, duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
+              } else {
+                controller.animateTo(initialSize, duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
+              }
+            }
+          },
           trailing: hasMoreTotalResults
               ? TextButton.icon(
                   icon: Icon(Icons.layers_outlined, size: 16, color: isDark ? Colors.white54 : Colors.grey[600]),

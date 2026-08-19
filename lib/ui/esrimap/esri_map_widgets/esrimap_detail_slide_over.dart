@@ -9,6 +9,7 @@ Widget buildSlideOverContent({
   required String headerTitle,
   IconData? headerIcon,
   required VoidCallback onClose,
+  VoidCallback? onHeaderTap,
   Widget? trailing,
   required List<Widget> sliverBody,
   double headerHeight = 80.0,
@@ -31,54 +32,61 @@ Widget buildSlideOverContent({
           delegate: SlideOverHeaderDelegate(
             height: headerHeight,
             backgroundColor: bgColor,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 4),
-                  child: Container(
-                    width: 36,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.grey[700] : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(2),
+            child: InkWell(
+              onTap: onHeaderTap,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 4),
+                    child: Container(
+                      width: 36,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.grey[700] : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 8),
-                  child: Row(
-                    children: [
-                      if (hasHeaderIcon) ...[
-                        Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
-                        const SizedBox(width: 8),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 6, 20, 8),
+                    child: Row(
+                      children: [
+                        if (hasHeaderIcon) ...[
+                          Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
+                          const SizedBox(width: 8),
+                        ],
+                        Expanded(
+                          child: Text(
+                            headerTitle,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: isDark ? Colors.white : Colors.grey[900],
+                            ),
+                          ),
+                        ),
+                        if (hasTrailing) trailing,
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: onClose,
+                            customBorder: const CircleBorder(),
+                            child: Container(
+                              width: 34,
+                              height: 34,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isDark ? Colors.grey[800] : Colors.grey[200],
+                              ),
+                              child: Icon(Icons.close, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
+                            ),
+                          ),
+                        ),
                       ],
-                      Expanded(
-                        child: Text(
-                          headerTitle,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.white : Colors.grey[900],
-                          ),
-                        ),
-                      ),
-                      if (hasTrailing) trailing,
-                      GestureDetector(
-                        onTap: onClose,
-                        child: Container(
-                          width: 34,
-                          height: 34,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isDark ? Colors.grey[800] : Colors.grey[200],
-                          ),
-                          child: Icon(Icons.close, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

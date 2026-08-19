@@ -901,7 +901,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           final closest = allResults.first;
           final p = ArcGISPoint(x: closest.longitude, y: closest.latitude, spatialReference: SpatialReference.wgs84);
           _showCalloutForGraphic(closest, _graphicsOverlay.graphics.first);
-          _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(p, scale: 5000));
+          _mapViewController.setViewpointAnimated(Viewpoint.fromCenter(p, scale: 18000));
         }
       } else {
         allResults.sort((a, b) => a.name.compareTo(b.name));
@@ -993,26 +993,25 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _mapViewController.setViewpointAnimated(
         Viewpoint.fromCenter(
           ArcGISPoint(x: r.longitude, y: r.latitude, spatialReference: SpatialReference.wgs84),
-          scale: 5000,
+          scale: 18000,
         ),
       );
       return;
     }
 
-    double minLat = results.map((r) => r.latitude).reduce((a, b) => a < b ? a : b);
-    double maxLat = results.map((r) => r.latitude).reduce((a, b) => a > b ? a : b);
-    double minLng = results.map((r) => r.longitude).reduce((a, b) => a < b ? a : b);
-    double maxLng = results.map((r) => r.longitude).reduce((a, b) => a > b ? a : b);
+    // Find the median coordinate to locate the densest cluster, ignoring outliers
+    final lats = results.map((r) => r.latitude).toList()..sort();
+    final lngs = results.map((r) => r.longitude).toList()..sort();
 
-    const padding = 0.005;
-    final envelope = Envelope.fromXY(
-      xMin: minLng - padding,
-      yMin: minLat - padding,
-      xMax: maxLng + padding,
-      yMax: maxLat + padding,
-      spatialReference: SpatialReference.wgs84,
+    final medianLat = lats[lats.length ~/ 2];
+    final medianLng = lngs[lngs.length ~/ 2];
+
+    _mapViewController.setViewpointAnimated(
+      Viewpoint.fromCenter(
+        ArcGISPoint(x: medianLng, y: medianLat, spatialReference: SpatialReference.wgs84),
+        scale: 24000,
+      ),
     );
-    _mapViewController.setViewpointAnimated(Viewpoint.fromTargetExtent(envelope));
   }
 
   /// Dismisses the active map pin callout, if any.
