@@ -176,10 +176,21 @@ class EsriMapSearchService {
   static Future<MapSearchResult?> identifyBuildingAtCoordinate(double lat, double lng) async {
     try {
       final point = ArcGISPoint(x: lng, y: lat, spatialReference: SpatialReference.wgs84);
-      for (final cached in _cachedBuildings) {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      
+      for (int i = 0; i < _cachedBuildings.length; i++) {
+        final cached = _cachedBuildings[i];
         if (cached.footprint != null) {
           if (GeometryEngine.intersects(geometry1: point, geometry2: cached.footprint as Geometry)) {
-            return cached;
+            // Check if cache is older than 30 days (30L * 24 * 60 * 60 * 1000)
+            final isExpired = cached.fetchedAt == null || (now - cached.fetchedAt!) > 2592000000;
+            if (!isExpired) {
+              return cached;
+            } else {
+              // Expired, remove it so we fetch a fresh one
+              _cachedBuildings.removeAt(i);
+              break;
+            }
           }
         }
       }
@@ -307,6 +318,7 @@ class EsriMapSearchService {
             address: address,
             footprint: footprintPolygon,
             rawGeometry: geom,
+            fetchedAt: DateTime.now().millisecondsSinceEpoch,
           );
 
           _cachedBuildings.add(newResult);

@@ -46,6 +46,9 @@ class MapSearchResult {
   /// Optional raw geometry dictionary for regenerating the footprint.
   final Map<String, dynamic>? rawGeometry;
 
+  /// Optional timestamp (milliseconds since epoch) indicating when this result was fetched.
+  final int? fetchedAt;
+
   /// Constructs a [MapSearchResult] instance.
   const MapSearchResult({
     required this.name,
@@ -58,6 +61,7 @@ class MapSearchResult {
     this.websiteUrl,
     this.footprint,
     this.rawGeometry,
+    this.fetchedAt,
   });
 
   /// Serializes the search result into a JSON-compatible map for storage in SharedPreferences.
@@ -71,6 +75,7 @@ class MapSearchResult {
     'description': description,
     'websiteUrl': websiteUrl,
     if (rawGeometry != null) 'rawGeometry': rawGeometry,
+    if (fetchedAt != null) 'fetchedAt': fetchedAt,
   };
 
   /// Factory constructor to deserialize a [MapSearchResult] from a JSON map.
@@ -85,6 +90,7 @@ class MapSearchResult {
       description: json['description'] as String? ?? '',
       websiteUrl: json['websiteUrl'] as String?,
       rawGeometry: json['rawGeometry'] as Map<String, dynamic>?,
+      fetchedAt: json['fetchedAt'] as int?,
     );
   }
 }
