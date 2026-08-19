@@ -742,6 +742,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
 
   Future<void> _loadRecentSearches() async {
+    await EsriMapSearchService.loadCachedBuildings();
     final searches = await EsriMapSearchService.loadRecentSearches();
     if (mounted) setState(() => _recentSearches = searches);
   }
@@ -840,7 +841,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       } else {
         merged.sort((a, b) => a.name.compareTo(b.name));
       }
-      
+
       _plotResultsOnMap(merged);
 
       setState(() {
@@ -851,10 +852,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _activeCategory = null;
         _isSearching = false;
       });
-      
+
       if (merged.isEmpty && query.isNotEmpty) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('No locations found.')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No locations found.')));
       }
     }
   }
@@ -915,8 +915,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _isSearching = false;
       });
       if (allResults.isEmpty) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
       }
     } catch (e) {
       debugPrint('Category search error: $e');
@@ -928,8 +929,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _allCategoryResults = [];
         _isSearching = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
     }
   }
 
@@ -1108,9 +1110,15 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     }
 
     final mapPoint = _mapViewController.screenToLocation(screen: screenPoint);
-    // Show the loading indicator immediately as a Flutter overlay
-    setState(() {
-      _loadingPoint = screenPoint;
+
+    // Delay the loading indicator so fast responses (like empty taps) don't flash it
+    bool isRequestFinished = false;
+    Future.delayed(const Duration(milliseconds: 350), () {
+      if (!isRequestFinished && mounted) {
+        setState(() {
+          _loadingPoint = screenPoint;
+        });
+      }
     });
 
     try {
@@ -1123,6 +1131,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
       final hasGraphics = identifyResult.graphics.isNotEmpty;
       if (hasGraphics) {
+        isRequestFinished = true;
         if (mounted)
           setState(() {
             _loadingPoint = null;
@@ -1142,6 +1151,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
       if (wgs84Point != null && !wgs84Point.x.isNaN && !wgs84Point.y.isNaN) {
         final buildingResult = await EsriMapSearchService.identifyBuildingAtCoordinate(wgs84Point.y, wgs84Point.x);
+        isRequestFinished = true;
         if (mounted)
           setState(() {
             _loadingPoint = null;
@@ -1159,6 +1169,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       }
     }
 
+    isRequestFinished = true;
     if (mounted)
       setState(() {
         _loadingPoint = null;
@@ -1236,7 +1247,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       // Ensure any existing callout is dismissed if we're in a list context
       _dismissCallout();
     }
-    
+
     _selectResultFromPin(result, updateSearchText: false);
   }
 
@@ -1325,8 +1336,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       final gps = await _getDeviceLocationEfficiently();
       if (gps == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
         }
         return;
       }

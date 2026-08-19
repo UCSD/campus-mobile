@@ -21,6 +21,12 @@ class EsriMapSearchService {
   /// SharedPreferences key used to persist recent searches.
   static const String RECENT_SEARCHES_KEY = 'esri_map_recent_searches';
 
+  /// SharedPreferences key used to persist cached building footprints.
+  static const String _cachedBuildingsKey = 'esrimap_cached_buildings';
+
+  static List<MapSearchResult> _searches = [];
+  static List<MapSearchResult> _cachedBuildings = [];
+
   /// Maximum number of recent searches retained.
   static const int MAX_RECENT_SEARCHES = 5;
 
@@ -112,9 +118,72 @@ class EsriMapSearchService {
         .toList();
   }
 
+  /// Loads cached building footprints from SharedPreferences.
+  static Future<void> loadCachedBuildings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStr = prefs.getString(_cachedBuildingsKey);
+    if (jsonStr != null) {
+      try {
+        final list = jsonDecode(jsonStr) as List<dynamic>;
+        _cachedBuildings = list.map((e) {
+          final result = MapSearchResult.fromJson(e as Map<String, dynamic>);
+          // Reconstruct the Polygon footprint if rawGeometry is available
+          dynamic footprintPolygon;
+          if (result.rawGeometry != null) {
+            final rings = result.rawGeometry!['rings'] as List<dynamic>?;
+            if (rings != null) {
+              try {
+                final builder = PolygonBuilder(spatialReference: SpatialReference.wgs84);
+                for (final ring in rings) {
+                  final part = MutablePart(spatialReference: SpatialReference.wgs84);
+                  for (final point in (ring as List<dynamic>)) {
+                    final coords = point as List<dynamic>;
+                    part.addPointXY(x: (coords[0] as num).toDouble(), y: (coords[1] as num).toDouble());
+                  }
+                  builder.parts.addPart(part);
+                }
+                footprintPolygon = builder.toGeometry();
+              } catch (_) {}
+            }
+          }
+          return MapSearchResult(
+            name: result.name,
+            subtitle: result.subtitle,
+            latitude: result.latitude,
+            longitude: result.longitude,
+            source: result.source,
+            address: result.address,
+            description: result.description,
+            websiteUrl: result.websiteUrl,
+            footprint: footprintPolygon,
+            rawGeometry: result.rawGeometry,
+          );
+        }).toList();
+      } catch (e) {
+        debugPrint('Failed to load cached buildings: $e');
+      }
+    }
+  }
+
+  /// Saves the current list of cached buildings to SharedPreferences.
+  static Future<void> _saveCachedBuildings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonList = _cachedBuildings.map((c) => c.toJson()).toList();
+    await prefs.setString(_cachedBuildingsKey, jsonEncode(jsonList));
+  }
+
   /// Identifies a building by performing a spatial intersection query at the given WGS84 coordinate.
   static Future<MapSearchResult?> identifyBuildingAtCoordinate(double lat, double lng) async {
     try {
+      final point = ArcGISPoint(x: lng, y: lat, spatialReference: SpatialReference.wgs84);
+      for (final cached in _cachedBuildings) {
+        if (cached.footprint != null) {
+          if (GeometryEngine.intersects(geometry1: point, geometry2: cached.footprint as Geometry)) {
+            return cached;
+          }
+        }
+      }
+
       final uri = Uri.parse(
         'https://admin-enterprise-gis.ucsd.edu/server/rest/services/Buildings/Buildings_Campus_Map/MapServer/2/query',
       );
@@ -229,7 +298,7 @@ class EsriMapSearchService {
             } catch (_) {}
           }
 
-          return MapSearchResult(
+          final newResult = MapSearchResult(
             name: name,
             subtitle: 'Building',
             latitude: resLat,
@@ -237,7 +306,13 @@ class EsriMapSearchService {
             source: MapSearchSource.building,
             address: address,
             footprint: footprintPolygon,
+            rawGeometry: geom,
           );
+
+          _cachedBuildings.add(newResult);
+          _saveCachedBuildings();
+
+          return newResult;
         }
       }
     } catch (e) {

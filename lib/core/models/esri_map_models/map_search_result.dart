@@ -43,6 +43,9 @@ class MapSearchResult {
   /// Optional polygon geometry for the building footprint. Not serialized to JSON.
   final dynamic footprint;
 
+  /// Optional raw geometry dictionary for regenerating the footprint.
+  final Map<String, dynamic>? rawGeometry;
+
   /// Constructs a [MapSearchResult] instance.
   const MapSearchResult({
     required this.name,
@@ -54,6 +57,7 @@ class MapSearchResult {
     this.description = '',
     this.websiteUrl,
     this.footprint,
+    this.rawGeometry,
   });
 
   /// Serializes the search result into a JSON-compatible map for storage in SharedPreferences.
@@ -66,6 +70,7 @@ class MapSearchResult {
     'address': address,
     'description': description,
     'websiteUrl': websiteUrl,
+    if (rawGeometry != null) 'rawGeometry': rawGeometry,
   };
 
   /// Factory constructor to deserialize a [MapSearchResult] from a JSON map.
@@ -79,6 +84,7 @@ class MapSearchResult {
       address: json['address'] as String? ?? '',
       description: json['description'] as String? ?? '',
       websiteUrl: json['websiteUrl'] as String?,
+      rawGeometry: json['rawGeometry'] as Map<String, dynamic>?,
     );
   }
 }
