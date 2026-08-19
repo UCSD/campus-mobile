@@ -1327,7 +1327,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     // Always show the callout when a pin is tapped, even if multiple results exist
     _showCalloutForGraphic(result, graphic);
-    
+
     _selectResultFromPin(result, updateSearchText: false);
   }
 

@@ -25,41 +25,28 @@ class EsriMapCalloutContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final String queryName = result.name.toLowerCase().trim();
 
     // 1. Try to match Dining
     final diningMatch = _findDiningMatch(queryName, diningModels);
     if (diningMatch != null) {
-      return _buildCalloutContainer(
-        context,
-        child: _buildDiningContent(context, diningMatch),
-      );
+      return _buildCalloutContainer(context, child: _buildDiningContent(context, diningMatch));
     }
 
     // 2. Try to match Parking
     final parkingMatch = _findParkingMatch(queryName, parkingModels);
     if (parkingMatch != null) {
-      return _buildCalloutContainer(
-        context,
-        child: _buildParkingContent(context, parkingMatch),
-      );
+      return _buildCalloutContainer(context, child: _buildParkingContent(context, parkingMatch));
     }
 
     // 3. Try to match Availability
     final availabilityMatch = _findAvailabilityMatch(queryName, availabilityModels);
     if (availabilityMatch != null) {
-      return _buildCalloutContainer(
-        context,
-        child: _buildAvailabilityContent(context, availabilityMatch),
-      );
+      return _buildCalloutContainer(context, child: _buildAvailabilityContent(context, availabilityMatch));
     }
 
     // 4. Fallback to generic subtitle if no contextual data is found
-    return _buildCalloutContainer(
-      context,
-      child: _buildFallbackContent(context),
-    );
+    return _buildCalloutContainer(context, child: _buildFallbackContent(context));
   }
 
   // --- Matching Logic ---
@@ -68,9 +55,7 @@ class EsriMapCalloutContent extends StatelessWidget {
     if (query.isEmpty) return null;
     for (var model in models) {
       final name = model.name.toLowerCase().trim();
-      if (name == query || query.contains(name) || name.contains(query)) {
-        return model;
-      }
+      if (name == query || query.contains(name) || name.contains(query)) return model;
     }
     return null;
   }
@@ -80,9 +65,7 @@ class EsriMapCalloutContent extends StatelessWidget {
     for (var model in models) {
       final locName = model.locationName.toLowerCase().trim();
       // Use bidirectional containment to catch cases where the map says "Gilman Parking Structure" but the model says "Gilman"
-      if (locName == query || query.contains(locName) || locName.contains(query)) {
-        return model;
-      }
+      if (locName == query || query.contains(locName) || locName.contains(query)) return model;
     }
     return null;
   }
@@ -93,9 +76,7 @@ class EsriMapCalloutContent extends StatelessWidget {
       if (model != null) {
         for (var sub in model.subLocations) {
           final subName = sub.name.toLowerCase().trim();
-          if (subName == query || query.contains(subName) || subName.contains(query)) {
-            return sub;
-          }
+          if (subName == query || query.contains(subName) || subName.contains(query)) return sub;
         }
       }
     }
@@ -105,7 +86,7 @@ class EsriMapCalloutContent extends StatelessWidget {
   // --- UI Builders ---
 
   Widget _buildCalloutContainer(BuildContext context, {required Widget child}) {
-    // Exclude semantics here so we can provide a combined label if needed, 
+    // Exclude semantics here so we can provide a combined label if needed,
     // or just let the children handle it.
     return Semantics(
       label: detail.isEmpty ? result.name : '${result.name}. $detail',
@@ -139,11 +120,7 @@ class EsriMapCalloutContent extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,
-      style: TextStyle(
-        color: isDark ? Colors.white70 : Colors.black54,
-        fontSize: 12,
-        height: 1.15,
-      ),
+      style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12, height: 1.15),
     );
   }
 
@@ -154,17 +131,14 @@ class EsriMapCalloutContent extends StatelessWidget {
       final isOpen = _isDiningOpen(dining.regularHours);
       final statusColor = isOpen ? Colors.green : Colors.red;
       final statusText = isOpen ? "Open" : "Closed";
-      
+
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(
-              color: statusColor,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
           ),
           const SizedBox(width: 4),
           Text(
@@ -180,18 +154,12 @@ class EsriMapCalloutContent extends StatelessWidget {
             Container(
               width: 4,
               height: 4,
-              decoration: BoxDecoration(
-                color: isDark ? Colors.white30 : Colors.black26,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: isDark ? Colors.white30 : Colors.black26, shape: BoxShape.circle),
             ),
             const SizedBox(width: 6),
             Text(
               "${dining.distance!.toStringAsFixed(1)} mi",
-              style: TextStyle(
-                color: isDark ? Colors.white70 : Colors.black54,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12),
             ),
           ],
         ],
@@ -205,20 +173,32 @@ class EsriMapCalloutContent extends StatelessWidget {
     int weekday = DateTime.now().weekday;
     String? dayHours;
     switch (weekday) {
-      case 1: dayHours = hours.mon; break;
-      case 2: dayHours = hours.tue; break;
-      case 3: dayHours = hours.wed; break;
-      case 4: dayHours = hours.thu; break;
-      case 5: dayHours = hours.fri; break;
-      case 6: dayHours = hours.sat; break;
-      case 7: dayHours = hours.sun; break;
+      case 1:
+        dayHours = hours.mon;
+        break;
+      case 2:
+        dayHours = hours.tue;
+        break;
+      case 3:
+        dayHours = hours.wed;
+        break;
+      case 4:
+        dayHours = hours.thu;
+        break;
+      case 5:
+        dayHours = hours.fri;
+        break;
+      case 6:
+        dayHours = hours.sat;
+        break;
+      case 7:
+        dayHours = hours.sun;
+        break;
     }
-    
-    if (dayHours == null || dayHours == 'Closed-Closed' || dayHours == 'Invalid Date-Invalid Date') {
-      return false;
-    }
-    
-    return true; 
+
+    if (dayHours == null || dayHours == 'Closed-Closed' || dayHours == 'Invalid Date-Invalid Date') return false;
+
+    return true;
   }
 
   // --- Parking Content ---
@@ -230,32 +210,27 @@ class EsriMapCalloutContent extends StatelessWidget {
 
       for (var spotData in parking.availability.values) {
         if (spotData == null || spotData is! Map) continue;
-        
-        int open = spotData["Open"] is String 
-            ? (int.tryParse(spotData["Open"]) ?? 0) 
-            : (spotData["Open"] ?? 0);
-            
-        int total = spotData["Total"] is String 
-            ? (int.tryParse(spotData["Total"]) ?? 0) 
-            : (spotData["Total"] ?? 0);
-            
+
+        int open = spotData["Open"] is String ? (int.tryParse(spotData["Open"]) ?? 0) : (spotData["Open"] ?? 0);
+
+        int total = spotData["Total"] is String ? (int.tryParse(spotData["Total"]) ?? 0) : (spotData["Total"] ?? 0);
+
         totalOpen += open;
         totalCapacity += total;
       }
 
       if (totalCapacity == 0) {
-        return Text(
-          "No space data",
-          style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12),
-        );
+        return Text("No space data", style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12));
       }
 
       double percent = totalOpen / totalCapacity;
       if (percent.isNaN) percent = 0.0;
 
       Color progressColor = Colors.green;
-      if (percent < 0.25) progressColor = Colors.red;
-      else if (percent < 0.75) progressColor = Colors.orange;
+      if (percent < 0.25)
+        progressColor = Colors.red;
+      else if (percent < 0.75)
+        progressColor = Colors.orange;
 
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -289,10 +264,12 @@ class EsriMapCalloutContent extends StatelessWidget {
   Widget _buildAvailabilityContent(BuildContext context, SubLocations subLocation) {
     try {
       double percent = subLocation.percentage;
-      
+
       Color progressColor = Color(0xFF109B00); // Green
-      if (percent >= 0.75) progressColor = Color(0xFFBD1900); // Red
-      else if (percent >= 0.25) progressColor = Color(0xFFFC8900); // Orange
+      if (percent >= 0.75)
+        progressColor = Color(0xFFBD1900); // Red
+      else if (percent >= 0.25)
+        progressColor = Color(0xFFFC8900); // Orange
 
       return Column(
         mainAxisSize: MainAxisSize.min,
