@@ -174,6 +174,14 @@ Widget buildDetailSlideOverContent({
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
               child: Row(
                 children: [
+                  GestureDetector(
+                    onTap: onClose,
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 12, top: 4, bottom: 4),
+                      child: Icon(Icons.arrow_back, size: 24, color: isDark ? Colors.white70 : Colors.grey[800]),
+                    ),
+                  ),
                   if (hasHeaderIcon) ...[
                     Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
                     const SizedBox(width: 8),

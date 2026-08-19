@@ -1147,6 +1147,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             _loadingPoint = null;
           });
         if (buildingResult != null) {
+          if (_allCategoryResults.isNotEmpty) {
+            _clearSearch();
+          }
           _plotResultsOnMap([buildingResult]);
           if (_graphicsOverlay.graphics.isNotEmpty) _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
           return;
@@ -1227,7 +1230,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
 
-    _showCalloutForGraphic(result, graphic);
+    if (_allCategoryResults.isEmpty) {
+      _showCalloutForGraphic(result, graphic);
+    } else {
+      // Ensure any existing callout is dismissed if we're in a list context
+      _dismissCallout();
+    }
+    
     _selectResultFromPin(result, updateSearchText: false);
   }
 
