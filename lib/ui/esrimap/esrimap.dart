@@ -29,7 +29,12 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_s
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_scene.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_search_bar.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_suggestions_panel.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_callout_content.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:campus_mobile_experimental/core/providers/dining.dart';
+import 'package:campus_mobile_experimental/core/providers/parking.dart';
+import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -1284,6 +1289,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final detail = (isBuilding && result.address.isNotEmpty) ? result.address : result.subtitle;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final diningProvider = Provider.of<DiningDataProvider>(context, listen: false);
+    final parkingProvider = Provider.of<ParkingDataProvider>(context, listen: false);
+    final availabilityProvider = Provider.of<AvailabilityDataProvider>(context, listen: false);
+
     _graphicsOverlay.clearSelection();
     graphic.isSelected = true;
     _mapViewController.callout.showCalloutForGeoElement(
@@ -1296,39 +1305,16 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         borderWidth: 0.5,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
         minWidth: 96,
-        maxWidth: 220,
+        // Removed maxWidth to allow the callout to size dynamically based on contextual data without clipping
         offset: const Offset(0, -10),
       ),
-      contentBuilder: (_, __) => Semantics(
-        label: detail.isEmpty ? result.name : '${result.name}. $detail',
-        excludeSemantics: true,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              result.name,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: isDark ? Colors.white : Colors.black87,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                height: 1.15,
-              ),
-            ),
-            if (detail.isNotEmpty) ...[
-              const SizedBox(height: 3),
-              Text(
-                detail,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12, height: 1.15),
-              ),
-            ],
-          ],
-        ),
+      contentBuilder: (_, __) => EsriMapCalloutContent(
+        result: result,
+        detail: detail,
+        isDark: isDark,
+        diningModels: diningProvider.diningModels,
+        parkingModels: parkingProvider.parkingModels,
+        availabilityModels: availabilityProvider.availabilityModels,
       ),
     );
   }
@@ -1339,12 +1325,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
 
-    if (_allCategoryResults.isEmpty) {
-      _showCalloutForGraphic(result, graphic);
-    } else {
-      // Ensure any existing callout is dismissed if we're in a list context
-      _dismissCallout();
-    }
+    // Always show the callout when a pin is tapped, even if multiple results exist
+    _showCalloutForGraphic(result, graphic);
 
     _selectResultFromPin(result, updateSearchText: false);
   }
