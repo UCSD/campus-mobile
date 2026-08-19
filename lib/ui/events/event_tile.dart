@@ -138,6 +138,14 @@ Widget _eventImageLoader(String? url) {
                 ),
               );
             },
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                'assets/images/UCSDMobile_sharp.png',
+                height: 150,
+                width: EventTile.TILE_WIDTH,
+                fit: BoxFit.cover,
+              );
+            },
             height: 150,
             width: EventTile.TILE_WIDTH,
             fit: BoxFit.cover,
