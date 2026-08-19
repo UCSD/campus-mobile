@@ -177,7 +177,7 @@ class EsriMapSearchService {
     try {
       final point = ArcGISPoint(x: lng, y: lat, spatialReference: SpatialReference.wgs84);
       final now = DateTime.now().millisecondsSinceEpoch;
-      
+
       for (int i = 0; i < _cachedBuildings.length; i++) {
         final cached = _cachedBuildings[i];
         if (cached.footprint != null) {

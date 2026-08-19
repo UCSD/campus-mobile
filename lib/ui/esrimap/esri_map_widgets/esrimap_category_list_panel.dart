@@ -101,7 +101,11 @@ class EsriMapCategoryListPanel extends StatelessWidget {
               if (controller.size < 0.85) {
                 controller.animateTo(maxSize, duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
               } else {
-                controller.animateTo(initialSize, duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
+                controller.animateTo(
+                  initialSize,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                );
               }
             }
           },

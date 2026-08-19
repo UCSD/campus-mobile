@@ -853,9 +853,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _isSearching = false;
       });
 
-      if (merged.isEmpty && query.isNotEmpty) {
+      if (merged.isEmpty && query.isNotEmpty)
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No locations found.')));
-      }
     }
   }
 
@@ -881,7 +880,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     try {
       var isRec = category.poiClassValue == 'Recreation Facilities';
       var allResults = <MapSearchResult>[];
-      
+
       if (isRec) {
         final baseSearch = EsriMapSearchService.queryPOIsByClass(category.poiClassValue);
         final extraSearches = <Future<List<MapSearchResult>>>[
@@ -909,16 +908,33 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           EsriMapSearchService.queryPOIs('theatre'),
           EsriMapSearchService.queryBuildings('wellness'),
         ];
-        
+
         final baseResults = await baseSearch;
         final extraResultsLists = await Future.wait(extraSearches);
-        
+
         final validTerms = [
-          'gym', 'rimac', 'track', 'canyonview', 'pool', 'natatorium', 
-          'park', 'beach', 'amphitheater', 'amphitheatre', 'arena', 'field', 
-          'court', 'fitness', 'athletic', 'aquatic', 'rec', 'theater', 'theatre', 'wellness'
+          'gym',
+          'rimac',
+          'track',
+          'canyonview',
+          'pool',
+          'natatorium',
+          'park',
+          'beach',
+          'amphitheater',
+          'amphitheatre',
+          'arena',
+          'field',
+          'court',
+          'fitness',
+          'athletic',
+          'aquatic',
+          'rec',
+          'theater',
+          'theatre',
+          'wellness',
         ];
-        
+
         final validExtraResults = extraResultsLists.expand((r) => r).where((r) {
           final textLower = '${r.name} ${r.subtitle} ${r.description}'.toLowerCase();
           for (final term in validTerms) {
@@ -927,24 +943,38 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           }
           return false;
         });
-        
+
         allResults = [...baseResults, ...validExtraResults];
       } else {
         allResults = await EsriMapSearchService.queryPOIsByClass(category.poiClassValue);
       }
-      
+
       // Deduplicate results by name to avoid showing the same place twice
       final uniqueNames = <String>{};
       allResults = allResults.where((r) {
         if (!uniqueNames.add(r.name)) return false;
-        
+
         // Filter out false positives for Recreation
         if (isRec) {
           final textLower = '${r.name} ${r.subtitle} ${r.description}'.toLowerCase();
           final excluded = [
-            'emergency', 'restroom', 'parking', 'call box', 'office', 
-            'elevator', 'atm ', ' atm', 'conference', 'room ', ' room', 
-            'reception', 'director', 'academic', 'admin', 'lecture', 'institute'
+            'emergency',
+            'restroom',
+            'parking',
+            'call box',
+            'office',
+            'elevator',
+            'atm ',
+            ' atm',
+            'conference',
+            'room ',
+            ' room',
+            'reception',
+            'director',
+            'academic',
+            'admin',
+            'lecture',
+            'institute',
           ];
           for (final term in excluded) {
             if (textLower.contains(term)) return false;
@@ -952,7 +982,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         }
         return true;
       }).toList();
-      
+
       await _waitForMinimumSearchLoadingTime(loadingStopwatch);
       final isStale = !mounted || requestId != _searchRequestId;
       if (isStale) return;
@@ -983,9 +1013,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _isSearching = false;
       });
       if (allResults.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
       }
     } catch (e) {
       debugPrint('Category search error: $e');
@@ -997,9 +1026,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _allCategoryResults = [];
         _isSearching = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
     }
   }
 
@@ -1224,9 +1252,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             _loadingPoint = null;
           });
         if (buildingResult != null) {
-          if (_allCategoryResults.isNotEmpty) {
-            _clearSearch();
-          }
+          if (_allCategoryResults.isNotEmpty) _clearSearch();
           _plotResultsOnMap([buildingResult]);
           if (_graphicsOverlay.graphics.isNotEmpty) _handlePinTap(buildingResult, _graphicsOverlay.graphics.last);
           return;
@@ -1403,9 +1429,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       final gps = await _getDeviceLocationEfficiently();
       if (gps == null) {
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
         }
         return;
       }
