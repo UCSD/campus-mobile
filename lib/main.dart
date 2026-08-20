@@ -117,9 +117,8 @@ class CampusMobile extends StatelessWidget {
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: ColorPrimary,
-      ).copyWith(surface: lightButtonColor, brightness: Brightness.light),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
+          .copyWith(surface: lightButtonColor, brightness: Brightness.light),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         unselectedItemColor: unselectedIconLightColor,
         selectedItemColor: Colors.white,
@@ -145,9 +144,8 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: ColorPrimary,
-      ).copyWith(surface: darkButtonColor, brightness: Brightness.dark),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
+          .copyWith(surface: darkButtonColor, brightness: Brightness.dark),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         unselectedItemColor: unselectedIconDarkColor,
         selectedItemColor: bottomTabBarColorDark,
