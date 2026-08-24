@@ -2454,7 +2454,15 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 ),
 
               // Basemap & Operational Layer Selector Panel
-              if (isLayersPanelVisible)
+              if (isLayersPanelVisible) ...[
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTap: () => setState(() => _showLayersPanel = false),
+                    child: Container(
+                      color: const Color(0x80000000),
+                    ),
+                  ),
+                ),
                 EsriMapLayersPanel(
                   config: _config!,
                   currentBasemapType: _currentBasemapType,
@@ -2467,6 +2475,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   onToggleLayer: _toggleLayer,
                   onClose: () => setState(() => _showLayersPanel = false),
                 ),
+              ],
             ],
           );
         },
