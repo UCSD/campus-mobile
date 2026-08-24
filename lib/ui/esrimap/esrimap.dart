@@ -129,7 +129,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   String? _activeRouteField;
   (double, double)? _fromLatLng;
   MapSearchResult? _routeDestination;
-  Offset? _loadingPoint;
+  ArcGISPoint? _loadingLocation;
 
   // Basemaps & Operational Layers State
   BasemapType _currentBasemapType = BasemapType.defaultMap;
@@ -1219,7 +1219,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     Future.delayed(const Duration(milliseconds: 200), () {
       if (!isRequestFinished && mounted) {
         setState(() {
-          _loadingPoint = screenPoint;
+          _loadingLocation = mapPoint;
         });
       }
     });
@@ -1237,7 +1237,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         isRequestFinished = true;
         if (mounted)
           setState(() {
-            _loadingPoint = null;
+            _loadingLocation = null;
           });
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
@@ -1258,7 +1258,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         isRequestFinished = true;
         if (mounted)
           setState(() {
-            _loadingPoint = null;
+            _loadingLocation = null;
           });
         if (buildingResult != null) {
           if (_allCategoryResults.isNotEmpty) _clearSearch();
@@ -1275,7 +1275,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     isRequestFinished = true;
     if (mounted)
       setState(() {
-        _loadingPoint = null;
+        _loadingLocation = null;
       });
     _dismissCallout();
     final isSelectedResultNotNull = _selectedResult != null;
@@ -2162,24 +2162,29 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   },
                 ),
 
-              if (_loadingPoint != null)
-                Positioned(
-                  left: _loadingPoint!.dx - 12,
-                  top: _loadingPoint!.dy - 12,
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF242424) : Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                    ),
-                  ),
+              if (_loadingLocation != null)
+                Builder(
+                  builder: (context) {
+                    final screenPt = _mapViewController.locationToScreen(mapPoint: _loadingLocation!);
+                    return Positioned(
+                      left: screenPt.dx - 12,
+                      top: screenPt.dy - 12,
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: isDark ? const Color(0xFF242424) : Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    );
+                  },
                 ),
 
               // Floating top search bar & suggestion panel
