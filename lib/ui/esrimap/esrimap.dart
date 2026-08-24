@@ -2063,7 +2063,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.wifi_off, size: 48, color: Colors.grey),
+                                const ExcludeSemantics(child: Icon(Icons.wifi_off, size: 48, color: Colors.grey)),
                                 const SizedBox(height: 16),
                                 const Text('Network error. Please try again.', style: TextStyle(fontSize: 16)),
                                 const SizedBox(height: 16),
@@ -2074,21 +2074,85 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         : IndexedStack(
                             index: indexedStackIndex,
                             children: [
-                              Listener(
-                                onPointerDown: _onMapPointerDown,
-                                child: ArcGISMapView(
-                                  controllerProvider: () => _mapViewController,
-                                  onMapViewReady: _onMapViewReady,
-                                  onTap: _onMapTap,
+                              Semantics(
+                                label: 'Interactive 2D Campus Map',
+                                hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
+                                child: Listener(
+                                  onPointerDown: _onMapPointerDown,
+                                  child: ArcGISMapView(
+                                    controllerProvider: () => _mapViewController,
+                                    onMapViewReady: _onMapViewReady,
+                                    onTap: _onMapTap,
+                                  ),
                                 ),
                               ),
-                              _scene3DWidget ?? const SizedBox.shrink(),
-                              _sceneDroneWidget ?? const SizedBox.shrink(),
+                              Semantics(
+                                label: 'Interactive 3D Campus Scene',
+                                hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
+                                child: _scene3DWidget ?? const SizedBox.shrink(),
+                              ),
+                              Semantics(
+                                label: 'Interactive 3D Drone Scene',
+                                hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
+                                child: _sceneDroneWidget ?? const SizedBox.shrink(),
+                              ),
                             ],
                           ),
                   ),
                 ],
               ),
+
+              // Hidden Semantics nodes for Map Pins / Graphics
+              if (_mappedResults.isNotEmpty && !_hasNetworkError && _sceneMode == 'default')
+                Builder(
+                  builder: (context) {
+                    final List<Widget> semanticsNodes = [];
+                    final vp = _mapViewController.getCurrentViewpoint(ViewpointType.boundingGeometry);
+                    final mapSr = vp?.targetGeometry.spatialReference;
+
+                    for (int i = 0; i < _mappedResults.length; i++) {
+                      final result = _mappedResults[i];
+                      var mapPoint = ArcGISPoint(
+                        x: result.longitude,
+                        y: result.latitude,
+                        spatialReference: SpatialReference.wgs84,
+                      );
+                      if (mapSr != null && mapPoint.spatialReference != null) {
+                        try {
+                          final proj = GeometryEngine.project(mapPoint, outputSpatialReference: mapSr);
+                          mapPoint = proj as ArcGISPoint;
+                        } catch (_) {}
+                      }
+
+                      final screenPt = _mapViewController.locationToScreen(mapPoint: mapPoint);
+                      // Keep within visible bounds roughly
+                      if (screenPt.dx >= -50 && screenPt.dy >= -50 && 
+                          screenPt.dx <= constraints.maxWidth + 50 && 
+                          screenPt.dy <= constraints.maxHeight + 50) {
+                        semanticsNodes.add(
+                          Positioned(
+                            left: screenPt.dx - 24,
+                            top: screenPt.dy - 48,
+                            child: Semantics(
+                              label: 'Map pin: ${result.name}',
+                              hint: 'Double tap to view details.',
+                              button: true,
+                              onTap: () {
+                                if (i < _graphicsOverlay.graphics.length) {
+                                  _handlePinTap(result, _graphicsOverlay.graphics[i]);
+                                } else {
+                                  _selectResultFromPin(result);
+                                }
+                              },
+                              child: const SizedBox(width: 48, height: 48),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                    return Stack(children: semanticsNodes);
+                  },
+                ),
 
               // Map controls stay behind search and slide-over panels.
               if (isFabVisible)
@@ -2125,22 +2189,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                             pos,
                             outputSpatialReference: geom.spatialReference!,
                           );
-                          if (projectedPos != null) {
-                            isUserVisible = GeometryEngine.intersects(geometry1: projectedPos, geometry2: geom);
+                          isUserVisible = GeometryEngine.intersects(geometry1: projectedPos, geometry2: geom);
 
-                            if (!isUserVisible) {
-                              final screenPoint = _mapViewController.locationToScreen(
-                                mapPoint: projectedPos as ArcGISPoint,
-                              );
-                              // FAB center is bottom: 100, right: 16, size: 48x48 -> center is 24px inwards
-                              final fabX = constraints.maxWidth - 16 - 24;
-                              final fabY = constraints.maxHeight - 100 - 24;
+                          if (!isUserVisible) {
+                            final screenPoint = _mapViewController.locationToScreen(
+                              mapPoint: projectedPos as ArcGISPoint,
+                            );
+                            // FAB center is bottom: 100, right: 16, size: 48x48 -> center is 24px inwards
+                            final fabX = constraints.maxWidth - 16 - 24;
+                            final fabY = constraints.maxHeight - 100 - 24;
 
-                              final dx = screenPoint.dx - fabX;
-                              final dy = screenPoint.dy - fabY;
-                              // angle from UP (negative Y)
-                              screenAngle = math.atan2(dx, -dy);
-                            }
+                            final dx = screenPoint.dx - fabX;
+                            final dy = screenPoint.dy - fabY;
+                            // angle from UP (negative Y)
+                            screenAngle = math.atan2(dx, -dy);
                           }
                         }
                       } catch (_) {}

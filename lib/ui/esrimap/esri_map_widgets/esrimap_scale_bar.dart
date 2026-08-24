@@ -108,11 +108,57 @@ class _EsriMapScaleBarState extends State<EsriMapScaleBar> {
   Widget build(BuildContext context) {
     if (widget.scale <= 0) return const SizedBox.shrink();
 
-    return AnimatedOpacity(
-      opacity: _isVisible ? 1.0 : 0.0,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      child: _buildScaleContent(context),
+    // 1 logical pixel in meters at standard 96 DPI: (scale * 0.0254 / 96.0)
+    final metersPerPx = (widget.scale * 0.0254) / 96.0;
+    if (metersPerPx <= 0) return const SizedBox.shrink();
+
+    // Calculate imperial label for semantics
+    double chosenImperialFt = _IMPERIAL_DISTANCES.first;
+    double chosenWidthPx = 60.0;
+    for (final ft in _IMPERIAL_DISTANCES) {
+      final meters = ft * 0.3048;
+      final px = meters / metersPerPx;
+      if (px >= 40 && px <= 100) {
+        chosenImperialFt = ft;
+        chosenWidthPx = px;
+        break;
+      }
+      if (px > 100) {
+        chosenImperialFt = ft;
+        chosenWidthPx = px.clamp(40.0, 100.0);
+        break;
+      }
+    }
+    final String imperialLabel = chosenImperialFt >= 5280
+        ? '${(chosenImperialFt / 5280).toStringAsFixed(chosenImperialFt % 5280 == 0 ? 0 : 1)} miles'
+        : '${chosenImperialFt.toInt()} feet';
+
+    final barMeters = chosenWidthPx * metersPerPx;
+    double chosenMetricMeters = _METRIC_DISTANCES.first;
+    for (final m in _METRIC_DISTANCES) {
+      if (m <= barMeters * 1.3) {
+        chosenMetricMeters = m;
+      } else {
+        break;
+      }
+    }
+    final String metricLabel = chosenMetricMeters >= 1000
+        ? '${(chosenMetricMeters / 1000).toStringAsFixed(chosenMetricMeters % 1000 == 0 ? 0 : 1)} kilometers'
+        : (chosenMetricMeters < 1
+              ? '${(chosenMetricMeters * 100).round()} centimeters'
+              : '${chosenMetricMeters % 1 == 0 ? chosenMetricMeters.toInt() : chosenMetricMeters.toStringAsFixed(1)} meters');
+
+    return Semantics(
+      label: 'Map scale is $imperialLabel or $metricLabel',
+      hidden: !_isVisible,
+      child: ExcludeSemantics(
+        child: AnimatedOpacity(
+          opacity: _isVisible ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: _buildScaleContent(context),
+        ),
+      ),
     );
   }
 
