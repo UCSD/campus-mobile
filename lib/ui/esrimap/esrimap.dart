@@ -1990,40 +1990,48 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       color: Theme.of(context).cardColor.withOpacity(0.9),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () => setState(() => _isTransitLegendMinimized = !_isTransitLegendMinimized),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                  const SizedBox(width: 8),
-                  Icon(_isTransitLegendMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 18),
-                ],
-              ),
-              if (!_isTransitLegendMinimized) ...[
-                const SizedBox(height: 6),
-                for (final info in _transitLegend)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (_transitLegendSwatches[info.name] != null)
-                          RawImage(image: _transitLegendSwatches[info.name], width: 16, height: 16),
-                        const SizedBox(width: 8),
-                        Text(info.name, style: const TextStyle(fontSize: 12)),
-                      ],
-                    ),
+      child: Semantics(
+        button: true,
+        label: _isTransitLegendMinimized ? 'Expand transit routes legend' : 'Collapse transit routes legend',
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () => setState(() => _isTransitLegendMinimized = !_isTransitLegendMinimized),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ExcludeSemantics(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      const SizedBox(width: 8),
+                      Icon(_isTransitLegendMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 18),
+                    ],
                   ),
+                ),
+                if (!_isTransitLegendMinimized) ...[
+                  const SizedBox(height: 6),
+                  for (final info in _transitLegend)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (_transitLegendSwatches[info.name] != null)
+                            ExcludeSemantics(
+                              child: RawImage(image: _transitLegendSwatches[info.name], width: 16, height: 16),
+                            ),
+                          const SizedBox(width: 8),
+                          Text('${info.name} route', style: const TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -2518,10 +2526,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Basemap & Operational Layer Selector Panel
               if (isLayersPanelVisible) ...[
                 Positioned.fill(
-                  child: GestureDetector(
-                    onTap: () => setState(() => _showLayersPanel = false),
-                    child: Container(
-                      color: const Color(0x80000000),
+                  child: Semantics(
+                    button: true,
+                    label: 'Close map displays menu',
+                    child: GestureDetector(
+                      onTap: () => setState(() => _showLayersPanel = false),
+                      child: Container(
+                        color: const Color(0x80000000),
+                      ),
                     ),
                   ),
                 ),

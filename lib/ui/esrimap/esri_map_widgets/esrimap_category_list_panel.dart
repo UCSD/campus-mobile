@@ -111,7 +111,7 @@ class EsriMapCategoryListPanel extends StatelessWidget {
           },
           trailing: hasMoreTotalResults
               ? TextButton.icon(
-                  icon: Icon(Icons.layers_outlined, size: 16, color: isDark ? Colors.white54 : Colors.grey[600]),
+                  icon: ExcludeSemantics(child: Icon(Icons.layers_outlined, size: 16, color: isDark ? Colors.white54 : Colors.grey[600])),
                   label: Text(
                     'See all ${allCategoryResults.length} results',
                     style: TextStyle(fontSize: 13, color: isDark ? Colors.white54 : Colors.grey[600]),
@@ -167,10 +167,12 @@ class EsriMapCategoryListPanel extends StatelessWidget {
                         children: [
                           ListTile(
                             splashColor: Colors.transparent,
-                            leading: Icon(
-                              iconForResult(r),
-                              size: 20,
-                              color: isDark ? Colors.grey[400] : Colors.grey[600],
+                            leading: ExcludeSemantics(
+                              child: Icon(
+                                iconForResult(r),
+                                size: 20,
+                                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                              ),
                             ),
                             title: Text(
                               r.name,

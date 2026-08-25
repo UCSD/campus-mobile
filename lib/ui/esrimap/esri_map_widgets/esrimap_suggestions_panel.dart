@@ -62,13 +62,16 @@ class _EsriMapSuggestionsPanelState extends State<EsriMapSuggestionsPanel> {
               if (isFromRouteFieldActive) ...[
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  leading: Icon(
-                    Icons.my_location,
-                    size: 20,
-                    color: isDark ? Colors.grey[400] : Theme.of(context).colorScheme.primary,
+                  leading: ExcludeSemantics(
+                    child: Icon(
+                      Icons.my_location,
+                      size: 20,
+                      color: isDark ? Colors.grey[400] : Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                   title: Text(
                     'Current Location',
+                    semanticsLabel: 'Use my current location',
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -123,7 +126,7 @@ class _EsriMapSuggestionsPanelState extends State<EsriMapSuggestionsPanel> {
                       TextButton(
                         onPressed: widget.onClearRecent,
                         style: TextButton.styleFrom(foregroundColor: isDark ? Colors.grey[400] : Colors.grey[600]),
-                        child: const Text('Clear'),
+                        child: const Text('Clear', semanticsLabel: 'Clear recent searches'),
                       ),
                     ],
                   ),
@@ -160,10 +163,12 @@ class _EsriMapSuggestionsPanelState extends State<EsriMapSuggestionsPanel> {
                 height: 64,
                 child: ListTile(
                   contentPadding: const EdgeInsets.only(left: 16, right: 4),
-                  leading: CircleAvatar(
-                    radius: 16,
-                    backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
-                    child: Icon(Icons.history, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                  leading: ExcludeSemantics(
+                    child: CircleAvatar(
+                      radius: 16,
+                      backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                      child: Icon(Icons.history, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                    ),
                   ),
                   title: Text(
                     recent.name,
@@ -198,7 +203,10 @@ class _EsriMapSuggestionsPanelState extends State<EsriMapSuggestionsPanel> {
                 _isHistoryExpanded = !_isHistoryExpanded;
               });
             },
-            child: Text(_isHistoryExpanded ? 'Show Less' : 'Show More'),
+            child: Text(
+              _isHistoryExpanded ? 'Show Less' : 'Show More',
+              semanticsLabel: _isHistoryExpanded ? 'Show less recent searches' : 'Show more recent searches',
+            ),
           ),
       ],
     );
@@ -207,28 +215,34 @@ class _EsriMapSuggestionsPanelState extends State<EsriMapSuggestionsPanel> {
   Widget _buildCategoryChip(BuildContext context, EsriSearchCategory category) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Tooltip(
-      message: 'Search ${category.label}',
-      child: GestureDetector(
-        onTap: () => widget.onSelectCategory(category),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(color: category.color, shape: BoxShape.circle),
-              child: Icon(category.icon, size: 22, color: Colors.black),
+    return Semantics(
+      button: true,
+      label: 'Search ${category.label}',
+      child: Tooltip(
+        message: 'Search ${category.label}',
+        child: GestureDetector(
+          onTap: () => widget.onSelectCategory(category),
+          child: ExcludeSemantics(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(color: category.color, shape: BoxShape.circle),
+                  child: Icon(category.icon, size: 22, color: Colors.black),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  category.label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                ),
+              ],
             ),
-            const SizedBox(height: 6),
-            Text(
-              category.label,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
-            ),
-          ],
+          ),
         ),
       ),
     );

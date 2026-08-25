@@ -79,10 +79,15 @@ class EsriMapLayersPanel extends StatelessWidget {
       Widget? imageWidget,
       bool loading = false,
     }) {
-      return GestureDetector(
-        onTap: onTap,
-        child: SizedBox(
-          width: 86,
+      return Semantics(
+        button: true,
+        selected: selected,
+        label: loading ? '$label, loading' : label,
+        child: ExcludeSemantics(
+          child: GestureDetector(
+            onTap: onTap,
+            child: SizedBox(
+              width: 86,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -119,7 +124,7 @@ class EsriMapLayersPanel extends StatelessWidget {
             ],
           ),
         ),
-      );
+      )));
     }
 
     Widget networkImage(String url) => Image.network(
@@ -128,23 +133,30 @@ class EsriMapLayersPanel extends StatelessWidget {
       errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.grey[700] : Colors.grey[300]),
     );
 
-    Widget sceneChip(String key, String label, bool selected) => GestureDetector(
-      onTap: () => onSetSceneMode(key),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: selected
-              ? Border.all(color: accent, width: 2)
-              : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
-          color: selected ? accent.withValues(alpha: 0.12) : (isDark ? Colors.grey[850] : Colors.grey[100]),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-            color: selected ? accent : textColor,
+    Widget sceneChip(String key, String label, bool selected) => Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      child: ExcludeSemantics(
+        child: GestureDetector(
+          onTap: () => onSetSceneMode(key),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: selected
+                  ? Border.all(color: accent, width: 2)
+                  : Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1),
+              color: selected ? accent.withValues(alpha: 0.12) : (isDark ? Colors.grey[850] : Colors.grey[100]),
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                color: selected ? accent : textColor,
+              ),
+            ),
           ),
         ),
       ),
@@ -194,6 +206,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                             IconButton(
                               icon: Icon(Icons.close, size: 20, color: subtitleColor),
                               onPressed: onClose,
+                              tooltip: 'Close map displays menu',
                               padding: EdgeInsets.zero,
                               constraints: const BoxConstraints(),
                             ),

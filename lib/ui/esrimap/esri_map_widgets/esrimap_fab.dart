@@ -73,34 +73,43 @@ class EsriMapFabCluster extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Compass needle button
-        Material(
-          elevation: 4,
-          color: bgColor,
-          shape: const CircleBorder(),
-          clipBehavior: Clip.antiAlias,
-          child: GestureDetector(
-            onTap: onSnapToNorth,
-            behavior: HitTestBehavior.opaque,
-            child: SizedBox(
-              width: SIZE,
-              height: SIZE,
-              child: Center(
-                child: CustomPaint(
-                  size: const Size(24, 24),
-                  painter: _CompassNeedlePainter(
-                    rotationDegrees: mapRotation,
-                    southColor: fgColor.withValues(alpha: 0.35),
+        if (mapRotation.abs() > 0.01) ...[
+          Material(
+            elevation: 4,
+            color: bgColor,
+            shape: const CircleBorder(),
+            clipBehavior: Clip.antiAlias,
+            child: Semantics(
+              button: true,
+              label: 'Snap to true north',
+              child: GestureDetector(
+                onTap: onSnapToNorth,
+                behavior: HitTestBehavior.opaque,
+                child: SizedBox(
+                  width: SIZE,
+                  height: SIZE,
+                  child: Center(
+                    child: ExcludeSemantics(
+                      child: CustomPaint(
+                        size: const Size(24, 24),
+                        painter: _CompassNeedlePainter(
+                          rotationDegrees: mapRotation,
+                          southColor: fgColor.withValues(alpha: 0.35),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 10),
+          const SizedBox(height: 10),
+        ],
 
         // Center Map (Center on Campus)
         _circleButton(
           svgAsset: 'assets/esri_map_assets/Center-Trident.svg',
+          semanticsLabel: 'Center on campus',
           color: recenterColor,
           bgColor: bgColor,
           onTap: onRecenterOnView,
@@ -113,6 +122,7 @@ class EsriMapFabCluster extends StatelessWidget {
             size: const Size(20, 20),
             painter: _MapDisplaysIconPainter(color: fgColor),
           ),
+          semanticsLabel: 'Map layers and displays',
           color: fgColor,
           bgColor: bgColor,
           onTap: onShowLayersPanel,
@@ -125,6 +135,7 @@ class EsriMapFabCluster extends StatelessWidget {
     IconData? icon,
     String? svgAsset,
     Widget? customIcon,
+    String? semanticsLabel,
     required Color color,
     required Color bgColor,
     required VoidCallback onTap,
@@ -143,6 +154,11 @@ class EsriMapFabCluster extends StatelessWidget {
       iconWidget = Icon(icon, size: 22, color: color);
     }
 
+    Widget accessibleIcon = ExcludeSemantics(child: iconWidget);
+    if (semanticsLabel != null) {
+      accessibleIcon = Semantics(label: semanticsLabel, child: accessibleIcon);
+    }
+
     return Material(
       elevation: 4,
       color: bgColor,
@@ -153,7 +169,7 @@ class EsriMapFabCluster extends StatelessWidget {
         child: SizedBox(
           width: SIZE,
           height: SIZE,
-          child: Center(child: iconWidget),
+          child: Center(child: accessibleIcon),
         ),
       ),
     );
@@ -297,17 +313,30 @@ class EsriMapLocationFab extends StatelessWidget {
       iconWidget = Icon(Icons.explore_outlined, size: 26, color: fgColor);
     }
 
+    String semanticsLabel;
+    if (isLoading) {
+      semanticsLabel = 'Center on my location, acquiring GPS signal';
+    } else if (isLocationActive) {
+      semanticsLabel = 'Tracking your location';
+    } else {
+      semanticsLabel = 'Center on my location';
+    }
+
     return Material(
       elevation: 4,
       color: bgColor,
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onRecenterOnUser,
-        child: SizedBox(
-          width: EsriMapFabCluster.SIZE,
-          height: EsriMapFabCluster.SIZE,
-          child: Center(child: iconWidget),
+      child: Semantics(
+        button: true,
+        label: semanticsLabel,
+        child: InkWell(
+          onTap: onRecenterOnUser,
+          child: SizedBox(
+            width: EsriMapFabCluster.SIZE,
+            height: EsriMapFabCluster.SIZE,
+            child: Center(child: ExcludeSemantics(child: iconWidget)),
+          ),
         ),
       ),
     );
