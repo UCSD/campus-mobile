@@ -31,6 +31,7 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_s
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_suggestions_panel.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_callout_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
@@ -129,7 +130,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   String? _activeRouteField;
   (double, double)? _fromLatLng;
   MapSearchResult? _routeDestination;
-  Offset? _loadingPoint;
+  ArcGISPoint? _loadingLocation;
 
   // Basemaps & Operational Layers State
   BasemapType _currentBasemapType = BasemapType.defaultMap;
@@ -1219,7 +1220,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     Future.delayed(const Duration(milliseconds: 200), () {
       if (!isRequestFinished && mounted) {
         setState(() {
-          _loadingPoint = screenPoint;
+          _loadingLocation = mapPoint;
         });
       }
     });
@@ -1237,7 +1238,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         isRequestFinished = true;
         if (mounted)
           setState(() {
-            _loadingPoint = null;
+            _loadingLocation = null;
           });
         final tappedGraphic = identifyResult.graphics.first;
         final index = tappedGraphic.attributes['resultIndex'] as int?;
@@ -1258,7 +1259,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         isRequestFinished = true;
         if (mounted)
           setState(() {
-            _loadingPoint = null;
+            _loadingLocation = null;
           });
         if (buildingResult != null) {
           if (_allCategoryResults.isNotEmpty) _clearSearch();
@@ -1275,7 +1276,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     isRequestFinished = true;
     if (mounted)
       setState(() {
-        _loadingPoint = null;
+        _loadingLocation = null;
       });
     _dismissCallout();
     final isSelectedResultNotNull = _selectedResult != null;
@@ -1527,6 +1528,26 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       return;
     }
     _mapViewController.setViewpointRotation(angleDegrees: 0);
+  }
+
+  void _zoomIn() {
+    if (_sceneMode != 'default') return; // Not implemented for 3D yet
+    final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
+    if (vp != null && vp.targetGeometry is ArcGISPoint) {
+      _mapViewController.setViewpointAnimated(
+        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale / 2.0)
+      );
+    }
+  }
+
+  void _zoomOut() {
+    if (_sceneMode != 'default') return; // Not implemented for 3D yet
+    final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
+    if (vp != null && vp.targetGeometry is ArcGISPoint) {
+      _mapViewController.setViewpointAnimated(
+        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale * 2.0)
+      );
+    }
   }
 
   void _clearSearch() {
@@ -1990,40 +2011,48 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       color: Theme.of(context).cardColor.withOpacity(0.9),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () => setState(() => _isTransitLegendMinimized = !_isTransitLegendMinimized),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                  const SizedBox(width: 8),
-                  Icon(_isTransitLegendMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 18),
-                ],
-              ),
-              if (!_isTransitLegendMinimized) ...[
-                const SizedBox(height: 6),
-                for (final info in _transitLegend)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (_transitLegendSwatches[info.name] != null)
-                          RawImage(image: _transitLegendSwatches[info.name], width: 16, height: 16),
-                        const SizedBox(width: 8),
-                        Text(info.name, style: const TextStyle(fontSize: 12)),
-                      ],
-                    ),
+      child: Semantics(
+        button: true,
+        label: _isTransitLegendMinimized ? 'Expand transit routes legend' : 'Collapse transit routes legend',
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () => setState(() => _isTransitLegendMinimized = !_isTransitLegendMinimized),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ExcludeSemantics(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      const SizedBox(width: 8),
+                      Icon(_isTransitLegendMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 18),
+                    ],
                   ),
+                ),
+                if (!_isTransitLegendMinimized) ...[
+                  const SizedBox(height: 6),
+                  for (final info in _transitLegend)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (_transitLegendSwatches[info.name] != null)
+                            ExcludeSemantics(
+                              child: RawImage(image: _transitLegendSwatches[info.name], width: 16, height: 16),
+                            ),
+                          const SizedBox(width: 8),
+                          Text('${info.name} route', style: const TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -2055,15 +2084,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           return Stack(
             children: [
               // Map View Stack (2D Map View vs 3D Scene View)
-              Column(
-                children: [
+              Semantics(
+                sortKey: const OrdinalSortKey(3.0),
+                child: Column(
+                  children: [
                   Expanded(
                     child: _hasNetworkError
                         ? Center(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.wifi_off, size: 48, color: Colors.grey),
+                                const ExcludeSemantics(child: Icon(Icons.wifi_off, size: 48, color: Colors.grey)),
                                 const SizedBox(height: 16),
                                 const Text('Network error. Please try again.', style: TextStyle(fontSize: 16)),
                                 const SizedBox(height: 16),
@@ -2074,28 +2105,98 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         : IndexedStack(
                             index: indexedStackIndex,
                             children: [
-                              Listener(
-                                onPointerDown: _onMapPointerDown,
-                                child: ArcGISMapView(
-                                  controllerProvider: () => _mapViewController,
-                                  onMapViewReady: _onMapViewReady,
-                                  onTap: _onMapTap,
+                              Semantics(
+                                label: 'Interactive 2D Campus Map',
+                                hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
+                                child: Listener(
+                                  onPointerDown: _onMapPointerDown,
+                                  child: ArcGISMapView(
+                                    controllerProvider: () => _mapViewController,
+                                    onMapViewReady: _onMapViewReady,
+                                    onTap: _onMapTap,
+                                  ),
                                 ),
                               ),
-                              _scene3DWidget ?? const SizedBox.shrink(),
-                              _sceneDroneWidget ?? const SizedBox.shrink(),
+                              Semantics(
+                                label: 'Interactive 3D Campus Scene',
+                                hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
+                                child: _scene3DWidget ?? const SizedBox.shrink(),
+                              ),
+                              Semantics(
+                                label: 'Interactive 3D Drone Scene',
+                                hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
+                                child: _sceneDroneWidget ?? const SizedBox.shrink(),
+                              ),
                             ],
                           ),
                   ),
                 ],
               ),
+              ),
+
+              // Hidden Semantics nodes for Map Pins / Graphics
+              if (_mappedResults.isNotEmpty && !_hasNetworkError && _sceneMode == 'default')
+                Builder(
+                  builder: (context) {
+                    final List<Widget> semanticsNodes = [];
+                    final vp = _mapViewController.getCurrentViewpoint(ViewpointType.boundingGeometry);
+                    final mapSr = vp?.targetGeometry.spatialReference;
+
+                    for (int i = 0; i < _mappedResults.length; i++) {
+                      final result = _mappedResults[i];
+                      var mapPoint = ArcGISPoint(
+                        x: result.longitude,
+                        y: result.latitude,
+                        spatialReference: SpatialReference.wgs84,
+                      );
+                      if (mapSr != null && mapPoint.spatialReference != null) {
+                        try {
+                          final proj = GeometryEngine.project(mapPoint, outputSpatialReference: mapSr);
+                          mapPoint = proj as ArcGISPoint;
+                        } catch (_) {}
+                      }
+
+                      final screenPt = _mapViewController.locationToScreen(mapPoint: mapPoint);
+                      // Keep within visible bounds roughly
+                      if (screenPt.dx >= -50 && screenPt.dy >= -50 && 
+                          screenPt.dx <= constraints.maxWidth + 50 && 
+                          screenPt.dy <= constraints.maxHeight + 50) {
+                        semanticsNodes.add(
+                          Positioned(
+                            left: screenPt.dx - 24,
+                            top: screenPt.dy - 48,
+                            child: Semantics(
+                              label: 'Map pin: ${result.name}',
+                              hint: 'Double tap to view details.',
+                              button: true,
+                              onTap: () {
+                                if (i < _graphicsOverlay.graphics.length) {
+                                  _handlePinTap(result, _graphicsOverlay.graphics[i]);
+                                } else {
+                                  _selectResultFromPin(result);
+                                }
+                              },
+                              child: const SizedBox(width: 48, height: 48),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                    return Semantics(
+                      sortKey: const OrdinalSortKey(4.0),
+                      child: Stack(children: semanticsNodes),
+                    );
+                  },
+                ),
 
               // Map controls stay behind search and slide-over panels.
               if (isFabVisible)
                 Positioned(
                   top: MediaQuery.of(context).padding.top + 68,
                   right: 16,
-                  child: EsriMapFabCluster(
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(5.0),
+                    child: EsriMapFabCluster(
                     isDark: isDark,
                     is3D: _sceneMode != 'default',
                     mapRotation: _mapRotation,
@@ -2105,6 +2206,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     onRecenterOnView: _recenterOnView,
                     onRecenterOnUser: _recenterOnUser,
                     onSnapToNorth: _snapToNorth,
+                    onZoomIn: _zoomIn,
+                    onZoomOut: _zoomOut,
+                  ),
                   ),
                 ),
 
@@ -2125,22 +2229,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                             pos,
                             outputSpatialReference: geom.spatialReference!,
                           );
-                          if (projectedPos != null) {
-                            isUserVisible = GeometryEngine.intersects(geometry1: projectedPos, geometry2: geom);
+                          isUserVisible = GeometryEngine.intersects(geometry1: projectedPos, geometry2: geom);
 
-                            if (!isUserVisible) {
-                              final screenPoint = _mapViewController.locationToScreen(
-                                mapPoint: projectedPos as ArcGISPoint,
-                              );
-                              // FAB center is bottom: 100, right: 16, size: 48x48 -> center is 24px inwards
-                              final fabX = constraints.maxWidth - 16 - 24;
-                              final fabY = constraints.maxHeight - 100 - 24;
+                          if (!isUserVisible) {
+                            final screenPoint = _mapViewController.locationToScreen(
+                              mapPoint: projectedPos as ArcGISPoint,
+                            );
+                            // FAB center is bottom: 100, right: 16, size: 48x48 -> center is 24px inwards
+                            final fabX = constraints.maxWidth - 16 - 24;
+                            final fabY = constraints.maxHeight - 100 - 24;
 
-                              final dx = screenPoint.dx - fabX;
-                              final dy = screenPoint.dy - fabY;
-                              // angle from UP (negative Y)
-                              screenAngle = math.atan2(dx, -dy);
-                            }
+                            final dx = screenPoint.dx - fabX;
+                            final dy = screenPoint.dy - fabY;
+                            // angle from UP (negative Y)
+                            screenAngle = math.atan2(dx, -dy);
                           }
                         }
                       } catch (_) {}
@@ -2149,37 +2251,48 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     return Positioned(
                       bottom: 100,
                       right: 16,
-                      child: EsriMapLocationFab(
-                        isDark: isDark,
-                        isLocationActive: _isLocationActive,
-                        isUserVisible: isUserVisible,
-                        isLoading: _isLocatingUser,
-                        bearingToUser: screenAngle,
-                        mapRotation: _mapRotation,
-                        onRecenterOnUser: _recenterOnUser,
+                      child: Semantics(
+                        sortKey: const OrdinalSortKey(6.0),
+                        child: EsriMapLocationFab(
+                          isDark: isDark,
+                          isLocationActive: _isLocationActive,
+                          isUserVisible: isUserVisible,
+                          isLoading: _isLocatingUser,
+                          bearingToUser: screenAngle,
+                          mapRotation: _mapRotation,
+                          onRecenterOnUser: _recenterOnUser,
+                        ),
                       ),
                     );
                   },
                 ),
 
-              if (_loadingPoint != null)
-                Positioned(
-                  left: _loadingPoint!.dx - 12,
-                  top: _loadingPoint!.dy - 12,
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF242424) : Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                    ),
-                  ),
+              if (_loadingLocation != null)
+                Builder(
+                  builder: (context) {
+                    final screenPt = _mapViewController.locationToScreen(mapPoint: _loadingLocation!);
+                    return Positioned(
+                      left: screenPt.dx - 12,
+                      top: screenPt.dy - 12,
+                      child: Semantics(
+                        sortKey: const OrdinalSortKey(7.0),
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: isDark ? const Color(0xFF242424) : Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
+                          ),
+                          padding: const EdgeInsets.all(4),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
 
               // Floating top search bar & suggestion panel
@@ -2188,8 +2301,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   top: 8,
                   left: 12,
                   right: 12,
-                  child: Column(
-                    children: [
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(1.0),
+                    child: Column(
+                      children: [
                       EsriMapSearchBar(
                         config: _config,
                         showRouteFields: _showRouteFields,
@@ -2375,24 +2490,28 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         ),
                     ],
                   ),
+                  ),
                 ),
 
               // Category results list panel
               if (shouldShowCatListPanel)
-                EsriMapCategoryListPanel(
-                  key: const Key('category_list_panel'),
-                  controller: _categorySheetController,
-                  activeCategory: _activeCategory,
-                  allCategoryResults: _allCategoryResults,
-                  viewportResults: EsriMapSearchService.filterToViewport(
-                    _allCategoryResults,
-                    _getViewportEnvelopeWGS84(),
+                Semantics(
+                  sortKey: const OrdinalSortKey(1.5),
+                  child: EsriMapCategoryListPanel(
+                    key: const Key('category_list_panel'),
+                    controller: _categorySheetController,
+                    activeCategory: _activeCategory,
+                    allCategoryResults: _allCategoryResults,
+                    viewportResults: EsriMapSearchService.filterToViewport(
+                      _allCategoryResults,
+                      _getViewportEnvelopeWGS84(),
+                    ),
+                    userLocation: _getUserLatLng(),
+                    onClearSearch: _clearSearch,
+                    onSeeAllResults: _seeAllCategoryResults,
+                    onSelectResult: _selectResultFromList,
+                    iconForResult: _iconForResult,
                   ),
-                  userLocation: _getUserLatLng(),
-                  onClearSearch: _clearSearch,
-                  onSeeAllResults: _seeAllCategoryResults,
-                  onSelectResult: _selectResultFromList,
-                  iconForResult: _iconForResult,
                 ),
 
               // Dynamic Google Maps-style Scale Bar Indicator
@@ -2400,17 +2519,29 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 Positioned(
                   bottom: 24,
                   right: 16,
-                  child: EsriMapScaleBar(scale: _currentScale, isDark: isDark),
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(8.0),
+                    child: EsriMapScaleBar(scale: _currentScale, isDark: isDark),
+                  ),
                 ),
 
               // Transit Legend
               if (_layerVisible['tritonTransit'] == true)
-                Positioned(bottom: 24, left: 16, child: _buildTransitLegend()),
+                Positioned(
+                  bottom: 24, 
+                  left: 16, 
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(9.0),
+                    child: _buildTransitLegend(),
+                  ),
+                ),
 
               // Selected Result Detail Slide-over
               if (_selectedResult != null)
-                LayoutBuilder(
-                  builder: (context, constraints) => EsriMapDetailSlideOver(
+                Semantics(
+                  sortKey: const OrdinalSortKey(1.6),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) => EsriMapDetailSlideOver(
                     minimizedNotifier: _detailSheetMinimized,
                     availableHeight: constraints.maxHeight,
                     result: _selectedResult!,
@@ -2447,21 +2578,39 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     onClearRoute: _clearRoute,
                   ),
                 ),
+                ),
 
               // Basemap & Operational Layer Selector Panel
-              if (isLayersPanelVisible)
-                EsriMapLayersPanel(
-                  config: _config!,
-                  currentBasemapType: _currentBasemapType,
-                  currentSceneKey: _sceneMode,
-                  layerVisible: _layerVisible,
-                  layerLoading: _layerLoading,
-                  hideSceneSwitcher: _selectedResult != null || _showCategoryList,
-                  onSwitchBasemap: _switchBasemap,
-                  onSetSceneMode: _setSceneMode,
-                  onToggleLayer: _toggleLayer,
-                  onClose: () => setState(() => _showLayersPanel = false),
+              if (isLayersPanelVisible) ...[
+                Positioned.fill(
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(1.7),
+                    button: true,
+                    label: 'Close map displays menu',
+                    child: GestureDetector(
+                      onTap: () => setState(() => _showLayersPanel = false),
+                      child: Container(
+                        color: const Color(0x80000000),
+                      ),
+                    ),
+                  ),
                 ),
+                Semantics(
+                  sortKey: const OrdinalSortKey(1.8),
+                  child: EsriMapLayersPanel(
+                    config: _config!,
+                    currentBasemapType: _currentBasemapType,
+                    currentSceneKey: _sceneMode,
+                    layerVisible: _layerVisible,
+                    layerLoading: _layerLoading,
+                    hideSceneSwitcher: _selectedResult != null || _showCategoryList,
+                    onSwitchBasemap: _switchBasemap,
+                    onSetSceneMode: _setSceneMode,
+                    onToggleLayer: _toggleLayer,
+                    onClose: () => setState(() => _showLayersPanel = false),
+                  ),
+                ),
+              ],
             ],
           );
         },

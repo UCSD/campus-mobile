@@ -4,9 +4,20 @@
 ///              [EsriMapConfig] layer specifications.
 /// ============================================================================
 
+import 'dart:async';
+
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_basemaps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
+
+void _setupPersistentRetry(Layer layer) {
+  layer.onLoadStatusChanged.listen((status) async {
+    if (status == LoadStatus.failedToLoad) {
+      await Future.delayed(const Duration(seconds: 2));
+      layer.retryLoad();
+    }
+  });
+}
 
 /// Constructs an ArcGIS [Basemap] for the requested [type] using configuration settings in [config].
 ///
@@ -31,11 +42,11 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
     _ => '291da5eab3a0412593b66d384379f89f',
   };
 
-  basemap.baseLayers.add(
-    ArcGISVectorTiledLayer.withItem(
-      PortalItem.withPortalAndItemId(portal: Portal.arcGISOnline(), itemId: globalBaseItemId),
-    ),
+  final globalLayer = ArcGISVectorTiledLayer.withItem(
+    PortalItem.withPortalAndItemId(portal: Portal.arcGISOnline(), itemId: globalBaseItemId),
   );
+  _setupPersistentRetry(globalLayer);
+  basemap.baseLayers.add(globalLayer);
 
   // 3. Custom UC San Diego Campus Vector Tile Layer (campus buildings, walkways, landscaping)
   final entry = config.basemaps[basemapKey(type)];
@@ -51,9 +62,11 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
       var hasValidUrlAndId = pUrl != null && layer.itemId != null;
       if (hasValidUrlAndId) {
         final portal = pUrl.contains('arcgis.com') ? Portal.arcGISOnline() : Portal(Uri.parse(pUrl));
-        basemap.baseLayers.add(
-          ArcGISVectorTiledLayer.withItem(PortalItem.withPortalAndItemId(portal: portal, itemId: layer.itemId!)),
+        final campusLayer = ArcGISVectorTiledLayer.withItem(
+          PortalItem.withPortalAndItemId(portal: portal, itemId: layer.itemId!),
         );
+        _setupPersistentRetry(campusLayer);
+        basemap.baseLayers.add(campusLayer);
       }
     }
   } else {
@@ -64,12 +77,13 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
       _ => 'e19f33d2c1f44967aef673306c483913',
     };
 
-    basemap.baseLayers.add(
-      ArcGISVectorTiledLayer.withItem(
-        PortalItem.withPortalAndItemId(portal: Portal(Uri.parse(portalUrl)), itemId: fallbackItemId),
-      ),
+    final fallbackLayer = ArcGISVectorTiledLayer.withItem(
+      PortalItem.withPortalAndItemId(portal: Portal(Uri.parse(portalUrl)), itemId: fallbackItemId),
     );
+    _setupPersistentRetry(fallbackLayer);
+    basemap.baseLayers.add(fallbackLayer);
   }
 
   return basemap;
 }
+

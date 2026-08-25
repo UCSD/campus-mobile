@@ -91,41 +91,39 @@ class EsriMapCalloutContent extends StatelessWidget {
   // --- UI Builders ---
 
   Widget _buildCalloutContainer(BuildContext context, {required Widget child}) {
-    // Exclude semantics here so we can provide a combined label if needed,
-    // or just let the children handle it.
-    return Semantics(
-      label: detail.isEmpty ? result.name : '${result.name}. $detail',
-      excludeSemantics: true,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            result.name,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isDark ? Colors.white : Colors.black87,
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              height: 1.15,
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          result.name,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isDark ? Colors.white : Colors.black87,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            height: 1.15,
           ),
-          const SizedBox(height: 4),
-          child,
-        ],
-      ),
+        ),
+        const SizedBox(height: 4),
+        child,
+      ],
     );
   }
 
   Widget _buildFallbackContent(BuildContext context) {
     if (detail.isEmpty) return const SizedBox.shrink();
-    return Text(
-      detail,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      textAlign: TextAlign.center,
-      style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12, height: 1.15),
+    final isBuilding = result.source == MapSearchSource.building;
+    return Semantics(
+      label: isBuilding ? 'Building Address: $detail' : null,
+      child: Text(
+        detail,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12, height: 1.15),
+      ),
     );
   }
 
@@ -252,10 +250,12 @@ class EsriMapCalloutContent extends StatelessWidget {
             width: 100,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: percent,
-                backgroundColor: isDark ? Colors.white24 : Colors.black12,
-                valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+              child: ExcludeSemantics(
+                child: LinearProgressIndicator(
+                  value: percent,
+                  backgroundColor: isDark ? Colors.white24 : Colors.black12,
+                  valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                ),
               ),
             ),
           ),
@@ -291,10 +291,12 @@ class EsriMapCalloutContent extends StatelessWidget {
             width: 100,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: percent <= 0.01 ? 0.01 : percent,
-                backgroundColor: isDark ? Colors.white24 : Colors.black12,
-                valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+              child: ExcludeSemantics(
+                child: LinearProgressIndicator(
+                  value: percent <= 0.01 ? 0.01 : percent,
+                  backgroundColor: isDark ? Colors.white24 : Colors.black12,
+                  valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                ),
               ),
             ),
           ),

@@ -66,19 +66,25 @@ Widget buildSlideOverContent({
                           ),
                         ),
                         if (hasTrailing) trailing,
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: onClose,
-                            customBorder: const CircleBorder(),
-                            child: Container(
-                              width: 34,
-                              height: 34,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isDark ? Colors.grey[800] : Colors.grey[200],
+                        Semantics(
+                          button: true,
+                          label: 'Close panel',
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: onClose,
+                              customBorder: const CircleBorder(),
+                              child: Container(
+                                width: 34,
+                                height: 34,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isDark ? Colors.grey[800] : Colors.grey[200],
+                                ),
+                                child: ExcludeSemantics(
+                                  child: Icon(Icons.close, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
+                                ),
                               ),
-                              child: Icon(Icons.close, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
                             ),
                           ),
                         ),
@@ -187,37 +193,43 @@ Widget buildDetailSlideOverContent({
                   tooltip: 'Back',
                 ),
                 Expanded(
-                  child: InkWell(
-                    onTap: onToggle,
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      child: Row(
-                        children: [
-                          if (hasHeaderIcon) ...[
-                            Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
-                            const SizedBox(width: 8),
-                          ],
-                          Expanded(
-                            child: Text(
-                              headerTitle,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: isDark ? Colors.white : Colors.grey[900],
+                  child: Semantics(
+                    button: true,
+                    label: isMinimized ? 'Expand details' : 'Collapse details',
+                    child: InkWell(
+                      onTap: onToggle,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        child: Row(
+                          children: [
+                            if (hasHeaderIcon) ...[
+                              ExcludeSemantics(child: Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700])),
+                              const SizedBox(width: 8),
+                            ],
+                            Expanded(
+                              child: Text(
+                                headerTitle,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark ? Colors.white : Colors.grey[900],
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          if (hasTrailing && !isMinimized) trailing,
-                          const SizedBox(width: 8),
-                          Icon(
-                            isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                            size: 24,
-                            color: isDark ? Colors.white70 : Colors.grey[700],
-                          ),
-                        ],
+                            if (hasTrailing && !isMinimized) trailing,
+                            const SizedBox(width: 8),
+                            ExcludeSemantics(
+                              child: Icon(
+                                isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                                size: 24,
+                                color: isDark ? Colors.white70 : Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -351,12 +363,15 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                           ),
                         if (shouldShowDetailText) ...[
                           const SizedBox(height: 10),
-                          Text(
-                            detailText,
-                            style: TextStyle(
-                              fontSize: 15,
-                              height: 1.4,
-                              color: isDark ? Colors.grey[300] : Colors.grey[700],
+                          Semantics(
+                            label: isBuilding ? 'Building Address: $detailText' : null,
+                            child: Text(
+                              detailText,
+                              style: TextStyle(
+                                fontSize: 15,
+                                height: 1.4,
+                                color: isDark ? Colors.grey[300] : Colors.grey[700],
+                              ),
                             ),
                           ),
                         ],
@@ -397,7 +412,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                         ] else if (hasRoute) ...[
                           Row(
                             children: [
-                              Icon(Icons.schedule, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                              ExcludeSemantics(child: Icon(Icons.schedule, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600])),
                               const SizedBox(width: 6),
                               Text(
                                 routeTravelTimeMinutes < 1 ? '< 1 min' : '${routeTravelTimeMinutes.ceil()} min',
@@ -417,10 +432,12 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(
-                                      Icons.directions_walk,
-                                      size: 16,
-                                      color: isDark ? Colors.grey[900] : Colors.white,
+                                    ExcludeSemantics(
+                                      child: Icon(
+                                        Icons.directions_walk,
+                                        size: 16,
+                                        color: isDark ? Colors.grey[900] : Colors.white,
+                                      ),
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
@@ -512,10 +529,12 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                         children: [
                           if (isFirstIndex) const Divider(height: 1),
                           ListTile(
-                            leading: Icon(
-                              Icons.subdirectory_arrow_right,
-                              size: 20,
-                              color: isDark ? Colors.grey[400] : Colors.grey[600],
+                            leading: ExcludeSemantics(
+                              child: Icon(
+                                Icons.subdirectory_arrow_right,
+                                size: 20,
+                                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                              ),
                             ),
                             title: Text(directionText, style: const TextStyle(fontSize: 14)),
                             trailing: distMeters > 0

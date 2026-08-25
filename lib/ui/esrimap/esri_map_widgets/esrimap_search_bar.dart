@@ -170,13 +170,15 @@ class EsriMapSearchBar extends StatelessWidget {
                   // Left route connection indicator dots
                   Padding(
                     padding: const EdgeInsets.only(left: 14),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.circle_outlined, size: 12, color: Colors.blue),
-                        Container(width: 1.5, height: 24, color: isDark ? Colors.grey[600] : Colors.grey[300]),
-                        const Icon(Icons.circle, size: 12, color: Colors.red),
-                      ],
+                    child: ExcludeSemantics(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.circle_outlined, size: 12, color: Colors.blue),
+                          Container(width: 1.5, height: 24, color: isDark ? Colors.grey[600] : Colors.grey[300]),
+                          const Icon(Icons.circle, size: 12, color: Colors.red),
+                        ],
+                      ),
                     ),
                   ),
                   // Text input fields column
@@ -210,6 +212,7 @@ class EsriMapSearchBar extends StatelessWidget {
                                   padding: EdgeInsets.zero,
                                   icon: Icon(Icons.close, size: 16, color: isDark ? Colors.white70 : Colors.grey[600]),
                                   onPressed: onClearFromField,
+                                  tooltip: 'Clear starting location',
                                 ),
                               ),
                           ],
@@ -241,6 +244,7 @@ class EsriMapSearchBar extends StatelessWidget {
                                   padding: EdgeInsets.zero,
                                   icon: Icon(Icons.close, size: 16, color: isDark ? Colors.white70 : Colors.grey[600]),
                                   onPressed: onClearToField,
+                                  tooltip: 'Clear destination location',
                                 ),
                               ),
                           ],
@@ -259,6 +263,7 @@ class EsriMapSearchBar extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           icon: const Icon(Icons.close, size: 20, color: Colors.redAccent),
                           onPressed: onClearRoute,
+                          tooltip: 'Close routing',
                         ),
                       ),
                       SizedBox(
@@ -268,6 +273,7 @@ class EsriMapSearchBar extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           icon: Icon(Icons.swap_vert, size: 20, color: isDark ? Colors.white70 : Colors.grey[600]),
                           onPressed: onSwapRouteFields,
+                          tooltip: 'Swap starting and destination locations',
                         ),
                       ),
                     ],
@@ -292,7 +298,7 @@ class EsriMapSearchBar extends StatelessWidget {
                     height: 24,
                     child: isSearching
                         ? CircularProgressIndicator(strokeWidth: 2, color: searchTextColor, semanticsLabel: 'Searching')
-                        : Icon(Icons.search, color: isDark ? Colors.white70 : Colors.grey[600]),
+                        : ExcludeSemantics(child: Icon(Icons.search, color: isDark ? Colors.white70 : Colors.grey[600])),
                   ),
                 ),
                 Expanded(
@@ -313,18 +319,13 @@ class EsriMapSearchBar extends StatelessWidget {
                     style: TextStyle(fontSize: searchFontSize, color: searchTextColor),
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                      hint: Padding(
-                        padding: const EdgeInsets.only(left: 4),
-                        child: Text(
-                          'Search buildings, places...',
-                          style: TextStyle(fontSize: searchFontSize, color: searchTextColor),
-                        ),
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      hintText: 'Search buildings, places...',
+                      hintStyle: TextStyle(fontSize: searchFontSize, color: searchTextColor),
                     ),
                   ),
                 ),
-                if (isSearchNotEmpty) IconButton(icon: const Icon(Icons.clear), onPressed: onClearSearch),
+                if (isSearchNotEmpty) IconButton(icon: const Icon(Icons.clear), onPressed: onClearSearch, tooltip: 'Clear search'),
                 if (isAiSearchEnabled)
                   IconButton(
                     icon: Icon(
@@ -333,6 +334,7 @@ class EsriMapSearchBar extends StatelessWidget {
                       size: 20,
                     ),
                     onPressed: onOpenAiSearch,
+                    tooltip: 'AI Location Search',
                   ),
               ],
             ),
