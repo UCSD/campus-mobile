@@ -126,13 +126,7 @@ class EsriMapFabCluster extends StatelessWidget {
 
         // Zoom Accessibility Buttons (Only shown when VoiceOver/TalkBack is active)
         if (MediaQuery.of(context).accessibleNavigation && onZoomIn != null && onZoomOut != null) ...[
-          _circleButton(
-            icon: Icons.add,
-            semanticsLabel: 'Zoom in',
-            color: fgColor,
-            bgColor: bgColor,
-            onTap: onZoomIn!,
-          ),
+          _circleButton(icon: Icons.add, semanticsLabel: 'Zoom in', color: fgColor, bgColor: bgColor, onTap: onZoomIn!),
           const SizedBox(height: 10),
           _circleButton(
             icon: Icons.remove,
@@ -183,9 +177,7 @@ class EsriMapFabCluster extends StatelessWidget {
     }
 
     Widget accessibleIcon = ExcludeSemantics(child: iconWidget);
-    if (semanticsLabel != null) {
-      accessibleIcon = Semantics(label: semanticsLabel, child: accessibleIcon);
-    }
+    if (semanticsLabel != null) accessibleIcon = Semantics(label: semanticsLabel, child: accessibleIcon);
 
     return Material(
       elevation: 4,

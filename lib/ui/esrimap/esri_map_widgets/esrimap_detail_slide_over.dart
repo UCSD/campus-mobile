@@ -204,7 +204,9 @@ Widget buildDetailSlideOverContent({
                         child: Row(
                           children: [
                             if (hasHeaderIcon) ...[
-                              ExcludeSemantics(child: Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700])),
+                              ExcludeSemantics(
+                                child: Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
+                              ),
                               const SizedBox(width: 8),
                             ],
                             Expanded(
@@ -412,7 +414,13 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                         ] else if (hasRoute) ...[
                           Row(
                             children: [
-                              ExcludeSemantics(child: Icon(Icons.schedule, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600])),
+                              ExcludeSemantics(
+                                child: Icon(
+                                  Icons.schedule,
+                                  size: 18,
+                                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                ),
+                              ),
                               const SizedBox(width: 6),
                               Text(
                                 routeTravelTimeMinutes < 1 ? '< 1 min' : '${routeTravelTimeMinutes.ceil()} min',

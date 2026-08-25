@@ -86,4 +86,3 @@ Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
 
   return basemap;
 }
-

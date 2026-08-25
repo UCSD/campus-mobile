@@ -298,7 +298,9 @@ class EsriMapSearchBar extends StatelessWidget {
                     height: 24,
                     child: isSearching
                         ? CircularProgressIndicator(strokeWidth: 2, color: searchTextColor, semanticsLabel: 'Searching')
-                        : ExcludeSemantics(child: Icon(Icons.search, color: isDark ? Colors.white70 : Colors.grey[600])),
+                        : ExcludeSemantics(
+                            child: Icon(Icons.search, color: isDark ? Colors.white70 : Colors.grey[600]),
+                          ),
                   ),
                 ),
                 Expanded(
@@ -325,7 +327,8 @@ class EsriMapSearchBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (isSearchNotEmpty) IconButton(icon: const Icon(Icons.clear), onPressed: onClearSearch, tooltip: 'Clear search'),
+                if (isSearchNotEmpty)
+                  IconButton(icon: const Icon(Icons.clear), onPressed: onClearSearch, tooltip: 'Clear search'),
                 if (isAiSearchEnabled)
                   IconButton(
                     icon: Icon(

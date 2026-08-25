@@ -1535,7 +1535,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
     if (vp != null && vp.targetGeometry is ArcGISPoint) {
       _mapViewController.setViewpointAnimated(
-        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale / 2.0)
+        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale / 2.0),
       );
     }
   }
@@ -1545,7 +1545,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
     if (vp != null && vp.targetGeometry is ArcGISPoint) {
       _mapViewController.setViewpointAnimated(
-        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale * 2.0)
+        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale * 2.0),
       );
     }
   }
@@ -2088,50 +2088,50 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 sortKey: const OrdinalSortKey(3.0),
                 child: Column(
                   children: [
-                  Expanded(
-                    child: _hasNetworkError
-                        ? Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
+                    Expanded(
+                      child: _hasNetworkError
+                          ? Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const ExcludeSemantics(child: Icon(Icons.wifi_off, size: 48, color: Colors.grey)),
+                                  const SizedBox(height: 16),
+                                  const Text('Network error. Please try again.', style: TextStyle(fontSize: 16)),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(onPressed: _fetchConfigThenInit, child: const Text('Reload')),
+                                ],
+                              ),
+                            )
+                          : IndexedStack(
+                              index: indexedStackIndex,
                               children: [
-                                const ExcludeSemantics(child: Icon(Icons.wifi_off, size: 48, color: Colors.grey)),
-                                const SizedBox(height: 16),
-                                const Text('Network error. Please try again.', style: TextStyle(fontSize: 16)),
-                                const SizedBox(height: 16),
-                                ElevatedButton(onPressed: _fetchConfigThenInit, child: const Text('Reload')),
-                              ],
-                            ),
-                          )
-                        : IndexedStack(
-                            index: indexedStackIndex,
-                            children: [
-                              Semantics(
-                                label: 'Interactive 2D Campus Map',
-                                hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
-                                child: Listener(
-                                  onPointerDown: _onMapPointerDown,
-                                  child: ArcGISMapView(
-                                    controllerProvider: () => _mapViewController,
-                                    onMapViewReady: _onMapViewReady,
-                                    onTap: _onMapTap,
+                                Semantics(
+                                  label: 'Interactive 2D Campus Map',
+                                  hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
+                                  child: Listener(
+                                    onPointerDown: _onMapPointerDown,
+                                    child: ArcGISMapView(
+                                      controllerProvider: () => _mapViewController,
+                                      onMapViewReady: _onMapViewReady,
+                                      onTap: _onMapTap,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Semantics(
-                                label: 'Interactive 3D Campus Scene',
-                                hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
-                                child: _scene3DWidget ?? const SizedBox.shrink(),
-                              ),
-                              Semantics(
-                                label: 'Interactive 3D Drone Scene',
-                                hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
-                                child: _sceneDroneWidget ?? const SizedBox.shrink(),
-                              ),
-                            ],
-                          ),
-                  ),
-                ],
-              ),
+                                Semantics(
+                                  label: 'Interactive 3D Campus Scene',
+                                  hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
+                                  child: _scene3DWidget ?? const SizedBox.shrink(),
+                                ),
+                                Semantics(
+                                  label: 'Interactive 3D Drone Scene',
+                                  hint: 'Double tap and hold, then drag to pan. Pinch to zoom.',
+                                  child: _sceneDroneWidget ?? const SizedBox.shrink(),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
               ),
 
               // Hidden Semantics nodes for Map Pins / Graphics
@@ -2158,8 +2158,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
                       final screenPt = _mapViewController.locationToScreen(mapPoint: mapPoint);
                       // Keep within visible bounds roughly
-                      if (screenPt.dx >= -50 && screenPt.dy >= -50 && 
-                          screenPt.dx <= constraints.maxWidth + 50 && 
+                      if (screenPt.dx >= -50 &&
+                          screenPt.dy >= -50 &&
+                          screenPt.dx <= constraints.maxWidth + 50 &&
                           screenPt.dy <= constraints.maxHeight + 50) {
                         semanticsNodes.add(
                           Positioned(
@@ -2197,18 +2198,18 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   child: Semantics(
                     sortKey: const OrdinalSortKey(5.0),
                     child: EsriMapFabCluster(
-                    isDark: isDark,
-                    is3D: _sceneMode != 'default',
-                    mapRotation: _mapRotation,
-                    isLocationActive: _isLocationActive,
-                    isRecenterActive: _isRecenterActive,
-                    onShowLayersPanel: () => setState(() => _showLayersPanel = true),
-                    onRecenterOnView: _recenterOnView,
-                    onRecenterOnUser: _recenterOnUser,
-                    onSnapToNorth: _snapToNorth,
-                    onZoomIn: _zoomIn,
-                    onZoomOut: _zoomOut,
-                  ),
+                      isDark: isDark,
+                      is3D: _sceneMode != 'default',
+                      mapRotation: _mapRotation,
+                      isLocationActive: _isLocationActive,
+                      isRecenterActive: _isRecenterActive,
+                      onShowLayersPanel: () => setState(() => _showLayersPanel = true),
+                      onRecenterOnView: _recenterOnView,
+                      onRecenterOnUser: _recenterOnUser,
+                      onSnapToNorth: _snapToNorth,
+                      onZoomIn: _zoomIn,
+                      onZoomOut: _zoomOut,
+                    ),
                   ),
                 ),
 
@@ -2305,191 +2306,191 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     sortKey: const OrdinalSortKey(1.0),
                     child: Column(
                       children: [
-                      EsriMapSearchBar(
-                        config: _config,
-                        showRouteFields: _showRouteFields,
-                        searchController: _searchController,
-                        focusNode: _focusNode,
-                        fromController: _fromController,
-                        fromFocusNode: _fromFocusNode,
-                        toController: _toController,
-                        toFocusNode: _toFocusNode,
-                        showSuggestions: _showSuggestions,
-                        showResults: _showResults,
-                        isSearching: _isSearching,
-                        searchResults: _searchResults,
-                        matchingPoiClasses: _matchingPoiClasses,
-                        onPerformSearch: _queueSearch,
-                        onPerformClassSearch: _performClassSearch,
-                        onSelectResult: _selectResult,
-                        onClearSearch: _clearSearch,
-                        onClearRoute: _clearRoute,
-                        onSwapRouteFields: () {
-                          final tmpText = _fromController.text;
-                          final tmpLatLng = _fromLatLng;
-                          _fromController.text = _toController.text;
-                          _toController.text = tmpText;
-                          setState(() {
-                            final hasRouteDestination = _routeDestination != null;
-                            _fromLatLng = hasRouteDestination
-                                ? (_routeDestination!.latitude, _routeDestination!.longitude)
-                                : null;
-                            final hasTmpLatLng = tmpLatLng != null;
-                            _routeDestination = hasTmpLatLng
-                                ? MapSearchResult(
-                                    name: tmpText,
-                                    subtitle: '',
-                                    latitude: tmpLatLng.$1,
-                                    longitude: tmpLatLng.$2,
-                                    source: MapSearchSource.building,
-                                  )
-                                : null;
-                          });
-                          final canSolveRoute = _routeDestination != null && _fromLatLng != null;
-                          if (canSolveRoute) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-                        },
-                        onTapSearchField: () {
-                          final hasSelectedResult = _selectedResult != null;
-                          if (hasSelectedResult) setState(() => _selectedResult = null);
-                          final isSearchTextEmpty = _searchController.text.isEmpty;
-                          if (isSearchTextEmpty) {
+                        EsriMapSearchBar(
+                          config: _config,
+                          showRouteFields: _showRouteFields,
+                          searchController: _searchController,
+                          focusNode: _focusNode,
+                          fromController: _fromController,
+                          fromFocusNode: _fromFocusNode,
+                          toController: _toController,
+                          toFocusNode: _toFocusNode,
+                          showSuggestions: _showSuggestions,
+                          showResults: _showResults,
+                          isSearching: _isSearching,
+                          searchResults: _searchResults,
+                          matchingPoiClasses: _matchingPoiClasses,
+                          onPerformSearch: _queueSearch,
+                          onPerformClassSearch: _performClassSearch,
+                          onSelectResult: _selectResult,
+                          onClearSearch: _clearSearch,
+                          onClearRoute: _clearRoute,
+                          onSwapRouteFields: () {
+                            final tmpText = _fromController.text;
+                            final tmpLatLng = _fromLatLng;
+                            _fromController.text = _toController.text;
+                            _toController.text = tmpText;
                             setState(() {
-                              _showSuggestions = true;
-                              _showResults = false;
-                            });
-                          }
-                        },
-                        onTapFromField: () {
-                          setState(() {
-                            _activeRouteField = 'from';
-                            _showSuggestions = true;
-                            _showResults = false;
-                          });
-                        },
-                        onTapToField: () {
-                          setState(() {
-                            _activeRouteField = 'to';
-                            _showSuggestions = true;
-                            _showResults = false;
-                          });
-                        },
-                        onChangedFromField: (text) {
-                          _fromLatLng = null;
-                          final isLongEnough = text.length >= 3;
-                          final isTextEmpty = text.isEmpty;
-                          if (isLongEnough) {
-                            _queueSearch(text);
-                          } else if (isTextEmpty) {
-                            _cancelPendingSearch();
-                            setState(() {
-                              _isSearching = false;
-                              _showResults = false;
-                              _showSuggestions = true;
-                            });
-                          } else {
-                            _cancelPendingSearch();
-                            setState(() {
-                              _isSearching = false;
-                              _showResults = false;
-                              _showSuggestions = false;
-                            });
-                          }
-                        },
-                        onChangedToField: (text) {
-                          final isLongEnough = text.length >= 3;
-                          final isTextEmpty = text.isEmpty;
-                          if (isLongEnough) {
-                            _queueSearch(text);
-                          } else if (isTextEmpty) {
-                            _cancelPendingSearch();
-                            setState(() {
-                              _isSearching = false;
-                              _showResults = false;
-                              _showSuggestions = true;
-                            });
-                          } else {
-                            _cancelPendingSearch();
-                            setState(() {
-                              _isSearching = false;
-                              _showResults = false;
-                              _showSuggestions = false;
-                            });
-                          }
-                        },
-                        onClearFromField: () {
-                          _cancelPendingSearch();
-                          _fromController.clear();
-                          _fromLatLng = null;
-                          setState(() {
-                            _isSearching = false;
-                            _showResults = false;
-                            _showSuggestions = true;
-                          });
-                        },
-                        onClearToField: () {
-                          _cancelPendingSearch();
-                          _toController.clear();
-                          setState(() {
-                            _isSearching = false;
-                            _showResults = false;
-                            _showSuggestions = true;
-                          });
-                        },
-                        onOpenAiSearch: () => showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (_) => EsriAiSearchSheet(
-                            userLat: _getUserLatLng()?.$1,
-                            userLon: _getUserLatLng()?.$2,
-                            onLocationSelected: _onAiLocationSelected,
-                            onRouteRequested: _onAiRouteRequested,
-                          ),
-                        ),
-                        iconForClass: _iconForClass,
-                        labelForClass: _labelForClass,
-                        iconForResult: _iconForResult,
-                      ),
-
-                      // Suggestions panel (Category icons + Recent Search History)
-                      if (_showSuggestions && !_showResults)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: EsriMapSuggestionsPanel(
-                            categories: _categories,
-                            recentSearches: _recentSearches,
-                            showRouteFields: _showRouteFields,
-                            activeRouteField: _activeRouteField,
-                            onSelectCurrentLocation: () async {
-                              (double, double)? gps = await _getDeviceLocationEfficiently();
-                              if (gps == null) {
-                                if (mounted) {
-                                  ScaffoldMessenger.of(
-                                    context,
-                                  ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
-                                }
-                                return;
-                              }
-                              _fromController.text = 'My Location';
-                              _fromLatLng = gps;
-                              if (mounted) {
-                                setState(() {
-                                  _showSuggestions = false;
-                                  _showResults = false;
-                                });
-                              }
-                              _fromFocusNode.unfocus();
                               final hasRouteDestination = _routeDestination != null;
-                              if (hasRouteDestination) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
-                            },
-                            onSelectCategory: _performCategorySearch,
-                            onSelectRecent: _selectResult,
-                            onRemoveRecent: _removeFromRecentSearches,
-                            onClearRecent: _clearRecentSearches,
+                              _fromLatLng = hasRouteDestination
+                                  ? (_routeDestination!.latitude, _routeDestination!.longitude)
+                                  : null;
+                              final hasTmpLatLng = tmpLatLng != null;
+                              _routeDestination = hasTmpLatLng
+                                  ? MapSearchResult(
+                                      name: tmpText,
+                                      subtitle: '',
+                                      latitude: tmpLatLng.$1,
+                                      longitude: tmpLatLng.$2,
+                                      source: MapSearchSource.building,
+                                    )
+                                  : null;
+                            });
+                            final canSolveRoute = _routeDestination != null && _fromLatLng != null;
+                            if (canSolveRoute) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+                          },
+                          onTapSearchField: () {
+                            final hasSelectedResult = _selectedResult != null;
+                            if (hasSelectedResult) setState(() => _selectedResult = null);
+                            final isSearchTextEmpty = _searchController.text.isEmpty;
+                            if (isSearchTextEmpty) {
+                              setState(() {
+                                _showSuggestions = true;
+                                _showResults = false;
+                              });
+                            }
+                          },
+                          onTapFromField: () {
+                            setState(() {
+                              _activeRouteField = 'from';
+                              _showSuggestions = true;
+                              _showResults = false;
+                            });
+                          },
+                          onTapToField: () {
+                            setState(() {
+                              _activeRouteField = 'to';
+                              _showSuggestions = true;
+                              _showResults = false;
+                            });
+                          },
+                          onChangedFromField: (text) {
+                            _fromLatLng = null;
+                            final isLongEnough = text.length >= 3;
+                            final isTextEmpty = text.isEmpty;
+                            if (isLongEnough) {
+                              _queueSearch(text);
+                            } else if (isTextEmpty) {
+                              _cancelPendingSearch();
+                              setState(() {
+                                _isSearching = false;
+                                _showResults = false;
+                                _showSuggestions = true;
+                              });
+                            } else {
+                              _cancelPendingSearch();
+                              setState(() {
+                                _isSearching = false;
+                                _showResults = false;
+                                _showSuggestions = false;
+                              });
+                            }
+                          },
+                          onChangedToField: (text) {
+                            final isLongEnough = text.length >= 3;
+                            final isTextEmpty = text.isEmpty;
+                            if (isLongEnough) {
+                              _queueSearch(text);
+                            } else if (isTextEmpty) {
+                              _cancelPendingSearch();
+                              setState(() {
+                                _isSearching = false;
+                                _showResults = false;
+                                _showSuggestions = true;
+                              });
+                            } else {
+                              _cancelPendingSearch();
+                              setState(() {
+                                _isSearching = false;
+                                _showResults = false;
+                                _showSuggestions = false;
+                              });
+                            }
+                          },
+                          onClearFromField: () {
+                            _cancelPendingSearch();
+                            _fromController.clear();
+                            _fromLatLng = null;
+                            setState(() {
+                              _isSearching = false;
+                              _showResults = false;
+                              _showSuggestions = true;
+                            });
+                          },
+                          onClearToField: () {
+                            _cancelPendingSearch();
+                            _toController.clear();
+                            setState(() {
+                              _isSearching = false;
+                              _showResults = false;
+                              _showSuggestions = true;
+                            });
+                          },
+                          onOpenAiSearch: () => showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (_) => EsriAiSearchSheet(
+                              userLat: _getUserLatLng()?.$1,
+                              userLon: _getUserLatLng()?.$2,
+                              onLocationSelected: _onAiLocationSelected,
+                              onRouteRequested: _onAiRouteRequested,
+                            ),
                           ),
+                          iconForClass: _iconForClass,
+                          labelForClass: _labelForClass,
+                          iconForResult: _iconForResult,
                         ),
-                    ],
-                  ),
+
+                        // Suggestions panel (Category icons + Recent Search History)
+                        if (_showSuggestions && !_showResults)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: EsriMapSuggestionsPanel(
+                              categories: _categories,
+                              recentSearches: _recentSearches,
+                              showRouteFields: _showRouteFields,
+                              activeRouteField: _activeRouteField,
+                              onSelectCurrentLocation: () async {
+                                (double, double)? gps = await _getDeviceLocationEfficiently();
+                                if (gps == null) {
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Unable to get your current location.')),
+                                    );
+                                  }
+                                  return;
+                                }
+                                _fromController.text = 'My Location';
+                                _fromLatLng = gps;
+                                if (mounted) {
+                                  setState(() {
+                                    _showSuggestions = false;
+                                    _showResults = false;
+                                  });
+                                }
+                                _fromFocusNode.unfocus();
+                                final hasRouteDestination = _routeDestination != null;
+                                if (hasRouteDestination) _solveRoute(_routeDestination!, originLatLng: _fromLatLng);
+                              },
+                              onSelectCategory: _performCategorySearch,
+                              onSelectRecent: _selectResult,
+                              onRemoveRecent: _removeFromRecentSearches,
+                              onClearRecent: _clearRecentSearches,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
 
@@ -2528,12 +2529,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Transit Legend
               if (_layerVisible['tritonTransit'] == true)
                 Positioned(
-                  bottom: 24, 
-                  left: 16, 
-                  child: Semantics(
-                    sortKey: const OrdinalSortKey(9.0),
-                    child: _buildTransitLegend(),
-                  ),
+                  bottom: 24,
+                  left: 16,
+                  child: Semantics(sortKey: const OrdinalSortKey(9.0), child: _buildTransitLegend()),
                 ),
 
               // Selected Result Detail Slide-over
@@ -2542,42 +2540,43 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   sortKey: const OrdinalSortKey(1.6),
                   child: LayoutBuilder(
                     builder: (context, constraints) => EsriMapDetailSlideOver(
-                    minimizedNotifier: _detailSheetMinimized,
-                    availableHeight: constraints.maxHeight,
-                    result: _selectedResult!,
-                    resultIcon: _iconForResult(_selectedResult!),
-                    isRoutingMode: _isRouting,
-                    hasRoute: _hasRoute,
-                    routeFailed: _routeFailed,
-                    travelMode: _travelMode,
-                    routeTravelTimeMinutes: _routeTravelTimeMinutes,
-                    routeManeuvers: _routeManeuvers,
-                    fromLatLng: _fromLatLng,
-                    onGetDirections: (res) {
-                      final gps = _getUserLatLng();
-                      final hasGps = gps != null;
-                      _fromController.text = hasGps ? 'My Location' : '';
-                      _toController.text = res.name;
-                      _routeDestination = res;
-                      _graphicsOverlay.graphics.clear();
-                      setState(() {
-                        _showRouteFields = true;
-                        _mappedResults = [];
-                        _allCategoryResults = [];
-                        _showCategoryList = false;
-                        _activeCategory = null;
-                      });
-                      _solveRoute(res);
-                    },
-                    onTravelModeChanged: (mode) {
-                      final hasSelectedResult = _selectedResult != null;
-                      if (hasSelectedResult) _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
-                    },
-                    onLaunchWebsite: _launchWebsite,
-                    onClose: _closeDetail,
-                    onClearRoute: _clearRoute,
+                      minimizedNotifier: _detailSheetMinimized,
+                      availableHeight: constraints.maxHeight,
+                      result: _selectedResult!,
+                      resultIcon: _iconForResult(_selectedResult!),
+                      isRoutingMode: _isRouting,
+                      hasRoute: _hasRoute,
+                      routeFailed: _routeFailed,
+                      travelMode: _travelMode,
+                      routeTravelTimeMinutes: _routeTravelTimeMinutes,
+                      routeManeuvers: _routeManeuvers,
+                      fromLatLng: _fromLatLng,
+                      onGetDirections: (res) {
+                        final gps = _getUserLatLng();
+                        final hasGps = gps != null;
+                        _fromController.text = hasGps ? 'My Location' : '';
+                        _toController.text = res.name;
+                        _routeDestination = res;
+                        _graphicsOverlay.graphics.clear();
+                        setState(() {
+                          _showRouteFields = true;
+                          _mappedResults = [];
+                          _allCategoryResults = [];
+                          _showCategoryList = false;
+                          _activeCategory = null;
+                        });
+                        _solveRoute(res);
+                      },
+                      onTravelModeChanged: (mode) {
+                        final hasSelectedResult = _selectedResult != null;
+                        if (hasSelectedResult)
+                          _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
+                      },
+                      onLaunchWebsite: _launchWebsite,
+                      onClose: _closeDetail,
+                      onClearRoute: _clearRoute,
+                    ),
                   ),
-                ),
                 ),
 
               // Basemap & Operational Layer Selector Panel
@@ -2589,9 +2588,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     label: 'Close map displays menu',
                     child: GestureDetector(
                       onTap: () => setState(() => _showLayersPanel = false),
-                      child: Container(
-                        color: const Color(0x80000000),
-                      ),
+                      child: Container(color: const Color(0x80000000)),
                     ),
                   ),
                 ),
