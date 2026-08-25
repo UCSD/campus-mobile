@@ -1533,9 +1533,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _zoomIn() {
     if (_sceneMode != 'default') return; // Not implemented for 3D yet
     final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
-    if (vp != null && vp.targetGeometry is ArcGISPoint) {
+    final isValidPoint = vp != null && vp.targetGeometry is ArcGISPoint;
+    if (isValidPoint) {
       _mapViewController.setViewpointAnimated(
-        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale / 2.0),
+        Viewpoint.fromCenter(vp!.targetGeometry as ArcGISPoint, scale: _currentScale / 2.0),
       );
     }
   }
@@ -1543,9 +1544,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _zoomOut() {
     if (_sceneMode != 'default') return; // Not implemented for 3D yet
     final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
-    if (vp != null && vp.targetGeometry is ArcGISPoint) {
+    final isValidPoint = vp != null && vp.targetGeometry is ArcGISPoint;
+    if (isValidPoint) {
       _mapViewController.setViewpointAnimated(
-        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale * 2.0),
+        Viewpoint.fromCenter(vp!.targetGeometry as ArcGISPoint, scale: _currentScale * 2.0),
       );
     }
   }
@@ -2077,6 +2079,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isLayersPanelVisible = _showLayersPanel && _config != null;
     final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene && !_hasNetworkError;
     final shouldShowScaleBar = _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel;
+    final hasValidResults = _mappedResults.isNotEmpty && !_hasNetworkError;
 
     return Scaffold(
       body: LayoutBuilder(
@@ -2135,7 +2138,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               ),
 
               // Hidden Semantics nodes for Map Pins / Graphics
-              if (_mappedResults.isNotEmpty && !_hasNetworkError && _sceneMode == 'default')
+              if (hasValidResults && isDefaultScene)
                 Builder(
                   builder: (context) {
                     final List<Widget> semanticsNodes = [];
@@ -2149,7 +2152,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         y: result.latitude,
                         spatialReference: SpatialReference.wgs84,
                       );
-                      if (mapSr != null && mapPoint.spatialReference != null) {
+                      final hasValidSpatialReference = mapSr != null && mapPoint.spatialReference != null;
+                      if (hasValidSpatialReference) {
                         try {
                           final proj = GeometryEngine.project(mapPoint, outputSpatialReference: mapSr);
                           mapPoint = proj as ArcGISPoint;
@@ -2158,10 +2162,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
                       final screenPt = _mapViewController.locationToScreen(mapPoint: mapPoint);
                       // Keep within visible bounds roughly
-                      if (screenPt.dx >= -50 &&
-                          screenPt.dy >= -50 &&
-                          screenPt.dx <= constraints.maxWidth + 50 &&
-                          screenPt.dy <= constraints.maxHeight + 50) {
+                      final isWithinHorizontalBounds = screenPt.dx >= -50 && screenPt.dx <= constraints.maxWidth + 50;
+                      final isWithinVerticalBounds = screenPt.dy >= -50 && screenPt.dy <= constraints.maxHeight + 50;
+                      if (isWithinHorizontalBounds && isWithinVerticalBounds) {
                         semanticsNodes.add(
                           Positioned(
                             left: screenPt.dx - 24,

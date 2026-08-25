@@ -76,6 +76,9 @@ class EsriMapFabCluster extends StatelessWidget {
 
     final recenterColor = isRecenterActive ? ACTIVE_COLOR : fgColor;
 
+    final isAccessibleNav = MediaQuery.of(context).accessibleNavigation;
+    final hasZoomCallbacks = onZoomIn != null && onZoomOut != null;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -125,7 +128,7 @@ class EsriMapFabCluster extends StatelessWidget {
         const SizedBox(height: 10),
 
         // Zoom Accessibility Buttons (Only shown when VoiceOver/TalkBack is active)
-        if (MediaQuery.of(context).accessibleNavigation && onZoomIn != null && onZoomOut != null) ...[
+        if (isAccessibleNav && hasZoomCallbacks) ...[
           _circleButton(icon: Icons.add, semanticsLabel: 'Zoom in', color: fgColor, bgColor: bgColor, onTap: onZoomIn!),
           const SizedBox(height: 10),
           _circleButton(
