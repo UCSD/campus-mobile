@@ -182,19 +182,25 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                FilledButton(
-                  onPressed: isLoading ? null : _submit,
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size(48, 48),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                Semantics(
+                  button: true,
+                  label: isLoading ? 'Searching' : 'Submit search',
+                  child: ExcludeSemantics(
+                    child: FilledButton(
+                      onPressed: isLoading ? null : _submit,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(48, 48),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: isLoading
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            )
+                          : const Icon(Icons.search),
+                    ),
                   ),
-                  child: isLoading
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                        )
-                      : const Icon(Icons.search),
                 ),
               ],
             ),
@@ -230,9 +236,11 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
                   final subtitleStr = hasDistance ? '${r.subtitle} · ${r.distanceFormatted}' : r.subtitle;
 
                   return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: accent.withValues(alpha: 0.12),
-                      child: Icon(_iconForSubtitle(r.subtitle), color: accent, size: 18),
+                    leading: ExcludeSemantics(
+                      child: CircleAvatar(
+                        backgroundColor: accent.withValues(alpha: 0.12),
+                        child: Icon(_iconForSubtitle(r.subtitle), color: accent, size: 18),
+                      ),
                     ),
                     title: Text(
                       r.name,
@@ -256,7 +264,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
                 child: SizedBox(
                   width: double.infinity,
                   child: FilledButton.icon(
-                    icon: const Icon(Icons.directions),
+                    icon: const ExcludeSemantics(child: Icon(Icons.directions)),
                     label: Text('Route through ${_response!.routeStopNames!.length} stops'),
                     onPressed: () {
                       Navigator.pop(context);

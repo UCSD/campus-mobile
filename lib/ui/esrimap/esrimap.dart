@@ -31,6 +31,7 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_s
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_suggestions_panel.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_callout_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
@@ -1529,6 +1530,26 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _mapViewController.setViewpointRotation(angleDegrees: 0);
   }
 
+  void _zoomIn() {
+    if (_sceneMode != 'default') return; // Not implemented for 3D yet
+    final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
+    if (vp != null && vp.targetGeometry is ArcGISPoint) {
+      _mapViewController.setViewpointAnimated(
+        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale / 2.0)
+      );
+    }
+  }
+
+  void _zoomOut() {
+    if (_sceneMode != 'default') return; // Not implemented for 3D yet
+    final vp = _mapViewController.getCurrentViewpoint(ViewpointType.centerAndScale);
+    if (vp != null && vp.targetGeometry is ArcGISPoint) {
+      _mapViewController.setViewpointAnimated(
+        Viewpoint.fromCenter(vp.targetGeometry as ArcGISPoint, scale: _currentScale * 2.0)
+      );
+    }
+  }
+
   void _clearSearch() {
     _cancelPendingSearch();
     _dismissCallout();
@@ -2063,8 +2084,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           return Stack(
             children: [
               // Map View Stack (2D Map View vs 3D Scene View)
-              Column(
-                children: [
+              Semantics(
+                sortKey: const OrdinalSortKey(3.0),
+                child: Column(
+                  children: [
                   Expanded(
                     child: _hasNetworkError
                         ? Center(
@@ -2108,6 +2131,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                           ),
                   ),
                 ],
+              ),
               ),
 
               // Hidden Semantics nodes for Map Pins / Graphics
@@ -2158,7 +2182,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         );
                       }
                     }
-                    return Stack(children: semanticsNodes);
+                    return Semantics(
+                      sortKey: const OrdinalSortKey(4.0),
+                      child: Stack(children: semanticsNodes),
+                    );
                   },
                 ),
 
@@ -2167,7 +2194,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 Positioned(
                   top: MediaQuery.of(context).padding.top + 68,
                   right: 16,
-                  child: EsriMapFabCluster(
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(5.0),
+                    child: EsriMapFabCluster(
                     isDark: isDark,
                     is3D: _sceneMode != 'default',
                     mapRotation: _mapRotation,
@@ -2177,6 +2206,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     onRecenterOnView: _recenterOnView,
                     onRecenterOnUser: _recenterOnUser,
                     onSnapToNorth: _snapToNorth,
+                    onZoomIn: _zoomIn,
+                    onZoomOut: _zoomOut,
+                  ),
                   ),
                 ),
 
@@ -2219,14 +2251,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     return Positioned(
                       bottom: 100,
                       right: 16,
-                      child: EsriMapLocationFab(
-                        isDark: isDark,
-                        isLocationActive: _isLocationActive,
-                        isUserVisible: isUserVisible,
-                        isLoading: _isLocatingUser,
-                        bearingToUser: screenAngle,
-                        mapRotation: _mapRotation,
-                        onRecenterOnUser: _recenterOnUser,
+                      child: Semantics(
+                        sortKey: const OrdinalSortKey(6.0),
+                        child: EsriMapLocationFab(
+                          isDark: isDark,
+                          isLocationActive: _isLocationActive,
+                          isUserVisible: isUserVisible,
+                          isLoading: _isLocatingUser,
+                          bearingToUser: screenAngle,
+                          mapRotation: _mapRotation,
+                          onRecenterOnUser: _recenterOnUser,
+                        ),
                       ),
                     );
                   },
@@ -2239,18 +2274,21 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     return Positioned(
                       left: screenPt.dx - 12,
                       top: screenPt.dy - 12,
-                      child: Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF242424) : Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
-                        ),
-                        padding: const EdgeInsets.all(4),
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                      child: Semantics(
+                        sortKey: const OrdinalSortKey(7.0),
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: isDark ? const Color(0xFF242424) : Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
+                          ),
+                          padding: const EdgeInsets.all(4),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                          ),
                         ),
                       ),
                     );
@@ -2263,8 +2301,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   top: 8,
                   left: 12,
                   right: 12,
-                  child: Column(
-                    children: [
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(1.0),
+                    child: Column(
+                      children: [
                       EsriMapSearchBar(
                         config: _config,
                         showRouteFields: _showRouteFields,
@@ -2450,24 +2490,28 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         ),
                     ],
                   ),
+                  ),
                 ),
 
               // Category results list panel
               if (shouldShowCatListPanel)
-                EsriMapCategoryListPanel(
-                  key: const Key('category_list_panel'),
-                  controller: _categorySheetController,
-                  activeCategory: _activeCategory,
-                  allCategoryResults: _allCategoryResults,
-                  viewportResults: EsriMapSearchService.filterToViewport(
-                    _allCategoryResults,
-                    _getViewportEnvelopeWGS84(),
+                Semantics(
+                  sortKey: const OrdinalSortKey(1.5),
+                  child: EsriMapCategoryListPanel(
+                    key: const Key('category_list_panel'),
+                    controller: _categorySheetController,
+                    activeCategory: _activeCategory,
+                    allCategoryResults: _allCategoryResults,
+                    viewportResults: EsriMapSearchService.filterToViewport(
+                      _allCategoryResults,
+                      _getViewportEnvelopeWGS84(),
+                    ),
+                    userLocation: _getUserLatLng(),
+                    onClearSearch: _clearSearch,
+                    onSeeAllResults: _seeAllCategoryResults,
+                    onSelectResult: _selectResultFromList,
+                    iconForResult: _iconForResult,
                   ),
-                  userLocation: _getUserLatLng(),
-                  onClearSearch: _clearSearch,
-                  onSeeAllResults: _seeAllCategoryResults,
-                  onSelectResult: _selectResultFromList,
-                  iconForResult: _iconForResult,
                 ),
 
               // Dynamic Google Maps-style Scale Bar Indicator
@@ -2475,17 +2519,29 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 Positioned(
                   bottom: 24,
                   right: 16,
-                  child: EsriMapScaleBar(scale: _currentScale, isDark: isDark),
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(8.0),
+                    child: EsriMapScaleBar(scale: _currentScale, isDark: isDark),
+                  ),
                 ),
 
               // Transit Legend
               if (_layerVisible['tritonTransit'] == true)
-                Positioned(bottom: 24, left: 16, child: _buildTransitLegend()),
+                Positioned(
+                  bottom: 24, 
+                  left: 16, 
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(9.0),
+                    child: _buildTransitLegend(),
+                  ),
+                ),
 
               // Selected Result Detail Slide-over
               if (_selectedResult != null)
-                LayoutBuilder(
-                  builder: (context, constraints) => EsriMapDetailSlideOver(
+                Semantics(
+                  sortKey: const OrdinalSortKey(1.6),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) => EsriMapDetailSlideOver(
                     minimizedNotifier: _detailSheetMinimized,
                     availableHeight: constraints.maxHeight,
                     result: _selectedResult!,
@@ -2522,11 +2578,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     onClearRoute: _clearRoute,
                   ),
                 ),
+                ),
 
               // Basemap & Operational Layer Selector Panel
               if (isLayersPanelVisible) ...[
                 Positioned.fill(
                   child: Semantics(
+                    sortKey: const OrdinalSortKey(1.7),
                     button: true,
                     label: 'Close map displays menu',
                     child: GestureDetector(
@@ -2537,17 +2595,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     ),
                   ),
                 ),
-                EsriMapLayersPanel(
-                  config: _config!,
-                  currentBasemapType: _currentBasemapType,
-                  currentSceneKey: _sceneMode,
-                  layerVisible: _layerVisible,
-                  layerLoading: _layerLoading,
-                  hideSceneSwitcher: _selectedResult != null || _showCategoryList,
-                  onSwitchBasemap: _switchBasemap,
-                  onSetSceneMode: _setSceneMode,
-                  onToggleLayer: _toggleLayer,
-                  onClose: () => setState(() => _showLayersPanel = false),
+                Semantics(
+                  sortKey: const OrdinalSortKey(1.8),
+                  child: EsriMapLayersPanel(
+                    config: _config!,
+                    currentBasemapType: _currentBasemapType,
+                    currentSceneKey: _sceneMode,
+                    layerVisible: _layerVisible,
+                    layerLoading: _layerLoading,
+                    hideSceneSwitcher: _selectedResult != null || _showCategoryList,
+                    onSwitchBasemap: _switchBasemap,
+                    onSetSceneMode: _setSceneMode,
+                    onToggleLayer: _toggleLayer,
+                    onClose: () => setState(() => _showLayersPanel = false),
+                  ),
                 ),
               ],
             ],

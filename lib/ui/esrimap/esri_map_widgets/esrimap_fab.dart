@@ -38,6 +38,12 @@ class EsriMapFabCluster extends StatelessWidget {
   /// Callback when compass snap-to-north button is pressed.
   final VoidCallback onSnapToNorth;
 
+  /// Callback when zoom in button is pressed.
+  final VoidCallback? onZoomIn;
+
+  /// Callback when zoom out button is pressed.
+  final VoidCallback? onZoomOut;
+
   /// Constructs an [EsriMapFabCluster] instance.
   const EsriMapFabCluster({
     Key? key,
@@ -50,6 +56,8 @@ class EsriMapFabCluster extends StatelessWidget {
     required this.onRecenterOnView,
     required this.onRecenterOnUser,
     required this.onSnapToNorth,
+    this.onZoomIn,
+    this.onZoomOut,
   }) : super(key: key);
 
   /// Active state highlight color.
@@ -115,6 +123,26 @@ class EsriMapFabCluster extends StatelessWidget {
           onTap: onRecenterOnView,
         ),
         const SizedBox(height: 10),
+
+        // Zoom Accessibility Buttons (Only shown when VoiceOver/TalkBack is active)
+        if (MediaQuery.of(context).accessibleNavigation && onZoomIn != null && onZoomOut != null) ...[
+          _circleButton(
+            icon: Icons.add,
+            semanticsLabel: 'Zoom in',
+            color: fgColor,
+            bgColor: bgColor,
+            onTap: onZoomIn!,
+          ),
+          const SizedBox(height: 10),
+          _circleButton(
+            icon: Icons.remove,
+            semanticsLabel: 'Zoom out',
+            color: fgColor,
+            bgColor: bgColor,
+            onTap: onZoomOut!,
+          ),
+          const SizedBox(height: 10),
+        ],
 
         // Map displays (Layers)
         _circleButton(

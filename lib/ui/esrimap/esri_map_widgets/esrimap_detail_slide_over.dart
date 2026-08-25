@@ -363,12 +363,15 @@ class EsriMapDetailSlideOver extends StatelessWidget {
                           ),
                         if (shouldShowDetailText) ...[
                           const SizedBox(height: 10),
-                          Text(
-                            detailText,
-                            style: TextStyle(
-                              fontSize: 15,
-                              height: 1.4,
-                              color: isDark ? Colors.grey[300] : Colors.grey[700],
+                          Semantics(
+                            label: isBuilding ? 'Building Address: $detailText' : null,
+                            child: Text(
+                              detailText,
+                              style: TextStyle(
+                                fontSize: 15,
+                                height: 1.4,
+                                color: isDark ? Colors.grey[300] : Colors.grey[700],
+                              ),
                             ),
                           ),
                         ],
