@@ -148,7 +148,7 @@ class CampusMobile extends StatelessWidget {
           .copyWith(surface: darkButtonColor, brightness: Brightness.dark),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         unselectedItemColor: unselectedIconDarkColor,
-        selectedItemColor: Colors.white,
+        selectedItemColor: bottomTabBarColorDark,
         backgroundColor: bottomTabBarColorDark,
       ),
       snackBarTheme: const SnackBarThemeData(
