@@ -2,6 +2,7 @@ import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
 import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Widget buildSlideOverContent({
   required BuildContext context,
@@ -154,19 +155,19 @@ Widget buildDetailSlideOverContent({
   IconData? headerIcon,
   required VoidCallback onClose,
   required VoidCallback onToggle,
+  VoidCallback? onShare,
   required bool isMinimized,
   Widget? trailing,
   required List<Widget> sliverBody,
 }) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
-  final bgColor = isDark ? Colors.grey[900]! : Colors.white;
   final hasHeaderIcon = headerIcon != null;
   final hasTrailing = trailing != null;
 
   return Material(
-    elevation: 8,
-    color: bgColor,
+    color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
     borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+    elevation: 16,
     clipBehavior: Clip.antiAlias,
     child: Column(
       mainAxisSize: MainAxisSize.min,
@@ -187,48 +188,52 @@ Widget buildDetailSlideOverContent({
             child: Row(
               children: [
                 Expanded(
-                  child: Semantics(
-                    button: true,
-                    label: isMinimized ? 'Expand details' : 'Collapse details',
-                    child: InkWell(
-                      onTap: onToggle,
-                      borderRadius: BorderRadius.circular(8),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                        child: Row(
-                          children: [
-                            if (hasHeaderIcon) ...[
-                              ExcludeSemantics(
-                                child: Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
-                              ),
-                              const SizedBox(width: 8),
-                            ],
-                            Expanded(
-                              child: Text(
-                                headerTitle,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: isDark ? Colors.white : Colors.grey[900],
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            if (hasTrailing && !isMinimized) trailing,
-                            const SizedBox(width: 8),
+                  child: InkWell(
+                    onTap: onToggle,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                      child: Row(
+                        children: [
+                          if (hasHeaderIcon) ...[
                             ExcludeSemantics(
-                              child: Icon(
-                                isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                                size: 24,
-                                color: isDark ? Colors.white70 : Colors.grey[700],
-                              ),
+                              child: Icon(headerIcon, size: 18, color: isDark ? Colors.white70 : Colors.grey[700]),
                             ),
+                            const SizedBox(width: 8),
                           ],
-                        ),
+                          Expanded(
+                            child: Text(
+                              headerTitle,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : Colors.grey[900],
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                ),
+                if (hasTrailing && !isMinimized) trailing,
+                if (onShare != null)
+                  IconButton(
+                    icon: const Icon(Icons.share, size: 22),
+                    color: isDark ? Colors.white70 : Colors.grey[800],
+                    onPressed: onShare,
+                    tooltip: 'Share location',
+                  ),
+                IconButton(
+                  icon: Icon(
+                    isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    size: 24,
+                  ),
+                  color: isDark ? Colors.white70 : Colors.grey[700],
+                  onPressed: onToggle,
+                  tooltip: isMinimized ? 'Expand details' : 'Collapse details',
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -304,6 +309,17 @@ class EsriMapDetailSlideOver extends StatelessWidget {
     // Constrain height to a maximum of 50% of screen height
     final maxHeight = availableHeight * 0.50;
 
+    void handleShare() {
+      final googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=${result.latitude},${result.longitude}';
+      Clipboard.setData(ClipboardData(text: googleMapsUrl));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Link copied to clipboard!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: ValueListenableBuilder<bool>(
@@ -322,6 +338,7 @@ class EsriMapDetailSlideOver extends StatelessWidget {
               headerIcon: resultIcon,
               onClose: isRouting ? onClearRoute : onClose,
               onToggle: () => minimizedNotifier.value = !isMinimized,
+              onShare: handleShare,
               isMinimized: isMinimized,
               trailing: isRouting && !routeFailed
                   ? Padding(
