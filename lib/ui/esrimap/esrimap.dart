@@ -2075,7 +2075,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final indexedStackIndex = isBuilding3dScene ? 1 : (isDroneViewScene ? 2 : 0);
 
     final shouldShowScaleBar = _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel;
-    final isFabVisible = !_hasNetworkError && !keyboardVisible && !_showLayersPanel && _selectedResult == null && !shouldShowCatListPanel;
+    final isFabVisible = !_hasNetworkError && !keyboardVisible && !_showLayersPanel && _selectedResult == null && !shouldShowCatListPanel && !_showSuggestions && !_showResults;
     final isLayersPanelVisible = _showLayersPanel && _config != null;
     final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene && !_hasNetworkError;
     final hasValidResults = _mappedResults.isNotEmpty && !_hasNetworkError;
