@@ -237,14 +237,20 @@ class EsriMapSearchBar extends StatelessWidget {
                               ),
                             ),
                             if (toController.text.isNotEmpty)
-                              SizedBox(
-                                width: 28,
-                                height: 28,
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: Icon(Icons.close, size: 16, color: isDark ? Colors.white70 : Colors.grey[600]),
-                                  onPressed: onClearToField,
-                                  tooltip: 'Clear destination location',
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  customBorder: const CircleBorder(),
+                                  onTap: onClearToField,
+                                  child: Container(
+                                    width: 28,
+                                    height: 28,
+                                    decoration: BoxDecoration(
+                                      color: isDark ? Colors.grey[800] : Colors.grey[200],
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(Icons.close, size: 16, color: isDark ? Colors.white70 : Colors.grey[800]),
+                                  ),
                                 ),
                               ),
                           ],
@@ -328,7 +334,25 @@ class EsriMapSearchBar extends StatelessWidget {
                   ),
                 ),
                 if (isSearchNotEmpty)
-                  IconButton(icon: const Icon(Icons.clear), onPressed: onClearSearch, tooltip: 'Clear search'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: onClearSearch,
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.grey[800] : Colors.grey[200],
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.close, size: 18, color: isDark ? Colors.white70 : Colors.grey[800]),
+                        ),
+                      ),
+                    ),
+                  ),
                 if (isAiSearchEnabled)
                   IconButton(
                     icon: Icon(
