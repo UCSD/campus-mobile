@@ -2167,7 +2167,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                                 ? Icons.check_box
                                 : Icons.check_box_outline_blank,
                             size: 16,
-                            color: Theme.of(context).colorScheme.primary,
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[400] : Theme.of(context).colorScheme.primary,
                           ),
                           const SizedBox(width: 8),
                           if (_transitLegendSwatches[info.name] != null)
