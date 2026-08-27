@@ -174,9 +174,15 @@ class EsriMapSearchBar extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.circle_outlined, size: 12, color: Colors.blue),
-                          Container(width: 1.5, height: 24, color: isDark ? Colors.grey[600] : Colors.grey[300]),
-                          const Icon(Icons.circle, size: 12, color: Colors.red),
+                          Icon(Icons.radio_button_checked, size: 16, color: Colors.blue[600]),
+                          const SizedBox(height: 6),
+                          Icon(Icons.circle, size: 4, color: isDark ? Colors.grey[600] : Colors.grey[400]),
+                          const SizedBox(height: 4),
+                          Icon(Icons.circle, size: 4, color: isDark ? Colors.grey[600] : Colors.grey[400]),
+                          const SizedBox(height: 4),
+                          Icon(Icons.circle, size: 4, color: isDark ? Colors.grey[600] : Colors.grey[400]),
+                          const SizedBox(height: 6),
+                          const Icon(Icons.location_on, size: 20, color: Colors.red),
                         ],
                       ),
                     ),
@@ -205,14 +211,20 @@ class EsriMapSearchBar extends StatelessWidget {
                               ),
                             ),
                             if (fromController.text.isNotEmpty)
-                              SizedBox(
-                                width: 28,
-                                height: 28,
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: Icon(Icons.close, size: 16, color: isDark ? Colors.white70 : Colors.grey[600]),
-                                  onPressed: onClearFromField,
-                                  tooltip: 'Clear starting location',
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  customBorder: const CircleBorder(),
+                                  onTap: onClearFromField,
+                                  child: Container(
+                                    width: 28,
+                                    height: 28,
+                                    decoration: BoxDecoration(
+                                      color: isDark ? Colors.grey[800] : Colors.grey[200],
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(Icons.close, size: 16, color: isDark ? Colors.white70 : Colors.grey[800]),
+                                  ),
                                 ),
                               ),
                           ],
