@@ -41,21 +41,25 @@ class EsriMapConfigService {
 
   /// Fetches map configuration over network, falling back to local asset bundle if offline or failed.
   Future<EsriMapConfig> _doFetch() async {
-    // 1. Attempt live HTTP GET request from backend API
-    try {
-      final response = await http.get(Uri.parse('$BASE_URL/config')).timeout(const Duration(seconds: 5));
-      final isResOk = response.statusCode == 200;
-      if (isResOk) {
-        _config = EsriMapConfig.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-        return _config!;
-      }
-    } catch (e) {
-      debugPrint('Remote map config fetch failed ($e), loading local asset fallback...');
-    }
-
-    // 2. Offline Fallback: Load configuration JSON from local app asset bundle
+    // 1. Instantly load local configuration JSON from app asset bundle so map opens immediately
     final fallbackJson = await rootBundle.loadString(ASSET_FALLBACK_PATH);
     _config = EsriMapConfig.fromJson(jsonDecode(fallbackJson) as Map<String, dynamic>);
+    
+    // 2. Fire background network fetch to seamlessly update the cache for later
+    _fetchRemoteAndUpdateCache();
+
     return _config!;
+  }
+
+  /// Silently fetches configuration over network in the background to update the cache.
+  Future<void> _fetchRemoteAndUpdateCache() async {
+    try {
+      final response = await http.get(Uri.parse('$BASE_URL/config')).timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        _config = EsriMapConfig.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      }
+    } catch (e) {
+      debugPrint('Background remote map config fetch failed: $e');
+    }
   }
 }
