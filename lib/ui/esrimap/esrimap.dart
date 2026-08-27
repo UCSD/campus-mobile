@@ -144,6 +144,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // Legend State
   List<LegendInfo> _transitLegend = [];
   Map<String, ui.Image> _transitLegendSwatches = {};
+  Map<String, List<dynamic>> _transitRouteLayers = {};
+  Map<String, bool> _transitRouteVisibility = {};
   bool _isTransitLegendLoading = false;
   bool _isTransitLegendMinimized = false;
 
@@ -557,25 +559,128 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
+  void _toggleTransitRoute(String routeName, bool isVisible) {
+    setState(() {
+      _transitRouteVisibility[routeName] = isVisible;
+    });
+
+    final layers = _transitRouteLayers[routeName] ?? [];
+    for (final layer in layers) {
+      final allRoutesForLayer = _transitRouteLayers.entries
+          .where((e) => e.value.contains(layer))
+          .map((e) => e.key)
+          .toList();
+
+      if (allRoutesForLayer.length <= 1) {
+        layer.isVisible = isVisible;
+      } else {
+        final visibleRoutes = allRoutesForLayer
+            .where((r) => _transitRouteVisibility[r] ?? true)
+            .toList();
+
+        if (visibleRoutes.isEmpty) {
+          layer.isVisible = false;
+          try {
+            layer.definitionExpression = '';
+          } catch (_) {}
+        } else if (visibleRoutes.length == allRoutesForLayer.length) {
+          layer.isVisible = true;
+          try {
+            layer.definitionExpression = '';
+          } catch (_) {}
+        } else {
+          layer.isVisible = true;
+          try {
+            final renderer = layer.renderer;
+            if (renderer != null && renderer is UniqueValueRenderer) {
+              final fieldNames = renderer.fieldNames;
+              if (fieldNames.isNotEmpty) {
+                final fieldName = fieldNames.first;
+                final visibleValues = <String>[];
+
+                for (final uv in renderer.uniqueValues) {
+                  String name = uv.label.trim();
+                  name = name.replaceAll('Institute of', 'Institution of');
+                  if (visibleRoutes.contains(name) && uv.values.isNotEmpty) {
+                    final val = uv.values.first;
+                    if (val is String) {
+                      visibleValues.add("'$val'");
+                    } else {
+                      visibleValues.add("$val");
+                    }
+                  }
+                }
+
+                if (visibleValues.isNotEmpty) {
+                  layer.definitionExpression = "$fieldName IN (${visibleValues.join(',')})";
+                }
+              }
+            }
+          } catch (e) {
+            debugPrint('Failed to set definitionExpression: $e');
+          }
+        }
+      }
+    }
+  }
+
   Future<void> _fetchTransitLegendInfos(List<Layer?> instances) async {
     if (_transitLegend.isNotEmpty) return;
     if (mounted) setState(() => _isTransitLegendLoading = true);
 
     try {
       final uniqueInfosMap = <String, LegendInfo>{};
-      for (final layer in instances.whereType<Layer>()) {
-        final layerInfos = await layer.fetchLegendInfos();
-        for (final info in layerInfos) {
-          String name = info.name.trim();
-          if (name.isEmpty) continue;
+      final routeLayers = <String, List<dynamic>>{};
 
-          // Normalize the SIO typo so the shuttle/line overwrites the pin
-          name = name.replaceAll('Institute of', 'Institution of');
-
-          // By overwriting, we naturally keep the later entries (lines/shuttles)
-          // instead of the earlier entries (stop pins).
-          uniqueInfosMap[name] = info;
+      Future<void> processContent(dynamic content) async {
+        if (content is Loadable) {
+          try {
+            await (content as Loadable).load();
+          } catch (_) {}
         }
+        
+        bool processedSublayers = false;
+
+        if (content is GroupLayer && content.layers.isNotEmpty) {
+          for (final sub in content.layers) {
+            await processContent(sub);
+          }
+          processedSublayers = true;
+        } else if (content is ArcGISMapImageLayer && content.mapImageSublayers.isNotEmpty) {
+          for (final sub in content.mapImageSublayers) {
+            await processContent(sub);
+          }
+          processedSublayers = true;
+        } else if (content is ArcGISSublayer && content.sublayers.isNotEmpty) {
+          for (final sub in content.sublayers) {
+            await processContent(sub);
+          }
+          processedSublayers = true;
+        } else if (content is LayerContent && content.subLayerContents.isNotEmpty) {
+          for (final sub in content.subLayerContents) {
+            await processContent(sub);
+          }
+          processedSublayers = true;
+        }
+
+        if (!processedSublayers && content is LayerContent) {
+          try {
+            final layerInfos = await content.fetchLegendInfos();
+            for (final info in layerInfos) {
+              String name = info.name.trim();
+              if (name.isEmpty) continue;
+              name = name.replaceAll('Institute of', 'Institution of');
+              uniqueInfosMap[name] = info;
+              routeLayers.putIfAbsent(name, () => []).add(content);
+            }
+          } catch (e) {
+            debugPrint('Failed to fetch legend info for sub-content: $e');
+          }
+        }
+      }
+
+      for (final layer in instances.whereType<Layer>()) {
+        await processContent(layer);
       }
 
       final uniqueInfos = uniqueInfosMap.values.toList();
@@ -590,6 +695,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         setState(() {
           _transitLegend = uniqueInfos.where((info) => swatches.containsKey(info.name)).toList();
           _transitLegendSwatches = swatches;
+          _transitRouteLayers = routeLayers;
+          _transitRouteVisibility = {for (var info in _transitLegend) info.name: true};
         });
       }
     } catch (e) {
@@ -2013,36 +2120,56 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Semantics(
-        button: true,
-        label: _isTransitLegendMinimized ? 'Expand transit routes legend' : 'Collapse transit routes legend',
-        child: InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: () => setState(() => _isTransitLegendMinimized = !_isTransitLegendMinimized),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ExcludeSemantics(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                      const SizedBox(width: 8),
-                      Icon(_isTransitLegendMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 18),
-                    ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Semantics(
+              button: true,
+              label: _isTransitLegendMinimized ? 'Expand transit routes legend' : 'Collapse transit routes legend',
+              child: InkWell(
+                borderRadius: BorderRadius.circular(4),
+                onTap: () => setState(() => _isTransitLegendMinimized = !_isTransitLegendMinimized),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: ExcludeSemantics(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Transit Routes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                        const SizedBox(width: 8),
+                        Icon(_isTransitLegendMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 18),
+                      ],
+                    ),
                   ),
                 ),
-                if (!_isTransitLegendMinimized) ...[
-                  const SizedBox(height: 6),
-                  for (final info in _transitLegend)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
+              ),
+            ),
+            if (!_isTransitLegendMinimized) ...[
+              const SizedBox(height: 6),
+              for (final info in _transitLegend)
+                InkWell(
+                  onTap: () {
+                    final isVisible = _transitRouteVisibility[info.name] ?? true;
+                    _toggleTransitRoute(info.name, !isVisible);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Opacity(
+                      opacity: (_transitRouteVisibility[info.name] ?? true) ? 1.0 : 0.5,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Icon(
+                            (_transitRouteVisibility[info.name] ?? true)
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank,
+                            size: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
                           if (_transitLegendSwatches[info.name] != null)
                             ExcludeSemantics(
                               child: RawImage(image: _transitLegendSwatches[info.name], width: 16, height: 16),
@@ -2052,10 +2179,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                         ],
                       ),
                     ),
-                ],
-              ],
-            ),
-          ),
+                  ),
+                ),
+            ],
+          ],
         ),
       ),
     );
