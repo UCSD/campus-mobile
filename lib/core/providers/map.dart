@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/map.dart';
 import 'package:campus_mobile_experimental/core/services/map.dart';
@@ -42,8 +43,10 @@ class MapsDataProvider extends ChangeNotifier {
     final Marker marker = Marker(
       markerId: MarkerId(_mapSearchModels[listIndex].mkrMarkerid.toString()),
       position: LatLng(_mapSearchModels[listIndex].mkrLat!, _mapSearchModels[listIndex].mkrLong!),
-      infoWindow:
-          InfoWindow(title: _mapSearchModels[listIndex].title, snippet: _mapSearchModels[listIndex].description),
+      infoWindow: InfoWindow(
+        title: _mapSearchModels[listIndex].title,
+        snippet: _mapSearchModels[listIndex].description,
+      ),
     );
     _markers.clear();
     _markers[marker.markerId] = marker;

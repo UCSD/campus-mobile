@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TopContent extends StatelessWidget {
-  TopContent({
-    this.title,
-    this.action,
-    required this.hasAction,
-  });
+  TopContent({this.title, this.action, required this.hasAction});
 
   final String? title;
   final Widget? action;
@@ -24,17 +20,11 @@ class TopContent extends StatelessWidget {
         primary: true,
         centerTitle: true,
         title: Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: title == null
-                ? Image.asset(
-                    'assets/images/UCSanDiegoLogo-nav.png',
-                    fit: BoxFit.contain,
-                    height: 28,
-                  )
-                : Text(
-                    title!,
-                    style: appBarTitleStyle,
-                  )),
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: title == null
+              ? Image.asset('assets/images/UCSanDiegoLogo-nav.png', fit: BoxFit.contain, height: 28)
+              : Text(title!, style: appBarTitleStyle),
+        ),
         actions: hasAction ? <Widget>[action!] : <Widget>[],
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),

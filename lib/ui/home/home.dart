@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notices.dart';
@@ -57,11 +58,7 @@ class MeasureSizeRenderObject extends RenderProxyBox {
 class MeasureSize extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChange onChange;
 
-  const MeasureSize({
-    Key? key,
-    required this.onChange,
-    required Widget child,
-  }) : super(key: key, child: child);
+  const MeasureSize({Key? key, required this.onChange, required Widget child}) : super(key: key, child: child);
 
   @override
   RenderObject createRenderObject(BuildContext context) => MeasureSizeRenderObject(onChange);
@@ -93,9 +90,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final _controller = ScrollController(
-    initialScrollOffset: getHomeScrollOffset(),
-  );
+  final _controller = ScrollController(initialScrollOffset: getHomeScrollOffset());
   InternetConnectivityProvider? _connectivityProvider;
 
   @override
@@ -157,9 +152,7 @@ class _HomeState extends State<Home> {
 
   List<Widget> createList() {
     // Copy list so select() detects reorder: profile mutates _cardOrder in place (same ref).
-    final orderedCards = getOrderedCardsList(
-      context.select((CardsDataProvider p) => List<String>.from(p.cardOrder)),
-    );
+    final orderedCards = getOrderedCardsList(context.select((CardsDataProvider p) => List<String>.from(p.cardOrder)));
     final noticesCards = getNoticesCardsList(context.select((NoticesDataProvider p) => p.noticesModel));
     return [...noticesCards, ...orderedCards];
   }
@@ -167,10 +160,12 @@ class _HomeState extends State<Home> {
   List<Widget> getNoticesCardsList(List<NoticesModel> notices) => notices
       .asMap()
       .entries
-      .map((e) => CardViewTrackingWrapper(
-            cardId: 'notice_${e.key}',
-            child: NoticesCard(notice: e.value),
-          ))
+      .map(
+        (e) => CardViewTrackingWrapper(
+          cardId: 'notice_${e.key}',
+          child: NoticesCard(notice: e.value),
+        ),
+      )
       .toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
@@ -187,7 +182,7 @@ class _HomeState extends State<Home> {
     'employee_id': EmployeeIdCard.new,
     'parking': ParkingCard.new,
     'speed_test': WiFiCard.new,
-    'shuttle': ShuttleCard.new
+    'shuttle': ShuttleCard.new,
   };
 
   void setNewCardHeight(String card, double height) {

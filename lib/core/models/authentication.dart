@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:hive/hive.dart';
 part 'authentication.g.dart';
 
@@ -23,12 +24,7 @@ class AuthenticationModel extends HiveObject {
   @HiveField(4)
   int? expiration;
 
-  AuthenticationModel({
-    this.accessToken,
-    this.pid,
-    this.ucsdaffiliation,
-    this.expiration,
-  });
+  AuthenticationModel({this.accessToken, this.pid, this.ucsdaffiliation, this.expiration});
 
   factory AuthenticationModel.fromJson(Map<String, dynamic> json) {
     return AuthenticationModel(
@@ -40,11 +36,11 @@ class AuthenticationModel extends HiveObject {
   }
 
   Map<String, dynamic> toJson() => {
-        "access_token": accessToken == null ? null : accessToken,
-        "pid": pid == null ? null : pid,
-        "ucsdaffiliation": ucsdaffiliation == null ? "" : ucsdaffiliation,
-        "expiration": expiration == null ? null : expiration,
-      };
+    "access_token": accessToken == null ? null : accessToken,
+    "pid": pid == null ? null : pid,
+    "ucsdaffiliation": ucsdaffiliation == null ? "" : ucsdaffiliation,
+    "expiration": expiration == null ? null : expiration,
+  };
 
   /// Checks if the token we got back is expired
   bool isLoggedIn(DateTime? lastUpdated) {

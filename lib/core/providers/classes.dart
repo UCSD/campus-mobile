@@ -32,10 +32,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     'SU': [],
     'OTHER': [],
   };
-  Map<String, List<SectionData>> _midterms = {
-    'MI': [],
-    'OTHER': [],
-  };
+  Map<String, List<SectionData>> _midterms = {'MI': [], 'OTHER': []};
 
   /// MODELS
   late ClassScheduleModel _classScheduleModel;
@@ -57,7 +54,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       if (termFetched && isLoggedIn) {
         _academicTermModel = _classScheduleService.academicTermModel!;
         final Map<String, String> headers = {
-          'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+          'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}',
         };
 
         /// erase old model
@@ -90,32 +87,11 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         }
 
         /// remove all old classes
-        _enrolledClasses = {
-          'MO': [],
-          'TU': [],
-          'WE': [],
-          'TH': [],
-          'FR': [],
-          'SA': [],
-          'SU': [],
-          'OTHER': [],
-        };
+        _enrolledClasses = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
 
-        _finals = {
-          'MO': [],
-          'TU': [],
-          'WE': [],
-          'TH': [],
-          'FR': [],
-          'SA': [],
-          'SU': [],
-          'OTHER': [],
-        };
+        _finals = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
 
-        _midterms = {
-          'MI': [],
-          'OTHER': [],
-        };
+        _midterms = {'MI': [], 'OTHER': []};
 
         try {
           _createMapOfClasses();

@@ -21,25 +21,25 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
     _shuttleDataProvider = Provider.of<ShuttleDataProvider>(context);
 
     if (isAddingStop) {
-      return Stack(children: <Widget>[
-        ContainerView(
+      return Stack(
+        children: <Widget>[
+          ContainerView(
             child: Container(
-          width: double.infinity,
-          height: 200.0,
-          child: Center(
-            child: Container(
-                height: 32,
-                width: 32,
-                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
+              width: double.infinity,
+              height: 200.0,
+              child: Center(
+                child: Container(
+                  height: 32,
+                  width: 32,
+                  child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary),
+                ),
+              ),
+            ),
           ),
-        )),
-      ]);
+        ],
+      );
     } else {
-      return Stack(children: <Widget>[
-        ContainerView(
-          child: buildAllLocationsList(context),
-        ),
-      ]);
+      return Stack(children: <Widget>[ContainerView(child: buildAllLocationsList(context))]);
     }
   }
 
@@ -50,20 +50,20 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
 
     _shuttleDataProvider.stopsNotSelected.forEach((key, value) {
       ShuttleStopModel model = value;
-      list.add(ListTile(
-        key: Key(model.id.toString()),
-        title: Text(
-          model.name,
+      list.add(
+        ListTile(
+          key: Key(model.id.toString()),
+          title: Text(model.name),
+          onTap: () async {
+            setState(() {
+              isAddingStop = true;
+            });
+            await _shuttleDataProvider.addStop(model.id);
+            isAddingStop = false;
+            Navigator.pop(context);
+          },
         ),
-        onTap: () async {
-          setState(() {
-            isAddingStop = true;
-          });
-          await _shuttleDataProvider.addStop(model.id);
-          isAddingStop = false;
-          Navigator.pop(context);
-        },
-      ));
+      );
     });
 
     return list;

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:dio/dio.dart';
@@ -40,9 +41,7 @@ class NetworkHelper {
     dio.options.receiveTimeout = DEFAULT_TIMEOUT;
     dio.options.responseType = ResponseType.plain;
     dio.options.headers = headers;
-    final _response = await dio.get(
-      url,
-    );
+    final _response = await dio.get(url);
     if (_response.statusCode == 200) {
       // If server returns an OK response, return the body
       return _response.data;
@@ -60,9 +59,7 @@ class NetworkHelper {
       content: const Text(LoginConstants.SILENT_LOGIN_FAILED_DESC),
       actions: [
         TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: ucLabelColor,
-          ),
+          style: TextButton.styleFrom(foregroundColor: ucLabelColor),
           onPressed: () {
             Get.back(closeOverlays: true);
           },
@@ -205,7 +202,7 @@ class NetworkHelper {
     final String tokenEndpoint = dotenv.get('NEW_TOKEN_ENDPOINT');
     final Map<String, String> tokenHeaders = {
       "content-type": 'application/x-www-form-urlencoded',
-      "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY')
+      "Authorization": dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY'),
     };
     try {
       var response = await authorizedPost(tokenEndpoint, tokenHeaders, "grant_type=client_credentials");

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
@@ -16,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -37,6 +39,17 @@ void main() async {
 
     // dotenv loading
     await dotenv.load(isOptional: true);
+
+    // Uncomment to remove the "Licensed for Developer Use Only" watermark in the ESRI Map
+    // final esriApiKey = dotenv.env['ESRI_API_KEY'];
+    // if (esriApiKey != null && esriApiKey.isNotEmpty) {
+    //   ArcGISEnvironment.apiKey = esriApiKey;
+    // }
+    //
+    // final esriLicenseKey = dotenv.env['ESRI_LICENSE_KEY'];
+    // if (esriLicenseKey != null && esriLicenseKey.isNotEmpty) {
+    //   ArcGISEnvironment.setLicense(esriLicenseKey);
+    // }
 
     /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
@@ -104,14 +117,13 @@ class CampusMobile extends StatelessWidget {
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        surface: lightButtonColor,
-        brightness: Brightness.light,
-      ),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
+          .copyWith(surface: lightButtonColor, brightness: Brightness.light),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          unselectedItemColor: unselectedIconLightColor,
-          selectedItemColor: Colors.white,
-          backgroundColor: bottomTabBarColorLight),
+        unselectedItemColor: unselectedIconLightColor,
+        selectedItemColor: Colors.white,
+        backgroundColor: bottomTabBarColorLight,
+      ),
     );
 
     final darkTheme = ThemeData(
@@ -132,14 +144,17 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        surface: darkButtonColor,
-        brightness: Brightness.dark,
-      ),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary)
+          .copyWith(surface: darkButtonColor, brightness: Brightness.dark),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          unselectedItemColor: unselectedIconDarkColor,
-          selectedItemColor: Colors.white,
-          backgroundColor: bottomTabBarColorDark),
+        unselectedItemColor: unselectedIconDarkColor,
+        selectedItemColor: bottomTabBarColorDark,
+        backgroundColor: bottomTabBarColorDark,
+      ),
+      snackBarTheme: const SnackBarThemeData(
+        contentTextStyle: TextStyle(color: Colors.white),
+        backgroundColor: Color(0xFF323232),
+      ),
     );
 
     return MultiProvider(
@@ -147,22 +162,14 @@ class CampusMobile extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
-        theme: lightTheme.copyWith(
-          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
-        ),
-        darkTheme: darkTheme.copyWith(
-          colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
-        ),
+        theme: lightTheme.copyWith(colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor)),
+        darkTheme: darkTheme.copyWith(colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor)),
         themeMode: ThemeMode.system,
         initialRoute: showOnboardingScreen ? RoutePaths.ONBOARDING_LOGIN : RoutePaths.BOTTOM_NAVIGATION_BAR,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
         builder: (context, child) {
-          return SafeArea(
-            top: false,
-            bottom: Platform.isAndroid,
-            child: child!,
-          );
+          return SafeArea(top: false, bottom: Platform.isAndroid, child: child!);
         },
       ),
     );

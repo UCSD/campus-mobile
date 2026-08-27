@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/spot_types.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,9 +13,7 @@ class SpotTypesService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   SpotTypeModel _spotTypeModel = SpotTypeModel();

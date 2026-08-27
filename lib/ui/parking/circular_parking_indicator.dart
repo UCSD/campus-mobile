@@ -7,10 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 
 class CircularParkingIndicators extends StatelessWidget {
-  const CircularParkingIndicators({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
+  const CircularParkingIndicators({Key? key, required this.model}) : super(key: key);
 
   /// MODELS
   final ParkingModel model;
@@ -38,14 +35,16 @@ class CircularParkingIndicators extends StatelessWidget {
       if (hasValue && hasSpaceForMore) selectedSpots.add(key);
     });
     for (String spot in selectedSpots) {
-      listOfCircularParkingInfo.add(buildCircularParkingInfo(
-          Provider.of<ParkingDataProvider>(context).spotTypeMap[spot], model.availability[spot], context));
+      listOfCircularParkingInfo.add(
+        buildCircularParkingInfo(
+          Provider.of<ParkingDataProvider>(context).spotTypeMap[spot],
+          model.availability[spot],
+          context,
+        ),
+      );
     }
     return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: listOfCircularParkingInfo,
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.start, children: listOfCircularParkingInfo),
     );
   }
 
@@ -66,121 +65,127 @@ class CircularParkingIndicators extends StatelessWidget {
     return locationData != null
         ? Expanded(
             child: Semantics(
-            label:
-                'For ${spotType?.name ?? "Unknown"} parking spots, ${((open / total).isNaN ? "Not applicable" : ((open / total) * 100).round().toString() + "% available")}',
-            excludeSemantics: true,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Center(
-                        child: SizedBox(
-                          height: 90,
-                          width: 90,
-                          child: CircularPercentIndicator(
-                            radius: 45,
-                            animation: true,
-                            animationDuration: 1000,
-                            lineWidth: 9,
-                            percent: (open / total).isNaN ? 0.0 : open / total,
-                            center: Text(
-                              (open / total).isNaN ? "N/A" : ((open / total) * 100).round().toString() + "%",
-                              style: Theme.of(context).textTheme.titleMedium,
+              label:
+                  'For ${spotType?.name ?? "Unknown"} parking spots, ${((open / total).isNaN ? "Not applicable" : ((open / total) * 100).round().toString() + "% available")}',
+              excludeSemantics: true,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Center(
+                          child: SizedBox(
+                            height: 90,
+                            width: 90,
+                            child: CircularPercentIndicator(
+                              radius: 45,
+                              animation: true,
+                              animationDuration: 1000,
+                              lineWidth: 9,
+                              percent: (open / total).isNaN ? 0.0 : open / total,
+                              center: Text(
+                                (open / total).isNaN ? "N/A" : ((open / total) * 100).round().toString() + "%",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              circularStrokeCap: CircularStrokeCap.round,
+                              backgroundColor: colorFromHex('#EDECEC'),
+                              progressColor: getColor(open / total),
                             ),
-                            circularStrokeCap: CircularStrokeCap.round,
-                            backgroundColor: colorFromHex('#EDECEC'),
-                            progressColor: getColor(open / total),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: spotType != null
-                      ? CircleAvatar(
-                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
-                          child: spotType.logoText.startsWith('icon - ')
-                              ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
-                                  size: 25.0, color: colorFromHex(spotType.logoTextColor))
-                              : (spotType.logoText.isNotEmpty
-                                  ? Text(
-                                      spotType.logoText,
-                                      style: TextStyle(
-                                        color: colorFromHex(spotType.logoTextColor),
-                                        fontFamily: 'Brix Sans',
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    )
-                                  : SizedBox.shrink()))
-                      : Container(),
-                )
-              ],
-            ),
-          ) // close Semantics
-            ) // close Expanded
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: spotType != null
+                        ? CircleAvatar(
+                            backgroundColor: colorFromHex(spotType.logoBackgroundColor),
+                            child: spotType.logoText.startsWith('icon - ')
+                                ? Icon(
+                                    ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
+                                    size: 25.0,
+                                    color: colorFromHex(spotType.logoTextColor),
+                                  )
+                                : (spotType.logoText.isNotEmpty
+                                      ? Text(
+                                          spotType.logoText,
+                                          style: TextStyle(
+                                            color: colorFromHex(spotType.logoTextColor),
+                                            fontFamily: 'Brix Sans',
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        )
+                                      : SizedBox.shrink()),
+                          )
+                        : Container(),
+                  ),
+                ],
+              ),
+            ), // close Semantics
+          ) // close Expanded
         : Expanded(
             child: Semantics(
-            label: 'For ${spotType?.name ?? "Unknown"} parking, Not applicable',
-            excludeSemantics: true,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Center(
-                        child: SizedBox(
-                          height: 90,
-                          width: 90,
-                          child: CircularPercentIndicator(
-                            radius: 45,
-                            animation: false,
-                            lineWidth: 9,
-                            percent: 0.0,
-                            center: Text(
-                              "N/A",
-                              style: Theme.of(context).textTheme.titleMedium,
+              label: 'For ${spotType?.name ?? "Unknown"} parking, Not applicable',
+              excludeSemantics: true,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Center(
+                          child: SizedBox(
+                            height: 90,
+                            width: 90,
+                            child: CircularPercentIndicator(
+                              radius: 45,
+                              animation: false,
+                              lineWidth: 9,
+                              percent: 0.0,
+                              center: Text("N/A", style: Theme.of(context).textTheme.titleMedium),
+                              backgroundColor: colorFromHex('#EDECEC'),
                             ),
-                            backgroundColor: colorFromHex('#EDECEC'),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: spotType != null
-                      ? CircleAvatar(
-                          backgroundColor: colorFromHex(spotType.logoBackgroundColor),
-                          child: spotType.logoText.startsWith('icon - ')
-                              ? Icon(ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
-                                  size: 25.0, color: colorFromHex(spotType.logoTextColor))
-                              : (spotType.logoText.isNotEmpty
-                                  ? Text(
-                                      spotType.logoText,
-                                      style: TextStyle(
-                                        color: colorFromHex(spotType.logoTextColor),
-                                        fontFamily: 'Brix Sans',
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 28,
-                                      ),
-                                    )
-                                  : SizedBox.shrink()))
-                      : Container(),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: spotType != null
+                        ? CircleAvatar(
+                            backgroundColor: colorFromHex(spotType.logoBackgroundColor),
+                            child: spotType.logoText.startsWith('icon - ')
+                                ? Icon(
+                                    ParkingConstants.STRING_TO_ICON_DATA[spotType.logoText] ?? Icons.error,
+                                    size: 25.0,
+                                    color: colorFromHex(spotType.logoTextColor),
+                                  )
+                                : (spotType.logoText.isNotEmpty
+                                      ? Text(
+                                          spotType.logoText,
+                                          style: TextStyle(
+                                            color: colorFromHex(spotType.logoTextColor),
+                                            fontFamily: 'Brix Sans',
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 28,
+                                          ),
+                                        )
+                                      : SizedBox.shrink()),
+                          )
+                        : Container(),
+                  ),
+                ],
+              ),
             ),
-          ));
+          );
   }
 
   static Color getColor(double value) {
@@ -195,9 +200,7 @@ class CircularParkingIndicators extends StatelessWidget {
       excludeSemantics: true,
       child: Text(
         model.locationName.toUpperCase(),
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.normal,
-            ),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.normal),
       ),
     );
   }
@@ -214,21 +217,19 @@ class CircularParkingIndicators extends StatelessWidget {
   }
 
   Widget buildSpotsAvailableText(BuildContext context) {
-    final openSpots =
-        Provider.of<ParkingDataProvider>(context).getApproxNumOfOpenSpots(model.locationName)["Open"].toString();
-    final totalSpots =
-        Provider.of<ParkingDataProvider>(context).getApproxNumOfOpenSpots(model.locationName)["Total"].toString();
+    final openSpots = Provider.of<ParkingDataProvider>(context)
+        .getApproxNumOfOpenSpots(model.locationName)["Open"]
+        .toString();
+    final totalSpots = Provider.of<ParkingDataProvider>(context)
+        .getApproxNumOfOpenSpots(model.locationName)["Total"]
+        .toString();
     final visualText = "~$openSpots of $totalSpots Spots Available";
     final semanticText = "Approximately $openSpots of $totalSpots Spots Available";
 
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Center(
-        child: Text(
-          visualText,
-          semanticsLabel: semanticText,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
+        child: Text(visualText, semanticsLabel: semanticText, style: Theme.of(context).textTheme.bodyMedium),
       ),
     );
   }
@@ -240,17 +241,12 @@ class CircularParkingIndicators extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              color: Colors.black,
+            Icon(Icons.error_outline, color: Colors.black),
+            SizedBox(width: 4),
+            Text(
+              "No Live Data. Estimated availability shown.",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16),
             ),
-            SizedBox(
-              width: 4,
-            ),
-            Text("No Live Data. Estimated availability shown.",
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: 16,
-                    ))
           ],
         ),
       );

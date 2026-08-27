@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
@@ -69,7 +70,7 @@ class DiningDataProvider extends ChangeNotifier {
             .any((type) => _diningFilterTypeStates[type] == true))
           // Add it to _filteredDiningModels as a key-value pair
           // Key: diningModel.name, Value: the whole diningModel
-          diningModel.name: diningModel
+          diningModel.name: diningModel,
     };
   }
 
@@ -111,7 +112,11 @@ class DiningDataProvider extends ChangeNotifier {
       for (DiningModel model in _diningModels.values.toList()) {
         if (model.coordinates != null) {
           var distance = calculateDistance(
-              _coordinates!.lat!, _coordinates!.lon!, model.coordinates!.lat!, model.coordinates!.lon!);
+            _coordinates!.lat!,
+            _coordinates!.lon!,
+            model.coordinates!.lat!,
+            model.coordinates!.lon!,
+          );
           model.distance = distance.toDouble();
         } else {
           model.distance = null;

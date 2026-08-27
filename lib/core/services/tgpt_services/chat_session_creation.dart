@@ -5,6 +5,7 @@
 /// - MOBILE_APP_PUBLIC_DATA_KEY: Public API key for unauthenticated users
 /// - TGPT_PERSONA_ID: Persona ID for chat sessions (optional, defaults to 1)
 import 'dart:convert';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_session.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -26,12 +27,7 @@ class ChatSessionService {
   ChatSessionService(this._userDataProvider);
 
   /// Build fresh headers for each request to avoid race conditions.
-  Map<String, String> _buildHeaders() {
-    return {
-      "accept": "application/json",
-      "content-type": "application/json",
-    };
-  }
+  Map<String, String> _buildHeaders() => {"accept": "application/json", "content-type": "application/json"};
 
   /// Create a new chat session.
   ///
@@ -62,11 +58,7 @@ class ChatSessionService {
       final String requestBody = json.encode(request.toJson());
 
       // Send POST
-      final response = await NetworkHelper.authorizedPost(
-        createChatSessionEndpoint,
-        headers,
-        requestBody,
-      );
+      final response = await NetworkHelper.authorizedPost(createChatSessionEndpoint, headers, requestBody);
 
       // Defensive parsing: handle both Map and String responses
       final CreateChatSessionID chatSessionId = CreateChatSessionID.fromJsonSafe(response);

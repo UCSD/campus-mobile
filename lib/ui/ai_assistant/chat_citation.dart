@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatCitation extends StatelessWidget {
-  const ChatCitation({
-    super.key,
-    required this.citation,
-  });
+  const ChatCitation({super.key, required this.citation});
 
   final ChatCitationReference citation;
 
@@ -21,18 +18,12 @@ class ChatCitation extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFF5F7FA),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: const Color(0xFFD7DDE5),
-          ),
+          border: Border.all(color: const Color(0xFFD7DDE5)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            SvgPicture.asset(
-              'assets/images/tgpt/document_icon.svg',
-              width: 16,
-              height: 14,
-            ),
+            SvgPicture.asset('assets/images/tgpt/document_icon.svg', width: 16, height: 14),
             const SizedBox(width: 6),
             Text(
               '[${citation.number}]',
@@ -77,9 +68,6 @@ class ChatCitation extends StatelessWidget {
     var isNotHttps = uri?.scheme != 'https';
     if (isNotHttp && isNotHttps) return;
 
-    await Navigator.of(context).pushNamed(
-      RoutePaths.TGPT_CITATION_WEB,
-      arguments: resolved,
-    );
+    await Navigator.of(context).pushNamed(RoutePaths.TGPT_CITATION_WEB, arguments: resolved);
   }
 }

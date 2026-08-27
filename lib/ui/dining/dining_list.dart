@@ -10,10 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DiningList extends StatelessWidget {
-  const DiningList({
-    Key? key,
-    this.listSize,
-  }) : super(key: key);
+  const DiningList({Key? key, this.listSize}) : super(key: key);
 
   final listSize;
 
@@ -58,12 +55,12 @@ class DiningList extends StatelessWidget {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             children: ListTile.divideTiles(
-                    tiles: diningTiles,
-                    context: context,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? listTileDividerColorDark
-                        : listTileDividerColorLight)
-                .toList(),
+              tiles: diningTiles,
+              context: context,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? listTileDividerColorDark
+                  : listTileDividerColorLight,
+            ).toList(),
           )
         : Stack(
             children: [
@@ -80,11 +77,7 @@ class DiningList extends StatelessWidget {
                   ).toList(),
                 ),
               ),
-              Positioned(
-                bottom: 24,
-                right: 24,
-                child: PaymentFilterButton(),
-              ),
+              Positioned(bottom: 24, right: 24, child: PaymentFilterButton()),
             ],
           );
   }
@@ -157,10 +150,10 @@ class DiningList extends StatelessWidget {
     return Text(
       formattedTimeRange(dayHours) ?? dayHours,
       style: TextStyle(
-          fontSize: 17.0,
-          fontWeight: FontWeight.w400,
-          color:
-              Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark),
+        fontSize: 17.0,
+        fontWeight: FontWeight.w400,
+        color: Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
+      ),
     );
   }
 
@@ -176,20 +169,26 @@ class DiningList extends StatelessWidget {
           child: data.vendorLogo != null
               ? Container(
                   decoration: Theme.of(context).brightness == Brightness.dark
-                      ? BoxDecoration(
-                          color: lightTextColor,
-                          borderRadius: BorderRadius.circular(8),
-                        )
+                      ? BoxDecoration(color: lightTextColor, borderRadius: BorderRadius.circular(8))
                       : null,
                   child: Image.network(
                     data.vendorLogo!,
                     width: 48,
                     height: 48,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        Icons.restaurant,
+                        size: 32,
+                        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                      );
+                    },
                   ),
                 )
-              : Icon(Icons.restaurant,
+              : Icon(
+                  Icons.restaurant,
                   size: 32,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2),
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                ),
         ),
       ),
       // Vendor Name
@@ -207,10 +206,7 @@ class DiningList extends StatelessWidget {
         label:
             'Business Hours: ${getHoursForToday(data.regularHours, context) is Text ? (getHoursForToday(data.regularHours, context) as Text).data : 'See details for hours'}',
         excludeSemantics: true,
-        child: Padding(
-          padding: EdgeInsets.only(top: 6),
-          child: getHoursForToday(data.regularHours, context),
-        ),
+        child: Padding(padding: EdgeInsets.only(top: 6), child: getHoursForToday(data.regularHours, context)),
       ),
       // Vendor's Distance and Directions
       trailing: buildIconWithDistance(data, context),
@@ -230,9 +226,7 @@ class DiningList extends StatelessWidget {
       label: distanceText,
       excludeSemantics: true,
       child: TextButton(
-        style: TextButton.styleFrom(
-          foregroundColor: linkColorLight,
-        ),
+        style: TextButton.styleFrom(foregroundColor: linkColorLight),
         onPressed: () async {
           try {
             await DirectionsHelper.openDirections(data.coordinates!.lat!, data.coordinates!.lon!);
@@ -243,13 +237,17 @@ class DiningList extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.directions_walk,
-                size: 28, color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
+            Icon(
+              Icons.directions_walk,
+              size: 28,
+              color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+            ),
             Text(
               data.distance != null ? (num.parse(data.distance!.toStringAsFixed(1)).toString() + ' mi') : '--',
               style: TextStyle(
-                  fontSize: 13,
-                  color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark),
+                fontSize: 13,
+                color: Theme.of(context).brightness == Brightness.light ? linkColorLight : linkColorDark,
+              ),
             ),
           ],
         ),

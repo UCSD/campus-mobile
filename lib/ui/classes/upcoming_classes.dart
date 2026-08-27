@@ -46,10 +46,7 @@ class UpcomingCoursesList extends StatelessWidget {
             ),
           ),
         ),
-        ListView(
-          children: listOfCourses,
-          shrinkWrap: true,
-        ),
+        ListView(children: listOfCourses, shrinkWrap: true),
       ],
     );
   }
@@ -74,8 +71,8 @@ class UpcomingCoursesList extends StatelessWidget {
               color: isSelected
                   ? toggleActiveColor
                   : Theme.of(context).brightness == Brightness.light
-                      ? lightPrimaryColor
-                      : darkPrimaryColor2,
+                  ? lightPrimaryColor
+                  : darkPrimaryColor2,
             ),
           ),
           SizedBox(height: 5),
@@ -87,8 +84,8 @@ class UpcomingCoursesList extends StatelessWidget {
               color: isSelected
                   ? toggleActiveColor
                   : Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
+                  ? descriptiveTextColorLight
+                  : descriptiveTextColorDark,
               fontWeight: FontWeight.w400,
             ),
           ),

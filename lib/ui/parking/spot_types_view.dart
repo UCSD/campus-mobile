@@ -24,30 +24,31 @@ class _SpotTypesViewState extends State<SpotTypesView> {
   }
 
   Widget createListWidget(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ListView(
-          children: [
-            for (int i = 0; i < createList(context).length; i++) ...[
-              createList(context)[i],
-              if (i != createList(context).length - 1)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Divider(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? listTileDividerColorDark
-                        : listTileDividerColorLight,
-                    thickness: 1,
-                    height: 0,
-                  ),
-                ),
-            ]
-          ],
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+    child: ListView(
+      children: [
+        for (int i = 0; i < createList(context).length; i++) ...[
+          createList(context)[i],
+          if (i != createList(context).length - 1)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Divider(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? listTileDividerColorDark
+                    : listTileDividerColorLight,
+                thickness: 1,
+                height: 0,
+              ),
+            ),
+        ],
+      ],
+    ),
+  );
 
   List<Widget> createList(BuildContext context) {
-    var selectedSpots =
-        Provider.of<ParkingDataProvider>(context).spotTypesState.values.where((selected) => selected == true).length;
+    var selectedSpots = Provider.of<ParkingDataProvider>(context).spotTypesState.values
+        .where((selected) => selected == true)
+        .length;
 
     List<Widget> list = [];
 
@@ -61,32 +62,31 @@ class _SpotTypesViewState extends State<SpotTypesView> {
         ListTile(
           key: Key(data.name.toString()),
           leading: Container(
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: iconColor,
-              ),
-              child: Align(
-                  alignment: Alignment.center,
-                  child: data.logoText.startsWith('icon - ')
-                      ? Icon(ParkingConstants.STRING_TO_ICON_DATA[data.logoText] ?? Icons.error,
-                          size: 25.0, color: textColor)
-                      : (data.logoText.isNotEmpty
-                          ? Text(
-                              data.logoText,
-                              style: TextStyle(
-                                color: textColor,
-                                fontFamily: 'Brix Sans',
-                                fontWeight: FontWeight.w700,
-                                fontSize: data.logoText.length > 1 ? 18 : 28,
-                              ),
-                            )
-                          : SizedBox.shrink()))),
-          title: Text(
-            data.name,
-            style: Theme.of(context).textTheme.bodyMedium,
+            width: 35,
+            height: 35,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: iconColor),
+            child: Align(
+              alignment: Alignment.center,
+              child: data.logoText.startsWith('icon - ')
+                  ? Icon(
+                      ParkingConstants.STRING_TO_ICON_DATA[data.logoText] ?? Icons.error,
+                      size: 25.0,
+                      color: textColor,
+                    )
+                  : (data.logoText.isNotEmpty
+                        ? Text(
+                            data.logoText,
+                            style: TextStyle(
+                              color: textColor,
+                              fontFamily: 'Brix Sans',
+                              fontWeight: FontWeight.w700,
+                              fontSize: data.logoText.length > 1 ? 18 : 28,
+                            ),
+                          )
+                        : SizedBox.shrink()),
+            ),
           ),
+          title: Text(data.name, style: Theme.of(context).textTheme.bodyMedium),
           trailing: Transform.scale(
             scale: 0.9,
             child: CupertinoSwitch(

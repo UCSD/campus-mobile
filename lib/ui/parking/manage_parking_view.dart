@@ -10,31 +10,17 @@ class ManageParkingView extends StatefulWidget {
 
 class _ManageParkingViewState extends State<ManageParkingView> {
   @override
-  Widget build(BuildContext context) {
-    return ContainerView(
-      child: buildLocationsList(context),
-    );
-  }
+  Widget build(BuildContext context) => ContainerView(child: buildLocationsList(context));
 
   Widget buildLocationsList(BuildContext context) {
-    const List<String> parkingType = [
-      "Neighborhoods",
-      "Parking Structures",
-    ];
+    const List<String> parkingType = ["Neighborhoods", "Parking Structures"];
 
     List<Widget> listTiles = [];
     for (int i = 0; i < parkingType.length; i++) {
       listTiles.add(
         ListTile(
-          title: Text(
-            parkingType[i],
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            color: dotsSelectedColorLight,
-            size: 18.0,
-          ),
+          title: Text(parkingType[i], style: Theme.of(context).textTheme.bodyMedium),
+          trailing: Icon(Icons.arrow_forward_ios, color: dotsSelectedColorLight, size: 18.0),
           onTap: () {
             if (i == 0) {
               Navigator.pushNamed(context, RoutePaths.NEIGHBORHOODS_VIEW);
@@ -64,7 +50,7 @@ class _ManageParkingViewState extends State<ManageParkingView> {
                   height: 0,
                 ),
               ),
-          ]
+          ],
         ],
       ),
     );

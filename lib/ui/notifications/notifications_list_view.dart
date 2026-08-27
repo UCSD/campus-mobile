@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
@@ -29,9 +30,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
     super.initState();
     hideListView = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<MessagesDataProvider>(context, listen: false)
-          .notificationScrollController
-          .jumpTo(getNotificationsScrollOffset());
+      Provider.of<MessagesDataProvider>(
+        context,
+        listen: false,
+      ).notificationScrollController.jumpTo(getNotificationsScrollOffset());
       setState(() {
         hideListView = false;
       });
@@ -95,22 +97,14 @@ class _NotificationsListViewState extends State<NotificationsListView> {
   static Widget _buildErrorText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(NotificationsConstants.STATUS_FETCH_PROBLEM),
-      ],
+      children: <Widget>[Text(NotificationsConstants.STATUS_FETCH_PROBLEM)],
     );
   }
 
   static Widget _buildNoMessagesText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Flexible(
-          child: Text(
-            NotificationsConstants.STATUS_NO_MESSAGES,
-          ),
-        ),
-      ],
+      children: <Widget>[Flexible(child: Text(NotificationsConstants.STATUS_NO_MESSAGES))],
     );
   }
 
@@ -166,8 +160,10 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         children: [
           Align(
             alignment: Alignment.topLeft,
-            child: Text(data.message.title,
-                style: Theme.of(context).brightness == Brightness.dark ? headlineMediumDark2 : headlineMediumLight2),
+            child: Text(
+              data.message.title,
+              style: Theme.of(context).brightness == Brightness.dark ? headlineMediumDark2 : headlineMediumLight2,
+            ),
           ),
         ],
       ),
@@ -178,19 +174,18 @@ class _NotificationsListViewState extends State<NotificationsListView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Linkify(
-                text: data.message.message,
-                onOpen: (link) async {
-                  try {
-                    launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
-                  } catch (e) {
-                    // an error occurred, do nothing
-                  }
-                },
-                options: LinkifyOptions(humanize: false),
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400)),
+              text: data.message.message,
+              onOpen: (link) async {
+                try {
+                  launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
+                } catch (e) {
+                  // an error occurred, do nothing
+                }
+              },
+              options: LinkifyOptions(humanize: false),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(fontSize: 16, height: 1.41, fontWeight: FontWeight.w400),
+            ),
             freefoodProvider.isFreeFood(data.messageId) ? FreeFoodNotification(messageId: data.messageId) : Container(),
           ],
         ),
@@ -200,11 +195,11 @@ class _NotificationsListViewState extends State<NotificationsListView> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 6.0),
-            child: Text(_readTimestamp(data.timestamp),
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700)),
+            child: Text(
+              _readTimestamp(data.timestamp),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(fontSize: 12, height: 1.41, fontWeight: FontWeight.w700),
+            ),
           ),
         ],
       ),

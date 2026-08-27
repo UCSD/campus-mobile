@@ -21,13 +21,8 @@ class EventTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Show loading indicator while data is loading
-    if (Provider.of<EventsDataProvider>(context).isLoading) {
-      return Center(
-        child: CircularProgressIndicator(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-      );
-    }
+    if (Provider.of<EventsDataProvider>(context).isLoading)
+      return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary));
     return _buildEventTile(context);
   }
 
@@ -37,17 +32,9 @@ class EventTile extends StatelessWidget {
       // height: 300,
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            RoutePaths.EVENT_DETAIL_VIEW,
-            arguments: data,
-          );
+          Navigator.pushNamed(context, RoutePaths.EVENT_DETAIL_VIEW, arguments: data);
         },
-        child: Column(
-          children: [
-            _eventDetailsCard(context),
-          ],
-        ),
+        child: Column(children: [_eventDetailsCard(context)]),
       ),
     );
   }
@@ -71,10 +58,7 @@ class EventTile extends StatelessWidget {
       width: TILE_WIDTH,
       height: 300,
       child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border.all(width: 0.3),
-          borderRadius: BorderRadius.all(CORNER_RADIUS),
-        ),
+        decoration: BoxDecoration(border: Border.all(width: 0.3), borderRadius: BorderRadius.all(CORNER_RADIUS)),
         child: Card(
           margin: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
           elevation: 4.0,
@@ -100,17 +84,17 @@ class EventTile extends StatelessWidget {
                           fit: BoxFit.scaleDown,
                           alignment: Alignment.centerRight,
                           child: isAllDay
-                              ? Text('All day',
+                              ? Text(
+                                  'All day',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Theme.of(context).brightness == Brightness.light
                                         ? lightPrimaryColor
                                         : Colors.white,
                                     fontWeight: FontWeight.w400,
-                                  ))
-                              : TileTime(
-                                  time: '$startTime - $endTime',
-                                ),
+                                  ),
+                                )
+                              : TileTime(time: '$startTime - $endTime'),
                         ),
                       ),
                   ],
@@ -131,21 +115,16 @@ class EventTile extends StatelessWidget {
 Widget _eventImageLoader(String? url) {
   return url?.isEmpty ?? true
       ? ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: EventTile.CORNER_RADIUS,
-            topRight: EventTile.CORNER_RADIUS,
-          ),
+          borderRadius: BorderRadius.only(topLeft: EventTile.CORNER_RADIUS, topRight: EventTile.CORNER_RADIUS),
           child: Image.asset(
             'assets/images/UCSDMobile_sharp.png',
             height: 150,
             width: EventTile.TILE_WIDTH,
             fit: BoxFit.cover,
-          ))
-      : ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: EventTile.CORNER_RADIUS,
-            topRight: EventTile.CORNER_RADIUS,
           ),
+        )
+      : ClipRRect(
+          borderRadius: BorderRadius.only(topLeft: EventTile.CORNER_RADIUS, topRight: EventTile.CORNER_RADIUS),
           child: Image.network(
             url!,
             loadingBuilder: (context, child, loadingProgress) {
@@ -159,10 +138,19 @@ Widget _eventImageLoader(String? url) {
                 ),
               );
             },
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                'assets/images/UCSDMobile_sharp.png',
+                height: 150,
+                width: EventTile.TILE_WIDTH,
+                fit: BoxFit.cover,
+              );
+            },
             height: 150,
             width: EventTile.TILE_WIDTH,
             fit: BoxFit.cover,
-          ));
+          ),
+        );
 }
 
 class TileTitle extends StatelessWidget {
@@ -230,11 +218,7 @@ class TileTime extends StatelessWidget {
                 Row(
                   children: [
                     // Start Time
-                    Text(
-                      startTime,
-                      textAlign: TextAlign.right,
-                      style: style,
-                    ),
+                    Text(startTime, textAlign: TextAlign.right, style: style),
                     Text(" - ", style: style), // Separator
                   ],
                 ),
@@ -269,7 +253,7 @@ class StartEndDateContainer extends StatelessWidget {
       'Sep': 'September',
       'Oct': 'October',
       'Nov': 'November',
-      'Dec': 'December'
+      'Dec': 'December',
     };
     months.forEach((key, value) {
       semanticDate = semanticDate.replaceAll(key, value);
@@ -298,8 +282,9 @@ class StartEndDateContainer extends StatelessWidget {
                             date.split(' ')[0].toUpperCase(),
                             style: TextStyle(
                               fontSize: 20,
-                              color:
-                                  Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -308,14 +293,15 @@ class StartEndDateContainer extends StatelessWidget {
                             date.split(' ')[1].toUpperCase(),
                             style: TextStyle(
                               fontSize: 22,
-                              color:
-                                  Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
                 Padding(
@@ -341,8 +327,9 @@ class StartEndDateContainer extends StatelessWidget {
                             date.split(' ')[4].toUpperCase(),
                             style: TextStyle(
                               fontSize: 20,
-                              color:
-                                  Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -351,16 +338,17 @@ class StartEndDateContainer extends StatelessWidget {
                             date.split(' ')[5].toUpperCase(),
                             style: TextStyle(
                               fontSize: 22,
-                              color:
-                                  Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? lightPrimaryColor
+                                  : Colors.white,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
-                )
+                ),
               ]
               // If it's a single date, display it normally
               else ...[
@@ -388,7 +376,7 @@ class StartEndDateContainer extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ],
           ),

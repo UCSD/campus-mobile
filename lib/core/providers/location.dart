@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,10 +12,7 @@ class LocationDataProvider extends ChangeNotifier {
   late LocationPermission permission = LocationPermission.denied;
 
   /// SERVICES
-  final locationSettings = LocationSettings(
-    accuracy: LocationAccuracy.high,
-    distanceFilter: 100,
-  );
+  final locationSettings = LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100);
   var _locationController = StreamController<Coordinates>.broadcast();
 
   LocationDataProvider() {

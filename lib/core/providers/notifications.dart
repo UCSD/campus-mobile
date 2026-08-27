@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/topics.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
@@ -58,11 +59,9 @@ class PushNotificationDataProvider extends ChangeNotifier {
     }
 
     /// listen for token changes and register user
-    _fcm.onTokenRefresh.listen(
-      (token) {
-        registerDevice(token);
-      },
-    );
+    _fcm.onTokenRefresh.listen((token) {
+      registerDevice(token);
+    });
   }
 
   var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -98,10 +97,14 @@ class PushNotificationDataProvider extends ChangeNotifier {
 
       const initializationSettingsAndroid = AndroidInitializationSettings("@drawable/ic_notif_round");
       final initializationSettingsIOS = DarwinInitializationSettings();
-      final initializationSettings =
-          InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-          onDidReceiveNotificationResponse: selectNotification);
+      final initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+      );
+      await flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: selectNotification,
+      );
       if (Platform.isAndroid) await _createAndroidNotificationChannel();
 
       RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
@@ -130,22 +133,20 @@ class PushNotificationDataProvider extends ChangeNotifier {
         Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
       });
 
-      FirebaseMessaging.onMessageOpenedApp.listen(
-        (RemoteMessage message) {
-          _logRemoteMessage('onMessageOpenedApp', message);
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        _logRemoteMessage('onMessageOpenedApp', message);
 
-          /// Fetch in-app messages
-          Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
+        /// Fetch in-app messages
+        Provider.of<MessagesDataProvider>(context, listen: false).fetchMessages(true);
 
-          /// Set tab bar index to the Notifications tab
-          Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
-              NavigatorConstants.NOTIFICATIONS_TAB;
+        /// Set tab bar index to the Notifications tab
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex =
+            NavigatorConstants.NOTIFICATIONS_TAB;
 
-          /// Navigate to Notifications tab
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil(RoutePaths.BOTTOM_NAVIGATION_BAR, (Route<dynamic> route) => false);
-        },
-      );
+        /// Navigate to Notifications tab
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(RoutePaths.BOTTOM_NAVIGATION_BAR, (Route<dynamic> route) => false);
+      });
     } on PlatformException {
       _error = 'Failed to get platform info.';
       _platformStateInitialized = false;
@@ -184,8 +185,10 @@ class PushNotificationDataProvider extends ChangeNotifier {
       showWhen: false,
     );
     const DarwinNotificationDetails();
-    const platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics, iOS: DarwinNotificationDetails());
+    const platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: DarwinNotificationDetails(),
+    );
     // This is where you put info from firebase
     try {
       await flutterLocalNotificationsPlugin.show(

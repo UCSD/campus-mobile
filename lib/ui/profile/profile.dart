@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
@@ -92,10 +93,7 @@ class Profile extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(1.0), // Adjust the padding as needed
-                      child: Icon(
-                        Icons.question_mark,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
+                      child: Icon(Icons.question_mark, color: Theme.of(context).iconTheme.color),
                     ),
                   ),
                   title: Text(

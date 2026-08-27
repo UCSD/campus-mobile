@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/notifications.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,7 +18,9 @@ class MessageService {
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_MESSAGES_API_ENDPOINT') + timestamp.toString(), authHeaders);
+        dotenv.get('MY_MESSAGES_API_ENDPOINT') + timestamp.toString(),
+        authHeaders,
+      );
 
       /// parse data
       final data = messagesFromJson(_response);
@@ -38,8 +41,9 @@ class MessageService {
     var timestampEndpoint = '&start=' + timestamp.toString();
     try {
       /// fetch data
-      String _response =
-          await NetworkHelper.fetchData(dotenv.get('TOPICS_API_ENDPOINT') + topicsEndpoint + timestampEndpoint);
+      String _response = await NetworkHelper.fetchData(
+        dotenv.get('TOPICS_API_ENDPOINT') + topicsEndpoint + timestampEndpoint,
+      );
 
       /// parse data
       final data = messagesFromJson(_response);

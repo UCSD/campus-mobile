@@ -34,9 +34,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install pre-commit
 
-      # 4 - Run pre-commit. If the script exits with a non-zero code, the GitHub Action will fail the PR.
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # 4 - Run pre-commit. We append || true so that if files are modified, it doesn't fail the workflow immediately.
       - name: Run pre-commit hooks
-        run: pre-commit run --all-files
+        run: pre-commit run --all-files || true
+
+      - name: Commit and push auto-fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto fix formatting violations"
 
       - name: Check code style violations
         id: check

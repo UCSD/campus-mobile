@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
@@ -30,24 +31,24 @@ class _CardsViewState extends State<CardsView> {
   Widget buildCardsList() {
     bool isAccessibleNavigation = MediaQuery.of(context).accessibleNavigation;
     var tempView = ReorderableListView(
-        header: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Text(
-              isAccessibleNavigation
-                  ? "Press up or down to reorder"
-                  : "Hold and drag to reorder",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+      header: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Text(
+          isAccessibleNavigation ? "Press up or down to reorder" : "Hold and drag to reorder",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        children: createList(context),
-        onReorderItem: (int oldIndex, int newIndex) {
-          var order = _cardsDataProvider.cardOrder;
-          order.insert(newIndex, order.removeAt(oldIndex));
-          setState(() {
-            // Checks against stored user order in remote profile
-            _cardsDataProvider.updateCardOrder(isUserReorder: true);
-          });
+      ),
+      children: createList(context),
+      onReorderItem: (int oldIndex, int newIndex) {
+        var order = _cardsDataProvider.cardOrder;
+        order.insert(newIndex, order.removeAt(oldIndex));
+        setState(() {
+          // Checks against stored user order in remote profile
+          _cardsDataProvider.updateCardOrder(isUserReorder: true);
         });
+      },
+    );
 
     return tempView;
   }
@@ -139,8 +140,10 @@ class _CardsViewState extends State<CardsView> {
                         ),
                       ],
                     )
-                  : Icon(Icons.drag_handle,
-                      color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
+                  : Icon(
+                      Icons.drag_handle,
+                      color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight,
+                    ),
               title: Text(title, style: Theme.of(context).textTheme.bodyMedium),
               trailing: Transform.scale(
                 scale: 0.9, // Adjust the scale as needed
@@ -162,8 +165,12 @@ class _CardsViewState extends State<CardsView> {
         );
       } catch (e) {
         FirebaseCrashlytics.instance.log('error getting $card in profile');
-        FirebaseCrashlytics.instance.recordError(e, StackTrace.fromString(e.toString()),
-            reason: "Profile/Cards: Failed to load Cards page", fatal: false);
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          StackTrace.fromString(e.toString()),
+          reason: "Profile/Cards: Failed to load Cards page",
+          fatal: false,
+        );
       }
     }
     return list;

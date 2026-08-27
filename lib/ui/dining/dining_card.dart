@@ -25,15 +25,16 @@ class DiningCard extends StatelessWidget {
       child: () => buildDiningCard(Provider.of<DiningDataProvider>(context).diningModels),
       actionButtons: [
         ActionButton(
-            buttonText: 'VIEW ALL DINING OPTIONS',
-            onPressed: () {
-              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_all'});
-              // Only navigate if not loading and no error
-              final provider = Provider.of<DiningDataProvider>(context, listen: false);
-              final bool isNotLoading = !provider.isLoading;
-              final bool hasNoError = provider.error == null;
-              if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.DINING_VIEW_ALL_DINING_OPTIONS);
-            })
+          buttonText: 'VIEW ALL DINING OPTIONS',
+          onPressed: () {
+            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_all'});
+            // Only navigate if not loading and no error
+            final provider = Provider.of<DiningDataProvider>(context, listen: false);
+            final bool isNotLoading = !provider.isLoading;
+            final bool hasNoError = provider.error == null;
+            if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.DINING_VIEW_ALL_DINING_OPTIONS);
+          },
+        ),
       ],
     );
   }

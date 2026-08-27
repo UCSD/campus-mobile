@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
@@ -41,9 +42,7 @@ class UserDataProvider extends ChangeNotifier {
   late final ChatPersistenceService _chatPersistenceService = ChatPersistenceService(this);
   // var storage = FlutterSecureStorage();
   final storage = const FlutterSecureStorage(
-    iOptions: IOSOptions(
-      accessibility: KeychainAccessibility.first_unlock_this_device,
-    ),
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock_this_device),
   );
 
   /// Update the [AuthenticationModel] stored in state

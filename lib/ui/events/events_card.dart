@@ -26,11 +26,12 @@ class EventsCard extends StatelessWidget {
       child: () => buildEventsCardList(Provider.of<EventsDataProvider>(context).eventsModels),
       actionButtons: [
         ActionButton(
-            buttonText: "VIEW ALL EVENTS",
-            onPressed: () {
-              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_all'});
-              Navigator.pushNamed(context, RoutePaths.EVENTS_VIEW_ALL);
-            })
+          buttonText: "VIEW ALL EVENTS",
+          onPressed: () {
+            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_all'});
+            Navigator.pushNamed(context, RoutePaths.EVENTS_VIEW_ALL);
+          },
+        ),
       ],
     );
   }
