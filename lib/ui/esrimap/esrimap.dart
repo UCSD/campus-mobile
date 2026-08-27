@@ -599,7 +599,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 for (final uv in renderer.uniqueValues) {
                   String name = uv.label.trim();
                   name = name.replaceAll('Institute of', 'Institution of');
-                  if (visibleRoutes.contains(name) && uv.values.isNotEmpty) {
+                  var isRouteVisible = visibleRoutes.contains(name);
+                  var hasUvValues = uv.values.isNotEmpty;
+                  if (isRouteVisible && hasUvValues) {
                     final val = uv.values.first;
                     if (val is String) {
                       visibleValues.add("'$val'");
@@ -609,7 +611,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   }
                 }
 
-                if (visibleValues.isNotEmpty) layer.definitionExpression = "$fieldName IN (${visibleValues.join(',')})";
+                var hasVisibleValues = visibleValues.isNotEmpty;
+                if (hasVisibleValues) layer.definitionExpression = "$fieldName IN (${visibleValues.join(',')})";
               }
             }
           } catch (e) {
@@ -637,22 +640,27 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
         bool processedSublayers = false;
 
-        if (content is GroupLayer && content.layers.isNotEmpty) {
+        var isGroupLayerWithLayers = content is GroupLayer && content.layers.isNotEmpty;
+        var isMapImageLayerWithSublayers = content is ArcGISMapImageLayer && content.mapImageSublayers.isNotEmpty;
+        var isArcGISSublayerWithSublayers = content is ArcGISSublayer && content.sublayers.isNotEmpty;
+        var isLayerContentWithSublayers = content is LayerContent && content.subLayerContents.isNotEmpty;
+
+        if (isGroupLayerWithLayers) {
           for (final sub in content.layers) {
             await processContent(sub);
           }
           processedSublayers = true;
-        } else if (content is ArcGISMapImageLayer && content.mapImageSublayers.isNotEmpty) {
+        } else if (isMapImageLayerWithSublayers) {
           for (final sub in content.mapImageSublayers) {
             await processContent(sub);
           }
           processedSublayers = true;
-        } else if (content is ArcGISSublayer && content.sublayers.isNotEmpty) {
+        } else if (isArcGISSublayerWithSublayers) {
           for (final sub in content.sublayers) {
             await processContent(sub);
           }
           processedSublayers = true;
-        } else if (content is LayerContent && content.subLayerContents.isNotEmpty) {
+        } else if (isLayerContentWithSublayers) {
           for (final sub in content.subLayerContents) {
             await processContent(sub);
           }
