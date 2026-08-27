@@ -71,7 +71,7 @@ class EsriMapFabCluster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = isDark ? Colors.grey[800]! : Colors.white;
+    final bgColor = Theme.of(context).scaffoldBackgroundColor;
     final fgColor = isDark ? Colors.white : Colors.grey[800]!;
 
     final recenterColor = isRecenterActive ? ACTIVE_COLOR : fgColor;
@@ -274,7 +274,7 @@ class EsriMapLocationFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = isDark ? Colors.grey[800]! : Colors.white;
+    final bgColor = Theme.of(context).scaffoldBackgroundColor;
     final fgColor = isDark ? Colors.white : Colors.grey[800]!;
 
     final activeBgColor = isDark ? Colors.blue[900]!.withValues(alpha: 0.5) : const Color(0xFFE8F0FE);

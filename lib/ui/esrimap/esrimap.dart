@@ -1300,7 +1300,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       graphic,
       leaderPosition: LeaderPosition.bottom,
       style: CalloutStyle(
-        backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         borderColor: isDark ? Colors.white24 : Colors.black26,
         borderRadius: 12,
         borderWidth: 0.5,
@@ -1997,7 +1997,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Widget _buildTransitLegend() {
     if (_isTransitLegendLoading) {
       return Card(
-        color: Theme.of(context).cardColor.withOpacity(0.9),
+      color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: const Padding(
@@ -2010,7 +2010,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (_transitLegend.isEmpty) return const SizedBox.shrink();
 
     return Card(
-      color: Theme.of(context).cardColor.withOpacity(0.9),
+      color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Semantics(
@@ -2283,7 +2283,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                           width: 24,
                           height: 24,
                           decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF242424) : Colors.white,
+                            color: Theme.of(context).scaffoldBackgroundColor,
                             shape: BoxShape.circle,
                             boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
                           ),

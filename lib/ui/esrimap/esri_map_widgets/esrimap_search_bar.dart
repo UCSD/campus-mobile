@@ -161,7 +161,7 @@ class EsriMapSearchBar extends StatelessWidget {
           Material(
             elevation: 4,
             borderRadius: BorderRadius.circular(8),
-            color: isDark ? Colors.grey[850] : Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
@@ -288,7 +288,7 @@ class EsriMapSearchBar extends StatelessWidget {
           Material(
             elevation: 4,
             borderRadius: BorderRadius.circular(8),
-            color: isDark ? Colors.grey[850] : Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: Row(
               children: [
                 Padding(
@@ -350,7 +350,7 @@ class EsriMapSearchBar extends StatelessWidget {
             child: Material(
               elevation: 4,
               borderRadius: BorderRadius.circular(8),
-              color: isDark ? Colors.grey[850] : Colors.white,
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

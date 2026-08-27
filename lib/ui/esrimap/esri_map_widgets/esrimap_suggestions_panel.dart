@@ -42,7 +42,7 @@ class _EsriMapSuggestionsPanelState extends State<EsriMapSuggestionsPanel> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? Colors.grey[850] : Colors.white;
+    final bgColor = Theme.of(context).scaffoldBackgroundColor;
     final isFromRouteFieldActive = widget.showRouteFields && widget.activeRouteField == 'from';
     final topPadding = isFromRouteFieldActive ? 0.0 : 12.0;
     final availableHeight = MediaQuery.sizeOf(context).height - MediaQuery.viewInsetsOf(context).bottom;
@@ -230,7 +230,7 @@ class _EsriMapSuggestionsPanelState extends State<EsriMapSuggestionsPanel> {
                   width: 52,
                   height: 52,
                   decoration: BoxDecoration(color: category.color, shape: BoxShape.circle),
-                  child: Icon(category.icon, size: 22, color: Colors.black),
+                  child: Icon(category.icon, size: 22, color: Theme.of(context).scaffoldBackgroundColor),
                 ),
                 const SizedBox(height: 6),
                 Text(

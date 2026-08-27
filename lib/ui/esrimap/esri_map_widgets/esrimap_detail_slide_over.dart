@@ -16,7 +16,7 @@ Widget buildSlideOverContent({
   double headerHeight = 80.0,
 }) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
-  final bgColor = isDark ? Colors.grey[900]! : Colors.white;
+  final bgColor = Theme.of(context).scaffoldBackgroundColor;
   final hasHeaderIcon = headerIcon != null;
   final hasTrailing = trailing != null;
 
@@ -161,11 +161,12 @@ Widget buildDetailSlideOverContent({
   required List<Widget> sliverBody,
 }) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
+  final bgColor = Theme.of(context).scaffoldBackgroundColor;
   final hasHeaderIcon = headerIcon != null;
   final hasTrailing = trailing != null;
 
   return Material(
-    color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+    color: bgColor,
     borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
     elevation: 16,
     clipBehavior: Clip.antiAlias,

@@ -60,7 +60,7 @@ class EsriMapLayersPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? Colors.grey[900]! : Colors.white;
+    final bgColor = Theme.of(context).scaffoldBackgroundColor;
     final textColor = isDark ? Colors.white : Colors.grey[900]!;
     final subtitleColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
     final accent = isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
