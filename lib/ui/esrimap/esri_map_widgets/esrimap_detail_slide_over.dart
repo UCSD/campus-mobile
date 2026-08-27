@@ -183,15 +183,9 @@ Widget buildDetailSlideOverContent({
             }
           },
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+            padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  color: isDark ? Colors.white70 : Colors.grey[800],
-                  onPressed: onClose,
-                  tooltip: 'Back',
-                ),
                 Expanded(
                   child: Semantics(
                     button: true,
@@ -200,7 +194,7 @@ Widget buildDetailSlideOverContent({
                       onTap: onToggle,
                       borderRadius: BorderRadius.circular(8),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                         child: Row(
                           children: [
                             if (hasHeaderIcon) ...[
@@ -235,6 +229,12 @@ Widget buildDetailSlideOverContent({
                       ),
                     ),
                   ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  color: isDark ? Colors.white70 : Colors.grey[800],
+                  onPressed: onClose,
+                  tooltip: 'Close details',
                 ),
               ],
             ),

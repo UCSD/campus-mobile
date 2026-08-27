@@ -2066,7 +2066,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     super.build(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-    final shouldShowCatListPanel = _showCategoryList && _selectedResult == null && _allCategoryResults.isNotEmpty;
+    final shouldShowCatListPanel = _showCategoryList && _allCategoryResults.isNotEmpty;
 
     final isDefaultScene = _sceneMode == 'default';
     final isBuilding3dScene = _sceneMode == 'building3d';
@@ -2537,10 +2537,22 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 ),
 
               // Selected Result Detail Slide-over
-              if (_selectedResult != null)
-                Semantics(
-                  sortKey: const OrdinalSortKey(1.6),
-                  child: LayoutBuilder(
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                switchInCurve: Curves.easeOutQuart,
+                switchOutCurve: Curves.easeInQuart,
+                transitionBuilder: (child, animation) {
+                  final offsetAnimation = Tween<Offset>(
+                    begin: const Offset(0.0, 1.0),
+                    end: Offset.zero,
+                  ).animate(animation);
+                  return SlideTransition(position: offsetAnimation, child: child);
+                },
+                child: _selectedResult != null
+                  ? Semantics(
+                      key: ValueKey(_selectedResult!.name),
+                      sortKey: const OrdinalSortKey(1.6),
+                      child: LayoutBuilder(
                     builder: (context, constraints) => EsriMapDetailSlideOver(
                       minimizedNotifier: _detailSheetMinimized,
                       availableHeight: constraints.maxHeight,
@@ -2578,8 +2590,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                       onClose: _closeDetail,
                       onClearRoute: _clearRoute,
                     ),
-                  ),
-                ),
+                    ),
+                  )
+                  : const SizedBox.shrink(key: ValueKey('empty_detail')),
+              ),
 
               // Basemap & Operational Layer Selector Panel
               if (isLayersPanelVisible) ...[
