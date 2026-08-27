@@ -44,7 +44,7 @@ class EsriMapConfigService {
     // 1. Instantly load local configuration JSON from app asset bundle so map opens immediately
     final fallbackJson = await rootBundle.loadString(ASSET_FALLBACK_PATH);
     _config = EsriMapConfig.fromJson(jsonDecode(fallbackJson) as Map<String, dynamic>);
-    
+
     // 2. Fire background network fetch to seamlessly update the cache for later
     _fetchRemoteAndUpdateCache();
 
@@ -55,9 +55,8 @@ class EsriMapConfigService {
   Future<void> _fetchRemoteAndUpdateCache() async {
     try {
       final response = await http.get(Uri.parse('$BASE_URL/config')).timeout(const Duration(seconds: 5));
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200)
         _config = EsriMapConfig.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-      }
     } catch (e) {
       debugPrint('Background remote map config fetch failed: $e');
     }
