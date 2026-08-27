@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_b
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
 import 'package:campus_mobile_experimental/core/utils/esri_map_feature_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 
 /// Bottom sheet widget rendering basemap choices, layer toggles, and 3D scene mode chips.
 class EsriMapLayersPanel extends StatelessWidget {
@@ -173,8 +174,10 @@ class EsriMapLayersPanel extends StatelessWidget {
       left: 12,
       right: 12,
       bottom: bottomPad + 12,
-      child: GestureDetector(
-        onVerticalDragEnd: (details) {
+      child: Semantics(
+        sortKey: const OrdinalSortKey(1.8),
+        child: GestureDetector(
+          onVerticalDragEnd: (details) {
           final isSwipeDown = details.velocity.pixelsPerSecond.dy > 200;
           if (isSwipeDown) onClose();
         },
@@ -314,6 +317,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                 const SizedBox(height: 20),
             ],
           ),
+        ),
         ),
       ),
     );

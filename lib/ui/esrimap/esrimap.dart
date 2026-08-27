@@ -2074,11 +2074,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     final indexedStackIndex = isBuilding3dScene ? 1 : (isDroneViewScene ? 2 : 0);
 
-    final isFabVisible = !_hasNetworkError && !keyboardVisible && !_showLayersPanel;
-
+    final shouldShowScaleBar = _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel;
+    final isFabVisible = !_hasNetworkError && !keyboardVisible && !_showLayersPanel && _selectedResult == null && !shouldShowCatListPanel;
     final isLayersPanelVisible = _showLayersPanel && _config != null;
     final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene && !_hasNetworkError;
-    final shouldShowScaleBar = _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel;
     final hasValidResults = _mappedResults.isNotEmpty && !_hasNetworkError;
 
     return Scaffold(
@@ -2530,7 +2529,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 ),
 
               // Transit Legend
-              if (_layerVisible['tritonTransit'] == true)
+              if (_layerVisible['tritonTransit'] == true && isFabVisible)
                 Positioned(
                   bottom: 24,
                   left: 16,
@@ -2595,20 +2594,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     ),
                   ),
                 ),
-                Semantics(
-                  sortKey: const OrdinalSortKey(1.8),
-                  child: EsriMapLayersPanel(
-                    config: _config!,
-                    currentBasemapType: _currentBasemapType,
-                    currentSceneKey: _sceneMode,
-                    layerVisible: _layerVisible,
-                    layerLoading: _layerLoading,
-                    hideSceneSwitcher: _selectedResult != null || _showCategoryList,
-                    onSwitchBasemap: _switchBasemap,
-                    onSetSceneMode: _setSceneMode,
-                    onToggleLayer: _toggleLayer,
-                    onClose: () => setState(() => _showLayersPanel = false),
-                  ),
+                EsriMapLayersPanel(
+                  config: _config!,
+                  currentBasemapType: _currentBasemapType,
+                  currentSceneKey: _sceneMode,
+                  layerVisible: _layerVisible,
+                  layerLoading: _layerLoading,
+                  hideSceneSwitcher: _selectedResult != null || _showCategoryList,
+                  onSwitchBasemap: _switchBasemap,
+                  onSetSceneMode: _setSceneMode,
+                  onToggleLayer: _toggleLayer,
+                  onClose: () => setState(() => _showLayersPanel = false),
                 ),
               ],
             ],
