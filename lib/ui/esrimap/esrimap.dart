@@ -574,9 +574,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       if (allRoutesForLayer.length <= 1) {
         layer.isVisible = isVisible;
       } else {
-        final visibleRoutes = allRoutesForLayer
-            .where((r) => _transitRouteVisibility[r] ?? true)
-            .toList();
+        final visibleRoutes = allRoutesForLayer.where((r) => _transitRouteVisibility[r] ?? true).toList();
 
         if (visibleRoutes.isEmpty) {
           layer.isVisible = false;
@@ -638,7 +636,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
             await (content as Loadable).load();
           } catch (_) {}
         }
-        
+
         bool processedSublayers = false;
 
         if (content is GroupLayer && content.layers.isNotEmpty) {
@@ -1129,8 +1127,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _isSearching = false;
       });
       if (allResults.isEmpty) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('No ${category.label.toLowerCase()} locations found.')));
       }
     } catch (e) {
       debugPrint('Category search error: $e');
@@ -1142,8 +1141,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         _allCategoryResults = [];
         _isSearching = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Couldn't load ${category.label.toLowerCase()} locations.")));
     }
   }
 
@@ -1524,8 +1524,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       final gps = await _getDeviceLocationEfficiently();
       if (gps == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Unable to get your current location.')));
         }
         return;
       }
@@ -2167,7 +2168,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                                 ? Icons.check_box
                                 : Icons.check_box_outline_blank,
                             size: 16,
-                            color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[400] : Theme.of(context).colorScheme.primary,
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey[400]
+                                : Theme.of(context).colorScheme.primary,
                           ),
                           const SizedBox(width: 8),
                           if (_transitLegendSwatches[info.name] != null)
@@ -2175,7 +2178,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                               child: RawImage(image: _transitLegendSwatches[info.name], width: 16, height: 16),
                             ),
                           const SizedBox(width: 8),
-                          Text('${info.name} route', style: const TextStyle(fontSize: 12)),
+                          Text(info.name, style: const TextStyle(fontSize: 12)),
                         ],
                       ),
                     ),
@@ -2665,8 +2668,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Transit Legend
               if (_layerVisible['tritonTransit'] == true && isFabVisible)
                 Positioned(
-                  bottom: 24,
-                  left: 16,
+                  bottom: 16,
+                  left: 8,
                   child: Semantics(sortKey: const OrdinalSortKey(9.0), child: _buildTransitLegend()),
                 ),
 
