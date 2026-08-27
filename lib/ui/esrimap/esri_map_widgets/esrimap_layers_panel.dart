@@ -199,7 +199,7 @@ class EsriMapLayersPanel extends StatelessWidget {
                     children: [
                       // Map Type Header (with Close Button)
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 14, 8, 8),
+                        padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
                         child: Row(
                           children: [
                             Expanded(
@@ -208,12 +208,21 @@ class EsriMapLayersPanel extends StatelessWidget {
                                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: textColor),
                               ),
                             ),
-                            IconButton(
-                              icon: Icon(Icons.close, size: 20, color: subtitleColor),
-                              onPressed: onClose,
-                              tooltip: 'Close map displays menu',
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                customBorder: const CircleBorder(),
+                                onTap: onClose,
+                                child: Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[800] : Colors.grey[200],
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(Icons.close, size: 18, color: subtitleColor),
+                                ),
+                              ),
                             ),
                           ],
                         ),

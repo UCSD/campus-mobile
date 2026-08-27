@@ -220,27 +220,61 @@ Widget buildDetailSlideOverContent({
                   ),
                 ),
                 if (hasTrailing && !isMinimized) trailing,
-                if (onShare != null)
-                  IconButton(
-                    icon: const Icon(Icons.share, size: 22),
-                    color: isDark ? Colors.white70 : Colors.grey[800],
-                    onPressed: onShare,
-                    tooltip: 'Share location',
+                if (onShare != null) ...[
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      customBorder: const CircleBorder(),
+                      onTap: onShare,
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.grey[800] : Colors.grey[200],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.share, size: 16, color: isDark ? Colors.white70 : Colors.grey[800]),
+                      ),
+                    ),
                   ),
-                IconButton(
-                  icon: Icon(
-                    isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    size: 24,
+                  const SizedBox(width: 12),
+                ],
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: onToggle,
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.grey[800] : Colors.grey[200],
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isMinimized ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        size: 20,
+                        color: isDark ? Colors.white70 : Colors.grey[800],
+                      ),
+                    ),
                   ),
-                  color: isDark ? Colors.white70 : Colors.grey[700],
-                  onPressed: onToggle,
-                  tooltip: isMinimized ? 'Expand details' : 'Collapse details',
                 ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  color: isDark ? Colors.white70 : Colors.grey[800],
-                  onPressed: onClose,
-                  tooltip: 'Close details',
+                const SizedBox(width: 12),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: onClose,
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.grey[800] : Colors.grey[200],
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.close, size: 18, color: isDark ? Colors.white70 : Colors.grey[800]),
+                    ),
+                  ),
                 ),
               ],
             ),
