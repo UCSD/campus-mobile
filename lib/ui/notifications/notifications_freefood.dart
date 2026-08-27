@@ -56,13 +56,12 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
       margin: EdgeInsets.only(top: 8.0),
       child: Row(
         children: <Widget>[
-          Container(
-            height: 30,
-            width: 170,
+          Expanded(
             child: AnimatedCrossFade(
               duration: Duration(milliseconds: 300),
               crossFadeState: isOverCount ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               firstChild: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(countText, style: TextStyle(fontSize: 10, color: Colors.red)),
                   Container(
@@ -70,12 +69,13 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                     child: Row(
                       children: <Widget>[
                         Icon(Icons.report, color: Colors.grey, size: 15),
-                        Text("There may not be enough food", style: TextStyle(fontSize: 12)),
+                        Expanded(
+                          child: Text("There may not be enough food", style: TextStyle(fontSize: 12)),
+                        ),
                       ],
                     ),
                   ),
                 ],
-                crossAxisAlignment: CrossAxisAlignment.start,
               ),
               secondChild: Align(
                 alignment: Alignment.topLeft,
