@@ -63,7 +63,7 @@ class EsriMapLayersPanel extends StatelessWidget {
     final bgColor = Theme.of(context).scaffoldBackgroundColor;
     final textColor = isDark ? Colors.white : Colors.grey[900]!;
     final subtitleColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
-    final accent = isDark ? Colors.lightBlue[300]! : Theme.of(context).colorScheme.primary;
+    final accent = isDark ? const Color(0xFFFFCD00) : Colors.lightBlue[300]!;
 
     Widget sectionLabel(String text) => Padding(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
