@@ -69,9 +69,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                     child: Row(
                       children: <Widget>[
                         Icon(Icons.report, color: Colors.grey, size: 15),
-                        Expanded(
-                          child: Text("There may not be enough food", style: TextStyle(fontSize: 12)),
-                        ),
+                        Expanded(child: Text("There may not be enough food", style: TextStyle(fontSize: 12))),
                       ],
                     ),
                   ),
