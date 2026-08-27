@@ -1997,7 +1997,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Widget _buildTransitLegend() {
     if (_isTransitLegendLoading) {
       return Card(
-      color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
+        color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: const Padding(
@@ -2075,7 +2075,14 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final indexedStackIndex = isBuilding3dScene ? 1 : (isDroneViewScene ? 2 : 0);
 
     final shouldShowScaleBar = _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel;
-    final isFabVisible = !_hasNetworkError && !keyboardVisible && !_showLayersPanel && _selectedResult == null && !shouldShowCatListPanel && !_showSuggestions && !_showResults;
+    final isFabVisible =
+        !_hasNetworkError &&
+        !keyboardVisible &&
+        !_showLayersPanel &&
+        _selectedResult == null &&
+        !shouldShowCatListPanel &&
+        !_showSuggestions &&
+        !_showResults;
     final isLayersPanelVisible = _showLayersPanel && _config != null;
     final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene && !_hasNetworkError;
     final hasValidResults = _mappedResults.isNotEmpty && !_hasNetworkError;
@@ -2549,50 +2556,50 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   return SlideTransition(position: offsetAnimation, child: child);
                 },
                 child: _selectedResult != null
-                  ? Semantics(
-                      key: ValueKey(_selectedResult!.name),
-                      sortKey: const OrdinalSortKey(1.6),
-                      child: LayoutBuilder(
-                    builder: (context, constraints) => EsriMapDetailSlideOver(
-                      minimizedNotifier: _detailSheetMinimized,
-                      availableHeight: constraints.maxHeight,
-                      result: _selectedResult!,
-                      resultIcon: _iconForResult(_selectedResult!),
-                      isRoutingMode: _isRouting,
-                      hasRoute: _hasRoute,
-                      routeFailed: _routeFailed,
-                      travelMode: _travelMode,
-                      routeTravelTimeMinutes: _routeTravelTimeMinutes,
-                      routeManeuvers: _routeManeuvers,
-                      fromLatLng: _fromLatLng,
-                      onGetDirections: (res) {
-                        final gps = _getUserLatLng();
-                        final hasGps = gps != null;
-                        _fromController.text = hasGps ? 'My Location' : '';
-                        _toController.text = res.name;
-                        _routeDestination = res;
-                        _graphicsOverlay.graphics.clear();
-                        setState(() {
-                          _showRouteFields = true;
-                          _mappedResults = [];
-                          _allCategoryResults = [];
-                          _showCategoryList = false;
-                          _activeCategory = null;
-                        });
-                        _solveRoute(res);
-                      },
-                      onTravelModeChanged: (mode) {
-                        final hasSelectedResult = _selectedResult != null;
-                        if (hasSelectedResult)
-                          _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
-                      },
-                      onLaunchWebsite: _launchWebsite,
-                      onClose: _closeDetail,
-                      onClearRoute: _clearRoute,
-                    ),
-                    ),
-                  )
-                  : const SizedBox.shrink(key: ValueKey('empty_detail')),
+                    ? Semantics(
+                        key: ValueKey(_selectedResult!.name),
+                        sortKey: const OrdinalSortKey(1.6),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) => EsriMapDetailSlideOver(
+                            minimizedNotifier: _detailSheetMinimized,
+                            availableHeight: constraints.maxHeight,
+                            result: _selectedResult!,
+                            resultIcon: _iconForResult(_selectedResult!),
+                            isRoutingMode: _isRouting,
+                            hasRoute: _hasRoute,
+                            routeFailed: _routeFailed,
+                            travelMode: _travelMode,
+                            routeTravelTimeMinutes: _routeTravelTimeMinutes,
+                            routeManeuvers: _routeManeuvers,
+                            fromLatLng: _fromLatLng,
+                            onGetDirections: (res) {
+                              final gps = _getUserLatLng();
+                              final hasGps = gps != null;
+                              _fromController.text = hasGps ? 'My Location' : '';
+                              _toController.text = res.name;
+                              _routeDestination = res;
+                              _graphicsOverlay.graphics.clear();
+                              setState(() {
+                                _showRouteFields = true;
+                                _mappedResults = [];
+                                _allCategoryResults = [];
+                                _showCategoryList = false;
+                                _activeCategory = null;
+                              });
+                              _solveRoute(res);
+                            },
+                            onTravelModeChanged: (mode) {
+                              final hasSelectedResult = _selectedResult != null;
+                              if (hasSelectedResult)
+                                _solveRoute(_selectedResult!, travelMode: mode, originLatLng: _fromLatLng);
+                            },
+                            onLaunchWebsite: _launchWebsite,
+                            onClose: _closeDetail,
+                            onClearRoute: _clearRoute,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(key: ValueKey('empty_detail')),
               ),
 
               // Basemap & Operational Layer Selector Panel

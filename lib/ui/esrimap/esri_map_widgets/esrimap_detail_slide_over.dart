@@ -347,12 +347,8 @@ class EsriMapDetailSlideOver extends StatelessWidget {
     void handleShare() {
       final googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=${result.latitude},${result.longitude}';
       Clipboard.setData(ClipboardData(text: googleMapsUrl));
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Link copied to clipboard!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Link copied to clipboard!'), duration: Duration(seconds: 2)));
     }
 
     return Align(

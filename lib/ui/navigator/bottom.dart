@@ -138,9 +138,9 @@ class _BottomTabBarState extends State<BottomTabBar> {
         borderRadius: BorderRadius.circular(34),
       ),
       child: Image.asset(
-        iconAsset, 
-        width: 34, 
-        height: 34, 
+        iconAsset,
+        width: 34,
+        height: 34,
         filterQuality: FilterQuality.high,
         color: isSelected
             ? theme.bottomNavigationBarTheme.selectedItemColor
