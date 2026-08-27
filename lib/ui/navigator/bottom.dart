@@ -137,7 +137,15 @@ class _BottomTabBarState extends State<BottomTabBar> {
         color: isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
         borderRadius: BorderRadius.circular(34),
       ),
-      child: Image.asset(iconAsset, width: 34, height: 34, filterQuality: FilterQuality.high),
+      child: Image.asset(
+        iconAsset, 
+        width: 34, 
+        height: 34, 
+        filterQuality: FilterQuality.high,
+        color: isSelected
+            ? theme.bottomNavigationBarTheme.selectedItemColor
+            : theme.bottomNavigationBarTheme.unselectedItemColor,
+      ),
     );
   }
 
