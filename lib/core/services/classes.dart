@@ -16,12 +16,18 @@ class ClassScheduleService {
   AcademicTermModel? _academicTermModel;
 
   Future<bool> fetchUNCourses(Map<String, String> headers, String term) async {
+    print("///////////////////// INSIDE FETCH UN ///////////////////////");
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=UN&term_code=' + term, headers);
+        dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=UN&term_code=' + term,
+        headers,
+      );
+
+      /// print undergrad response in blue
+      print('\x1B[34m[Undergrad] $_response\x1B[0m');
 
       /// parse data
       _unData = classScheduleModelFromJson(_response);
@@ -35,12 +41,18 @@ class ClassScheduleService {
   }
 
   Future<bool> fetchGRCourses(Map<String, String> headers, String term) async {
+    print("===================== INSIDE FETCH GR ==========================");
     _error = null;
     _isLoading = true;
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=GR&term_code=' + term, headers);
+        dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=GR&term_code=' + term,
+        headers,
+      );
+
+      /// print grad response in yellow
+      print('\x1B[33m=============[Grad] $_response\x1B[0m');
 
       /// parse data
       _grData = classScheduleModelFromJson(_response);

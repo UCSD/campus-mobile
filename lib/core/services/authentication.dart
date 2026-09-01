@@ -23,8 +23,11 @@ class AuthenticationService {
 
       /// fetch data
       /// MODIFIED TO USE EXPONENTIAL RETRY
-      var response =
-          await NetworkHelper.authorizedPublicPost(dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
+      var response = await NetworkHelper.authorizedPublicPost(
+        dotenv.get('AUTH_SERVICE_API_ENDPOINT'),
+        authServiceHeaders,
+        null,
+      );
 
       /// check to see if response has an error
       if (response['errorMessage'] != null) throw (response['errorMessage']);
@@ -32,6 +35,10 @@ class AuthenticationService {
       /// parse data
       final authenticationModel = AuthenticationModel.fromJson(response);
       _data = authenticationModel;
+
+      /// DEBUG - remove after: log the raw SSO access token
+      print("---------------------------------------- ACCESS TOKEN -------------------------------");
+      print('\x1B[32m[AUTH TOKEN] ${authenticationModel.accessToken}\x1B[0m');
       _lastUpdated = DateTime.now();
       return true;
     } catch (e) {
@@ -51,8 +58,11 @@ class AuthenticationService {
 
       /// fetch data
       /// MODIFIED TO USE EXPONENTIAL RETRY
-      var response =
-          await NetworkHelper.authorizedPost(dotenv.get('AUTH_SERVICE_API_ENDPOINT'), authServiceHeaders, null);
+      var response = await NetworkHelper.authorizedPost(
+        dotenv.get('AUTH_SERVICE_API_ENDPOINT'),
+        authServiceHeaders,
+        null,
+      );
 
       /// check to see if response has an error
       if (response['errorMessage'] != null) throw (response['errorMessage']);
@@ -60,6 +70,9 @@ class AuthenticationService {
       /// parse data
       final authenticationModel = AuthenticationModel.fromJson(response);
       _data = authenticationModel;
+
+      /// DEBUG - remove after: log the raw SSO access token
+      print('\x1B[32m[AUTH TOKEN] ${authenticationModel.accessToken}\x1B[0m');
       _lastUpdated = DateTime.now();
       return true;
     } catch (e) {
