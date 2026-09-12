@@ -8,6 +8,7 @@ StudentIdProfileModel studentIdProfileModelFromJson(String str) => StudentIdProf
 String studentIdProfileModelToJson(StudentIdProfileModel data) => json.encode(data.toJson());
 
 class StudentIdProfileModel {
+  String studentPid;
   String studentTsn;
   String termYear;
   String studentLevelCurrent;
@@ -21,7 +22,8 @@ class StudentIdProfileModel {
   int issueNumber;
 
   StudentIdProfileModel(
-      {this.studentTsn = '',
+      {this.studentPid = '',
+      this.studentTsn = '',
       this.termYear = '',
       this.studentLevelCurrent = '',
       this.collegeCurrent = '',
@@ -33,9 +35,16 @@ class StudentIdProfileModel {
       this.classificationType = '',
       this.issueNumber = 0});
 
-  factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) => StudentIdProfileModel(
-      // MA-477: MyStudentProfile currently returns TSN as Student_PID
-      studentTsn: json["Student_PID"],
+  factory StudentIdProfileModel.fromJson(Map<String, dynamic> json) {
+    final responsePid = json["Student_PID"]?.toString() ?? '';
+    final legacyPid = json["Legacy_Student_PID"]?.toString();
+    final explicitTsn = (json["Student_TSN"] ?? json["TSS_Student_Number"])?.toString();
+    final pidCarriesTsn = RegExp(r'^\d{9}$').hasMatch(responsePid);
+
+    return StudentIdProfileModel(
+      // MA-477 keeps profile identifiers separate
+      studentPid: legacyPid ?? (pidCarriesTsn ? '' : responsePid),
+      studentTsn: explicitTsn ?? (pidCarriesTsn ? responsePid : ''),
       termYear: json["Term_Year"],
       studentLevelCurrent: json["Student_Level_Current"] == null ? "" : json["Student_Level_Current"],
       collegeCurrent: json["College_Current"] == null ? "" : json["College_Current"],
@@ -46,10 +55,13 @@ class StudentIdProfileModel {
       cardNumber: json["Card_Number"],
       barcode: json["Barcode"],
       classificationType: json["Classification_Type"],
-      issueNumber: json["Issue_Number"]);
+      issueNumber: json["Issue_Number"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-        "Student_PID": studentTsn,
+        "Student_PID": studentPid,
+        "Student_TSN": studentTsn,
         "Term_Year": termYear,
         "Student_Level_Current": studentLevelCurrent,
         "College_Current": collegeCurrent,

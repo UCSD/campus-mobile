@@ -9,6 +9,8 @@ AuthenticationModel authenticationModelFromJson(String str) => AuthenticationMod
 
 String authenticationModelToJson(AuthenticationModel data) => json.encode(data.toJson());
 
+bool _isTsnValue(String? value) => value != null && RegExp(r'^\d{9}$').hasMatch(value);
+
 @HiveType(typeId: 1)
 class AuthenticationModel extends HiveObject {
   @HiveField(0)
@@ -17,24 +19,29 @@ class AuthenticationModel extends HiveObject {
   // @HiveField(1)
   // String refreshToken;
   @HiveField(2)
-  String? tsn;
+  String? pid;
   @HiveField(3)
   String? ucsdaffiliation;
   @HiveField(4)
   int? expiration;
+  @HiveField(5)
+  String? tsn;
 
   AuthenticationModel({
     this.accessToken,
-    this.tsn,
+    String? pid,
+    String? tsn,
     this.ucsdaffiliation,
     this.expiration,
-  });
+  })  : pid = _isTsnValue(pid) && tsn == null ? null : pid,
+        tsn = tsn ?? (_isTsnValue(pid) ? pid : null);
 
   factory AuthenticationModel.fromJson(Map<String, dynamic> json) {
     return AuthenticationModel(
       accessToken: json["access_token"] == null ? null : json["access_token"],
-      // MA-477: QA returns TSN in legacy pid field
-      tsn: json["pid"] == null ? null : json["pid"],
+      // MA-477 keeps PID and TSN separate
+      pid: json["pid"]?.toString(),
+      tsn: json["tsn"]?.toString(),
       ucsdaffiliation: json["ucsdaffiliation"] == null ? "" : json["ucsdaffiliation"],
       expiration: json["expiration"] == null ? 0 : json["expiration"],
     );
@@ -42,7 +49,8 @@ class AuthenticationModel extends HiveObject {
 
   Map<String, dynamic> toJson() => {
         "access_token": accessToken == null ? null : accessToken,
-        "pid": tsn == null ? null : tsn,
+        "pid": pid == null ? null : pid,
+        "tsn": tsn == null ? null : tsn,
         "ucsdaffiliation": ucsdaffiliation == null ? "" : ucsdaffiliation,
         "expiration": expiration == null ? null : expiration,
       };

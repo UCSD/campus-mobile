@@ -18,7 +18,8 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
     };
     return AuthenticationModel(
       accessToken: fields[0] as String?,
-      tsn: fields[2] as String?,
+      pid: fields[2] as String?,
+      tsn: fields[5] as String?,
       ucsdaffiliation: fields[3] as String?,
       expiration: fields[4] as int?,
     );
@@ -27,15 +28,17 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
   @override
   void write(BinaryWriter writer, AuthenticationModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.accessToken)
       ..writeByte(2)
-      ..write(obj.tsn)
+      ..write(obj.pid)
       ..writeByte(3)
       ..write(obj.ucsdaffiliation)
       ..writeByte(4)
-      ..write(obj.expiration);
+      ..write(obj.expiration)
+      ..writeByte(5)
+      ..write(obj.tsn);
   }
 
   @override

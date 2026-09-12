@@ -248,8 +248,8 @@ class SpeedTestProvider extends ChangeNotifier {
     final mobileLoggerApiWifiReport = mobileLoggerApi + "?type=WIFIREPORT";
     offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
     wiFiLog = {
-      // MA-477: userId follows current QA TSN identity
-      "userId": (_userDataProvider.userProfileModel.tsn) == null ? "" : _userDataProvider.userProfileModel.tsn,
+      // MA-477 retains PID with TSN fallback
+      "userId": _userDataProvider.userProfileModel.pid ?? _userDataProvider.userProfileModel.tsn ?? "",
       "userLogin":
           (_userDataProvider.userProfileModel.username) == null ? "" : _userDataProvider.userProfileModel.username!,
       "Platform": _speedTestModel!.platform,

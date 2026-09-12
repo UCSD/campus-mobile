@@ -9,10 +9,13 @@ UserProfileModel userProfileModelFromJson(String str) => UserProfileModel.fromJs
 
 String userProfileModelToJson(UserProfileModel data) => json.encode(data.toJson());
 
+bool _isTsnValue(String? value) => value != null && RegExp(r'^\d{9}$').hasMatch(value);
+
 @HiveType(typeId: 2)
 class UserProfileModel extends HiveObject {
   Classifications? classifications;
   int? latestTimeStamp;
+  String? pid;
   String? tsn;
   String? ucsdAffiliation;
   String? username;
@@ -37,7 +40,8 @@ class UserProfileModel extends HiveObject {
   UserProfileModel(
       {this.classifications,
       this.latestTimeStamp,
-      this.tsn,
+      String? pid,
+      String? tsn,
       this.selectedLots,
       this.selectedOccuspaceLocations,
       this.subscribedTopics,
@@ -47,13 +51,16 @@ class UserProfileModel extends HiveObject {
       this.selectedParkingLots,
       this.selectedStops,
       this.surveyCompletion,
-      this.selectedVentilationLocations});
+      this.selectedVentilationLocations})
+      : pid = _isTsnValue(pid) && tsn == null ? null : pid,
+        tsn = tsn ?? (_isTsnValue(pid) ? pid : null);
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) => UserProfileModel(
         classifications: json["classifications"] == null ? null : Classifications.fromJson(json["classifications"]),
         latestTimeStamp: json["latestTimeStamp"] == null ? null : json["latestTimeStamp"],
-        // MA-477: QA keeps TSN value under pid key
-        tsn: json["pid"] == null ? null : json["pid"],
+        // MA-477 supports separate fields and current QA transition response
+        pid: json["pid"]?.toString(),
+        tsn: json["tsn"]?.toString(),
         selectedLots: json["selectedLots"] == null ? [] : List<String>.from(json["selectedLots"].map((x) => x)),
         selectedOccuspaceLocations: json["selectedOccuspaceLocations"] == null
             ? []
@@ -79,7 +86,8 @@ class UserProfileModel extends HiveObject {
   Map<String, dynamic> toJson() => {
         "classifications": classifications == null ? null : classifications!.toJson(),
         "latestTimeStamp": latestTimeStamp == null ? null : latestTimeStamp,
-        "pid": tsn == null ? null : tsn,
+        "pid": pid == null ? null : pid,
+        "tsn": tsn == null ? null : tsn,
         "selectedLots": selectedLots == null ? null : List<dynamic>.from(selectedLots!.map((x) => x)),
         "selectedOccuspaceLocations":
             selectedOccuspaceLocations == null ? null : List<dynamic>.from(selectedOccuspaceLocations!.map((x) => x)),

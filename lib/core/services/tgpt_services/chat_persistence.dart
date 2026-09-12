@@ -22,8 +22,8 @@ class ChatPersistenceService {
   String get _userKey {
     final auth = _userDataProvider.authenticationModel;
     final profile = _userDataProvider.userProfileModel;
-    // MA-477: local storage identity follows current QA TSN
-    final stableId = auth.tsn ?? profile.tsn ?? profile.username;
+    // MA-477 retains existing PID storage with TSN fallback
+    final stableId = auth.pid ?? profile.pid ?? auth.tsn ?? profile.tsn ?? profile.username;
     return stableId?.isNotEmpty == true ? stableId! : auth.accessToken?.hashCode.toString() ?? 'unknown';
   }
 

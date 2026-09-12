@@ -316,7 +316,8 @@ class UserDataProvider extends ChangeNotifier {
         } else {
           newModel.username = await getUsernameFromDevice();
           newModel.ucsdAffiliation = _authenticationModel.ucsdaffiliation;
-          // MA-477: propagate current QA TSN identity
+          // MA-477 keeps profile identifiers separate
+          newModel.pid = _authenticationModel.pid;
           newModel.tsn = _authenticationModel.tsn;
           List<String> castSubscriptions = newModel.subscribedTopics!.cast<String>();
           newModel.subscribedTopics = castSubscriptions.toSet().toList();
@@ -364,7 +365,8 @@ class UserDataProvider extends ChangeNotifier {
     try {
       profile.username = await getUsernameFromDevice();
       profile.ucsdAffiliation = _authenticationModel.ucsdaffiliation;
-      // MA-477: propagate the current QA TSN identity.
+      // MA-477 keeps profile identifiers separate
+      profile.pid = _authenticationModel.pid;
       profile.tsn = _authenticationModel.tsn;
       profile.subscribedTopics = _pushNotificationDataProvider.publicTopics();
       final studentPattern = RegExp('[BGJMU]');
