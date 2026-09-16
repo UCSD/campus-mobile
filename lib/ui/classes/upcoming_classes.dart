@@ -7,8 +7,9 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 class UpcomingCoursesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<SectionData> data = Provider.of<ClassScheduleDataProvider>(context).upcomingCourses;
-    int? selectedCourseIndex = Provider.of<ClassScheduleDataProvider>(context).selectedCourse;
+    final provider = Provider.of<ClassScheduleDataProvider>(context);
+    List<SectionData> data = provider.upcomingCourses;
+    int? selectedCourseIndex = provider.selectedCourse;
     return buildListOfCourses(context, data, selectedCourseIndex);
   }
 
@@ -16,7 +17,8 @@ class UpcomingCoursesList extends StatelessWidget {
   Widget buildListOfCourses(BuildContext context, List<SectionData> data, int? selectedCourse) {
     // Builds Today's Schedule using buildTile
     List<Widget> listOfCourses = List.generate(
-      data.length * 2 - 1, // Adjust length to account for dividers
+      // MA-470 tss-classes START - allow empty meeting list
+      data.isEmpty ? 0 : data.length * 2 - 1, // Booked course may have no meeting
       (int index) {
         if (index.isEven) {
           // Show a tile at even indexes
@@ -32,6 +34,7 @@ class UpcomingCoursesList extends StatelessWidget {
         }
       },
     );
+    // MA-470 tss-classes END - allow empty meeting list
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -46,10 +49,7 @@ class UpcomingCoursesList extends StatelessWidget {
             ),
           ),
         ),
-        ListView(
-          children: listOfCourses,
-          shrinkWrap: true,
-        ),
+        ListView(children: listOfCourses, shrinkWrap: true),
       ],
     );
   }
@@ -74,8 +74,8 @@ class UpcomingCoursesList extends StatelessWidget {
               color: isSelected
                   ? toggleActiveColor
                   : Theme.of(context).brightness == Brightness.light
-                      ? lightPrimaryColor
-                      : darkPrimaryColor2,
+                  ? lightPrimaryColor
+                  : darkPrimaryColor2,
             ),
           ),
           SizedBox(height: 5),
@@ -87,8 +87,8 @@ class UpcomingCoursesList extends StatelessWidget {
               color: isSelected
                   ? toggleActiveColor
                   : Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
+                  ? descriptiveTextColorLight
+                  : descriptiveTextColorDark,
               fontWeight: FontWeight.w400,
             ),
           ),

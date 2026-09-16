@@ -50,8 +50,32 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildClassScheduleCard(BuildContext context, List<SectionData> courseData, int selectedCourse,
-      DateTime lastUpdated, String nextDayWithClasses) {
+  Widget buildClassScheduleCard(
+    BuildContext context,
+    List<SectionData> courseData,
+    int selectedCourse,
+    DateTime lastUpdated,
+    String nextDayWithClasses,
+  ) {
+    // MA-470 tss-classes START - empty Classes card handling
+    // Avoid RangeError when preview has no meetings
+    if (courseData.isEmpty && context.read<ClassScheduleDataProvider>().hasTssQaStudentOverride) {
+      final booked = context.watch<ClassScheduleDataProvider>().bookedCourses;
+      if (booked.isNotEmpty) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('No class meeting information available.'),
+              for (final course in booked) Text('${course.subjectCode} ${course.courseCode}'),
+            ],
+          ),
+        );
+      }
+      return const Padding(padding: EdgeInsets.all(16), child: Text('No classes found.'));
+    }
+    // MA-470 tss-classes END - empty Classes card handling
     try {
       final section = courseData[selectedCourse];
       return Padding(
@@ -71,8 +95,9 @@ class ClassScheduleCard extends StatelessWidget {
                         'Next Class',
                         style: TextStyle(
                           fontSize: 22.0,
-                          color:
-                              Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : darkPrimaryColor2,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -102,34 +127,32 @@ class ClassScheduleCard extends StatelessWidget {
               ),
             ),
             // Vertical Divider
-            SizedBox(
-              height: 276,
-              child: VerticalDivider(
-                color: listTileDividerColorDark,
-                thickness: 0.7,
-              ),
-            ),
+            SizedBox(height: 276, child: VerticalDivider(color: listTileDividerColorDark, thickness: 0.7)),
             // Right-hand side of the card //
             Flexible(
               flex: 4, // Adjusts width of Right Hand Side
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start, // Aligns content to the top
                 crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
-                children: [
-                  UpcomingCoursesList(),
-                ],
+                children: [UpcomingCoursesList()],
               ),
             ),
           ],
         ),
       );
     } catch (e) {
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        StackTrace.fromString(e.toString()),
-        reason: "Classes Card: Failed to build card content.",
-        fatal: false,
-      );
+      // MA-470 tss-classes START - QA render diagnostics
+      if (context.read<ClassScheduleDataProvider>().hasTssQaStudentOverride) {
+        debugPrint('[MA470 Classes QA] card build failed: ${e.runtimeType}');
+      } else {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          StackTrace.fromString(e.toString()),
+          reason: "Classes Card: Failed to build card content.",
+          fatal: false,
+        );
+      }
+      // MA-470 tss-classes END - QA render diagnostics
 
       return Center(
         child: Padding(
@@ -145,13 +168,16 @@ class ClassScheduleCard extends StatelessWidget {
 
   // Heading 3 i.e. "CSE 141L"
   Widget buildClassCode(BuildContext context, String className) {
-    return Text(className,
-        style: TextStyle(
-            fontSize: 17.0,
-            fontFamily: 'Refrigerator Deluxe',
-            letterSpacing: 1.2,
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-            fontWeight: FontWeight.w900));
+    return Text(
+      className,
+      style: TextStyle(
+        fontSize: 17.0,
+        fontFamily: 'Refrigerator Deluxe',
+        letterSpacing: 1.2,
+        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+        fontWeight: FontWeight.w900,
+      ),
+    );
   }
 
   // Small body text i.e. "Laboratory"
@@ -162,8 +188,9 @@ class ClassScheduleCard extends StatelessWidget {
         classType,
         style: TextStyle(
           fontSize: 17,
-          color:
-              Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
+          color: Theme.of(context).brightness == Brightness.light
+              ? descriptiveTextColorLight
+              : descriptiveTextColorDark,
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -196,11 +223,14 @@ class ClassScheduleCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              Text((day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                      fontWeight: FontWeight.w700))
+              Text(
+                (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ],
           ),
         ],
@@ -236,10 +266,11 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                 location,
                 style: TextStyle(
-                    fontSize: 15,
-                    letterSpacing: 0.8,
-                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700),
+                  fontSize: 15,
+                  letterSpacing: 0.8,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -253,9 +284,11 @@ class ClassScheduleCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
-          Icon(Icons.check_box_outlined,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-              size: 34),
+          Icon(
+            Icons.check_box_outlined,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+            size: 34,
+          ),
           SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,9 +307,10 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                 gradeEvaluation,
                 style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700),
+                  fontSize: 16,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),

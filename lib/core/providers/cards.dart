@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/cards.dart';
+import 'package:campus_mobile_experimental/core/services/tss_academic_history.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -40,6 +41,22 @@ class CardsDataProvider extends ChangeNotifier {
   /// SERVICES
   final _cardsService = CardsService();
 
+  // MA-470 tss-classes START - anonymous Classes preview
+  bool get isAnonymousQaClassesPreviewEnabled => TssAcademicHistoryClient().anonymousQaPreviewEnabled;
+
+  /// Only show Classes card for synthetic preview
+  /// Keep preview temporary and skip stored card state
+  void showAnonymousQaClassesPreview() {
+    if (!isAnonymousQaClassesPreviewEnabled) return;
+    final alreadyOrdered = _cardOrder.contains('schedule');
+    final alreadyVisible = _cardStates['schedule'] == true;
+    if (alreadyOrdered && alreadyVisible) return;
+    if (!alreadyOrdered) _cardOrder.insert(0, 'schedule');
+    _cardStates['schedule'] = true;
+    notifyListeners();
+  }
+  // MA-470 tss-classes END - anonymous Classes preview
+
   // Default card order for native cards
   // Most of the time immediately overwritten by default card order coming from server
   List<String> _cardOrder = [
@@ -59,18 +76,11 @@ class CardsDataProvider extends ChangeNotifier {
   ];
 
   // Native student cards
-  static const List<String> _STUDENT_CARDS = [
-    'finals',
-    'schedule',
-    'student_id',
-  ];
+  static const List<String> _STUDENT_CARDS = ['finals', 'schedule', 'student_id'];
 
   // Native staff cards
   // TODO: removed 'staff_info', if needed re-add later - December 2025
-  static const List<String> _STAFF_CARDS = [
-    'my_ucsd_chart',
-    'employee_id',
-  ];
+  static const List<String> _STAFF_CARDS = ['my_ucsd_chart', 'employee_id'];
 
   void updateAvailableCards(String? ucsdAffiliation) async {
     _isLoading = true;
@@ -158,6 +168,11 @@ class CardsDataProvider extends ChangeNotifier {
       _error = _cardsService.error;
     }
     _isLoading = false;
+    // MA-470 tss-classes START - restore preview after card refresh
+    if (!(_userDataProvider?.isLoggedIn ?? false)) {
+      showAnonymousQaClassesPreview();
+    }
+    // MA-470 tss-classes END - restore preview after card refresh
     notifyListeners();
   }
 
@@ -231,7 +246,9 @@ class CardsDataProvider extends ChangeNotifier {
     // by default all cards will be on
     if (_cardStateBox.get(DataPersistence.CARD_STATES) == null) {
       await _cardStateBox.put(
-          DataPersistence.CARD_STATES, _cardStates.keys.where((card) => _cardStates[card]!).toList());
+        DataPersistence.CARD_STATES,
+        _cardStates.keys.where((card) => _cardStates[card]!).toList(),
+      );
     } else {
       _deactivateAllCards();
     }
@@ -464,7 +481,8 @@ class CardsDataProvider extends ChangeNotifier {
         // User has explicitly set this card's state - restore their preference
         _cardStates[card] = _userToggledCards[card]!;
         print(
-            "DEBUG: activateStaffCardsForSilentLogin() - $card restored to user preference: ${_userToggledCards[card]}");
+          "DEBUG: activateStaffCardsForSilentLogin() - $card restored to user preference: ${_userToggledCards[card]}",
+        );
       }
     }
 

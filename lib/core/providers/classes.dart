@@ -2,7 +2,7 @@ import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/term.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/classes.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 class ClassScheduleDataProvider extends ChangeNotifier {
@@ -32,13 +32,12 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     'SU': [],
     'OTHER': [],
   };
-  Map<String, List<SectionData>> _midterms = {
-    'MI': [],
-    'OTHER': [],
-  };
+  Map<String, List<SectionData>> _midterms = {'MI': [], 'OTHER': []};
 
   /// MODELS
-  late ClassScheduleModel _classScheduleModel;
+  // MA-470 tss-classes START - initialize Classes model
+  ClassScheduleModel _classScheduleModel = ClassScheduleModel();
+  // MA-470 tss-classes END - initialize Classes model
   late AcademicTermModel _academicTermModel;
 
   /// PROVIDERS
@@ -47,79 +46,111 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   /// SERVICES
   var _classScheduleService = ClassScheduleService();
 
+  // MA-470 tss-classes START - expose QA mode
+  bool get isAnonymousQaPreview => _classScheduleService.isTssAnonymousQaPreviewEnabled;
+  bool get hasTssQaStudentOverride => _classScheduleService.hasTssQaStudentOverride;
+  bool get isTssDirectQaEnabled => _classScheduleService.isTssDirectQaEnabled;
+  // MA-470 tss-classes END - expose QA mode
+
+  // MA-470 tss-classes START - keep booked courses without meetings
+  // Booked module without meeting stays enrolled
+  // Never create a weekday or time just to show it
+  List<ClassData> get bookedCourses =>
+      List<ClassData>.unmodifiable((_classScheduleModel.data ?? []).where((course) => course.enrollmentStatus == 'EN'));
+  List<ClassData> get unscheduledCourses => List<ClassData>.unmodifiable(
+    bookedCourses.where((course) => course.sectionData == null || course.sectionData!.isEmpty),
+  );
+  // MA-470 tss-classes END - keep booked courses without meetings
+
   void fetchData() async {
     if (!_isLoading) {
+      if (kDebugMode) debugPrint('[MA470 Classes QA] fetch start; anonymous=$isAnonymousQaPreview');
       _isLoading = true;
       _error = null;
       notifyListeners();
       final bool termFetched = await _classScheduleService.fetchAcademicTerm();
+      if (kDebugMode) debugPrint('[MA470 Classes QA] term selected=$termFetched');
       final bool isLoggedIn = _userDataProvider.isLoggedIn;
-      if (termFetched && isLoggedIn) {
+      // MA-470 tss-classes START - choose QA TSS or signed-in flow
+      // Signed-in flow stays unchanged
+      // Student override bypasses login only for local QA
+      if (termFetched && (isLoggedIn || isAnonymousQaPreview)) {
         _academicTermModel = _classScheduleService.academicTermModel!;
-        final Map<String, String> headers = {
-          'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
-        };
 
         /// erase old model
         _classScheduleModel = ClassScheduleModel();
-
-        /// fetch grad courses
-        final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!);
-        if (grCoursesFetched) {
-          _classScheduleModel = _classScheduleService.grData;
-        } else {
-          _error = _classScheduleService.error.toString();
-        }
-
-        /// fetch undergrad courses
-        final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(headers, _academicTermModel.termCode!);
-        if (unCoursesFetched) {
-          if (_classScheduleModel.data != null) {
-            _classScheduleModel.data!.addAll(_classScheduleService.unData.data!);
-          } else {
-            _classScheduleModel = _classScheduleService.unData;
+        // MA-470 tss-classes START - select direct TSS Booking in QA mode
+        if (_classScheduleService.isTssDirectQaEnabled) {
+          final studentNumber = _classScheduleService.qaTssStudentNumber(_userDataProvider.authenticationModel);
+          if (studentNumber == null) {
+            _error = 'A TSN is required for the direct TSS QA Classes proof.';
+            _isLoading = false;
+            notifyListeners();
+            return;
           }
-          _error = null;
+          final fetched = await _classScheduleService.fetchTssCourses(studentNumber, _academicTermModel.termCode!);
+          if (kDebugMode) debugPrint('[MA470 Classes QA] TSS fetch complete; success=$fetched');
+          if (!fetched) {
+            _error = _classScheduleService.error.toString();
+            _isLoading = false;
+            notifyListeners();
+            return;
+          }
+          _classScheduleModel = _classScheduleService.tssData;
         } else {
-          _error = _classScheduleService.error.toString();
-          _isLoading = false;
-          notifyListeners();
+          final Map<String, String> headers = {
+            'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}',
+          };
 
-          /// short circuit
-          return;
+          /// fetch grad courses
+          final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(
+            headers,
+            _academicTermModel.termCode!,
+          );
+          if (grCoursesFetched) {
+            _classScheduleModel = _classScheduleService.grData;
+          } else {
+            _error = _classScheduleService.error.toString();
+          }
+
+          /// fetch undergrad courses
+          final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(
+            headers,
+            _academicTermModel.termCode!,
+          );
+          if (unCoursesFetched) {
+            if (_classScheduleModel.data != null) {
+              _classScheduleModel.data!.addAll(_classScheduleService.unData.data!);
+            } else {
+              _classScheduleModel = _classScheduleService.unData;
+            }
+            _error = null;
+          } else {
+            _error = _classScheduleService.error.toString();
+            _isLoading = false;
+            notifyListeners();
+
+            /// short circuit
+            return;
+          }
         }
+        // MA-470 tss-classes END - select direct TSS Booking in QA mode
 
         /// remove all old classes
-        _enrolledClasses = {
-          'MO': [],
-          'TU': [],
-          'WE': [],
-          'TH': [],
-          'FR': [],
-          'SA': [],
-          'SU': [],
-          'OTHER': [],
-        };
+        _enrolledClasses = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
 
-        _finals = {
-          'MO': [],
-          'TU': [],
-          'WE': [],
-          'TH': [],
-          'FR': [],
-          'SA': [],
-          'SU': [],
-          'OTHER': [],
-        };
+        _finals = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
 
-        _midterms = {
-          'MI': [],
-          'OTHER': [],
-        };
+        _midterms = {'MI': [], 'OTHER': []};
 
         try {
           _createMapOfClasses();
+          if (kDebugMode)
+            debugPrint(
+              '[MA470 Classes QA] mapped booked courses=${_classScheduleModel.data?.length ?? 0}; upcoming meetings=${upcomingCourses.length}',
+            );
         } catch (e) {
+          if (kDebugMode) debugPrint('[MA470 Classes QA] map failed: ${e.runtimeType}');
           _error = e.toString();
         }
 
@@ -132,15 +163,18 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+  // MA-470 tss-classes END - choose QA TSS or signed-in flow
 
   void _createMapOfClasses() {
     List<ClassData> enrolledCourses = [];
 
     /// add only enrolled classes because api returns wait-listed and dropped
     /// courses as well
-    for (ClassData classData in _classScheduleModel.data!) {
+    // MA-470 tss-classes START - map TSS Booking model
+    for (ClassData classData in _classScheduleModel.data ?? []) {
       if (classData.enrollmentStatus == 'EN') enrolledCourses.add(classData);
     }
+    // MA-470 tss-classes END - map TSS Booking model
 
     if (enrolledCourses.isEmpty) {
       _error = "No enrolled courses found.";
@@ -148,7 +182,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       notifyListeners();
     }
     for (ClassData classData in enrolledCourses) {
-      for (SectionData sectionData in classData.sectionData!) {
+      for (SectionData sectionData in classData.sectionData ?? []) {
         /// copy over info from [ClassData] object and put into [SectionData] object
         sectionData.subjectCode = classData.subjectCode;
         sectionData.courseCode = classData.courseCode;
@@ -240,11 +274,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       /// if no classes are scheduled for today then find the next day with classes
       var daysToAdd = 1;
       while (_enrolledClasses[today]!.isEmpty && daysToAdd <= 7) {
-        today = DateFormat('EEEE')
-            .format(DateTime.now().add(Duration(days: daysToAdd)))
-            .toString()
-            .toUpperCase()
-            .substring(0, 2);
+        today = DateFormat(
+          'EEEE',
+        ).format(DateTime.now().add(Duration(days: daysToAdd))).toString().toUpperCase().substring(0, 2);
         nextDayWithClass = DateFormat('EEEE').format(DateTime.now().add(Duration(days: daysToAdd)));
         daysToAdd += 1;
       }
