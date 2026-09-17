@@ -47,6 +47,12 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   /// SERVICES
   var _classScheduleService = ClassScheduleService();
 
+  // MA-470 tss-finals-midterm START - expose local exam preview
+  bool get isAnonymousTssExamQaPreview =>
+      _classScheduleService.isTssExamAnonymousQaPreviewEnabled && _classScheduleService.hasTssExamStudentOverride;
+  bool get isTssExamQaEnabled => _classScheduleService.isTssExamQaEnabled;
+  // MA-470 tss-finals-midterm END - expose local exam preview
+
   void fetchData() async {
     if (!_isLoading) {
       _isLoading = true;
@@ -54,39 +60,61 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       notifyListeners();
       final bool termFetched = await _classScheduleService.fetchAcademicTerm();
       final bool isLoggedIn = _userDataProvider.isLoggedIn;
-      if (termFetched && isLoggedIn) {
+      // MA-470 tss-finals-midterm START - select direct TSS exam or existing class flow
+      if (termFetched && (isLoggedIn || isAnonymousTssExamQaPreview)) {
         _academicTermModel = _classScheduleService.academicTermModel!;
-        final Map<String, String> headers = {
-          'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
-        };
 
         /// erase old model
         _classScheduleModel = ClassScheduleModel();
 
-        /// fetch grad courses
-        final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!);
-        if (grCoursesFetched) {
-          _classScheduleModel = _classScheduleService.grData;
-        } else {
-          _error = _classScheduleService.error.toString();
-        }
-
-        /// fetch undergrad courses
-        final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(headers, _academicTermModel.termCode!);
-        if (unCoursesFetched) {
-          if (_classScheduleModel.data != null) {
-            _classScheduleModel.data!.addAll(_classScheduleService.unData.data!);
-          } else {
-            _classScheduleModel = _classScheduleService.unData;
+        if (_classScheduleService.isTssExamQaEnabled) {
+          final studentNumber =
+              _classScheduleService.qaTssExamStudentNumber(_userDataProvider.authenticationModel);
+          if (studentNumber == null) {
+            _error = 'A TSN is required for direct TSS exam QA';
+            _isLoading = false;
+            notifyListeners();
+            return;
           }
-          _error = null;
+          final examsFetched =
+              await _classScheduleService.fetchTssExams(studentNumber, _academicTermModel.termCode!);
+          if (!examsFetched) {
+            _error = _classScheduleService.error.toString();
+            _isLoading = false;
+            notifyListeners();
+            return;
+          }
+          _classScheduleModel = _classScheduleService.tssExamData;
         } else {
-          _error = _classScheduleService.error.toString();
-          _isLoading = false;
-          notifyListeners();
+          final Map<String, String> headers = {
+            'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+          };
 
-          /// short circuit
-          return;
+          /// fetch grad courses
+          final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!);
+          if (grCoursesFetched) {
+            _classScheduleModel = _classScheduleService.grData;
+          } else {
+            _error = _classScheduleService.error.toString();
+          }
+
+          /// fetch undergrad courses
+          final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(headers, _academicTermModel.termCode!);
+          if (unCoursesFetched) {
+            if (_classScheduleModel.data != null) {
+              _classScheduleModel.data!.addAll(_classScheduleService.unData.data!);
+            } else {
+              _classScheduleModel = _classScheduleService.unData;
+            }
+            _error = null;
+          } else {
+            _error = _classScheduleService.error.toString();
+            _isLoading = false;
+            notifyListeners();
+
+            /// short circuit
+            return;
+          }
         }
 
         /// remove all old classes
@@ -132,13 +160,14 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+  // MA-470 tss-finals-midterm END - select direct TSS exam or existing class flow
 
   void _createMapOfClasses() {
     List<ClassData> enrolledCourses = [];
 
     /// add only enrolled classes because api returns wait-listed and dropped
     /// courses as well
-    for (ClassData classData in _classScheduleModel.data!) {
+    for (ClassData classData in _classScheduleModel.data ?? []) {
       if (classData.enrollmentStatus == 'EN') enrolledCourses.add(classData);
     }
 
@@ -148,7 +177,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       notifyListeners();
     }
     for (ClassData classData in enrolledCourses) {
-      for (SectionData sectionData in classData.sectionData!) {
+      for (SectionData sectionData in classData.sectionData ?? []) {
         /// copy over info from [ClassData] object and put into [SectionData] object
         sectionData.subjectCode = classData.subjectCode;
         sectionData.courseCode = classData.courseCode;

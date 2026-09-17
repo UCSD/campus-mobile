@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_networking.dart';
+import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/term.dart';
+import 'package:campus_mobile_experimental/core/services/tss_exam_schedule.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ClassScheduleService {
@@ -13,7 +16,33 @@ class ClassScheduleService {
   /// MODELS
   ClassScheduleModel _unData = ClassScheduleModel();
   ClassScheduleModel _grData = ClassScheduleModel();
+  ClassScheduleModel _tssExamData = ClassScheduleModel();
   AcademicTermModel? _academicTermModel;
+  final TssExamScheduleClient _tssExamClient = TssExamScheduleClient();
+
+  // MA-470 tss-finals-midterm START - direct TSS exam service
+  bool get isTssExamQaEnabled => _tssExamClient.enabled;
+  bool get isTssExamAnonymousQaPreviewEnabled => _tssExamClient.anonymousQaPreviewEnabled;
+  bool get hasTssExamStudentOverride => _tssExamClient.hasStudentOverride;
+  ClassScheduleModel get tssExamData => _tssExamData;
+
+  String? qaTssExamStudentNumber(AuthenticationModel authentication) =>
+      _tssExamClient.qaStudentNumber(authentication);
+
+  Future<bool> fetchTssExams(String studentNumber, String termCode) async {
+    _error = null;
+    _isLoading = true;
+    try {
+      _tssExamData = await _tssExamClient.examsForStudent(studentNumber, termCode);
+      return true;
+    } catch (error) {
+      _error = error.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+    }
+  }
+  // MA-470 tss-finals-midterm END - direct TSS exam service
 
   Future<bool> fetchUNCourses(Map<String, String> headers, String term) async {
     _error = null;
@@ -57,8 +86,21 @@ class ClassScheduleService {
     _error = null;
     _isLoading = true;
     try {
+      // MA-470 tss-finals-midterm START - local term override
+      final overrideTerm = _tssExamClient.overrideTerm;
+      if (overrideTerm != null) {
+        _academicTermModel = overrideTerm;
+        if (kDebugMode) debugPrint('[MA470 Exams QA] using term override: ${overrideTerm.termCode}');
+        return true;
+      }
+      // MA-470 tss-finals-midterm END - local term override
       String _response = await NetworkHelper.fetchData(dotenv.get('ACADEMIC_TERM_API_ENDPOINT'));
       _academicTermModel = academicTermModelFromJson(_response);
+      // MA-470 tss-finals-midterm START - select TSS term
+      if (_tssExamClient.enabled) {
+        _academicTermModel = _tssExamClient.selectedTerm(_academicTermModel!);
+      }
+      // MA-470 tss-finals-midterm END - select TSS term
       return true;
     } catch (e) {
       _error = e.toString();

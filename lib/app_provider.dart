@@ -141,6 +141,9 @@ List<SingleChildWidget> dependentServices = [
               cardsDataProvider.activateStudentCardsForSilentLogin();
             } else {
               cardsDataProvider.deactivateStudentCards();
+              // MA-470 tss-finals-midterm START - local Finals preview
+              cardsDataProvider.showAnonymousQaExamPreview();
+              // MA-470 tss-finals-midterm END - local Finals preview
             }
 
             // Staff card activation
@@ -161,7 +164,10 @@ List<SingleChildWidget> dependentServices = [
     classScheduleDataProvider!.userDataProvider = userDataProvider;
     final bool isLoggedIn = userDataProvider.isLoggedIn;
     final bool isNotLoading = !classScheduleDataProvider.isLoading;
-    if (isLoggedIn && isNotLoading) classScheduleDataProvider.fetchData();
+    // MA-470 tss-finals-midterm START - anonymous exam fetch
+    if ((isLoggedIn || classScheduleDataProvider.isAnonymousTssExamQaPreview) && isNotLoading)
+      classScheduleDataProvider.fetchData();
+    // MA-470 tss-finals-midterm END - anonymous exam fetch
     return classScheduleDataProvider;
   }),
   ChangeNotifierProxyProvider<UserDataProvider, StudentIdDataProvider>(create: (_) {

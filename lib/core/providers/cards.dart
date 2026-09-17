@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/cards.dart';
+import 'package:campus_mobile_experimental/core/services/tss_exam_schedule.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -39,6 +40,20 @@ class CardsDataProvider extends ChangeNotifier {
 
   /// SERVICES
   final _cardsService = CardsService();
+
+  // MA-470 tss-finals-midterm START - anonymous Finals preview
+  bool get isAnonymousQaExamPreviewEnabled => TssExamScheduleClient().anonymousQaPreviewEnabled;
+
+  void showAnonymousQaExamPreview() {
+    if (!isAnonymousQaExamPreviewEnabled) return;
+    final alreadyOrdered = _cardOrder.contains('finals');
+    final alreadyVisible = _cardStates['finals'] == true;
+    if (alreadyOrdered && alreadyVisible) return;
+    if (!alreadyOrdered) _cardOrder.insert(0, 'finals');
+    _cardStates['finals'] = true;
+    notifyListeners();
+  }
+  // MA-470 tss-finals-midterm END - anonymous Finals preview
 
   // Default card order for native cards
   // Most of the time immediately overwritten by default card order coming from server
@@ -158,6 +173,11 @@ class CardsDataProvider extends ChangeNotifier {
       _error = _cardsService.error;
     }
     _isLoading = false;
+    // MA-470 tss-finals-midterm START - restore Finals preview after card refresh
+    if (!(_userDataProvider?.isLoggedIn ?? false)) {
+      showAnonymousQaExamPreview();
+    }
+    // MA-470 tss-finals-midterm END - restore Finals preview after card refresh
     notifyListeners();
   }
 
