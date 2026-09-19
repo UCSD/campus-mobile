@@ -78,6 +78,7 @@ class FinalsCard extends StatelessWidget {
       finalsData.forEach((key, value) {
         for (ScheduledClass data in value) {
           final section = data.section;
+          final room = section.room?.trim();
           listToReturn.add(
             ListTile(
               // Friday
@@ -86,20 +87,17 @@ class FinalsCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 7),
-                  // CSE 127  19:00 - 21:59
-                  Row(
-                    children: [
-                      buildClassCode(context, '${data.subjectCode} ${data.courseCode}'),
-                      SizedBox(width: 10), // 10 logical pixels
-                      buildTimeRow(context, section.time),
-                    ],
-                  ),
+                  // CSE 127
+                  buildClassCode(context, '${data.subjectCode} ${data.courseCode}'),
+                  SizedBox(height: 2),
+                  // Final Time: 19:00 - 21:59
+                  buildTimeRow(context, section.time),
                   SizedBox(height: 2),
                   // Intro to Computer Security
                   buildClassTitle(context, data.courseTitle ?? ''),
                   SizedBox(height: 2),
                   // WLH 2005
-                  buildLocationRow(context, 'Location: ${section.room ?? ''}'.trim()),
+                  buildLocationRow(context, 'Location: ${room == null || room.isEmpty ? 'TBD' : room}'),
                   ///////////////// Horizontal Division ///////////////////
                   if (i < finalsCount) Divider(color: listTileDividerColorLight, thickness: 0.7),
                 ],
@@ -167,8 +165,9 @@ class FinalsCard extends StatelessWidget {
 
   // Small body text i.e. 15:00 - 17:59 (24hr format)
   Widget buildTimeRow(BuildContext context, String? time) {
+    final formattedTime = time?.replaceAllMapped(RegExp(r'(\d{1,2}:\d{2}):\d{2}'), (match) => match.group(1)!);
     return Text(
-      time ?? 'TBA', // TBA if time is null or empty
+      'Final Time: ${formattedTime?.trim().isNotEmpty == true ? formattedTime! : 'TBA'}',
       style: TextStyle(
         fontSize: 16,
         color: Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
@@ -182,7 +181,7 @@ class FinalsCard extends StatelessWidget {
     return Text(
       title,
       style: TextStyle(
-        fontSize: 18.0,
+        fontSize: 16.0,
         color: Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
         fontWeight: FontWeight.w400,
       ),
@@ -200,7 +199,7 @@ class FinalsCard extends StatelessWidget {
               Text(
                 location,
                 style: TextStyle(
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                   color: Theme.of(context).brightness == Brightness.light
                       ? descriptiveTextColorLight
                       : descriptiveTextColorDark,

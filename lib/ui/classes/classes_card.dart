@@ -185,29 +185,31 @@ class ClassScheduleCard extends StatelessWidget {
             size: 34,
           ),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Start and Finish Time:',
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
-                  fontWeight: FontWeight.w400,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Start and Finish Time:',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                  fontWeight: FontWeight.w700,
+                SizedBox(height: 5),
+                Text(
+                  (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -225,30 +227,32 @@ class ClassScheduleCard extends StatelessWidget {
             size: 34,
           ),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Classroom Location:',
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
-                  fontWeight: FontWeight.w400,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Classroom Location:',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                location,
-                style: TextStyle(
-                  fontSize: 15,
-                  letterSpacing: 0.8,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                  fontWeight: FontWeight.w700,
+                SizedBox(height: 5),
+                Text(
+                  location,
+                  style: TextStyle(
+                    fontSize: 15,
+                    letterSpacing: 0.8,
+                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -266,29 +270,31 @@ class ClassScheduleCard extends StatelessWidget {
             size: 34,
           ),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Evaluation Option:',
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
-                  fontWeight: FontWeight.w400,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Evaluation Option:',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                gradeEvaluation,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                  fontWeight: FontWeight.w700,
+                SizedBox(height: 5),
+                Text(
+                  gradeEvaluation,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

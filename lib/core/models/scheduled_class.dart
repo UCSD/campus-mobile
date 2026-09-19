@@ -14,7 +14,10 @@ class ScheduledClass {
     final days = section.days?.trim();
     if (days == null || days.isEmpty) return 'TBA';
 
-    final dayCodes = RegExp(r'MO|TU|WE|TH|FR|SA|SU').allMatches(days).map((match) => match.group(0)!).toList();
+    const dayLabels = {'MO': 'Mon', 'TU': 'Tue', 'WE': 'Wed', 'TH': 'Thu', 'FR': 'Fri', 'SA': 'Sat', 'SU': 'Sun'};
+    final dayCodes = RegExp(
+      r'MO|TU|WE|TH|FR|SA|SU',
+    ).allMatches(days).map((match) => dayLabels[match.group(0)!]!).toList();
     return dayCodes.isEmpty ? days : dayCodes.join(', ');
   }
 
