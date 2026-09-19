@@ -115,7 +115,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     /// courses as well
     for (ClassData classData in _classScheduleModel.data!) {
       // print('\x1B[33m${classData.toJson()}\x1B[0m');
-      if (classData.enrollmentStatus == 'Booked') enrolledCourses.add(classData);
+      final isBooked = classData.enrollmentStatus == 'Booked';
+      if (isBooked) enrolledCourses.add(classData);
     }
 
     print('\x1B[33m${enrolledCourses.length}\x1B[0m');

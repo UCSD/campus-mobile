@@ -12,7 +12,8 @@ class ScheduledClass {
 
   String get displayDays {
     final days = section.days?.trim();
-    if (days == null || days.isEmpty) return 'TBA';
+    if (days == null) return 'TBA';
+    if (days.isEmpty) return 'TBA';
 
     const dayLabels = {'MO': 'Mon', 'TU': 'Tue', 'WE': 'Wed', 'TH': 'Thu', 'FR': 'Fri', 'SA': 'Sat', 'SU': 'Sun'};
     final dayCodes = RegExp(

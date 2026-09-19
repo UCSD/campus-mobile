@@ -112,10 +112,11 @@ class ClassList extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final titleStyle = isDark ? titleSmallDark : titleSmallLight;
     final detailStyle = (isDark ? descriptiveTextSmallDark : descriptiveTextSmallLight).copyWith(fontSize: 16);
-    final meetingType = sectionData.meetingType?.trim();
+    final meetingType = sectionData.meetingType?.trim() ?? '';
     final meetingLabel = isMidterm
         ? '${abbrevToFullWeekday(sectionData.days)}, ${formatDate(sectionData.date) ?? 'TBD'}'
         : scheduledClass.displayDays;
+    final meetingTypeLabel = meetingType.toLowerCase() == 'unknown' ? '' : meetingType;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -136,10 +137,10 @@ class ClassList extends StatelessWidget {
                     style: titleStyle,
                   ),
                 ),
-                if (meetingType != null && meetingType.isNotEmpty) ...[
+                if (meetingTypeLabel.isNotEmpty) ...[
                   const SizedBox(width: 8),
-                  Flexible(
-                    child: Text(meetingType, textAlign: TextAlign.end, style: detailStyle),
+                  Expanded(
+                    child: Text(meetingTypeLabel, textAlign: TextAlign.end, style: detailStyle),
                   ),
                 ],
               ],
@@ -176,7 +177,8 @@ class ClassList extends StatelessWidget {
   }
 
   Widget _detailRow(IconData icon, String? text, TextStyle style, {Widget? trailing}) {
-    final value = text?.trim();
+    final value = text?.trim() ?? '';
+    final hasValue = value.isNotEmpty;
     return Padding(
       padding: const EdgeInsets.only(top: 4),
       child: Row(
@@ -189,10 +191,7 @@ class ClassList extends StatelessWidget {
               spacing: 4,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                if (value != null && value.isNotEmpty)
-                  Text(value, style: style)
-                else if (trailing == null)
-                  Text('TBD', style: style),
+                if (hasValue) Text(value, style: style) else if (trailing == null) Text('TBD', style: style),
                 if (trailing != null) trailing,
               ],
             ),
@@ -206,7 +205,12 @@ class ClassList extends StatelessWidget {
     final building = scheduledClass.section.building?.trim() ?? '';
     final room = scheduledClass.section.room?.trim() ?? '';
     if (room.isEmpty) return building.isEmpty ? 'TBD' : building;
-    if (building.isEmpty || room.toUpperCase().startsWith(building.toUpperCase())) return room;
+    if (building.isEmpty) return room;
+
+    final upperCaseRoom = room.toUpperCase();
+    final upperCaseBuilding = building.toUpperCase();
+    final roomIncludesBuilding = upperCaseRoom.startsWith(upperCaseBuilding);
+    if (roomIncludesBuilding) return room;
     return '$building $room';
   }
 
