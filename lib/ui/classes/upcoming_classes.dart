@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,13 +7,13 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 class UpcomingCoursesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<SectionData> data = Provider.of<ClassScheduleDataProvider>(context).upcomingCourses;
+    List<ScheduledClass> data = Provider.of<ClassScheduleDataProvider>(context).upcomingCourses;
     int? selectedCourseIndex = Provider.of<ClassScheduleDataProvider>(context).selectedCourse;
     return buildListOfCourses(context, data, selectedCourseIndex);
   }
 
   // Right Hand Side of Classes Card //
-  Widget buildListOfCourses(BuildContext context, List<SectionData> data, int? selectedCourse) {
+  Widget buildListOfCourses(BuildContext context, List<ScheduledClass> data, int? selectedCourse) {
     // Builds Today's Schedule using buildTile
     List<Widget> listOfCourses = List.generate(
       data.length * 2 - 1, // Adjust length to account for dividers
@@ -46,15 +46,12 @@ class UpcomingCoursesList extends StatelessWidget {
             ),
           ),
         ),
-        ListView(
-          children: listOfCourses,
-          shrinkWrap: true,
-        ),
+        ListView(children: listOfCourses, shrinkWrap: true),
       ],
     );
   }
 
-  Widget buildTile(int index, int? selectedCourse, SectionData data, BuildContext context) {
+  Widget buildTile(int index, int? selectedCourse, ScheduledClass data, BuildContext context) {
     bool isSelected = index == selectedCourse;
     return ListTile(
       dense: true,
@@ -74,21 +71,21 @@ class UpcomingCoursesList extends StatelessWidget {
               color: isSelected
                   ? toggleActiveColor
                   : Theme.of(context).brightness == Brightness.light
-                      ? lightPrimaryColor
-                      : darkPrimaryColor2,
+                  ? lightPrimaryColor
+                  : darkPrimaryColor2,
             ),
           ),
           SizedBox(height: 5),
           // Small Body i.e. "WE @ 10:00"
           Text(
-            '${data.days} @ ${getStartTime(data.time!)}',
+            '${data.displayDays} @ ${getStartTime(data.section.time!)}',
             style: TextStyle(
               fontSize: 16,
               color: isSelected
                   ? toggleActiveColor
                   : Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
+                  ? descriptiveTextColorLight
+                  : descriptiveTextColorDark,
               fontWeight: FontWeight.w400,
             ),
           ),

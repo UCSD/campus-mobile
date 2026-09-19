@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
@@ -10,59 +10,59 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 class ClassList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ContainerView(
-      child: buildSchedule(context),
-    );
+    return ContainerView(child: buildSchedule(context));
   }
 
   Widget buildSchedule(BuildContext context) {
     List<Widget> list = [];
-    Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses
-        .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
-    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses.keys.forEach(
-      (key) {
-        final bool hasClasses = Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.isNotEmpty;
-        if (hasClasses) {
-          list.add(SliverStickyHeader(
+    Provider.of<ClassScheduleDataProvider>(
+      context,
+    ).enrolledClasses.addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
+    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses.keys.forEach((key) {
+      final bool hasClasses = Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.isNotEmpty;
+      if (hasClasses) {
+        list.add(
+          SliverStickyHeader(
             header: buildWeekDayHeader(context, key),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 if (key == 'MI') {
                   return buildMidterm(
-                      Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index));
+                    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index),
+                  );
                 }
                 return buildClass(
-                    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index));
+                  Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index),
+                );
               }, childCount: Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.length),
             ),
-          ));
-        }
-      },
-    );
+          ),
+        );
+      }
+    });
     return CustomScrollView(slivers: list);
   }
 
-//  Widget buildHeader(
-//      BuildContext context, String weekday, String specialMtgCode) {
-//    if (specialMtgCode == null) {
-//      buildWeekDayHeader(context, weekday);
-//    } else {
-//      return Container(
-//        color: Theme.of(context).secondaryHeaderColor,
-//        child: Padding(
-//          padding: const EdgeInsets.all(12.0),
-//          child: Text(
-//            "Midterm",
-//            style: TextStyle(
-//              fontSize: 20.0,
-//              color: Colors.white,
-//            ),
-//          ),
-//        ),
-//      );
-//    }
-//  }
+  //  Widget buildHeader(
+  //      BuildContext context, String weekday, String specialMtgCode) {
+  //    if (specialMtgCode == null) {
+  //      buildWeekDayHeader(context, weekday);
+  //    } else {
+  //      return Container(
+  //        color: Theme.of(context).secondaryHeaderColor,
+  //        child: Padding(
+  //          padding: const EdgeInsets.all(12.0),
+  //          child: Text(
+  //            "Midterm",
+  //            style: TextStyle(
+  //              fontSize: 20.0,
+  //              color: Colors.white,
+  //            ),
+  //          ),
+  //        ),
+  //      );
+  //    }
+  //  }
 
   Widget buildWeekDayHeader(BuildContext context, String weekday) {
     weekday = abbrevToFullWeekday(weekday);
@@ -70,18 +70,14 @@ class ClassList extends StatelessWidget {
       color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : descriptiveTextColorLight,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Text(
-          weekday,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white,
-              ),
-        ),
+        child: Text(weekday, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
       ),
     );
   }
 
-  Widget buildClass(SectionData? sectionData) {
-    return sectionData != null
+  Widget buildClass(ScheduledClass? scheduledClass) {
+    final sectionData = scheduledClass?.section;
+    return scheduledClass != null && sectionData != null
         ? Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -89,25 +85,22 @@ class ClassList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    sectionData.subjectCode! + ' ' + sectionData.courseCode!,
+                    '${scheduledClass.subjectCode} ${scheduledClass.courseCode}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
-                  Text(
-                    sectionData.courseTitle!,
-                    style: TextStyle(fontSize: 17.0),
-                  ),
+                  Text(scheduledClass.courseTitle ?? '', style: TextStyle(fontSize: 17.0)),
                   Text(sectionData.instructorName!, style: TextStyle(fontSize: 17.0)),
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
-                    child: Row(children: [
-                      Text(sectionData.meetingType! + ' '),
-                      TimeRangeWidget(
-                        time: sectionData.time!,
-                      )
-                    ]),
+                    child: Row(
+                      children: [
+                        Text(sectionData.meetingType! + ' '),
+                        TimeRangeWidget(time: sectionData.time!),
+                      ],
+                    ),
                   ),
                   Text(sectionData.building! + ' ' + sectionData.room!),
-                  Text(sectionData.gradeOption)
+                  Text(scheduledClass.gradeOption),
                 ],
               ),
             ),
@@ -138,8 +131,9 @@ class ClassList extends StatelessWidget {
     }
   }
 
-  Widget buildMidterm(SectionData? sectionData) {
-    return sectionData != null
+  Widget buildMidterm(ScheduledClass? scheduledClass) {
+    final sectionData = scheduledClass?.section;
+    return scheduledClass != null && sectionData != null
         ? Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -147,23 +141,20 @@ class ClassList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    sectionData.subjectCode! + ' ' + sectionData.courseCode!,
+                    '${scheduledClass.subjectCode} ${scheduledClass.courseCode}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
-                  Text(
-                    sectionData.courseTitle!,
-                    style: TextStyle(fontSize: 17.0),
-                  ),
+                  Text(scheduledClass.courseTitle ?? '', style: TextStyle(fontSize: 17.0)),
                   Text(sectionData.instructorName!),
                   Text(sectionData.building! + ' ' + sectionData.room!),
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
-                    child: Row(children: [
-                      Text(abbrevToFullWeekday(sectionData.days) + ", " + formatDate(sectionData.date)! + ' from '),
-                      TimeRangeWidget(
-                        time: sectionData.time!,
-                      )
-                    ]),
+                    child: Row(
+                      children: [
+                        Text(abbrevToFullWeekday(sectionData.days) + ", " + formatDate(sectionData.date)! + ' from '),
+                        TimeRangeWidget(time: sectionData.time!),
+                      ],
+                    ),
                   ),
                 ],
               ),

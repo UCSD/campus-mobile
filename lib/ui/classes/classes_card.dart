@@ -1,7 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/classes/upcoming_classes.dart';
@@ -50,10 +50,16 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildClassScheduleCard(BuildContext context, List<SectionData> courseData, int selectedCourse,
-      DateTime lastUpdated, String nextDayWithClasses) {
+  Widget buildClassScheduleCard(
+    BuildContext context,
+    List<ScheduledClass> courseData,
+    int selectedCourse,
+    DateTime lastUpdated,
+    String nextDayWithClasses,
+  ) {
     try {
-      final section = courseData[selectedCourse];
+      final scheduledClass = courseData[selectedCourse];
+      final section = scheduledClass.section;
       return Padding(
         padding: const EdgeInsets.only(left: 2.0, top: 4.0),
         child: Row(
@@ -71,26 +77,27 @@ class ClassScheduleCard extends StatelessWidget {
                         'Next Class',
                         style: TextStyle(
                           fontSize: 22.0,
-                          color:
-                              Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                          color: Theme.of(context).brightness == Brightness.light
+                              ? lightPrimaryColor
+                              : darkPrimaryColor2,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       SizedBox(height: 8),
                       // CSE 141L
-                      buildClassCode(context, '${section.subjectCode} ${section.courseCode}'),
+                      buildClassCode(context, '${scheduledClass.subjectCode} ${scheduledClass.courseCode}'),
                       SizedBox(height: 3),
                       // Laboratory
                       buildClassType(context, section.meetingType!),
                       SizedBox(height: 3),
                       // Start and Finish Time:
-                      buildTimeRow(context, section.days!, section.time),
+                      buildTimeRow(context, scheduledClass.displayDays, section.time),
                       SizedBox(height: 8),
                       // Classroom Location:
-                      buildLocationRow(context, '${section.building} ${section.room}'),
+                      buildLocationRow(context, section.room?.trim().isNotEmpty == true ? section.room!.trim() : 'TBD'),
                       SizedBox(height: 8),
                       // Evaluation Option:
-                      buildGradeEvaluationRow(context, section.gradeOption),
+                      buildGradeEvaluationRow(context, scheduledClass.gradeOption),
                       // "Last updated: A few seconds ago
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0, top: 24.0),
@@ -102,22 +109,14 @@ class ClassScheduleCard extends StatelessWidget {
               ),
             ),
             // Vertical Divider
-            SizedBox(
-              height: 276,
-              child: VerticalDivider(
-                color: listTileDividerColorDark,
-                thickness: 0.7,
-              ),
-            ),
+            SizedBox(height: 276, child: VerticalDivider(color: listTileDividerColorDark, thickness: 0.7)),
             // Right-hand side of the card //
             Flexible(
               flex: 4, // Adjusts width of Right Hand Side
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start, // Aligns content to the top
                 crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
-                children: [
-                  UpcomingCoursesList(),
-                ],
+                children: [UpcomingCoursesList()],
               ),
             ),
           ],
@@ -145,13 +144,16 @@ class ClassScheduleCard extends StatelessWidget {
 
   // Heading 3 i.e. "CSE 141L"
   Widget buildClassCode(BuildContext context, String className) {
-    return Text(className,
-        style: TextStyle(
-            fontSize: 17.0,
-            fontFamily: 'Refrigerator Deluxe',
-            letterSpacing: 1.2,
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-            fontWeight: FontWeight.w900));
+    return Text(
+      className,
+      style: TextStyle(
+        fontSize: 17.0,
+        fontFamily: 'Refrigerator Deluxe',
+        letterSpacing: 1.2,
+        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+        fontWeight: FontWeight.w900,
+      ),
+    );
   }
 
   // Small body text i.e. "Laboratory"
@@ -162,8 +164,9 @@ class ClassScheduleCard extends StatelessWidget {
         classType,
         style: TextStyle(
           fontSize: 17,
-          color:
-              Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
+          color: Theme.of(context).brightness == Brightness.light
+              ? descriptiveTextColorLight
+              : descriptiveTextColorDark,
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -196,11 +199,14 @@ class ClassScheduleCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              Text((day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                      fontWeight: FontWeight.w700))
+              Text(
+                (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ],
           ),
         ],
@@ -236,10 +242,11 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                 location,
                 style: TextStyle(
-                    fontSize: 15,
-                    letterSpacing: 0.8,
-                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700),
+                  fontSize: 15,
+                  letterSpacing: 0.8,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -253,9 +260,11 @@ class ClassScheduleCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
-          Icon(Icons.check_box_outlined,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-              size: 34),
+          Icon(
+            Icons.check_box_outlined,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+            size: 34,
+          ),
           SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,9 +283,10 @@ class ClassScheduleCard extends StatelessWidget {
               Text(
                 gradeEvaluation,
                 style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700),
+                  fontSize: 16,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
