@@ -16,7 +16,7 @@ class UpcomingCoursesList extends StatelessWidget {
   Widget buildListOfCourses(BuildContext context, List<ScheduledClass> data, int? selectedCourse) {
     // Builds Today's Schedule using buildTile
     List<Widget> listOfCourses = List.generate(
-      data.length * 2 - 1, // Adjust length to account for dividers
+      data.isEmpty ? 0 : data.length * 2 - 1, // Adjust length to account for dividers
       (int index) {
         if (index.isEven) {
           // Show a tile at even indexes
@@ -46,13 +46,14 @@ class UpcomingCoursesList extends StatelessWidget {
             ),
           ),
         ),
-        ListView(children: listOfCourses, shrinkWrap: true),
+        ListView(physics: NeverScrollableScrollPhysics(), children: listOfCourses, shrinkWrap: true),
       ],
     );
   }
 
   Widget buildTile(int index, int? selectedCourse, ScheduledClass data, BuildContext context) {
     bool isSelected = index == selectedCourse;
+    final time = data.section.time?.trim();
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.symmetric(horizontal: 0),
@@ -78,7 +79,7 @@ class UpcomingCoursesList extends StatelessWidget {
           SizedBox(height: 5),
           // Small Body i.e. "WE @ 10:00"
           Text(
-            '${data.displayDays} @ ${getStartTime(data.section.time!)}',
+            '${data.displayDays} @ ${time == null || time.isEmpty ? 'TBA' : getStartTime(time)}',
             style: TextStyle(
               fontSize: 16,
               color: isSelected

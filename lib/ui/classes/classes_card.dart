@@ -60,67 +60,66 @@ class ClassScheduleCard extends StatelessWidget {
     try {
       final scheduledClass = courseData[selectedCourse];
       final section = scheduledClass.section;
-      return Padding(
-        padding: const EdgeInsets.only(left: 2.0, top: 4.0),
-        child: Row(
+      final nextClass = Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(
-              flex: 5,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Next Class',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Theme.of(context).brightness == Brightness.light
-                              ? lightPrimaryColor
-                              : darkPrimaryColor2,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      // CSE 141L
-                      buildClassCode(context, '${scheduledClass.subjectCode} ${scheduledClass.courseCode}'),
-                      SizedBox(height: 3),
-                      // Laboratory
-                      buildClassType(context, section.meetingType!),
-                      SizedBox(height: 3),
-                      // Start and Finish Time:
-                      buildTimeRow(context, scheduledClass.displayDays, section.time),
-                      SizedBox(height: 8),
-                      // Classroom Location:
-                      buildLocationRow(context, section.room?.trim().isNotEmpty == true ? section.room!.trim() : 'TBD'),
-                      SizedBox(height: 8),
-                      // Evaluation Option:
-                      buildGradeEvaluationRow(context, scheduledClass.gradeOption),
-                      // "Last updated: A few seconds ago
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0, top: 24.0),
-                        child: LastUpdatedWidget(time: lastUpdated),
-                      ),
-                    ],
-                  ),
-                ),
+            Text(
+              'Next Class',
+              style: TextStyle(
+                fontSize: 22.0,
+                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            // Vertical Divider
-            SizedBox(height: 276, child: VerticalDivider(color: listTileDividerColorDark, thickness: 0.7)),
-            // Right-hand side of the card //
-            Flexible(
-              flex: 4, // Adjusts width of Right Hand Side
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start, // Aligns content to the top
-                crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
-                children: [UpcomingCoursesList()],
-              ),
+            SizedBox(height: 8),
+            // CSE 141L
+            buildClassCode(context, '${scheduledClass.subjectCode} ${scheduledClass.courseCode}'),
+            SizedBox(height: 3),
+            // Laboratory
+            buildClassType(context, section.meetingType ?? 'Class'),
+            SizedBox(height: 3),
+            // Start and Finish Time:
+            buildTimeRow(context, scheduledClass.displayDays, section.time),
+            SizedBox(height: 8),
+            // Classroom Location:
+            buildLocationRow(context, section.room?.trim().isNotEmpty == true ? section.room!.trim() : 'TBD'),
+            SizedBox(height: 8),
+            // Evaluation Option:
+            buildGradeEvaluationRow(context, scheduledClass.gradeOption),
+            // "Last updated: A few seconds ago
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0, top: 24.0),
+              child: LastUpdatedWidget(time: lastUpdated),
             ),
           ],
         ),
+      );
+      final todaySchedule = Padding(padding: const EdgeInsets.symmetric(horizontal: 8.0), child: UpcomingCoursesList());
+
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 360) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                nextClass,
+                Divider(color: listTileDividerColorDark, thickness: 0.7),
+                todaySchedule,
+              ],
+            );
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(flex: 5, child: nextClass),
+              SizedBox(height: 276, child: VerticalDivider(color: listTileDividerColorDark, thickness: 0.7)),
+              Expanded(flex: 4, child: todaySchedule),
+            ],
+          );
+        },
       );
     } catch (e) {
       FirebaseCrashlytics.instance.recordError(
@@ -190,7 +189,7 @@ class ClassScheduleCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Start and Finish Time:',
+                  'Time and Days:',
                   style: TextStyle(
                     fontSize: 17,
                     color: Theme.of(context).brightness == Brightness.light

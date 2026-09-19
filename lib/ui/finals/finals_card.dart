@@ -90,11 +90,11 @@ class FinalsCard extends StatelessWidget {
                   // CSE 127
                   buildClassCode(context, '${data.subjectCode} ${data.courseCode}'),
                   SizedBox(height: 2),
-                  // Final Time: 19:00 - 21:59
-                  buildTimeRow(context, section.time),
-                  SizedBox(height: 2),
                   // Intro to Computer Security
                   buildClassTitle(context, data.courseTitle ?? ''),
+                  SizedBox(height: 2),
+                  // Final Time: 19:00 - 21:59
+                  buildTimeRow(context, section.time),
                   SizedBox(height: 2),
                   // WLH 2005
                   buildLocationRow(context, 'Location: ${room == null || room.isEmpty ? 'TBD' : room}'),
@@ -167,7 +167,7 @@ class FinalsCard extends StatelessWidget {
   Widget buildTimeRow(BuildContext context, String? time) {
     final formattedTime = time?.replaceAllMapped(RegExp(r'(\d{1,2}:\d{2}):\d{2}'), (match) => match.group(1)!);
     return Text(
-      'Final Time: ${formattedTime?.trim().isNotEmpty == true ? formattedTime! : 'TBA'}',
+      'Time: ${formattedTime?.trim().isNotEmpty == true ? formattedTime! : 'TBA'}',
       style: TextStyle(
         fontSize: 16,
         color: Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,

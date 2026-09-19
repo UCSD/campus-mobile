@@ -136,7 +136,12 @@ class ClassList extends StatelessWidget {
                     style: titleStyle,
                   ),
                 ),
-                if (meetingType != null && meetingType.isNotEmpty) Text(meetingType, style: detailStyle),
+                if (meetingType != null && meetingType.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(meetingType, textAlign: TextAlign.end, style: detailStyle),
+                  ),
+                ],
               ],
             ),
             const SizedBox(height: 2),
