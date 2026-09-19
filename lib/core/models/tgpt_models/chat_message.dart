@@ -1,13 +1,14 @@
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message_persistent.dart';
 
+// MA-707 feedback type START
+enum AssistantChatFeedback { upvote, downvote }
+// MA-707 feedback type END
+
 class ChatCitationReference {
   final int number;
   final String url;
 
-  const ChatCitationReference({
-    required this.number,
-    required this.url,
-  });
+  const ChatCitationReference({required this.number, required this.url});
 
   /// Parses a citation object from legacy `citation_delta` arrays (`citation_num`)
   /// or new `citation_info` packets (`citation_number`).
@@ -15,19 +16,13 @@ class ChatCitationReference {
     final Object? rawNumber = json['citation_num'] ?? json['citation_number'];
     final int? number = rawNumber is int ? rawNumber : int.tryParse(rawNumber?.toString() ?? '');
 
-    return ChatCitationReference(
-      number: number ?? 0,
-      url: json['document_id']?.toString() ?? '',
-    );
+    return ChatCitationReference(number: number ?? 0, url: json['document_id']?.toString() ?? '');
   }
 }
 
 class AssistantMessageContent {
   /// Line-based `[rq] question` (mobile / legacy TGPT lines).
-  static final RegExp _relatedQuestionPattern = RegExp(
-    r'^(?:[-*]\s*)?\[rq\]\s*(.*)$',
-    caseSensitive: false,
-  );
+  static final RegExp _relatedQuestionPattern = RegExp(r'^(?:[-*]\s*)?\[rq\]\s*(.*)$', caseSensitive: false);
 
   /// Markdown links `[label](#rq)` from web-style TGPT output.
   static final RegExp _rqMarkdownLink = RegExp(r'\[([^\]\n]+)\]\(\s*#rq\s*\)');
@@ -35,10 +30,7 @@ class AssistantMessageContent {
   /// Bullet line that is only `- [label](#rq)`.
   static final RegExp _bulletRqOnlyLine = RegExp(r'^\s*[-*+]\s*\[[^\]\n]+\]\(\s*#rq\s*\)\s*$');
 
-  const AssistantMessageContent({
-    required this.markdown,
-    this.relatedQuestions = const <String>[],
-  });
+  const AssistantMessageContent({required this.markdown, this.relatedQuestions = const <String>[]});
 
   final String markdown;
   final List<String> relatedQuestions;
@@ -74,8 +66,7 @@ class AssistantMessageContent {
     if (hasRelatedQuestions && hasAnswerLines) {
       final String trailingLine = normalizedAnswerLines.last.trim().toLowerCase();
       var isTrailingRelatedQuestions = trailingLine == 'related questions' || trailingLine == 'related questions:';
-      if (isTrailingRelatedQuestions)
-        normalizedAnswerLines.removeLast();
+      if (isTrailingRelatedQuestions) normalizedAnswerLines.removeLast();
     }
 
     String markdown = _trimBlankLines(normalizedAnswerLines).join('\n');
@@ -83,18 +74,12 @@ class AssistantMessageContent {
     markdown = _collapseBlankLines(markdown).trim();
     markdown = _stripTrailingRelatedQuestionsFromMarkdown(markdown, relatedQuestions);
 
-    return AssistantMessageContent(
-      markdown: markdown,
-      relatedQuestions: List<String>.unmodifiable(relatedQuestions),
-    );
+    return AssistantMessageContent(markdown: markdown, relatedQuestions: List<String>.unmodifiable(relatedQuestions));
   }
 
   /// TGPT web widget strips the related-questions block from the visible transcript; keep
   /// questions only in the dedicated UI ([...](#rq) hydrated separately from markdown).
-  static String _stripTrailingRelatedQuestionsFromMarkdown(
-    String markdown,
-    List<String> relatedQuestions,
-  ) {
+  static String _stripTrailingRelatedQuestionsFromMarkdown(String markdown, List<String> relatedQuestions) {
     var isInvalidInput = relatedQuestions.isEmpty || markdown.trim().isEmpty;
     if (isInvalidInput) return markdown;
 
@@ -148,7 +133,10 @@ class AssistantMessageContent {
   static bool _isRelatedQuestionsHeadingLine(String line) {
     final String t = line.trim();
     if (t.isEmpty) return false;
-    var hasAsteriskHeading = RegExp(r'^\*{0,2}\s*Related Questions\s*\*{0,2}\s*:?\s*$', caseSensitive: false).hasMatch(t);
+    var hasAsteriskHeading = RegExp(
+      r'^\*{0,2}\s*Related Questions\s*\*{0,2}\s*:?\s*$',
+      caseSensitive: false,
+    ).hasMatch(t);
     if (hasAsteriskHeading) return true;
     var hasHashHeading = RegExp(r'^#+\s*Related Questions\s*:?\s*$', caseSensitive: false).hasMatch(t);
     if (hasHashHeading) return true;
@@ -178,6 +166,10 @@ class AssistantChatMessage {
   final bool isFromUser;
   final bool isStreaming;
   final List<ChatCitationReference> citations;
+  // MA-707 feedback state START
+  final AssistantChatFeedback? feedback;
+  final bool isFeedbackPending;
+  // MA-707 feedback state END
 
   const AssistantChatMessage({
     required this.id,
@@ -186,6 +178,10 @@ class AssistantChatMessage {
     required this.isFromUser,
     this.isStreaming = false,
     this.citations = const [],
+    // MA-707 feedback setup START
+    this.feedback,
+    this.isFeedbackPending = false,
+    // MA-707 feedback setup END
   });
 
   AssistantChatMessage copyWith({
@@ -195,6 +191,11 @@ class AssistantChatMessage {
     bool? isFromUser,
     bool? isStreaming,
     List<ChatCitationReference>? citations,
+    // MA-707 feedback update START
+    AssistantChatFeedback? feedback,
+    bool clearFeedback = false,
+    bool? isFeedbackPending,
+    // MA-707 feedback update END
   }) {
     return AssistantChatMessage(
       id: id ?? this.id,
@@ -203,16 +204,23 @@ class AssistantChatMessage {
       isFromUser: isFromUser ?? this.isFromUser,
       isStreaming: isStreaming ?? this.isStreaming,
       citations: citations ?? this.citations,
+      // MA-707 feedback copy START
+      feedback: clearFeedback ? null : feedback ?? this.feedback,
+      isFeedbackPending: isFeedbackPending ?? this.isFeedbackPending,
+      // MA-707 feedback copy END
     );
   }
 
   AssistantMessageContent get content => AssistantMessageContent.parse(text);
 
-  ChatMessagePersistent toPersistent({
-    required String sessionId,
-    required String authorId,
-    String? parentMessageId,
-  }) {
+  // MA-707 feedback message ID START
+  int? get feedbackMessageId {
+    if (isFromUser || isStreaming) return null;
+    return int.tryParse(id);
+  }
+  // MA-707 feedback message ID END
+
+  ChatMessagePersistent toPersistent({required String sessionId, required String authorId, String? parentMessageId}) {
     return ChatMessagePersistent(
       id: id,
       text: text,
@@ -221,15 +229,31 @@ class AssistantChatMessage {
       isFromUser: isFromUser,
       sessionId: sessionId,
       parentMessageId: parentMessageId,
+      // MA-707 feedback persistence START
+      feedback: feedback?.name,
+      // MA-707 feedback persistence END
     );
   }
 
   factory AssistantChatMessage.fromPersistent(ChatMessagePersistent persistent) {
+    // MA-707 feedback restore START
+    AssistantChatFeedback? feedback;
+    for (final AssistantChatFeedback value in AssistantChatFeedback.values) {
+      if (value.name == persistent.feedback) {
+        feedback = value;
+        break;
+      }
+    }
+    // MA-707 feedback restore END
+
     return AssistantChatMessage(
       id: persistent.id,
       text: persistent.text,
       createdAt: DateTime.fromMillisecondsSinceEpoch(persistent.createdAt),
       isFromUser: persistent.isFromUser,
+      // MA-707 restored feedback START
+      feedback: feedback,
+      // MA-707 restored feedback END
     );
   }
 }

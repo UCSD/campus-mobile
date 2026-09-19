@@ -36,6 +36,11 @@ class ChatMessagePersistent extends HiveObject {
   @HiveField(6)
   final String? parentMessageId;
 
+  // MA-707 vote persistence START
+  /// Selected assistant feedback value
+  @HiveField(7)
+  final String? feedback;
+
   ChatMessagePersistent({
     required this.id,
     required this.text,
@@ -44,27 +49,31 @@ class ChatMessagePersistent extends HiveObject {
     required this.isFromUser,
     this.sessionId,
     this.parentMessageId,
+    this.feedback,
   });
 
   /// Create a ChatMessagePersistent from JSON
   factory ChatMessagePersistent.fromJson(Map<String, dynamic> json) => ChatMessagePersistent(
-        id: json["id"],
-        text: json["text"],
-        authorId: json["author_id"] ?? json["authorId"],
-        createdAt: json["created_at"] ?? json["createdAt"],
-        isFromUser: json["is_from_user"] ?? json["isFromUser"],
-        sessionId: json["session_id"] ?? json["sessionId"],
-        parentMessageId: json["parent_message_id"] ?? json["parentMessageId"],
-      );
+    id: json["id"],
+    text: json["text"],
+    authorId: json["author_id"] ?? json["authorId"],
+    createdAt: json["created_at"] ?? json["createdAt"],
+    isFromUser: json["is_from_user"] ?? json["isFromUser"],
+    sessionId: json["session_id"] ?? json["sessionId"],
+    parentMessageId: json["parent_message_id"] ?? json["parentMessageId"],
+    feedback: json["feedback"],
+  );
 
   /// Convert to JSON map
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "text": text,
-        "author_id": authorId,
-        "created_at": createdAt,
-        "is_from_user": isFromUser,
-        "session_id": sessionId,
-        "parent_message_id": parentMessageId,
-      };
+    "id": id,
+    "text": text,
+    "author_id": authorId,
+    "created_at": createdAt,
+    "is_from_user": isFromUser,
+    "session_id": sessionId,
+    "parent_message_id": parentMessageId,
+    "feedback": feedback,
+  };
+  // MA-707 vote persistence END
 }

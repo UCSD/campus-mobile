@@ -13,9 +13,7 @@ class ChatMessagePersistentAdapter extends TypeAdapter<ChatMessagePersistent> {
   @override
   ChatMessagePersistent read(BinaryReader reader) {
     final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
+    final fields = <int, dynamic>{for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read()};
     return ChatMessagePersistent(
       id: fields[0] as String,
       text: fields[1] as String,
@@ -24,13 +22,14 @@ class ChatMessagePersistentAdapter extends TypeAdapter<ChatMessagePersistent> {
       isFromUser: fields[4] as bool,
       sessionId: fields[5] as String?,
       parentMessageId: fields[6] as String?,
+      feedback: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatMessagePersistent obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,7 +43,9 @@ class ChatMessagePersistentAdapter extends TypeAdapter<ChatMessagePersistent> {
       ..writeByte(5)
       ..write(obj.sessionId)
       ..writeByte(6)
-      ..write(obj.parentMessageId);
+      ..write(obj.parentMessageId)
+      ..writeByte(7)
+      ..write(obj.feedback);
   }
 
   @override

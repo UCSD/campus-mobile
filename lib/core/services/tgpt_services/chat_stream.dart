@@ -18,6 +18,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_send_message.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_error_message.dart';
+import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_debug_log.dart';
+import 'package:campus_mobile_experimental/core/services/tgpt_services/tgpt_request.dart';
 
 /// Streaming chunk data for real-time chat display.
 class StreamingChatChunk {
@@ -26,12 +28,7 @@ class StreamingChatChunk {
   final int? messageId; // reserved_assistant_message_id for threading
   final List<ChatCitationReference>? citations; // citation references (at end of stream)
 
-  const StreamingChatChunk({
-    required this.delta,
-    this.done = false,
-    this.messageId,
-    this.citations,
-  });
+  const StreamingChatChunk({required this.delta, this.done = false, this.messageId, this.citations});
 }
 
 /// Merges search/retrieval documents into [documentIdToUrl] so [citation_info] can resolve URLs.
@@ -83,26 +80,25 @@ class ChatMessageStreamService {
     required String chatSessionId,
     int? parentMessageId,
   }) async* {
-    // Build fresh headers per request to avoid race conditions
-    final headers = <String, String>{
-      "accept": "application/json",
-      "content-type": "application/json",
-    };
-    if (_userDataProvider.isLoggedIn) {
-      headers['Authorization'] = 'Bearer ${_userDataProvider.authenticationModel.accessToken}';
-    } else {
-      headers['Authorization'] = dotenv.get('MOBILE_APP_PUBLIC_DATA_KEY');
-    }
-
     final endpoint = dotenv.env['CHAT_SEND_MESSAGE_ENDPOINT'];
     if (endpoint == null) {
       yield const StreamingChatChunk(delta: ErrorConstants.TRITONGPT_UNAVAILABLE, done: true);
       return;
     }
 
+    // MA-707 TGPT proxy auth START
+    final String authMode = tgptAuthMode(endpoint: endpoint, isLoggedIn: _userDataProvider.isLoggedIn);
+    final Map<String, String> headers = tgptRequestHeaders(
+      endpoint: endpoint,
+      isLoggedIn: _userDataProvider.isLoggedIn,
+      accessToken: _userDataProvider.authenticationModel.accessToken ?? '',
+    );
+    // MA-707 TGPT proxy auth END
+
     final String? rawContextUrl = dotenv.env['TGPT_CHAT_SEND_CONTEXT_URL'];
-    final String sendContextUrl =
-        (rawContextUrl != null && rawContextUrl.trim().isNotEmpty) ? rawContextUrl.trim() : 'https://mobile.ucsd.edu/';
+    final String sendContextUrl = (rawContextUrl != null && rawContextUrl.trim().isNotEmpty)
+        ? rawContextUrl.trim()
+        : 'https://mobile.ucsd.edu/';
 
     // Build request body using shared helper (includes `url` per TGPT web widget contract)
     final body = ChatMessageService.buildRequestBody(
@@ -120,7 +116,24 @@ class ChatMessageStreamService {
     dio.options.receiveTimeout = _RECEIVE_TIMEOUT;
 
     try {
+      // MA-707 stream diagnostics START
+      tgptDebugLog(
+        'stream-start',
+        endpoint: endpoint,
+        authMode: authMode,
+        sessionId: chatSessionId,
+        detail: 'parent=${parentMessageId ?? 'none'}',
+      );
+      // MA-707 stream diagnostics END
       final response = await dio.post<ResponseBody>(endpoint, data: body);
+
+      tgptDebugLog(
+        'stream-connected',
+        endpoint: endpoint,
+        authMode: authMode,
+        sessionId: chatSessionId,
+        statusCode: response.statusCode,
+      );
 
       if (response.data == null) {
         yield const StreamingChatChunk(delta: ErrorConstants.TRITONGPT_UNAVAILABLE, done: true);
@@ -170,6 +183,7 @@ class ChatMessageStreamService {
               final String? type = obj['type'] as String?;
 
               if (type == 'stop') {
+                tgptDebugLog('stream-done', endpoint: endpoint, authMode: authMode, sessionId: chatSessionId);
                 yield const StreamingChatChunk(delta: '', done: true);
                 return;
               }
@@ -220,21 +234,19 @@ class ChatMessageStreamService {
 
       yield const StreamingChatChunk(delta: '', done: true);
     } on DioException catch (e) {
+      tgptDebugDio('stream-failed', endpoint: endpoint, authMode: authMode, error: e, sessionId: chatSessionId);
       // Retry once on 401 with refreshed token (align with send/session behavior)
       var isNotRetried = !_hasRetried;
       var has401Status = e.response?.statusCode == 401;
-      if (isNotRetried && has401Status) {
+      final bool canRefreshUserBearer = authMode == 'user-bearer';
+      if (isNotRetried && has401Status && canRefreshUserBearer) {
         _hasRetried = true;
         dio.close();
 
         final bool refreshed = await NetworkHelper.getNewToken(headers);
         if (refreshed) {
           // Restart stream with refreshed token
-          yield* streamMessage(
-            message: message,
-            chatSessionId: chatSessionId,
-            parentMessageId: parentMessageId,
-          );
+          yield* streamMessage(message: message, chatSessionId: chatSessionId, parentMessageId: parentMessageId);
           _hasRetried = false;
           return;
         }

@@ -7,10 +7,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessageBubble extends StatelessWidget {
-  const ChatMessageBubble({
-    super.key,
-    required this.message,
-  });
+  const ChatMessageBubble({super.key, required this.message});
 
   final AssistantChatMessage message;
 
@@ -26,10 +23,7 @@ class ChatMessageBubble extends StatelessWidget {
         constraints: BoxConstraints(maxWidth: maxBubbleWidth),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF3F5F8),
-            borderRadius: BorderRadius.circular(21),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFFF3F5F8), borderRadius: BorderRadius.circular(21)),
           child: Text(
             message.text,
             style: const TextStyle(
@@ -60,10 +54,7 @@ class ChatMessageBubble extends StatelessWidget {
           child: SizedBox(
             width: 20,
             height: 20,
-            child: Image.asset(
-              'assets/images/tgpt/tgpt-icon.png',
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset('assets/images/tgpt/tgpt-icon.png', fit: BoxFit.contain),
           ),
         ),
         const SizedBox(width: 10),
@@ -120,20 +111,22 @@ class ChatMessageBubble extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: message.citations
-                        .map(
-                          (ChatCitationReference citation) => ChatCitation(citation: citation),
-                        )
+                        .map((ChatCitationReference citation) => ChatCitation(citation: citation))
                         .toList(),
                   ),
                 ),
               if (content.relatedQuestions.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
-                  child: _RelatedQuestionsSection(
-                    questions: content.relatedQuestions,
-                    enabled: !isMessageStreaming,
-                  ),
+                  child: _RelatedQuestionsSection(questions: content.relatedQuestions, enabled: !isMessageStreaming),
                 ),
+              // MA-707 feedback controls START
+              if (message.feedbackMessageId != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: _FeedbackRow(message: message),
+                ),
+              // MA-707 feedback controls END
               if (isTypingIndicator) const _TypingIndicator(),
             ],
           ),
@@ -143,11 +136,73 @@ class ChatMessageBubble extends StatelessWidget {
   }
 }
 
-class _RelatedQuestionsSection extends StatelessWidget {
-  const _RelatedQuestionsSection({
-    required this.questions,
+// MA-707 feedback widgets START
+class _FeedbackRow extends StatelessWidget {
+  const _FeedbackRow({required this.message});
+
+  final AssistantChatMessage message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        _FeedbackButton(
+          tooltip: 'Helpful',
+          icon: message.feedback == AssistantChatFeedback.upvote ? Icons.thumb_up : Icons.thumb_up_outlined,
+          selected: message.feedback == AssistantChatFeedback.upvote,
+          enabled: !message.isFeedbackPending,
+          onPressed: () => context.read<ChatProvider>().toggleMessageFeedback(message.id, AssistantChatFeedback.upvote),
+        ),
+        const SizedBox(width: 4),
+        _FeedbackButton(
+          tooltip: 'Not helpful',
+          icon: message.feedback == AssistantChatFeedback.downvote ? Icons.thumb_down : Icons.thumb_down_outlined,
+          selected: message.feedback == AssistantChatFeedback.downvote,
+          enabled: !message.isFeedbackPending,
+          onPressed: () =>
+              context.read<ChatProvider>().toggleMessageFeedback(message.id, AssistantChatFeedback.downvote),
+        ),
+        if (message.isFeedbackPending)
+          const Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2)),
+          ),
+      ],
+    );
+  }
+}
+
+class _FeedbackButton extends StatelessWidget {
+  const _FeedbackButton({
+    required this.tooltip,
+    required this.icon,
+    required this.selected,
     required this.enabled,
+    required this.onPressed,
   });
+
+  final String tooltip;
+  final IconData icon;
+  final bool selected;
+  final bool enabled;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: tooltip,
+      visualDensity: VisualDensity.compact,
+      constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+      color: selected ? linkTextColorLight : lightPrimaryColor,
+      onPressed: enabled ? onPressed : null,
+      icon: Icon(icon, size: 20),
+    );
+  }
+}
+// MA-707 feedback widgets END
+
+class _RelatedQuestionsSection extends StatelessWidget {
+  const _RelatedQuestionsSection({required this.questions, required this.enabled});
 
   final List<String> questions;
   final bool enabled;
@@ -160,9 +215,7 @@ class _RelatedQuestionsSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF6F8FB),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFE1E6EE),
-        ),
+        border: Border.all(color: const Color(0xFFE1E6EE)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,10 +296,7 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    )..repeat();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat();
   }
 
   @override
@@ -267,19 +317,13 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
             builder: (BuildContext context, Widget? child) {
               final double phase = (_controller.value - i * 0.18).clamp(0.0, 1.0);
               final double offset = phase < 0.5 ? -4.0 * (phase / 0.5) : -4.0 * (1.0 - (phase - 0.5) / 0.5);
-              return Transform.translate(
-                offset: Offset(0, offset),
-                child: child,
-              );
+              return Transform.translate(offset: Offset(0, offset), child: child);
             },
             child: Container(
               margin: EdgeInsets.only(left: i == 0 ? 0 : 5),
               width: 7,
               height: 7,
-              decoration: const BoxDecoration(
-                color: Color(0xFFB0B5BE),
-                shape: BoxShape.circle,
-              ),
+              decoration: const BoxDecoration(color: Color(0xFFB0B5BE), shape: BoxShape.circle),
             ),
           );
         }),
