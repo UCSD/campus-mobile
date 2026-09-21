@@ -103,7 +103,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       if (stopsToRender.isEmpty) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 42.0),
-          child: Center(child: Text('Add a stop to view real-time bus arrivals')),
+          child: Center(child: Text('Add a stop to view real-time bus arrivals.')),
         );
       }
 
