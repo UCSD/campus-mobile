@@ -119,7 +119,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       if (isBooked) enrolledCourses.add(classData);
     }
 
-    print('\x1B[33m${enrolledCourses.length}\x1B[0m');
+    // print('\x1B[33m${enrolledCourses.length}\x1B[0m');
     if (enrolledCourses.isEmpty) {
       _error = "No enrolled courses found.";
       _isLoading = false;
