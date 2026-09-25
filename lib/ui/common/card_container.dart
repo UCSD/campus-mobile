@@ -89,23 +89,26 @@ class CardContainer extends StatelessWidget {
         var customErrorText = '';
         if (errorText!.contains('Exception')) {
           customErrorText =
-              'Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu';
+          'Your finals could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu';
         } else {
           customErrorText = 'No finals found.';
         }
         return Padding(
-          padding: const EdgeInsets.only(bottom: 42.0),
+          padding: const EdgeInsets.only(left: 12, top: 32, bottom: 48),
           child: Text(customErrorText),
         );
       } else if (titleText == 'CLASSES') {
         var customErrorText = '';
         if (errorText!.contains('Exception')) {
           customErrorText =
-              'Your classes could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu';
+          'Your classes could not be displayed.\n\nIf the problem persists contact mobilesupport@ucsd.edu';
         } else {
           customErrorText = 'No classes found.';
         }
-        return Text(customErrorText);
+        return Padding(
+          padding: const EdgeInsets.only(top: 32, bottom: 48, left: 12),
+          child: Text(customErrorText),
+        );
       } else {
         return Text('An error occurred, please try again.');
       }
