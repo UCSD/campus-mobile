@@ -3,10 +3,7 @@ import 'package:campus_mobile_experimental/ui/ai_assistant/chat_message_bubble.d
 import 'package:flutter/material.dart';
 
 class ChatMessageList extends StatefulWidget {
-  const ChatMessageList({
-    super.key,
-    required this.messages,
-  });
+  const ChatMessageList({super.key, required this.messages});
 
   final List<AssistantChatMessage> messages;
 
@@ -27,7 +24,8 @@ class _ChatMessageListState extends State<ChatMessageList> {
   void didUpdateWidget(covariant ChatMessageList oldWidget) {
     super.didUpdateWidget(oldWidget);
     final bool didChangeLength = oldWidget.messages.length != widget.messages.length;
-    final bool didChangeLastMessage = !didChangeLength &&
+    final bool didChangeLastMessage =
+        !didChangeLength &&
         widget.messages.isNotEmpty &&
         oldWidget.messages.isNotEmpty &&
         oldWidget.messages.last.text != widget.messages.last.text;
@@ -49,9 +47,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
       itemCount: widget.messages.length,
       separatorBuilder: (_, __) => const SizedBox(height: 14),
       itemBuilder: (BuildContext context, int index) {
-        return ChatMessageBubble(
-          message: widget.messages[index],
-        );
+        return ChatMessageBubble(message: widget.messages[index]);
       },
     );
   }

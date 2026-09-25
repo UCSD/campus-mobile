@@ -21,7 +21,10 @@ class ShuttleDisplay extends StatelessWidget {
         height: 200.0,
         child: Center(
           child: Container(
-              height: 32, width: 32, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
+            height: 32,
+            width: 32,
+            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary),
+          ),
         ),
       );
     } else {
@@ -58,22 +61,21 @@ class ShuttleDisplay extends StatelessWidget {
           ),
           child: CircleAvatar(
             minRadius: 40,
-            backgroundColor:
-                HexColor(arrivingShuttles!.isEmpty ? noArrivalsFoundColor : arrivingShuttles![0].routeColor),
+            backgroundColor: HexColor(
+              arrivingShuttles!.isEmpty ? noArrivalsFoundColor : arrivingShuttles![0].routeColor,
+            ),
             foregroundColor: Colors.black,
             child: Builder(
               builder: (context) {
-                Color circleColor =
-                    HexColor(arrivingShuttles!.isEmpty ? noArrivalsFoundColor : arrivingShuttles![0].routeColor);
+                Color circleColor = HexColor(
+                  arrivingShuttles!.isEmpty ? noArrivalsFoundColor : arrivingShuttles![0].routeColor,
+                );
                 // Calculate luminance to determine the color of "?"
                 final double luminance = circleColor.computeLuminance();
                 final Color textColor = luminance > 0.5 ? Colors.black : Colors.white;
                 return Text(
                   arrivingShuttles!.isEmpty ? "?" : arrivingShuttles![0].routeName[0],
-                  style: TextStyle(
-                    fontSize: 50,
-                    color: textColor,
-                  ),
+                  style: TextStyle(fontSize: 50, color: textColor),
                 );
               },
             ),
@@ -91,7 +93,7 @@ class ShuttleDisplay extends StatelessWidget {
             softWrap: true, // optional, default true
           ),
         ),
-        SizedBox(width: 16)
+        SizedBox(width: 16),
       ],
     );
   }
@@ -105,11 +107,12 @@ class ShuttleDisplay extends StatelessWidget {
           Text(
             "No arrivals found.",
             style: TextStyle(
-                fontSize: 23.0,
-                fontWeight: FontWeight.w700,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? descriptiveTextColorLight
-                    : descriptiveTextColorDark),
+              fontSize: 23.0,
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? descriptiveTextColorLight
+                  : descriptiveTextColorDark,
+            ),
           ),
         ],
       );
@@ -153,7 +156,7 @@ class ShuttleDisplay extends StatelessWidget {
               ),
               buildTimeToArrivalText(context),
             ],
-          )
+          ),
         ],
       );
     }
@@ -210,20 +213,12 @@ class ShuttleDisplay extends StatelessWidget {
             minRadius: 20,
             backgroundColor: circleColor,
             foregroundColor: textColor,
-            child: Text(
-              shuttle.routeName[0],
-              style: TextStyle(fontSize: 25),
-            ),
+            child: Text(shuttle.routeName[0], style: TextStyle(fontSize: 25)),
           ),
         ),
         Expanded(
           flex: 3,
-          child: Text(
-            shuttle.routeName,
-            style: TextStyle(fontSize: 16),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
+          child: Text(shuttle.routeName, style: TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis, maxLines: 1),
         ),
         Expanded(flex: 1, child: Container()),
         Padding(

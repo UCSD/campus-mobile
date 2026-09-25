@@ -5,22 +5,13 @@ import 'package:campus_mobile_experimental/ui/availability/availability_constant
 import 'package:flutter/material.dart';
 
 class AvailabilityDisplay extends StatelessWidget {
-  const AvailabilityDisplay({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
+  const AvailabilityDisplay({Key? key, required this.model}) : super(key: key);
 
   final AvailabilityModel model;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        buildLocationTitle(context),
-        buildAvailabilityBars(context),
-      ],
-    );
-  }
+  Widget build(BuildContext context) =>
+      Column(children: <Widget>[buildLocationTitle(context), buildAvailabilityBars(context)]);
 
   Widget buildLocationTitle(BuildContext context) {
     return Container(
@@ -31,9 +22,7 @@ class AvailabilityDisplay extends StatelessWidget {
         excludeSemantics: true,
         child: Text(
           model.name.toUpperCase(),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.normal,
-              ),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.normal),
         ),
       ),
     );
@@ -44,10 +33,7 @@ class AvailabilityDisplay extends StatelessWidget {
       return Container(
         alignment: Alignment.center,
         padding: EdgeInsets.only(top: DATA_UNAVAILABLE_TOP_PADDING),
-        child: Text(
-          "Data Unavailable",
-          style: TextStyle(fontSize: LOCATION_FONT_SIZE),
-        ),
+        child: Text("Data Unavailable", style: TextStyle(fontSize: LOCATION_FONT_SIZE)),
       );
     }
 
@@ -62,13 +48,8 @@ class AvailabilityDisplay extends StatelessWidget {
           excludeSemantics: true,
           child: GestureDetector(
             onTap: () {
-              if (subLocation.floors.isNotEmpty) {
-                Navigator.pushNamed(
-                  context,
-                  RoutePaths.AVAILABILITY_DETAILED_VIEW,
-                  arguments: subLocation,
-                );
-              }
+              if (subLocation.floors.isNotEmpty)
+                Navigator.pushNamed(context, RoutePaths.AVAILABILITY_DETAILED_VIEW, arguments: subLocation);
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,11 +65,11 @@ class AvailabilityDisplay extends StatelessWidget {
                             subLocation.name,
                             style: subLocation.floors.isNotEmpty
                                 ? (Theme.of(context).brightness == Brightness.dark
-                                    ? textButtonSmallDark
-                                    : textButtonSmallLight)
+                                      ? textButtonSmallDark
+                                      : textButtonSmallLight)
                                 : (Theme.of(context).brightness == Brightness.dark
-                                    ? descriptiveTextSmallDark.copyWith(fontSize: 22.0)
-                                    : descriptiveTextSmallLight.copyWith(fontSize: 22.0)),
+                                      ? descriptiveTextSmallDark.copyWith(fontSize: 22.0)
+                                      : descriptiveTextSmallLight.copyWith(fontSize: 22.0)),
                           ),
                           SizedBox(height: 4),
                           Text(
@@ -123,9 +104,7 @@ class AvailabilityDisplay extends StatelessWidget {
                           ? 0.01
                           : percentAvailability(subLocation).toDouble(),
                       backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        setIndicatorColor(percentAvailability(subLocation)),
-                      ),
+                      valueColor: AlwaysStoppedAnimation<Color>(setIndicatorColor(percentAvailability(subLocation))),
                     ),
                   ),
                 ),
@@ -143,8 +122,9 @@ class AvailabilityDisplay extends StatelessWidget {
           children: ListTile.divideTiles(
             tiles: locations,
             context: context,
-            color:
-                Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? listTileDividerColorDark
+                : listTileDividerColorLight,
           ).toList(),
         ),
       ),

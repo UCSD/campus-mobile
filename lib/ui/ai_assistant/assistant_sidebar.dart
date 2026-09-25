@@ -71,10 +71,12 @@ class _AssistantSidebarState extends State<AssistantSidebar> {
   Widget build(BuildContext context) {
     final double drawerWidth = MediaQuery.sizeOf(context).width * 0.78;
     final DateTime cutoff = DateTime.now().subtract(const Duration(days: 7));
-    final List<ChatSessionMeta> recentSessions =
-        widget.sessions.where((ChatSessionMeta session) => session.updatedAt.isAfter(cutoff)).toList();
-    final List<ChatSessionMeta> olderSessions =
-        widget.sessions.where((ChatSessionMeta session) => !session.updatedAt.isAfter(cutoff)).toList();
+    final List<ChatSessionMeta> recentSessions = widget.sessions
+        .where((ChatSessionMeta session) => session.updatedAt.isAfter(cutoff))
+        .toList();
+    final List<ChatSessionMeta> olderSessions = widget.sessions
+        .where((ChatSessionMeta session) => !session.updatedAt.isAfter(cutoff))
+        .toList();
 
     return Drawer(
       width: drawerWidth,
@@ -93,11 +95,7 @@ class _AssistantSidebarState extends State<AssistantSidebar> {
                   IconButton(
                     onPressed: widget.onClose,
                     splashRadius: 20,
-                    icon: SvgPicture.asset(
-                      'assets/images/tgpt/pin-sidebar.svg',
-                      width: 22,
-                      height: 22,
-                    ),
+                    icon: SvgPicture.asset('assets/images/tgpt/pin-sidebar.svg', width: 22, height: 22),
                   ),
                 ],
               ),
@@ -112,17 +110,11 @@ class _AssistantSidebarState extends State<AssistantSidebar> {
                   decoration: BoxDecoration(
                     color: const Color(0xFFF6F8FB),
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: const Color(0xFFE1E6EE),
-                    ),
+                    border: Border.all(color: const Color(0xFFE1E6EE)),
                   ),
                   child: Row(
                     children: <Widget>[
-                      SvgPicture.asset(
-                        'assets/images/tgpt/new_chat_icon.svg',
-                        width: 20,
-                        height: 20,
-                      ),
+                      SvgPicture.asset('assets/images/tgpt/new_chat_icon.svg', width: 20, height: 20),
                       const SizedBox(width: 12),
                       const Text(
                         'New Chat',
@@ -215,11 +207,7 @@ class _AssistantSidebarState extends State<AssistantSidebar> {
 }
 
 class _SidebarSectionTitle extends StatelessWidget {
-  const _SidebarSectionTitle({
-    required this.title,
-    required this.isExpanded,
-    required this.onTap,
-  });
+  const _SidebarSectionTitle({required this.title, required this.isExpanded, required this.onTap});
 
   final String title;
   final bool isExpanded;
@@ -236,11 +224,7 @@ class _SidebarSectionTitle extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(4, 8, 0, 8),
           child: Row(
             children: <Widget>[
-              Icon(
-                isExpanded ? Icons.arrow_drop_down : Icons.arrow_right,
-                size: 26,
-                color: lightPrimaryColor,
-              ),
+              Icon(isExpanded ? Icons.arrow_drop_down : Icons.arrow_right, size: 26, color: lightPrimaryColor),
               Text(
                 title,
                 style: const TextStyle(

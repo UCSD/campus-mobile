@@ -5,40 +5,29 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 
 class DiningBusynessBar extends StatelessWidget {
-  const DiningBusynessBar({
-    Key? key,
-    required this.diningModel,
-    required this.busynessDiningHallModel,
-  }) : super(key: key);
+  const DiningBusynessBar({Key? key, required this.diningModel, required this.busynessDiningHallModel})
+    : super(key: key);
 
   final DiningModel diningModel;
   final AvailabilityModel busynessDiningHallModel;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        buildAvailabilityBars(context),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => Column(children: <Widget>[buildAvailabilityBars(context)]);
 
   Widget buildAvailabilityBars(BuildContext context) {
     if (busynessDiningHallModel.subLocations.isEmpty) {
       return Container(
         alignment: Alignment.center,
         padding: EdgeInsets.only(top: DATA_UNAVAILABLE_TOP_PADDING),
-        child: Text(
-          "Data Unavailable",
-          style: TextStyle(fontSize: LOCATION_FONT_SIZE),
-        ),
+        child: Text("Data Unavailable", style: TextStyle(fontSize: LOCATION_FONT_SIZE)),
       );
     }
 
     // Only display the subLocation where subLocation.name == diningModel.name
     final matchingSubLocation = busynessDiningHallModel.subLocations
         .where(
-            (subLocation) => diningModel.name.contains(subLocation.name) || subLocation.name.contains(diningModel.name))
+          (subLocation) => diningModel.name.contains(subLocation.name) || subLocation.name.contains(diningModel.name),
+        )
         .toList();
 
     if (matchingSubLocation.isEmpty) {
@@ -67,12 +56,11 @@ class DiningBusynessBar extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(BORDER_RADIUS),
                 child: LinearProgressIndicator(
-                  value:
-                      (percentAvailability(subLocation) <= 0.01) ? 0.01 : percentAvailability(subLocation).toDouble(),
+                  value: (percentAvailability(subLocation) <= 0.01)
+                      ? 0.01
+                      : percentAvailability(subLocation).toDouble(),
                   backgroundColor: Colors.grey[BACKGROUND_GREY_SHADE],
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    setIndicatorColor(percentAvailability(subLocation)),
-                  ),
+                  valueColor: AlwaysStoppedAnimation<Color>(setIndicatorColor(percentAvailability(subLocation))),
                 ),
               ),
             ),

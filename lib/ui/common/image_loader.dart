@@ -18,10 +18,7 @@ class ImageLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return url.isEmpty
-        ? Container(
-            width: 0,
-            height: 0,
-          )
+        ? Container(width: 0, height: 0)
         : Image.network(
             url,
             width: fullSize ? null : width,
@@ -39,10 +36,7 @@ class ImageLoader extends StatelessWidget {
               );
             },
             errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-              return Container(
-                width: 0,
-                height: 0,
-              );
+              return Container(width: 0, height: 0);
             },
           );
   }

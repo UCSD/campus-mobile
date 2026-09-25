@@ -5,15 +5,10 @@ class ChatSessionCreationRequest {
   final int personaId;
   final String? description;
 
-  ChatSessionCreationRequest({
-    required this.personaId,
-    this.description,
-  });
+  ChatSessionCreationRequest({required this.personaId, this.description});
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> json = {
-      'persona_id': personaId,
-    };
+    final Map<String, dynamic> json = {'persona_id': personaId};
 
     if (description != null) json['description'] = description;
 
@@ -25,15 +20,10 @@ class ChatSessionCreationRequest {
 class CreateChatSessionID {
   final String chatSessionId;
 
-  CreateChatSessionID({
-    required this.chatSessionId,
-  });
+  CreateChatSessionID({required this.chatSessionId});
 
-  factory CreateChatSessionID.fromJson(Map<String, dynamic> json) {
-    return CreateChatSessionID(
-      chatSessionId: json['chat_session_id'] as String,
-    );
-  }
+  factory CreateChatSessionID.fromJson(Map<String, dynamic> json) =>
+      CreateChatSessionID(chatSessionId: json['chat_session_id'] as String);
 
   /// Defensive factory that handles both Map and JSON String responses.
   /// Use this when the response format from the API is uncertain.
@@ -55,7 +45,5 @@ class CreateChatSessionID {
     return CreateChatSessionID.fromJson(json);
   }
 
-  Map<String, dynamic> toJson() => {
-        'chat_session_id': chatSessionId,
-      };
+  Map<String, dynamic> toJson() => {'chat_session_id': chatSessionId};
 }

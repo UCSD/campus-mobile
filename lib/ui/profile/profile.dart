@@ -92,10 +92,7 @@ class Profile extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(1.0), // Adjust the padding as needed
-                      child: Icon(
-                        Icons.question_mark,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
+                      child: Icon(Icons.question_mark, color: Theme.of(context).iconTheme.color),
                     ),
                   ),
                   title: Text(

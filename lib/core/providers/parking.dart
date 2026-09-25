@@ -53,8 +53,9 @@ class ParkingDataProvider extends ChangeNotifier {
 
       for (ParkingModel model in _parkingService.data!) {
         newMapOfLots[model.locationName] = model;
-        newMapOfLotStates[model.locationName] =
-            (_parkingViewState[model.locationName] == null ? false : _parkingViewState[model.locationName])!;
+        newMapOfLotStates[model.locationName] = (_parkingViewState[model.locationName] == null
+            ? false
+            : _parkingViewState[model.locationName])!;
       }
 
       /// replace old list of lots with new one
@@ -79,9 +80,7 @@ class ParkingDataProvider extends ChangeNotifier {
       var hasSelectedParkingSpots = _userDataProvider.userProfileModel.selectedParkingSpots!.isNotEmpty;
       if (hasSelectedParkingSpots) {
         // Load selected spots types from user Profile
-        _selectedSpotTypesState = Map<String, bool>.from(
-          _userDataProvider.userProfileModel.selectedParkingSpots!,
-        );
+        _selectedSpotTypesState = Map<String, bool>.from(_userDataProvider.userProfileModel.selectedParkingSpots!);
       } else {
         // Load default spot types
         for (Spot spot in _spotTypeModel.spots!) {
@@ -112,7 +111,7 @@ class ParkingDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-// add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
+  // add or remove location availability display from card based on user selection, Limit to MAX_SELECTED
   void toggleLot(String location, int numSelected) {
     try {
       selectedLots = numSelected;
@@ -186,7 +185,8 @@ class ParkingDataProvider extends ChangeNotifier {
         final bool hasOpenData = _parkingModels[locationId]!.availability[spot]['Open'] != null;
         final bool openDataNotEmpty = _parkingModels[locationId]!.availability[spot]['Open'] != "";
         if (hasOpenData && openDataNotEmpty) {
-          totalAndOpenSpots["Open"] = totalAndOpenSpots["Open"]! +
+          totalAndOpenSpots["Open"] =
+              totalAndOpenSpots["Open"]! +
               (_parkingModels[locationId]!.availability[spot]['Open'] is String
                   ? int.parse(_parkingModels[locationId]!.availability[spot]['Open'])
                   : _parkingModels[locationId]!.availability[spot]['Open']);
@@ -195,7 +195,8 @@ class ParkingDataProvider extends ChangeNotifier {
         final bool hasTotalData = _parkingModels[locationId]!.availability[spot]['Total'] != null;
         final bool totalDataNotEmpty = _parkingModels[locationId]!.availability[spot]['Total'] != "";
         if (hasTotalData && totalDataNotEmpty) {
-          totalAndOpenSpots["Total"] = totalAndOpenSpots["Total"]! +
+          totalAndOpenSpots["Total"] =
+              totalAndOpenSpots["Total"]! +
               (_parkingModels[locationId]!.availability[spot]['Total'] is String
                   ? int.parse(_parkingModels[locationId]!.availability[spot]['Total'])
                   : _parkingModels[locationId]!.availability[spot]['Total']);

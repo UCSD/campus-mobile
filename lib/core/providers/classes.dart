@@ -32,10 +32,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     'SU': [],
     'OTHER': [],
   };
-  Map<String, List<SectionData>> _midterms = {
-    'MI': [],
-    'OTHER': [],
-  };
+  Map<String, List<SectionData>> _midterms = {'MI': [], 'OTHER': []};
 
   /// MODELS
   late ClassScheduleModel _classScheduleModel;
@@ -57,7 +54,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       if (termFetched && isLoggedIn) {
         _academicTermModel = _classScheduleService.academicTermModel!;
         final Map<String, String> headers = {
-          'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'
+          'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}',
         };
 
         /// erase old model
@@ -90,32 +87,11 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         }
 
         /// remove all old classes
-        _enrolledClasses = {
-          'MO': [],
-          'TU': [],
-          'WE': [],
-          'TH': [],
-          'FR': [],
-          'SA': [],
-          'SU': [],
-          'OTHER': [],
-        };
+        _enrolledClasses = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
 
-        _finals = {
-          'MO': [],
-          'TU': [],
-          'WE': [],
-          'TH': [],
-          'FR': [],
-          'SA': [],
-          'SU': [],
-          'OTHER': [],
-        };
+        _finals = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
 
-        _midterms = {
-          'MI': [],
-          'OTHER': [],
-        };
+        _midterms = {'MI': [], 'OTHER': []};
 
         try {
           _createMapOfClasses();
@@ -240,11 +216,9 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       /// if no classes are scheduled for today then find the next day with classes
       var daysToAdd = 1;
       while (_enrolledClasses[today]!.isEmpty && daysToAdd <= 7) {
-        today = DateFormat('EEEE')
-            .format(DateTime.now().add(Duration(days: daysToAdd)))
-            .toString()
-            .toUpperCase()
-            .substring(0, 2);
+        today = DateFormat(
+          'EEEE',
+        ).format(DateTime.now().add(Duration(days: daysToAdd))).toString().toUpperCase().substring(0, 2);
         nextDayWithClass = DateFormat('EEEE').format(DateTime.now().add(Duration(days: daysToAdd)));
         daysToAdd += 1;
       }

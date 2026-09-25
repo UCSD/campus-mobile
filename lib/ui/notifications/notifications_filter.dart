@@ -37,17 +37,10 @@ class NotificationsFilterView extends StatelessWidget {
             contentPadding: EdgeInsets.all(0),
             visualDensity: VisualDensity.compact,
             key: Key(topic!),
-            leading: Icon(
-              chooseIcons(topic),
-              color: Theme.of(context).iconTheme.color,
-              size: 30,
-            ),
+            leading: Icon(chooseIcons(topic), color: Theme.of(context).iconTheme.color, size: 30),
             title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Text(
-                getTopicName(context, topic)!,
-                style: Theme.of(context).textTheme.labelMedium,
-              ),
+              child: Text(getTopicName(context, topic)!, style: Theme.of(context).textTheme.labelMedium),
             ),
             trailing: Transform.scale(
               scale: 0.9,

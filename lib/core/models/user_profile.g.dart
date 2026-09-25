@@ -12,9 +12,7 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
   @override
   UserProfileModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
+    final fields = <int, dynamic>{for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read()};
     return UserProfileModel(
       selectedLots: (fields[0] as List?)?.cast<String>(),
       selectedOccuspaceLocations: (fields[1] as List?)?.cast<String?>(),

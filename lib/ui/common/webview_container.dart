@@ -164,7 +164,8 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
     // check if this webCard needs an auth token
     if (widget.requireAuth) {
       _userDataProvider = Provider.of<UserDataProvider>(context);
-      webCardUrl = widget.initialUrl +
+      webCardUrl =
+          widget.initialUrl +
           "?expiration=${_userDataProvider.authenticationModel.expiration}#${_userDataProvider.authenticationModel.accessToken}";
     } else {
       webCardUrl = widget.initialUrl;
@@ -180,10 +181,7 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
         semanticContainer: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
-          side: BorderSide(
-            color: dotsUnselectedColor,
-            width: 0.5,
-          ),
+          side: BorderSide(color: dotsUnselectedColor, width: 0.5),
         ),
         color: Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
         child: Column(
@@ -214,15 +212,10 @@ class _WebViewContainerState extends State<WebViewContainer> with AutomaticKeepA
       _lastLoadedUrl = webCardUrl;
     }
     return ClipRRect(
-      borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(12.0),
-        bottomRight: Radius.circular(12.0),
-      ),
+      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
       child: SizedBox(
         height: _contentHeight,
-        child: WebViewWidget(
-          controller: _webViewController,
-        ),
+        child: WebViewWidget(controller: _webViewController),
       ),
     );
   }

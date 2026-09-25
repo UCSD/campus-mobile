@@ -12,9 +12,7 @@ class AuthenticationModelAdapter extends TypeAdapter<AuthenticationModel> {
   @override
   AuthenticationModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
+    final fields = <int, dynamic>{for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read()};
     return AuthenticationModel(
       accessToken: fields[0] as String?,
       pid: fields[2] as String?,

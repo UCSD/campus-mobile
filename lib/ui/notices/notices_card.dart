@@ -5,10 +5,7 @@ import 'package:campus_mobile_experimental/ui/common/image_loader.dart';
 import 'package:flutter/material.dart';
 
 class NoticesCard extends StatelessWidget {
-  const NoticesCard({
-    Key? key,
-    required this.notice,
-  }) : super(key: key);
+  const NoticesCard({Key? key, required this.notice}) : super(key: key);
 
   /// MODELS
   final NoticesModel notice;
@@ -19,21 +16,15 @@ class NoticesCard extends StatelessWidget {
       margin: EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin * 1.5, left: 0.0),
       elevation: 4,
       shadowColor: Colors.black,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.0),
-        child: buildBannerView(notice),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      child: ClipRRect(borderRadius: BorderRadius.circular(12.0), child: buildBannerView(notice)),
     );
   }
 
   Widget buildBannerView(NoticesModel notice) {
     String accessibilityLabel = notice.title;
     var isWelcomeTitle = notice.title == 'Triton Weeks of Welcome - Welcoming new students to the Triton community';
-    if (isWelcomeTitle)
-      accessibilityLabel = 'T W O W - Triton Weeks of Welcome - visit t w o w dot ucsd dot e d u';
+    if (isWelcomeTitle) accessibilityLabel = 'T W O W - Triton Weeks of Welcome - visit t w o w dot ucsd dot e d u';
 
     // The screen reader will read - "image - (text on the image)"
     // print('\x1B[32mNoticesModel(title: ${notice.title}, link: ${notice.link}, imageUrl: ${notice.imageUrl})\x1B[0m');
@@ -42,13 +33,11 @@ class NoticesCard extends StatelessWidget {
       image: true,
       button: true,
       child: GestureDetector(
-          onTap: () {
-            openLink(notice.link);
-          },
-          child: ImageLoader(
-            url: notice.imageUrl,
-            fullSize: true,
-          )),
+        onTap: () {
+          openLink(notice.link);
+        },
+        child: ImageLoader(url: notice.imageUrl, fullSize: true),
+      ),
     );
   }
 }

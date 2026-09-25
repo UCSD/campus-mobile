@@ -19,12 +19,12 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
   @override
   Widget build(BuildContext context) {
     _shuttleDataProvider = Provider.of<ShuttleDataProvider>(context);
-    return Stack(children: <Widget>[
-      ContainerView(
-        child: buildLocationsList(context),
-      ),
-      buildAddStopsButton(context),
-    ]);
+    return Stack(
+      children: <Widget>[
+        ContainerView(child: buildLocationsList(context)),
+        buildAddStopsButton(context),
+      ],
+    );
   }
 
   Widget buildLocationsList(BuildContext context) {
@@ -34,8 +34,11 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
       return ReorderableListView(
         header: Padding(
           padding: const EdgeInsets.only(top: 10),
-          child: Text("Hold and drag to reorder",
-              textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
+          child: Text(
+            "Hold and drag to reorder",
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ),
         children: createList(context),
         onReorderItem: _onReorder,
@@ -62,21 +65,27 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
     List<Widget> list = [];
     for (ShuttleStopModel? model in _shuttleDataProvider.stopsToRender) {
       if (model != null) {
-        list.add(Card(
-          key: Key(model.id.toString()),
-          elevation: 2.0,
-          margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
-          child: ListTile(
+        list.add(
+          Card(
+            key: Key(model.id.toString()),
+            elevation: 2.0,
+            margin: EdgeInsets.fromLTRB(cardMargin, 5, cardMargin, 5),
+            child: ListTile(
               title: Text(model.name, style: Theme.of(context).textTheme.bodyMedium),
-              leading: Icon(Icons.drag_handle,
-                  color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight),
+              leading: Icon(
+                Icons.drag_handle,
+                color: Theme.of(context).brightness == Brightness.dark ? linkTextColorDark : linkTextColorLight,
+              ),
               trailing: IconButton(
-                  icon: Icon(Icons.close),
-                  tooltip: 'Remove ${model.name}',
-                  onPressed: () async {
-                    await _shuttleDataProvider.removeStop(model.id);
-                  })),
-        ));
+                icon: Icon(Icons.close),
+                tooltip: 'Remove ${model.name}',
+                onPressed: () async {
+                  await _shuttleDataProvider.removeStop(model.id);
+                },
+              ),
+            ),
+          ),
+        );
       }
     }
     return list;
@@ -96,18 +105,19 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
               Navigator.pushNamed(context, RoutePaths.ADD_SHUTTLE_STOPS_VIEW);
             } else {
               showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialogWidget(
-                      type: MessageTypeConstants.ERROR,
-                      icon: Icons.block_flipped,
-                      title: LoginConstants.SHUTTLE_MAX_TITLE,
-                      description: LoginConstants.SHUTTLE_MAX_DESC,
-                      onClose: () {
-                        Navigator.of(context).pop();
-                      },
-                    );
-                  });
+                context: context,
+                builder: (context) {
+                  return AlertDialogWidget(
+                    type: MessageTypeConstants.ERROR,
+                    icon: Icons.block_flipped,
+                    title: LoginConstants.SHUTTLE_MAX_TITLE,
+                    description: LoginConstants.SHUTTLE_MAX_DESC,
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+                },
+              );
             }
           },
         ),
@@ -150,10 +160,12 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Icon(Icons.block,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? systemErrorTextColorDark
-                    : systemErrorTextColorLight),
+            child: Icon(
+              Icons.block,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? systemErrorTextColorDark
+                  : systemErrorTextColorLight,
+            ),
             flex: 1,
           ),
           Expanded(
@@ -165,21 +177,25 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
                       color: systemErrorTextColorDark,
                       fontFamily: 'Brix Sans',
                       fontWeight: FontWeight.w700,
-                      fontSize: 18.0)
+                      fontSize: 18.0,
+                    )
                   : TextStyle(
                       color: systemErrorTextColorLight,
                       fontFamily: 'Brix Sans',
                       fontWeight: FontWeight.w700,
-                      fontSize: 18.0),
+                      fontSize: 18.0,
+                    ),
             ),
             flex: 6,
           ),
           Expanded(
             child: IconButton(
-              icon: Icon(Icons.close,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? systemErrorTextColorDark
-                      : systemErrorTextColorLight),
+              icon: Icon(
+                Icons.close,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? systemErrorTextColorDark
+                    : systemErrorTextColorLight,
+              ),
               alignment: Alignment.topRight,
               onPressed: () {
                 Navigator.of(context).pop();
@@ -197,10 +213,7 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
+              Expanded(flex: 1, child: Container()),
               Expanded(
                 flex: 6,
                 child: Column(
@@ -214,20 +227,19 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
                               color: systemErrorTextColorDark,
                               fontFamily: 'Brix Sans',
                               fontWeight: FontWeight.w400,
-                              fontSize: 14.0)
+                              fontSize: 14.0,
+                            )
                           : TextStyle(
                               color: systemErrorTextColorLight,
                               fontFamily: 'Brix Sans',
                               fontWeight: FontWeight.w400,
-                              fontSize: 14.0),
+                              fontSize: 14.0,
+                            ),
                     ),
                   ],
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
+              Expanded(flex: 1, child: Container()),
             ],
           ),
         ),

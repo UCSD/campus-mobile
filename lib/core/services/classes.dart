@@ -21,7 +21,9 @@ class ClassScheduleService {
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=UN&term_code=' + term, headers);
+        dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=UN&term_code=' + term,
+        headers,
+      );
 
       /// parse data
       _unData = classScheduleModelFromJson(_response);
@@ -40,7 +42,9 @@ class ClassScheduleService {
     try {
       /// fetch data
       String _response = await NetworkHelper.authorizedFetch(
-          dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=GR&term_code=' + term, headers);
+        dotenv.get('MY_ACADEMIC_HISTORY_API_ENDPOINT') + '?academic_level=GR&term_code=' + term,
+        headers,
+      );
 
       /// parse data
       _grData = classScheduleModelFromJson(_response);

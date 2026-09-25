@@ -10,14 +10,15 @@ String cardsModelToJson(Map<String, CardsModel> data) =>
     json.encode(Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
 
 class CardsModel {
-  CardsModel(
-      {required this.cardActive,
-      required this.initialURL,
-      required this.isWebCard,
-      required this.requireAuth,
-      required this.titleText,
-      this.externalLinkURL = '',
-      this.externalLinkText = ''});
+  CardsModel({
+    required this.cardActive,
+    required this.initialURL,
+    required this.isWebCard,
+    required this.requireAuth,
+    required this.titleText,
+    this.externalLinkURL = '',
+    this.externalLinkText = '',
+  });
 
   bool cardActive;
   String initialURL;
@@ -28,22 +29,22 @@ class CardsModel {
   String externalLinkText;
 
   factory CardsModel.fromJson(Map<String, dynamic> json) => CardsModel(
-        cardActive: json["cardActive"]!,
-        initialURL: json["initialURL"]!,
-        isWebCard: json["isWebCard"]!,
-        requireAuth: json["requireAuth"]!,
-        titleText: json["titleText"]!,
-        externalLinkURL: json["externalLinkURL"] as String? ?? '',
-        externalLinkText: json["externalLinkText"] as String? ?? '',
-      );
+    cardActive: json["cardActive"]!,
+    initialURL: json["initialURL"]!,
+    isWebCard: json["isWebCard"]!,
+    requireAuth: json["requireAuth"]!,
+    titleText: json["titleText"]!,
+    externalLinkURL: json["externalLinkURL"] as String? ?? '',
+    externalLinkText: json["externalLinkText"] as String? ?? '',
+  );
 
   Map<String, dynamic> toJson() => {
-        "cardActive": cardActive,
-        "initialURL": initialURL,
-        "isWebCard": isWebCard,
-        "requireAuth": requireAuth,
-        "titleText": titleText,
-        "externalLinkURL": externalLinkURL,
-        "externalLinkText": externalLinkText,
-      };
+    "cardActive": cardActive,
+    "initialURL": initialURL,
+    "isWebCard": isWebCard,
+    "requireAuth": requireAuth,
+    "titleText": titleText,
+    "externalLinkURL": externalLinkURL,
+    "externalLinkText": externalLinkText,
+  };
 }

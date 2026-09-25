@@ -29,13 +29,7 @@ class BottomTabBar extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar> {
-  var currentTab = [
-    Home(),
-    prefix0.Maps(),
-    AIAssistantTab(),
-    NotificationsListView(),
-    Profile(),
-  ];
+  var currentTab = [Home(), prefix0.Maps(), AIAssistantTab(), NotificationsListView(), Profile()];
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +44,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
           ? null
           : PreferredSize(preferredSize: Size.fromHeight(57), child: Provider.of<CustomAppBar>(context).appBar),
       body: PushNotificationWrapper(
-        child: IndexedStack(
-          index: provider.currentIndex,
-          children: currentTab,
-        ),
+        child: IndexedStack(index: provider.currentIndex, children: currentTab),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -87,8 +78,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
                 break;
               case NavigatorConstants.NOTIFICATIONS_TAB:
                 resetAllCardLoadedStates();
-                Provider.of<CustomAppBar>(context, listen: false)
-                    .changeTitle("Notifications", done: false, notification: true);
+                Provider.of<CustomAppBar>(
+                  context,
+                  listen: false,
+                ).changeTitle("Notifications", done: false, notification: true);
                 break;
               case NavigatorConstants.PROFILE_TAB:
                 resetAllCardLoadedStates();
@@ -97,21 +90,18 @@ class _BottomTabBarState extends State<BottomTabBar> {
             }
           },
           items: [
-            BottomNavigationBarItem(
-              icon: _buildIcon(Icons.home, provider.currentIndex == 0, theme),
-              label: 'HOME',
-            ),
-            BottomNavigationBarItem(
-              icon: _buildIcon(Icons.map, provider.currentIndex == 1, theme),
-              label: 'MAP',
-            ),
+            BottomNavigationBarItem(icon: _buildIcon(Icons.home, provider.currentIndex == 0, theme), label: 'HOME'),
+            BottomNavigationBarItem(icon: _buildIcon(Icons.map, provider.currentIndex == 1, theme), label: 'MAP'),
             BottomNavigationBarItem(
               icon: _buildAIAssistantIcon(provider.currentIndex == NavigatorConstants.AI_ASSISTANT_TAB, theme),
               label: 'AI ASSISTANT',
             ),
             BottomNavigationBarItem(
-              icon:
-                  _buildIcon(Icons.notifications, provider.currentIndex == NavigatorConstants.NOTIFICATIONS_TAB, theme),
+              icon: _buildIcon(
+                Icons.notifications,
+                provider.currentIndex == NavigatorConstants.NOTIFICATIONS_TAB,
+                theme,
+              ),
               label: 'NOTIFICATIONS',
             ),
             BottomNavigationBarItem(
@@ -133,8 +123,9 @@ class _BottomTabBarState extends State<BottomTabBar> {
   }
 
   Widget _buildAIAssistantIcon(bool isSelected, ThemeData theme) {
-    final iconAsset =
-        isSelected ? 'assets/images/tgpt/center-icon2.png' : 'assets/images/tgpt/center-icon2-unselected.png';
+    final iconAsset = isSelected
+        ? 'assets/images/tgpt/center-icon2.png'
+        : 'assets/images/tgpt/center-icon2-unselected.png';
 
     return Container(
       height: 34,
@@ -144,16 +135,11 @@ class _BottomTabBarState extends State<BottomTabBar> {
         color: isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
         borderRadius: BorderRadius.circular(34),
       ),
-      child: Image.asset(
-        iconAsset,
-        width: 34,
-        height: 34,
-        filterQuality: FilterQuality.high,
-      ),
+      child: Image.asset(iconAsset, width: 34, height: 34, filterQuality: FilterQuality.high),
     );
   }
 
-// Build bottom navigator icons
+  // Build bottom navigator icons
   Widget _buildIcon(IconData icon, bool isSelected, ThemeData theme, {double size = 34}) {
     return Container(
       height: 34,

@@ -22,10 +22,7 @@ class DiningFilterView extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Text(
-              'Dining Payment Filters',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            child: Text('Dining Payment Filters', style: Theme.of(context).textTheme.titleMedium),
           ),
           Expanded(
             child: Padding(

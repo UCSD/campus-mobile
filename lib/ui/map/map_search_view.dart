@@ -12,10 +12,7 @@ class MapSearchView extends StatelessWidget {
     return ContainerView(
       child: Column(
         children: <Widget>[
-          Hero(
-            tag: 'search_bar',
-            child: MapSearchBar(),
-          ),
+          Hero(tag: 'search_bar', child: MapSearchBar()),
           QuickSearchIcons(),
           Provider.of<MapsDataProvider>(context).searchHistory.isEmpty
               ? Card(
@@ -26,7 +23,7 @@ class MapSearchView extends StatelessWidget {
                     child: Center(child: Text('You have no recent searches')),
                   ),
                 )
-              : SearchHistoryList()
+              : SearchHistoryList(),
         ],
       ),
     );

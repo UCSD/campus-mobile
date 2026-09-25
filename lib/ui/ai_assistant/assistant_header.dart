@@ -13,12 +13,7 @@ class AssistantHeader extends StatelessWidget {
       width: double.infinity,
       color: lightPrimaryColor,
       padding: EdgeInsets.fromLTRB(24, safeAreaInsets.top + 14, 24, 16),
-      child: Center(
-        child: SvgPicture.asset(
-          'assets/images/tgpt/tritongpt-header.svg',
-          height: 27,
-        ),
-      ),
+      child: Center(child: SvgPicture.asset('assets/images/tgpt/tritongpt-header.svg', height: 27)),
     );
   }
 }
