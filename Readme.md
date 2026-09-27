@@ -6,7 +6,7 @@
 https://github.com/UCSD/campus-mobile/pull/2087
 
 #### Campus Mobile Flutter Version:
-3.32.0
+3.44.0
 
 #### Set Up Your IDE to use our `.editorconfig` Settings
 - If using VS Code, install the [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extension.

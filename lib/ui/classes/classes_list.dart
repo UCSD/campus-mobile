@@ -1,4 +1,4 @@
-import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
@@ -9,60 +9,60 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 
 class ClassList extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return ContainerView(
-      child: buildSchedule(context),
-    );
-  }
+  Widget build(BuildContext context) => ContainerView(child: buildSchedule(context));
 
   Widget buildSchedule(BuildContext context) {
     List<Widget> list = [];
-    Provider.of<ClassScheduleDataProvider>(context)
-        .enrolledClasses
-        .addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
-    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses.keys.forEach(
-      (key) {
-        final bool hasClasses = Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.isNotEmpty;
-        if (hasClasses) {
-          list.add(SliverStickyHeader(
+    Provider.of<ClassScheduleDataProvider>(
+      context,
+    ).enrolledClasses.addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
+    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses.keys.forEach((key) {
+      final bool hasClasses = Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.isNotEmpty;
+      if (hasClasses) {
+        list.add(
+          SliverStickyHeader(
             header: buildWeekDayHeader(context, key),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 if (key == 'MI') {
                   return buildMidterm(
-                      Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index));
+                    context,
+                    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index),
+                  );
                 }
                 return buildClass(
-                    Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index));
+                  context,
+                  Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.elementAt(index),
+                );
               }, childCount: Provider.of<ClassScheduleDataProvider>(context).enrolledClasses[key]!.length),
             ),
-          ));
-        }
-      },
-    );
+          ),
+        );
+      }
+    });
     return CustomScrollView(slivers: list);
   }
 
-//  Widget buildHeader(
-//      BuildContext context, String weekday, String specialMtgCode) {
-//    if (specialMtgCode == null) {
-//      buildWeekDayHeader(context, weekday);
-//    } else {
-//      return Container(
-//        color: Theme.of(context).secondaryHeaderColor,
-//        child: Padding(
-//          padding: const EdgeInsets.all(12.0),
-//          child: Text(
-//            "Midterm",
-//            style: TextStyle(
-//              fontSize: 20.0,
-//              color: Colors.white,
-//            ),
-//          ),
-//        ),
-//      );
-//    }
-//  }
+  //  Widget buildHeader(
+  //      BuildContext context, String weekday, String specialMtgCode) {
+  //    if (specialMtgCode == null) {
+  //      buildWeekDayHeader(context, weekday);
+  //    } else {
+  //      return Container(
+  //        color: Theme.of(context).secondaryHeaderColor,
+  //        child: Padding(
+  //          padding: const EdgeInsets.all(12.0),
+  //          child: Text(
+  //            "Midterm",
+  //            style: TextStyle(
+  //              fontSize: 20.0,
+  //              color: Colors.white,
+  //            ),
+  //          ),
+  //        ),
+  //      );
+  //    }
+  //  }
 
   Widget buildWeekDayHeader(BuildContext context, String weekday) {
     weekday = abbrevToFullWeekday(weekday);
@@ -70,50 +70,12 @@ class ClassList extends StatelessWidget {
       color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : descriptiveTextColorLight,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Text(
-          weekday,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white,
-              ),
-        ),
+        child: Text(weekday, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
       ),
     );
   }
 
-  Widget buildClass(SectionData? sectionData) {
-    return sectionData != null
-        ? Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    sectionData.subjectCode! + ' ' + sectionData.courseCode!,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
-                  ),
-                  Text(
-                    sectionData.courseTitle!,
-                    style: TextStyle(fontSize: 17.0),
-                  ),
-                  Text(sectionData.instructorName!, style: TextStyle(fontSize: 17.0)),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Row(children: [
-                      Text(sectionData.meetingType! + ' '),
-                      TimeRangeWidget(
-                        time: sectionData.time!,
-                      )
-                    ]),
-                  ),
-                  Text(sectionData.building! + ' ' + sectionData.room!),
-                  Text(sectionData.gradeOption)
-                ],
-              ),
-            ),
-          )
-        : Card();
-  }
+  Widget buildClass(BuildContext context, ScheduledClass? scheduledClass) => _buildClassCard(context, scheduledClass);
 
   String abbrevToFullWeekday(String? abbreviation) {
     switch (abbreviation) {
@@ -138,38 +100,116 @@ class ClassList extends StatelessWidget {
     }
   }
 
-  Widget buildMidterm(SectionData? sectionData) {
-    return sectionData != null
-        ? Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    sectionData.subjectCode! + ' ' + sectionData.courseCode!,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+  Widget buildMidterm(BuildContext context, ScheduledClass? scheduledClass) =>
+      _buildClassCard(context, scheduledClass, isMidterm: true);
+
+  Widget _buildClassCard(BuildContext context, ScheduledClass? scheduledClass, {bool isMidterm = false}) {
+    final sectionData = scheduledClass?.section;
+    if (scheduledClass == null || sectionData == null) return Card();
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final titleStyle = isDark ? titleSmallDark : titleSmallLight;
+    final detailStyle = (isDark ? descriptiveTextSmallDark : descriptiveTextSmallLight).copyWith(fontSize: 16);
+    final meetingType = sectionData.meetingType?.trim() ?? '';
+    final meetingLabel = isMidterm
+        ? '${abbrevToFullWeekday(sectionData.days)}, ${formatDate(sectionData.date) ?? 'TBD'}'
+        : scheduledClass.displayDays;
+    final meetingTypeLabel = meetingType.toLowerCase() == 'unknown' ? '' : meetingType;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 11),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Course Code and Meeting Type:
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    '${scheduledClass.subjectCode ?? ''} ${scheduledClass.courseCode ?? ''}'.trim(),
+                    style: titleStyle,
                   ),
-                  Text(
-                    sectionData.courseTitle!,
-                    style: TextStyle(fontSize: 17.0),
+                ),
+                if (meetingTypeLabel.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(meetingTypeLabel, textAlign: TextAlign.end, style: detailStyle),
                   ),
-                  Text(sectionData.instructorName!),
-                  Text(sectionData.building! + ' ' + sectionData.room!),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Row(children: [
-                      Text(abbrevToFullWeekday(sectionData.days) + ", " + formatDate(sectionData.date)! + ' from '),
-                      TimeRangeWidget(
-                        time: sectionData.time!,
-                      )
-                    ]),
-                  ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 2),
+            // Course Title:
+            Text(scheduledClass.courseTitle ?? 'Course title unavailable', style: detailStyle),
+            const SizedBox(height: 8),
+            // Instructor:
+            _detailRow(Icons.person_outline, 'Instructor: ${sectionData.instructorName}', detailStyle),
+            // Meeting Time, Days, and Date:
+            _detailRow(
+              Icons.schedule_outlined,
+              null,
+              detailStyle,
+              trailing: Wrap(
+                spacing: 4,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  sectionData.time == null ? Text('TBD', style: detailStyle) : TimeRangeWidget(time: sectionData.time!),
+                  Text('· $meetingLabel', style: detailStyle),
                 ],
               ),
             ),
-          )
-        : Card();
+            // Classroom Location:
+            _detailRow(Icons.location_on_outlined, 'Location: ${_formatLocation(scheduledClass)}', detailStyle),
+            // Evaluation Option:
+            if (!isMidterm)
+              _detailRow(Icons.check_box_outlined, 'Evaluation: ${scheduledClass.gradeOption}', detailStyle),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _detailRow(IconData icon, String? text, TextStyle style, {Widget? trailing}) {
+    final value = text?.trim() ?? '';
+    final hasValue = value.isNotEmpty;
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(icon, size: 17, color: style.color),
+          const SizedBox(width: 7),
+          Expanded(
+            child: Wrap(
+              spacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                if (hasValue) Text(value, style: style) else if (trailing == null) Text('TBD', style: style),
+                if (trailing != null) trailing,
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatLocation(ScheduledClass scheduledClass) {
+    final building = scheduledClass.section.building?.trim() ?? '';
+    final room = scheduledClass.section.room?.trim() ?? '';
+    if (room.isEmpty) return building.isEmpty ? 'TBD' : building;
+    if (building.isEmpty) return room;
+
+    final upperCaseRoom = room.toUpperCase();
+    final upperCaseBuilding = building.toUpperCase();
+    final roomIncludesBuilding = upperCaseRoom.startsWith(upperCaseBuilding);
+    if (roomIncludesBuilding) return room;
+    return '$building $room';
   }
 
   String? formatDate(String? date) {

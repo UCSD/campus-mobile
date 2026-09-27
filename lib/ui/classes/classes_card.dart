@@ -1,7 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/classes.dart';
 import 'package:campus_mobile_experimental/ui/classes/upcoming_classes.dart';
@@ -50,78 +50,76 @@ class ClassScheduleCard extends StatelessWidget {
     );
   }
 
-  Widget buildClassScheduleCard(BuildContext context, List<SectionData> courseData, int selectedCourse,
-      DateTime lastUpdated, String nextDayWithClasses) {
+  Widget buildClassScheduleCard(
+    BuildContext context,
+    List<ScheduledClass> courseData,
+    int selectedCourse,
+    DateTime lastUpdated,
+    String nextDayWithClasses,
+  ) {
     try {
-      final section = courseData[selectedCourse];
-      return Padding(
-        padding: const EdgeInsets.only(left: 2.0, top: 4.0),
-        child: Row(
+      final scheduledClass = courseData[selectedCourse];
+      final section = scheduledClass.section;
+      final nextClass = Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(
-              flex: 5,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Next Class',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color:
-                              Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      // CSE 141L
-                      buildClassCode(context, '${section.subjectCode} ${section.courseCode}'),
-                      SizedBox(height: 3),
-                      // Laboratory
-                      buildClassType(context, section.meetingType!),
-                      SizedBox(height: 3),
-                      // Start and Finish Time:
-                      buildTimeRow(context, section.days!, section.time),
-                      SizedBox(height: 8),
-                      // Classroom Location:
-                      buildLocationRow(context, '${section.building} ${section.room}'),
-                      SizedBox(height: 8),
-                      // Evaluation Option:
-                      buildGradeEvaluationRow(context, section.gradeOption),
-                      // "Last updated: A few seconds ago
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0, top: 24.0),
-                        child: LastUpdatedWidget(time: lastUpdated),
-                      ),
-                    ],
-                  ),
-                ),
+            Text(
+              'Next Class',
+              style: TextStyle(
+                fontSize: 22.0,
+                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            // Vertical Divider
-            SizedBox(
-              height: 276,
-              child: VerticalDivider(
-                color: listTileDividerColorDark,
-                thickness: 0.7,
-              ),
-            ),
-            // Right-hand side of the card //
-            Flexible(
-              flex: 4, // Adjusts width of Right Hand Side
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start, // Aligns content to the top
-                crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
-                children: [
-                  UpcomingCoursesList(),
-                ],
-              ),
+            SizedBox(height: 8),
+            // CSE 141L
+            buildClassCode(context, '${scheduledClass.subjectCode} ${scheduledClass.courseCode}'),
+            SizedBox(height: 3),
+            // Laboratory
+            buildClassType(context, section.meetingType ?? 'Class'),
+            SizedBox(height: 3),
+            // Start and Finish Time:
+            buildTimeRow(context, scheduledClass.displayDays, section.time),
+            SizedBox(height: 8),
+            // Classroom Location:
+            buildLocationRow(context, section.room?.trim().isNotEmpty == true ? section.room!.trim() : 'TBD'),
+            SizedBox(height: 8),
+            // Evaluation Option:
+            buildGradeEvaluationRow(context, scheduledClass.gradeOption),
+            // "Last updated: A few seconds ago
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0, top: 24.0),
+              child: LastUpdatedWidget(time: lastUpdated),
             ),
           ],
         ),
+      );
+      final todaySchedule = Padding(padding: const EdgeInsets.symmetric(horizontal: 8.0), child: UpcomingCoursesList());
+
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 360) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                nextClass,
+                Divider(color: listTileDividerColorDark, thickness: 0.7),
+                todaySchedule,
+              ],
+            );
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(flex: 5, child: nextClass),
+              SizedBox(height: 276, child: VerticalDivider(color: listTileDividerColorDark, thickness: 0.7)),
+              Expanded(flex: 4, child: todaySchedule),
+            ],
+          );
+        },
       );
     } catch (e) {
       FirebaseCrashlytics.instance.recordError(
@@ -145,13 +143,16 @@ class ClassScheduleCard extends StatelessWidget {
 
   // Heading 3 i.e. "CSE 141L"
   Widget buildClassCode(BuildContext context, String className) {
-    return Text(className,
-        style: TextStyle(
-            fontSize: 17.0,
-            fontFamily: 'Refrigerator Deluxe',
-            letterSpacing: 1.2,
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-            fontWeight: FontWeight.w900));
+    return Text(
+      className,
+      style: TextStyle(
+        fontSize: 17.0,
+        fontFamily: 'Refrigerator Deluxe',
+        letterSpacing: 1.2,
+        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+        fontWeight: FontWeight.w900,
+      ),
+    );
   }
 
   // Small body text i.e. "Laboratory"
@@ -162,8 +163,9 @@ class ClassScheduleCard extends StatelessWidget {
         classType,
         style: TextStyle(
           fontSize: 17,
-          color:
-              Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
+          color: Theme.of(context).brightness == Brightness.light
+              ? descriptiveTextColorLight
+              : descriptiveTextColorDark,
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -182,26 +184,31 @@ class ClassScheduleCard extends StatelessWidget {
             size: 34,
           ),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Start and Finish Time:',
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              SizedBox(height: 5),
-              Text((day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Time and Days:',
                   style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                      fontWeight: FontWeight.w700))
-            ],
+                    fontSize: 17,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -219,29 +226,32 @@ class ClassScheduleCard extends StatelessWidget {
             size: 34,
           ),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Classroom Location:',
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
-                  fontWeight: FontWeight.w400,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Classroom Location:',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                location,
-                style: TextStyle(
+                SizedBox(height: 5),
+                Text(
+                  location,
+                  style: TextStyle(
                     fontSize: 15,
                     letterSpacing: 0.8,
                     color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700),
-              ),
-            ],
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -253,32 +263,37 @@ class ClassScheduleCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
-          Icon(Icons.check_box_outlined,
-              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-              size: 34),
+          Icon(
+            Icons.check_box_outlined,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+            size: 34,
+          ),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Evaluation Option:',
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
-                  fontWeight: FontWeight.w400,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Evaluation Option:',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? descriptiveTextColorLight
+                        : descriptiveTextColorDark,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                gradeEvaluation,
-                style: TextStyle(
+                SizedBox(height: 5),
+                Text(
+                  gradeEvaluation,
+                  style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700),
-              ),
-            ],
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
