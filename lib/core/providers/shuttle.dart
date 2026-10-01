@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
+import 'package:campus_mobile_experimental/core/utils/districts.dart';
 import 'package:flutter/material.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {
@@ -17,6 +18,7 @@ class ShuttleDataProvider extends ChangeNotifier {
   /// MODELS
   ShuttleStopModel? _closestStop;
   Map<int, ShuttleStopModel>? fetchedStops;
+  Map<int, String> _stopDistricts = {};
 
   /// PROVIDERS
   UserDataProvider? userDataProvider;
@@ -38,6 +40,11 @@ class ShuttleDataProvider extends ChangeNotifier {
         newMapOfStops[model.id] = model;
       }
       fetchedStops = newMapOfStops;
+
+      await loadCampusDistricts();
+      _stopDistricts = {
+        for (ShuttleStopModel model in _shuttleService.data) model.id: districtForLocation(model.lat, model.lon)
+      };
 
       /// if the user is logged in we want to sync the order of parking lots amongst all devices
       if (userDataProvider != null && !reloading) reorderStops(userDataProvider!.userProfileModel.selectedStops);
@@ -171,5 +178,21 @@ class ShuttleDataProvider extends ChangeNotifier {
       output.remove(stop!.id);
     }
     return output;
+  }
+
+  Map<String, List<ShuttleStopModel>> get stopsNotSelectedByDistrict {
+    final Map<String, List<ShuttleStopModel>> districtMap = {};
+    stopsNotSelected.forEach((id, model) {
+      final district = _stopDistricts[id] ?? 'Other';
+      districtMap.putIfAbsent(district, () => []).add(model);
+    });
+
+    final sortedKeys = districtMap.keys.toList()
+      ..sort((a, b) {
+        if (a == 'Other') return 1;
+        if (b == 'Other') return -1;
+        return a.compareTo(b);
+      });
+    return {for (var key in sortedKeys) key: districtMap[key]!};
   }
 }
