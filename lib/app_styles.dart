@@ -22,6 +22,7 @@ const Color lightPrimaryColor = Color(0xFF182B49);
 const Color darkPrimaryColor = Color(0xFF333333);
 const Color darkPrimaryColor2 = Color(0xFFF5F0E6);
 const Color darkPrimaryBgColor = Color(0xff1D1D1D);
+const Color pinkTest = const Color(0xFFFFCD00); // Yellow Button);
 
 const Color secondaryColorLight = Color(0xFF182B49);
 const Color secondaryColorDark = Color(0xFF5496BC);
@@ -298,7 +299,7 @@ const Color darkButtonColor = Color(0xFFFFFFFF);
 // Colors
 const Color lightTextColor = Color(0xFFFFFFFF);
 const Color darkTextColor = Color(0xFF006A96);
-const Color actionButtonBackgroundColor = Color(0xFFFFCD00);
+const Color actionButtonBackgroundColor = Color(0xFFFF00FB);
 const Color dotsUnselectedColor = Color(0xFF747678);
 const Color dotsSelectedColorLight = Color(0xFF00629B);
 const Color dotsSelectedColorDark = Color(0xFF5496BC);
