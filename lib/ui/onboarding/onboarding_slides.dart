@@ -45,6 +45,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
             PageView.builder(
                 controller: _backgroundPageController,
                 physics: const NeverScrollableScrollPhysics(),
+                pageSnapping: false,
                 itemCount: 5,
                 itemBuilder: (_, index) => Stack(
                       children: [
