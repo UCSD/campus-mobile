@@ -173,7 +173,9 @@ class _HomeState extends State<Home> {
           child: Center(
             child: Text(
               'All cards hidden.\nPlease enable them in\nProfile > Card Settings',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).brightness == Brightness.light ? Colors.white : null,
+                  ),
               textAlign: TextAlign.center,
             ),
           ),
