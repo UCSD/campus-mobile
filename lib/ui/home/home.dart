@@ -168,10 +168,14 @@ class _HomeState extends State<Home> {
     if (!anyCardVisible) {
       return [
         ...noticesCards,
-        const Padding(
-          padding: EdgeInsets.all(32),
+        Padding(
+          padding: const EdgeInsets.all(32),
           child: Center(
-            child: Text('All Cards Hidden', style: const TextStyle(color: Colors.white)),
+            child: Text(
+              'All cards hidden.\nPlease enable them in\nProfile > Card Settings',
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ];
