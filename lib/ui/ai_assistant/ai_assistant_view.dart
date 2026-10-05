@@ -60,9 +60,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
   @override
   Widget build(BuildContext context) {
     final ChatProvider chatProvider = context.watch<ChatProvider>();
-    final bool isLoggedIn = context
-        .watch<UserDataProvider>()
-        .isLoggedIn;
+    final bool isLoggedIn = context.watch<UserDataProvider>().isLoggedIn;
 
     return PopScope(
       canPop: !_isSidebarOpen,
@@ -75,6 +73,13 @@ class _AIAssistantViewState extends State<AIAssistantView> {
         backgroundColor: Colors.white,
         drawerScrimColor: Colors.black.withValues(alpha: 0.28),
         onDrawerChanged: (bool isOpen) {
+          FocusScope.of(context).unfocus();
+          if (!isOpen) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              FocusScope.of(context).unfocus();
+            });
+          }
           if (_isSidebarOpen == isOpen) return;
           setState(() {
             _isSidebarOpen = isOpen;
@@ -124,49 +129,49 @@ class _AIAssistantViewState extends State<AIAssistantView> {
 
   Widget _buildMainContent(ChatProvider chatProvider) {
     return GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => FocusScope.of(context).unfocus(),
-        child:
-        Column(
-          children: <Widget>[
-            const AssistantHeader(),
-            Padding(
-                padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(
-                      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                      splashRadius: 22,
-                      icon: SvgPicture.asset(
-                        'assets/images/tgpt/unpin-sidebar.svg',
-                        width: 22,
-                        height: 22,
-                        colorFilter: const ColorFilter.mode(_SIDEBAR_ICON_COLOR, BlendMode.srcIn),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: chatProvider.startNewChat,
-                      splashRadius: 22,
-                      icon: SvgPicture.asset(
-                        'assets/images/tgpt/new_chat2.svg',
-                        width: 22,
-                        height: 22,
-                        colorFilter: const ColorFilter.mode(_NEW_CHAT_ICON_COLOR, BlendMode.srcIn),
-                      ),
-                    ),
-                  ],
-                )
+      behavior: HitTestBehavior.opaque,
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Column(
+        children: <Widget>[
+          const AssistantHeader(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                IconButton(
+                  onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                  splashRadius: 22,
+                  icon: SvgPicture.asset(
+                    'assets/images/tgpt/unpin-sidebar.svg',
+                    width: 22,
+                    height: 22,
+                    colorFilter: const ColorFilter.mode(_SIDEBAR_ICON_COLOR, BlendMode.srcIn),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    chatProvider.startNewChat();
+                  },
+                  splashRadius: 22,
+                  icon: SvgPicture.asset(
+                    'assets/images/tgpt/new_chat2.svg',
+                    width: 22,
+                    height: 22,
+                    colorFilter: const ColorFilter.mode(_NEW_CHAT_ICON_COLOR, BlendMode.srcIn),
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: chatProvider.hasMessages
-                  ? ChatMessageList(messages: chatProvider.messages)
-                  : const AssistantEmptyState(),
-            )
-            ,
-          ]
-          ,
-        )
+          ),
+          Expanded(
+            child: chatProvider.hasMessages
+                ? ChatMessageList(messages: chatProvider.messages)
+                : const AssistantEmptyState(),
+          ),
+        ],
+      ),
     );
   }
 
