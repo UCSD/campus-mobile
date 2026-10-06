@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
+import 'package:campus_mobile_experimental/ui/common/base64_image_widget.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -103,8 +104,10 @@ class _StudentIdCardState extends State<StudentIdCard> {
             SizedBox(width: cardMargin * 0.5),
             ClipRRect(
               borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                photoModel.photoUrl,
+              // MA-759: render student photo from base64 encoded string
+              child: Base64ImageWidget(
+                base64String: photoModel.photoUrl,
+                placeholderAssetPath: 'assets/images/staff_id_placeholder.png',
                 fit: BoxFit.contain,
                 height: ScalingUtility.verticalSafeBlock * 21,
               ),
