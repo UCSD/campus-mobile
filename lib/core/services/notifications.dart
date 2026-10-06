@@ -34,8 +34,11 @@ class NotificationService {
 
   Future<bool> postPushToken(Map<String, String> headers, body) async {
     try {
-      String? response =
-          await NetworkHelper.authorizedPost(dotenv.get('NOTIFICATIONS_ENDPOINT') + '/register', headers, body);
+      String? response = await NetworkHelper.authorizedPost(
+        dotenv.get('NOTIFICATIONS_ENDPOINT') + '/register',
+        headers,
+        body,
+      );
       if (response == 'Success') {
         return true;
       } else {
@@ -51,8 +54,10 @@ class NotificationService {
   Future<bool> deletePushToken(Map<String, String> headers, String token) async {
     token = Uri.encodeComponent(token);
     try {
-      String? response =
-          await NetworkHelper.authorizedDelete(dotenv.get('NOTIFICATIONS_ENDPOINT') + '/token/' + token, headers);
+      String? response = await NetworkHelper.authorizedDelete(
+        dotenv.get('NOTIFICATIONS_ENDPOINT') + '/token/' + token,
+        headers,
+      );
       if (response == 'Success') {
         return true;
       } else {

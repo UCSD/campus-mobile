@@ -34,25 +34,25 @@ class ParkingModel {
   });
 
   ParkingModel.fromJson(Map<String, dynamic> json)
-      : neighborhood = json["neighborhood"],
-        isStructure = json["isStructure"],
-        locationId = json["LocationId"],
-        locationName = json["LocationName"],
-        locationContext = json["LocationContext"],
-        locationProvider = json["LocationProvider"],
-        availability = json["Availability"] as Map<String, dynamic>,
-        lastUpdated = json["lastUpdated"] == null ? null : DateTime.parse(json["LastUpdated"]),
-        availabilityType = json["AvailabilityType"] == null ? null : json["AvailabilityType"];
+    : neighborhood = json["neighborhood"],
+      isStructure = json["isStructure"],
+      locationId = json["LocationId"],
+      locationName = json["LocationName"],
+      locationContext = json["LocationContext"],
+      locationProvider = json["LocationProvider"],
+      availability = json["Availability"] as Map<String, dynamic>,
+      lastUpdated = json["lastUpdated"] == null ? null : DateTime.parse(json["LastUpdated"]),
+      availabilityType = json["AvailabilityType"] == null ? null : json["AvailabilityType"];
 
   Map<String, dynamic> toJson() => {
-        "Neighborhood": neighborhood,
-        "isStructure": isStructure,
-        "LocationId": locationId,
-        "LocationName": locationName,
-        "LocationContext": locationContext,
-        "LocationProvider": locationProvider,
-        "Availability": availability,
-        "LastUpdated": lastUpdated?.toIso8601String(),
-        "AvailabilityType": availabilityType
-      };
+    "Neighborhood": neighborhood,
+    "isStructure": isStructure,
+    "LocationId": locationId,
+    "LocationName": locationName,
+    "LocationContext": locationContext,
+    "LocationProvider": locationProvider,
+    "Availability": availability,
+    "LastUpdated": lastUpdated?.toIso8601String(),
+    "AvailabilityType": availabilityType,
+  };
 }

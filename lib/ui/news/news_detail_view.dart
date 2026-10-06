@@ -14,48 +14,46 @@ class NewsDetailView extends StatelessWidget {
     return ContainerView(
       child: ListView(
         children: [
-          Builder(builder: (context) {
-            String fallbackTitle = data.title;
-            var hasColon = fallbackTitle.contains(':');
-            if (hasColon) fallbackTitle = fallbackTitle.split(':')[0].trim();
-            var isTitleTooLong = fallbackTitle.length > 40;
-            if (isTitleTooLong) fallbackTitle = fallbackTitle.substring(0, 40) + '...';
-            String semanticLabel = fallbackTitle;
+          Builder(
+            builder: (context) {
+              String fallbackTitle = data.title;
+              var hasColon = fallbackTitle.contains(':');
+              if (hasColon) fallbackTitle = fallbackTitle.split(':')[0].trim();
+              var isTitleTooLong = fallbackTitle.length > 40;
+              if (isTitleTooLong) fallbackTitle = fallbackTitle.substring(0, 40) + '...';
+              String semanticLabel = fallbackTitle;
 
-            // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out
-            semanticLabel = semanticLabel.replaceAllMapped(
-              RegExp(r'[A-Z]{2,}'),
-              (match) => match.group(0)!.split('').join(' '),
-            );
+              // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out
+              semanticLabel = semanticLabel.replaceAllMapped(
+                RegExp(r'[A-Z]{2,}'),
+                (match) => match.group(0)!.split('').join(' '),
+              );
 
-            return Semantics(
-              image: true,
-              label: semanticLabel,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.33,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: data.image.isEmpty
-                        ? const AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
-                        : NetworkImage(data.image),
+              return Semantics(
+                image: true,
+                label: semanticLabel,
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.33,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: data.image.isEmpty
+                          ? const AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
+                          : NetworkImage(data.image),
+                    ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            },
+          ),
           Container(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
                 // Mimics StartDateContainer from events_detail_view.dart
-                NewsDateContainer(
-                  date: DateFormat("MMM d y").format(data.date.toLocal()),
-                ),
+                NewsDateContainer(date: DateFormat("MMM d y").format(data.date.toLocal())),
                 // Title on the right
-                Expanded(
-                  child: NewsTitle(title: data.title),
-                ),
+                Expanded(child: NewsTitle(title: data.title)),
               ],
             ),
           ),
@@ -65,11 +63,7 @@ class NewsDetailView extends StatelessWidget {
                 ? Text(
                     data.description,
                     semanticsLabel: 'What happened: ${data.description}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      height: 1.4,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    style: const TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
                   )
                 : Container(),
           ),
@@ -103,7 +97,7 @@ class NewsDateContainer extends StatelessWidget {
       'Sep': 'September',
       'Oct': 'October',
       'Nov': 'November',
-      'Dec': 'December'
+      'Dec': 'December',
     };
     months.forEach((key, value) {
       semanticDate = semanticDate.replaceAll(key, value);
@@ -189,18 +183,13 @@ class ContinueReadingButton extends StatelessWidget {
         try {
           launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Could not open.')),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open.')));
         }
       },
       child: FittedBox(
         child: Row(
           children: [
-            Text(
-              'FULL STORY',
-              style: TextStyle(fontSize: 18, color: lightPrimaryColor),
-            ),
+            Text('FULL STORY', style: TextStyle(fontSize: 18, color: lightPrimaryColor)),
             const SizedBox(width: 4),
             Icon(Icons.open_in_new, size: 18, color: lightPrimaryColor),
           ],

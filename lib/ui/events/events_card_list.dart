@@ -37,10 +37,7 @@ class EventsCardList extends StatelessWidget {
       return SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: eventTiles,
-        ),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: eventTiles),
       );
     } else {
       return ContainerView(

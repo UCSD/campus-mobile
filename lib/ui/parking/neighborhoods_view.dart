@@ -13,9 +13,7 @@ class NeighborhoodsView extends StatefulWidget {
 class _NeighborhoodsViewState extends State<NeighborhoodsView> {
   @override
   Widget build(BuildContext context) {
-    return ContainerView(
-      child: buildNeighborhoodsList(context),
-    );
+    return ContainerView(child: buildNeighborhoodsList(context));
   }
 
   Widget buildNeighborhoodsList(BuildContext context) {
@@ -36,21 +34,10 @@ class _NeighborhoodsViewState extends State<NeighborhoodsView> {
       if (key.isNotEmpty) {
         listTiles.add(
           ListTile(
-            title: Text(
-              key,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: dotsSelectedColorLight,
-              size: 18.0,
-            ),
+            title: Text(key, style: Theme.of(context).textTheme.bodyMedium),
+            trailing: Icon(Icons.arrow_forward_ios, color: dotsSelectedColorLight, size: 18.0),
             onTap: () {
-              Navigator.pushNamed(
-                context,
-                RoutePaths.NEIGHBORHOODS_LOTS_VIEW,
-                arguments: value,
-              );
+              Navigator.pushNamed(context, RoutePaths.NEIGHBORHOODS_LOTS_VIEW, arguments: value);
             },
           ),
         );

@@ -5,11 +5,7 @@ class ActionLink extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
 
-  const ActionLink({
-    Key? key,
-    required this.buttonText,
-    required this.onPressed,
-  }) : super(key: key);
+  const ActionLink({Key? key, required this.buttonText, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +22,7 @@ class ActionLink extends StatelessWidget {
         child: Text(
           buttonText,
           textAlign: TextAlign.start,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                decoration: TextDecoration.underline,
-              ),
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(decoration: TextDecoration.underline),
         ),
       ),
       onPressed: onPressed,

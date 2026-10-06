@@ -13,9 +13,7 @@ class ChatMessagePersistentAdapter extends TypeAdapter<ChatMessagePersistent> {
   @override
   ChatMessagePersistent read(BinaryReader reader) {
     final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
+    final fields = <int, dynamic>{for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read()};
     return ChatMessagePersistent(
       id: fields[0] as String,
       text: fields[1] as String,

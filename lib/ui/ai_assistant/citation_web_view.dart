@@ -7,10 +7,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 /// Pushed from [ChatCitation.openCitation] so the app bar shows **CITATION**
 /// (see [RouteTitles]) instead of reusing another feature title such as News.
 class CitationWebView extends StatefulWidget {
-  const CitationWebView({
-    super.key,
-    required this.initialUrl,
-  });
+  const CitationWebView({super.key, required this.initialUrl});
 
   final String initialUrl;
 
@@ -29,9 +26,7 @@ class _CitationWebViewState extends State<CitationWebView> {
     if (!ok) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open link.')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open link.')));
         Navigator.of(context).pop();
       });
       return;
@@ -44,8 +39,6 @@ class _CitationWebViewState extends State<CitationWebView> {
   @override
   Widget build(BuildContext context) {
     final WebViewController? c = _controller;
-    return ContainerView(
-      child: c == null ? const SizedBox.shrink() : WebViewWidget(controller: c),
-    );
+    return ContainerView(child: c == null ? const SizedBox.shrink() : WebViewWidget(controller: c));
   }
 }

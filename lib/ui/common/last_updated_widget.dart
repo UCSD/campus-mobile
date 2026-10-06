@@ -10,12 +10,16 @@ class LastUpdatedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Text('Last updated: ' + determineText(time),
-            style: TextStyle(
-                fontSize: 16.0,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w400,
-                color: descriptiveTextColorLight)));
+      child: Text(
+        'Last updated: ' + determineText(time),
+        style: TextStyle(
+          fontSize: 16.0,
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.w400,
+          color: descriptiveTextColorLight,
+        ),
+      ),
+    );
   }
 
   static String determineText(DateTime time) {
