@@ -65,19 +65,14 @@ class _AddShuttleStopsViewState extends State<AddShuttleStopsView> {
 
   List<Widget> createSections(BuildContext context) {
     List<Widget> sections = [];
-    final query = _searchQuery.trim().toLowerCase();
 
-    _shuttleDataProvider.stopsNotSelectedByDistrict.forEach((district, stops) {
-      final matchingStops =
-          query.isEmpty ? stops : stops.where((stop) => stop.name.toLowerCase().contains(query)).toList();
-      if (matchingStops.isEmpty) return;
-
+    _shuttleDataProvider.stopsNotSelectedByDistrict(query: _searchQuery).forEach((district, stops) {
       sections.add(SliverStickyHeader(
         header: buildDistrictHeader(context, district),
         sliver: SliverList(
           delegate: SliverChildBuilderDelegate(
-            (context, index) => buildStopTile(context, matchingStops[index]),
-            childCount: matchingStops.length,
+            (context, index) => buildStopTile(context, stops[index]),
+            childCount: stops.length,
           ),
         ),
       ));
