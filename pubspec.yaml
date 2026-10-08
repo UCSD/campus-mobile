@@ -63,6 +63,7 @@ flutter:
     - assets/images/
     - assets/images/onboarding/
     - assets/images/tgpt/
+    - assets/data/campus_districts.json
     - .env
   fonts:
     - family: Refrigerator Deluxe
