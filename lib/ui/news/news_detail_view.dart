@@ -12,72 +12,71 @@ class NewsDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerView(
-      child: ListView(
-        children: [
-          Builder(builder: (context) {
-            String fallbackTitle = data.title;
-            var hasColon = fallbackTitle.contains(':');
-            if (hasColon) fallbackTitle = fallbackTitle.split(':')[0].trim();
-            var isTitleTooLong = fallbackTitle.length > 40;
-            if (isTitleTooLong) fallbackTitle = fallbackTitle.substring(0, 40) + '...';
-            String semanticLabel = fallbackTitle;
-
-            // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out
-            semanticLabel = semanticLabel.replaceAllMapped(
-              RegExp(r'[A-Z]{2,}'),
-              (match) => match.group(0)!.split('').join(' '),
-            );
-
-            return Semantics(
-              image: true,
-              label: semanticLabel,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.33,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: data.image.isEmpty
-                        ? const AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
-                        : NetworkImage(data.image),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+        child: ListView(
+          children: [
+            Builder(builder: (context) {
+              String fallbackTitle = data.title;
+              var hasColon = fallbackTitle.contains(':');
+              if (hasColon) fallbackTitle = fallbackTitle.split(':')[0].trim();
+              var isTitleTooLong = fallbackTitle.length > 40;
+              if (isTitleTooLong) fallbackTitle = fallbackTitle.substring(0, 40) + '...';
+              String semanticLabel = fallbackTitle;
+              semanticLabel = semanticLabel.replaceAllMapped(
+                RegExp(r'[A-Z]{2,}'),
+                    (match) => match.group(0)!.split('').join(' '),
+              );
+              return Semantics(
+                image: true,
+                label: semanticLabel,
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.33,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: data.image.isEmpty
+                          ? const AssetImage('assets/images/UCSDMobile_banner.png') as ImageProvider
+                          : NetworkImage(data.image),
+                    ),
                   ),
                 ),
+              );
+            }),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  NewsDateContainer(
+                    date: DateFormat("MMM d y").format(data.date.toLocal()),
+                  ),
+                  Expanded(
+                    child: NewsTitle(title: data.title),
+                  ),
+                ],
               ),
-            );
-          }),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                // Mimics StartDateContainer from events_detail_view.dart
-                NewsDateContainer(
-                  date: DateFormat("MMM d y").format(data.date.toLocal()),
-                ),
-                // Title on the right
-                Expanded(
-                  child: NewsTitle(title: data.title),
-                ),
-              ],
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: data.description.isNotEmpty
-                ? Text(
-                    data.description,
-                    semanticsLabel: 'What happened: ${data.description}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      height: 1.4,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  )
-                : Container(),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 15, top: 20, right: 248, bottom: 20),
-            child: data.link.isNotEmpty ? ContinueReadingButton(link: data.link) : Container(),
-          ),
-        ],
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: data.description.isNotEmpty
+                  ? Text(
+                data.description,
+                semanticsLabel: 'What happened: ${data.description}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  height: 1.4,
+                  fontWeight: FontWeight.w400,
+                ),
+              )
+                  : Container(),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 15, top: 20, right: 248, bottom: 20),
+              child: data.link.isNotEmpty ? ContinueReadingButton(link: data.link) : Container(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -85,6 +84,7 @@ class NewsDetailView extends StatelessWidget {
 
 class NewsDateContainer extends StatelessWidget {
   final String date;
+
   const NewsDateContainer({Key? key, required this.date}) : super(key: key);
 
   @override
@@ -122,7 +122,9 @@ class NewsDateContainer extends StatelessWidget {
               parts[0].toUpperCase(),
               style: TextStyle(
                 fontSize: 18,
-                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                color: Theme
+                    .of(context)
+                    .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -130,7 +132,9 @@ class NewsDateContainer extends StatelessWidget {
               parts[1].toUpperCase(),
               style: TextStyle(
                 fontSize: 20,
-                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                color: Theme
+                    .of(context)
+                    .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -138,7 +142,9 @@ class NewsDateContainer extends StatelessWidget {
               parts[2].toUpperCase(),
               style: TextStyle(
                 fontSize: 18,
-                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                color: Theme
+                    .of(context)
+                    .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -151,6 +157,7 @@ class NewsDateContainer extends StatelessWidget {
 
 class NewsTitle extends StatelessWidget {
   final String title;
+
   const NewsTitle({Key? key, required this.title}) : super(key: key);
 
   @override
@@ -165,7 +172,9 @@ class NewsTitle extends StatelessWidget {
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w500,
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+            color: Theme
+                .of(context)
+                .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
           ),
         ),
       ),
@@ -175,6 +184,7 @@ class NewsTitle extends StatelessWidget {
 
 class ContinueReadingButton extends StatelessWidget {
   final String link;
+
   const ContinueReadingButton({Key? key, required this.link}) : super(key: key);
 
   @override
@@ -190,7 +200,10 @@ class ContinueReadingButton extends StatelessWidget {
           launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Could not open.')),
+            const SnackBar(content: Text('Could not open.',
+              style: TextStyle(color: Colors.white),
+            )),
+
           );
         }
       },

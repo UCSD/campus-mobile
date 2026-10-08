@@ -17,109 +17,128 @@ class EventDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading
-        ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
+    return Provider
+        .of<EventsDataProvider>(context)
+        .isLoading
+        ? Center(child: CircularProgressIndicator(color: Theme
+        .of(context)
+        .colorScheme
+        .secondary))
         : ContainerView(child: buildDetailView(context));
   }
 
   Widget buildDetailView(BuildContext context) {
-    return ListView(
-      children: [
-        // Event Image
-        EventImage(data: data),
-        // Event Content
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              // Event Date
-              Builder(builder: (context) {
-                final df = DateFormat("MMM d y");
-                final localStart = data.startDate.toLocal();
-                final localEnd = data.endDate.toLocal();
-                final startDate = df.format(localStart);
-                final endDate = df.format(localEnd);
-                final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
-                return StartEndDateContainer(date: dateDisplay);
-              }),
-
-              // Event Title
-              Expanded(child: EventTitle(title: data.title)),
-            ],
-          ),
-        ),
-        Container(
-            padding: const EdgeInsets.only(left: 17.0),
-            child: Row(children: [
-              // Event Location
-              Icon(
-                Icons.location_on_sharp,
-                size: 36,
-                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-              ),
-              SizedBox(width: 5),
-              Expanded(
-                child: data.location != null && data.location!.isNotEmpty
-                    ? Semantics(
-                        label: 'Location: ',
-                        child: LinkifyWithCatch(
-                          text: data.location!,
-                          looseUrl: true,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      )
-                    : Container(),
-              ),
-              SizedBox(width: 5),
-              // Event Time
-              Builder(builder: (context) {
-                final timeString = data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
-                    ? '    All day     '
-                    : DateFormat.jm().format(data.startDate.toLocal()) +
-                        ' - ' +
-                        DateFormat.jm().format(data.endDate.toLocal());
-                final semanticTime = 'From: ' + timeString.replaceAll('-', 'to').trim();
-                return Semantics(
-                  container: true,
-                  child: Text(
-                    timeString,
-                    semanticsLabel: semanticTime,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                );
-              }),
-              SizedBox(width: 16),
-            ])),
-        Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+      child: ListView(
+        children: [
+          // Event Image
+          EventImage(data: data),
+          // Event Content
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
               children: [
-                ///////////////// Horizontal Division ///////////////////
-                Divider(color: listTileDividerColorDark, thickness: 0.6),
-                // Event Description
-                data.description != null && data.description!.isNotEmpty
-                    ? Text(
-                        data.description!,
-                        semanticsLabel: 'Event Description and Details: ${data.description}',
-                        style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
-                      )
-                    : Container(),
+                // Event Date
+                Builder(builder: (context) {
+                  final df = DateFormat("MMM d y");
+                  final localStart = data.startDate.toLocal();
+                  final localEnd = data.endDate.toLocal();
+                  final startDate = df.format(localStart);
+                  final endDate = df.format(localEnd);
+                  final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
+                  return StartEndDateContainer(date: dateDisplay);
+                }),
+
+                // Event Title
+                Expanded(child: EventTitle(title: data.title)),
               ],
-            )),
-        Container(
-          padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
-          // "GO TO EVENT PAGE" Button
-          child: data.link != null && data.link!.isNotEmpty ? GoToEventPageButton(link: data.link!) : Container(),
-        )
-      ],
+            ),
+          ),
+          Container(
+              padding: const EdgeInsets.only(left: 17.0),
+              child: Row(children: [
+                // Event Location
+                Icon(
+                  Icons.location_on_sharp,
+                  size: 36,
+                  color: Theme
+                      .of(context)
+                      .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                ),
+                SizedBox(width: 5),
+                Expanded(
+                  child: data.location != null && data.location!.isNotEmpty
+                      ? Semantics(
+                    label: 'Location: ',
+                    child: LinkifyWithCatch(
+                      text: data.location!,
+                      looseUrl: true,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme
+                            .of(context)
+                            .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  )
+                      : Container(),
+                ),
+                SizedBox(width: 5),
+                // Event Time
+                Builder(builder: (context) {
+                  final timeString = data.startDate
+                      .toLocal()
+                      .hour == 0 && data.endDate
+                      .toLocal()
+                      .hour == 23
+                      ? '    All day     '
+                      : DateFormat.jm().format(data.startDate.toLocal()) +
+                      ' - ' +
+                      DateFormat.jm().format(data.endDate.toLocal());
+                  final semanticTime = 'From: ' + timeString.replaceAll('-', 'to').trim();
+                  return Semantics(
+                    container: true,
+                    child: Text(
+                      timeString,
+                      semanticsLabel: semanticTime,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme
+                            .of(context)
+                            .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  );
+                }),
+                SizedBox(width: 16),
+              ])),
+          Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  ///////////////// Horizontal Division ///////////////////
+                  Divider(color: listTileDividerColorDark, thickness: 0.6),
+                  // Event Description
+                  data.description != null && data.description!.isNotEmpty
+                      ? Text(
+                    data.description!,
+                    semanticsLabel: 'Event Description and Details: ${data.description}',
+                    style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
+                  )
+                      : Container(),
+                ],
+              )),
+          Container(
+            padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
+            // "GO TO EVENT PAGE" Button
+            child: data.link != null && data.link!.isNotEmpty ? GoToEventPageButton(link: data.link!) : Container(),
+          )
+        ],
+      ),
     );
   }
 }
@@ -127,7 +146,9 @@ class EventDetailView extends StatelessWidget {
 // CREATE EVENT IMAGE
 class EventImage extends StatelessWidget {
   final EventModel data;
+
   const EventImage({Key? key, required this.data}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     String fallbackTitle = data.title;
@@ -138,14 +159,17 @@ class EventImage extends StatelessWidget {
     // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out
     semanticLabel = semanticLabel.replaceAllMapped(
       RegExp(r'[A-Z]{2,}'),
-      (match) => match.group(0)!.split('').join(' '),
+          (match) => match.group(0)!.split('').join(' '),
     );
 
     return Semantics(
       image: true,
       label: semanticLabel,
       child: Container(
-        height: MediaQuery.of(context).size.width / 2.1,
+        height: MediaQuery
+            .of(context)
+            .size
+            .width / 2.1,
         decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover, // Ensure the image fills the container
@@ -162,6 +186,7 @@ class EventImage extends StatelessWidget {
 // CREATE EVENT TITLE
 class EventTitle extends StatelessWidget {
   final String title;
+
   const EventTitle({Key? key, required this.title}) : super(key: key);
 
   @override
@@ -180,7 +205,9 @@ class EventTitle extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w500,
-                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                color: Theme
+                    .of(context)
+                    .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
               ),
             ),
           ),
@@ -211,7 +238,10 @@ class GoToEventPageButton extends StatelessWidget {
             try {
               await launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
             } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.',
+                style: TextStyle(color: Colors.white),
+
+              )));
             }
           },
           child: FittedBox(
