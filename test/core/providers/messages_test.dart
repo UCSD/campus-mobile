@@ -32,12 +32,12 @@ void main() {
 }
 
 MessageElement _message(String id, List<String>? topics) => MessageElement(
-      sender: '',
-      message: Message(message: '', title: '', data: Data()),
-      messageId: id,
-      audience: Audience(topics: topics),
-      timestamp: 0,
-    );
+  sender: '',
+  message: Message(message: '', title: '', data: Data()),
+  messageId: id,
+  audience: Audience(topics: topics),
+  timestamp: 0,
+);
 
 class _UserDataProvider extends UserDataProvider {
   _UserDataProvider(this.topics, {required bool isLoggedIn}) : loggedIn = isLoggedIn;

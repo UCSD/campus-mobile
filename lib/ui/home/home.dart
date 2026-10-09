@@ -150,10 +150,34 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList() {
-    // Copy list so select() detects reorder: profile mutates _cardOrder in place (same ref).
-    final orderedCards = getOrderedCardsList(context.select((CardsDataProvider p) => List<String>.from(p.cardOrder)));
+    final order = context.select((CardsDataProvider p) => List<String>.from(p.cardOrder));
+    final states = context.select((CardsDataProvider p) => Map<String, bool>.from(p.cardStates));
+    final webCards = context.read<CardsDataProvider>().webCards;
     final noticesCards = getNoticesCardsList(context.select((NoticesDataProvider p) => p.noticesModel));
-    return [...noticesCards, ...orderedCards];
+
+    final anyCardVisible = order.any(
+      (c) => states[c] == true && (webCards.containsKey(c) || _CARD_CTORS.containsKey(c)),
+    );
+
+    if (!anyCardVisible) {
+      return [
+        ...noticesCards,
+        Padding(
+          padding: const EdgeInsets.all(32),
+          child: Center(
+            child: Text(
+              'All cards hidden.\nPlease enable them in\nProfile > Card Settings',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).brightness == Brightness.light ? Colors.white : null,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ];
+    }
+
+    return [...noticesCards, ...getOrderedCardsList(order)];
   }
 
   List<Widget> getNoticesCardsList(List<NoticesModel> notices) => notices

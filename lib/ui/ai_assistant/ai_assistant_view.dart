@@ -7,6 +7,7 @@ import 'package:campus_mobile_experimental/ui/ai_assistant/assistant_header.dart
 import 'package:campus_mobile_experimental/ui/ai_assistant/assistant_sidebar.dart';
 import 'package:campus_mobile_experimental/ui/ai_assistant/chat_composer.dart';
 import 'package:campus_mobile_experimental/ui/ai_assistant/chat_message_list.dart';
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -73,6 +74,13 @@ class _AIAssistantViewState extends State<AIAssistantView> {
         backgroundColor: Colors.white,
         drawerScrimColor: Colors.black.withValues(alpha: 0.28),
         onDrawerChanged: (bool isOpen) {
+          FocusScope.of(context).unfocus();
+          if (!isOpen) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              FocusScope.of(context).unfocus();
+            });
+          }
           if (_isSidebarOpen == isOpen) return;
           setState(() {
             _isSidebarOpen = isOpen;
@@ -121,43 +129,50 @@ class _AIAssistantViewState extends State<AIAssistantView> {
   }
 
   Widget _buildMainContent(ChatProvider chatProvider) {
-    return Column(
-      children: <Widget>[
-        const AssistantHeader(),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                splashRadius: 22,
-                icon: SvgPicture.asset(
-                  'assets/images/tgpt/unpin-sidebar.svg',
-                  width: 22,
-                  height: 22,
-                  colorFilter: const ColorFilter.mode(_SIDEBAR_ICON_COLOR, BlendMode.srcIn),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Column(
+        children: <Widget>[
+          const AssistantHeader(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                IconButton(
+                  onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                  splashRadius: 22,
+                  icon: SvgPicture.asset(
+                    'assets/images/tgpt/unpin-sidebar.svg',
+                    width: 22,
+                    height: 22,
+                    colorFilter: const ColorFilter.mode(_SIDEBAR_ICON_COLOR, BlendMode.srcIn),
+                  ),
                 ),
-              ),
-              IconButton(
-                onPressed: chatProvider.startNewChat,
-                splashRadius: 22,
-                icon: SvgPicture.asset(
-                  'assets/images/tgpt/new_chat2.svg',
-                  width: 22,
-                  height: 22,
-                  colorFilter: const ColorFilter.mode(_NEW_CHAT_ICON_COLOR, BlendMode.srcIn),
+                IconButton(
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    chatProvider.startNewChat();
+                  },
+                  splashRadius: 22,
+                  icon: SvgPicture.asset(
+                    'assets/images/tgpt/new_chat2.svg',
+                    width: 22,
+                    height: 22,
+                    colorFilter: const ColorFilter.mode(_NEW_CHAT_ICON_COLOR, BlendMode.srcIn),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: chatProvider.hasMessages
-              ? ChatMessageList(messages: chatProvider.messages)
-              : const AssistantEmptyState(),
-        ),
-      ],
+          Expanded(
+            child: chatProvider.hasMessages
+                ? ChatMessageList(messages: chatProvider.messages)
+                : const AssistantEmptyState(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -173,7 +188,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
     _lastShownError = errorMessage;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+      AppSnackBar.show(context, errorMessage);
     });
   }
 

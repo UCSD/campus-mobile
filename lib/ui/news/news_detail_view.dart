@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:campus_mobile_experimental/core/models/news.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
@@ -183,7 +184,7 @@ class ContinueReadingButton extends StatelessWidget {
         try {
           launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open.')));
+          AppSnackBar.show(context, 'Could not open.');
         }
       },
       child: FittedBox(

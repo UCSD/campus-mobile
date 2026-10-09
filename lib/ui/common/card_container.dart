@@ -87,7 +87,7 @@ class CardContainer extends StatelessWidget {
         } else {
           customErrorText = 'No finals found.';
         }
-        return Padding(padding: const EdgeInsets.only(bottom: 42.0), child: Text(customErrorText));
+        return Padding(padding: const EdgeInsets.only(left: 8, top: 32, bottom: 48), child: Text(customErrorText));
       } else if (titleText == 'CLASSES') {
         var customErrorText = '';
         if (errorText!.contains('Exception')) {
@@ -96,7 +96,7 @@ class CardContainer extends StatelessWidget {
         } else {
           customErrorText = 'No classes found.';
         }
-        return Text(customErrorText);
+        return Padding(padding: const EdgeInsets.only(top: 32, bottom: 48, left: 8), child: Text(customErrorText));
       } else {
         return Text('An error occurred, please try again.');
       }

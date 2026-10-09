@@ -49,8 +49,9 @@ class AvailabilityDisplay extends StatelessWidget {
           excludeSemantics: true,
           child: GestureDetector(
             onTap: () {
-              if (subLocation.floors.isNotEmpty)
+              if (subLocation.floors.isNotEmpty) {
                 Navigator.pushNamed(context, RoutePaths.AVAILABILITY_DETAILED_VIEW, arguments: subLocation);
+              }
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

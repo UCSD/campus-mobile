@@ -56,30 +56,31 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
       margin: EdgeInsets.only(top: 8.0),
       child: Row(
         children: <Widget>[
-          Container(
-            height: 30,
-            width: 170,
-            child: AnimatedCrossFade(
-              duration: Duration(milliseconds: 300),
-              crossFadeState: isOverCount ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-              firstChild: Column(
-                children: <Widget>[
-                  Text(countText, style: TextStyle(fontSize: 10, color: Colors.red)),
-                  Container(
-                    margin: EdgeInsets.only(top: 2.0),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.report, color: Colors.grey, size: 15),
-                        Text("There may not be enough food", style: TextStyle(fontSize: 12)),
-                      ],
+          Expanded(
+            child: Container(
+              height: 40,
+              child: AnimatedCrossFade(
+                duration: Duration(milliseconds: 300),
+                crossFadeState: isOverCount ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                firstChild: Column(
+                  children: <Widget>[
+                    Text(countText, style: TextStyle(fontSize: 10, color: Colors.red)),
+                    Container(
+                      margin: EdgeInsets.only(top: 2.0),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.report, color: Colors.grey, size: 15),
+                          Expanded(child: Text("There may not be enough food", style: TextStyle(fontSize: 12))),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-                crossAxisAlignment: CrossAxisAlignment.start,
-              ),
-              secondChild: Align(
-                alignment: Alignment.topLeft,
-                child: Text(countText, style: TextStyle(fontSize: 12, color: Colors.green)),
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+                secondChild: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(countText, style: TextStyle(fontSize: 12, color: Colors.green)),
+                ),
               ),
             ),
           ),
