@@ -1,138 +1,116 @@
-# Student ID: Data Sources and Graceful Degradation
+# Student ID: Graceful Degradation
 
-This document records the current Student ID data flow and the proposed design for preserving useful card content when individual requests or fields fail. The proposed behavior still needs to be implemented.
+Status: proposed design; implementation is pending.
 
-## Design objective
+## Objective
 
-The Student ID card should degrade one component at a time. A missing photo, name, academic detail, or barcode must not discard other usable information.
+Preserve every usable Student ID component when another component fails. Replace the card body with the generic error only when no usable content remains and no load is pending.
 
-Replace the entire card body with the following message only when no section has usable content and all outstanding requests and relevant image loads have finished or failed:
+## Data sources
 
-> An error occurred, please try again.
+`StudentIdDataProvider` calls `StudentIdService`, which sends authenticated GET requests through `NetworkHelper.authorizedFetch` using the logged-in user's bearer token.
 
-A placeholder, static title, loading indicator, or error label does not count as usable student information. An HTTP `200` response alone does not establish that a section has usable content.
+The reviewed local `.env` uses these QA endpoints:
 
-## Data sources and component ownership
-
-The card reads models from `StudentIdDataProvider`, which calls `StudentIdService`. The service makes authenticated GET requests through `NetworkHelper.authorizedFetch`, using the logged-in user's bearer access token.
-
-The local `.env` configuration reviewed for this design points to the QA API host, `https://api-qa.ucsd.edu:8243`:
-
-| Environment variable | Configured base URL |
-| --- | --- |
-| `MY_STUDENT_CONTACT_API_ENDPOINT` | `https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1` |
-| `MY_STUDENT_PROFILE_API_ENDPOINT` | `https://api-qa.ucsd.edu:8243/student/my/v1` |
-
-These are the reviewed local settings, not a statement about the production build. The app code does not identify the databases behind these APIs.
-
-| Visible component | API endpoint | Response field and behavior |
+| API | Environment variable | Base URL |
 | --- | --- | --- |
-| Student photo | Contact API: `/photo` | `photoUrl`; the image is downloaded separately from that URL. |
-| Displayed name | Contact API: `/display_name` | `firstName` + `lastName`. The returned middle name is not currently displayed. |
-| Classification beneath the name | Profile API: `/profile` | `Classification_Type`. |
-| Major | Profile API: `/profile` | `Graduate_Primary_Major_Current` when nonempty; otherwise `UG_Primary_Major_Current`. |
-| College | Profile API: `/profile` | `College_Current`. |
-| Barcode graphic | Profile API: `/profile` | `Barcode`, rendered locally using Codabar. |
-| Number beneath the barcode | Profile API: `/profile` | Also `Barcode`. |
+| Contact | `MY_STUDENT_CONTACT_API_ENDPOINT` | `https://api-qa.ucsd.edu:8243/student/my/student_contact_info/v1` |
+| Profile | `MY_STUDENT_PROFILE_API_ENDPOINT` | `https://api-qa.ucsd.edu:8243/student/my/v1` |
 
-The enlarged scanning view belongs to the same barcode component and should use the same validated `Barcode` value. The card title and "tap for easier scanning" instruction are local UI text.
+The app code does not identify the databases behind these APIs.
 
-`Student_PID` and `Card_Number` are returned by the profile API but are not currently displayed as separate fields. They must not be substituted for `Barcode` without an explicit change to the API contract and product behavior.
+| Card component | Endpoint | Response fields |
+| --- | --- | --- |
+| Photo | Contact: `/photo` | `photoUrl`; requires a separate image download. |
+| Name | Contact: `/display_name` | `firstName` + `lastName`; middle name is not displayed. |
+| Classification | Profile: `/profile` | `Classification_Type`. |
+| Major | Profile: `/profile` | `Graduate_Primary_Major_Current`, falling back to `UG_Primary_Major_Current`. |
+| College | Profile: `/profile` | `College_Current`. |
+| Barcode and printed number | Profile: `/profile` | `Barcode`; rendered locally as Codabar. |
 
-## Current error handling
+Use the same validated `Barcode` in the card and enlarged scanning view. `Student_PID` and `Card_Number` are fetched but are not separately displayed; do not substitute them for `Barcode`. The card title and scan instruction are local UI text.
 
-Requests currently run sequentially: name, then photo, then profile. Each service method catches both request failures and JSON/model parsing failures, stores `e.toString()` in a shared error field, returns `false`, and clears its loading flag.
+## Current behavior
 
-| Failed request | Current result |
+- Requests run in order: name, photo, profile. The first request or parsing failure stops the sequence and hides the entire card body, including previously fetched content.
+- Each service method stores `e.toString()` in a shared error field and returns `false`. `CardContainer` prints the error and displays "An error occurred, please try again." Reload restarts the sequence.
+- The network helper accepts HTTP `200`. HTTP errors, connection failures, and timeouts reach the same catch block. Connection and receive timeouts are each configured to 60 seconds; this request path has no automatic retry or token refresh.
+- `Image.network` has no fallback. Asynchronous image failures bypass the API and widget-construction catches.
+- The widget-construction catch reports to Crashlytics and displays a support message. Global Flutter error reporting is configured, but the service does not explicitly report caught API failures to Crashlytics.
+
+## Fetching and recovery priority
+
+Start all three API requests in parallel after authentication: none depends on another response. Render each result immediately. Start the image download when its URL arrives; do not make other components wait for it.
+
+If request concurrency must be limited, prioritize:
+
+1. **Profile:** restores scanning and supplies academic details.
+2. **Name:** identifies the student by name.
+3. **Photo:** supports visual identification.
+
+This ranking assumes scanning is the primary task. It does not change normal parallel loading or make any one endpoint mandatory for displaying partial content.
+
+## Card state and fallbacks
+
+**Usable content** means at least one validated, nonempty displayed text field (name, classification, major, or college), a valid barcode, or a successfully loaded student photo. A URL alone, placeholder, static label, or HTTP `200` does not qualify. Under this design, any one usable component is enough to retain the card.
+
+Evaluate the card state in this order:
+
+1. **Usable content exists:** render it. Show loading indicators for pending components and the fallbacks below for unavailable components.
+2. **No usable content, but a load is pending:** show a loading state.
+3. **No usable content and no load is pending:** replace the card body with exactly:
+
+   > An error occurred, please try again.
+
+Pending work includes the image download and decoding. Give each load attempt a finite deadline so it cannot prevent the final error indefinitely. A future manual retry does not count as pending work.
+
+Apply these component fallbacks only while retaining the card:
+
+| Unavailable component | Fallback |
 | --- | --- |
-| `/display_name` | Stops loading immediately; photo and profile are never requested. |
-| `/photo` | Stops loading immediately; profile is never requested. |
-| `/profile` | Stops after name and photo succeeded; their content is still hidden by the card error. |
+| Photo API, URL, or image | Show `assets/images/staff_id_placeholder.png`. |
+| Name | Show "Name unavailable". |
+| Classification, major, or college | Omit the affected field and its spacing. |
+| Barcode | Show "Barcode unavailable"; disable scanning and the popup, and hide the scan instruction. |
+| Entire profile | Apply the academic-field and barcode fallbacks; preserve name/photo. |
 
-The provider copies the first error, stops loading, and notifies the UI. `CardContainer` prints the technical error to the console and replaces the card body with the generic message. The menu's Reload action restarts the full sequence.
+Combine fallbacks when multiple components fail. The whole-card error takes precedence once nothing usable or pending remains.
 
-The network helper accepts HTTP `200` as success. Dio throws for HTTP failures such as `401`, `403`, `404`, and `500`, as well as connection failures and timeouts. The reviewed configuration sets connection and receive timeouts to 60 seconds each. This GET request path has no automatic retry or token refresh.
+The [placeholder image](assets/images/staff_id_placeholder.png) exists, is included by `pubspec.yaml`, and is used by Employee ID. Retry failed sections independently, including the image load, while keeping successful content visible.
 
-There are two additional error paths:
+## Essential change 1: Independent section state
 
-- The photo API returns a URL, not the image itself. The current `Image.network` has no image fallback. Asynchronous image download or decoding errors are outside the API service's catch block and the surrounding widget-construction catch.
-- The widget-construction catch reports to Crashlytics and displays a separate message containing the support email. Global Flutter error reporting is also configured. Caught API errors are converted to strings and are not explicitly reported to Crashlytics by this service.
+Replace the service's shared `_error` and `_isLoading` with request-specific results. Parallelizing the existing methods alone allows requests to overwrite one another's state.
 
-## Fetch strategy and priority
+- Track data, loading, and errors independently for name, profile, photo metadata, and the image load. Derive component availability from validated data.
+- Start image loading even while the card body shows a loading indicator, so a photo-only response can become visible.
+- Update the provider and UI after each result; one failure must not stop another request.
+- Adapt the Student ID use of `CardContainer` to the three card states above. Its current global loading/error flags hide partial content.
+- Preserve successful content during retries. Retained content must belong to the current authenticated user.
 
-Fetch all three APIs in parallel after authentication. They share an access token, but no request requires another request's response.
+## Essential change 2: Field-level parsing and validation
 
-Publish each result as soon as it is available. Start the image download as soon as `/photo` supplies a usable URL. Do not wait for all requests to finish before displaying successful sections, and do not let a slow image delay a ready barcode.
+Parse fields independently so one missing or malformed value cannot discard valid sibling fields. Invalid JSON or an unexpected response structure fails that endpoint; a valid JSON object can still supply partial content.
 
-Assuming scanning is the primary task, use this order when prioritizing recovery or when concurrency must be limited:
+- Accept valid string values, trim display text, and treat empty or wrong-type values as unavailable. Unused metadata must not invalidate displayed fields.
+- Build the name from available `firstName` and `lastName` values.
+- Use a valid, nonempty graduate major; otherwise try the undergraduate major.
+- Validate `Barcode` against the Codabar renderer. Keep other profile fields if it is invalid; never generate a replacement value.
+- Validate the photo URL, then handle download, timeout, and decoding failures with the placeholder. Mark the photo usable only after it loads successfully.
 
-1. **Profile (`/profile`):** Provides the barcode and most of the card's information. The barcode is its highest-priority field; academic details are supplementary.
-2. **Name (`/display_name`):** Identifies the student by name and complements both scanning and visual identification.
-3. **Photo (`/photo` plus image download):** Supports visual identification, but its absence should not block the barcode or text.
+## Acceptance checks
 
-This is a usefulness and recovery ranking. Normal loading should start all three requests together.
+- Vary response order and delay each API/image in turn: ready components appear without waiting.
+- Fail each API and every combination of APIs: preserve all remaining usable components.
+- Fail or stall the image after `/photo` succeeds: use the placeholder when other content exists; show the generic error once all work ends without usable content.
+- Return empty `200` responses or malformed fields: apply the same availability rules as other failures.
+- Return a valid barcode with malformed unrelated fields: keep scanning available. Return an invalid barcode with valid text: keep the text and disable scanning.
+- Leave only one usable component, including an academic field: retain it. Leave none after all loads end: show the exact generic error.
+- Retry failed sections: preserve successful content and display recovered content.
 
-## Degradation and recovery behavior
+## Implementation references
 
-| Failure or missing content | Proposed behavior |
-| --- | --- |
-| Photo API fails, URL is absent/invalid, or image download/decoding fails | Display `assets/images/staff_id_placeholder.png`; preserve available text and barcode. |
-| Name is unavailable | Display "Name unavailable"; preserve other sections. |
-| Profile is unavailable | Preserve name/photo, display "Barcode unavailable", and omit unavailable academic details. |
-| College, major, or classification is missing | Omit the affected field and its unnecessary spacing; preserve other profile fields. |
-| Barcode is missing or invalid | Display "Barcode unavailable" and disable the scan interaction, popup, and scan instruction; preserve usable identity details. |
-| Multiple sections fail | Combine the relevant fallbacks and preserve every remaining useful section. |
-| No section has usable content, but work is still pending | Keep an appropriate loading state; do not declare complete failure yet. |
-| No section has usable content and all work has settled | Replace the card body with "An error occurred, please try again." |
-
-The placeholder asset exists and `pubspec.yaml` already includes the `assets/images/` directory. It is also used by the Employee ID card.
-
-Successful sections should remain visible during recovery. Support retrying failed sections without forcing successful sections to disappear or reload. A failed image download should be recoverable independently of the name and profile APIs.
-
-The last-resort decision must include actual image availability: a successful `/photo` response does not rescue the card if its image cannot load and no other useful content exists. Conversely, a name-only or photo-only result should remain visible under this design.
-
-## Essential implementation change 1: Independent section state
-
-Replace the shared error/loading state with independent results for name, photo metadata/image, and profile. Each section needs its own loading status, usable data, and failure information.
-
-The service currently shares `_error` and `_isLoading` across all three methods. Simply placing the existing calls in a parallel wait is insufficient: one request can clear or overwrite another request's state. Prefer returning request-specific results or otherwise isolating their state.
-
-The provider must update the UI when each section completes, without short-circuiting the remaining requests. A failed section must not become the card-level error while another section has usable content or is still loading.
-
-The Student ID integration with `CardContainer` must allow partial rendering. Its current card-wide error and loading flags suppress the entire child. Derive the whole-card failure only after all relevant work settles and no usable section remains. Track image success/failure explicitly and render the placeholder when needed.
-
-## Essential implementation change 2: Field-level parsing and validation
-
-Preserve valid fields even when another field in the same response is missing or malformed. The current models can reject a whole response because a directly assigned field has an unexpected type or is null, including fields the card does not display.
-
-- Treat optional fields independently. Missing college, major, classification, middle name, or unused metadata must not invalidate otherwise usable content.
-- Build the displayed name from available, valid name parts; trim whitespace and treat an empty result as unavailable.
-- Validate the barcode for the existing Codabar renderer. Missing or invalid barcode data should disable only the barcode component; do not invent a fallback barcode.
-- Validate the photo URL and handle subsequent image download/decoding failures with the provided placeholder.
-- Distinguish an unreadable response from a readable response containing partially usable data. Determine availability from validated fields, not just request success or an allocated model with empty defaults.
-
-## Verification scenarios for implementation
-
-- All APIs succeed: the complete card renders, with each section appearing when ready.
-- Each API fails independently: other requests still complete and their content remains visible.
-- A slow API or image load does not delay already available sections.
-- The photo API succeeds but the image fails: the placeholder appears without hiding other content.
-- One or two APIs fail: the remaining usable sections are retained, including name-only and photo-only results.
-- A valid barcode survives missing or malformed unrelated profile fields.
-- A missing or invalid barcode disables scanning without hiding usable name, photo, or academic details.
-- All requests settle without usable content, including empty successful responses: the exact generic card error appears.
-- Retrying failed sections preserves successful sections and restores recovered content.
-
-## Relevant code
-
-- [Student ID service](lib/core/services/student_id.dart)
-- [Student ID provider](lib/core/providers/student_id.dart)
-- [Student ID card](lib/ui/student_id/student_id_card.dart)
-- [Name model](lib/core/models/student_id_name.dart)
-- [Photo model](lib/core/models/student_id_photo.dart)
-- [Profile model](lib/core/models/student_id_profile.dart)
-- [Network helper](lib/app_networking.dart)
-- [Shared card container](lib/ui/common/card_container.dart)
-- [Provider registration](lib/app_provider.dart)
-- [Global error reporting](lib/main.dart)
-- [Photo placeholder](assets/images/staff_id_placeholder.png)
+- Data flow: [service](lib/core/services/student_id.dart), [provider](lib/core/providers/student_id.dart), [provider registration](lib/app_provider.dart).
+- Parsing: [name](lib/core/models/student_id_name.dart), [photo](lib/core/models/student_id_photo.dart), [profile](lib/core/models/student_id_profile.dart).
+- Rendering: [Student ID card](lib/ui/student_id/student_id_card.dart), [card container](lib/ui/common/card_container.dart).
+- Infrastructure: [network helper](lib/app_networking.dart), [global error reporting](lib/main.dart).
