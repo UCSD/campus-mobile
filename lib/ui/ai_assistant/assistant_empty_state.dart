@@ -12,10 +12,7 @@ class AssistantEmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            SvgPicture.asset(
-              'assets/images/tgpt/uc-san-diego-assistant.svg',
-              width: 286,
-            ),
+            SvgPicture.asset('assets/images/tgpt/uc-san-diego-assistant.svg', width: 286),
             const SizedBox(height: 10),
             const Text(
               'This assistant has access to campus information.',

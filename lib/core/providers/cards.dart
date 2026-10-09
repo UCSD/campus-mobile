@@ -59,18 +59,11 @@ class CardsDataProvider extends ChangeNotifier {
   ];
 
   // Native student cards
-  static const List<String> _STUDENT_CARDS = [
-    'finals',
-    'schedule',
-    'student_id',
-  ];
+  static const List<String> _STUDENT_CARDS = ['finals', 'schedule', 'student_id'];
 
   // Native staff cards
   // TODO: removed 'staff_info', if needed re-add later - December 2025
-  static const List<String> _STAFF_CARDS = [
-    'my_ucsd_chart',
-    'employee_id',
-  ];
+  static const List<String> _STAFF_CARDS = ['my_ucsd_chart', 'employee_id'];
 
   void updateAvailableCards(String? ucsdAffiliation) async {
     _isLoading = true;
@@ -131,10 +124,7 @@ class CardsDataProvider extends ChangeNotifier {
           });
 
           // staff only: move employee_id to the top, like student_id for students
-          if (isStaff && _cardOrder.remove('employee_id')) {
-            _cardOrder.insert(0, 'employee_id');
-          }
-
+          if (isStaff && _cardOrder.remove('employee_id')) _cardOrder.insert(0, 'employee_id');
         } else {
           // User has custom order - just add any new web cards and ensure they're in available cards
           // print("DEBUG: User has custom order, preserving: $_cardOrder");
@@ -237,7 +227,9 @@ class CardsDataProvider extends ChangeNotifier {
     // by default all cards will be on
     if (_cardStateBox.get(DataPersistence.CARD_STATES) == null) {
       await _cardStateBox.put(
-          DataPersistence.CARD_STATES, _cardStates.keys.where((card) => _cardStates[card]!).toList());
+        DataPersistence.CARD_STATES,
+        _cardStates.keys.where((card) => _cardStates[card]!).toList(),
+      );
     } else {
       _deactivateAllCards();
     }
@@ -470,7 +462,8 @@ class CardsDataProvider extends ChangeNotifier {
         // User has explicitly set this card's state - restore their preference
         _cardStates[card] = _userToggledCards[card]!;
         print(
-            "DEBUG: activateStaffCardsForSilentLogin() - $card restored to user preference: ${_userToggledCards[card]}");
+          "DEBUG: activateStaffCardsForSilentLogin() - $card restored to user preference: ${_userToggledCards[card]}",
+        );
       }
     }
 

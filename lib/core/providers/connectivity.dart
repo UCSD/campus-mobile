@@ -57,15 +57,16 @@ class InternetConnectivityProvider extends ChangeNotifier {
     );
 
     Future.delayed(
-        Duration.zero,
-        () => {
-              showDialog(
-                context: context,
-                builder: (BuildContext ctx) {
-                  return alert;
-                },
-              )
-            });
+      Duration.zero,
+      () => {
+        showDialog(
+          context: context,
+          builder: (BuildContext ctx) {
+            return alert;
+          },
+        ),
+      },
+    );
   }
 
   /// SIMPLE GETTERS

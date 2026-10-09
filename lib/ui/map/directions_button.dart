@@ -7,18 +7,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class DirectionsButton extends StatelessWidget {
-  const DirectionsButton({
-    Key? key,
-  }) : super(key: key);
+  const DirectionsButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
       heroTag: "directions",
-      child: Icon(
-        Icons.directions_walk,
-        color: Colors.lightBlue,
-      ),
+      child: Icon(Icons.directions_walk, color: Colors.lightBlue),
       backgroundColor: Colors.white,
       onPressed: () {
         final MapsDataProvider mapsProvider = Provider.of<MapsDataProvider>(context, listen: false);
