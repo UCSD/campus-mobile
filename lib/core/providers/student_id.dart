@@ -85,7 +85,7 @@ class StudentIdDataProvider extends ChangeNotifier {
     final retryProfile = !hasBarcode || _profile.error != null;
     final retryPhoto = !hasPhoto || _photoMetadata.error != null || _image.error != null;
     if (!retryName && !retryProfile && !retryPhoto) {
-      _refreshAll();
+      if (!hasPendingWork) _refreshAll();
       return;
     }
     if (retryProfile) _startProfile();
@@ -220,6 +220,7 @@ class StudentIdDataProvider extends ChangeNotifier {
   String? get photoMetadataError => _photoMetadata.error;
   String? get imageError => _image.error;
   DateTime? get lastUpdated => _lastUpdated;
+  int get sessionId => _sessionId;
   StudentIdNameModel get studentIdNameModel => _studentIdNameModel;
   StudentIdPhotoModel get studentIdPhotoModel => _studentIdPhotoModel;
   StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;

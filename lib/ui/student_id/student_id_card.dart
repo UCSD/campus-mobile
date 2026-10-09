@@ -19,7 +19,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
   static const CARD_ID = "student_id";
 
   /// Pop up barcode
-  createAlertDialog(BuildContext context, Column image, String cardNumber, bool rotated) {
+  createAlertDialog(BuildContext context) {
+    final sessionId = context.read<StudentIdDataProvider>().sessionId;
     return showDialog(
       context: context,
       builder: (context) {
@@ -27,9 +28,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
         return AlertDialog(
           backgroundColor: Colors.white,
           title: Text("Student ID", style: TextStyle(color: Colors.black)),
-          content: studentId.hasBarcode && studentId.studentIdProfileModel.barcode == cardNumber
-              ? SingleChildScrollView(child: checkForRotation(image, context, cardNumber, rotated))
-              : const Text('Barcode unavailable'),
+          content: studentId.hasBarcode && studentId.sessionId == sessionId
+              ? SingleChildScrollView(
+                  child: returnBarcodeContainer(studentId.studentIdProfileModel.barcode, true, context),
+                )
+              : const Text('Barcode unavailable', style: TextStyle(color: Colors.black)),
           actions: <Widget>[
             TextButton(
               child: Icon(Icons.close, color: Colors.black),
@@ -41,12 +44,6 @@ class _StudentIdCardState extends State<StudentIdCard> {
         );
       },
     );
-  }
-
-  Column checkForRotation(Column image, BuildContext context, String cardNumber, bool rotated) {
-    if (MediaQuery.of(context).orientation == Orientation.landscape)
-      return returnBarcodeContainer(cardNumber, rotated, context);
-    return image;
   }
 
   @override
@@ -154,7 +151,11 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
   Widget _sectionLoading(String label) => Semantics(
     label: label,
-    child: const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+    child: SizedBox(
+      width: 16,
+      height: 16,
+      child: CircularProgressIndicator(strokeWidth: 2, color: Theme.of(context).colorScheme.secondary),
+    ),
   );
 
   Widget _buildPhoto(StudentIdDataProvider studentId, double availableWidth) {
@@ -223,8 +224,8 @@ class _StudentIdCardState extends State<StudentIdCard> {
                       cardNumber,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: fontSizeForTablet(),
-                        letterSpacing: letterSpacingForTablet(),
+                        fontSize: fontSizeForTablet(context),
+                        letterSpacing: letterSpacingForTablet(context),
                       ),
                     ),
                   ],
@@ -246,7 +247,9 @@ class _StudentIdCardState extends State<StudentIdCard> {
               child: Text(
                 "tap for easier scanning",
                 textAlign: TextAlign.center,
-                style: linkTextLight.copyWith(fontSize: 18.0),
+                style: (Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight).copyWith(
+                  fontSize: 18.0,
+                ),
               ),
             ),
           ),
@@ -256,14 +259,14 @@ class _StudentIdCardState extends State<StudentIdCard> {
     }
   }
 
-  double letterSpacingForTablet() {
-    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+  double letterSpacingForTablet([BuildContext? barcodeContext]) {
+    final bool isLandscape = MediaQuery.of(barcodeContext ?? context).orientation == Orientation.landscape;
     if (isLandscape) return ScalingUtility.horizontalSafeBlock * 1;
     return ScalingUtility.horizontalSafeBlock * 2;
   }
 
-  double fontSizeForTablet() {
-    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+  double fontSizeForTablet(BuildContext barcodeContext) {
+    final bool isLandscape = MediaQuery.of(barcodeContext).orientation == Orientation.landscape;
     if (isLandscape) return ScalingUtility.horizontalSafeBlock * 2;
     return ScalingUtility.horizontalSafeBlock * 4;
   }
@@ -465,12 +468,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
     style: TextButton.styleFrom(padding: EdgeInsets.all(0), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
     child: returnBarcodeContainer(profileModel.barcode, false, context),
     onPressed: () {
-      createAlertDialog(
-        context,
-        returnBarcodeContainer(profileModel.barcode, true, context),
-        profileModel.barcode,
-        true,
-      );
+      createAlertDialog(context);
     },
   );
 

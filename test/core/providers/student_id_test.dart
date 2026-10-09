@@ -5,6 +5,29 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../student_id_test_support.dart';
 
 void main() {
+  testWidgets('Reload during a healthy refresh does not restart sections that already finished', (tester) async {
+    final fixture = StudentIdTestFixture()..start();
+    addTearDown(fixture.dispose);
+    fixture.service.names.single.complete(testName());
+    fixture.service.profiles.single.complete(testProfile());
+    fixture.service.photos.single.complete(testPhoto());
+    await tester.pump();
+    fixture.service.images.single.complete(testStudentPhoto());
+    await tester.pump();
+    fixture.provider.fetchData();
+    fixture.service.names.last.complete(testName());
+    await tester.pump();
+    fixture.provider.fetchData();
+    expect(fixture.service.names, hasLength(2));
+    expect(fixture.service.profiles, hasLength(2));
+    expect(fixture.service.photos, hasLength(2));
+    fixture.service.profiles.last.complete(testProfile());
+    fixture.service.photos.last.complete(testPhoto());
+    await tester.pump();
+    fixture.service.images.last.complete(testStudentPhoto());
+    await tester.pump();
+  });
+
   testWidgets('parallel requests notify independently in every response order', (tester) async {
     for (final order in [
       [0, 1, 2],

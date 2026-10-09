@@ -12,7 +12,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import '../../student_id_test_support.dart';
 
-Future<void> mountCard(WidgetTester tester, StudentIdTestFixture fixture, {Size size = const Size(390, 844)}) async {
+Future<void> mountCard(
+  WidgetTester tester,
+  StudentIdTestFixture fixture, {
+  Size size = const Size(390, 844),
+  ThemeData? theme,
+}) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = size;
   await tester.pumpWidget(
@@ -22,7 +27,13 @@ Future<void> mountCard(WidgetTester tester, StudentIdTestFixture fixture, {Size 
         ChangeNotifierProvider<CardsDataProvider>(create: (_) => CardsDataProvider()..cardStates['student_id'] = true),
       ],
       child: MaterialApp(
-        home: Scaffold(body: SingleChildScrollView(child: StudentIdCard())),
+        theme: theme,
+        builder: (_, child) => RepaintBoundary(key: const ValueKey('student-id-screen-preview'), child: child),
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: RepaintBoundary(key: const ValueKey('student-id-theme-preview'), child: StudentIdCard()),
+          ),
+        ),
       ),
     ),
   );
@@ -34,6 +45,119 @@ void resetView(WidgetTester tester) {
 }
 
 void main() {
+  testWidgets('popup adapts to rotation with a long valid barcode', (tester) async {
+    final fixture = StudentIdTestFixture()..start();
+    addTearDown(fixture.dispose);
+    addTearDown(() => resetView(tester));
+    fixture.service.names.single.complete(testName());
+    fixture.service.profiles.single.complete(testProfile('123456789012345678901234567890'));
+    fixture.service.photos.single.complete(StudentIdPhotoModel());
+    await mountCard(tester, fixture, size: const Size(320, 640));
+    await tester.pump();
+    await tester.tap(find.byType(TextButton));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    tester.view.physicalSize = const Size(640, 320);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('popup stays isolated if a new user receives the same barcode', (tester) async {
+    final fixture = StudentIdTestFixture()..start();
+    addTearDown(fixture.dispose);
+    addTearDown(() => resetView(tester));
+    fixture.service.names.single.complete(testName());
+    fixture.service.profiles.single.complete(testProfile());
+    fixture.service.photos.single.complete(StudentIdPhotoModel());
+    await mountCard(tester, fixture);
+    await tester.pump();
+    await tester.tap(find.byType(TextButton));
+    await tester.pumpAndSettle();
+    fixture.user.changeSession(pid: 'student-two', token: 'token-two');
+    fixture.service.names.last.complete(testName('Student Two'));
+    fixture.service.profiles.last.complete(testProfile());
+    fixture.service.photos.last.complete(StudentIdPhotoModel());
+    await tester.pump();
+    expect(find.descendant(of: find.byType(AlertDialog), matching: find.byType(BarcodeWidget)), findsNothing);
+    expect(find.descendant(of: find.byType(AlertDialog), matching: find.text('Barcode unavailable')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('popup follows a valid barcode replacement during refresh', (tester) async {
+    final fixture = StudentIdTestFixture()..start();
+    addTearDown(fixture.dispose);
+    addTearDown(() => resetView(tester));
+    fixture.service.names.single.complete(testName());
+    fixture.service.profiles.single.complete(testProfile());
+    fixture.service.photos.single.complete(testPhoto());
+    await mountCard(tester, fixture);
+    await tester.pump();
+    fixture.service.images.single.complete(testStudentPhoto());
+    await tester.pump();
+    await tester.tap(find.byType(TextButton));
+    await tester.pumpAndSettle();
+    fixture.provider.fetchData();
+    fixture.service.names.last.complete(testName());
+    fixture.service.profiles.last.complete(testProfile('9876543210'));
+    fixture.service.photos.last.complete(testPhoto());
+    await tester.pump();
+    fixture.service.images.last.complete(testStudentPhoto());
+    await tester.pump();
+    final popupBarcode = find.descendant(of: find.byType(AlertDialog), matching: find.byType(BarcodeWidget));
+    expect(popupBarcode, findsOneWidget);
+    expect(String.fromCharCodes(tester.widget<BarcodeWidget>(popupBarcode).data), '9876543210');
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('popup can rebuild after its source card is removed', (tester) async {
+    final fixture = StudentIdTestFixture()..start();
+    addTearDown(fixture.dispose);
+    addTearDown(() => resetView(tester));
+    final visible = ValueNotifier(true);
+    addTearDown(visible.dispose);
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(844, 390);
+    fixture.service.names.single.complete(testName());
+    fixture.service.profiles.single.complete(testProfile());
+    fixture.service.photos.single.complete(StudentIdPhotoModel());
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<StudentIdDataProvider>.value(value: fixture.provider),
+          ChangeNotifierProvider<CardsDataProvider>(
+            create: (_) => CardsDataProvider()..cardStates['student_id'] = true,
+          ),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: ValueListenableBuilder<bool>(
+              valueListenable: visible,
+              builder: (_, value, __) => value ? StudentIdCard() : const SizedBox.shrink(),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byType(TextButton));
+    await tester.pumpAndSettle();
+    visible.value = false;
+    await tester.pump();
+    fixture.provider.fetchData();
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+    fixture.service.photos.last.complete(StudentIdPhotoModel());
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pumpAndSettle();
+  });
+
   testWidgets('proxy registration loads once and responds safely to authentication changes', (tester) async {
     final fixture = StudentIdTestFixture();
     addTearDown(fixture.user.dispose);
