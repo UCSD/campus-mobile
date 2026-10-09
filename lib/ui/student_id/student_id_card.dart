@@ -25,12 +25,22 @@ class _StudentIdCardState extends State<StudentIdCard> {
       context: context,
       builder: (context) {
         final studentId = context.watch<StudentIdDataProvider>();
+        final media = MediaQuery.of(context);
+        final dialogSize = Size(
+          media.size.width - media.padding.horizontal - media.viewInsets.horizontal - 48,
+          media.size.height - media.padding.vertical - media.viewInsets.vertical - 48,
+        );
         return AlertDialog(
           backgroundColor: Colors.white,
+          insetPadding: const EdgeInsets.all(24),
+          constraints: BoxConstraints.tight(dialogSize),
           title: Text("Student ID", style: TextStyle(color: Colors.black)),
           content: studentId.hasBarcode && studentId.sessionId == sessionId
-              ? SingleChildScrollView(
-                  child: returnBarcodeContainer(studentId.studentIdProfileModel.barcode, true, context),
+              ? SizedBox(
+                  key: const ValueKey('student-id-scanning-area'),
+                  width: dialogSize.width,
+                  height: dialogSize.height,
+                  child: _buildScanningBarcode(studentId.studentIdProfileModel.barcode, context),
                 )
               : const Text('Barcode unavailable', style: TextStyle(color: Colors.black)),
           actions: <Widget>[
@@ -45,6 +55,42 @@ class _StudentIdCardState extends State<StudentIdCard> {
       },
     );
   }
+
+  Widget _buildScanningBarcode(String barcode, BuildContext context) => Padding(
+    padding: const EdgeInsets.all(12),
+    child: Align(
+      alignment: Alignment.topCenter,
+      child: RotatedBox(
+        quarterTurns: MediaQuery.orientationOf(context) == Orientation.portrait ? 1 : 0,
+        child: ConstrainedBox(
+          // Limit bar length before rotation; leave room for its printed number.
+          constraints: const BoxConstraints(maxHeight: 120 + 12 + 28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: BarcodeWidget(
+                  barcode: Barcode.codabar(),
+                  data: barcode,
+                  color: Colors.black,
+                  backgroundColor: Colors.white,
+                  drawText: false,
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 28,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(barcode, style: const TextStyle(color: Colors.black, fontSize: 24, letterSpacing: 6)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -182,93 +228,42 @@ class _StudentIdCardState extends State<StudentIdCard> {
   }
 
   /// Determine barcode to display
-  Column returnBarcodeContainer(String cardNumber, bool rotated, BuildContext context) {
-    final barcodeWithText;
-
+  Column returnBarcodeContainer(String cardNumber, BuildContext context) {
     /// Initialize sizing
     ScalingUtility().getCurrentMeasurements(context);
 
-    if (rotated) {
-      barcodeWithText = BarcodeWidget(
-        barcode: Barcode.codabar(),
-        data: cardNumber,
-        width: ScalingUtility.verticalSafeBlock * 45,
-        height: 80,
-        style: TextStyle(letterSpacing: ScalingUtility.verticalSafeBlock * 3, color: Colors.white, fontSize: 0),
-      );
-    } else {
-      barcodeWithText = BarcodeWidget(
-        barcode: Barcode.codabar(),
-        data: cardNumber,
-        width: ScalingUtility.horizontalSafeBlock * 50,
-        height: ScalingUtility.verticalSafeBlock * 4.45,
-        style: TextStyle(letterSpacing: ScalingUtility.horizontalSafeBlock * 1.5, fontSize: 0, color: Colors.white),
-      );
-    }
-
-    if (rotated) {
-      // Rotated view
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          RotatedBox(
-            quarterTurns: 1,
-            child: Row(
-              children: <Widget>[
-                Padding(padding: EdgeInsets.all(ScalingUtility.verticalSafeBlock * 7.5)),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(child: barcodeWithText, color: Colors.white),
-                    Text(
-                      cardNumber,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: fontSizeForTablet(context),
-                        letterSpacing: letterSpacingForTablet(context),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    } else {
-      // Normal orientation
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                "tap for easier scanning",
-                textAlign: TextAlign.center,
-                style: (Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight).copyWith(
-                  fontSize: 18.0,
-                ),
+    final barcodeWithText = BarcodeWidget(
+      barcode: Barcode.codabar(),
+      data: cardNumber,
+      width: ScalingUtility.horizontalSafeBlock * 50,
+      height: ScalingUtility.verticalSafeBlock * 4.45,
+      style: TextStyle(letterSpacing: ScalingUtility.horizontalSafeBlock * 1.5, fontSize: 0, color: Colors.white),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              "tap for easier scanning",
+              textAlign: TextAlign.center,
+              style: (Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight).copyWith(
+                fontSize: 18.0,
               ),
             ),
           ),
-          Container(padding: EdgeInsets.fromLTRB(0, 0, 10, 0), color: Colors.white, child: barcodeWithText),
-        ],
-      );
-    }
+        ),
+        Container(padding: EdgeInsets.fromLTRB(0, 0, 10, 0), color: Colors.white, child: barcodeWithText),
+      ],
+    );
   }
 
   double letterSpacingForTablet([BuildContext? barcodeContext]) {
     final bool isLandscape = MediaQuery.of(barcodeContext ?? context).orientation == Orientation.landscape;
     if (isLandscape) return ScalingUtility.horizontalSafeBlock * 1;
     return ScalingUtility.horizontalSafeBlock * 2;
-  }
-
-  double fontSizeForTablet(BuildContext barcodeContext) {
-    final bool isLandscape = MediaQuery.of(barcodeContext).orientation == Orientation.landscape;
-    if (isLandscape) return ScalingUtility.horizontalSafeBlock * 2;
-    return ScalingUtility.horizontalSafeBlock * 4;
   }
 
   // Column returnBarcodeContainerTablet(
@@ -466,7 +461,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
   Widget _buildBarcode(StudentIdProfileModel profileModel) => TextButton(
     style: TextButton.styleFrom(padding: EdgeInsets.all(0), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-    child: returnBarcodeContainer(profileModel.barcode, false, context),
+    child: returnBarcodeContainer(profileModel.barcode, context),
     onPressed: () {
       createAlertDialog(context);
     },

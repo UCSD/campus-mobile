@@ -370,6 +370,23 @@ void main() {
       final barcodes = tester.widgetList<BarcodeWidget>(find.byType(BarcodeWidget, skipOffstage: false));
       expect(barcodes.length, 2);
       expect(barcodes.map((widget) => String.fromCharCodes(widget.data)), everyElement('1234567890'));
+      final popupBarcode = find.descendant(of: find.byType(AlertDialog), matching: find.byType(BarcodeWidget));
+      final barcodeBounds = tester.getRect(popupBarcode);
+      final titleBounds = tester.getRect(find.text('Student ID'));
+      final scanningBounds = tester.getRect(find.byKey(const ValueKey('student-id-scanning-area')));
+      expect(barcodeBounds.top - titleBounds.bottom, lessThanOrEqualTo(36));
+      final portrait = size.height > size.width;
+      final barLength = portrait ? barcodeBounds.width : barcodeBounds.height;
+      expect(barLength, greaterThan(0));
+      expect(barLength, lessThanOrEqualTo(120));
+      if (portrait) {
+        expect(barcodeBounds.height, closeTo(scanningBounds.height - 24, 0.01));
+        // The bars and printed number stay centered together in the dialog.
+        expect(barcodeBounds.center.dx - 20, closeTo(scanningBounds.center.dx, 0.01));
+      } else {
+        expect(barcodeBounds.width, closeTo(scanningBounds.width - 24, 0.01));
+        expect(barcodeBounds.center.dx, closeTo(scanningBounds.center.dx, 0.01));
+      }
       expect(tester.takeException(), isNull);
       await tester.tap(find.byIcon(Icons.close));
       await tester.pumpAndSettle();

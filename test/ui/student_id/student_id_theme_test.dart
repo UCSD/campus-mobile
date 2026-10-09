@@ -185,6 +185,13 @@ void main() {
       expect(dialog.backgroundColor, Colors.white);
       expect(contrast(textColor(tester, 'Student ID'), Colors.white), greaterThanOrEqualTo(4.5));
       await capturePreview(tester, '$mode-popup', finder: find.byKey(const ValueKey('student-id-screen-preview')));
+      tester.view.physicalSize = const Size(844, 390);
+      await tester.pumpAndSettle();
+      await capturePreview(
+        tester,
+        '$mode-popup-landscape',
+        finder: find.byKey(const ValueKey('student-id-screen-preview')),
+      );
       fixture.user.changeSession(signOut: true);
       await tester.pump();
       expect(contrast(textColor(tester, 'Barcode unavailable'), Colors.white), greaterThanOrEqualTo(4.5));
