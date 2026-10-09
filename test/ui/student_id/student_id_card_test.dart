@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/student_id/student_id_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import '../../student_id_test_support.dart';
@@ -17,6 +18,7 @@ Future<void> mountCard(
   StudentIdTestFixture fixture, {
   Size size = const Size(390, 844),
   ThemeData? theme,
+  TextScaler textScaler = TextScaler.noScaling,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = size;
@@ -28,10 +30,16 @@ Future<void> mountCard(
       ],
       child: MaterialApp(
         theme: theme,
-        builder: (_, child) => RepaintBoundary(key: const ValueKey('student-id-screen-preview'), child: child),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaler: textScaler),
+          child: RepaintBoundary(key: const ValueKey('student-id-screen-preview'), child: child),
+        ),
         home: Scaffold(
           body: SingleChildScrollView(
-            child: RepaintBoundary(key: const ValueKey('student-id-theme-preview'), child: StudentIdCard()),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: RepaintBoundary(key: const ValueKey('student-id-theme-preview'), child: StudentIdCard()),
+            ),
           ),
         ),
       ),
@@ -45,6 +53,14 @@ void resetView(WidgetTester tester) {
 }
 
 void main() {
+  setUpAll(() async {
+    // Use real glyph widths when checking long text and accessibility scaling.
+    final loader = FontLoader('Roboto')..addFont(rootBundle.load('assets/fonts/HVD Fonts - BrixSansRegular.otf'));
+    await loader.load();
+    final brix = FontLoader('Brix Sans')..addFont(rootBundle.load('assets/fonts/HVD Fonts - BrixSansRegular.otf'));
+    await brix.load();
+  });
+
   testWidgets('popup adapts to rotation with a long valid barcode', (tester) async {
     final fixture = StudentIdTestFixture()..start();
     addTearDown(fixture.dispose);
@@ -138,7 +154,9 @@ void main() {
           home: Scaffold(
             body: ValueListenableBuilder<bool>(
               valueListenable: visible,
-              builder: (_, value, __) => value ? StudentIdCard() : const SizedBox.shrink(),
+              // Home displays its cards in a scrolling list, including in landscape.
+              builder: (_, value, __) =>
+                  SingleChildScrollView(child: value ? StudentIdCard() : const SizedBox.shrink()),
             ),
           ),
         ),
@@ -321,7 +339,63 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final size in [const Size(320, 640), const Size(390, 844), const Size(844, 390)]) {
+  for (final size in [const Size(320, 640), const Size(390, 844), const Size(844, 390), const Size(1024, 768)]) {
+    for (final scale in [1.0, 2.0]) {
+      testWidgets('card aligns details and barcode at $size with text scale $scale', (tester) async {
+        final fixture = StudentIdTestFixture()..start();
+        addTearDown(fixture.dispose);
+        addTearDown(() => resetView(tester));
+        const name = 'A Very Long Student Display Name';
+        const classification = 'Undergraduate student classification';
+        const major = 'A very long major name';
+        const college = 'A very long college name';
+        fixture.service.names.single.complete(testName(name));
+        fixture.service.profiles.single.complete(
+          studentIdProfileModelFromJson(
+            '{"Barcode":"1234567890123456","Classification_Type":"$classification",'
+            '"College_Current":"$college","UG_Primary_Major_Current":"$major"}',
+          ),
+        );
+        fixture.service.photos.single.complete(StudentIdPhotoModel());
+        await mountCard(tester, fixture, size: size, textScaler: TextScaler.linear(scale));
+        await tester.pumpAndSettle();
+
+        final photo = tester.getRect(find.byKey(const ValueKey('student-id-photo')));
+        final nameBounds = tester.getRect(find.text(name));
+        expect(photo.top, closeTo(nameBounds.top, 0.01));
+        expect(photo.right, lessThan(nameBounds.left));
+        expect(photo.width, lessThanOrEqualTo(120));
+        expect(photo.height / photo.width, closeTo(1.25, 0.01));
+        for (final label in [classification, major, college]) {
+          expect(tester.getRect(find.text(label)).left, closeTo(nameBounds.left, 0.01));
+        }
+        final divider = tester.getRect(find.byType(Divider));
+        expect(divider.left, closeTo(nameBounds.left, 0.01));
+        expect(divider.right, closeTo(nameBounds.right, 0.01));
+
+        final surface = tester.getRect(find.byKey(const ValueKey('student-id-inline-barcode')));
+        final bars = tester.getRect(find.byType(BarcodeWidget));
+        final number = tester.getRect(find.text('1234567890123456'));
+        expect(surface.top, greaterThan(tester.getRect(find.text(college)).bottom));
+        // Preserve the original photo-left, details-and-barcode-right layout.
+        expect(surface.left, closeTo(nameBounds.left, 0.01));
+        expect(surface.right, closeTo(nameBounds.right, 0.01));
+        expect(surface.left, greaterThan(photo.right));
+        expect(surface.center.dx, closeTo(nameBounds.center.dx, 0.01));
+        expect(bars.left - surface.left, closeTo(16, 0.01));
+        expect(surface.right - bars.right, closeTo(16, 0.01));
+        expect(bars.height, inInclusiveRange(40, 64));
+        expect(number.center.dx, closeTo(bars.center.dx, 0.01));
+        expect(number.top, greaterThanOrEqualTo(bars.bottom));
+        expect(number.width, lessThanOrEqualTo(bars.width));
+        final barcode = tester.widget<BarcodeWidget>(find.byType(BarcodeWidget));
+        expect(String.fromCharCodes(barcode.data), '1234567890123456');
+        expect(barcode.drawText, isFalse);
+        expect(barcode.color, Colors.black);
+        expect(tester.takeException(), isNull);
+      });
+    }
+
     testWidgets('photo transitions keep bounds/details stable at $size', (tester) async {
       final fixture = StudentIdTestFixture()..start();
       addTearDown(fixture.dispose);

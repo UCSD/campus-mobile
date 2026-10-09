@@ -56,6 +56,14 @@ double contrast(Color foreground, Color background) {
 
 Future<void> capturePreview(WidgetTester tester, String filename, {Finder? finder}) async {
   if (!const bool.fromEnvironment('STUDENT_ID_PREVIEWS')) return;
+  // Wait for asset decoding so the preview includes the photo placeholder.
+  final assets = find.byType(Image);
+  await tester.runAsync(() async {
+    for (final element in assets.evaluate()) {
+      await precacheImage((element.widget as Image).image, element);
+    }
+  });
+  await tester.pump();
   final boundary = tester.renderObject<RenderRepaintBoundary>(
     finder ?? find.byKey(const ValueKey('student-id-theme-preview')),
   );
@@ -86,7 +94,7 @@ void main() {
   for (final brightness in Brightness.values) {
     final mode = brightness.name;
     final background = brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor;
-    for (final size in [const Size(320, 640), const Size(390, 844), const Size(844, 390)]) {
+    for (final size in [const Size(320, 640), const Size(390, 844), const Size(844, 390), const Size(1024, 768)]) {
       testWidgets('$mode theme keeps ready, loading, and failed sections legible at $size', (tester) async {
         final fixture = StudentIdTestFixture()..start();
         addTearDown(fixture.dispose);
@@ -115,10 +123,40 @@ void main() {
         await tester.pumpAndSettle();
         await capturePreview(tester, '$mode-placeholder-$dimensions');
         expect(tester.takeException(), isNull);
-        final barcodes = tester.widgetList<BarcodeWidget>(find.byType(BarcodeWidget));
-        expect(barcodes.every((barcode) => barcode.color == Colors.black), isTrue);
+        final barcode = tester.widget<BarcodeWidget>(find.byType(BarcodeWidget));
+        expect(barcode.color, Colors.black);
+        expect(barcode.backgroundColor, Colors.white);
+        expect(contrast(textColor(tester, '1234567890'), Colors.white), greaterThanOrEqualTo(4.5));
+        expect(contrast(textColor(tester, 'Undergraduate'), background), greaterThanOrEqualTo(4.5));
       });
     }
+
+    testWidgets('$mode theme keeps long details legible with larger text', (tester) async {
+      final fixture = StudentIdTestFixture()..start();
+      addTearDown(fixture.dispose);
+      addTearDown(() => resetView(tester));
+      fixture.service.names.single.complete(testName('Alexandra Student Example'));
+      fixture.service.profiles.single.complete(
+        studentIdProfileModelFromJson(
+          '{"Barcode":"1234567890123456","Classification_Type":"Undergraduate",'
+          '"UG_Primary_Major_Current":"Cognitive Science and Neuroscience","College_Current":"Revelle College"}',
+        ),
+      );
+      fixture.service.photos.single.complete(StudentIdPhotoModel());
+      await mountCard(tester, fixture, theme: appTheme(brightness), size: const Size(320, 640));
+      await tester.pumpAndSettle();
+      await capturePreview(tester, '$mode-long-details');
+      await mountCard(
+        tester,
+        fixture,
+        theme: appTheme(brightness),
+        size: const Size(320, 640),
+        textScaler: TextScaler.linear(2),
+      );
+      await tester.pumpAndSettle();
+      await capturePreview(tester, '$mode-large-text');
+      expect(tester.takeException(), isNull);
+    });
 
     testWidgets('$mode theme keeps name and barcode fallbacks and whole-card error legible', (tester) async {
       final fixture = StudentIdTestFixture()..start();
