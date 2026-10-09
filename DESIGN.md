@@ -143,3 +143,19 @@ Parse fields independently so one missing or malformed value cannot discard vali
 - Parsing: [name](lib/core/models/student_id_name.dart), [photo](lib/core/models/student_id_photo.dart), [profile](lib/core/models/student_id_profile.dart).
 - Rendering: [Student ID card](lib/ui/student_id/student_id_card.dart), [card container](lib/ui/common/card_container.dart).
 - Infrastructure: [network helper](lib/app_networking.dart), [global error reporting](lib/main.dart).
+
+## For the future, do not implement the below
+
+These five additions are deferred. Do not implement them as part of the current work.
+
+1. **Separate request activity from the full-card spinner.** Keep the provider's request-activity flag true while requests run, even when partial content is visible. `app_provider.dart` uses `isLoading` to guard fetches. Prevent repeated Reload taps from starting duplicate requests.
+
+2. **Ignore outdated responses.** Associate requests with the current user and load attempt. Clear retained data on logout or account changes, ignore responses from previous attempts, and remove image listeners and timers when the widget is disposed.
+
+3. **Define replacement of previously displayed values.** Preserve successful content during refreshes and transient network failures. When a new, valid response explicitly returns `null` or an empty string for a field, clear its previous value and apply the fallback instead of retaining an outdated barcode, photo, or text value.
+
+4. **Make image recovery explicit.** Start a fresh image attempt on retry even when the URL is unchanged. Reload `/photo` if its URL has expired. Specify the image deadline, preferably using the configured `DEFAULT_TIMEOUT`, and ignore late completions after timeout.
+
+5. **Guarantee loading-state completion.** Clear pending flags on success, request failure, parsing errors, and timeout. Distinguish authentication failures from missing data and leave sign-in recovery to the existing authentication flow.
+
+Future acceptance checks: repeated Reload taps, logout during loading, late responses from older attempts, refreshes returning empty fields, and image retries using the same URL.
