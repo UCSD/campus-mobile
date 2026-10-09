@@ -382,6 +382,10 @@ void main() {
         expect(surface.right, closeTo(nameBounds.right, 0.01));
         expect(surface.left, greaterThan(photo.right));
         expect(surface.center.dx, closeTo(nameBounds.center.dx, 0.01));
+        final card = tester.widget<Card>(find.byType(Card));
+        final cardContent = tester.getRect(find.byWidget(card.child!));
+        final contentBottom = photo.bottom > surface.bottom ? photo.bottom : surface.bottom;
+        expect(cardContent.bottom - contentBottom, closeTo(16, 0.01));
         expect(bars.left - surface.left, closeTo(16, 0.01));
         expect(surface.right - bars.right, closeTo(16, 0.01));
         expect(bars.height, inInclusiveRange(40, 64));

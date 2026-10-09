@@ -16,6 +16,7 @@ class CardContainer extends StatelessWidget {
     required this.hide,
     this.overFlowMenu,
     this.actionButtons,
+    this.actionButtonsPadding = const EdgeInsets.only(top: 16, bottom: 16, left: 8),
     this.footer,
     this.hideMenu = false,
     this.cardId,
@@ -35,6 +36,7 @@ class CardContainer extends StatelessWidget {
   final Map<String, Function>? overFlowMenu;
   final bool hideMenu;
   final List<Widget>? actionButtons;
+  final EdgeInsetsGeometry actionButtonsPadding;
   final Widget? footer;
   final String? cardId;
   @override
@@ -56,7 +58,7 @@ class CardContainer extends StatelessWidget {
             CardHeader(titleText: titleText, trailing: buildMenu()),
             buildBody(context),
             Padding(
-              padding: const EdgeInsets.only(top: 16, right: 0, bottom: 16, left: 8),
+              padding: actionButtonsPadding,
               child: actionButtons != null ? Row(children: actionButtons!) : Container(),
             ),
             footer ?? Container(),

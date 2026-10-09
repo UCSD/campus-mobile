@@ -98,6 +98,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
     return CardContainer(
       cardId: CARD_ID,
+      actionButtonsPadding: const EdgeInsets.only(top: 8, bottom: 8, left: 8),
       active: context.select((CardsDataProvider p) => p.cardStates[CARD_ID] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(CARD_ID),
       reload: () => Provider.of<StudentIdDataProvider>(context, listen: false).fetchData(),
@@ -144,7 +145,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
                     if (hasCollege) ...[if (hasMajor) const SizedBox(height: 4), _buildCollegeName(profileModel)],
                     if (studentId.isProfileLoading) _sectionLoading('Loading profile'),
                     if (studentId.hasBarcode) ...[
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       _buildBarcode(profileModel),
                     ] else if (!studentId.isProfileLoading) ...[
                       const SizedBox(height: 12),
