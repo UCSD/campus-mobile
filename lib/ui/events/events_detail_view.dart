@@ -17,13 +17,8 @@ class EventDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider
-        .of<EventsDataProvider>(context)
-        .isLoading
-        ? Center(child: CircularProgressIndicator(color: Theme
-        .of(context)
-        .colorScheme
-        .secondary))
+    return Provider.of<EventsDataProvider>(context).isLoading
+        ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
         : ContainerView(child: buildDetailView(context));
   }
 
@@ -63,41 +58,33 @@ class EventDetailView extends StatelessWidget {
                 Icon(
                   Icons.location_on_sharp,
                   size: 36,
-                  color: Theme
-                      .of(context)
-                      .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
                 ),
                 SizedBox(width: 5),
                 Expanded(
                   child: data.location != null && data.location!.isNotEmpty
                       ? Semantics(
-                    label: 'Location: ',
-                    child: LinkifyWithCatch(
-                      text: data.location!,
-                      looseUrl: true,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme
-                            .of(context)
-                            .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  )
+                          label: 'Location: ',
+                          child: LinkifyWithCatch(
+                            text: data.location!,
+                            looseUrl: true,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        )
                       : Container(),
                 ),
                 SizedBox(width: 5),
                 // Event Time
                 Builder(builder: (context) {
-                  final timeString = data.startDate
-                      .toLocal()
-                      .hour == 0 && data.endDate
-                      .toLocal()
-                      .hour == 23
+                  final timeString = data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
                       ? '    All day     '
                       : DateFormat.jm().format(data.startDate.toLocal()) +
-                      ' - ' +
-                      DateFormat.jm().format(data.endDate.toLocal());
+                          ' - ' +
+                          DateFormat.jm().format(data.endDate.toLocal());
                   final semanticTime = 'From: ' + timeString.replaceAll('-', 'to').trim();
                   return Semantics(
                     container: true,
@@ -106,9 +93,7 @@ class EventDetailView extends StatelessWidget {
                       semanticsLabel: semanticTime,
                       style: TextStyle(
                         fontSize: 16,
-                        color: Theme
-                            .of(context)
-                            .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -125,10 +110,10 @@ class EventDetailView extends StatelessWidget {
                   // Event Description
                   data.description != null && data.description!.isNotEmpty
                       ? Text(
-                    data.description!,
-                    semanticsLabel: 'Event Description and Details: ${data.description}',
-                    style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
-                  )
+                          data.description!,
+                          semanticsLabel: 'Event Description and Details: ${data.description}',
+                          style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
+                        )
                       : Container(),
                 ],
               )),
@@ -146,9 +131,7 @@ class EventDetailView extends StatelessWidget {
 // CREATE EVENT IMAGE
 class EventImage extends StatelessWidget {
   final EventModel data;
-
   const EventImage({Key? key, required this.data}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     String fallbackTitle = data.title;
@@ -159,17 +142,14 @@ class EventImage extends StatelessWidget {
     // Add spaces between consecutive uppercase letters so TalkBack spells acronyms out
     semanticLabel = semanticLabel.replaceAllMapped(
       RegExp(r'[A-Z]{2,}'),
-          (match) => match.group(0)!.split('').join(' '),
+      (match) => match.group(0)!.split('').join(' '),
     );
 
     return Semantics(
       image: true,
       label: semanticLabel,
       child: Container(
-        height: MediaQuery
-            .of(context)
-            .size
-            .width / 2.1,
+        height: MediaQuery.of(context).size.width / 2.1,
         decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover, // Ensure the image fills the container
@@ -186,7 +166,6 @@ class EventImage extends StatelessWidget {
 // CREATE EVENT TITLE
 class EventTitle extends StatelessWidget {
   final String title;
-
   const EventTitle({Key? key, required this.title}) : super(key: key);
 
   @override
@@ -205,9 +184,7 @@ class EventTitle extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w500,
-                color: Theme
-                    .of(context)
-                    .brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
               ),
             ),
           ),
@@ -238,10 +215,7 @@ class GoToEventPageButton extends StatelessWidget {
             try {
               await launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
             } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.',
-                style: TextStyle(color: Colors.white),
-
-              )));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.', style: TextStyle(color: Colors.white))));
             }
           },
           child: FittedBox(

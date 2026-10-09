@@ -1,8 +1,6 @@
 analyzer:
   exclude:
     - build/**
-    - android/**
-    - ios/**
 
 formatter:
   page_width: 120

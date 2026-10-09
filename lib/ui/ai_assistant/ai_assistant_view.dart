@@ -60,9 +60,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
   @override
   Widget build(BuildContext context) {
     final ChatProvider chatProvider = context.watch<ChatProvider>();
-    final bool isLoggedIn = context
-        .watch<UserDataProvider>()
-        .isLoggedIn;
+    final bool isLoggedIn = context.watch<UserDataProvider>().isLoggedIn;
 
     return PopScope(
       canPop: !_isSidebarOpen,
@@ -179,8 +177,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
     _lastShownError = errorMessage;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage,
-        style: TextStyle(color: Colors.white),)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage, style: TextStyle(color: Colors.white))));
     });
   }
 

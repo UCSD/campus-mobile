@@ -13,48 +13,31 @@ import 'package:app_links/app_links.dart';
 
 class Maps extends StatelessWidget {
   Widget resultsList(BuildContext context) {
-    if (Provider
-        .of<MapsDataProvider>(context)
-        .markers
-        .isNotEmpty) {
+    if (Provider.of<MapsDataProvider>(context).markers.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       });
       return MoreResultsList();
-    } else if (Provider
-        .of<MapsDataProvider>(context)
-        .noResults!) {
+    } else if (Provider.of<MapsDataProvider>(context).noResults!) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text('No results found for your search.',
-            style: TextStyle(color: Colors.white),
-          ),
-          )
-          );
+          ..showSnackBar(SnackBar(content: Text('No results found for your search.', style: TextStyle(color: Colors.white))));
       });
     }
     return Container();
   }
 
   Widget buildButtons(BuildContext context) {
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
     return Positioned(
       bottom: height * 0.05,
       right: width * 0.05,
       child: Column(
         children: [
-          MyLocationButton(mapController: Provider
-              .of<MapsDataProvider>(context)
-              .mapController),
+          MyLocationButton(mapController: Provider.of<MapsDataProvider>(context).mapController),
           SizedBox(height: 10),
           DirectionsButton(),
         ],
@@ -73,14 +56,9 @@ class Maps extends StatelessWidget {
     if (hasInitialLink && isSearchMapLink) {
       var uri = Uri.dataFromString(initialLink);
       var query = uri.queryParameters['query']!;
-      Provider
-          .of<MapsDataProvider>(context, listen: false)
-          .searchBarController
-          .text = query;
+      Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
       Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider
-          .of<BottomNavigationBarProvider>(context, listen: false)
-          .currentIndex = NavigatorConstants.MAP_TAB;
+      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
     }
 
     _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
@@ -89,14 +67,9 @@ class Maps extends StatelessWidget {
       final bool isSearchMapLink = hasLink && link.contains("deeplinking.searchmap");
       if (hasLink && isSearchMapLink) {
         var query = uri!.queryParameters['query']!;
-        Provider
-            .of<MapsDataProvider>(context, listen: false)
-            .searchBarController
-            .text = query;
+        Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
         Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider
-            .of<BottomNavigationBarProvider>(context, listen: false)
-            .currentIndex = NavigatorConstants.MAP_TAB;
+        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
         _sub?.cancel();
       }
     });
@@ -109,18 +82,13 @@ class Maps extends StatelessWidget {
       children: <Widget>[
         GoogleMap(
           onTap: (_) => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-          markers: Set<Marker>.of(Provider
-              .of<MapsDataProvider>(context)
-              .markers
-              .values),
+          markers: Set<Marker>.of(Provider.of<MapsDataProvider>(context).markers.values),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           mapToolbarEnabled: false,
           zoomControlsEnabled: false,
           onMapCreated: (controller) {
-            Provider
-                .of<MapsDataProvider>(context, listen: false)
-                .mapController = controller;
+            Provider.of<MapsDataProvider>(context, listen: false).mapController = controller;
           },
           initialCameraPosition: CameraPosition(
             target: const LatLng(32.8801, -117.2341),

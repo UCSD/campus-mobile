@@ -30,12 +30,7 @@ class _CitationWebViewState extends State<CitationWebView> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Could not open link.',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          const SnackBar(content: Text('Could not open link.', style: TextStyle(color: Colors.white))),
         );
         Navigator.of(context).pop();
       });

@@ -27,9 +27,7 @@ class MyLocationButton extends StatelessWidget {
         final bool hasNullLongitude = mapsProvider.coordinates!.lon == null;
         if (hasNullLatitude || hasNullLongitude) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Please turn your location on in order to use this feature.',
-            style: TextStyle(color: Colors.white),
-            ),
+            content: Text('Please turn your location on in order to use this feature.', style: TextStyle(color: Colors.white)),
             duration: Duration(seconds: 3),
           ));
         } else {

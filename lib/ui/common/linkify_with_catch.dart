@@ -25,10 +25,9 @@ class LinkifyWithCatch extends StatelessWidget {
           launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Could not open.',
-                style: TextStyle(color: Colors.white),)
+            content: Text('Could not open.', style: TextStyle(color: Colors.white)),
           ));
-      }
+        }
       },
       options: LinkifyOptions(humanize: false, looseUrl: looseUrl),
       text: text,
