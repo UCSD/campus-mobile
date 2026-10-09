@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:campus_mobile_experimental/ui/map/directions_button.dart';
 import 'package:campus_mobile_experimental/ui/map/map_search_bar_ph.dart';
+import 'package:campus_mobile_experimental/ui/map/map_search_feedback.dart';
 import 'package:campus_mobile_experimental/ui/map/more_results_list.dart';
 import 'package:campus_mobile_experimental/ui/map/my_location_button.dart';
 import 'package:flutter/material.dart';
@@ -13,19 +14,7 @@ import 'package:app_links/app_links.dart';
 
 class Maps extends StatelessWidget {
   Widget resultsList(BuildContext context) {
-    if (Provider.of<MapsDataProvider>(context).markers.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      });
-      return MoreResultsList();
-    } else if (Provider.of<MapsDataProvider>(context).noResults!) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context)
-          ..removeCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text('No results found for your search.', style: TextStyle(color: Colors.white))));
-      });
-    }
-    return Container();
+    return Provider.of<MapsDataProvider>(context).markers.isNotEmpty ? MoreResultsList() : const SizedBox.shrink();
   }
 
   Widget buildButtons(BuildContext context) {
@@ -81,7 +70,6 @@ class Maps extends StatelessWidget {
     return Stack(
       children: <Widget>[
         GoogleMap(
-          onTap: (_) => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           markers: Set<Marker>.of(Provider.of<MapsDataProvider>(context).markers.values),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
@@ -98,6 +86,7 @@ class Maps extends StatelessWidget {
         MapSearchBarPlaceHolder(),
         buildButtons(context),
         resultsList(context),
+        const MapSearchFeedback(),
       ],
     );
   }

@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -23,107 +24,103 @@ class EventDetailView extends StatelessWidget {
   }
 
   Widget buildDetailView(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-      child: ListView(
-        children: [
-          // Event Image
-          EventImage(data: data),
-          // Event Content
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                // Event Date
-                Builder(builder: (context) {
-                  final df = DateFormat("MMM d y");
-                  final localStart = data.startDate.toLocal();
-                  final localEnd = data.endDate.toLocal();
-                  final startDate = df.format(localStart);
-                  final endDate = df.format(localEnd);
-                  final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
-                  return StartEndDateContainer(date: dateDisplay);
-                }),
+    return ListView(
+      children: [
+        // Event Image
+        EventImage(data: data),
+        // Event Content
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              // Event Date
+              Builder(builder: (context) {
+                final df = DateFormat("MMM d y");
+                final localStart = data.startDate.toLocal();
+                final localEnd = data.endDate.toLocal();
+                final startDate = df.format(localStart);
+                final endDate = df.format(localEnd);
+                final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
+                return StartEndDateContainer(date: dateDisplay);
+              }),
 
-                // Event Title
-                Expanded(child: EventTitle(title: data.title)),
-              ],
-            ),
+              // Event Title
+              Expanded(child: EventTitle(title: data.title)),
+            ],
           ),
-          Container(
-              padding: const EdgeInsets.only(left: 17.0),
-              child: Row(children: [
-                // Event Location
-                Icon(
-                  Icons.location_on_sharp,
-                  size: 36,
-                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                ),
-                SizedBox(width: 5),
-                Expanded(
-                  child: data.location != null && data.location!.isNotEmpty
-                      ? Semantics(
-                          label: 'Location: ',
-                          child: LinkifyWithCatch(
-                            text: data.location!,
-                            looseUrl: true,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                              fontWeight: FontWeight.w400,
-                            ),
+        ),
+        Container(
+            padding: const EdgeInsets.only(left: 17.0),
+            child: Row(children: [
+              // Event Location
+              Icon(
+                Icons.location_on_sharp,
+                size: 36,
+                color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+              ),
+              SizedBox(width: 5),
+              Expanded(
+                child: data.location != null && data.location!.isNotEmpty
+                    ? Semantics(
+                        label: 'Location: ',
+                        child: LinkifyWithCatch(
+                          text: data.location!,
+                          looseUrl: true,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                            fontWeight: FontWeight.w400,
                           ),
-                        )
-                      : Container(),
-                ),
-                SizedBox(width: 5),
-                // Event Time
-                Builder(builder: (context) {
-                  final timeString = data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
-                      ? '    All day     '
-                      : DateFormat.jm().format(data.startDate.toLocal()) +
-                          ' - ' +
-                          DateFormat.jm().format(data.endDate.toLocal());
-                  final semanticTime = 'From: ' + timeString.replaceAll('-', 'to').trim();
-                  return Semantics(
-                    container: true,
-                    child: Text(
-                      timeString,
-                      semanticsLabel: semanticTime,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                        fontWeight: FontWeight.w400,
-                      ),
+                        ),
+                      )
+                    : Container(),
+              ),
+              SizedBox(width: 5),
+              // Event Time
+              Builder(builder: (context) {
+                final timeString = data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
+                    ? '    All day     '
+                    : DateFormat.jm().format(data.startDate.toLocal()) +
+                        ' - ' +
+                        DateFormat.jm().format(data.endDate.toLocal());
+                final semanticTime = 'From: ' + timeString.replaceAll('-', 'to').trim();
+                return Semantics(
+                  container: true,
+                  child: Text(
+                    timeString,
+                    semanticsLabel: semanticTime,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                      fontWeight: FontWeight.w400,
                     ),
-                  );
-                }),
-                SizedBox(width: 16),
-              ])),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  ///////////////// Horizontal Division ///////////////////
-                  Divider(color: listTileDividerColorDark, thickness: 0.6),
-                  // Event Description
-                  data.description != null && data.description!.isNotEmpty
-                      ? Text(
-                          data.description!,
-                          semanticsLabel: 'Event Description and Details: ${data.description}',
-                          style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
-                        )
-                      : Container(),
-                ],
-              )),
-          Container(
-            padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
-            // "GO TO EVENT PAGE" Button
-            child: data.link != null && data.link!.isNotEmpty ? GoToEventPageButton(link: data.link!) : Container(),
-          )
-        ],
-      ),
+                  ),
+                );
+              }),
+              SizedBox(width: 16),
+            ])),
+        Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                ///////////////// Horizontal Division ///////////////////
+                Divider(color: listTileDividerColorDark, thickness: 0.6),
+                // Event Description
+                data.description != null && data.description!.isNotEmpty
+                    ? Text(
+                        data.description!,
+                        semanticsLabel: 'Event Description and Details: ${data.description}',
+                        style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
+                      )
+                    : Container(),
+              ],
+            )),
+        Container(
+          padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
+          // "GO TO EVENT PAGE" Button
+          child: data.link != null && data.link!.isNotEmpty ? GoToEventPageButton(link: data.link!) : Container(),
+        )
+      ],
     );
   }
 }
@@ -215,7 +212,7 @@ class GoToEventPageButton extends StatelessWidget {
             try {
               await launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
             } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.', style: TextStyle(color: Colors.white))));
+              AppSnackBar.show(context, 'Could not open.');
             }
           },
           child: FittedBox(

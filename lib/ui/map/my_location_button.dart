@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:campus_mobile_experimental/core/providers/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,10 +27,11 @@ class MyLocationButton extends StatelessWidget {
         final bool hasNullLatitude = mapsProvider.coordinates!.lat == null;
         final bool hasNullLongitude = mapsProvider.coordinates!.lon == null;
         if (hasNullLatitude || hasNullLongitude) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Please turn your location on in order to use this feature.', style: TextStyle(color: Colors.white)),
-            duration: Duration(seconds: 3),
-          ));
+          AppSnackBar.show(
+            context,
+            'Please turn your location on in order to use this feature.',
+            duration: const Duration(seconds: 3),
+          );
         } else {
           _mapController!.animateCamera(CameraUpdate.newLatLng(LatLng(
               Provider.of<MapsDataProvider>(context, listen: false).coordinates!.lat!,
