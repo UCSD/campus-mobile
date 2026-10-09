@@ -6,12 +6,8 @@ class ActionButton extends StatelessWidget {
   final VoidCallback onPressed;
   final IconData? trailingIcon;
 
-  const ActionButton({
-    Key? key,
-    required this.buttonText,
-    required this.onPressed,
-    this.trailingIcon,
-  }) : super(key: key);
+  const ActionButton({Key? key, required this.buttonText, required this.onPressed, this.trailingIcon})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +21,7 @@ class ActionButton extends StatelessWidget {
     return TextButton(
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll<Color>(actionButtonBackgroundColor),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-        ),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
         alignment: Alignment.centerLeft,
         padding: WidgetStatePropertyAll(EdgeInsets.zero),
         minimumSize: WidgetStatePropertyAll(Size.zero),

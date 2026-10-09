@@ -53,11 +53,6 @@ class Base64ImageWidget extends StatelessWidget {
   }
 
   Widget _buildPlaceholder() {
-    return Image.asset(
-      placeholderAssetPath,
-      fit: fit,
-      width: width,
-      height: height,
-    );
+    return Image.asset(placeholderAssetPath, fit: fit, width: width, height: height);
   }
 }

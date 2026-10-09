@@ -8,12 +8,7 @@ class ChatSessionMeta {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  ChatSessionMeta({
-    required this.id,
-    required this.title,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+  ChatSessionMeta({required this.id, required this.title, required this.createdAt, required this.updatedAt});
 
   ChatSessionMeta copyWith({String? title, DateTime? updatedAt}) {
     return ChatSessionMeta(
@@ -25,16 +20,16 @@ class ChatSessionMeta {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'title': title,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   static ChatSessionMeta fromJson(Map<String, dynamic> j) => ChatSessionMeta(
-        id: j['id'],
-        title: j['title'],
-        createdAt: DateTime.parse(j['createdAt']),
-        updatedAt: DateTime.parse(j['updatedAt']),
-      );
+    id: j['id'],
+    title: j['title'],
+    createdAt: DateTime.parse(j['createdAt']),
+    updatedAt: DateTime.parse(j['updatedAt']),
+  );
 }

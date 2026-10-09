@@ -6,7 +6,7 @@
 https://github.com/UCSD/campus-mobile/pull/2087
 
 #### Campus Mobile Flutter Version:
-3.44.0
+3.44.6 (stable), including Dart 3.12.2. Use this SDK locally to match the pinned GitHub Actions workflow.
 
 #### Set Up Your IDE to use our `.editorconfig` Settings
 - If using VS Code, install the [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extension.
@@ -68,17 +68,61 @@ git checkout -b experimental
 ```
 
 #### Using the Pre-Commit Hook
-Before you start committing any changes, you can enable the repository's pre-commit hook, which will automatically run our lint/format scripts before each commit.
+The pre-commit hook runs only `dart format` on staged Dart files under `lib/` and `test/`.
+It does not rewrite comments, remove braces, or convert functions using text matching.
+Formatter failures block the commit. When formatting changes files, review and stage
+those changes, then retry the commit. The pinned Flutter SDK must be on your PATH.
 
 To enable it:
 
 ```shell
 # Install pre-commit hook (one-time on your machine)
-pip install pre-commit # or brew install pre-commit
+pip install pre-commit==4.4.0
 
 # Enable the repo's pre-commit hook
 pre-commit install # or python -m pre_commit install
 ```
+
+Check or format the whole Dart source tree manually:
+
+```shell
+bash scripts/auto_fix_all.sh --dry-run
+bash scripts/auto_fix_all.sh
+```
+
+`--dry-run` does not modify files and returns a nonzero status when formatting is
+needed. Both commands propagate formatter failures. The unsafe scripts formerly
+under `scripts/styling/` have been removed. The legacy text-based style checker
+is no longer part of CI. Arrow-function suggestions now come from the Dart
+analyzer; review any IDE/analyzer-assisted fixes before applying them. Automatic
+brace removal, comment spacing rewrites, and TODO dating are intentionally not
+enforced.
+
+Pull requests run the formatting safeguards, a read-only formatting check,
+`flutter analyze`, and the full Flutter test suite using Flutter 3.44.6.
+Analyzer errors and test failures block CI. Analyzer warnings and informational
+lints remain visible but are temporarily non-fatal because the repository has
+existing warnings; a green check is not a warning-free analysis. CI installs
+dependencies with `flutter pub get --enforce-lockfile` and uses an empty `.env`
+asset for isolated tests, without application secrets. The obsolete generated
+counter test is replaced by actual snackbar widget tests; this is not a full
+Firebase-backed application integration test.
+
+Run the same checks locally after installing dependencies:
+
+```shell
+python -m unittest discover -s scripts/tests -v
+bash scripts/auto_fix_all.sh --dry-run
+flutter analyze --no-pub --no-fatal-warnings --no-fatal-infos
+flutter test --no-pub
+```
+
+On a fresh checkout, create an empty `.env` file if you do not have local app
+configuration; it is required by the asset manifest for widget tests. Do not
+overwrite an existing local `.env`. Bash is required for the helper and its
+regression tests (Git Bash on Windows); the pre-commit hook itself invokes Dart
+directly and does not require Bash.
+
 You are now ready to begin developing your new feature. Commit your code often, using present-tense and concise verbiage explaining the work completed.
 
 Example: Add, commit, and push your new feature:

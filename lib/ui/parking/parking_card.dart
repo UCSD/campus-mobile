@@ -46,21 +46,23 @@ class _ParkingCardState extends State<ParkingCard> {
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(CARD_ID),
       actionButtons: [
         ActionButton(
-            buttonText: 'MANAGE SPOTS',
-            onPressed: () {
-              analytics.logEvent(name: '${CARD_ID}_card_action', parameters: {'action': 'manage_spots'});
-              final bool isNotLoading = !_parkingDataProvider.isLoading;
-              final bool hasNoError = _parkingDataProvider.error == null;
-              if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.SPOT_TYPES_VIEW);
-            }),
+          buttonText: 'MANAGE SPOTS',
+          onPressed: () {
+            analytics.logEvent(name: '${CARD_ID}_card_action', parameters: {'action': 'manage_spots'});
+            final bool isNotLoading = !_parkingDataProvider.isLoading;
+            final bool hasNoError = _parkingDataProvider.error == null;
+            if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.SPOT_TYPES_VIEW);
+          },
+        ),
         ActionLink(
-            buttonText: 'MANAGE LOTS',
-            onPressed: () {
-              analytics.logEvent(name: '${CARD_ID}_card_action', parameters: {'action': 'manage_lots'});
-              final bool isNotLoading = !_parkingDataProvider.isLoading;
-              final bool hasNoError = _parkingDataProvider.error == null;
-              if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.MANAGE_PARKING_VIEW);
-            }),
+          buttonText: 'MANAGE LOTS',
+          onPressed: () {
+            analytics.logEvent(name: '${CARD_ID}_card_action', parameters: {'action': 'manage_lots'});
+            final bool isNotLoading = !_parkingDataProvider.isLoading;
+            final bool hasNoError = _parkingDataProvider.error == null;
+            if (isNotLoading && hasNoError) Navigator.pushNamed(context, RoutePaths.MANAGE_PARKING_VIEW);
+          },
+        ),
       ],
     );
   }
@@ -78,16 +80,10 @@ class _ParkingCardState extends State<ParkingCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "No Lots to Display",
-              style: TextStyle(fontSize: 24),
-            ),
+            Text("No Lots to Display", style: TextStyle(fontSize: 24)),
             Padding(
               padding: const EdgeInsets.only(top: 5),
-              child: Text(
-                "Add a Lot via 'Manage Lots'",
-                style: TextStyle(fontSize: 14),
-              ),
+              child: Text("Add a Lot via 'Manage Lots'", style: TextStyle(fontSize: 14)),
             ),
           ],
         ));
@@ -115,8 +111,9 @@ class _ParkingCardState extends State<ParkingCard> {
             dotsCount: selectedLotsViews.length,
             decorator: DotsDecorator(
               color: dotsUnselectedColor,
-              activeColor:
-                  Theme.of(context).brightness == Brightness.dark ? dotsSelectedColorDark : dotsSelectedColorLight,
+              activeColor: Theme.of(context).brightness == Brightness.dark
+                  ? dotsSelectedColorDark
+                  : dotsSelectedColorLight,
               activeSize: const Size(22.0, 22.0),
               size: const Size(10.0, 10.0),
             ),
@@ -127,11 +124,7 @@ class _ParkingCardState extends State<ParkingCard> {
       print(e);
       return Container(
         width: double.infinity,
-        child: Center(
-          child: Container(
-            child: Text('An error occurred, please try again.'),
-          ),
-        ),
+        child: Center(child: Container(child: Text('An error occurred, please try again.'))),
       );
     }
   }

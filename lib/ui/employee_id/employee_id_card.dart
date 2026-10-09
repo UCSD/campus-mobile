@@ -26,7 +26,8 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     ScalingUtility().getCurrentMeasurements(context);
 
     EmployeeIdModel? employeeModel = Provider.of<EmployeeIdDataProvider>(context).employeeIdModel;
-    isValidId = employeeModel != null &&
+    isValidId =
+        employeeModel != null &&
         (employeeModel.barcode != null) &&
         (employeeModel.employeePreferredDisplayName != null && employeeModel.employeeId != null);
 
@@ -56,17 +57,21 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
             children: [
               Center(
                 child: Text.rich(
-                  TextSpan(text: "Unable to display STAFF ID.\n\n", children: [
-                    TextSpan(text: "If the problem persists, contact the "),
-                    TextSpan(
+                  TextSpan(
+                    text: "Unable to display STAFF ID.\n\n",
+                    children: [
+                      TextSpan(text: "If the problem persists, contact the "),
+                      TextSpan(
                         text: "ITS Service Desk",
                         style: TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             openLink("https://blink.ucsd.edu/technology/help-desk/index.html");
-                          }),
-                    TextSpan(text: ".")
-                  ]),
+                          },
+                      ),
+                      TextSpan(text: "."),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -103,8 +108,9 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                       Text(
                         employeeIdModel!.employeePreferredDisplayName,
                         style: TextStyle(
-                          color:
-                              Theme.of(context).brightness == Brightness.dark ? darkPrimaryColor2 : lightPrimaryColor,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? darkPrimaryColor2
+                              : lightPrimaryColor,
                           fontFamily: 'Brix Sans',
                           fontWeight: FontWeight.w400,
                           fontSize: getFontSize(employeeIdModel.employeePreferredDisplayName, "name"),
@@ -120,11 +126,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
                           fontSize: ScalingUtility.horizontalSafeBlock * 4.0,
                         ),
                       ),
-                      Divider(
-                        color: listTileDividerColorLight,
-                        thickness: 1,
-                        height: 16,
-                      ),
+                      Divider(color: listTileDividerColorLight, thickness: 1, height: 16),
                       Text(
                         employeeIdModel.department,
                         style: TextStyle(
@@ -194,29 +196,23 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
   /// Pop up barcode
   createAlertDialog(BuildContext context, Column image, String? cardNumber, bool rotated) {
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.white,
-            title: Text(
-              "STAFF ID",
-              style: TextStyle(color: Colors.black),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text("STAFF ID", style: TextStyle(color: Colors.black)),
+          content: Container(child: checkForRotation(image, context, cardNumber, rotated)),
+          actions: <Widget>[
+            TextButton(
+              child: Icon(Icons.close, color: Colors.black),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
-            content: Container(
-              child: checkForRotation(image, context, cardNumber, rotated),
-            ),
-            actions: <Widget>[
-              TextButton(
-                  child: Icon(
-                    Icons.close,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  })
-            ],
-          );
-        });
+          ],
+        );
+      },
+    );
   }
 
   Column checkForRotation(Column image, BuildContext context, String? cardNumber, bool rotated) {
@@ -229,9 +225,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     return Text(
       "STAFF ID",
       textAlign: TextAlign.left,
-      style: TextStyle(
-        fontSize: ScalingUtility.horizontalSafeBlock * 2,
-      ),
+      style: TextStyle(fontSize: ScalingUtility.horizontalSafeBlock * 2),
     );
   }
 
@@ -260,32 +254,33 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     }
 
     if (rotated) {
-      return Column(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
-        RotatedBox(
-          quarterTurns: 1,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(ScalingUtility.verticalSafeBlock * 7.5),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    child: barcodeWithText,
-                    color: Colors.white,
-                  ),
-                  Text(
-                    cardNumber,
-                    style: TextStyle(
-                        color: Colors.black, fontSize: fontSizeForTablet(), letterSpacing: letterSpacingForTablet()),
-                  )
-                ],
-              ),
-            ],
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          RotatedBox(
+            quarterTurns: 1,
+            child: Row(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.all(ScalingUtility.verticalSafeBlock * 7.5)),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(child: barcodeWithText, color: Colors.white),
+                    Text(
+                      cardNumber,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: fontSizeForTablet(),
+                        letterSpacing: letterSpacingForTablet(),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ]);
+        ],
+      );
     } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -298,11 +293,7 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
               style: linkTextLight.copyWith(fontSize: 18.0),
             ),
           ),
-          Container(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            color: Colors.white,
-            child: barcodeWithText,
-          ),
+          Container(padding: EdgeInsets.fromLTRB(0, 0, 10, 0), color: Colors.white, child: barcodeWithText),
         ],
       );
     }
@@ -342,58 +333,52 @@ class _EmployeeIdCardState extends State<EmployeeIdCard> {
     }
 
     if (rotated) {
-      return Column(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(25),
-        ),
-        RotatedBox(
-          quarterTurns: 1,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 7.5),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    child: barcodeWithText,
-                    color: Colors.white,
-                  ),
-                  Text(
-                    cardNumber,
-                    style: TextStyle(
-                        color: Colors.black, fontSize: getRotatedPopUpFontSize(), letterSpacing: letterSpacing()),
-                  )
-                ],
-              ),
-            ],
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(padding: EdgeInsets.all(25)),
+          RotatedBox(
+            quarterTurns: 1,
+            child: Row(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 7.5)),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(child: barcodeWithText, color: Colors.white),
+                    Text(
+                      cardNumber,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: getRotatedPopUpFontSize(),
+                        letterSpacing: letterSpacing(),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ]);
+        ],
+      );
     } else {
-      return Column(children: <Widget>[
-        Text(
-          "(tap for easier scanning)",
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16.0,
-            color: decideColor(Theme.of(context)),
+      return Column(
+        children: <Widget>[
+          Text(
+            "(tap for easier scanning)",
+            textAlign: TextAlign.left,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: decideColor(Theme.of(context))),
           ),
-        ),
-        Container(
-          padding: addBorder(Theme.of(context)),
-          color: Colors.white,
-          child: barcodeWithText,
-        ),
-        Text(
-          cardNumber,
-          style: TextStyle(
+          Container(padding: addBorder(Theme.of(context)), color: Colors.white, child: barcodeWithText),
+          Text(
+            cardNumber,
+            style: TextStyle(
               fontSize: ScalingUtility.horizontalSafeBlock * 1.25,
-              letterSpacing: ScalingUtility.horizontalSafeBlock * .5),
-        ),
-      ]);
+              letterSpacing: ScalingUtility.horizontalSafeBlock * .5,
+            ),
+          ),
+        ],
+      );
     }
   }
 

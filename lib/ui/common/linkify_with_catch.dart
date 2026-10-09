@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,9 +14,13 @@ class LinkifyWithCatch extends StatelessWidget {
   final TextAlign textAlign;
   final bool looseUrl;
 
-  const LinkifyWithCatch(
-      {Key? key, required this.text, this.style, this.textAlign = TextAlign.start, this.looseUrl = false})
-      : super(key: key);
+  const LinkifyWithCatch({
+    Key? key,
+    required this.text,
+    this.style,
+    this.textAlign = TextAlign.start,
+    this.looseUrl = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +29,7 @@ class LinkifyWithCatch extends StatelessWidget {
         try {
           launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Could not open.'),
-          ));
+          AppSnackBar.show(context, 'Could not open.');
         }
       },
       options: LinkifyOptions(humanize: false, looseUrl: looseUrl),

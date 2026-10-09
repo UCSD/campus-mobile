@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message_persistent.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
@@ -89,6 +90,7 @@ class CampusMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     final lightTheme = ThemeData(
       useMaterial3: false,
+      snackBarTheme: AppSnackBar.theme,
       primaryColor: lightPrimaryColor,
       textTheme: lightThemeText.copyWith(
         titleLarge: cardTitleStyleLight,
@@ -104,18 +106,19 @@ class CampusMobile extends StatelessWidget {
       iconTheme: lightIconTheme,
       appBarTheme: lightAppBarTheme,
       listTileTheme: lightListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        surface: lightButtonColor,
-        brightness: Brightness.light,
-      ),
+      colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: ColorPrimary,
+      ).copyWith(surface: lightButtonColor, brightness: Brightness.light),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          unselectedItemColor: unselectedIconLightColor,
-          selectedItemColor: Colors.white,
-          backgroundColor: bottomTabBarColorLight),
+        unselectedItemColor: unselectedIconLightColor,
+        selectedItemColor: Colors.white,
+        backgroundColor: bottomTabBarColorLight,
+      ),
     );
 
     final darkTheme = ThemeData(
       useMaterial3: false,
+      snackBarTheme: AppSnackBar.theme,
       primaryColor: darkPrimaryColor,
       textTheme: darkThemeText.copyWith(
         titleLarge: cardTitleStyleDark,
@@ -132,14 +135,14 @@ class CampusMobile extends StatelessWidget {
       appBarTheme: darkAppBarTheme,
       unselectedWidgetColor: darkAccentColor,
       listTileTheme: darkListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: ColorPrimary).copyWith(
-        surface: darkButtonColor,
-        brightness: Brightness.dark,
-      ),
+      colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: ColorPrimary,
+      ).copyWith(surface: darkButtonColor, brightness: Brightness.dark),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          unselectedItemColor: unselectedIconDarkColor,
-          selectedItemColor: Colors.white,
-          backgroundColor: bottomTabBarColorDark),
+        unselectedItemColor: unselectedIconDarkColor,
+        selectedItemColor: Colors.white,
+        backgroundColor: bottomTabBarColorDark,
+      ),
     );
 
     return MultiProvider(
@@ -147,22 +150,14 @@ class CampusMobile extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
-        theme: lightTheme.copyWith(
-          colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor),
-        ),
-        darkTheme: darkTheme.copyWith(
-          colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor),
-        ),
+        theme: lightTheme.copyWith(colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor)),
+        darkTheme: darkTheme.copyWith(colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor)),
         themeMode: ThemeMode.system,
         initialRoute: showOnboardingScreen ? RoutePaths.ONBOARDING_LOGIN : RoutePaths.BOTTOM_NAVIGATION_BAR,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
         navigatorObservers: [observer],
         builder: (context, child) {
-          return SafeArea(
-            top: false,
-            bottom: Platform.isAndroid,
-            child: child!,
-          );
+          return SafeArea(top: false, bottom: Platform.isAndroid, child: child!);
         },
       ),
     );

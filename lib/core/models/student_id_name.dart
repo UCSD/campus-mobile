@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:campus_mobile_experimental/core/models/student_id_fields.dart';
 
 // To parse this JSON data, do
 //
 //     final studentIdNameModel = studentIdNameModelFromJson(jsonString);
-StudentIdNameModel studentIdNameModelFromJson(String str) => StudentIdNameModel.fromJson(json.decode(str));
+StudentIdNameModel studentIdNameModelFromJson(String str) => StudentIdNameModel.fromJson(studentIdObjectFromJson(str));
 
 String studentIdNameModelToJson(StudentIdNameModel data) => json.encode(data.toJson());
 
@@ -27,22 +28,29 @@ class StudentIdNameModel {
   });
 
   factory StudentIdNameModel.fromJson(Map<String, dynamic> json) => StudentIdNameModel(
-        studentId: json["studentId"],
-        firstName: json["firstName"],
-        middleName: json["middleName"],
-        lastName: json["lastName"],
-        lastUpdatedBy: json["lastUpdatedBy"],
-        internalId: json["internalId"],
-        lastUpdatedDate: json["lastUpdatedDate"],
-      );
+    studentId: studentIdText(json["studentId"]),
+    firstName: studentIdText(json["firstName"]),
+    middleName: studentIdText(json["middleName"]),
+    lastName: studentIdText(json["lastName"]),
+    lastUpdatedBy: studentIdText(json["lastUpdatedBy"]),
+    internalId: json["internalId"] is int ? json["internalId"] : 0,
+    lastUpdatedDate: json["lastUpdatedDate"],
+  );
+
+  String get displayName => [firstName, lastName].where((part) => part.isNotEmpty).join(' ');
+
+  StudentIdNameModel mergeValid(StudentIdNameModel replacement) => StudentIdNameModel(
+    firstName: retainStudentIdText(replacement.firstName, firstName),
+    lastName: retainStudentIdText(replacement.lastName, lastName),
+  );
 
   Map<String, dynamic> toJson() => {
-        "studentId": studentId,
-        "firstName": firstName,
-        "middleName": middleName,
-        "lastName": lastName,
-        "lastUpdatedBy": lastUpdatedBy,
-        "internalId": internalId,
-        "lastUpdatedDate": lastUpdatedDate,
-      };
+    "studentId": studentId,
+    "firstName": firstName,
+    "middleName": middleName,
+    "lastName": lastName,
+    "lastUpdatedBy": lastUpdatedBy,
+    "internalId": internalId,
+    "lastUpdatedDate": lastUpdatedDate,
+  };
 }

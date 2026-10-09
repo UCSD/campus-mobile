@@ -34,9 +34,7 @@ class SpeedTestProvider extends ChangeNotifier {
   Map? wiFiLog;
   Map<String, String>? offloadDataHeader;
   late Coordinates _coordinates;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   SpeedTestModel? _speedTestModel;
@@ -113,8 +111,12 @@ class SpeedTestProvider extends ChangeNotifier {
     try {
       _cancelTokenUpload = new CancelToken();
       _timer.start();
-      await dio.put(_speedTestModel!.uploadUrl!,
-          data: formData, onSendProgress: _progressCallbackUpload, cancelToken: _cancelTokenUpload);
+      await dio.put(
+        _speedTestModel!.uploadUrl!,
+        data: formData,
+        onSendProgress: _progressCallbackUpload,
+        cancelToken: _cancelTokenUpload,
+      );
     } catch (e) {
       print(e);
     } finally {
@@ -130,8 +132,12 @@ class SpeedTestProvider extends ChangeNotifier {
     try {
       _cancelTokenDownload = new CancelToken();
       _timer.start();
-      await dio.download(_speedTestModel!.downloadUrl!, (tempDownload.path),
-          onReceiveProgress: _progressCallbackDownload, cancelToken: _cancelTokenDownload);
+      await dio.download(
+        _speedTestModel!.downloadUrl!,
+        (tempDownload.path),
+        onReceiveProgress: _progressCallbackDownload,
+        cancelToken: _cancelTokenDownload,
+      );
     } catch (e) {
       print(e);
     } finally {
@@ -249,8 +255,9 @@ class SpeedTestProvider extends ChangeNotifier {
     offloadDataHeader = {'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}'};
     wiFiLog = {
       "userId": (_userDataProvider.userProfileModel.pid) == null ? "" : _userDataProvider.userProfileModel.pid,
-      "userLogin":
-          (_userDataProvider.userProfileModel.username) == null ? "" : _userDataProvider.userProfileModel.username!,
+      "userLogin": (_userDataProvider.userProfileModel.username) == null
+          ? ""
+          : _userDataProvider.userProfileModel.username!,
       "Platform": _speedTestModel!.platform,
       "SSID": _speedTestModel!.ssid,
       "BSSID": _speedTestModel!.bssid,

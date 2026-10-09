@@ -16,11 +16,12 @@ class CardContainer extends StatelessWidget {
     required this.hide,
     this.overFlowMenu,
     this.actionButtons,
+    this.actionButtonsPadding = const EdgeInsets.only(top: 16, bottom: 16, left: 8),
     this.footer,
     this.hideMenu = false,
     this.cardId,
-  })  : active = active ?? false,
-        super(key: key);
+  }) : active = active ?? false,
+       super(key: key);
 
   /// required parameters
   final String titleText;
@@ -35,6 +36,7 @@ class CardContainer extends StatelessWidget {
   final Map<String, Function>? overFlowMenu;
   final bool hideMenu;
   final List<Widget>? actionButtons;
+  final EdgeInsetsGeometry actionButtonsPadding;
   final Widget? footer;
   final String? cardId;
   @override
@@ -47,22 +49,16 @@ class CardContainer extends StatelessWidget {
         semanticContainer: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
-          side: BorderSide(
-            color: dotsUnselectedColor,
-            width: 0.5,
-          ),
+          side: BorderSide(color: dotsUnselectedColor, width: 0.5),
         ),
         color: Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CardHeader(
-              titleText: titleText,
-              trailing: buildMenu(),
-            ),
+            CardHeader(titleText: titleText, trailing: buildMenu()),
             buildBody(context),
             Padding(
-              padding: const EdgeInsets.only(top: 16, right: 0, bottom: 16, left: 8),
+              padding: actionButtonsPadding,
               child: actionButtons != null ? Row(children: actionButtons!) : Container(),
             ),
             footer ?? Container(),
@@ -93,10 +89,7 @@ class CardContainer extends StatelessWidget {
         } else {
           customErrorText = 'No finals found.';
         }
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 42.0),
-          child: Text(customErrorText),
-        );
+        return Padding(padding: const EdgeInsets.only(left: 8, top: 32, bottom: 48), child: Text(customErrorText));
       } else if (titleText == 'CLASSES') {
         var customErrorText = '';
         if (errorText!.contains('Exception')) {
@@ -105,7 +98,7 @@ class CardContainer extends StatelessWidget {
         } else {
           customErrorText = 'No classes found.';
         }
-        return Text(customErrorText);
+        return Padding(padding: const EdgeInsets.only(top: 32, bottom: 48, left: 8), child: Text(customErrorText));
       } else {
         return Text('An error occurred, please try again.');
       }
@@ -115,11 +108,10 @@ class CardContainer extends StatelessWidget {
         constraints: BoxConstraints(minHeight: cardContentMinHeight),
         child: Center(
           child: Container(
-              height: 32,
-              width: 32,
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary,
-              )),
+            height: 32,
+            width: 32,
+            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary),
+          ),
         ),
       );
     } else if (titleText == "BUSYNESS") {
@@ -145,10 +137,7 @@ class CardContainer extends StatelessWidget {
         child: child(),
       );
     } else {
-      return Container(
-        width: double.infinity,
-        child: child(),
-      );
+      return Container(width: double.infinity, child: child());
     }
   }
 
@@ -157,12 +146,7 @@ class CardContainer extends StatelessWidget {
 
     return OverflowBar(
       children: [
-        buildMenuOptions(
-          {
-            CardMenuOptionConstants.RELOAD_CARD: reload,
-            CardMenuOptionConstants.HIDE_CARD: hide,
-          },
-        ),
+        buildMenuOptions({CardMenuOptionConstants.RELOAD_CARD: reload, CardMenuOptionConstants.HIDE_CARD: hide}),
       ],
     );
   }
@@ -192,11 +176,7 @@ class CardContainer extends StatelessWidget {
         underline: Container(),
         icon: Transform.translate(
           offset: Offset(6, -3),
-          child: Icon(
-            Icons.more_vert,
-            color: dotsUnselectedColor,
-            semanticLabel: '$titleText Card Menu',
-          ),
+          child: Icon(Icons.more_vert, color: dotsUnselectedColor, semanticLabel: '$titleText Card Menu'),
         ),
         onChanged: (String? selectedMenuItem) => onMenuItemPressed(selectedMenuItem),
       ),

@@ -1,84 +1,46 @@
-import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+/// Each call returns its own result; section state belongs to the provider.
 class StudentIdService {
-  /// STATES
-  bool _isLoading = false;
-  DateTime? _lastUpdated;
-  String? _error;
-  final myStudentProfileApiUrl = dotenv.get('MY_STUDENT_PROFILE_API_ENDPOINT');
-  final myStudentContactApiUrl = dotenv.get('MY_STUDENT_CONTACT_API_ENDPOINT');
+  Future<StudentIdNameModel> fetchStudentIdName(Map<String, String> headers) async => studentIdNameModelFromJson(
+    await NetworkHelper.authorizedFetch('${dotenv.get('MY_STUDENT_CONTACT_API_ENDPOINT')}/display_name', headers),
+  );
 
-  /// MODELS
-  StudentIdNameModel _studentIdNameModel = StudentIdNameModel();
-  StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
-  StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel();
+  Future<StudentIdPhotoModel> fetchStudentIdPhoto(Map<String, String> headers) async => studentIdPhotoModelFromJson(
+    await NetworkHelper.authorizedFetch('${dotenv.get('MY_STUDENT_CONTACT_API_ENDPOINT')}/photo', headers),
+  );
 
-  // Removed term (not used)
-  Future<bool> fetchStudentIdName(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
+  Future<StudentIdProfileModel> fetchStudentIdProfile(Map<String, String> headers) async =>
+      studentIdProfileModelFromJson(
+        await NetworkHelper.authorizedFetch('${dotenv.get('MY_STUDENT_PROFILE_API_ENDPOINT')}/profile', headers),
+      );
+
+  /// Load even while CardContainer hides its body. Fresh GETs bypass image caches
+  /// so retrying an unchanged URL starts a new download and decoding attempt.
+  Future<ui.Image> fetchStudentIdImage(String url) async {
+    final client = Dio(
+      BaseOptions(connectTimeout: const Duration(seconds: 30), receiveTimeout: const Duration(seconds: 30)),
+    );
     try {
-      /// fetch data
-      String _response = await NetworkHelper.authorizedFetch(myStudentContactApiUrl + '/display_name', headers);
-
-      /// parse data
-      _studentIdNameModel = studentIdNameModelFromJson(_response);
-      return true;
-    } catch (e) {
-      _error = e.toString();
-      return false;
+      final response = await client.get<List<int>>(url, options: Options(responseType: ResponseType.bytes));
+      if (response.statusCode != 200 || response.data == null) {
+        throw const FormatException('Student ID photo download failed');
+      }
+      final codec = await ui.instantiateImageCodec(Uint8List.fromList(response.data!));
+      try {
+        return (await codec.getNextFrame()).image;
+      } finally {
+        codec.dispose();
+      }
     } finally {
-      _isLoading = false;
+      client.close(force: true);
     }
   }
-
-  // Removed term (not used)
-  Future<bool> fetchStudentIdPhoto(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
-    try {
-      /// fetch data
-      String _response = await NetworkHelper.authorizedFetch(myStudentContactApiUrl + '/photo', headers);
-
-      /// parse data
-      _studentIdPhotoModel = studentIdPhotoModelFromJson(_response);
-      return true;
-    } catch (e) {
-      _error = e.toString();
-      return false;
-    } finally {
-      _isLoading = false;
-    }
-  }
-
-  /// Removed term (not used)
-  Future<bool> fetchStudentIdProfile(Map<String, String> headers) async {
-    _error = null;
-    _isLoading = true;
-    try {
-      /// fetch data
-      String _response = await NetworkHelper.authorizedFetch(myStudentProfileApiUrl + '/profile', headers);
-
-      _studentIdProfileModel = studentIdProfileModelFromJson(_response);
-      return true;
-    } catch (e) {
-      _error = e.toString();
-      return false;
-    } finally {
-      _isLoading = false;
-    }
-  }
-
-  /// SIMPLE GETTERS
-  get error => _error;
-  get isLoading => _isLoading;
-  get lastUpdated => _lastUpdated;
-  StudentIdNameModel get studentIdNameModel => _studentIdNameModel;
-  StudentIdPhotoModel get studentIdPhotoModel => _studentIdPhotoModel;
-  StudentIdProfileModel get studentIdProfileModel => _studentIdProfileModel;
 }

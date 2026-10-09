@@ -13,10 +13,7 @@ class DirectionsHelper {
       final appleUri = Uri.parse(appleMapsUrl);
       final canLaunchAppleMaps = await canLaunchUrl(appleUri);
       if (canLaunchAppleMaps) {
-        await launchUrl(
-          appleUri,
-          mode: LaunchMode.externalApplication,
-        );
+        await launchUrl(appleUri, mode: LaunchMode.externalApplication);
         return;
       }
     }
@@ -26,10 +23,7 @@ class DirectionsHelper {
     final googleAppUri = Uri.parse(googleMapsAppUrl);
     final canLaunchGoogleMapsApp = await canLaunchUrl(googleAppUri);
     if (canLaunchGoogleMapsApp) {
-      await launchUrl(
-        googleAppUri,
-        mode: LaunchMode.externalApplication,
-      );
+      await launchUrl(googleAppUri, mode: LaunchMode.externalApplication);
       return;
     }
 
@@ -38,10 +32,7 @@ class DirectionsHelper {
     final googleWebUri = Uri.parse(googleMapsWebUrl);
     final canLaunchGoogleMapsWeb = await canLaunchUrl(googleWebUri);
     if (canLaunchGoogleMapsWeb) {
-      await launchUrl(
-        googleWebUri,
-        mode: LaunchMode.externalApplication,
-      );
+      await launchUrl(googleWebUri, mode: LaunchMode.externalApplication);
     } else {
       // If all else fails, show an error
       debugPrint('Failed to open directions: No map apps available');

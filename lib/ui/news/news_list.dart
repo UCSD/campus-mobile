@@ -17,16 +17,9 @@ class NewsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Provider.of<NewsDataProvider>(context).isLoading) {
-      return Center(
-        child: CircularProgressIndicator(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-      );
+      return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary));
     }
-    return buildNewsList(
-      context,
-      Provider.of<NewsDataProvider>(context).newsModels,
-    );
+    return buildNewsList(context, Provider.of<NewsDataProvider>(context).newsModels);
   }
 
   Widget buildNewsList(BuildContext context, NewsModel data) {
@@ -81,11 +74,7 @@ class NewsList extends StatelessWidget {
       excludeSemantics: true,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            RoutePaths.NEWS_DETAIL_VIEW,
-            arguments: newsItem,
-          );
+          Navigator.pushNamed(context, RoutePaths.NEWS_DETAIL_VIEW, arguments: newsItem);
         },
         child: Container(
           padding: EdgeInsets.all(8.0),
@@ -96,11 +85,7 @@ class NewsList extends StatelessWidget {
                 Container(
                   width: 140,
                   margin: EdgeInsets.only(right: 8.0),
-                  child: ImageLoader(
-                    url: newsItem.image,
-                    fullSize: true,
-                    fit: BoxFit.cover,
-                  ),
+                  child: ImageLoader(url: newsItem.image, fullSize: true, fit: BoxFit.cover),
                 ),
                 Expanded(
                   child: Column(
@@ -122,10 +107,11 @@ class NewsList extends StatelessWidget {
                             ),
                             TextSpan(
                               text: ' - ',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium!
-                                  .copyWith(height: 1.42, fontSize: 16.0, decoration: TextDecoration.none),
+                              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                height: 1.42,
+                                fontSize: 16.0,
+                                decoration: TextDecoration.none,
+                              ),
                             ),
                             TextSpan(
                               text: newsItem.title,
