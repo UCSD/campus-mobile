@@ -2,7 +2,6 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
-import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
@@ -24,10 +23,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
     return showDialog(
       context: context,
       builder: (context) {
+        final studentId = context.watch<StudentIdDataProvider>();
         return AlertDialog(
           backgroundColor: Colors.white,
           title: Text("Student ID", style: TextStyle(color: Colors.black)),
-          content: Container(child: checkForRotation(image, context, cardNumber, rotated)),
+          content: studentId.hasBarcode && studentId.studentIdProfileModel.barcode == cardNumber
+              ? SingleChildScrollView(child: checkForRotation(image, context, cardNumber, rotated))
+              : const Text('Barcode unavailable'),
           actions: <Widget>[
             TextButton(
               child: Icon(Icons.close, color: Colors.black),
@@ -50,79 +52,81 @@ class _StudentIdCardState extends State<StudentIdCard> {
   @override
   Widget build(BuildContext context) {
     ScalingUtility().getCurrentMeasurements(context);
+    final studentId = context.watch<StudentIdDataProvider>();
 
     return CardContainer(
       cardId: CARD_ID,
       active: context.select((CardsDataProvider p) => p.cardStates[CARD_ID] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(CARD_ID),
       reload: () => Provider.of<StudentIdDataProvider>(context, listen: false).fetchData(),
-      isLoading: Provider.of<StudentIdDataProvider>(context).isLoading,
+      isLoading: !studentId.hasUsableContent && studentId.hasPendingWork,
       titleText: CardTitleConstants.TITLE_MAP[CARD_ID]!,
-      errorText: Provider.of<StudentIdDataProvider>(context).error,
-      child: () => buildCardContent(
-        Provider.of<StudentIdDataProvider>(context).studentIdNameModel,
-        Provider.of<StudentIdDataProvider>(context).studentIdPhotoModel,
-        Provider.of<StudentIdDataProvider>(context).studentIdProfileModel,
-        context,
-      ),
+      errorText: !studentId.hasUsableContent && !studentId.hasPendingWork
+          ? 'An error occurred, please try again.'
+          : null,
+      child: () => buildCardContent(studentId, context),
     );
   }
 
-  Widget buildCardContent(
-    StudentIdNameModel nameModel,
-    StudentIdPhotoModel photoModel,
-    StudentIdProfileModel profileModel,
-    BuildContext context,
-  ) {
+  Widget buildCardContent(StudentIdDataProvider studentId, BuildContext context) {
     try {
+      final nameModel = studentId.studentIdNameModel;
+      final profileModel = studentId.studentIdProfileModel;
+      final hasClassification = profileModel.classificationType.isNotEmpty;
+      final hasMajor = profileModel.major.isNotEmpty;
+      final hasCollege = profileModel.collegeCurrent.isNotEmpty;
       return Padding(
         padding: const EdgeInsets.only(bottom: 0.0, left: 3.5),
         // Use a single Row; place the left image and the right text in flexible layouts
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            // Left side: Photo
-            SizedBox(width: cardMargin * 0.5),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                photoModel.photoUrl,
-                fit: BoxFit.contain,
-                height: ScalingUtility.verticalSafeBlock * 21,
-              ),
-            ),
-            SizedBox(width: cardMargin * 1.5),
+        child: LayoutBuilder(
+          builder: (context, constraints) => Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              // Left side: Photo
+              SizedBox(width: cardMargin * 0.5),
+              _buildPhoto(studentId, constraints.maxWidth),
+              SizedBox(width: cardMargin * 1.5),
 
-            // Right side: Expanded so text won't overflow
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _buildName(nameModel),
-                  SizedBox(height: ScalingUtility.verticalSafeBlock * 0.5),
-                  _buildClassificationTitle(profileModel),
-                  SizedBox(
-                    width: 201,
-                    child: Divider(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? listTileDividerColorDark
-                          : listTileDividerColorLight,
-                      thickness: 1,
-                      height: 10,
+              // Right side: Expanded so text won't overflow
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    if (studentId.hasName || !studentId.isNameLoading) _buildName(nameModel),
+                    if (studentId.isNameLoading) _sectionLoading('Loading name'),
+                    if (hasClassification) ...[
+                      SizedBox(height: ScalingUtility.verticalSafeBlock * 0.5),
+                      _buildClassificationTitle(profileModel),
+                    ],
+                    if (hasMajor || hasCollege)
+                      SizedBox(
+                        width: 201,
+                        child: Divider(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? listTileDividerColorDark
+                              : listTileDividerColorLight,
+                          thickness: 1,
+                          height: 10,
+                        ),
+                      ),
+                    if (hasMajor) _buildMajorName(profileModel),
+                    if (hasCollege) ...[
+                      SizedBox(height: ScalingUtility.verticalSafeBlock * 0.5),
+                      _buildCollegeName(profileModel),
+                    ],
+                    if (studentId.isProfileLoading) _sectionLoading('Loading profile'),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: studentId.hasBarcode
+                          ? [_buildBarcode(profileModel), _buildBarcodeNumber(profileModel)]
+                          : [if (!studentId.isProfileLoading) Text('Barcode unavailable')],
                     ),
-                  ),
-                  _buildMajorName(profileModel),
-                  SizedBox(height: ScalingUtility.verticalSafeBlock * 0.5),
-                  _buildCollegeName(profileModel),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [_buildBarcode(profileModel), _buildBarcodeNumber(profileModel)],
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(width: cardMargin * 0.5),
-          ],
+              SizedBox(width: cardMargin * 0.5),
+            ],
+          ),
         ),
       );
     } catch (e) {
@@ -146,6 +150,34 @@ class _StudentIdCardState extends State<StudentIdCard> {
         ),
       );
     }
+  }
+
+  Widget _sectionLoading(String label) => Semantics(
+    label: label,
+    child: const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+  );
+
+  Widget _buildPhoto(StudentIdDataProvider studentId, double availableWidth) {
+    final height = ScalingUtility.verticalSafeBlock * 21;
+    final width = (height * 0.7).clamp(0.0, availableWidth * 0.32);
+    return SizedBox(
+      key: const ValueKey('student-id-photo'),
+      width: width,
+      height: height,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (studentId.hasPhoto)
+              RawImage(image: studentId.studentPhoto, fit: BoxFit.contain)
+            else if (!studentId.isPhotoLoading)
+              Image.asset('assets/images/staff_id_placeholder.png', fit: BoxFit.contain),
+            if (studentId.isPhotoLoading) Center(child: _sectionLoading('Loading photo')),
+          ],
+        ),
+      ),
+    );
   }
 
   /// Determine barcode to display
@@ -209,10 +241,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-            child: Text(
-              "tap for easier scanning",
-              textAlign: TextAlign.center,
-              style: linkTextLight.copyWith(fontSize: 18.0),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "tap for easier scanning",
+                textAlign: TextAlign.center,
+                style: linkTextLight.copyWith(fontSize: 18.0),
+              ),
             ),
           ),
           Container(padding: EdgeInsets.fromLTRB(0, 0, 10, 0), color: Colors.white, child: barcodeWithText),
@@ -387,12 +422,13 @@ class _StudentIdCardState extends State<StudentIdCard> {
   Container _buildName(StudentIdNameModel nameModel) => Container(
     padding: EdgeInsets.only(right: ScalingUtility.horizontalSafeBlock * cardMargin),
     child: FittedBox(
+      fit: BoxFit.scaleDown,
       child: Text(
-        '${nameModel.firstName} ${nameModel.lastName}',
+        nameModel.displayName.isNotEmpty ? nameModel.displayName : 'Name unavailable',
         style: TextStyle(
           fontFamily: 'Brix Sans',
           fontWeight: FontWeight.w400,
-          fontSize: getFontSize('${nameModel.firstName} ${nameModel.lastName}', "name"),
+          fontSize: getFontSize(nameModel.displayName, "name").clamp(10.0, double.infinity),
         ),
         textAlign: TextAlign.left,
         softWrap: true,
@@ -416,9 +452,7 @@ class _StudentIdCardState extends State<StudentIdCard> {
   Container _buildMajorName(StudentIdProfileModel profileModel) => Container(
     padding: EdgeInsets.only(right: ScalingUtility.horizontalSafeBlock * cardMargin),
     child: Text(
-      profileModel.graduatePrimaryMajorCurrent != ""
-          ? profileModel.graduatePrimaryMajorCurrent
-          : profileModel.ugPrimaryMajorCurrent,
+      profileModel.major,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700),
       textAlign: TextAlign.left,
       softWrap: false,
@@ -429,29 +463,36 @@ class _StudentIdCardState extends State<StudentIdCard> {
 
   Widget _buildBarcode(StudentIdProfileModel profileModel) => TextButton(
     style: TextButton.styleFrom(padding: EdgeInsets.all(0), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-    child: returnBarcodeContainer(profileModel.barcode.toString(), false, context),
+    child: returnBarcodeContainer(profileModel.barcode, false, context),
     onPressed: () {
       createAlertDialog(
         context,
-        returnBarcodeContainer(profileModel.barcode.toString(), true, context),
-        profileModel.toString(),
+        returnBarcodeContainer(profileModel.barcode, true, context),
+        profileModel.barcode,
         true,
       );
     },
   );
 
-  Widget _buildClassificationTitle(StudentIdProfileModel profileModel) =>
-      Text(profileModel.classificationType, style: TextStyle(fontSize: ScalingUtility.horizontalSafeBlock * 4.0));
+  Widget _buildClassificationTitle(StudentIdProfileModel profileModel) => Text(
+    profileModel.classificationType,
+    style: TextStyle(fontSize: ScalingUtility.horizontalSafeBlock * 4.0),
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+  );
 
   Widget _buildBarcodeNumber(StudentIdProfileModel profileModel) {
     return Padding(
       padding: const EdgeInsets.only(top: 6.0),
       // child: Center(
-      child: Text(
-        profileModel.barcode.toString(),
-        style: TextStyle(
-          fontSize: ScalingUtility.horizontalSafeBlock * 3,
-          letterSpacing: ScalingUtility.horizontalSafeBlock * 1.5,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          profileModel.barcode,
+          style: TextStyle(
+            fontSize: ScalingUtility.horizontalSafeBlock * 3,
+            letterSpacing: ScalingUtility.horizontalSafeBlock * 1.5,
+          ),
         ),
       ),
       //),

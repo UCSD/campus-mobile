@@ -1,6 +1,6 @@
 # Student ID: Graceful Degradation
 
-Status: proposed design; implementation is pending.
+Status: implemented; automated model, provider, and widget checks cover the acceptance behavior.
 
 ## Objective
 
