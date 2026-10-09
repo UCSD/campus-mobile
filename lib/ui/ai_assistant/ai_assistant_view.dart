@@ -7,6 +7,7 @@ import 'package:campus_mobile_experimental/ui/ai_assistant/assistant_header.dart
 import 'package:campus_mobile_experimental/ui/ai_assistant/assistant_sidebar.dart';
 import 'package:campus_mobile_experimental/ui/ai_assistant/chat_composer.dart';
 import 'package:campus_mobile_experimental/ui/ai_assistant/chat_message_list.dart';
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -187,7 +188,7 @@ class _AIAssistantViewState extends State<AIAssistantView> {
     _lastShownError = errorMessage;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+      AppSnackBar.show(context, errorMessage);
     });
   }
 

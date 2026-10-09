@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -29,9 +30,7 @@ class _CitationWebViewState extends State<CitationWebView> {
     if (!ok) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open link.')),
-        );
+        AppSnackBar.show(context, 'Could not open link.');
         Navigator.of(context).pop();
       });
       return;

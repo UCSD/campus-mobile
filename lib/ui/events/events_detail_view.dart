@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:campus_mobile_experimental/core/providers/events.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
@@ -211,7 +212,7 @@ class GoToEventPageButton extends StatelessWidget {
             try {
               await launchUrl(Uri.parse(link), mode: LaunchMode.inAppBrowserView);
             } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not open.')));
+              AppSnackBar.show(context, 'Could not open.');
             }
           },
           child: FittedBox(
