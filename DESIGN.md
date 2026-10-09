@@ -6,6 +6,8 @@ Status: proposed design; implementation is pending.
 
 Preserve every usable Student ID component when another component fails. Replace the card body with the generic error only when no usable content remains and no load is pending.
 
+Keep changes limited to Student ID data handling and UI. Reuse `CardContainer` unchanged and preserve the existing visual design.
+
 ## Data sources
 
 `StudentIdDataProvider` calls `StudentIdService`, which sends authenticated GET requests through `NetworkHelper.authorizedFetch` using the logged-in user's bearer token.
@@ -76,23 +78,48 @@ Apply these component fallbacks only while retaining the card:
 
 Combine fallbacks when multiple components fail. The whole-card error takes precedence once nothing usable or pending remains.
 
-The [placeholder image](assets/images/staff_id_placeholder.png) exists, is included by `pubspec.yaml`, and is used by Employee ID. Retry failed sections independently, including the image load, while keeping successful content visible.
+The [placeholder image](assets/images/staff_id_placeholder.png) exists, is included by `pubspec.yaml`, and is used by Employee ID.
+
+## Minimal UI changes
+
+In `StudentIdCard`, pass aggregate state to the existing `CardContainer` interface:
+
+```dart
+isLoading: !hasUsableContent && hasPendingWork,
+errorText: !hasUsableContent && !hasPendingWork
+    ? 'An error occurred, please try again.'
+    : null,
+```
+
+Derive these values from validated content and pending API/image work. This reuses the container's loading, content, and error states without changing its implementation or other cards.
+
+| Area | Change within Student ID |
+| --- | --- |
+| Layout | Keep the photo-left, details-right arrangement, fonts, colors, and styling. |
+| Photo | Give the photo, placeholder, and loading indicator identical bounds. Constrain the photo width to leave room for details. |
+| Name | Keep its position and styling; use the fallback only after loading finishes without a usable name. |
+| Academic details | Include each available field with its spacing. Hide the divider when it no longer separates visible sections. |
+| Barcode | Keep the renderer and popup; pass the validated barcode string to both. Replace an unavailable barcode and printed number with the fallback text. |
+| Partial loading | Show small indicators in pending sections while keeping successful content visible. |
+
+Reuse the existing Reload menu action. During partial failure, retry failed or unusable sections, including the image, while preserving successful content. Otherwise, refresh all three APIs. Missing optional academic fields alone do not count as a failure. Add no new retry controls.
 
 ## Essential change 1: Independent section state
 
 Replace the service's shared `_error` and `_isLoading` with request-specific results. Parallelizing the existing methods alone allows requests to overwrite one another's state.
 
 - Track data, loading, and errors independently for name, profile, photo metadata, and the image load. Derive component availability from validated data.
+- Set pending flags before notifying the UI at the start of a load to avoid briefly showing the final error.
 - Start image loading even while the card body shows a loading indicator, so a photo-only response can become visible.
 - Update the provider and UI after each result; one failure must not stop another request.
-- Adapt the Student ID use of `CardContainer` to the three card states above. Its current global loading/error flags hide partial content.
+- Supply the aggregate flags above from `StudentIdCard`; keep `CardContainer` unchanged.
 - Preserve successful content during retries. Retained content must belong to the current authenticated user.
 
 ## Essential change 2: Field-level parsing and validation
 
 Parse fields independently so one missing or malformed value cannot discard valid sibling fields. Invalid JSON or an unexpected response structure fails that endpoint; a valid JSON object can still supply partial content.
 
-- Accept valid string values, trim display text, and treat empty or wrong-type values as unavailable. Unused metadata must not invalidate displayed fields.
+- Accept valid string values, trim display text, and treat `null`, empty strings, or wrong-type values as unavailable. Unused metadata must not invalidate displayed fields.
 - Build the name from available `firstName` and `lastName` values.
 - Use a valid, nonempty graduate major; otherwise try the undergraduate major.
 - Validate `Barcode` against the Codabar renderer. Keep other profile fields if it is invalid; never generate a replacement value.
@@ -106,7 +133,9 @@ Parse fields independently so one missing or malformed value cannot discard vali
 - Return empty `200` responses or malformed fields: apply the same availability rules as other failures.
 - Return a valid barcode with malformed unrelated fields: keep scanning available. Return an invalid barcode with valid text: keep the text and disable scanning.
 - Leave only one usable component, including an academic field: retain it. Leave none after all loads end: show the exact generic error.
-- Retry failed sections: preserve successful content and display recovered content.
+- Use Reload during partial failure: retry affected sections and preserve successful content. With no failures, refresh all three APIs.
+- Check narrow screens and portrait/landscape layouts: image-state changes must not shift the details column or cause overflow; omitted fields must not leave orphaned spacing or dividers.
+- Check the barcode popup uses the same value as the card, and partial Student ID failures do not change other cards' loading/error behavior.
 
 ## Implementation references
 
