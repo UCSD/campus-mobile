@@ -51,8 +51,7 @@ void main() {
   });
 }
 
-Finder _switchFinder(String topic) =>
-    find.descendant(of: find.byKey(Key(topic)), matching: find.byType(Switch));
+Finder _switchFinder(String topic) => find.descendant(of: find.byKey(Key(topic)), matching: find.byType(Switch));
 
 Switch _switch(WidgetTester tester, String topic) => tester.widget(_switchFinder(topic));
 

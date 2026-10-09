@@ -15,13 +15,7 @@ Related Questions:
       final AssistantMessageContent content = AssistantMessageContent.parse(rawText);
 
       expect(content.markdown, 'Here is the answer.');
-      expect(
-        content.relatedQuestions,
-        <String>[
-          'What deadlines should I watch?',
-          'Who do I contact next?',
-        ],
-      );
+      expect(content.relatedQuestions, <String>['What deadlines should I watch?', 'Who do I contact next?']);
     });
 
     test('suppresses partial streaming related question lines from markdown', () {
@@ -49,17 +43,11 @@ Hello! How can I assist you today with UC San Diego information?
 
       final AssistantMessageContent content = AssistantMessageContent.parse(rawText);
 
-      expect(
-        content.markdown,
-        'Hello! How can I assist you today with UC San Diego information?',
-      );
-      expect(
-        content.relatedQuestions,
-        <String>[
-          'What UC San Diego resources are available for new students moving onto campus?',
-          'How can I find the latest UC San Diego policy updates for staff members?',
-        ],
-      );
+      expect(content.markdown, 'Hello! How can I assist you today with UC San Diego information?');
+      expect(content.relatedQuestions, <String>[
+        'What UC San Diego resources are available for new students moving onto campus?',
+        'How can I find the latest UC San Diego policy updates for staff members?',
+      ]);
     });
   });
 }

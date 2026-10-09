@@ -17,10 +17,14 @@ void main() {
 
   setUp(() {
     resetNotificationsScrollOffset();
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(messagesChannel, (_) async => null);
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(eventsChannel, (_) async => null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      messagesChannel,
+      (_) async => null,
+    );
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      eventsChannel,
+      (_) async => null,
+    );
   });
 
   testWidgets('subscription expansion keeps notification scrolling stable', (tester) async {
@@ -51,21 +55,19 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-        messages.notificationScrollController.offset, messages.notificationScrollController.position.maxScrollExtent);
+      messages.notificationScrollController.offset,
+      messages.notificationScrollController.position.maxScrollExtent,
+    );
   });
 }
 
 MessageElement _message(int index) => MessageElement(
-      sender: '',
-      message: Message(
-        message: 'Notification $index ${'content ' * (index % 4 + 1)}',
-        title: 'Title $index',
-        data: Data(),
-      ),
-      messageId: '$index',
-      audience: Audience(topics: [index.isEven ? 'campusAnnouncements' : 'studentAnnouncements']),
-      timestamp: index,
-    );
+  sender: '',
+  message: Message(message: 'Notification $index ${'content ' * (index % 4 + 1)}', title: 'Title $index', data: Data()),
+  messageId: '$index',
+  audience: Audience(topics: [index.isEven ? 'campusAnnouncements' : 'studentAnnouncements']),
+  timestamp: index,
+);
 
 class _CountingMessagesDataProvider extends MessagesDataProvider {
   int reads = 0;
