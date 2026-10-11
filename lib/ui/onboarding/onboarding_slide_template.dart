@@ -21,82 +21,113 @@ class OnboardingSlideTemplate extends StatelessWidget {
   final String heading;
   final String description;
 
+  // Three body lines is the conservative estimate used by the outer column;
+  // scrolling is only a fallback when even the minimum sizes cannot fit.
+  static double contentHeight({
+    required double unit,
+    required double textScale,
+    required bool landscape,
+    double photoFactor = 0.9,
+  }) {
+    final photoWidth = photoFactor * unit;
+    final photoHeight = photoWidth / heroAspectRatio;
+    final textHeight =
+        2 * math.max(28.0, 0.12 * unit) * 1.1 * textScale +
+        0.0595 * unit +
+        3 * math.max(14.0, 0.041 * unit) * 1.3 * textScale;
+    return landscape ? math.max(photoHeight, textHeight) : photoHeight + 0.0945 * unit + textHeight;
+  }
+
   @override
   Widget build(BuildContext context) {
     final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
-    final photoWidth = (textScale > 1.15 ? 0.8 : 0.9) * u;
-    final photoHeight = photoWidth / heroAspectRatio;
+    final basePhotoFactor = textScale > 1.15 ? 0.8 : 0.9;
+    final shrunkPhotoFactor = textScale > 1.15 ? 0.72 : 0.8;
     final headingFontSize = math.max(28.0, 0.12 * u);
     final bodyFontSize = math.max(14.0, 0.041 * u);
 
-    final photo = SizedBox(
-      width: photoWidth,
-      height: photoHeight,
-      child: Image(image: heroImage, fit: BoxFit.contain),
-    );
+    Widget content(double photoFactor) {
+      final photoWidth = photoFactor * u;
+      final photoHeight = photoWidth / heroAspectRatio;
 
-    final text = SizedBox(
-      width: 0.8 * u,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              heading,
-              style: TextStyle(
-                fontFamily: 'Refrigerator Deluxe',
-                color: ColorPrimary,
-                fontWeight: FontWeight.w900,
-                fontSize: headingFontSize,
-                height: 1.1,
+      final photo = SizedBox(
+        width: photoWidth,
+        height: photoHeight,
+        child: Image(image: heroImage, fit: BoxFit.contain),
+      );
+
+      final text = SizedBox(
+        width: 0.8 * u,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                heading,
+                style: TextStyle(
+                  fontFamily: 'Refrigerator Deluxe',
+                  color: ColorPrimary,
+                  fontWeight: FontWeight.w900,
+                  fontSize: headingFontSize,
+                  height: 1.1,
+                ),
+                textAlign: TextAlign.left,
               ),
+            ),
+            SizedBox(height: 0.0595 * u),
+            Text(
+              description,
+              style: TextStyle(color: const Color(0xFF182B49), fontSize: bodyFontSize, height: 1.3),
               textAlign: TextAlign.left,
             ),
-          ),
-          SizedBox(height: 0.085 * u),
-          Text(
-            description,
-            style: TextStyle(color: const Color(0xFF182B49), fontSize: bodyFontSize, height: 1.3),
-            textAlign: TextAlign.left,
-          ),
-        ],
-      ),
-    );
-
-    final Widget content;
-    if (landscape) {
-      content = Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          photo,
-          SizedBox(width: 0.10 * u),
-          text,
-        ],
+          ],
+        ),
       );
-    } else {
-      content = Column(
+
+      if (landscape) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            photo,
+            SizedBox(width: 0.10 * u),
+            text,
+          ],
+        );
+      }
+      return Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           photo,
-          SizedBox(height: 0.135 * u),
+          SizedBox(height: 0.0945 * u),
           text,
         ],
       );
     }
 
-    // Three body lines is the conservative estimate used by the outer column;
-    // scrolling is only a fallback when even the minimum sizes cannot fit.
-    final minTextHeight = 2 * headingFontSize * 1.1 * textScale + 0.085 * u + 3 * bodyFontSize * 1.3 * textScale;
-    final minHeight = landscape ? math.max(photoHeight, minTextHeight) : photoHeight + 0.135 * u + minTextHeight;
-
     return LayoutBuilder(
       builder: (context, constraints) {
+        final minHeight = contentHeight(
+          unit: u,
+          textScale: textScale,
+          landscape: landscape,
+          photoFactor: basePhotoFactor,
+        );
+        var photoFactor = basePhotoFactor;
         if (constraints.maxHeight < minHeight) {
-          return SingleChildScrollView(child: Center(child: content));
+          final shrunkMinHeight = contentHeight(
+            unit: u,
+            textScale: textScale,
+            landscape: landscape,
+            photoFactor: shrunkPhotoFactor,
+          );
+          if (constraints.maxHeight < shrunkMinHeight) {
+            return SingleChildScrollView(child: Center(child: content(basePhotoFactor)));
+          }
+          photoFactor = shrunkPhotoFactor;
         }
-        return Center(child: content);
+        return Center(child: content(photoFactor));
       },
     );
   }

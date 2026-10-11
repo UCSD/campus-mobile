@@ -47,14 +47,46 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
     return math.min(0.77 * usableHeight, math.min(0.49 * width, cap));
   }
 
-  double _stackHeight(double u, double textScale, bool landscape) {
-    final photoWidth = (textScale > 1.15 ? 0.8 : 0.9) * u;
-    final photoHeight = photoWidth / OnboardingSlideTemplate.heroAspectRatio;
-    final textHeight =
-        2 * math.max(28.0, 0.12 * u) * 1.1 * textScale + 0.085 * u + 3 * math.max(14.0, 0.041 * u) * 1.3 * textScale;
-    final contentHeight = landscape ? math.max(photoHeight, textHeight) : photoHeight + 0.135 * u + textHeight;
+  double _stackHeight(double u, double textScale, bool landscape, {double? contentUnit}) {
     final linkLine = math.max(14.0, 0.039 * u) * 1.195 * textScale;
-    return 0.03 * u + 0.03 * u + contentHeight + 0.12 * u + linkLine;
+    final gapBL = math.max(0.084 * u, 50.0 - linkLine);
+    return 0.03 * u +
+        0.03 * u +
+        OnboardingSlideTemplate.contentHeight(
+          unit: contentUnit ?? u,
+          textScale: textScale,
+          landscape: landscape,
+          photoFactor: textScale > 1.15 ? 0.8 : 0.9,
+        ) +
+        gapBL +
+        linkLine;
+  }
+
+  double _boostedContentUnit(double u, double textScale, double baseSpare, double usableHeight) {
+    if (baseSpare <= 0) return u;
+    final photoFactor = textScale > 1.15 ? 0.8 : 0.9;
+    double content(double unit) => OnboardingSlideTemplate.contentHeight(
+      unit: unit,
+      textScale: textScale,
+      landscape: false,
+      photoFactor: photoFactor,
+    );
+    final target = content(u) + 0.165 * baseSpare;
+    var unit = u;
+    for (var i = 0; i < 3; i++) {
+      final deficit = target - content(unit);
+      if (deficit <= 0.1) break;
+      final slope = content(unit + 1.0) - content(unit);
+      if (slope <= 0) break;
+      unit += deficit / slope;
+    }
+    // Bias the solve to undershoot: the PageView is sized to the modeled height.
+    unit = math.max(u, unit - 0.25);
+    final maxStackHeight = usableHeight - 0.835 * baseSpare;
+    while (unit > u && _stackHeight(u, textScale, false, contentUnit: unit) > maxStackHeight) {
+      unit = math.max(u, unit - 1.0);
+    }
+    return unit;
   }
 
   // Dot Indicator
@@ -65,6 +97,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
       activeColor: const Color(0xFF00619B),
       activeSize: Size.square(0.03 * u),
       size: Size.square(0.02 * u),
+      spacing: const EdgeInsets.symmetric(horizontal: 6.0),
     ),
   );
 
@@ -76,10 +109,12 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
     final landscape = size.width > size.height && size.shortestSide >= 600;
     final u = landscape ? _landscapeUnit(size.width, usableHeight) : _portraitUnit(size.width, usableHeight);
     final textScale = math.min(MediaQuery.textScalerOf(context).scale(14) / 14, 1.3);
-    final spare = math.max(0.0, usableHeight - _stackHeight(u, textScale, landscape));
+    final baseSpare = math.max(0.0, usableHeight - _stackHeight(u, textScale, landscape));
+    final contentUnit = landscape ? u : _boostedContentUnit(u, textScale, baseSpare, usableHeight);
     final linkFontSize = math.max(14.0, 0.039 * u);
     final linkLineHeight = linkFontSize * 1.195 * textScale;
-    final linkPadding = math.max(0.0, math.min(48.0 - linkLineHeight, 0.12 * u - 2.0));
+    final gapBL = math.max(0.084 * u, 50.0 - linkLineHeight);
+    final linkPadding = math.max(0.0, math.min(48.0 - linkLineHeight, gapBL - 2.0));
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -114,7 +149,7 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
               padding: EdgeInsets.only(top: padding.top, bottom: padding.bottom),
               child: Column(
                 children: <Widget>[
-                  if (!landscape) SizedBox(height: spare * 0.55),
+                  if (!landscape) SizedBox(height: baseSpare * 0.385),
                   buildDotIndicator(u),
                   SizedBox(height: 0.03 * u),
                   Expanded(
@@ -126,17 +161,20 @@ class _OnboardingSlidesState extends State<OnboardingSlides> with TickerProvider
                         });
                       },
                       children: [
-                        buildPage1(u, landscape),
-                        buildPage2(u, landscape),
-                        buildPage3(u, landscape),
-                        buildPage4(u, landscape),
-                        buildPage5(u, landscape),
+                        buildPage1(contentUnit, landscape),
+                        buildPage2(contentUnit, landscape),
+                        buildPage3(contentUnit, landscape),
+                        buildPage4(contentUnit, landscape),
+                        buildPage5(contentUnit, landscape),
                       ],
                     ),
                   ),
-                  SizedBox(height: 0.12 * u - linkPadding),
-                  buildGoToTheAppButton(u, linkPadding),
-                  if (!landscape) SizedBox(height: spare * 0.45),
+                  SizedBox(height: gapBL - linkPadding),
+                  Transform.translate(
+                    offset: Offset(0, landscape ? -math.min(0.1 * u, gapBL) : 0),
+                    child: buildGoToTheAppButton(u, linkPadding),
+                  ),
+                  if (!landscape) SizedBox(height: baseSpare * 0.45),
                 ],
               ),
             ),
