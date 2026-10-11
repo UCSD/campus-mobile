@@ -134,9 +134,14 @@ class _HomeState extends State<Home> {
   }
 
   void executeQuery(String query) {
-    context.read<MapsDataProvider>().searchBarController.text = query;
+    context
+        .read<MapsDataProvider>()
+        .searchBarController
+        .text = query;
     context.read<MapsDataProvider>().fetchLocations();
-    context.read<BottomNavigationBarProvider>().currentIndex = NavigatorConstants.MAP_TAB;
+    context
+        .read<BottomNavigationBarProvider>()
+        .currentIndex = NavigatorConstants.MAP_TAB;
     context.read<CustomAppBar>().changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
   }
@@ -147,10 +152,84 @@ class _HomeState extends State<Home> {
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
-      child: ListView(
+      // TODO(circles): replace this ListView with a SingleChildScrollView ->
+      // Stack structure. SingleChildScrollView is a ready-made widget: place
+      // it here exactly where ListView sits (no new class). The scroll view
+      // owns the existing _controller; the Stack layers the circle
+      // decorations (bottom) beneath the card Column (top, fed by
+      // createList()) so both scroll together.
+      child: SingleChildScrollView(
         controller: _controller,
         padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
-        children: createList(),
+        child: Stack(
+          children: [
+            Positioned(
+            top: 355,
+            left: 162,
+            child: Image.asset(
+              'assets/images/circles/circle-1-background.png',
+              width: 298.64,
+              height: 280,
+            ),
+          ),
+          Positioned(
+            top: 720,
+            left: -64,
+            child: Transform.rotate(
+              angle: -0.3246312409,
+              child: Image.asset(
+                'assets/images/circles/circle-2-background.png',
+                width: 136,
+                height: 136,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 1065,
+            left: 190,
+            child: Image.asset(
+              'assets/images/circles/circle-4-background.png',
+              width: 399.7,
+              height: 398,
+            ),
+          ),
+          Positioned(
+            top: 1908,
+            left: -121,
+            child: Transform.rotate(
+              angle: 2.8797932658,
+              child: Image.asset(
+                'assets/images/circles/circle-5-background.png',
+                width: 197,
+                height: 197,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 2585,
+            left: -157,
+            child: Transform.rotate(
+              angle: -0.5235987756,
+              child: Image.asset(
+                'assets/images/circles/circle-6-background.png',
+                width: 188,
+                height: 188,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 3392,
+            left: -142,
+            child: Image.asset(
+              'assets/images/circles/circle-3-background.png',
+              width: 300,
+              height: 298.6,
+            ),
+          ),
+
+          Column(children: createList()),
+        ],
+        ),
       ),
     );
   }
@@ -164,14 +243,16 @@ class _HomeState extends State<Home> {
     return [...noticesCards, ...orderedCards];
   }
 
-  List<Widget> getNoticesCardsList(List<NoticesModel> notices) => notices
-      .asMap()
-      .entries
-      .map((e) => CardViewTrackingWrapper(
+  List<Widget> getNoticesCardsList(List<NoticesModel> notices) =>
+      notices
+          .asMap()
+          .entries
+          .map((e) =>
+          CardViewTrackingWrapper(
             cardId: 'notice_${e.key}',
             child: NoticesCard(notice: e.value),
           ))
-      .toList();
+          .toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
   static const _CARD_CTORS = {
@@ -206,7 +287,9 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     final orderedCards = <Widget>[];
-    final webCards = context.read<CardsDataProvider>().webCards;
+    final webCards = context
+        .read<CardsDataProvider>()
+        .webCards;
 
     for (String cardName in order) {
       // TODO: if-branches logic here theoretically could be simplified - December 2025
