@@ -150,20 +150,17 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // Provider.of<CustomAppBar>(context).changeTitle(null); // reset title to logo (for dining)
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
-      // TODO(circles): replace this ListView with a SingleChildScrollView ->
-      // Stack structure. SingleChildScrollView is a ready-made widget: place
-      // it here exactly where ListView sits (no new class). The scroll view
-      // owns the existing _controller; the Stack layers the circle
-      // decorations (bottom) beneath the card Column (top, fed by
-      // createList()) so both scroll together.
-      child: SingleChildScrollView(
-        controller: _controller,
-        padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
-        child: Stack(
-          children: [
-            Positioned(
+    return SingleChildScrollView(
+      controller: _controller,
+      clipBehavior: Clip.none,
+      padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Reserve scrollable canvas for the background decorations, since
+          // Positioned children do not determine the Stack's size.
+          const SizedBox(height: 3700),
+          Positioned(
             top: 355,
             left: 162,
             child: Image.asset(
@@ -227,9 +224,11 @@ class _HomeState extends State<Home> {
             ),
           ),
 
-          Column(children: createList()),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: cardMargin),
+            child: Column(children: createList()),
+          ),
         ],
-        ),
       ),
     );
   }
