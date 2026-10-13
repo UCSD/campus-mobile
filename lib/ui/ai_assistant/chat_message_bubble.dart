@@ -7,10 +7,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessageBubble extends StatelessWidget {
-  const ChatMessageBubble({
-    super.key,
-    required this.message,
-  });
+  const ChatMessageBubble({super.key, required this.message});
 
   final AssistantChatMessage message;
 
@@ -26,10 +23,7 @@ class ChatMessageBubble extends StatelessWidget {
         constraints: BoxConstraints(maxWidth: maxBubbleWidth),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF3F5F8),
-            borderRadius: BorderRadius.circular(21),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFFF3F5F8), borderRadius: BorderRadius.circular(21)),
           child: Text(
             message.text,
             style: const TextStyle(
@@ -60,10 +54,7 @@ class ChatMessageBubble extends StatelessWidget {
           child: SizedBox(
             width: 20,
             height: 20,
-            child: Image.asset(
-              'assets/images/tgpt/tgpt-icon.png',
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset('assets/images/tgpt/tgpt-icon.png', fit: BoxFit.contain),
           ),
         ),
         const SizedBox(width: 10),
@@ -120,19 +111,14 @@ class ChatMessageBubble extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: message.citations
-                        .map(
-                          (ChatCitationReference citation) => ChatCitation(citation: citation),
-                        )
+                        .map((ChatCitationReference citation) => ChatCitation(citation: citation))
                         .toList(),
                   ),
                 ),
               if (content.relatedQuestions.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
-                  child: _RelatedQuestionsSection(
-                    questions: content.relatedQuestions,
-                    enabled: !isMessageStreaming,
-                  ),
+                  child: _RelatedQuestionsSection(questions: content.relatedQuestions, enabled: !isMessageStreaming),
                 ),
               if (isTypingIndicator) const _TypingIndicator(),
             ],
@@ -144,10 +130,7 @@ class ChatMessageBubble extends StatelessWidget {
 }
 
 class _RelatedQuestionsSection extends StatelessWidget {
-  const _RelatedQuestionsSection({
-    required this.questions,
-    required this.enabled,
-  });
+  const _RelatedQuestionsSection({required this.questions, required this.enabled});
 
   final List<String> questions;
   final bool enabled;
@@ -160,9 +143,7 @@ class _RelatedQuestionsSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF6F8FB),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFE1E6EE),
-        ),
+        border: Border.all(color: const Color(0xFFE1E6EE)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,10 +224,7 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    )..repeat();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat();
   }
 
   @override
@@ -267,19 +245,13 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
             builder: (BuildContext context, Widget? child) {
               final double phase = (_controller.value - i * 0.18).clamp(0.0, 1.0);
               final double offset = phase < 0.5 ? -4.0 * (phase / 0.5) : -4.0 * (1.0 - (phase - 0.5) / 0.5);
-              return Transform.translate(
-                offset: Offset(0, offset),
-                child: child,
-              );
+              return Transform.translate(offset: Offset(0, offset), child: child);
             },
             child: Container(
               margin: EdgeInsets.only(left: i == 0 ? 0 : 5),
               width: 7,
               height: 7,
-              decoration: const BoxDecoration(
-                color: Color(0xFFB0B5BE),
-                shape: BoxShape.circle,
-              ),
+              decoration: const BoxDecoration(color: Color(0xFFB0B5BE), shape: BoxShape.circle),
             ),
           );
         }),

@@ -89,10 +89,7 @@ class Maps extends StatelessWidget {
           onMapCreated: (controller) {
             Provider.of<MapsDataProvider>(context, listen: false).mapController = controller;
           },
-          initialCameraPosition: CameraPosition(
-            target: const LatLng(32.8801, -117.2341),
-            zoom: 14.5,
-          ),
+          initialCameraPosition: CameraPosition(target: const LatLng(32.8801, -117.2341), zoom: 14.5),
         ),
         MapSearchBarPlaceHolder(),
         buildButtons(context),

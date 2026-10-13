@@ -8,9 +8,7 @@ class CardsService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   late Map<String, CardsModel> _cardsModel;
@@ -27,8 +25,8 @@ class CardsService {
       _cardsModel = cardsModelFromJson(_response);
       return true;
     } catch (e) {
-      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers))
-        return await fetchCards(ucsdAffiliation);
+      if (e.toString().contains("401"))
+        if (await NetworkHelper.getNewToken(headers)) return await fetchCards(ucsdAffiliation);
       _error = e.toString();
       return false;
     } finally {

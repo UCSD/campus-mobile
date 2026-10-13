@@ -33,15 +33,17 @@ class EventDetailView extends StatelessWidget {
           child: Row(
             children: [
               // Event Date
-              Builder(builder: (context) {
-                final df = DateFormat("MMM d y");
-                final localStart = data.startDate.toLocal();
-                final localEnd = data.endDate.toLocal();
-                final startDate = df.format(localStart);
-                final endDate = df.format(localEnd);
-                final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
-                return StartEndDateContainer(date: dateDisplay);
-              }),
+              Builder(
+                builder: (context) {
+                  final df = DateFormat("MMM d y");
+                  final localStart = data.startDate.toLocal();
+                  final localEnd = data.endDate.toLocal();
+                  final startDate = df.format(localStart);
+                  final endDate = df.format(localEnd);
+                  final dateDisplay = startDate == endDate ? startDate : '$startDate - $endDate';
+                  return StartEndDateContainer(date: dateDisplay);
+                },
+              ),
 
               // Event Title
               Expanded(child: EventTitle(title: data.title)),
@@ -49,8 +51,9 @@ class EventDetailView extends StatelessWidget {
           ),
         ),
         Container(
-            padding: const EdgeInsets.only(left: 17.0),
-            child: Row(children: [
+          padding: const EdgeInsets.only(left: 17.0),
+          child: Row(
+            children: [
               // Event Location
               Icon(
                 Icons.location_on_sharp,
@@ -76,49 +79,54 @@ class EventDetailView extends StatelessWidget {
               ),
               SizedBox(width: 5),
               // Event Time
-              Builder(builder: (context) {
-                final timeString = data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
-                    ? '    All day     '
-                    : DateFormat.jm().format(data.startDate.toLocal()) +
-                        ' - ' +
-                        DateFormat.jm().format(data.endDate.toLocal());
-                final semanticTime = 'From: ' + timeString.replaceAll('-', 'to').trim();
-                return Semantics(
-                  container: true,
-                  child: Text(
-                    timeString,
-                    semanticsLabel: semanticTime,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
-                      fontWeight: FontWeight.w400,
+              Builder(
+                builder: (context) {
+                  final timeString = data.startDate.toLocal().hour == 0 && data.endDate.toLocal().hour == 23
+                      ? '    All day     '
+                      : DateFormat.jm().format(data.startDate.toLocal()) +
+                            ' - ' +
+                            DateFormat.jm().format(data.endDate.toLocal());
+                  final semanticTime = 'From: ' + timeString.replaceAll('-', 'to').trim();
+                  return Semantics(
+                    container: true,
+                    child: Text(
+                      timeString,
+                      semanticsLabel: semanticTime,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                },
+              ),
               SizedBox(width: 16),
-            ])),
+            ],
+          ),
+        ),
         Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                ///////////////// Horizontal Division ///////////////////
-                Divider(color: listTileDividerColorDark, thickness: 0.6),
-                // Event Description
-                data.description != null && data.description!.isNotEmpty
-                    ? Text(
-                        data.description!,
-                        semanticsLabel: 'Event Description and Details: ${data.description}',
-                        style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
-                      )
-                    : Container(),
-              ],
-            )),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              ///////////////// Horizontal Division ///////////////////
+              Divider(color: listTileDividerColorDark, thickness: 0.6),
+              // Event Description
+              data.description != null && data.description!.isNotEmpty
+                  ? Text(
+                      data.description!,
+                      semanticsLabel: 'Event Description and Details: ${data.description}',
+                      style: TextStyle(fontSize: 16, height: 1.4, fontWeight: FontWeight.w400),
+                    )
+                  : Container(),
+            ],
+          ),
+        ),
         Container(
           padding: EdgeInsets.only(left: 15, top: 5, right: 248, bottom: 20),
           // "GO TO EVENT PAGE" Button
           child: data.link != null && data.link!.isNotEmpty ? GoToEventPageButton(link: data.link!) : Container(),
-        )
+        ),
       ],
     );
   }

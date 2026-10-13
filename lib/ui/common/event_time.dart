@@ -65,13 +65,9 @@ class EventDateTime extends StatelessWidget {
         }
       } else {
         if (!unspecifiedTime) {
-          return Text(startMonthDay +
-              ', ' +
-              startTime +
-              ' - ' +
-              endMonthDay +
-              ', ' +
-              endTime); // ex: Jan. 1, 8:00 AM - Jan. 2, 12:00 PM
+          return Text(
+            startMonthDay + ', ' + startTime + ' - ' + endMonthDay + ', ' + endTime,
+          ); // ex: Jan. 1, 8:00 AM - Jan. 2, 12:00 PM
         } else {
           return Text(startMonthDay + ' - ' + endMonthDay); // ex: Jan. 1 - Jan. 2
         }
@@ -101,10 +97,7 @@ class EventTileDateTime extends StatelessWidget {
       var unspecifiedTime = (startTime == '12:00 AM' && endTime == '12:00 AM');
       Widget date, time;
       if (sameDay) {
-        date = Text(
-          startMonthDayYear,
-          style: TextStyle(fontSize: 12),
-        ); // Ex. June 11, 2021
+        date = Text(startMonthDayYear, style: TextStyle(fontSize: 12)); // Ex. June 11, 2021
       } else {
         // if not the same date, check if the same year
         var startYear = startMonthDayYear.substring(startMonthDayYear.indexOf(',') + 2, startMonthDayYear.length);
@@ -115,8 +108,10 @@ class EventTileDateTime extends StatelessWidget {
           var endMonth = endMonthDayYear.substring(0, endMonthDayYear.indexOf(' '));
           if (startMonth == endMonth) {
             // if different date in the same month and year
-            var startDay =
-                startMonthDayYear.substring(startMonthDayYear.indexOf(' ') + 1, startMonthDayYear.indexOf(','));
+            var startDay = startMonthDayYear.substring(
+              startMonthDayYear.indexOf(' ') + 1,
+              startMonthDayYear.indexOf(','),
+            );
             var endDay = endMonthDayYear.substring(endMonthDayYear.indexOf(' ') + 1, endMonthDayYear.indexOf(','));
             date = Text(
               startMonth + ' ' + startDay + ' - ' + endDay + ', ' + startYear,
@@ -140,25 +135,17 @@ class EventTileDateTime extends StatelessWidget {
       }
 
       if (unspecifiedTime) {
-        time = Text(
-          '',
-          style: TextStyle(fontSize: 12),
-        );
+        time = Text('', style: TextStyle(fontSize: 12));
       } else {
-        time = Text(
-          startTime + ' - ' + endTime,
-          style: TextStyle(fontSize: 12),
-        );
+        time = Text(startTime + ' - ' + endTime, style: TextStyle(fontSize: 12));
       }
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           date,
-          Padding(
-            padding: EdgeInsets.only(bottom: 5),
-          ),
-          time
+          Padding(padding: EdgeInsets.only(bottom: 5)),
+          time,
         ],
       );
     } catch (e) {

@@ -18,9 +18,9 @@ class BasicCreateChatMessageRequest {
   });
 
   Map<String, dynamic> toJson() => {
-        'message': message,
-        'chat_session_id': chatSessionId,
-        'parent_message_id': parentMessageId,
-        'url': url,
-      };
+    'message': message,
+    'chat_session_id': chatSessionId,
+    'parent_message_id': parentMessageId,
+    'url': url,
+  };
 }

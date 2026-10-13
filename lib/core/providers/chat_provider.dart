@@ -36,9 +36,8 @@ class ChatProvider extends ChangeNotifier {
 
   List<AssistantChatMessage> get messages => List<AssistantChatMessage>.unmodifiable(_messages);
 
-  List<ChatSessionMeta> get sessions => List<ChatSessionMeta>.unmodifiable(
-        _userDataProvider.isLoggedIn ? _persistedSessions : _guestSessions,
-      );
+  List<ChatSessionMeta> get sessions =>
+      List<ChatSessionMeta>.unmodifiable(_userDataProvider.isLoggedIn ? _persistedSessions : _guestSessions);
 
   bool get hasMessages => _messages.isNotEmpty;
   bool get isInitializing => _isInitializing;
@@ -65,10 +64,7 @@ class ChatProvider extends ChangeNotifier {
         final String? savedSessionId = await _chatPersistenceService.loadSessionId();
         final String? sessionToOpen = _resolveSessionToOpen(savedSessionId);
         if (sessionToOpen != null) {
-          await _loadPersistedSession(
-            sessionToOpen,
-            saveAsActive: savedSessionId != sessionToOpen,
-          );
+          await _loadPersistedSession(sessionToOpen, saveAsActive: savedSessionId != sessionToOpen);
         } else {
           _messages.clear();
           _activeSessionId = null;
@@ -113,10 +109,7 @@ class ChatProvider extends ChangeNotifier {
     var isPreviousSessionNotEmpty = previousSessionId?.isNotEmpty ?? false;
     if (hasPreviousSession && isPreviousSessionNotEmpty) {
       _setSessionMessages(previousSessionId, _messages);
-      await _persistSessionState(
-        previousSessionId,
-        saveAsActive: false,
-      );
+      await _persistSessionState(previousSessionId, saveAsActive: false);
     }
 
     _messages.clear();
@@ -172,8 +165,9 @@ class ChatProvider extends ChangeNotifier {
       return;
     }
 
-    final List<AssistantChatMessage> sessionMessages =
-        List<AssistantChatMessage>.from(_sessionMessagesById[sessionId] ?? _messages);
+    final List<AssistantChatMessage> sessionMessages = List<AssistantChatMessage>.from(
+      _sessionMessagesById[sessionId] ?? _messages,
+    );
 
     final DateTime now = DateTime.now();
     final AssistantChatMessage userMessage = AssistantChatMessage(
@@ -195,15 +189,8 @@ class ChatProvider extends ChangeNotifier {
       ..add(placeholderMessage);
     _setSessionMessages(sessionId, sessionMessages);
     _streamingSessionIds.add(sessionId);
-    _upsertSessionMeta(
-      sessionId,
-      title: _sessionTitleForMessage(message),
-      updatedAt: now,
-    );
-    await _persistSessionState(
-      sessionId,
-      saveAsActive: _activeSessionId == sessionId,
-    );
+    _upsertSessionMeta(sessionId, title: _sessionTitleForMessage(message), updatedAt: now);
+    await _persistSessionState(sessionId, saveAsActive: _activeSessionId == sessionId);
     notifyListeners();
 
     int? reservedAssistantMessageId;
@@ -218,8 +205,9 @@ class ChatProvider extends ChangeNotifier {
         var hasMessageId = chunk.messageId != null;
         if (hasMessageId) reservedAssistantMessageId = chunk.messageId;
 
-        final int placeholderIndex =
-            sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);
+        final int placeholderIndex = sessionMessages.indexWhere(
+          (AssistantChatMessage item) => item.id == placeholderMessage.id,
+        );
         if (placeholderIndex == -1) continue;
 
         final AssistantChatMessage currentMessage = sessionMessages[placeholderIndex];
@@ -238,8 +226,9 @@ class ChatProvider extends ChangeNotifier {
     } catch (e) {
       final String userMessage = e is DioException ? await tgptErrorMessageForDio(e) : tgptErrorMessageFor(e);
       _errorMessage = userMessage;
-      final int placeholderIndex =
-          sessionMessages.indexWhere((AssistantChatMessage item) => item.id == placeholderMessage.id);
+      final int placeholderIndex = sessionMessages.indexWhere(
+        (AssistantChatMessage item) => item.id == placeholderMessage.id,
+      );
       if (placeholderIndex != -1) {
         sessionMessages[placeholderIndex] = sessionMessages[placeholderIndex].copyWith(
           text: userMessage,
@@ -251,10 +240,7 @@ class ChatProvider extends ChangeNotifier {
       _parentMessageIdsBySession[sessionId] = reservedAssistantMessageId ?? _deriveParentMessageId(sessionMessages);
       _streamingSessionIds.remove(sessionId);
       _setSessionMessages(sessionId, sessionMessages);
-      await _persistSessionState(
-        sessionId,
-        saveAsActive: _activeSessionId == sessionId,
-      );
+      await _persistSessionState(sessionId, saveAsActive: _activeSessionId == sessionId);
       notifyListeners();
     }
   }
@@ -279,15 +265,10 @@ class ChatProvider extends ChangeNotifier {
     return _activeSessionId;
   }
 
-  Future<void> _loadPersistedSession(
-    String sessionId, {
-    required bool saveAsActive,
-  }) async {
-    final List<AssistantChatMessage> persistedMessages = (await _chatPersistenceService
-            .loadMessagesForSession(sessionId))
-        .map(AssistantChatMessage.fromPersistent)
-        .toList()
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+  Future<void> _loadPersistedSession(String sessionId, {required bool saveAsActive}) async {
+    final List<AssistantChatMessage> persistedMessages = (await _chatPersistenceService.loadMessagesForSession(
+      sessionId,
+    )).map(AssistantChatMessage.fromPersistent).toList()..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     _setSessionMessages(sessionId, persistedMessages, updateActiveSession: false);
     _messages
@@ -301,10 +282,7 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _persistSessionState(
-    String sessionId, {
-    required bool saveAsActive,
-  }) async {
+  Future<void> _persistSessionState(String sessionId, {required bool saveAsActive}) async {
     final List<AssistantChatMessage> sessionMessages =
         _sessionMessagesById[sessionId] ?? const <AssistantChatMessage>[];
     if (sessionId.isEmpty) return;
@@ -330,11 +308,7 @@ class ChatProvider extends ChangeNotifier {
     _setSessionMessages(sessionId, sessionMessages, updateActiveSession: false);
   }
 
-  void _upsertSessionMeta(
-    String sessionId, {
-    required String title,
-    required DateTime updatedAt,
-  }) {
+  void _upsertSessionMeta(String sessionId, {required String title, required DateTime updatedAt}) {
     final List<ChatSessionMeta> target = _userDataProvider.isLoggedIn ? _persistedSessions : _guestSessions;
     final int existingIndex = target.indexWhere((session) => session.id == sessionId);
     final DateTime createdAt = existingIndex == -1 ? updatedAt : target[existingIndex].createdAt;
@@ -379,9 +353,7 @@ class ChatProvider extends ChangeNotifier {
     var hasSavedSessionId = savedSessionId != null;
     var isSavedSessionIdNotEmpty = savedSessionId?.isNotEmpty ?? false;
     if (hasSavedSessionId && isSavedSessionIdNotEmpty) {
-      final bool hasSavedSession = _persistedSessions.any(
-        (ChatSessionMeta session) => session.id == savedSessionId,
-      );
+      final bool hasSavedSession = _persistedSessions.any((ChatSessionMeta session) => session.id == savedSessionId);
       if (hasSavedSession) return savedSessionId;
     }
 
@@ -401,11 +373,7 @@ class ChatProvider extends ChangeNotifier {
     return uniqueSessions.values.toList();
   }
 
-  void _setSessionMessages(
-    String sessionId,
-    List<AssistantChatMessage> messages, {
-    bool updateActiveSession = true,
-  }) {
+  void _setSessionMessages(String sessionId, List<AssistantChatMessage> messages, {bool updateActiveSession = true}) {
     final List<AssistantChatMessage> copiedMessages = List<AssistantChatMessage>.from(messages);
     _sessionMessagesById[sessionId] = copiedMessages;
 
