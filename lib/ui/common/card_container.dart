@@ -49,7 +49,7 @@ class CardContainer extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(color: dotsUnselectedColor, width: 0.5),
         ),
-        color: Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
+        color: Color(0xFFEFE5CD),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
