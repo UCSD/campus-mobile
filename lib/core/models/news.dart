@@ -37,11 +37,11 @@ class Item {
   });
 
   Item.fromJson(Map<String, dynamic> json)
-      : date = DateTime.parse(json["date"]),
-        title = json["title"],
-        description = json["description"].trim(),
-        link = json["link"],
-        image = json["image"];
+      : date = DateTime.tryParse(json["date"] ?? "") ?? DateTime.now(),
+        title = json["title"] ?? "",
+        description = (json["description"] ?? "").trim(),
+        link = json["link"] ?? "",
+        image = json["image"] ?? "";
 
   Map<String, dynamic> toJson() => {
         "date": date.toIso8601String(),

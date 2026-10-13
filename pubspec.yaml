@@ -60,10 +60,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/images/
     - assets/images/onboarding/
     - assets/images/tgpt/
-    - .env
   fonts:
     - family: Refrigerator Deluxe
       fonts:

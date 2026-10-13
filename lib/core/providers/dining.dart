@@ -109,7 +109,7 @@ class DiningDataProvider extends ChangeNotifier {
     final bool hasLongitude = _coordinates?.lon != null;
     if (hasCoordinates && hasLatitude && hasLongitude) {
       for (DiningModel model in _diningModels.values.toList()) {
-        if (model.coordinates != null) {
+        if (model.coordinates?.lat != null && model.coordinates?.lon != null) {
           var distance = calculateDistance(
               _coordinates!.lat!, _coordinates!.lon!, model.coordinates!.lat!, model.coordinates!.lon!);
           model.distance = distance.toDouble();

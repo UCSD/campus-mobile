@@ -17,6 +17,8 @@ class NetworkHelper {
   static const int SSO_REFRESH_RETRY_MULTIPLIER = 3;
   static final DEFAULT_TIMEOUT = Duration(milliseconds: int.parse(dotenv.get('DEFAULT_TIMEOUT')));
 
+  static const int GET_MAX_RETRIES = 2;
+
   static Future<dynamic> fetchData(String url) async {
     Dio dio = new Dio();
     dio.options.connectTimeout = DEFAULT_TIMEOUT;
@@ -35,23 +37,41 @@ class NetworkHelper {
   }
 
   static Future<dynamic> authorizedFetch(String url, Map<String, String> headers) async {
-    Dio dio = new Dio();
-    dio.options.connectTimeout = DEFAULT_TIMEOUT;
-    dio.options.receiveTimeout = DEFAULT_TIMEOUT;
-    dio.options.responseType = ResponseType.plain;
-    dio.options.headers = headers;
-    final _response = await dio.get(
-      url,
-    );
-    if (_response.statusCode == 200) {
-      // If server returns an OK response, return the body
-      return _response.data;
-    } else {
-      // TODO: log this as a bug because the response was bad - December 2025
-      // If that response was not OK, throw an error.
+    Object? lastError;
+    for (var attempt = 0; attempt <= GET_MAX_RETRIES; attempt++) {
+      if (attempt > 0) {
+        await Future.delayed(Duration(milliseconds: 500 * attempt));
+      }
 
-      throw Exception('Failed to fetch data: ' + _response.data);
+      try {
+        Dio dio = new Dio();
+        dio.options.connectTimeout = DEFAULT_TIMEOUT;
+        dio.options.receiveTimeout = DEFAULT_TIMEOUT;
+        dio.options.responseType = ResponseType.plain;
+        dio.options.headers = headers;
+        final _response = await dio.get(
+          url,
+        );
+        if (_response.statusCode == 200) {
+          // If server returns an OK response, return the body
+          return _response.data;
+        } else {
+          // TODO: log this as a bug because the response was bad - December 2025
+          // If that response was not OK, throw an error.
+
+          throw Exception('Failed to fetch data: ' + _response.data);
+        }
+      } on DioException catch (error) {
+        if (error.type != DioExceptionType.connectionError &&
+            error.type != DioExceptionType.connectionTimeout &&
+            error.type != DioExceptionType.receiveTimeout &&
+            error.type != DioExceptionType.sendTimeout) {
+          rethrow;
+        }
+        lastError = error;
+      }
     }
+    throw lastError!;
   }
 
   static Widget getSilentLoginDialog() {

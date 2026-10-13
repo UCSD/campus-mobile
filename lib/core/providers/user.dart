@@ -175,6 +175,9 @@ class UserDataProvider extends ChangeNotifier {
     final bool hasPassword = password.isNotEmpty;
     if (hasUsername && hasPassword) {
       await _encryptAndSaveCredentials(username, password);
+      _authenticationModel = AuthenticationModel.fromJson({});
+      _lastUpdated = null;
+      _userProfileModel = UserProfileModel.fromJson({});
       if (await silentLogin()) {
         if (_userProfileModel.classifications!.student!) {
           cardsDataProvider.showAllStudentCards();
