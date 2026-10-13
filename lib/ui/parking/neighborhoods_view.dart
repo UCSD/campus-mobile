@@ -12,9 +12,7 @@ class NeighborhoodsView extends StatefulWidget {
 
 class _NeighborhoodsViewState extends State<NeighborhoodsView> {
   @override
-  Widget build(BuildContext context) {
-    return ContainerView(child: buildNeighborhoodsList(context));
-  }
+  Widget build(BuildContext context) => ContainerView(child: buildNeighborhoodsList(context));
 
   Widget buildNeighborhoodsList(BuildContext context) {
     Map<String, List<String>> neighborhoods = Provider.of<ParkingDataProvider>(context).getParkingMap();

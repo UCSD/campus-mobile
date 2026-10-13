@@ -10,9 +10,8 @@ class AvailabilityDisplay extends StatelessWidget {
   final AvailabilityModel model;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[buildLocationTitle(context), buildAvailabilityBars(context)]);
-  }
+  Widget build(BuildContext context) =>
+      Column(children: <Widget>[buildLocationTitle(context), buildAvailabilityBars(context)]);
 
   Widget buildLocationTitle(BuildContext context) {
     return Container(
@@ -49,9 +48,8 @@ class AvailabilityDisplay extends StatelessWidget {
           excludeSemantics: true,
           child: GestureDetector(
             onTap: () {
-              if (subLocation.floors.isNotEmpty) {
+              if (subLocation.floors.isNotEmpty)
                 Navigator.pushNamed(context, RoutePaths.AVAILABILITY_DETAILED_VIEW, arguments: subLocation);
-              }
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

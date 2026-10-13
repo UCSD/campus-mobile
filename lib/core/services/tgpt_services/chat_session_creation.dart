@@ -26,9 +26,7 @@ class ChatSessionService {
   ChatSessionService(this._userDataProvider);
 
   /// Build fresh headers for each request to avoid race conditions.
-  Map<String, String> _buildHeaders() {
-    return {"accept": "application/json", "content-type": "application/json"};
-  }
+  Map<String, String> _buildHeaders() => {"accept": "application/json", "content-type": "application/json"};
 
   /// Create a new chat session.
   ///

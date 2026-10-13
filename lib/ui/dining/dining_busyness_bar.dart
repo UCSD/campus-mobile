@@ -12,9 +12,7 @@ class DiningBusynessBar extends StatelessWidget {
   final AvailabilityModel busynessDiningHallModel;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[buildAvailabilityBars(context)]);
-  }
+  Widget build(BuildContext context) => Column(children: <Widget>[buildAvailabilityBars(context)]);
 
   Widget buildAvailabilityBars(BuildContext context) {
     if (busynessDiningHallModel.subLocations.isEmpty) {

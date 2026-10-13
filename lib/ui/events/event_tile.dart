@@ -21,9 +21,8 @@ class EventTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Show loading indicator while data is loading
-    if (Provider.of<EventsDataProvider>(context).isLoading) {
+    if (Provider.of<EventsDataProvider>(context).isLoading)
       return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary));
-    }
     return _buildEventTile(context);
   }
 

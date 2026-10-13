@@ -9,9 +9,7 @@ class AvailabilityDetailedView extends StatelessWidget {
   const AvailabilityDetailedView({required this.subLocation});
 
   @override
-  Widget build(BuildContext context) {
-    return ContainerView(child: buildLocationsList(context, subLocation));
-  }
+  Widget build(BuildContext context) => ContainerView(child: buildLocationsList(context, subLocation));
 
   Widget buildLocationsList(BuildContext context, SubLocations subLocation) {
     List<Widget> list = [];
