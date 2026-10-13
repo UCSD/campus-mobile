@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/classes.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 class ClassScheduleDataProvider extends ChangeNotifier {
@@ -45,67 +46,116 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   /// SERVICES
   var _classScheduleService = ClassScheduleService();
 
+  /// Resets the day maps and rebuilds them from the given model.
+  void _applyModel(ClassScheduleModel model) {
+    _classScheduleModel = model;
+
+    /// remove all old classes
+    _enrolledClasses = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
+    _finals = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
+    _midterms = {'MI': [], 'OTHER': []};
+
+    try {
+      _createMapOfClasses();
+    } catch (e) {
+      _error = e.toString();
+    }
+  }
+
   void fetchData() async {
-    if (!_isLoading) {
-      _isLoading = true;
-      _error = null;
-      notifyListeners();
-      final bool termFetched = await _classScheduleService.fetchAcademicTerm();
-      final bool isLoggedIn = _userDataProvider.isLoggedIn;
-      if (termFetched && isLoggedIn) {
-        _academicTermModel = _classScheduleService.academicTermModel!;
-        final Map<String, String> headers = {
-          'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}',
-        };
+    if (_isLoading) return;
 
-        /// erase old model
-        _classScheduleModel = ClassScheduleModel();
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
 
-        /// fetch grad courses
-        final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!);
-        if (grCoursesFetched) {
-          _classScheduleModel = _classScheduleService.grData;
-        } else {
-          _error = _classScheduleService.error.toString();
-        }
-
-        /// fetch undergrad courses
-        final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(headers, _academicTermModel.termCode!);
-        if (unCoursesFetched) {
-          if (_classScheduleModel.data != null) {
-            _classScheduleModel.data!.addAll(_classScheduleService.unData.data!);
-          } else {
-            _classScheduleModel = _classScheduleService.unData;
-          }
-          _error = null;
-        } else {
-          _error = _classScheduleService.error.toString();
-          _isLoading = false;
-          notifyListeners();
-
-          /// short circuit
-          return;
-        }
-
-        /// remove all old classes
-        _enrolledClasses = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
-        _finals = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
-        _midterms = {'MI': [], 'OTHER': []};
-
-        try {
-          _createMapOfClasses();
-        } catch (e) {
-          _error = e.toString();
-        }
-
-        _lastUpdated = DateTime.now();
-      } else {
-        // TODO: determine what error to show to the user - December 2025
-        _error = _classScheduleService.error;
-      }
+    if (!_userDataProvider.isLoggedIn) {
+      // TODO: determine what error to show to the user - December 2025
+      _error = _classScheduleService.error;
       _isLoading = false;
       notifyListeners();
+      return;
     }
+
+    Box? box;
+    String? cachedJson;
+    try {
+      box = await Hive.openBox('ClassScheduleModel');
+      cachedJson = box.get('ClassScheduleModel');
+    } catch (_) {}
+
+    bool loadedFromCache = false;
+
+    /// if class schedule data is cached in hive box, immediately load data to UI
+    if (cachedJson != null && cachedJson.isNotEmpty) {
+      try {
+        _applyModel(classScheduleModelFromJson(cachedJson));
+        _isLoading = false;
+        loadedFromCache = true;
+        notifyListeners();
+      } catch (_) {}
+    }
+
+    /// fetch actual data
+    final bool termFetched = await _classScheduleService.fetchAcademicTerm();
+    if (!termFetched) {
+      if (!loadedFromCache) {
+        // TODO: determine what error to show to the user - December 2025
+        _error = _classScheduleService.error;
+        _isLoading = false;
+        notifyListeners();
+      }
+      return;
+    }
+
+    _academicTermModel = _classScheduleService.academicTermModel!;
+    final Map<String, String> headers = {
+      'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}',
+    };
+
+    /// erase old model
+    ClassScheduleModel fetchedModel = ClassScheduleModel();
+
+    /// fetch grad courses
+    final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!);
+    if (grCoursesFetched) {
+      fetchedModel = _classScheduleService.grData;
+    } else {
+      _error = _classScheduleService.error.toString();
+    }
+
+    /// fetch undergrad courses
+    final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(headers, _academicTermModel.termCode!);
+    if (unCoursesFetched) {
+      if (fetchedModel.data != null) {
+        if (_classScheduleService.unData.data != null) {
+          fetchedModel.data!.addAll(_classScheduleService.unData.data!);
+        }
+      } else {
+        fetchedModel = _classScheduleService.unData;
+      }
+      _error = null;
+    } else {
+      _error = _classScheduleService.error.toString();
+      if (!loadedFromCache) {
+        _isLoading = false;
+        notifyListeners();
+
+        /// short circuit
+        return;
+      }
+    }
+
+    final String newJson = classScheduleModelToJson(fetchedModel);
+
+    /// verify against cached data
+    if (loadedFromCache && cachedJson == newJson) return;
+
+    _applyModel(fetchedModel);
+    _lastUpdated = DateTime.now();
+    if (box != null) await box.put('ClassScheduleModel', newJson);
+    if (!loadedFromCache) _isLoading = false;
+    notifyListeners();
   }
 
   void _createMapOfClasses() {
