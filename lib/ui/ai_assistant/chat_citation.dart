@@ -73,8 +73,8 @@ class ChatCitation extends StatelessWidget {
     var isUriNull = uri == null;
     var hasNoScheme = uri?.hasScheme == false;
     if (isUriNull || hasNoScheme) return;
-    var isNotHttp = uri.scheme != 'http';
-    var isNotHttps = uri.scheme != 'https';
+    var isNotHttp = uri?.scheme != 'http';
+    var isNotHttps = uri?.scheme != 'https';
     if (isNotHttp && isNotHttps) return;
 
     await Navigator.of(context).pushNamed(
