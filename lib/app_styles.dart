@@ -322,7 +322,7 @@ const Color darkButtonColor = Color(0xFFFFFFFF);
 // Colors
 const Color lightTextColor = Color(0xFFFFFFFF);
 const Color darkTextColor = Color(0xFF006A96);
-const Color actionButtonBackgroundColor = Color(0xFFFFCD00);
+const Color actionButtonBackgroundColor = Color(0xFFE22CE8);
 const Color dotsUnselectedColor = Color(0xFF747678);
 const Color dotsSelectedColorLight = Color(0xFF00629B);
 const Color dotsSelectedColorDark = Color(0xFF5496BC);
