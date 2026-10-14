@@ -52,7 +52,7 @@ class CardContainer extends StatelessWidget {
             width: 0.5,
           ),
         ),
-        color: Theme.of(context).brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor,
+        color: Color(0xFFEFE5CD),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
