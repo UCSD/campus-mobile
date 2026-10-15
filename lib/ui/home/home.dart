@@ -134,9 +134,14 @@ class _HomeState extends State<Home> {
   }
 
   void executeQuery(String query) {
-    context.read<MapsDataProvider>().searchBarController.text = query;
+    context
+        .read<MapsDataProvider>()
+        .searchBarController
+        .text = query;
     context.read<MapsDataProvider>().fetchLocations();
-    context.read<BottomNavigationBarProvider>().currentIndex = NavigatorConstants.MAP_TAB;
+    context
+        .read<BottomNavigationBarProvider>()
+        .currentIndex = NavigatorConstants.MAP_TAB;
     context.read<CustomAppBar>().changeTitle("Maps");
     executedInitialDeeplinkQuery = true;
   }
@@ -145,12 +150,76 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // Provider.of<CustomAppBar>(context).changeTitle(null); // reset title to logo (for dining)
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
-      child: ListView(
-        controller: _controller,
-        padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
-        children: createList(),
+    return SingleChildScrollView(
+      controller: _controller,
+      clipBehavior: Clip.none,
+      padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Reserve scrollable canvas for the background decorations, since
+          // Positioned children do not determine the Stack's size.
+          const SizedBox(height: 3700),
+          Positioned(
+            top: 355,
+            right: -101,
+            child: Image.asset(
+              'assets/images/circles/circle-1-background.png',
+              width: 298.64,
+              height: 280,
+            ),
+          ),
+          Positioned(
+            top: 720,
+            left: -64,
+            child: Image.asset(
+              'assets/images/circles/real_circle_2.png',
+              width: 136,
+              height: 136,
+            ),
+          ),
+          Positioned(
+            top: 1065,
+            left: 190,
+            child: Image.asset(
+              'assets/images/circles/circle-4-background.png',
+              width: 399.7,
+              height: 398,
+            ),
+          ),
+          Positioned(
+            top: 1908,
+            left: -88,
+            child: Image.asset(
+              'assets/images/circles/real_circle_5.png',
+              width: 197,
+              height: 197,
+            ),
+          ),
+          Positioned(
+            top: 2585,
+            right: -21,
+            child: Image.asset(
+              'assets/images/circles/real_circle_6.png',
+              width: 188,
+              height: 188,
+            ),
+          ),
+          Positioned(
+            top: 3392,
+            left: -142,
+            child: Image.asset(
+              'assets/images/circles/circle-3-background.png',
+              width: 300,
+              height: 298.6,
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: cardMargin),
+            child: Column(children: createList()),
+          ),
+        ],
       ),
     );
   }
@@ -164,14 +233,16 @@ class _HomeState extends State<Home> {
     return [...noticesCards, ...orderedCards];
   }
 
-  List<Widget> getNoticesCardsList(List<NoticesModel> notices) => notices
-      .asMap()
-      .entries
-      .map((e) => CardViewTrackingWrapper(
+  List<Widget> getNoticesCardsList(List<NoticesModel> notices) =>
+      notices
+          .asMap()
+          .entries
+          .map((e) =>
+          CardViewTrackingWrapper(
             cardId: 'notice_${e.key}',
             child: NoticesCard(notice: e.value),
           ))
-      .toList();
+          .toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
   static const _CARD_CTORS = {
@@ -206,7 +277,9 @@ class _HomeState extends State<Home> {
 
   List<Widget> getOrderedCardsList(List<String> order) {
     final orderedCards = <Widget>[];
-    final webCards = context.read<CardsDataProvider>().webCards;
+    final webCards = context
+        .read<CardsDataProvider>()
+        .webCards;
 
     for (String cardName in order) {
       // TODO: if-branches logic here theoretically could be simplified - December 2025
