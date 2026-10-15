@@ -204,9 +204,10 @@ class _HomeState extends State<Home> {
           ),
           Positioned(
             top: 2585,
-            right: -157,
+            left: 157,
             child: Transform.rotate(
               angle: -0.5235987756,
+              alignment: Alignment.topLeft,
               child: Image.asset(
                 'assets/images/circles/circle-6-background.png',
                 width: 188,
