@@ -162,7 +162,7 @@ class _HomeState extends State<Home> {
           const SizedBox(height: 3700),
           Positioned(
             top: 355,
-            left: 162,
+            right: -61,
             child: Image.asset(
               'assets/images/circles/circle-1-background.png',
               width: 298.64,
@@ -172,13 +172,10 @@ class _HomeState extends State<Home> {
           Positioned(
             top: 720,
             left: -64,
-            child: Transform.rotate(
-              angle: -0.3246312409,
-              child: Image.asset(
-                'assets/images/circles/circle-2-background.png',
-                width: 136,
-                height: 136,
-              ),
+            child: Image.asset(
+              'assets/images/circles/real_circle_2.png',
+              width: 136,
+              height: 136,
             ),
           ),
           Positioned(
@@ -204,18 +201,11 @@ class _HomeState extends State<Home> {
           ),
           Positioned(
             top: 2585,
-            right: -48,
-            child: Transform.rotate(
-              angle: -0.5235987756,
-              alignment: Alignment.topLeft,
-              child: Transform.flip(
-                flipX: true,
-                child: Image.asset(
-                  'assets/images/circles/circle-6-background.png',
-                  width: 188,
-                  height: 188,
-                ),
-              ),
+            right: -21,
+            child: Image.asset(
+              'assets/images/circles/real_circle_6.png',
+              width: 188,
+              height: 188,
             ),
           ),
           Positioned(
