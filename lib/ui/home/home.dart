@@ -162,7 +162,7 @@ class _HomeState extends State<Home> {
           const SizedBox(height: 3700),
           Positioned(
             top: 355,
-            right: -61,
+            right: -101,
             child: Image.asset(
               'assets/images/circles/circle-1-background.png',
               width: 298.64,
@@ -190,13 +190,10 @@ class _HomeState extends State<Home> {
           Positioned(
             top: 1908,
             left: -121,
-            child: Transform.rotate(
-              angle: 2.8797932658,
-              child: Image.asset(
-                'assets/images/circles/circle-5-background.png',
-                width: 197,
-                height: 197,
-              ),
+            child: Image.asset(
+              'assets/images/circles/real_circle_5.png',
+              width: 197,
+              height: 197,
             ),
           ),
           Positioned(
