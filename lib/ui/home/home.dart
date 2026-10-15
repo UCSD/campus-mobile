@@ -189,7 +189,7 @@ class _HomeState extends State<Home> {
           ),
           Positioned(
             top: 1908,
-            left: -121,
+            left: -100,
             child: Image.asset(
               'assets/images/circles/real_circle_5.png',
               width: 197,
