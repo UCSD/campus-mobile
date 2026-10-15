@@ -204,7 +204,7 @@ class _HomeState extends State<Home> {
           ),
           Positioned(
             top: 2585,
-            left: 157,
+            right: -157,
             child: Transform.rotate(
               angle: -0.5235987756,
               child: Image.asset(
