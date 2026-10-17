@@ -102,8 +102,12 @@ class _ShuttleCardState extends State<ShuttleCard> {
       // Initialize first shuttle display with arrival information
       if (stopsToRender.isEmpty) {
         return Padding(
-          padding: const EdgeInsets.only(bottom: 42.0),
-          child: Center(child: Text('Add a stop to view real-time bus arrivals.')),
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 42.0, top: 160.0),
+          child: Column(
+            children: const [
+              Text('Add a stop to view real-time bus arrivals.'),
+            ],
+          ),
         );
       }
 
