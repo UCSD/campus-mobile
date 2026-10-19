@@ -11,7 +11,10 @@ import Firebase
   ) -> Bool {
     // Use Firebase library to configure APIs
     GeneratedPluginRegistrant.register(with: self)
-    GMSServices.provideAPIKey("AIzaSyAwHFV7LL99A-PXa7J1k7H1MhT4_RUgZtk")
+    if let googleMapsAPIKey = Bundle.main.object(forInfoDictionaryKey: "GoogleMapsAPIKey") as? String,
+       !googleMapsAPIKey.isEmpty {
+      GMSServices.provideAPIKey(googleMapsAPIKey)
+    }
     if #available(iOS 10.0, *) {
       // For iOS 10 display notification (sent via APNS)
       UNUserNotificationCenter.current().delegate = self

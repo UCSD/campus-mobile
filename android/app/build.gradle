@@ -13,6 +13,18 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+def secretProperties = new Properties()
+def secretPropertiesFile = rootProject.file('secrets.properties')
+if (secretPropertiesFile.exists()) {
+    secretPropertiesFile.withReader('UTF-8') { reader ->
+        secretProperties.load(reader)
+    }
+}
+
+def googleMapsApiKey = secretProperties.getProperty("GOOGLE_MAPS_API_KEY")
+    ?: System.getenv("GOOGLE_MAPS_API_KEY")
+    ?: ""
+
 android {
     namespace = "edu.ucsd"
     compileSdk = 36
@@ -38,6 +50,7 @@ android {
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders['googleMapsApiKey'] = "$googleMapsApiKey"
     }
 
     signingConfigs {
