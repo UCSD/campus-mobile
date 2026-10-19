@@ -39,10 +39,10 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     final cap = width < 600
         ? 480.0
         : width < 900
-            ? 560.0
-            : width < 1200
-                ? 620.0
-                : 680.0;
+        ? 560.0
+        : width < 1200
+        ? 620.0
+        : 680.0;
     return math.min(width, math.min(usableHeight / 1.6, cap));
   }
 
@@ -76,9 +76,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   maxScaleFactor: 1.3,
                   child: Stack(
                     children: [
-                      Positioned.fill(
-                        child: Image.asset('assets/images/login-background.png', fit: BoxFit.cover),
-                      ),
+                      Positioned.fill(child: Image.asset('assets/images/login-background.png', fit: BoxFit.cover)),
                       SafeArea(
                         child: LayoutBuilder(
                           builder: (context, constraints) {
@@ -89,10 +87,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                             return SingleChildScrollView(
                               child: Center(
                                 child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    minHeight: constraints.maxHeight,
-                                    maxWidth: u,
-                                  ),
+                                  constraints: BoxConstraints(minHeight: constraints.maxHeight, maxWidth: u),
                                   child: IntrinsicHeight(child: _buildLoginWidget(u)),
                                 ),
                               ),

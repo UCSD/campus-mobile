@@ -12,6 +12,7 @@ import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/ui/common/action_link.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_display.dart';
+
 // import 'package:url_launcher/url_launcher.dart';
 
 const String cardId = 'shuttle';
@@ -103,11 +104,7 @@ class _ShuttleCardState extends State<ShuttleCard> {
       if (stopsToRender.isEmpty) {
         return Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 42.0, top: 160.0),
-          child: Column(
-            children: const [
-              Text('Add a stop to view real-time bus arrivals.'),
-            ],
-          ),
+          child: Column(children: const [Text('Add a stop to view real-time bus arrivals.')]),
         );
       }
 
