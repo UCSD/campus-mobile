@@ -66,7 +66,7 @@
             android:value="true" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCCQZfcvW7pLI9bOgu4iYxji7f9csl_ovg"/>
+            android:value="${googleMapsApiKey}" />
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="true" />
