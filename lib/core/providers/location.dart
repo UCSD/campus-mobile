@@ -11,10 +11,7 @@ class LocationDataProvider extends ChangeNotifier {
   late LocationPermission permission = LocationPermission.denied;
 
   /// SERVICES
-  final locationSettings = LocationSettings(
-    accuracy: LocationAccuracy.high,
-    distanceFilter: 100,
-  );
+  final locationSettings = LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100);
   var _locationController = StreamController<Coordinates>.broadcast();
 
   LocationDataProvider() {

@@ -57,11 +57,7 @@ class MeasureSizeRenderObject extends RenderProxyBox {
 class MeasureSize extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChange onChange;
 
-  const MeasureSize({
-    Key? key,
-    required this.onChange,
-    required Widget child,
-  }) : super(key: key, child: child);
+  const MeasureSize({Key? key, required this.onChange, required Widget child}) : super(key: key, child: child);
 
   @override
   RenderObject createRenderObject(BuildContext context) => MeasureSizeRenderObject(onChange);
@@ -93,9 +89,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final _controller = ScrollController(
-    initialScrollOffset: getHomeScrollOffset(),
-  );
+  final _controller = ScrollController(initialScrollOffset: getHomeScrollOffset());
   InternetConnectivityProvider? _connectivityProvider;
 
   @override
@@ -156,21 +150,45 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> createList() {
-    // Copy list so select() detects reorder: profile mutates _cardOrder in place (same ref).
-    final orderedCards = getOrderedCardsList(
-      context.select((CardsDataProvider p) => List<String>.from(p.cardOrder)),
-    );
+    final order = context.select((CardsDataProvider p) => List<String>.from(p.cardOrder));
+    final states = context.select((CardsDataProvider p) => Map<String, bool>.from(p.cardStates));
+    final webCards = context.read<CardsDataProvider>().webCards;
     final noticesCards = getNoticesCardsList(context.select((NoticesDataProvider p) => p.noticesModel));
-    return [...noticesCards, ...orderedCards];
+
+    final anyCardVisible = order.any(
+      (c) => states[c] == true && (webCards.containsKey(c) || _CARD_CTORS.containsKey(c)),
+    );
+
+    if (!anyCardVisible) {
+      return [
+        ...noticesCards,
+        Padding(
+          padding: const EdgeInsets.all(32),
+          child: Center(
+            child: Text(
+              'All cards hidden.\nPlease enable them in\nProfile > Card Settings',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).brightness == Brightness.light ? Colors.white : null,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ];
+    }
+
+    return [...noticesCards, ...getOrderedCardsList(order)];
   }
 
   List<Widget> getNoticesCardsList(List<NoticesModel> notices) => notices
       .asMap()
       .entries
-      .map((e) => CardViewTrackingWrapper(
-            cardId: 'notice_${e.key}',
-            child: NoticesCard(notice: e.value),
-          ))
+      .map(
+        (e) => CardViewTrackingWrapper(
+          cardId: 'notice_${e.key}',
+          child: NoticesCard(notice: e.value),
+        ),
+      )
       .toList();
 
   // Constructor tear-offs used below to generate ordered cards list in O(1) time
@@ -187,7 +205,7 @@ class _HomeState extends State<Home> {
     'employee_id': EmployeeIdCard.new,
     'parking': ParkingCard.new,
     'speed_test': WiFiCard.new,
-    'shuttle': ShuttleCard.new
+    'shuttle': ShuttleCard.new,
   };
 
   void setNewCardHeight(String card, double height) {

@@ -29,10 +29,7 @@ class OnboardingSlideTemplate extends StatelessWidget {
             height: height * .42,
             width: width * .9,
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: heroImage,
-                fit: BoxFit.fill,
-              ),
+              image: DecorationImage(image: heroImage, fit: BoxFit.fill),
             ),
           ),
         ),
@@ -57,10 +54,7 @@ class OnboardingSlideTemplate extends StatelessWidget {
                 // Description
                 Text(
                   description,
-                  style: TextStyle(
-                    color: const Color(0xFF182B49),
-                    fontSize: 18,
-                  ),
+                  style: TextStyle(color: const Color(0xFF182B49), fontSize: 18),
                   textAlign: TextAlign.left,
                 ),
               ],

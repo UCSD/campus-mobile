@@ -26,12 +26,7 @@ class StreamingChatChunk {
   final int? messageId; // reserved_assistant_message_id for threading
   final List<ChatCitationReference>? citations; // citation references (at end of stream)
 
-  const StreamingChatChunk({
-    required this.delta,
-    this.done = false,
-    this.messageId,
-    this.citations,
-  });
+  const StreamingChatChunk({required this.delta, this.done = false, this.messageId, this.citations});
 }
 
 /// Merges search/retrieval documents into [documentIdToUrl] so [citation_info] can resolve URLs.
@@ -84,10 +79,7 @@ class ChatMessageStreamService {
     int? parentMessageId,
   }) async* {
     // Build fresh headers per request to avoid race conditions
-    final headers = <String, String>{
-      "accept": "application/json",
-      "content-type": "application/json",
-    };
+    final headers = <String, String>{"accept": "application/json", "content-type": "application/json"};
     if (_userDataProvider.isLoggedIn) {
       headers['Authorization'] = 'Bearer ${_userDataProvider.authenticationModel.accessToken}';
     } else {
@@ -101,8 +93,9 @@ class ChatMessageStreamService {
     }
 
     final String? rawContextUrl = dotenv.env['TGPT_CHAT_SEND_CONTEXT_URL'];
-    final String sendContextUrl =
-        (rawContextUrl != null && rawContextUrl.trim().isNotEmpty) ? rawContextUrl.trim() : 'https://mobile.ucsd.edu/';
+    final String sendContextUrl = (rawContextUrl != null && rawContextUrl.trim().isNotEmpty)
+        ? rawContextUrl.trim()
+        : 'https://mobile.ucsd.edu/';
 
     // Build request body using shared helper (includes `url` per TGPT web widget contract)
     final body = ChatMessageService.buildRequestBody(
@@ -230,11 +223,7 @@ class ChatMessageStreamService {
         final bool refreshed = await NetworkHelper.getNewToken(headers);
         if (refreshed) {
           // Restart stream with refreshed token
-          yield* streamMessage(
-            message: message,
-            chatSessionId: chatSessionId,
-            parentMessageId: parentMessageId,
-          );
+          yield* streamMessage(message: message, chatSessionId: chatSessionId, parentMessageId: parentMessageId);
           _hasRetried = false;
           return;
         }

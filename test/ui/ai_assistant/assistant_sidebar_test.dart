@@ -104,10 +104,7 @@ void main() {
   });
 
   testWidgets('loads saved section expansion preferences', (WidgetTester tester) async {
-    SharedPreferences.setMockInitialValues(<String, Object>{
-      previous7DaysExpandedKey: false,
-      olderExpandedKey: true,
-    });
+    SharedPreferences.setMockInitialValues(<String, Object>{previous7DaysExpandedKey: false, olderExpandedKey: true});
 
     await pumpSidebar(tester, isLoggedIn: true);
 

@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatComposer extends StatefulWidget {
-  const ChatComposer({
-    super.key,
-    required this.onSubmitted,
-    required this.enabled,
-    required this.isSending,
-  });
+  const ChatComposer({super.key, required this.onSubmitted, required this.enabled, required this.isSending});
 
   final Future<void> Function(String message) onSubmitted;
   final bool enabled;
@@ -59,21 +54,14 @@ class _ChatComposerState extends State<ChatComposer> {
           contentPadding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
           filled: true,
           fillColor: Colors.white,
-          suffixIconConstraints: const BoxConstraints(
-            minWidth: 48,
-            minHeight: 48,
-          ),
+          suffixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
           suffixIcon: Padding(
             padding: const EdgeInsets.only(right: 8),
             child: IconButton(
               onPressed: canSend ? _submit : null,
               icon: Opacity(
                 opacity: canSend ? 1 : 0.45,
-                child: SvgPicture.asset(
-                  'assets/images/tgpt/send-message.svg',
-                  width: 22,
-                  height: 22,
-                ),
+                child: SvgPicture.asset('assets/images/tgpt/send-message.svg', width: 22, height: 22),
               ),
             ),
           ),
@@ -96,9 +84,6 @@ class _ChatComposerState extends State<ChatComposer> {
 
   static const OutlineInputBorder _BORDER = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(10)),
-    borderSide: BorderSide(
-      color: Color(0xFFB1B5BB),
-      width: 1.25,
-    ),
+    borderSide: BorderSide(color: Color(0xFFB1B5BB), width: 1.25),
   );
 }
