@@ -19,10 +19,12 @@ class AvailabilityDataProvider extends ChangeNotifier {
   /// SERVICES
   var _availabilityService = AvailabilityService();
 
-  void fetchAvailability() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
+  void fetchAvailability({bool silent = false}) async {
+    if (!silent) {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+    }
 
     /// creating  new map ensures we remove all unsupported lots
     Map<String, AvailabilityModel> newMapOfLots = {};
@@ -60,7 +62,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
       reorderLocations(userDataProvider.userProfileModel.selectedOccuspaceLocations);
       _lastUpdated = DateTime.now();
     } else {
-      _error = _availabilityService.error;
+      if (!silent) _error = _availabilityService.error;
     }
     _isLoading = false;
     notifyListeners();

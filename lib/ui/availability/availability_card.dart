@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -10,6 +12,7 @@ import 'package:campus_mobile_experimental/ui/common/action_link.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 const cardId = 'availability';
@@ -26,11 +29,26 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   /// SERVICES
   final _controller = PageController();
   int _currentPage = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(
+        const Duration(seconds: 90), (_) => _availabilityDataProvider.fetchAvailability(silent: true));
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -60,6 +78,19 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
             Navigator.pushNamed(context, RoutePaths.MANAGE_AVAILABILITY_VIEW);
           },
         ),
+        if (_availabilityDataProvider.lastUpdated != null)
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 16.0),
+              child: Text(
+                'Live · Updated ${DateFormat.jm().format(_availabilityDataProvider.lastUpdated!)}',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+                textAlign: TextAlign.right,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
       ],
     );
   }
