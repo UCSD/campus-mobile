@@ -161,11 +161,10 @@ List<SingleChildWidget> dependentServices = [
       var classDataProvider = ClassScheduleDataProvider();
       return classDataProvider;
     },
+    lazy: false,
     update: (_, userDataProvider, classScheduleDataProvider) {
       classScheduleDataProvider!.userDataProvider = userDataProvider;
-      final bool isLoggedIn = userDataProvider.isLoggedIn;
-      final bool isNotLoading = !classScheduleDataProvider.isLoading;
-      if (isLoggedIn && isNotLoading) classScheduleDataProvider.fetchData();
+      classScheduleDataProvider.handleLoginStateChange();
       return classScheduleDataProvider;
     },
   ),

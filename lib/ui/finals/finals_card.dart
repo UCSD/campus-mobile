@@ -11,7 +11,18 @@ import 'package:campus_mobile_experimental/app_styles.dart';
 
 const cardId = 'finals';
 
-class FinalsCard extends StatelessWidget {
+class FinalsCard extends StatefulWidget {
+  @override
+  State<FinalsCard> createState() => _FinalsCardState();
+}
+
+class _FinalsCardState extends State<FinalsCard> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ClassScheduleDataProvider>().loadFromCache();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -26,7 +37,8 @@ class FinalsCard extends StatelessWidget {
           Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
         }
       },
-      isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
+      isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading &&
+          !Provider.of<ClassScheduleDataProvider>(context).hasData,
       titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildFinalsCard(

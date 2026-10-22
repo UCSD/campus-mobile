@@ -14,7 +14,18 @@ import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 
 const cardId = 'schedule';
 
-class ClassScheduleCard extends StatelessWidget {
+class ClassScheduleCard extends StatefulWidget {
+  @override
+  State<ClassScheduleCard> createState() => _ClassScheduleCardState();
+}
+
+class _ClassScheduleCardState extends State<ClassScheduleCard> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ClassScheduleDataProvider>().loadFromCache();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -28,7 +39,8 @@ class ClassScheduleCard extends StatelessWidget {
         else
           Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
       },
-      isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
+      isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading &&
+          !Provider.of<ClassScheduleDataProvider>(context).hasData,
       titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildClassScheduleCard(

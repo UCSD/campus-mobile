@@ -10,6 +10,10 @@ import 'package:intl/intl.dart';
 class ClassScheduleDataProvider extends ChangeNotifier {
   /// STATES
   bool _isLoading = false;
+  bool _modelInitialized = false;
+  bool _fetchStarted = false;
+  bool? _wasLoggedIn;
+  int _sessionGeneration = 0;
   DateTime _lastUpdated = DateTime.now();
   String? _error;
   int _selectedCourse = 0;
@@ -57,13 +61,68 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
     try {
       _createMapOfClasses();
+      _modelInitialized = true;
     } catch (e) {
       _error = e.toString();
     }
   }
 
+  Future<void> loadFromCache() async {
+    if (_modelInitialized) return;
+    final int generation = _sessionGeneration;
+
+    try {
+      final box = await Hive.openBox('ClassScheduleModel');
+      final cachedJson = box.get('ClassScheduleModel') as String?;
+      if (cachedJson == null || cachedJson.isEmpty) return;
+
+      final cachedModel = classScheduleModelFromJson(cachedJson);
+      if (_modelInitialized || generation != _sessionGeneration) return;
+
+      /// A fast failed fetch may have set an error before this cache load
+      /// completed; good cached data wins.
+      _error = null;
+
+      _applyModel(cachedModel);
+      print('=========cached model applied============');
+      notifyListeners();
+    } catch (_) {
+      /// A cache miss or unreadable cache is not an error;
+      /// the network fetch remains the source of truth.
+    }
+  }
+
+  /// Called from the app_provider proxy update whenever UserDataProvider notifies.
+  void handleLoginStateChange() {
+    final bool isLoggedIn = _userDataProvider.isLoggedIn;
+    final bool wasLoggedIn = _wasLoggedIn ?? false;
+    _wasLoggedIn = isLoggedIn;
+
+    if (wasLoggedIn && !isLoggedIn) {
+      reset();
+      return;
+    }
+
+    if (!wasLoggedIn && isLoggedIn) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        startFetchIfNeeded();
+      });
+    }
+  }
+
+  /// Single-flight per login session; the reload menu bypasses this gate.
+  void startFetchIfNeeded() {
+    if (_fetchStarted || _isLoading) return;
+    if (!_userDataProvider.isLoggedIn) return;
+
+    _fetchStarted = true;
+    fetchData();
+  }
+
   void fetchData() async {
     if (_isLoading) return;
+
+    print("=========fetchData() called==========");
 
     _isLoading = true;
     _error = null;
@@ -71,40 +130,20 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
     if (!_userDataProvider.isLoggedIn) {
       // TODO: determine what error to show to the user - December 2025
-      _error = _classScheduleService.error;
       _isLoading = false;
       notifyListeners();
       return;
     }
 
-    Box? box;
-    String? cachedJson;
-    try {
-      box = await Hive.openBox('ClassScheduleModel');
-      cachedJson = box.get('ClassScheduleModel');
-    } catch (_) {}
-
-    bool loadedFromCache = false;
-
-    /// if class schedule data is cached in hive box, immediately load data to UI
-    if (cachedJson != null && cachedJson.isNotEmpty) {
-      try {
-        _applyModel(classScheduleModelFromJson(cachedJson));
-        _isLoading = false;
-        loadedFromCache = true;
-        notifyListeners();
-      } catch (_) {}
-    }
+    final int generation = _sessionGeneration;
 
     /// fetch actual data
     final bool termFetched = await _classScheduleService.fetchAcademicTerm();
+    if (generation != _sessionGeneration) return;
     if (!termFetched) {
-      if (!loadedFromCache) {
-        // TODO: determine what error to show to the user - December 2025
-        _error = _classScheduleService.error;
-        _isLoading = false;
-        notifyListeners();
-      }
+      if (!_modelInitialized) _error = _classScheduleService.error;
+      _isLoading = false;
+      notifyListeners();
       return;
     }
 
@@ -115,17 +154,19 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
     /// erase old model
     ClassScheduleModel fetchedModel = ClassScheduleModel();
+    bool fetchedAnyCourses = false;
 
     /// fetch grad courses
     final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!);
+    if (generation != _sessionGeneration) return;
     if (grCoursesFetched) {
       fetchedModel = _classScheduleService.grData;
-    } else {
-      _error = _classScheduleService.error.toString();
+      fetchedAnyCourses = true;
     }
 
     /// fetch undergrad courses
     final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(headers, _academicTermModel.termCode!);
+    if (generation != _sessionGeneration) return;
     if (unCoursesFetched) {
       if (fetchedModel.data != null) {
         if (_classScheduleService.unData.data != null) {
@@ -134,28 +175,47 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       } else {
         fetchedModel = _classScheduleService.unData;
       }
-      _error = null;
-    } else {
-      _error = _classScheduleService.error.toString();
-      if (!loadedFromCache) {
-        _isLoading = false;
-        notifyListeners();
+      fetchedAnyCourses = true;
+    }
 
-        /// short circuit
-        return;
-      }
+    /// If we have nothing fresh to show, keep whatever is already displayed.
+    if (!fetchedAnyCourses) {
+      if (!_modelInitialized) _error = _classScheduleService.error;
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
+
+    /// Never replace a complete displayed schedule with partial data;
+    /// partial results are only applied when nothing is displayed.
+    if (_modelInitialized && (!grCoursesFetched || !unCoursesFetched)) {
+      _isLoading = false;
+      notifyListeners();
+      return;
     }
 
     final String newJson = classScheduleModelToJson(fetchedModel);
 
-    /// verify against cached data
-    if (loadedFromCache && cachedJson == newJson) return;
+    /// Skip the redundant apply and cache write if the fresh data
+    /// matches what is already displayed.
+    if (_modelInitialized && newJson == classScheduleModelToJson(_classScheduleModel)) {
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
 
     _applyModel(fetchedModel);
     _lastUpdated = DateTime.now();
-    if (box != null) await box.put('ClassScheduleModel', newJson);
-    if (!loadedFromCache) _isLoading = false;
     notifyListeners();
+
+    /// A failed cache write must not discard the fresh UI update. Re-check
+    /// the generation so a logout during the box open cannot re-persist the
+    /// previous user's schedule into the just-cleared box.
+    try {
+      final box = await Hive.openBox('ClassScheduleModel');
+      if (generation != _sessionGeneration) return;
+      await box.put('ClassScheduleModel', newJson);
+    } catch (_) {}
   }
 
   void _createMapOfClasses() {
@@ -172,8 +232,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     // print('\x1B[33m${enrolledCourses.length}\x1B[0m');
     if (enrolledCourses.isEmpty) {
       _error = "No enrolled courses found.";
-      _isLoading = false;
-      notifyListeners();
     }
 
     /// Now that we obtained the classes the student is enrolled in, let's display them!
@@ -251,6 +309,25 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> reset() async {
+    _sessionGeneration++;
+    _modelInitialized = false;
+    _fetchStarted = false;
+    _isLoading = false;
+    _error = null;
+    _selectedCourse = 0;
+    _lastUpdated = DateTime.now();
+    _enrolledClasses = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
+    _finals = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
+    _midterms = {'MI': [], 'OTHER': []};
+    notifyListeners();
+
+    try {
+      final box = await Hive.openBox('ClassScheduleModel');
+      await box.clear();
+    } catch (_) {}
+  }
+
   static DateTime _getStartTime(String time) {
     var times = time.split("-");
     final format = DateFormat.Hm();
@@ -297,6 +374,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
+  bool get hasData => _modelInitialized;
   get error => _error;
   get lastUpdated => _lastUpdated;
   get selectedCourse => _selectedCourse;
