@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 class ClassScheduleDataProvider extends ChangeNotifier {
   /// STATES
   bool _isLoading = false;
+  bool _isRefreshing = false;
   bool _modelInitialized = false;
   bool _fetchStarted = false;
   bool? _wasLoggedIn;
@@ -119,11 +120,11 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     fetchData();
   }
 
-  void fetchData() async {
+  Future<void> fetchData() async {
     if (_isLoading) return;
 
     print("=========fetchData() called==========");
-
+    _selectedCourse = 0;
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -196,6 +197,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
     final String newJson = classScheduleModelToJson(fetchedModel);
 
+    print(newJson);
+
     /// Skip the redundant apply and cache write if the fresh data
     /// matches what is already displayed.
     if (_modelInitialized && newJson == classScheduleModelToJson(_classScheduleModel)) {
@@ -206,6 +209,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
     _applyModel(fetchedModel);
     _lastUpdated = DateTime.now();
+    _isLoading = false;
     notifyListeners();
 
     /// A failed cache write must not discard the fresh UI update. Re-check
@@ -314,6 +318,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     _modelInitialized = false;
     _fetchStarted = false;
     _isLoading = false;
+    _isRefreshing = false;
     _error = null;
     _selectedCourse = 0;
     _lastUpdated = DateTime.now();
@@ -337,6 +342,18 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   void selectCourse(int index) {
     _selectedCourse = index;
     notifyListeners();
+  }
+
+  Future<void> reload() async {
+    if (_isLoading || _isRefreshing) return;
+
+    _isRefreshing = true;
+    try {
+      await fetchData();
+    } finally {
+      _isRefreshing = false;
+      notifyListeners();
+    }
   }
 
   List<ScheduledClass> get upcomingCourses {
@@ -374,6 +391,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
+  bool get isRefreshing => _isRefreshing;
   bool get hasData => _modelInitialized;
   get error => _error;
   get lastUpdated => _lastUpdated;
