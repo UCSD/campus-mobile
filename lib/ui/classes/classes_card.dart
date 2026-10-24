@@ -17,36 +17,36 @@ const cardId = 'schedule';
 class ClassScheduleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CardContainer(
-      cardId: cardId,
-      active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
-      hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
-      reload: () {
-        final bool isLoading = Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading;
-        if (isLoading)
-          return null;
-        else
-          Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
-      },
-      isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
-      titleText: CardTitleConstants.TITLE_MAP[cardId]!,
-      errorText: Provider.of<ClassScheduleDataProvider>(context).error,
-      child: () => buildClassScheduleCard(
-        context,
-        Provider.of<ClassScheduleDataProvider>(context).upcomingCourses,
-        Provider.of<ClassScheduleDataProvider>(context).selectedCourse,
-        Provider.of<ClassScheduleDataProvider>(context).lastUpdated,
-        Provider.of<ClassScheduleDataProvider>(context).nextDayWithClass,
+    cardId: cardId,
+    active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
+    hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
+    reload: () {
+      final bool isLoading = Provider.of<ClassScheduleDataProvider>(context, listen: false).isLoading;
+      if (isLoading)
+        return null;
+      else
+        Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
+    },
+    isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
+    titleText: CardTitleConstants.TITLE_MAP[cardId]!,
+    errorText: Provider.of<ClassScheduleDataProvider>(context).error,
+    child: () => buildClassScheduleCard(
+      context,
+      Provider.of<ClassScheduleDataProvider>(context).upcomingCourses,
+      Provider.of<ClassScheduleDataProvider>(context).selectedCourse,
+      Provider.of<ClassScheduleDataProvider>(context).lastUpdated,
+      Provider.of<ClassScheduleDataProvider>(context).nextDayWithClass,
+    ),
+    actionButtons: [
+      ActionButton(
+        buttonText: 'VIEW ALL CLASSES',
+        onPressed: () {
+          analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_all'});
+          Navigator.pushNamed(context, RoutePaths.CLASS_SCHEDULE_VIEW_ALL);
+        },
       ),
-      actionButtons: [
-        ActionButton(
-          buttonText: 'VIEW ALL CLASSES',
-          onPressed: () {
-            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_all'});
-            Navigator.pushNamed(context, RoutePaths.CLASS_SCHEDULE_VIEW_ALL);
-          },
-        ),
-      ],
-    );
+    ],
+  );
 
   Widget buildClassScheduleCard(
     BuildContext context,
@@ -155,150 +155,148 @@ class ClassScheduleCard extends StatelessWidget {
 
   // Heading 3 i.e. "CSE 141L"
   Widget buildClassCode(BuildContext context, String className) => Text(
-      className,
-      style: TextStyle(
-        fontSize: 17.0,
-        fontFamily: 'Refrigerator Deluxe',
-        letterSpacing: 1.2,
-        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-        fontWeight: FontWeight.w900,
-      ),
-    );
+    className,
+    style: TextStyle(
+      fontSize: 17.0,
+      fontFamily: 'Refrigerator Deluxe',
+      letterSpacing: 1.2,
+      color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+      fontWeight: FontWeight.w900,
+    ),
+  );
 
   // Small body text i.e. "Laboratory"
   Widget buildClassType(BuildContext context, String classType) => Padding(
-      padding: const EdgeInsets.only(bottom: 6.0),
-      child: Text(
-        classType,
-        style: TextStyle(
-          fontSize: 17,
-          color: Theme.of(context).brightness == Brightness.light
-              ? descriptiveTextColorLight
-              : descriptiveTextColorDark,
-          fontWeight: FontWeight.w400,
-        ),
+    padding: const EdgeInsets.only(bottom: 6.0),
+    child: Text(
+      classType,
+      style: TextStyle(
+        fontSize: 17,
+        color: Theme.of(context).brightness == Brightness.light ? descriptiveTextColorLight : descriptiveTextColorDark,
+        fontWeight: FontWeight.w400,
       ),
-    );
+    ),
+  );
 
   // Start and Finish Time:
   Widget buildTimeRow(BuildContext context, String? day, String? time) => Padding(
-      padding: const EdgeInsets.only(left: 4.0),
-      child: Row(
-        children: <Widget>[
-          Icon(
-            Icons.access_time,
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-            size: 34,
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Time and Days:',
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? descriptiveTextColorLight
-                        : descriptiveTextColorDark,
-                    fontWeight: FontWeight.w400,
-                  ),
+    padding: const EdgeInsets.only(left: 4.0),
+    child: Row(
+      children: <Widget>[
+        Icon(
+          Icons.access_time,
+          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+          size: 34,
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Time and Days:',
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
+                  fontWeight: FontWeight.w400,
                 ),
-                SizedBox(height: 5),
-                Text(
-                  (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700,
-                  ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                (day ?? 'TBA') + ' @ ' + (time ?? 'TBA'),
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ),
+  );
 
   Widget buildLocationRow(BuildContext context, String location) => Padding(
-      padding: const EdgeInsets.only(left: 4.0),
-      child: Row(
-        children: <Widget>[
-          Icon(
-            Icons.location_city,
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-            size: 34,
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Classroom Location:',
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? descriptiveTextColorLight
-                        : descriptiveTextColorDark,
-                    fontWeight: FontWeight.w400,
-                  ),
+    padding: const EdgeInsets.only(left: 4.0),
+    child: Row(
+      children: <Widget>[
+        Icon(
+          Icons.location_city,
+          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+          size: 34,
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Classroom Location:',
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
+                  fontWeight: FontWeight.w400,
                 ),
-                SizedBox(height: 5),
-                Text(
-                  location,
-                  style: TextStyle(
-                    fontSize: 15,
-                    letterSpacing: 0.8,
-                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700,
-                  ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                location,
+                style: TextStyle(
+                  fontSize: 15,
+                  letterSpacing: 0.8,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ),
+  );
 
   Widget buildGradeEvaluationRow(BuildContext context, String gradeEvaluation) => Padding(
-      padding: const EdgeInsets.only(left: 4.0),
-      child: Row(
-        children: <Widget>[
-          Icon(
-            Icons.check_box_outlined,
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-            size: 34,
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Evaluation Option:',
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? descriptiveTextColorLight
-                        : descriptiveTextColorDark,
-                    fontWeight: FontWeight.w400,
-                  ),
+    padding: const EdgeInsets.only(left: 4.0),
+    child: Row(
+      children: <Widget>[
+        Icon(
+          Icons.check_box_outlined,
+          color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+          size: 34,
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Evaluation Option:',
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
+                  fontWeight: FontWeight.w400,
                 ),
-                SizedBox(height: 5),
-                Text(
-                  gradeEvaluation,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
-                    fontWeight: FontWeight.w700,
-                  ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                gradeEvaluation,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                  fontWeight: FontWeight.w700,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ),
+  );
 }

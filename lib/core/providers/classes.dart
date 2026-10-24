@@ -38,6 +38,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   /// MODELS
   late ClassScheduleModel _classScheduleModel;
+
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
 
