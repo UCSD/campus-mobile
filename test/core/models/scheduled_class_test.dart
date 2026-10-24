@@ -47,4 +47,39 @@ void main() {
       expect(ClassData.fromJson({'gradeOption': 'Pass/No Pass'}).gradeOption, 'Pass/No Pass');
     });
   });
+
+  group('ScheduledClass waitlist handling', () {
+    test('uses an explicit waitlist position', () {
+      final scheduledClass = _scheduledClass(waitlistPosition: 3);
+
+      expect(scheduledClass.isWaitlisted, isTrue);
+      expect(scheduledClass.waitlistDisplay, 'Waitlist #3');
+    });
+
+    test('parses a waitlist position from the enrollment status', () {
+      final scheduledClass = _scheduledClass(enrollmentStatus: 'Waitlisted 4');
+
+      expect(scheduledClass.isWaitlisted, isTrue);
+      expect(scheduledClass.waitlistDisplay, 'Waitlist #4');
+    });
+
+    test('falls back to a generic waitlist label when no position is present', () {
+      final scheduledClass = _scheduledClass(enrollmentStatus: 'Waitlisted');
+
+      expect(scheduledClass.isWaitlisted, isTrue);
+      expect(scheduledClass.waitlistDisplay, 'Waitlisted');
+    });
+  });
+}
+
+ScheduledClass _scheduledClass({String? enrollmentStatus, int? waitlistPosition}) {
+  final course = ClassData(
+    subjectCode: 'CSE',
+    courseCode: '110',
+    enrollmentStatus: enrollmentStatus,
+    waitlistPosition: waitlistPosition,
+    sectionData: [SectionData(enrollStatus: enrollmentStatus)],
+  );
+
+  return ScheduledClass(course: course, section: course.sectionData!.first);
 }

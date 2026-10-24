@@ -34,6 +34,9 @@ class ClassData {
   String? courseTitle;
   String? enrollmentStatus;
   String? repeatCode;
+  String? waitlistStatus;
+  int? waitlistPosition;
+  int? waitlistNumber;
   List<SectionData>? sectionData;
 
   ClassData({
@@ -47,6 +50,9 @@ class ClassData {
     this.courseTitle,
     this.enrollmentStatus,
     this.repeatCode,
+    this.waitlistStatus,
+    this.waitlistPosition,
+    this.waitlistNumber,
     this.sectionData,
   });
 
@@ -61,6 +67,9 @@ class ClassData {
     courseTitle: json["course_title"] == null ? null : json["course_title"],
     enrollmentStatus: json["enrollment_status"] == null ? null : json["enrollment_status"],
     repeatCode: json["repeat_code"] == null ? null : json["repeat_code"],
+    waitlistStatus: json["waitlist_status"] == null ? null : json["waitlist_status"],
+    waitlistPosition: _intFromDynamic(json["waitlist_position"]),
+    waitlistNumber: _intFromDynamic(json["waitlist_number"]),
     sectionData: json["sectionData"] == null
         ? null
         : (json["sectionData"] as List<dynamic>)
@@ -79,8 +88,18 @@ class ClassData {
     "course_title": courseTitle == null ? null : courseTitle,
     "enrollment_status": enrollmentStatus == null ? null : enrollmentStatus,
     "repeat_code": repeatCode == null ? null : repeatCode,
+    "waitlist_status": waitlistStatus == null ? null : waitlistStatus,
+    "waitlist_position": waitlistPosition == null ? null : waitlistPosition,
+    "waitlist_number": waitlistNumber == null ? null : waitlistNumber,
     "sectionData": sectionData?.map((item) => item.toJson()).toList(),
   };
+}
+
+int? _intFromDynamic(dynamic value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  if (value is String) return int.tryParse(value);
+  return null;
 }
 
 class SectionData {

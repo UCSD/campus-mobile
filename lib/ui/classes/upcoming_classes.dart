@@ -47,8 +47,66 @@ class UpcomingCoursesList extends StatelessWidget {
           ),
         ),
         ListView(physics: NeverScrollableScrollPhysics(), children: listOfCourses, shrinkWrap: true),
+        ...buildWaitlistedSection(context),
       ],
     );
+  }
+
+  List<Widget> buildWaitlistedSection(BuildContext context) {
+    final waitlistedClasses = Provider.of<ClassScheduleDataProvider>(context).waitlistedClasses;
+    if (waitlistedClasses.isEmpty) return [];
+
+    return [
+      const SizedBox(height: 12),
+      Divider(color: listTileDividerColorDark, thickness: 0.7),
+      Padding(
+        padding: const EdgeInsets.only(right: 8, bottom: 4),
+        child: Text(
+          'Waitlisted',
+          style: TextStyle(
+            fontSize: 22.0,
+            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+      Column(
+        children: waitlistedClasses
+            .map(
+              (scheduledClass) => ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${scheduledClass.subjectCode} ${scheduledClass.courseCode}',
+                      style: TextStyle(
+                        fontSize: 17.0,
+                        fontFamily: 'Refrigerator Deluxe',
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.2,
+                        color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : darkPrimaryColor2,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      scheduledClass.waitlistDisplay,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? descriptiveTextColorLight
+                            : descriptiveTextColorDark,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    ];
   }
 
   Widget buildTile(int index, int? selectedCourse, ScheduledClass data, BuildContext context) {
