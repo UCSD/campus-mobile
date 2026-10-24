@@ -16,8 +16,7 @@ const cardId = 'schedule';
 
 class ClassScheduleCard extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return CardContainer(
+  Widget build(BuildContext context) => CardContainer(
       cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
@@ -48,7 +47,6 @@ class ClassScheduleCard extends StatelessWidget {
         ),
       ],
     );
-  }
 
   Widget buildClassScheduleCard(
     BuildContext context,
@@ -58,8 +56,10 @@ class ClassScheduleCard extends StatelessWidget {
     String nextDayWithClasses,
   ) {
     try {
-      final scheduledClass = courseData[selectedCourse];
-      final section = scheduledClass.section;
+      final ScheduledClass? scheduledClass = courseData.isEmpty
+          ? null
+          : courseData[selectedCourse.clamp(0, courseData.length - 1)];
+      final section = scheduledClass?.section;
       final nextClass = Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
@@ -74,20 +74,32 @@ class ClassScheduleCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8),
-            // CSE 141L
-            buildClassCode(context, '${scheduledClass.subjectCode} ${scheduledClass.courseCode}'),
-            SizedBox(height: 3),
-            // Laboratory
-            buildClassType(context, section.meetingType ?? 'Class'),
-            SizedBox(height: 3),
-            // Start and Finish Time:
-            buildTimeRow(context, scheduledClass.displayDays, section.time),
-            SizedBox(height: 8),
-            // Classroom Location:
-            buildLocationRow(context, section.room?.trim().isNotEmpty == true ? section.room!.trim() : 'TBD'),
-            SizedBox(height: 8),
-            // Evaluation Option:
-            buildGradeEvaluationRow(context, scheduledClass.gradeOption),
+            if (scheduledClass == null || section == null)
+              Text(
+                'No upcoming classes.',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? descriptiveTextColorLight
+                      : descriptiveTextColorDark,
+                ),
+              )
+            else ...[
+              // CSE 141L
+              buildClassCode(context, '${scheduledClass.subjectCode} ${scheduledClass.courseCode}'),
+              SizedBox(height: 3),
+              // Laboratory
+              buildClassType(context, section.meetingType ?? 'Class'),
+              SizedBox(height: 3),
+              // Start and Finish Time:
+              buildTimeRow(context, scheduledClass.displayDays, section.time),
+              SizedBox(height: 8),
+              // Classroom Location:
+              buildLocationRow(context, section.room?.trim().isNotEmpty == true ? section.room!.trim() : 'TBD'),
+              SizedBox(height: 8),
+              // Evaluation Option:
+              buildGradeEvaluationRow(context, scheduledClass.gradeOption),
+            ],
             // "Last updated: A few seconds ago
             Padding(
               padding: const EdgeInsets.only(left: 4.0, top: 24.0),
@@ -142,8 +154,7 @@ class ClassScheduleCard extends StatelessWidget {
   }
 
   // Heading 3 i.e. "CSE 141L"
-  Widget buildClassCode(BuildContext context, String className) {
-    return Text(
+  Widget buildClassCode(BuildContext context, String className) => Text(
       className,
       style: TextStyle(
         fontSize: 17.0,
@@ -153,11 +164,9 @@ class ClassScheduleCard extends StatelessWidget {
         fontWeight: FontWeight.w900,
       ),
     );
-  }
 
   // Small body text i.e. "Laboratory"
-  Widget buildClassType(BuildContext context, String classType) {
-    return Padding(
+  Widget buildClassType(BuildContext context, String classType) => Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
       child: Text(
         classType,
@@ -170,11 +179,9 @@ class ClassScheduleCard extends StatelessWidget {
         ),
       ),
     );
-  }
 
   // Start and Finish Time:
-  Widget buildTimeRow(BuildContext context, String? day, String? time) {
-    return Padding(
+  Widget buildTimeRow(BuildContext context, String? day, String? time) => Padding(
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
@@ -213,10 +220,8 @@ class ClassScheduleCard extends StatelessWidget {
         ],
       ),
     );
-  }
 
-  Widget buildLocationRow(BuildContext context, String location) {
-    return Padding(
+  Widget buildLocationRow(BuildContext context, String location) => Padding(
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
@@ -256,10 +261,8 @@ class ClassScheduleCard extends StatelessWidget {
         ],
       ),
     );
-  }
 
-  Widget buildGradeEvaluationRow(BuildContext context, String gradeEvaluation) {
-    return Padding(
+  Widget buildGradeEvaluationRow(BuildContext context, String gradeEvaluation) => Padding(
       padding: const EdgeInsets.only(left: 4.0),
       child: Row(
         children: <Widget>[
@@ -298,5 +301,4 @@ class ClassScheduleCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }
