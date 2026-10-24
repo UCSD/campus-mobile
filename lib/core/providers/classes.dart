@@ -105,7 +105,14 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     }
 
     if (!wasLoggedIn && isLoggedIn) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final studentId = _userDataProvider.studentIdDataProvider;
+        if (studentId != null) {
+          await Future.any([
+            studentId.whenSettled(),
+            Future<void>.delayed(const Duration(milliseconds: 1000)),
+          ]);
+        }
         startFetchIfNeeded();
       });
     }

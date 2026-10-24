@@ -175,6 +175,7 @@ List<SingleChildWidget> dependentServices = [
     },
     update: (_, userDataProvider, studentIdDataProvider) {
       studentIdDataProvider!.userDataProvider = userDataProvider;
+      userDataProvider.studentIdDataProvider = studentIdDataProvider;
       return studentIdDataProvider;
     },
   ),
