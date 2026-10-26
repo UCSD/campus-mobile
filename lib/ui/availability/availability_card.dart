@@ -35,7 +35,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
   void initState() {
     super.initState();
     _timer = Timer.periodic(
-        const Duration(seconds: 90), (_) => _availabilityDataProvider.fetchAvailability(silent: true));
+      const Duration(seconds: 90),
+      (_) => _availabilityDataProvider.fetchAvailability(silent: true),
+    );
   }
 
   @override
