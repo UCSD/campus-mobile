@@ -79,5 +79,18 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+        <!-- Home screen widgets: android/app/src/main/kotlin/edu/ucsd/HomeWidgets.kt -->
+        <receiver android:name=".StudentIdWidget" android:label="Student ID" android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/student_id_widget_info" />
+        </receiver>
+        <receiver android:name=".ClassesWidget" android:label="Classes" android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/classes_widget_info" />
+        </receiver>
     </application>
 </manifest>

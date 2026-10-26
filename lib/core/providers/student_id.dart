@@ -4,6 +4,7 @@ import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/home_widget.dart';
 import 'package:campus_mobile_experimental/core/services/student_id.dart';
 import 'package:flutter/material.dart';
 
@@ -158,6 +159,7 @@ class StudentIdDataProvider extends ChangeNotifier {
         section.loading = false;
         _lastUpdated = DateTime.now();
         notifyListeners();
+        unawaited(HomeWidgetService.syncStudentId(_studentIdNameModel.displayName, _studentIdProfileModel.barcode));
       }
     }
   }

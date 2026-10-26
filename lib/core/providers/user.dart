@@ -6,6 +6,7 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
+import 'package:campus_mobile_experimental/core/services/home_widget.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_persistence.dart';
 import 'package:campus_mobile_experimental/core/services/user.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
@@ -269,6 +270,7 @@ class UserDataProvider extends ChangeNotifier {
     updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
     _deletePasswordFromDevice();
     _deleteUsernameFromDevice();
+    HomeWidgetService.clear();
     var _cardsDataProvider = CardsDataProvider();
     _cardsDataProvider.updateAvailableCards("");
     var box = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');

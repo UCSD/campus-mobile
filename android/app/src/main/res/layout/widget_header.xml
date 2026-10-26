@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- UC San Diego wordmark top left, Triton trident top right. FrameLayout because RemoteViews can't inflate a plain spacer View. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="6dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_gravity="start|center_vertical"
+        android:adjustViewBounds="true"
+        android:contentDescription="UC San Diego"
+        android:src="@drawable/ucsd_logo_white" />
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end|center_vertical"
+        android:importantForAccessibility="no"
+        android:src="@drawable/triton_logo" />
+</FrameLayout>

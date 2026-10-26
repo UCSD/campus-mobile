@@ -1,0 +1,2 @@
+// Keeps the widget's version in sync with the app (FLUTTER_BUILD_NAME / FLUTTER_BUILD_NUMBER).
+#include "../Flutter/Generated.xcconfig"

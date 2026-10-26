@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/classes.dart';
+import 'package:campus_mobile_experimental/core/services/home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -99,6 +100,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         }
 
         _lastUpdated = DateTime.now();
+        // Skip if the user logged out mid-fetch so the widget never shows their classes again.
+        if (_userDataProvider.isLoggedIn) HomeWidgetService.syncClasses(_enrolledClasses);
       } else {
         // TODO: determine what error to show to the user - December 2025
         _error = _classScheduleService.error;

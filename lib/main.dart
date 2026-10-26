@@ -8,6 +8,7 @@ import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message_persistent.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
+import 'package:campus_mobile_experimental/core/services/home_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -38,6 +40,7 @@ void main() async {
 
     // dotenv loading
     await dotenv.load(isOptional: true);
+    await HomeWidget.setAppGroupId(HomeWidgetService.appGroupId);
 
     /// Enable crash analytics - https://firebase.flutter.dev/docs/crashlytics/usage#toggle-crashlytics-collection
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
