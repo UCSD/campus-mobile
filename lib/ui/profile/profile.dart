@@ -110,7 +110,7 @@ class Profile extends StatelessWidget {
                   onTap: handlePrivacyTap,
                 ),
                 ListTile(
-                  leading: Icon(Icons.lock, color: Theme.of(context).iconTheme.color, size: 30.0),
+                  leading: Icon(Icons.star, color: Theme.of(context).iconTheme.color, size: 30.0),
                   title: Text(
                     'Triton Credits',
                     style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,

@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 
 class TritonCredits extends StatelessWidget {
   const TritonCredits({Key? key}) : super(key: key);
 
   static const List<String> _credits = [
     'This page was suggested by Kristhian Ortiz Alvarado and built by Prisha Jain.',
+    'Test credit #2',
+    'Test credit #3',
   ];
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ColorSecondary,
     appBar: AppBar(
+      titleTextStyle: TextStyle(color: Colors.white),
+      foregroundColor: Colors.white,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('UC San Diego'),
-          Text('Triton Credits', style: Theme.of(context).textTheme.bodySmall),
-        ],
+        children: [Text('TRITON CREDITS')],
       ),
     ),
     body: ListView.separated(
