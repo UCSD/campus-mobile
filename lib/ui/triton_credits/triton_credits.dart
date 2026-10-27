@@ -12,20 +12,41 @@ class TritonCredits extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: ColorSecondary,
+    backgroundColor: ColorPrimary,
     appBar: AppBar(
-      titleTextStyle: TextStyle(color: Colors.white),
-      foregroundColor: Colors.white,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [Text('TRITON CREDITS')],
-      ),
+      titleTextStyle: appBarTitleStyle,
+      centerTitle: true,
+      elevation: 0,
+      backgroundColor: ColorPrimary,
+      foregroundColor: lightTextColor,
+      title: Text('TRITON CREDITS'),
     ),
     body: ListView.separated(
       itemCount: _credits.length,
-      itemBuilder: (context, index) =>
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), child: Text(_credits[index])),
+      itemBuilder: (context, index) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Card(
+          color: triton_credits_color,
+          elevation: 6,
+          margin: EdgeInsets.zero,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.auto_awesome_rounded,
+                color: actionButtonBackgroundColor,
+                size: 20,
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  _credits[index]
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       separatorBuilder: (context, index) => const Divider(height: 1),
     ),
   );
