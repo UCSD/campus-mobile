@@ -39,13 +39,13 @@ class TritonCredits extends StatelessWidget {
               Image.asset('assets/images/UCSDMobile_sharp-removebg-preview.png', fit: BoxFit.cover, height: 80, width: 80),
               Padding(padding: EdgeInsets.all(20)),
               Image.asset('assets/images/UCSanDiego-Logo_White.png', fit: BoxFit.contain, height: 36),
-              Padding(padding: EdgeInsets.all(20)),
+              Padding(padding: EdgeInsets.all(12)),
               Text('This page is dedicated to all the members of our Triton community who have helped to build and improve the mobile app.',
                   style: const TextStyle(fontSize: 16, color: Colors.white70),
                   textAlign: TextAlign.center),
               for (final credit in _credits)
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
