@@ -1,43 +1,48 @@
-import 'dart:async';
-import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:campus_mobile_experimental/core/services/one_bus_away_client.dart';
 
+/// Fetches campus transit data from the OneBusAway API (MA-685).
+///
+/// The service keeps the same public contract as the previous
+/// shuttle-feed-backed implementation, so the provider and UI are unchanged:
+/// - [fetchData] populates [data] with the available shuttle stops.
+/// - [getArrivingInformation] returns upcoming arrivals for a stop id.
 class ShuttleService {
-  ShuttleService();
+  ShuttleService({OneBusAwayClient? client}) : _client = client ?? OneBusAwayClient();
 
   /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {"accept": "application/json"};
-
-  /// add state related things for view model here
-  /// add any type of data manipulation here so it can be accessed via provider
 
   /// MODELS
   List<ShuttleStopModel> _data = [];
+
+  /// Maps the integer stop ids used by the UI to the raw OneBusAway stop ids
+  /// (e.g. `10772` -> `UCSD_10772`) needed by the arrivals endpoint.
+  final Map<int, String> _oneBusAwayStopIds = {};
+
+  final OneBusAwayClient _client;
 
   Future<bool> fetchData() async {
     _error = null;
     _isLoading = true;
     try {
-      /// fetch data
-      String _response = await (NetworkHelper.authorizedFetch(dotenv.get('SHUTTLE_API_ENDPOINT'), headers));
+      /// fetch data: all stops served by the campus shuttle agency
+      final Map<String, dynamic> envelope = await _client.fetchStopsForAgency();
 
       /// parse data
-      var data = shuttleStopModelFromJson(_response);
-      _data = data;
-      // print fetched data to terminal in green (one line per stop with reset)
-      // for (var stop in _data) {
-      //   print('\x1B[32mShuttleStop(id: ${stop.id}, name: ${stop.name}, lat: ${stop.lat}, lon: ${stop.lon})\x1B[0m');
-      // }
+      _data = shuttleStopsFromOneBusAwayEnvelope(envelope);
+      _oneBusAwayStopIds.clear();
+      for (final ShuttleStopModel stop in _data) {
+        final String? oneBusAwayId = stop.oneBusAwayId;
+        if (oneBusAwayId != null) _oneBusAwayStopIds[stop.id] = oneBusAwayId;
+      }
       return true;
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers)) return await fetchData();
+      /// OneBusAway failures are wrapped in [OneBusAwayException] with
+      /// sanitized messages, so this is safe to expose to the UI.
       _error = e.toString();
       return false;
     } finally {
@@ -49,25 +54,16 @@ class ShuttleService {
     _error = null;
     _isLoading = true;
     try {
-      /// fetch data
-      String _response = await (NetworkHelper.authorizedFetch(
-        dotenv.get('SHUTTLE_API_ENDPOINT') + "/$stopId/arrivals",
-        headers,
-      ));
+      /// fetch data: arrivals for the raw OneBusAway stop id when known
+      final String oneBusAwayStopId = _oneBusAwayStopIds[stopId] ?? stopId.toString();
+      final Map<String, dynamic> envelope = await _client.fetchArrivalsAndDeparturesForStop(oneBusAwayStopId);
 
-      /// parse data
-      final arrivingData = getArrivingShuttles(_response);
-      // print arriving data to terminal in pink (one line per arrival with reset)
-      // for (var arrival in arrivingData) {
-      //   print(
-      //       '\x1B[35mArrivingShuttle(stopId: ${arrival.routeStopId}, routeId: ${arrival.routeId}, routeName: ${arrival.routeName}, routeColor: ${arrival.routeColor}, minutesToArrival: ${arrival.secondsToArrival / 60})\x1B[0m');
-      // }
-      return arrivingData;
+      /// parse data: keep only the campus shuttle agency's routes, matching
+      /// the scope of the previous shuttle feed
+      return arrivingShuttlesFromOneBusAwayEnvelope(envelope, agencyId: OneBusAwayClient.defaultAgencyId);
     } catch (e) {
-      /// if the authorized fetch failed we know we have to refresh the
-      /// token for this service
-      if (e.toString().contains("401"))
-        if (await NetworkHelper.getNewToken(headers)) return await getArrivingInformation(stopId);
+      /// OneBusAway failures are wrapped in [OneBusAwayException] with
+      /// sanitized messages, so this is safe to expose to the UI.
       _error = e.toString();
       return [];
     } finally {
