@@ -12,6 +12,7 @@ import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/ui/common/action_link.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_display.dart';
+
 // import 'package:url_launcher/url_launcher.dart';
 
 const String cardId = 'shuttle';

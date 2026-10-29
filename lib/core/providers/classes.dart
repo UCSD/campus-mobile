@@ -107,10 +107,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         final studentId = _userDataProvider.studentIdDataProvider;
         if (studentId != null) {
-          await Future.any([
-            studentId.whenSettled(),
-            Future<void>.delayed(const Duration(milliseconds: 1000)),
-          ]);
+          await Future.any([studentId.whenSettled(), Future<void>.delayed(const Duration(milliseconds: 1000))]);
         }
         startFetchIfNeeded();
       });
