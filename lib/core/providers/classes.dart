@@ -85,7 +85,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       _error = null;
 
       _applyModel(cachedModel);
-      print('=========cached model applied============');
       notifyListeners();
     } catch (_) {
       /// A cache miss or unreadable cache is not an error;
@@ -130,7 +129,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   Future<void> fetchData() async {
     if (_isLoading) return;
 
-    print("=========fetchData() called==========");
     _selectedCourse = 0;
     _isLoading = true;
     _error = null;
@@ -203,8 +201,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     }
 
     final String newJson = classScheduleModelToJson(fetchedModel);
-
-    print(newJson);
 
     /// Skip the redundant apply and cache write if the fresh data
     /// matches what is already displayed.
