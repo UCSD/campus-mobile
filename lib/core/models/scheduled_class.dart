@@ -60,7 +60,7 @@ class ScheduledClass {
 
   String get waitlistDisplay {
     final position = waitlistPosition;
-    return position == null ? 'Waitlisted' : 'Waitlist #$position';
+    return position == null ? 'Waitlisted' : '#$position on Waitlist';
   }
 
   static int? _extractWaitlistPosition(String? value) {

@@ -7,14 +7,14 @@ void main() {
     final scheduledClass = _scheduledClass(waitlistPosition: 3);
 
     expect(scheduledClass.isWaitlisted, isTrue);
-    expect(scheduledClass.waitlistDisplay, 'Waitlist #3');
+    expect(scheduledClass.waitlistDisplay, '#3 on Waitlist');
   });
 
   test('parses a waitlist position from the enrollment status', () {
     final scheduledClass = _scheduledClass(enrollmentStatus: 'Waitlisted 4');
 
     expect(scheduledClass.isWaitlisted, isTrue);
-    expect(scheduledClass.waitlistDisplay, 'Waitlist #4');
+    expect(scheduledClass.waitlistDisplay, '#4 on Waitlist');
   });
 
   test('falls back to a generic waitlist label when no position is present', () {

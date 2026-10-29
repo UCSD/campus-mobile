@@ -44,19 +44,30 @@ class ClassList extends StatelessWidget {
 
     if (waitlistedClasses.isNotEmpty) {
       list.add(
-        SliverStickyHeader(
-          header: Container(
-            color: Theme.of(context).brightness == Brightness.light ? lightPrimaryColor : descriptiveTextColorLight,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text('Waitlisted', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
-            ),
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(child: Divider(color: listTileDividerColorDark, thickness: 0.7)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text('Waitlisted', style: Theme.of(context).textTheme.bodySmall),
+                  ),
+                  Expanded(child: Divider(color: listTileDividerColorDark, thickness: 0.7)),
+                ],
+              ),
+              const SizedBox(height: 8),
+            ],
           ),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildClassCard(context, waitlistedClasses[index], isWaitlisted: true),
-              childCount: waitlistedClasses.length,
-            ),
+        ),
+      );
+      list.add(
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => _buildClassCard(context, waitlistedClasses[index], isWaitlisted: true),
+            childCount: waitlistedClasses.length,
           ),
         ),
       );
