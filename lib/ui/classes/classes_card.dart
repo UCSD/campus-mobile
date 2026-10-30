@@ -37,10 +37,10 @@ class _ClassScheduleCardState extends State<ClassScheduleCard> {
         if (isLoading)
           return null;
         else
-          Provider.of<ClassScheduleDataProvider>(context, listen: false).reload();
+          Provider.of<ClassScheduleDataProvider>(context, listen: false).reload(cardId);
       },
       isLoading:
-          Provider.of<ClassScheduleDataProvider>(context).isRefreshing ||
+          Provider.of<ClassScheduleDataProvider>(context).isRefreshing(cardId) ||
           (Provider.of<ClassScheduleDataProvider>(context).isLoading &&
               !Provider.of<ClassScheduleDataProvider>(context).hasData),
       titleText: CardTitleConstants.TITLE_MAP[cardId]!,

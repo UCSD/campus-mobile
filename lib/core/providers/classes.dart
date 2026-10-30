@@ -10,7 +10,8 @@ import 'package:intl/intl.dart';
 class ClassScheduleDataProvider extends ChangeNotifier {
   /// STATES
   bool _isLoading = false;
-  bool _isRefreshing = false;
+  String? _refreshingCardId;
+  bool _linkedRefreshActive = false;
   bool _modelInitialized = false;
   bool _fetchStarted = false;
   bool? _wasLoggedIn;
@@ -207,6 +208,10 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       return;
     }
 
+    if (_refreshingCardId != null) {
+      _linkedRefreshActive = true;
+    }
+
     _applyModel(fetchedModel);
     _lastUpdated = DateTime.now();
     _isLoading = false;
@@ -318,7 +323,8 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     _modelInitialized = false;
     _fetchStarted = false;
     _isLoading = false;
-    _isRefreshing = false;
+    _refreshingCardId = null;
+    _linkedRefreshActive = false;
     _error = null;
     _selectedCourse = 0;
     _lastUpdated = DateTime.now();
@@ -344,14 +350,15 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reload() async {
-    if (_isLoading || _isRefreshing) return;
+  Future<void> reload(String cardId) async {
+    if (_isLoading || _refreshingCardId != null) return;
 
-    _isRefreshing = true;
+    _refreshingCardId = cardId;
     try {
       await fetchData();
     } finally {
-      _isRefreshing = false;
+      _refreshingCardId = null;
+      _linkedRefreshActive = false;
       notifyListeners();
     }
   }
@@ -391,7 +398,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
-  bool get isRefreshing => _isRefreshing;
+  bool isRefreshing(String cardId) => _refreshingCardId == cardId || _linkedRefreshActive;
   bool get hasData => _modelInitialized;
   get error => _error;
   get lastUpdated => _lastUpdated;
