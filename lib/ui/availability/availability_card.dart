@@ -10,9 +10,9 @@ import 'package:campus_mobile_experimental/ui/availability/availability_constant
 import 'package:campus_mobile_experimental/ui/availability/availability_display.dart';
 import 'package:campus_mobile_experimental/ui/common/action_link.dart';
 import 'package:campus_mobile_experimental/ui/common/card_container.dart';
+import 'package:campus_mobile_experimental/ui/common/last_updated_widget.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 const cardId = 'availability';
@@ -73,27 +73,25 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       errorText: _availabilityDataProvider.error,
       child: () => buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
       actionButtons: [
-        ActionLink(
-          buttonText: 'MANAGE LOCATIONS',
-          onPressed: () {
-            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage'});
-            Navigator.pushNamed(context, RoutePaths.MANAGE_AVAILABILITY_VIEW);
-          },
+        Flexible(
+          child: ActionLink(
+            buttonText: 'MANAGE LOCATIONS',
+            onPressed: () {
+              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage'});
+              Navigator.pushNamed(context, RoutePaths.MANAGE_AVAILABILITY_VIEW);
+            },
+          ),
         ),
-        if (_availabilityDataProvider.lastUpdated != null)
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 16.0),
-              child: Text(
-                'Live · Updated ${DateFormat.jm().format(_availabilityDataProvider.lastUpdated!)}',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-                textAlign: TextAlign.right,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+      ],
+      footer: _availabilityDataProvider.lastUpdated == null
+          ? null
+          : Padding(
+              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 16),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: LastUpdatedWidget(time: _availabilityDataProvider.lastUpdated!),
               ),
             ),
-          ),
-      ],
     );
   }
 
