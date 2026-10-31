@@ -16,30 +16,36 @@ class CardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: padding,
-      child: Semantics(
-        explicitChildNodes: true,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Focus(
-                  child: Semantics(
-                    container: true,
-                    header: true,
-                    focusable: true,
-                    child: Text(
-                      titleText,
-                      style: Theme.of(context).textTheme.titleLarge,
-                      semanticsLabel: '$titleText Card',
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
+        child: Semantics(
+          explicitChildNodes: true,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Focus(
+                    child: Semantics(
+                      container: true,
+                      header: true,
+                      focusable: true,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          titleText,
+                          style: Theme.of(context).textTheme.titleLarge,
+                          semanticsLabel: '$titleText Card',
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            trailing,
-          ],
+              trailing,
+            ],
+          ),
         ),
       ),
     );
