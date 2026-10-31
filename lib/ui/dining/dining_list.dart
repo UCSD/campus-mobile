@@ -22,11 +22,13 @@ class DiningList extends StatefulWidget {
 
 class _DiningListState extends State<DiningList> {
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocus = FocusNode();
   String _searchQuery = '';
 
   @override
   void dispose() {
     _searchController.dispose();
+    _searchFocus.dispose();
     super.dispose();
   }
 
@@ -45,24 +47,6 @@ class _DiningListState extends State<DiningList> {
           children: [
             Text(
               'No dining locations match your filters.',
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
-    }
-
-    if (widget.showSearch && _searchQuery.trim().isNotEmpty && searchedData.isEmpty) {
-      return ContainerView(
-        child: ListView(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 32),
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            if (widget.showSearch) buildSearchField(context),
-            Text(
-              'No dining locations match your search.',
               style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
@@ -107,13 +91,23 @@ class _DiningListState extends State<DiningList> {
                   shrinkWrap: true,
                   children: [
                     if (widget.showSearch) buildSearchField(context),
-                    ...ListTile.divideTiles(
-                      tiles: diningTiles,
-                      context: context,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? listTileDividerColorDark
-                          : listTileDividerColorLight,
-                    ),
+                    if (listOfDiners.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text(
+                          'No dining locations match your search.',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    else
+                      ...ListTile.divideTiles(
+                        tiles: diningTiles,
+                        context: context,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? listTileDividerColorDark
+                            : listTileDividerColorLight,
+                      ),
                   ],
                 ),
               ),
@@ -126,6 +120,7 @@ class _DiningListState extends State<DiningList> {
     padding: const EdgeInsets.only(bottom: 16, top: 16),
     child: TextField(
       controller: _searchController,
+      focusNode: _searchFocus,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         hintText: 'Search dining locations',
