@@ -118,6 +118,11 @@ void main() {
 
   ScrollPosition position(WidgetTester tester) => tester.state<ScrollableState>(find.byType(Scrollable)).position;
 
+  Finder emptyStatePadding() => find.ancestor(
+    of: find.text('All cards hidden.\nPlease enable them in\nProfile > Card Settings'),
+    matching: find.byWidgetPredicate((widget) => widget is Padding && widget.padding == const EdgeInsets.all(32)),
+  );
+
   Future<Color> pixel(WidgetTester tester, int x, int y) async {
     final boundary = tester.renderObject<RenderRepaintBoundary>(find.byKey(const ValueKey('home capture')));
     return (await tester.runAsync(() async {
@@ -154,13 +159,13 @@ void main() {
     final scrollPosition = position(tester);
     expect(scrollPosition.maxScrollExtent, greaterThan(0));
     scrollPosition.jumpTo(scrollPosition.maxScrollExtent);
-    await tester.pump();
-    expect(
-      find.byWidgetPredicate((widget) => widget is NoticesCard && widget.notice.title == 'Notice 31'),
-      findsOneWidget,
-    );
-    final lastCardBottom = tester.getBottomLeft(find.byType(NoticesCard).last).dy;
-    expect(lastCardBottom, closeTo(scrollPosition.viewportDimension - cardMargin - 2, 0.01));
+    await tester.pumpAndSettle();
+    final lastCard = find.byWidgetPredicate((widget) => widget is NoticesCard && widget.notice.title == 'Notice 31');
+    expect(lastCard, findsOneWidget);
+    expect(emptyStatePadding(), findsOneWidget);
+    expect(tester.getBottomLeft(lastCard).dy, closeTo(tester.getTopLeft(emptyStatePadding()).dy, 0.01));
+    final contentBottom = tester.getBottomLeft(emptyStatePadding()).dy;
+    expect(contentBottom, closeTo(scrollPosition.viewportDimension - cardMargin - 2, 0.01));
     expect(tester.takeException(), isNull);
   });
 
@@ -223,21 +228,25 @@ void main() {
     await showHome(tester, 1, mockDecorations: true);
     final sliver = tester.renderObject<RenderDecoratedSliver>(find.byType(DecoratedSliver));
     final cardHeight = tester.getSize(find.byType(NoticesCard)).height;
-    expect(sliver.geometry!.scrollExtent, closeTo(cardHeight + cardMargin + 2, 0.01));
+    expect(emptyStatePadding(), findsOneWidget);
+    final emptyStateHeight = tester.getSize(emptyStatePadding()).height;
+    expect(sliver.geometry!.scrollExtent, closeTo(cardHeight + emptyStateHeight + cardMargin + 2, 0.01));
     expect(await pixel(tester, 398, 500), Colors.transparent);
     expect(tester.takeException(), isNull);
   });
 
   testWidgets('decorations cover bottom padding at the end of scrolling', (tester) async {
-    await showHome(tester, 3, mockDecorations: true);
+    // Two notices plus the empty-state message end within circle 1's bounds.
+    await showHome(tester, 2, mockDecorations: true);
     tester.view.physicalSize = const Size(400, 400);
     await tester.pumpAndSettle();
     final scrollPosition = position(tester);
     expect(scrollPosition.maxScrollExtent, greaterThan(0));
     scrollPosition.jumpTo(scrollPosition.maxScrollExtent);
     await tester.pumpAndSettle();
-    final lastCardBottom = tester.getBottomLeft(find.byType(NoticesCard).last).dy;
-    expect(lastCardBottom, closeTo(scrollPosition.viewportDimension - cardMargin - 2, 0.01));
+    expect(emptyStatePadding(), findsOneWidget);
+    final contentBottom = tester.getBottomLeft(emptyStatePadding()).dy;
+    expect(contentBottom, closeTo(scrollPosition.viewportDimension - cardMargin - 2, 0.01));
     // Circle 1 intersects the content end. Check continuity into the final
     // padding and through the last visible row, outside the cards horizontally.
     expect(await pixel(tester, 398, 389), const Color(0xFFFF0000));
