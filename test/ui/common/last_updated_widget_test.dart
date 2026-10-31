@@ -4,6 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  final staleAges = {
+    const Duration(minutes: 5): '5 minutes ago',
+    const Duration(hours: 3): '3 hours ago',
+    const Duration(days: 3): '3 days ago',
+  };
+  for (final entry in staleAges.entries) {
+    test('stale timestamp displays ${entry.value}', () {
+      final lastUpdated = DateTime.now().subtract(entry.key);
+      expect(LastUpdatedWidget.determineText(lastUpdated), entry.value);
+    });
+  }
+
   for (final brightness in Brightness.values) {
     testWidgets('last updated text is readable in ${brightness.name} mode', (tester) async {
       final background = brightness == Brightness.dark ? darkPrimaryBgColor : lightAccentColor;

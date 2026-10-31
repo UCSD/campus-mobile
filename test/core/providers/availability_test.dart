@@ -52,6 +52,32 @@ void main() {
     });
   });
 
+  test('repeated background failures keep cached data until a successful refresh clears the failure state', () async {
+    await _withAvailability((fixture) async {
+      expect(fixture.provider.refreshFailed, isFalse);
+      await fixture.fetch();
+      final lastUpdated = fixture.provider.lastUpdated;
+      final location = fixture.provider.availabilityModels.single;
+
+      fixture.statusCode = 503;
+      for (var attempt = 0; attempt < 3; attempt++) {
+        await fixture.fetch(silent: true);
+        expect(fixture.provider.refreshFailed, isTrue);
+        expect(fixture.provider.error, isNull);
+        expect(fixture.provider.isLoading, isFalse);
+        expect(fixture.provider.lastUpdated, lastUpdated);
+        expect(fixture.provider.availabilityModels.single, same(location));
+      }
+
+      fixture.statusCode = 200;
+      fixture.locationName = 'Updated Geisel';
+      await fixture.fetch(silent: true);
+      expect(fixture.provider.refreshFailed, isFalse);
+      expect(fixture.provider.availabilityModels.single!.name, 'Updated Geisel');
+      expect(fixture.provider.lastUpdated!.isAfter(lastUpdated!), isTrue);
+    });
+  });
+
   for (final firstSilent in [false, true]) {
     for (final secondSilent in [false, true]) {
       test(

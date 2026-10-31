@@ -89,7 +89,23 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
               padding: const EdgeInsets.only(left: 24, right: 24, bottom: 16),
               child: Align(
                 alignment: AlignmentDirectional.centerStart,
-                child: LastUpdatedWidget(time: _availabilityDataProvider.lastUpdated!),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    LastUpdatedWidget(time: _availabilityDataProvider.lastUpdated!),
+                    if (_availabilityDataProvider.refreshFailed)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          'Unable to refresh. Showing last available data.',
+                          style: Theme.of(context).brightness == Brightness.dark
+                              ? descriptiveTextSmallDark
+                              : descriptiveTextSmallLight,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
     );

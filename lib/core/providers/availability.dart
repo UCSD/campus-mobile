@@ -7,6 +7,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   /// STATES
   bool _isLoading = false;
   bool _isFetching = false;
+  bool _refreshFailed = false;
   DateTime? _lastUpdated;
   String? _error;
   Map<String?, bool> _locationViewState = {};
@@ -34,6 +35,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
       Map<String, AvailabilityModel> newMapOfLots = {};
 
       if (await _availabilityService.fetchData()) {
+        _refreshFailed = false;
         _error = null;
         Map<String?, bool> newLocationViewState = {};
 
@@ -67,6 +69,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
         reorderLocations(userDataProvider.userProfileModel.selectedOccuspaceLocations);
         _lastUpdated = DateTime.now();
       } else {
+        _refreshFailed = true;
         if (!silent) _error = _availabilityService.error;
       }
     } finally {
@@ -123,6 +126,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   /// SIMPLE GETTERS
   bool get isLoading => _isLoading;
   String? get error => _error;
+  bool get refreshFailed => _refreshFailed;
   DateTime? get lastUpdated => _lastUpdated;
   Map<String?, bool> get locationViewState => _locationViewState;
   List<AvailabilityModel?> get availabilityModels =>

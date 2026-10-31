@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_card.dart';
+import 'package:campus_mobile_experimental/ui/common/last_updated_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +30,8 @@ void main() {
       testWidgets('timestamp and action fit a 320px screen in ${brightness.name} mode at ${scale}x text', (
         tester,
       ) async {
-        await _showCard(tester, brightness: brightness, scale: scale);
+        final availability = _AvailabilityProvider(DateTime.now().subtract(const Duration(minutes: 5)))..failed = true;
+        await _showCard(tester, brightness: brightness, scale: scale, provider: availability);
         final timestamp = find.byWidgetPredicate(
           (widget) => widget is Text && (widget.data?.contains('Updated') ?? false),
         );
@@ -39,6 +41,7 @@ void main() {
 
         expect(timestampParagraph.didExceedMaxLines, isFalse);
         expect(actionParagraph.didExceedMaxLines, isFalse);
+        expect(find.text('Unable to refresh. Showing last available data.'), findsOneWidget);
         expect(tester.getRect(timestamp).top, greaterThanOrEqualTo(tester.getRect(action).bottom));
         expect(tester.getRect(timestamp).left, closeTo(tester.getRect(action).left, 0.1));
         expect(tester.takeException(), isNull);
@@ -52,6 +55,34 @@ void main() {
     expect(find.text('MANAGE LOCATIONS'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('failed refreshes rebuild the cached age and show a note until recovery', (tester) async {
+    final lastUpdated = DateTime.now().subtract(const Duration(hours: 3));
+    final availability = _AvailabilityProvider(lastUpdated);
+    await _showCard(tester, provider: availability);
+    const failureNote = 'Unable to refresh. Showing last available data.';
+    expect(find.text(failureNote), findsNothing);
+    var previousLabel = tester.widget<LastUpdatedWidget>(find.byType(LastUpdatedWidget));
+
+    for (var attempt = 0; attempt < 3; attempt++) {
+      availability.failed = true;
+      availability.notifyListeners();
+      await tester.pump();
+      final label = tester.widget<LastUpdatedWidget>(find.byType(LastUpdatedWidget));
+      expect(label.time, lastUpdated);
+      expect(label, isNot(same(previousLabel)));
+      expect(find.text('Last Updated: ${LastUpdatedWidget.determineText(lastUpdated)}'), findsOneWidget);
+      expect(find.text(failureNote), findsOneWidget);
+      expect(find.textContaining('Live'), findsNothing);
+      previousLabel = label;
+    }
+
+    availability.failed = false;
+    availability.notifyListeners();
+    await tester.pump();
+    expect(find.text(failureNote), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 }
 
 Future<void> _showCard(
@@ -59,14 +90,14 @@ Future<void> _showCard(
   Brightness brightness = Brightness.light,
   double scale = 1,
   bool showTimestamp = true,
+  _AvailabilityProvider? provider,
 }) async {
   tester.view.physicalSize = const Size(320, 640);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
-  final availability = _AvailabilityProvider(
-    showTimestamp ? DateTime.now().subtract(const Duration(minutes: 5)) : null,
-  );
+  final availability =
+      provider ?? _AvailabilityProvider(showTimestamp ? DateTime.now().subtract(const Duration(minutes: 5)) : null);
   final cards = CardsDataProvider();
   addTearDown(() async {
     await tester.pumpWidget(const SizedBox());
@@ -109,6 +140,10 @@ class _AvailabilityProvider extends AvailabilityDataProvider {
   _AvailabilityProvider(this.updatedAt);
 
   final DateTime? updatedAt;
+  bool failed = false;
+
+  @override
+  bool get refreshFailed => failed;
 
   @override
   DateTime? get lastUpdated => updatedAt;
