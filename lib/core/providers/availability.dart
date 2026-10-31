@@ -30,6 +30,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
     Map<String, AvailabilityModel> newMapOfLots = {};
 
     if (await _availabilityService.fetchData()) {
+      _error = null;
       Map<String?, bool> newLocationViewState = {};
 
       /// setting the LocationViewState based on user data
