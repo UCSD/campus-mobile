@@ -5,6 +5,7 @@ import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/availability.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
+import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_constants.dart';
 import 'package:campus_mobile_experimental/ui/availability/availability_display.dart';
@@ -22,32 +23,73 @@ class AvailabilityCard extends StatefulWidget {
   _AvailabilityCardState createState() => _AvailabilityCardState();
 }
 
-class _AvailabilityCardState extends State<AvailabilityCard> {
+class _AvailabilityCardState extends State<AvailabilityCard> with WidgetsBindingObserver {
+  static const _refreshInterval = Duration(seconds: 90);
+
   /// PROVIDERS
   late AvailabilityDataProvider _availabilityDataProvider;
+  late CardsDataProvider _cardsDataProvider;
+  late BottomNavigationBarProvider _bottomNavigationBarProvider;
 
   /// SERVICES
   final _controller = PageController();
   int _currentPage = 0;
   Timer? _timer;
+  AppLifecycleState? _lifecycleState;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(
-      const Duration(seconds: 90),
-      (_) => _availabilityDataProvider.fetchAvailability(silent: true),
-    );
+    _lifecycleState = WidgetsBinding.instance.lifecycleState;
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _availabilityDataProvider = Provider.of<AvailabilityDataProvider>(context);
+    _cardsDataProvider = Provider.of<CardsDataProvider>(context);
+    _bottomNavigationBarProvider = Provider.of<BottomNavigationBarProvider>(context);
+    _updatePolling();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _lifecycleState = state;
+    _updatePolling();
+  }
+
+  bool get _isActive =>
+      mounted &&
+      (_cardsDataProvider.cardStates[cardId] ?? false) &&
+      _bottomNavigationBarProvider.currentIndex == NavigatorConstants.HOME_TAB &&
+      _lifecycleState == AppLifecycleState.resumed;
+
+  void _updatePolling() {
+    if (!_isActive) {
+      _timer?.cancel();
+      _timer = null;
+      return;
+    }
+    if (_timer != null) return;
+    final timer = _timer = Timer.periodic(_refreshInterval, (_) {
+      if (_isActive) _availabilityDataProvider.fetchAvailability(silent: true);
+    });
+
+    // Defer fetching until after build so provider notifications are safe.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_isActive || _timer != timer) return;
+      final lastUpdated = _availabilityDataProvider.lastUpdated;
+      if (lastUpdated == null || DateTime.now().difference(lastUpdated) >= _refreshInterval) {
+        _availabilityDataProvider.fetchAvailability(silent: true);
+      }
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     _controller.dispose();
     super.dispose();
