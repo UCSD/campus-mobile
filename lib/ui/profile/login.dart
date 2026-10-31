@@ -82,11 +82,17 @@ class _LoginState extends State<Login> {
       leading: Icon(Icons.check_circle, color: Colors.green),
       title: Transform.translate(
         offset: Offset(-24, 0),
-        child: Text(
-          _userDataProvider.userProfileModel.username != null
-              ? parseUsername(_userDataProvider.userProfileModel.username!)
-              : "",
-          style: bodyMediumLight,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            _userDataProvider.userProfileModel.username != null
+                ? parseUsername(_userDataProvider.userProfileModel.username!)
+                : "",
+            style: bodyMediumLight,
+            maxLines: 1,
+            softWrap: false,
+          ),
         ),
       ),
       trailing: TextButton(
