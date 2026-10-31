@@ -23,8 +23,9 @@ class _HomeBackgroundPainter extends BoxPainter {
     (
       asset: 'assets/images/circles/circle-4-background.png',
       top: 1065.0,
-      x: 190.0,
-      fromRight: false,
+      // Preserve the left: 190 crop at a 390-pixel reference width.
+      x: -199.7,
+      fromRight: true,
       size: Size(399.7, 398),
     ),
     (asset: 'assets/images/circles/real_circle_5.png', top: 1908.0, x: -88.0, fromRight: false, size: Size(197, 197)),
