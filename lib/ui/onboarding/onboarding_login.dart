@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
@@ -22,8 +23,28 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
 
-  late final _screenWidth = MediaQuery.sizeOf(context).width;
-  late final _screenHeight = MediaQuery.sizeOf(context).height;
+  static const _CONTENT_WIDTH_FACTOR = 0.74444444;
+  static const _SIGN_IN_BUTTON_WIDTH_FACTOR = 0.24111111;
+  static const _SIGN_IN_BUTTON_ASPECT = 2.29268293;
+  static const _HEADING_FONT_FLOOR = 34.5;
+  static const _HEADING_FONT_FACTOR = 0.077;
+  static const _BODY_FONT_FLOOR = 18.0;
+  static const _BODY_FONT_FACTOR = 0.0402;
+  static const _FOOTER_FONT_FLOOR = 15.5;
+  static const _FOOTER_FONT_FACTOR = 0.0346;
+  static const _SKIP_FONT_FLOOR = 16.5;
+  static const _SKIP_FONT_FACTOR = 0.0368;
+
+  double _contentUnit(double width, double usableHeight) {
+    final cap = width < 600
+        ? 480.0
+        : width < 900
+        ? 560.0
+        : width < 1200
+        ? 620.0
+        : 680.0;
+    return math.min(width, math.min(usableHeight / 1.6, cap));
+  }
 
   @override
   void didChangeDependencies() {
@@ -43,6 +64,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
           systemNavigationBarIconBrightness: Brightness.dark,
         ),
         child: Scaffold(
+          resizeToAvoidBottomInset: true,
           backgroundColor: lightOnboardingScreen,
           body: _userDataProvider.isLoading
               ? const Center(
@@ -50,22 +72,36 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                     valueColor: const AlwaysStoppedAnimation<Color>(darkAccentColor),
                   ),
                 )
-              : SingleChildScrollView(
-                  child: Container(
-                    height: _screenHeight,
-                    decoration: const BoxDecoration(
-                      image: const DecorationImage(
-                        image: const AssetImage("assets/images/login-background.png"),
-                        fit: BoxFit.cover, // Ensure the image covers the entire screen
+              : MediaQuery.withClampedTextScaling(
+                  maxScaleFactor: 1.3,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(child: Image.asset('assets/images/login-background.png', fit: BoxFit.cover)),
+                      SafeArea(
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            final size = MediaQuery.sizeOf(context);
+                            final viewPadding = MediaQuery.viewPaddingOf(context);
+                            final usableHeight = size.height - viewPadding.top - viewPadding.bottom;
+                            final u = _contentUnit(constraints.maxWidth, usableHeight);
+                            return SingleChildScrollView(
+                              child: Center(
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(minHeight: constraints.maxHeight, maxWidth: u),
+                                  child: IntrinsicHeight(child: _buildLoginWidget(u)),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    child: SafeArea(child: _buildLoginWidget()),
+                    ],
                   ),
                 ),
         ),
       );
 
-  Widget _buildLoginWidget() => Center(
+  Widget _buildLoginWidget(double u) => Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center, // Align items at the top
       crossAxisAlignment: CrossAxisAlignment.center, // Center items horizontally
@@ -80,19 +116,19 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             child: Image.asset('assets/images/UCSanDiegoLogo-Blue.png'),
           ),
         ),
-        const SizedBox(height: 44.0),
+        SizedBox(height: math.max(44.0, 0.0982 * u)),
 
         // Welcome Heading
-        const Flexible(
+        Flexible(
           flex: 0,
-          child: const FractionallySizedBox(
+          child: FractionallySizedBox(
             widthFactor: 0.725,
-            child: const Text(
+            child: Text(
               "WELCOME TO THE UC SAN DIEGO MOBILE APP",
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: "Refrigerator Deluxe",
-                fontSize: 34.5,
+                fontSize: math.max(_HEADING_FONT_FLOOR, _HEADING_FONT_FACTOR * u),
                 height: 0.9333, // line height: 20px
                 fontWeight: FontWeight.w900,
                 color: const Color(0xFF182B49), // Subheading color
@@ -100,21 +136,21 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             ),
           ),
         ),
-        const SizedBox(height: 12.5),
+        SizedBox(height: math.max(12.5, 0.0279 * u)),
 
         // Description Text
-        const Flexible(
+        Flexible(
           flex: 0,
-          child: const FractionallySizedBox(
+          child: FractionallySizedBox(
             widthFactor: 0.64722222,
-            child: const Text(
+            child: Text(
               // TODO: the font here seems a bit light. Might need to swap that out later - December 2025
               "Your personalized gateway to campus life, events, news and more.",
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Brix Sans',
                 fontWeight: FontWeight.w400,
-                fontSize: 18,
+                fontSize: math.max(_BODY_FONT_FLOOR, _BODY_FONT_FACTOR * u),
                 letterSpacing: 2.2,
                 height: 1.2778, // line height: ~26px
                 color: const Color(0xFF182B49), // Foreground body color
@@ -122,22 +158,22 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             ),
           ),
         ),
-        const SizedBox(height: 35.0),
+        SizedBox(height: math.max(35.0, 0.0781 * u)),
 
         // UCSD Email Input
-        _buildEmailField(),
-        const SizedBox(height: 18.5),
+        _buildEmailField(u),
+        SizedBox(height: math.max(18.5, 0.0413 * u)),
 
         // Password Input
-        _buildPasswordField(),
-        const SizedBox(height: 20.0),
+        _buildPasswordField(u),
+        SizedBox(height: math.max(20.0, 0.0446 * u)),
 
         // SIGN IN and Forgot Password?
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * ((1 - 0.74444444) / 2) + 6),
+              padding: EdgeInsets.only(left: u * ((1 - _CONTENT_WIDTH_FACTOR) / 2) + 6),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFFCD00), // Yellow Button
@@ -145,19 +181,19 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
                   elevation: 0.0,
                   fixedSize: () {
                     // calculate width using scaling ratio, then calculate height from width using aspect ratio
-                    final width = _screenWidth * 0.24111111;
-                    final height = width / 2.29268293;
+                    final width = u * _SIGN_IN_BUTTON_WIDTH_FACTOR;
+                    final height = width / _SIGN_IN_BUTTON_ASPECT;
                     return Size(width, height);
                   }(),
                 ),
                 child: Semantics(
                   button: true,
                   hint: 'press to login with your information inputted in above textfields',
-                  child: const Text(
+                  child: Text(
                     'SIGN IN',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Brix Sans',
-                      fontSize: 18.0,
+                      fontSize: math.max(_BODY_FONT_FLOOR, _BODY_FONT_FACTOR * u),
                       height: 1.195,
                       color: Colors.black, // Text color on button
                       fontWeight: FontWeight.bold,
@@ -183,17 +219,17 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
             // the spacer in between sign in and forgot password
             // SizedBox(width: _screenWidth * 0.202),
             Padding(
-              padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * ((1 - 0.74444444) / 2) + 6),
+              padding: EdgeInsets.only(right: u * ((1 - _CONTENT_WIDTH_FACTOR) / 2) + 6),
               child: GestureDetector(
                 child: Semantics(
                   hint: 'press to be redirected to the UCSD Password reset page',
-                  child: const Text(
+                  child: Text(
                     'Forgot Password?',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: const Color(0xFF00629B),
                       height: 1.42857143,
                       decoration: TextDecoration.underline,
-                      fontSize: 18.0,
+                      fontSize: math.max(_BODY_FONT_FLOOR, _BODY_FONT_FACTOR * u),
                     ), // Light Blue
                   ),
                 ),
@@ -215,28 +251,28 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         const Spacer(flex: 2),
 
         // Not affiliated text
-        const Text(
+        Text(
           "Not affiliated with UC San Diego?",
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 15.5,
+          style: TextStyle(
+            fontSize: math.max(_FOOTER_FONT_FLOOR, _FOOTER_FONT_FACTOR * u),
             height: 1.42, // line height: 20px
             color: const Color(0xFF5D5E60), // Foreground body color
           ),
         ),
-        const SizedBox(height: 12.0),
+        SizedBox(height: math.max(12.0, 0.0268 * u)),
 
         // Skip This Step
         GestureDetector(
           child: Semantics(
             hint: 'press to skip the login process and use this app as a visitor',
-            child: const Text(
+            child: Text(
               "SKIP THIS STEP",
-              style: const TextStyle(
+              style: TextStyle(
                 color: const Color(0xFF182B49), // Subheading color
                 fontFamily: 'Brix Sans',
                 fontWeight: FontWeight.w700,
-                fontSize: 16.5,
+                fontSize: math.max(_SKIP_FONT_FLOOR, _SKIP_FONT_FACTOR * u),
                 height: 1.195, // line height: 16.73px
                 decoration: TextDecoration.underline,
               ),
@@ -256,6 +292,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
   static Widget _buildInputField(
     InputDecoration decoration,
     TextEditingController controller, {
+    required double u,
     TextInputType? keyboardType,
     bool obscureText = false,
   }) => Padding(
@@ -268,14 +305,14 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
         ],
       ),
       child: FractionallySizedBox(
-        widthFactor: 0.74444444,
+        widthFactor: _CONTENT_WIDTH_FACTOR,
         child: TextField(
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Brix Sans',
             textBaseline: TextBaseline.alphabetic,
             color: const Color(0xFF182B49), // Fixed color format with full opacity
             fontWeight: FontWeight.w400,
-            fontSize: 18.0,
+            fontSize: math.max(_BODY_FONT_FLOOR, _BODY_FONT_FACTOR * u),
             height: 1.277, // line height: 23px
             letterSpacing: 1.2,
           ),
@@ -288,7 +325,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
     ),
   );
 
-  Widget _buildEmailField() => _buildInputField(
+  Widget _buildEmailField(double u) => _buildInputField(
     const InputDecoration(
       border: InputBorder.none,
       hintText: 'UCSD Email',
@@ -310,10 +347,11 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
       hintStyle: const TextStyle(color: Color(0xFF6A6B6D)),
     ),
     _emailTextFieldController,
+    u: u,
     keyboardType: TextInputType.emailAddress,
   );
 
-  Widget _buildPasswordField() => _buildInputField(
+  Widget _buildPasswordField(double u) => _buildInputField(
     InputDecoration(
       border: InputBorder.none,
       hintText: 'Password',
@@ -335,6 +373,7 @@ class _OnboardingLoginState extends State<OnboardingLogin> {
       hintStyle: const TextStyle(color: Color(0xFF6A6B6D)),
     ),
     _passwordTextFieldController,
+    u: u,
     obscureText: _passwordObscured,
   );
 
