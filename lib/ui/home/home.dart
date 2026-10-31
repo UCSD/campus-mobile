@@ -16,6 +16,7 @@ import 'package:campus_mobile_experimental/ui/dining/dining_card.dart';
 import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart';
 import 'package:campus_mobile_experimental/ui/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
+import 'package:campus_mobile_experimental/ui/home/home_background.dart';
 import 'package:campus_mobile_experimental/ui/my_student_chart/my_student_chart_card.dart';
 import 'package:campus_mobile_experimental/ui/my_ucsd_chart/my_ucsd_chart_card.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
@@ -150,75 +151,20 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // Provider.of<CustomAppBar>(context).changeTitle(null); // reset title to logo (for dining)
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
-    return SingleChildScrollView(
+    return CustomScrollView(
       controller: _controller,
-      clipBehavior: Clip.none,
-      padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
-      child: Stack(
-        // Positioned decorations must not paint beyond the card content.
-        clipBehavior: Clip.hardEdge,
-        children: [
-          Positioned(
-            top: 355,
-            right: -101,
-            child: Image.asset(
-              'assets/images/circles/circle-1-background.png',
-              width: 298.64,
-              height: 280,
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.only(bottom: cardMargin + 2.0),
+          sliver: DecoratedSliver(
+            decoration: const HomeBackgroundDecoration(),
+            sliver: SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: cardMargin),
+              sliver: SliverList(delegate: SliverChildListDelegate(createList())),
             ),
           ),
-          Positioned(
-            top: 720,
-            left: -64,
-            child: Image.asset(
-              'assets/images/circles/real_circle_2.png',
-              width: 136,
-              height: 136,
-            ),
-          ),
-          Positioned(
-            top: 1065,
-            left: 190,
-            child: Image.asset(
-              'assets/images/circles/circle-4-background.png',
-              width: 399.7,
-              height: 398,
-            ),
-          ),
-          Positioned(
-            top: 1908,
-            left: -88,
-            child: Image.asset(
-              'assets/images/circles/real_circle_5.png',
-              width: 197,
-              height: 197,
-            ),
-          ),
-          Positioned(
-            top: 2585,
-            right: -21,
-            child: Image.asset(
-              'assets/images/circles/real_circle_6.png',
-              width: 188,
-              height: 188,
-            ),
-          ),
-          Positioned(
-            top: 3392,
-            left: -142,
-            child: Image.asset(
-              'assets/images/circles/circle-3-background.png',
-              width: 300,
-              height: 298.6,
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: cardMargin),
-            child: Column(children: createList()),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
