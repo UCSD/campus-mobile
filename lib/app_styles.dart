@@ -25,7 +25,7 @@ const Color darkPrimaryBgColor = Color(0xff1D1D1D);
 
 const Color secondaryColorLight = Color(0xFF182B49);
 const Color secondaryColorDark = Color(0xFF5496BC);
-
+const Color triton_credits_color = Color(0xFF334F82);
 const Color linkTextColorLight = Color(0xFF00629B);
 const Color linkTextColorDark = Color(0xFF5496BC);
 
