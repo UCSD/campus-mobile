@@ -155,11 +155,9 @@ class _HomeState extends State<Home> {
       clipBehavior: Clip.none,
       padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
       child: Stack(
-        clipBehavior: Clip.none,
+        // Positioned decorations must not paint beyond the card content.
+        clipBehavior: Clip.hardEdge,
         children: [
-          // Reserve scrollable canvas for the background decorations, since
-          // Positioned children do not determine the Stack's size.
-          const SizedBox(height: 3700),
           Positioned(
             top: 355,
             right: -101,
