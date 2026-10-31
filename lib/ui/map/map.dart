@@ -12,7 +12,33 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:app_links/app_links.dart';
 
-class Maps extends StatelessWidget {
+class Maps extends StatefulWidget {
+  @override
+  State<Maps> createState() => _MapsState();
+}
+
+class _MapsState extends State<Maps> {
+  StreamSubscription<Uri>? _linkSubscription;
+  bool _mapInitialized = false;
+  bool _mapReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Warm the native map after the app has laid out its full viewport.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() => _mapInitialized = true);
+      initUniLinks();
+    });
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
+  }
+
   Widget resultsList(BuildContext context) =>
       Provider.of<MapsDataProvider>(context).markers.isNotEmpty ? MoreResultsList() : const SizedBox.shrink();
 
@@ -33,53 +59,59 @@ class Maps extends StatelessWidget {
     );
   }
 
-  Future<Null> initUniLinks(BuildContext context) async {
+  Future<void> initUniLinks() async {
     final appLinks = AppLinks();
-    StreamSubscription? _sub;
+    final initialUri = await appLinks.getInitialAppLink();
+    if (!mounted) return;
+    _handleMapLink(initialUri);
+    _linkSubscription = appLinks.uriLinkStream.listen(_handleMapLink);
+  }
 
-    Uri? initialUri = await appLinks.getInitialAppLink();
-    String? initialLink = initialUri?.toString();
-    final bool hasInitialLink = initialLink != null;
-    final bool isSearchMapLink = hasInitialLink && initialLink.contains("deeplinking.searchmap");
-    if (hasInitialLink && isSearchMapLink) {
-      var uri = Uri.dataFromString(initialLink);
-      var query = uri.queryParameters['query']!;
-      Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
-      Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-      Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
-    }
-
-    _sub = appLinks.uriLinkStream.listen((Uri? uri) async {
-      String? link = uri?.toString();
-      final bool hasLink = link != null;
-      final bool isSearchMapLink = hasLink && link.contains("deeplinking.searchmap");
-      if (hasLink && isSearchMapLink) {
-        var query = uri!.queryParameters['query']!;
-        Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = query;
-        Provider.of<MapsDataProvider>(context, listen: false).fetchLocations();
-        Provider.of<BottomNavigationBarProvider>(context, listen: false).currentIndex = NavigatorConstants.MAP_TAB;
-        _sub?.cancel();
-      }
-    });
+  void _handleMapLink(Uri? uri) {
+    if (!mounted || uri == null || !uri.toString().contains('deeplinking.searchmap')) return;
+    final query = uri.queryParameters['query'];
+    if (query == null) return;
+    final mapsProvider = context.read<MapsDataProvider>();
+    mapsProvider.searchBarController.text = query;
+    mapsProvider.fetchLocations();
+    context.read<BottomNavigationBarProvider>().currentIndex = NavigatorConstants.MAP_TAB;
   }
 
   @override
   Widget build(BuildContext context) {
-    initUniLinks(context);
+    final isMapTab = context.select<BottomNavigationBarProvider, bool>(
+      (provider) => provider.currentIndex == NavigatorConstants.MAP_TAB,
+    );
     return Stack(
+      fit: StackFit.expand,
       children: <Widget>[
-        GoogleMap(
-          markers: Set<Marker>.of(Provider.of<MapsDataProvider>(context).markers.values),
-          myLocationEnabled: true,
-          myLocationButtonEnabled: false,
-          mapToolbarEnabled: false,
-          zoomControlsEnabled: false,
-          onMapCreated: (controller) {
-            Provider.of<MapsDataProvider>(context, listen: false).mapController = controller;
-          },
-          initialCameraPosition: CameraPosition(target: const LatLng(32.8801, -117.2341), zoom: 14.5),
+        // Reserve the full viewport even before the native map is created.
+        Positioned.fill(
+          child: _mapInitialized
+              ? GoogleMap(
+                  markers: Set<Marker>.of(Provider.of<MapsDataProvider>(context).markers.values),
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  mapToolbarEnabled: false,
+                  zoomControlsEnabled: false,
+                  onMapCreated: (controller) {
+                    if (!mounted) return;
+                    final mapsProvider = context.read<MapsDataProvider>();
+                    mapsProvider.mapController = controller;
+                    mapsProvider.updateMapPosition();
+                    setState(() => _mapReady = true);
+                  },
+                  initialCameraPosition: CameraPosition(target: const LatLng(32.8801, -117.2341), zoom: 14.5),
+                )
+              : const SizedBox.expand(),
         ),
-        MapSearchBarPlaceHolder(),
+        if (isMapTab && !_mapReady)
+          const Positioned.fill(
+            child: IgnorePointer(
+              child: Center(child: CircularProgressIndicator(semanticsLabel: 'Loading map')),
+            ),
+          ),
+        const Positioned(top: 0, left: 0, right: 0, child: MapSearchBarPlaceHolder()),
         buildButtons(context),
         resultsList(context),
         const MapSearchFeedback(),
