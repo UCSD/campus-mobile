@@ -19,7 +19,13 @@ class _HomeBackgroundPainter extends BoxPainter {
       fromRight: true,
       size: Size(298.64, 280),
     ),
-    (asset: 'assets/images/circles/real_circle_2.png', top: 720.0, x: -64.0, fromRight: false, size: Size(136, 136)),
+    (
+      asset: 'assets/images/circles/circle-2-background.png',
+      top: 720.0,
+      x: -64.0,
+      fromRight: false,
+      size: Size(136, 136),
+    ),
     (
       asset: 'assets/images/circles/circle-4-background.png',
       top: 1065.0,
@@ -28,8 +34,20 @@ class _HomeBackgroundPainter extends BoxPainter {
       fromRight: true,
       size: Size(399.7, 398),
     ),
-    (asset: 'assets/images/circles/real_circle_5.png', top: 1908.0, x: -88.0, fromRight: false, size: Size(197, 197)),
-    (asset: 'assets/images/circles/real_circle_6.png', top: 2585.0, x: -21.0, fromRight: true, size: Size(188, 188)),
+    (
+      asset: 'assets/images/circles/circle-5-background.png',
+      top: 1908.0,
+      x: -88.0,
+      fromRight: false,
+      size: Size(197, 197),
+    ),
+    (
+      asset: 'assets/images/circles/circle-6-background.png',
+      top: 2585.0,
+      x: -21.0,
+      fromRight: true,
+      size: Size(188, 188),
+    ),
     (
       asset: 'assets/images/circles/circle-3-background.png',
       top: 3392.0,
