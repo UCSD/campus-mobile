@@ -3,7 +3,7 @@ import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/classes.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 class ClassScheduleDataProvider extends ChangeNotifier {
@@ -34,10 +34,10 @@ class ClassScheduleDataProvider extends ChangeNotifier {
     'OTHER': [],
   };
   Map<String, List<ScheduledClass>> _midterms = {'MI': [], 'OTHER': []};
+  List<ScheduledClass> _waitlistedClasses = [];
 
   /// MODELS
   late ClassScheduleModel _classScheduleModel;
-  late AcademicTermModel _academicTermModel;
 
   /// PROVIDERS
   late UserDataProvider _userDataProvider;
@@ -53,7 +53,14 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       final bool termFetched = await _classScheduleService.fetchAcademicTerm();
       final bool isLoggedIn = _userDataProvider.isLoggedIn;
       if (termFetched && isLoggedIn) {
-        _academicTermModel = _classScheduleService.academicTermModel!;
+        final AcademicTermModel? academicTermModel = _classScheduleService.academicTermModel;
+        final String? termCode = academicTermModel?.termCode;
+        if (academicTermModel == null || termCode == null) {
+          _error = 'Unable to determine the current academic term.';
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
         final Map<String, String> headers = {
           'Authorization': 'Bearer ${_userDataProvider.authenticationModel.accessToken}',
         };
@@ -62,7 +69,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         _classScheduleModel = ClassScheduleModel();
 
         /// fetch grad courses
-        final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(headers, _academicTermModel.termCode!);
+        final bool grCoursesFetched = await _classScheduleService.fetchGRCourses(headers, termCode);
         if (grCoursesFetched) {
           _classScheduleModel = _classScheduleService.grData;
         } else {
@@ -70,12 +77,14 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         }
 
         /// fetch undergrad courses
-        final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(headers, _academicTermModel.termCode!);
+        final bool unCoursesFetched = await _classScheduleService.fetchUNCourses(headers, termCode);
         if (unCoursesFetched) {
-          if (_classScheduleModel.data != null) {
+          if (_classScheduleModel.data != null && _classScheduleService.unData.data != null) {
             _classScheduleModel.data!.addAll(_classScheduleService.unData.data!);
-          } else {
+          } else if (_classScheduleService.unData.data != null) {
             _classScheduleModel = _classScheduleService.unData;
+          } else {
+            _classScheduleModel = ClassScheduleModel();
           }
           _error = null;
         } else {
@@ -91,6 +100,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         _enrolledClasses = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
         _finals = {'MO': [], 'TU': [], 'WE': [], 'TH': [], 'FR': [], 'SA': [], 'SU': [], 'OTHER': []};
         _midterms = {'MI': [], 'OTHER': []};
+        _waitlistedClasses = [];
 
         try {
           _createMapOfClasses();
@@ -110,26 +120,51 @@ class ClassScheduleDataProvider extends ChangeNotifier {
 
   void _createMapOfClasses() {
     List<ClassData> enrolledCourses = [];
+    List<ClassData> waitlistedCourses = [];
 
-    /// add only enrolled classes because api returns wait-listed and dropped
-    /// courses as well
-    for (ClassData classData in _classScheduleModel.data!) {
-      // print('\x1B[33m${classData.toJson()}\x1B[0m');
+    /// add enrolled and waitlisted classes because api returns wait-listed and
+    /// dropped courses as well
+    for (ClassData classData in _classScheduleModel.data ?? <ClassData>[]) {
       final isBooked = classData.enrollmentStatus == 'Booked';
-      if (isBooked) enrolledCourses.add(classData);
+      if (isBooked) {
+        enrolledCourses.add(classData);
+        continue;
+      }
+
+      final isWaitlisted =
+          classData.enrollmentStatus?.toLowerCase().contains('waitlist') == true ||
+          classData.waitlistStatus?.toLowerCase().contains('waitlist') == true ||
+          (classData.sectionData?.any((section) => section.enrollStatus?.toLowerCase().contains('waitlist') == true) ??
+              false);
+      if (isWaitlisted) waitlistedCourses.add(classData);
     }
 
-    // print('\x1B[33m${enrolledCourses.length}\x1B[0m');
-    if (enrolledCourses.isEmpty) {
+    if (enrolledCourses.isEmpty && waitlistedCourses.isEmpty) {
       _error = "No enrolled courses found.";
       _isLoading = false;
       notifyListeners();
     }
 
+    for (ClassData classData in waitlistedCourses) {
+      for (SectionData sectionData in classData.sectionData ?? []) {
+        final scheduledClass = ScheduledClass(course: classData, section: sectionData);
+        _waitlistedClasses.add(scheduledClass);
+      }
+    }
+
+    _waitlistedClasses.sort((a, b) {
+      final aPosition = a.waitlistPosition;
+      final bPosition = b.waitlistPosition;
+      if (aPosition == null && bPosition == null) return 0;
+      if (aPosition == null) return 1;
+      if (bPosition == null) return -1;
+      return aPosition.compareTo(bPosition);
+    });
+
     /// Now that we obtained the classes the student is enrolled in, let's display them!
     for (ClassData classData in enrolledCourses) {
       // print('\x1B[34mCurrent Class: ${classData.toJson()}\x1B[0m');
-      for (SectionData sectionData in classData.sectionData!) {
+      for (SectionData sectionData in classData.sectionData ?? <SectionData>[]) {
         // print('\x1B[35mCurrent Section Data: ${sectionData.toJson()}\x1B[0m');
 
         /// Get the detailed information of each class
@@ -168,8 +203,14 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   }
 
   static int _compareMidterms(ScheduledClass a, ScheduledClass b) {
-    var dateTimeA = DateFormat('yyyy-M-dd').parse(a.section.date!);
-    var dateTimeB = DateFormat('yyyy-M-dd').parse(b.section.date!);
+    final String? rawDateA = a.section.date;
+    final String? rawDateB = b.section.date;
+    if (rawDateA == null && rawDateB == null) return 0;
+    if (rawDateA == null) return 1;
+    if (rawDateB == null) return -1;
+
+    var dateTimeA = DateFormat('yyyy-M-dd').parse(rawDateA);
+    var dateTimeB = DateFormat('yyyy-M-dd').parse(rawDateB);
     if (dateTimeA.compareTo(dateTimeB) == 0) return 0;
     if (dateTimeA.compareTo(dateTimeB) < 0) return -1;
     return 1;
@@ -179,7 +220,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   static int _compare(ScheduledClass a, ScheduledClass b) {
     final bool aTimeIsNull = a.section.time == null;
     final bool bTimeIsNull = b.section.time == null;
-    if (aTimeIsNull || bTimeIsNull) return 0;
+    if (aTimeIsNull || bTimeIsNull || a.section.time!.isEmpty || b.section.time!.isEmpty) return 0;
     DateTime aStartTime = _getStartTime(a.section.time!);
     DateTime bStartTime = _getStartTime(b.section.time!);
 
@@ -253,5 +294,6 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   Map<String, List<ScheduledClass>> get finals => _finals;
   Map<String, List<ScheduledClass>> get midterms => _midterms;
   Map<String, List<ScheduledClass>> get enrolledClasses => _enrolledClasses;
+  List<ScheduledClass> get waitlistedClasses => _waitlistedClasses;
   ClassScheduleModel get classScheduleModel => _classScheduleModel;
 }

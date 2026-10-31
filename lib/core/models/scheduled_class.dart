@@ -34,4 +34,39 @@ class ScheduledClass {
         return 'Other';
     }
   }
+
+  bool get isWaitlisted {
+    final rawStatus = course.enrollmentStatus?.toLowerCase() ?? '';
+    final sectionStatus = section.enrollStatus?.toLowerCase() ?? '';
+    final waitlistStatus = course.waitlistStatus?.toLowerCase() ?? '';
+    return rawStatus.contains('waitlist') ||
+        sectionStatus.contains('waitlist') ||
+        waitlistStatus.contains('waitlist') ||
+        course.waitlistPosition != null;
+  }
+
+  int? get waitlistPosition {
+    final explicitPosition = course.waitlistPosition;
+    if (explicitPosition != null) return explicitPosition;
+
+    final fromEnrollmentStatus = _extractWaitlistPosition(course.enrollmentStatus);
+    if (fromEnrollmentStatus != null) return fromEnrollmentStatus;
+
+    final fromWaitlistStatus = _extractWaitlistPosition(course.waitlistStatus);
+    if (fromWaitlistStatus != null) return fromWaitlistStatus;
+
+    return _extractWaitlistPosition(section.enrollStatus);
+  }
+
+  String get waitlistDisplay {
+    final position = waitlistPosition;
+    return position == null ? 'Waitlisted' : '#$position on Waitlist';
+  }
+
+  static int? _extractWaitlistPosition(String? value) {
+    if (value == null || value.isEmpty) return null;
+    final match = RegExp(r'(\d+)').firstMatch(value);
+    if (match == null) return null;
+    return int.tryParse(match.group(1)!);
+  }
 }

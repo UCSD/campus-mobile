@@ -13,6 +13,7 @@ class ClassList extends StatelessWidget {
 
   Widget buildSchedule(BuildContext context) {
     List<Widget> list = [];
+    final waitlistedClasses = Provider.of<ClassScheduleDataProvider>(context).waitlistedClasses;
     Provider.of<ClassScheduleDataProvider>(
       context,
     ).enrolledClasses.addAll(Provider.of<ClassScheduleDataProvider>(context).midterms);
@@ -40,6 +41,37 @@ class ClassList extends StatelessWidget {
         );
       }
     });
+
+    if (waitlistedClasses.isNotEmpty) {
+      list.add(
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(child: Divider(color: listTileDividerColorDark, thickness: 0.7)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text('Waitlisted', style: Theme.of(context).textTheme.bodySmall),
+                  ),
+                  Expanded(child: Divider(color: listTileDividerColorDark, thickness: 0.7)),
+                ],
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      );
+      list.add(
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => _buildClassCard(context, waitlistedClasses[index], isWaitlisted: true),
+            childCount: waitlistedClasses.length,
+          ),
+        ),
+      );
+    }
     return CustomScrollView(slivers: list);
   }
 
@@ -103,7 +135,12 @@ class ClassList extends StatelessWidget {
   Widget buildMidterm(BuildContext context, ScheduledClass? scheduledClass) =>
       _buildClassCard(context, scheduledClass, isMidterm: true);
 
-  Widget _buildClassCard(BuildContext context, ScheduledClass? scheduledClass, {bool isMidterm = false}) {
+  Widget _buildClassCard(
+    BuildContext context,
+    ScheduledClass? scheduledClass, {
+    bool isMidterm = false,
+    bool isWaitlisted = false,
+  }) {
     final sectionData = scheduledClass?.section;
     if (scheduledClass == null || sectionData == null) return Card();
 
@@ -168,6 +205,8 @@ class ClassList extends StatelessWidget {
             // Evaluation Option:
             if (!isMidterm)
               _detailRow(Icons.check_box_outlined, 'Evaluation: ${scheduledClass.gradeOption}', detailStyle),
+            if (isWaitlisted)
+              _detailRow(Icons.hourglass_empty, 'Status: ${scheduledClass.waitlistDisplay}', detailStyle),
           ],
         ),
       ),
