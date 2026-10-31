@@ -143,14 +143,11 @@ class _HomeState extends State<Home> {
     return CustomScrollView(
       controller: _controller,
       slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.only(bottom: cardMargin + 2.0),
-          sliver: DecoratedSliver(
-            decoration: const HomeBackgroundDecoration(),
-            sliver: SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: cardMargin),
-              sliver: SliverList(delegate: SliverChildListDelegate(createList())),
-            ),
+        DecoratedSliver(
+          decoration: const HomeBackgroundDecoration(),
+          sliver: SliverPadding(
+            padding: const EdgeInsets.only(left: cardMargin, right: cardMargin, bottom: cardMargin + 2.0),
+            sliver: SliverList(delegate: SliverChildListDelegate(createList())),
           ),
         ),
       ],
