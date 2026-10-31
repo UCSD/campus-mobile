@@ -17,6 +17,7 @@ class StudentIdDataProvider extends ChangeNotifier {
   final _profile = _StudentIdRequest();
   final _photoMetadata = _StudentIdRequest();
   final _image = _StudentIdRequest();
+  final Set<Future<void>> _inflight = {};
   StudentIdNameModel _studentIdNameModel = StudentIdNameModel();
   StudentIdPhotoModel _studentIdPhotoModel = StudentIdPhotoModel();
   StudentIdProfileModel _studentIdProfileModel = StudentIdProfileModel();
@@ -111,7 +112,7 @@ class StudentIdDataProvider extends ChangeNotifier {
 
   void _startName() {
     if (_name.loading) return;
-    unawaited(
+    _track(
       _loadApi<StudentIdNameModel>(_name, () => _studentIdService.fetchStudentIdName(_headers), (replacement) {
         _studentIdNameModel = _studentIdNameModel.mergeValid(replacement);
         return replacement.displayName.isNotEmpty;
@@ -121,7 +122,7 @@ class StudentIdDataProvider extends ChangeNotifier {
 
   void _startProfile() {
     if (_profile.loading) return;
-    unawaited(
+    _track(
       _loadApi<StudentIdProfileModel>(_profile, () => _studentIdService.fetchStudentIdProfile(_headers), (replacement) {
         _studentIdProfileModel = _studentIdProfileModel.mergeValid(replacement);
         return replacement.barcode.isNotEmpty;
@@ -131,7 +132,7 @@ class StudentIdDataProvider extends ChangeNotifier {
 
   void _startPhotoMetadata() {
     if (isPhotoLoading) return;
-    unawaited(
+    _track(
       _loadApi<StudentIdPhotoModel>(_photoMetadata, () => _studentIdService.fetchStudentIdPhoto(_headers), (
         replacement,
       ) {
@@ -164,7 +165,25 @@ class StudentIdDataProvider extends ChangeNotifier {
 
   void _startImage(String url, {bool refetchOnFailure = false}) {
     if (_image.loading) return;
-    unawaited(_loadImage(url, refetchOnFailure: refetchOnFailure));
+    _track(_loadImage(url, refetchOnFailure: refetchOnFailure));
+  }
+
+  /// Track a fire-and-forget request so whenSettled() can observe it.
+  /// Tracked futures never complete with an error: _loadApi and _loadImage
+  /// catch everything internally, so no error handling is needed here.
+  void _track(Future<void> future) {
+    _inflight.add(future);
+    unawaited(future.whenComplete(() => _inflight.remove(future)));
+  }
+
+  /// Resolves when the current session's requests have all settled, including
+  /// requests they spawn mid-flight (metadata -> image, image failure -> metadata
+  /// refetch). Re-snapshots the set each round because those spawned futures are
+  /// added while earlier ones are still being awaited.
+  Future<void> whenSettled() async {
+    while (_inflight.isNotEmpty && !_disposed) {
+      await Future.wait(_inflight.toList());
+    }
   }
 
   Future<void> _loadImage(String url, {required bool refetchOnFailure}) async {
