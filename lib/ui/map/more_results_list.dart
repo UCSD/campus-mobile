@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MoreResultsList extends StatelessWidget {
-  const MoreResultsList({
-    Key? key,
-  }) : super(key: key);
+  const MoreResultsList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +21,9 @@ class MoreResultsList extends StatelessWidget {
                   Container(
                     height: 50,
                     alignment: Alignment.center,
-                    child: Text(
-                      'More Results',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
+                    child: Text('More Results', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
-                  Divider(
-                    height: 0,
-                  ),
+                  Divider(height: 0),
                   Expanded(
                     child: ListView.builder(
                       itemCount: Provider.of<MapsDataProvider>(context).mapSearchModels.length,
@@ -41,11 +34,11 @@ class MoreResultsList extends StatelessWidget {
                           ),
                           trailing: Text(
                             Provider.of<MapsDataProvider>(cntxt, listen: false).mapSearchModels[index].distance != null
-                                ? Provider.of<MapsDataProvider>(cntxt, listen: false)
-                                        .mapSearchModels[index]
-                                        .distance!
-                                        .toStringAsFixed(1) +
-                                    ' mi'
+                                ? Provider.of<MapsDataProvider>(
+                                        cntxt,
+                                        listen: false,
+                                      ).mapSearchModels[index].distance!.toStringAsFixed(1) +
+                                      ' mi'
                                 : '--',
                             style: TextStyle(color: Colors.blue[600]),
                           ),
@@ -64,17 +57,9 @@ class MoreResultsList extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: actionButtonBackgroundColor,
             padding: EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          child: Text(
-            'SHOW MORE RESULTS',
-            style: TextStyle(
-              color: lightPrimaryColor,
-              fontSize: 16,
-            ),
-          ),
+          child: Text('SHOW MORE RESULTS', style: TextStyle(color: lightPrimaryColor, fontSize: 16)),
         ),
       ),
     );

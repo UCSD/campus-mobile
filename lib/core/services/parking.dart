@@ -12,9 +12,7 @@ class ParkingService {
   bool _isLoading = false;
   DateTime? _lastUpdated;
   String? _error;
-  final Map<String, String> headers = {
-    "accept": "application/json",
-  };
+  final Map<String, String> headers = {"accept": "application/json"};
 
   /// MODELS
   List<ParkingModel>? _data;
@@ -24,8 +22,10 @@ class ParkingService {
     _isLoading = true;
     try {
       /// fetch data
-      String _response =
-          await (NetworkHelper.authorizedFetch(dotenv.get('PARKING_SERVICE_API_ENDPOINT') + "/status", headers));
+      String _response = await (NetworkHelper.authorizedFetch(
+        dotenv.get('PARKING_SERVICE_API_ENDPOINT') + "/status",
+        headers,
+      ));
 
       /// parse data
       _data = parkingModelFromJson(_response);
@@ -33,8 +33,8 @@ class ParkingService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.toString().contains("401")) if (await NetworkHelper.getNewToken(headers))
-        return await fetchParkingLotData();
+      if (e.toString().contains("401"))
+        if (await NetworkHelper.getNewToken(headers)) return await fetchParkingLotData();
       _error = e.toString();
       return false;
     } finally {

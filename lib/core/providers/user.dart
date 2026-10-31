@@ -41,9 +41,7 @@ class UserDataProvider extends ChangeNotifier {
   late final ChatPersistenceService _chatPersistenceService = ChatPersistenceService(this);
   // var storage = FlutterSecureStorage();
   final storage = const FlutterSecureStorage(
-    iOptions: IOSOptions(
-      accessibility: KeychainAccessibility.first_unlock_this_device,
-    ),
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock_this_device),
   );
 
   /// Update the [AuthenticationModel] stored in state

@@ -87,18 +87,19 @@ String tgptErrorMessageFor(Object error) {
   final String s = error.toString();
   var isNotFound = s.contains('[404]') || s.contains('status code of 404');
   if (isNotFound) return ErrorConstants.TRITONGPT_NOT_FOUND;
-  
-  var isServerError = s.contains('[500]') ||
+
+  var isServerError =
+      s.contains('[500]') ||
       s.contains('[502]') ||
       s.contains('[503]') ||
       s.contains('status code of 500') ||
       s.contains('status code of 502') ||
       s.contains('status code of 503');
   if (isServerError) return ErrorConstants.TRITONGPT_SERVER_ERROR;
-      
+
   var isUnprocessableEntity = s.contains('[422]') || s.contains('status code of 422');
   if (isUnprocessableEntity) return ErrorConstants.TRITONGPT_BAD_REQUEST;
-  
+
   var isBadRequest = s.contains('[400]') || s.contains('status code of 400');
   if (isBadRequest) return ErrorConstants.TRITONGPT_BAD_REQUEST;
   return ErrorConstants.TRITONGPT_UNAVAILABLE;

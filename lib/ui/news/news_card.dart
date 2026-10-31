@@ -18,23 +18,22 @@ class NewsCard extends StatelessWidget {
       print(e);
       return Container(
         width: double.infinity,
-        child: Center(
-          child: Container(
-            child: Text('An error occurred, please try again.'),
-          ),
-        ),
+        child: Center(child: Container(child: Text('An error occurred, please try again.'))),
       );
     }
   }
 
   List<Widget> buildActionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
-    actionButtons.add(ActionButton(
+    actionButtons.add(
+      ActionButton(
         buttonText: 'VIEW MORE NEWS STORIES',
         onPressed: () {
           analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'view_more'});
           Navigator.pushNamed(context, RoutePaths.NEWS_VIEW_ALL);
-        }));
+        },
+      ),
+    );
     return actionButtons;
   }
 

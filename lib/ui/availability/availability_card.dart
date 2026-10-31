@@ -54,11 +54,12 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
       child: () => buildAvailabilityCard(_availabilityDataProvider.availabilityModels),
       actionButtons: [
         ActionLink(
-            buttonText: 'MANAGE LOCATIONS',
-            onPressed: () {
-              analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage'});
-              Navigator.pushNamed(context, RoutePaths.MANAGE_AVAILABILITY_VIEW);
-            })
+          buttonText: 'MANAGE LOCATIONS',
+          onPressed: () {
+            analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage'});
+            Navigator.pushNamed(context, RoutePaths.MANAGE_AVAILABILITY_VIEW);
+          },
+        ),
       ],
     );
   }
@@ -88,14 +89,9 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
             Container(
               child: Text(
                 "No Location to Display",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: LOCATION_FONT_SIZE,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: LOCATION_FONT_SIZE),
               ),
-              padding: EdgeInsets.only(
-                bottom: TITLE_BOTTOM_PADDING,
-              ),
+              padding: EdgeInsets.only(bottom: TITLE_BOTTOM_PADDING),
             ),
             Text("Add Locations via 'Manage Locations'"),
           ],
@@ -129,14 +125,15 @@ class _AvailabilityCardState extends State<AvailabilityCard> {
                 dotsCount: locationsList.length,
                 decorator: DotsDecorator(
                   color: dotsUnselectedColor,
-                  activeColor:
-                      Theme.of(context).brightness == Brightness.dark ? dotsSelectedColorDark : dotsSelectedColorLight,
+                  activeColor: Theme.of(context).brightness == Brightness.dark
+                      ? dotsSelectedColorDark
+                      : dotsSelectedColorLight,
                   activeSize: const Size(22.0, 22.0),
                   size: const Size(10.0, 10.0),
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

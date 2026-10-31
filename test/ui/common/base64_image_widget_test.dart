@@ -8,10 +8,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Base64ImageWidget(
-              base64String: null,
-              placeholderAssetPath: 'assets/images/staff_id_placeholder.png',
-            ),
+            body: Base64ImageWidget(base64String: null, placeholderAssetPath: 'assets/images/staff_id_placeholder.png'),
           ),
         ),
       );
@@ -24,10 +21,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Base64ImageWidget(
-              base64String: '',
-              placeholderAssetPath: 'assets/images/staff_id_placeholder.png',
-            ),
+            body: Base64ImageWidget(base64String: '', placeholderAssetPath: 'assets/images/staff_id_placeholder.png'),
           ),
         ),
       );
