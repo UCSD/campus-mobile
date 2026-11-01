@@ -3,6 +3,7 @@ import 'package:campus_mobile_experimental/app_router.dart' as campus;
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/ui/triton_credits/triton_credits.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
@@ -17,6 +18,8 @@ void main() {
     final titleFont = FontLoader('Refrigerator Deluxe')
       ..addFont(rootBundle.load('assets/fonts/Refrigerator Deluxe Bold.otf'));
     final bodyFont = FontLoader('Brix Sans')..addFont(rootBundle.load('assets/fonts/HVD Fonts - BrixSansMedium.otf'));
+    bodyFont.addFont(rootBundle.load('assets/fonts/HVD Fonts - BrixSansRegular.otf'));
+    bodyFont.addFont(rootBundle.load('assets/fonts/HVD Fonts - BrixSansBold.otf'));
     await Future.wait([titleFont.load(), bodyFont.load()]);
   });
 
@@ -25,6 +28,7 @@ void main() {
       (size: const Size(390, 844), scale: 1.0),
       (size: const Size(320, 568), scale: 3.0),
       (size: const Size(568, 320), scale: 2.0),
+      (size: const Size(1024, 768), scale: 1.0),
     ]) {
       testWidgets('credits render and scroll in ${brightness.name} mode at $layout', (tester) async {
         tester.view.physicalSize = layout.size;
@@ -41,7 +45,9 @@ void main() {
             ),
             onGenerateRoute: campus.Router.generateRoute,
             builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(layout.scale)),
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(layout.scale), padding: const EdgeInsets.only(bottom: 34)),
               child: child!,
             ),
             home: Builder(
@@ -60,6 +66,16 @@ void main() {
         expect(tester.takeException(), isNull);
         expect(find.text('TRITON CREDITS'), findsOneWidget);
         expect(find.text(_expectedCredit), findsOneWidget);
+        final creditText = tester.widget<Text>(find.text(_expectedCredit));
+        final creditSpans = (creditText.textSpan as TextSpan).children!.whereType<TextSpan>();
+        expect(creditSpans.where((span) => span.style?.fontWeight == FontWeight.bold).map((span) => span.text), [
+          'Triton Credits',
+          'Kristhian Ortiz Alvarado',
+          'Prisha Jain',
+        ]);
+        expect(creditText.style!.fontWeight, FontWeight.w400);
+        expect(creditSpans.last.text, ' on October 26, 2026.');
+        expect(creditSpans.last.style?.fontWeight, isNull);
         expect(find.text('Suggested this page'), findsNothing);
         expect(find.text('Built this page'), findsNothing);
         expect(find.byType(Image), findsNWidgets(2));
@@ -70,18 +86,30 @@ void main() {
           ),
           findsOneWidget,
         );
-        expect(find.text('Feedback & Support'), findsOneWidget);
+        final invitation = tester.widget<Text>(find.textContaining('Have an idea?'));
+        expect(invitation.textSpan!.toPlainText(), contains('to Feedback & Support and you could be immortalized'));
         expect(find.byType(Divider), findsOneWidget);
         final invitationRect = tester.getRect(find.textContaining('Have an idea?'));
+        final descriptionRect = tester.getRect(find.textContaining('This page is dedicated'));
         final dividerRect = tester.getRect(find.byType(Divider));
         final creditRect = tester.getRect(find.text(_expectedCredit));
         expect(invitationRect.bottom, lessThanOrEqualTo(dividerRect.top));
         expect(dividerRect.bottom, lessThanOrEqualTo(creditRect.top));
+        for (final rect in [descriptionRect, invitationRect, creditRect]) {
+          expect(rect.left, closeTo(dividerRect.left, 0.01));
+          expect(rect.right, closeTo(dividerRect.right, 0.01));
+        }
+        expect(dividerRect.width, lessThanOrEqualTo(560));
+        expect(dividerRect.left, greaterThanOrEqualTo(24));
+        expect(dividerRect.center.dx, closeTo(layout.size.width / 2, 0.01));
+        for (final image in find.byType(Image).evaluate()) {
+          expect(tester.getRect(find.byWidget(image.widget)).center.dx, closeTo(dividerRect.center.dx, 0.01));
+        }
 
         await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -3000));
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
-        expect(tester.getRect(find.text(_expectedCredit)).bottom, lessThanOrEqualTo(layout.size.height));
+        expect(tester.getRect(find.text(_expectedCredit)).bottom, lessThanOrEqualTo(layout.size.height - 34));
 
         await tester.tap(find.byType(BackButton));
         await tester.pumpAndSettle();
@@ -98,8 +126,26 @@ void main() {
 
     await tester.pumpWidget(const MaterialApp(home: TritonCredits()));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Feedback & Support'));
-    await tester.tap(find.text('Feedback & Support'));
+    await tester.ensureVisible(find.textContaining('Have an idea?'));
+    await tester.pumpAndSettle();
+    final semantics = tester.ensureSemantics();
+    try {
+      await tester.pump();
+      expect(
+        find.semantics.byLabel('Feedback & Support').evaluate().single,
+        isSemantics(label: 'Feedback & Support', isLink: true, hasTapAction: true),
+      );
+    } finally {
+      semantics.dispose();
+    }
+    final paragraph = tester.renderObject<RenderParagraph>(
+      find.descendant(of: find.textContaining('Have an idea?'), matching: find.byType(RichText)),
+    );
+    final linkStart = paragraph.text.toPlainText().indexOf('Feedback & Support');
+    final linkBoxes = paragraph.getBoxesForSelection(
+      TextSelection(baseOffset: linkStart, extentOffset: linkStart + 'Feedback & Support'.length),
+    );
+    await tester.tapAt(paragraph.localToGlobal(linkBoxes.first.toRect().center));
     await tester.pumpAndSettle();
 
     expect(launcher.launchedUrl, 'https://eforms.ucsd.edu/view.php?id=857622');

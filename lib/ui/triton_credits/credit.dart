@@ -8,8 +8,9 @@ class Credit {
 
   const Credit({required this.feature, required this.ideaOwner, required this.devName, required this.date});
 
-  String get description =>
-      '$feature was suggested by $ideaOwner and implemented by $devName on ${DateFormat.yMMMMd('en_US').format(date)}.';
+  String get formattedDate => DateFormat.yMMMMd('en_US').format(date);
+
+  String get description => '$feature was suggested by $ideaOwner and implemented by $devName on $formattedDate.';
 }
 
 Credit credit({required String feature, required String ideaOwner, required String devName, required DateTime date}) =>
