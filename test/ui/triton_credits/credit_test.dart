@@ -5,14 +5,14 @@ void main() {
   test('credit generates one sentence with the feature, suggester, developer, and date', () {
     final entry = credit(
       feature: 'Triton Credits',
-      ideaOwner: 'Kristhian Ortiz Alvarado',
+      ideaOwner: 'Kristhian Ortiz',
       devName: 'Prisha Jain',
       date: DateTime(2026, 10, 26),
     );
 
     expect(
       entry.description,
-      'Triton Credits was suggested by Kristhian Ortiz Alvarado and implemented by Prisha Jain on October 26, 2026.',
+      'Triton Credits was suggested by Kristhian Ortiz and implemented by Prisha Jain on October 26, 2026.',
     );
   });
 

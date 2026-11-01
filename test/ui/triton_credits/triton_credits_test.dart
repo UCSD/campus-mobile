@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_router.dart' as campus;
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/ui/triton_credits/credit.dart';
 import 'package:campus_mobile_experimental/ui/triton_credits/triton_credits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -9,7 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 const _expectedCredit =
-    'Triton Credits was suggested by Kristhian Ortiz Alvarado and implemented by Prisha Jain on October 26, 2026.';
+    'Triton Credits was suggested by Kristhian Ortiz and implemented by Prisha Jain on October 26, 2026.';
+const _expectedWaitlistedCredit =
+    'Show Waitlisted Classes was suggested by Saeli Yuki and implemented by Gibson Connor on October 24, 2026.';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -66,23 +69,32 @@ void main() {
         expect(tester.takeException(), isNull);
         expect(find.text('TRITON CREDITS'), findsOneWidget);
         expect(find.text(_expectedCredit), findsOneWidget);
+        expect(find.text(_expectedWaitlistedCredit), findsOneWidget);
+        expect(find.textContaining('Alvarado'), findsNothing);
         final creditText = tester.widget<Text>(find.text(_expectedCredit));
         final creditSpans = (creditText.textSpan as TextSpan).children!.whereType<TextSpan>();
         expect(creditSpans.where((span) => span.style?.fontWeight == FontWeight.bold).map((span) => span.text), [
           'Triton Credits',
-          'Kristhian Ortiz Alvarado',
+          'Kristhian Ortiz',
           'Prisha Jain',
         ]);
         expect(creditText.style!.fontWeight, FontWeight.w400);
         expect(creditSpans.last.text, ' on October 26, 2026.');
         expect(creditSpans.last.style?.fontWeight, isNull);
+        final waitlistedText = tester.widget<Text>(find.text(_expectedWaitlistedCredit));
+        final waitlistedSpans = (waitlistedText.textSpan as TextSpan).children!.whereType<TextSpan>();
+        expect(waitlistedSpans.where((span) => span.style?.fontWeight == FontWeight.bold).map((span) => span.text), [
+          'Show Waitlisted Classes',
+          'Saeli Yuki',
+          'Gibson Connor',
+        ]);
         expect(find.text('Suggested this page'), findsNothing);
         expect(find.text('Built this page'), findsNothing);
-        expect(find.byType(Image), findsNWidgets(2));
+        expect(find.byType(Image), findsNWidgets(3));
         expect(find.textContaining('Have an idea? Submit a feedback ticket to '), findsOneWidget);
         expect(
           find.textContaining(
-            'and you could be immortalized in this page! Thank you for contributing to improving your campus app.',
+            'and you could be immortalized on this page!\nThank you for contributing to your campus mobile app!',
           ),
           findsOneWidget,
         );
@@ -95,7 +107,12 @@ void main() {
         final creditRect = tester.getRect(find.text(_expectedCredit));
         expect(invitationRect.bottom, lessThanOrEqualTo(dividerRect.top));
         expect(dividerRect.bottom, lessThanOrEqualTo(creditRect.top));
-        for (final rect in [descriptionRect, invitationRect, creditRect]) {
+        for (final rect in [
+          descriptionRect,
+          invitationRect,
+          creditRect,
+          tester.getRect(find.text(_expectedWaitlistedCredit)),
+        ]) {
           expect(rect.left, closeTo(dividerRect.left, 0.01));
           expect(rect.right, closeTo(dividerRect.right, 0.01));
         }
@@ -106,16 +123,61 @@ void main() {
           expect(tester.getRect(find.byWidget(image.widget)).center.dx, closeTo(dividerRect.center.dx, 0.01));
         }
 
-        await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -3000));
+        final scrollable = tester.state<ScrollableState>(
+          find.descendant(of: find.byType(SingleChildScrollView), matching: find.byType(Scrollable)),
+        );
+        await tester.drag(
+          find.byType(SingleChildScrollView),
+          Offset(0, -scrollable.position.maxScrollExtent - layout.size.height),
+        );
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
-        expect(tester.getRect(find.text(_expectedCredit)).bottom, lessThanOrEqualTo(layout.size.height - 34));
+        expect(tester.getRect(find.text(_expectedWaitlistedCredit)).bottom, lessThanOrEqualTo(layout.size.height - 34));
 
         await tester.tap(find.byType(BackButton));
         await tester.pumpAndSettle();
         expect(find.text('Open credits'), findsOneWidget);
       });
     }
+  }
+
+  for (final count in [0, 1, 3]) {
+    testWidgets('$count credits have decorative separators only between entries', (tester) async {
+      final entries = List.generate(
+        count,
+        (index) => credit(
+          feature: 'Feature $index',
+          ideaOwner: 'Idea $index',
+          devName: 'Developer $index',
+          date: DateTime(2026, 11, 1),
+        ),
+      );
+      await tester.pumpWidget(MaterialApp(home: TritonCredits(credits: entries)));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+
+      final tridents = find.byWidgetPredicate((widget) => widget is Image && widget.width == 20 && widget.height == 20);
+      expect(tridents, findsNWidgets(count > 0 ? count - 1 : 0));
+      expect(find.byType(Divider), findsOneWidget);
+      for (var index = 0; index < count - 1; index++) {
+        final trident = tridents.at(index);
+        final tridentRect = tester.getRect(trident);
+        expect(tridentRect.center.dx, closeTo(tester.view.physicalSize.width / tester.view.devicePixelRatio / 2, 0.01));
+        expect(tridentRect.top, greaterThan(tester.getRect(find.text(entries[index].description)).bottom));
+        expect(tridentRect.bottom, lessThan(tester.getRect(find.text(entries[index + 1].description)).top));
+
+        final row = tester.widget<Row>(find.ancestor(of: trident, matching: find.byType(Row)).first);
+        final symbols = row.children
+            .where((widget) => widget is Image || widget is SizedBox && widget.child is DecoratedBox)
+            .toList();
+        expect(symbols, hasLength(5));
+        expect(symbols[2], isA<Image>());
+        for (final symbol in [symbols[0], symbols[1], symbols[3], symbols[4]]) {
+          final dot = (symbol as SizedBox).child as DecoratedBox;
+          expect((dot.decoration as BoxDecoration).shape, BoxShape.circle);
+        }
+      }
+    });
   }
 
   testWidgets('feedback link opens the same support form as the Profile menu', (tester) async {

@@ -14,14 +14,22 @@ const _bodyTextStyle = TextStyle(
 );
 
 class TritonCredits extends StatelessWidget {
-  const TritonCredits({Key? key}) : super(key: key);
+  const TritonCredits({Key? key, this.credits}) : super(key: key);
+
+  final List<Credit>? credits;
 
   static final List<Credit> _credits = [
     credit(
       feature: 'Triton Credits',
-      ideaOwner: 'Kristhian Ortiz Alvarado',
+      ideaOwner: 'Kristhian Ortiz',
       devName: 'Prisha Jain',
       date: DateTime(2026, 10, 26), // First page implementation: commit 71ca34f4a.
+    ),
+    credit(
+      feature: 'Show Waitlisted Classes',
+      ideaOwner: 'Saeli Yuki',
+      devName: 'Gibson Connor',
+      date: DateTime(2026, 10, 24), // First implementation: commit c243436b3.
     ),
   ];
 
@@ -73,35 +81,74 @@ class TritonCredits extends StatelessWidget {
                 const SizedBox(height: 24),
                 const Divider(color: Colors.white24, thickness: 1, height: 1),
                 const SizedBox(height: 24),
-                for (final entry in _credits)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: entry.feature,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const TextSpan(text: ' was suggested by '),
-                          TextSpan(
-                            text: entry.ideaOwner,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const TextSpan(text: ' and implemented by '),
-                          TextSpan(
-                            text: entry.devName,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(text: ' on ${entry.formattedDate}.'),
-                        ],
-                      ),
-                      style: _bodyTextStyle,
+                for (final (index, entry) in (credits ?? _credits).indexed) ...[
+                  if (index > 0) const _CreditSeparator(),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: entry.feature,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const TextSpan(text: ' was suggested by '),
+                        TextSpan(
+                          text: entry.ideaOwner,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const TextSpan(text: ' and implemented by '),
+                        TextSpan(
+                          text: entry.devName,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(text: ' on ${entry.formattedDate}.'),
+                      ],
                     ),
+                    style: _bodyTextStyle,
                   ),
+                ],
               ],
             ),
           ),
+        ),
+      ),
+    ),
+  );
+}
+
+const _separatorDot = SizedBox(
+  width: 4,
+  height: 4,
+  child: DecoratedBox(
+    decoration: BoxDecoration(color: Colors.white54, shape: BoxShape.circle),
+  ),
+);
+
+class _CreditSeparator extends StatelessWidget {
+  const _CreditSeparator();
+
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _separatorDot,
+            const SizedBox(width: 6),
+            _separatorDot,
+            const SizedBox(width: 10),
+            Image.asset(
+              'assets/images/UCSDMobile_sharp-removebg-preview.png',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(width: 10),
+            _separatorDot,
+            const SizedBox(width: 6),
+            _separatorDot,
+          ],
         ),
       ),
     ),
