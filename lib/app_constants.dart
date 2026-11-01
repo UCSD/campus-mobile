@@ -38,6 +38,10 @@ class RoutePaths {
   static const String TRITON_CREDITS = 'profile/triton_credits';
 }
 
+class SupportConstants {
+  static const String FEEDBACK_URL = 'https://eforms.ucsd.edu/view.php?id=857622';
+}
+
 class RouteTitles {
   static const TITLE_MAP = {
     'Maps': 'MAP',

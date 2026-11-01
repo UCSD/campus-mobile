@@ -1,9 +1,11 @@
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_router.dart' as campus;
 import 'package:campus_mobile_experimental/app_styles.dart';
+import 'package:campus_mobile_experimental/ui/triton_credits/triton_credits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 const _expectedCredit =
     'Triton Credits was suggested by Kristhian Ortiz Alvarado and implemented by Prisha Jain on October 26, 2026.';
@@ -61,6 +63,20 @@ void main() {
         expect(find.text('Suggested this page'), findsNothing);
         expect(find.text('Built this page'), findsNothing);
         expect(find.byType(Image), findsNWidgets(2));
+        expect(find.textContaining('Have an idea? Submit a feedback ticket to '), findsOneWidget);
+        expect(
+          find.textContaining(
+            'and you could be immortalized in this page! Thank you for contributing to improving your campus app.',
+          ),
+          findsOneWidget,
+        );
+        expect(find.text('Feedback & Support'), findsOneWidget);
+        expect(find.byType(Divider), findsOneWidget);
+        final invitationRect = tester.getRect(find.textContaining('Have an idea?'));
+        final dividerRect = tester.getRect(find.byType(Divider));
+        final creditRect = tester.getRect(find.text(_expectedCredit));
+        expect(invitationRect.bottom, lessThanOrEqualTo(dividerRect.top));
+        expect(dividerRect.bottom, lessThanOrEqualTo(creditRect.top));
 
         await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -3000));
         await tester.pumpAndSettle();
@@ -72,5 +88,37 @@ void main() {
         expect(find.text('Open credits'), findsOneWidget);
       });
     }
+  }
+
+  testWidgets('feedback link opens the same support form as the Profile menu', (tester) async {
+    final previousLauncher = UrlLauncherPlatform.instance;
+    final launcher = _FeedbackLauncher();
+    UrlLauncherPlatform.instance = launcher;
+    addTearDown(() => UrlLauncherPlatform.instance = previousLauncher);
+
+    await tester.pumpWidget(const MaterialApp(home: TritonCredits()));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Feedback & Support'));
+    await tester.tap(find.text('Feedback & Support'));
+    await tester.pumpAndSettle();
+
+    expect(launcher.launchedUrl, 'https://eforms.ucsd.edu/view.php?id=857622');
+    expect(launcher.options!.mode, PreferredLaunchMode.inAppBrowserView);
+    expect(tester.takeException(), isNull);
+  });
+}
+
+class _FeedbackLauncher extends UrlLauncherPlatform {
+  String? launchedUrl;
+  LaunchOptions? options;
+
+  @override
+  get linkDelegate => null;
+
+  @override
+  Future<bool> launchUrl(String url, LaunchOptions options) async {
+    launchedUrl = url;
+    this.options = options;
+    return true;
   }
 }

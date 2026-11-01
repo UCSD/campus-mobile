@@ -140,8 +140,7 @@ class Profile extends StatelessWidget {
   // }
 
   Future<void> handleFeedbackTap() async {
-    const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=857622";
-    openLink(feedbackUrl);
+    openLink(SupportConstants.FEEDBACK_URL);
   }
 
   Future<void> handlePrivacyTap() async {
