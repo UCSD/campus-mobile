@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/utils/webview.dart';
@@ -23,7 +22,7 @@ class TritonCredits extends StatelessWidget {
       feature: 'Triton Credits',
       ideaOwner: 'Kristhian Ortiz',
       devName: 'Prisha Jain',
-      date: DateTime(2026, 10, 26), // First page implementation: commit 71ca34f4a.
+      date: DateTime(2026, 10, 2),
     ),
     credit(
       feature: 'Show Waitlisted Classes',
@@ -32,6 +31,15 @@ class TritonCredits extends StatelessWidget {
       date: DateTime(2026, 10, 24), // First implementation: commit c243436b3.
     ),
   ];
+
+  List<Credit> get _sortedCredits {
+    final entries = (credits ?? _credits).indexed.toList();
+    entries.sort((a, b) {
+      final byDate = DateUtils.dateOnly(b.$2.date).compareTo(DateUtils.dateOnly(a.$2.date));
+      return byDate != 0 ? byDate : a.$1.compareTo(b.$1);
+    });
+    return entries.map((entry) => entry.$2).toList();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -81,7 +89,16 @@ class TritonCredits extends StatelessWidget {
                 const SizedBox(height: 24),
                 const Divider(color: Colors.white24, thickness: 1, height: 1),
                 const SizedBox(height: 24),
-                for (final (index, entry) in (credits ?? _credits).indexed) ...[
+                Semantics(
+                  header: true,
+                  child: Text(
+                    'UCSD Campus Mobile App Contributions',
+                    textAlign: TextAlign.center,
+                    style: _bodyTextStyle.copyWith(fontWeight: FontWeight.w600, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                for (final (index, entry) in _sortedCredits.indexed) ...[
                   if (index > 0) const _CreditSeparator(),
                   Text.rich(
                     TextSpan(
@@ -106,6 +123,8 @@ class TritonCredits extends StatelessWidget {
                     style: _bodyTextStyle,
                   ),
                 ],
+                const SizedBox(height: 24),
+                const Text('Thank you for contributing to your campus mobile app!', style: _bodyTextStyle),
               ],
             ),
           ),
@@ -155,37 +174,41 @@ class _CreditSeparator extends StatelessWidget {
   );
 }
 
-class _FeedbackInvitation extends StatefulWidget {
+class _FeedbackInvitation extends StatelessWidget {
   const _FeedbackInvitation();
 
   @override
-  State<_FeedbackInvitation> createState() => _FeedbackInvitationState();
-}
-
-class _FeedbackInvitationState extends State<_FeedbackInvitation> {
-  final _feedbackTap = TapGestureRecognizer()..onTap = () => openLink(SupportConstants.FEEDBACK_URL);
-
-  @override
-  void dispose() {
-    _feedbackTap.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => Text.rich(
-    TextSpan(
-      children: [
-        const TextSpan(text: 'Have an idea? Submit a feedback ticket to '),
-        TextSpan(
-          text: 'Feedback & Support',
-          style: const TextStyle(color: Colors.white, decoration: TextDecoration.underline),
-          recognizer: _feedbackTap,
+  Widget build(BuildContext context) => Semantics(
+    link: true,
+    child: InkWell(
+      onTap: () => openLink(SupportConstants.FEEDBACK_URL),
+      borderRadius: BorderRadius.circular(6),
+      overlayColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.pressed) || states.contains(WidgetState.focused)) {
+          return Colors.white12;
+        }
+        if (states.contains(WidgetState.hovered)) return Colors.white10;
+        return Colors.transparent;
+      }),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: const Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: 'Have an idea? Submit a feedback ticket to '),
+                TextSpan(
+                  text: 'Feedback & Support',
+                  style: TextStyle(color: Colors.white, decoration: TextDecoration.underline),
+                ),
+                TextSpan(text: ' and you could be immortalized on this page!'),
+              ],
+            ),
+            style: _bodyTextStyle,
+          ),
         ),
-        const TextSpan(
-          text: ' and you could be immortalized on this page!\nThank you for contributing to your campus mobile app!',
-        ),
-      ],
+      ),
     ),
-    style: _bodyTextStyle,
   );
 }

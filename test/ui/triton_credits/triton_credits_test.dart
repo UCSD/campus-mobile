@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_router.dart' as campus;
 import 'package:campus_mobile_experimental/app_styles.dart';
@@ -10,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 const _expectedCredit =
-    'Triton Credits was suggested by Kristhian Ortiz and implemented by Prisha Jain on October 26, 2026.';
+    'Triton Credits was suggested by Kristhian Ortiz and implemented by Prisha Jain on October 2, 2026.';
 const _expectedWaitlistedCredit =
     'Show Waitlisted Classes was suggested by Saeli Yuki and implemented by Gibson Connor on October 24, 2026.';
 
@@ -79,7 +81,7 @@ void main() {
           'Prisha Jain',
         ]);
         expect(creditText.style!.fontWeight, FontWeight.w400);
-        expect(creditSpans.last.text, ' on October 26, 2026.');
+        expect(creditSpans.last.text, ' on October 2, 2026.');
         expect(creditSpans.last.style?.fontWeight, isNull);
         final waitlistedText = tester.widget<Text>(find.text(_expectedWaitlistedCredit));
         final waitlistedSpans = (waitlistedText.textSpan as TextSpan).children!.whereType<TextSpan>();
@@ -92,26 +94,36 @@ void main() {
         expect(find.text('Built this page'), findsNothing);
         expect(find.byType(Image), findsNWidgets(3));
         expect(find.textContaining('Have an idea? Submit a feedback ticket to '), findsOneWidget);
-        expect(
-          find.textContaining(
-            'and you could be immortalized on this page!\nThank you for contributing to your campus mobile app!',
-          ),
-          findsOneWidget,
-        );
+        expect(find.textContaining('and you could be immortalized on this page!'), findsOneWidget);
         final invitation = tester.widget<Text>(find.textContaining('Have an idea?'));
         expect(invitation.textSpan!.toPlainText(), contains('to Feedback & Support and you could be immortalized'));
         expect(find.byType(Divider), findsOneWidget);
         final invitationRect = tester.getRect(find.textContaining('Have an idea?'));
+        final invitationTapRect = tester.getRect(
+          find.ancestor(of: find.textContaining('Have an idea?'), matching: find.byType(InkWell)).first,
+        );
+        final thanksRect = tester.getRect(find.text('Thank you for contributing to your campus mobile app!'));
+        final heading = find.text('UCSD Campus Mobile App Contributions');
+        final headingRect = tester.getRect(heading);
+        expect(tester.widget<Text>(heading).textAlign, TextAlign.center);
         final descriptionRect = tester.getRect(find.textContaining('This page is dedicated'));
         final dividerRect = tester.getRect(find.byType(Divider));
-        final creditRect = tester.getRect(find.text(_expectedCredit));
+        final firstCreditRect = tester.getRect(find.text(_expectedWaitlistedCredit));
+        final lastCreditRect = tester.getRect(find.text(_expectedCredit));
         expect(invitationRect.bottom, lessThanOrEqualTo(dividerRect.top));
-        expect(dividerRect.bottom, lessThanOrEqualTo(creditRect.top));
+        expect(invitationTapRect.height, greaterThanOrEqualTo(48));
+        expect(thanksRect.top - lastCreditRect.bottom, closeTo(24, 0.01));
+        expect(dividerRect.bottom, lessThanOrEqualTo(headingRect.top));
+        expect(headingRect.bottom, lessThanOrEqualTo(firstCreditRect.top));
+        expect(dividerRect.bottom, lessThanOrEqualTo(firstCreditRect.top));
+        expect(firstCreditRect.bottom, lessThanOrEqualTo(lastCreditRect.top));
         for (final rect in [
           descriptionRect,
           invitationRect,
-          creditRect,
-          tester.getRect(find.text(_expectedWaitlistedCredit)),
+          thanksRect,
+          headingRect,
+          firstCreditRect,
+          lastCreditRect,
         ]) {
           expect(rect.left, closeTo(dividerRect.left, 0.01));
           expect(rect.right, closeTo(dividerRect.right, 0.01));
@@ -132,7 +144,10 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
-        expect(tester.getRect(find.text(_expectedWaitlistedCredit)).bottom, lessThanOrEqualTo(layout.size.height - 34));
+        expect(
+          tester.getRect(find.text('Thank you for contributing to your campus mobile app!')).bottom,
+          lessThanOrEqualTo(layout.size.height - 34),
+        );
 
         await tester.tap(find.byType(BackButton));
         await tester.pumpAndSettle();
@@ -180,6 +195,40 @@ void main() {
     });
   }
 
+  testWidgets('credits sort newest first and preserve input order for the same calendar date', (tester) async {
+    final dates = [
+      DateTime(2025, 12, 31),
+      DateTime(2026, 10, 24),
+      DateTime(2026, 1, 1),
+      DateTime.utc(2026, 10, 24, 23),
+      DateTime(2026, 11, 1),
+    ];
+    final entries = List<Credit>.unmodifiable(
+      List.generate(
+        dates.length,
+        (index) => credit(
+          feature: 'Feature $index',
+          ideaOwner: 'Idea $index',
+          devName: 'Developer $index',
+          date: dates[index],
+        ),
+      ),
+    );
+    await tester.pumpWidget(MaterialApp(home: TritonCredits(credits: entries)));
+    await tester.pumpAndSettle();
+
+    final renderedCredits = tester.widgetList<Text>(find.textContaining(' was suggested by '));
+    expect(renderedCredits.map((text) => text.textSpan!.toPlainText()), [
+      for (final index in [4, 1, 3, 2, 0]) entries[index].description,
+    ]);
+    expect(entries.map((entry) => entry.feature), ['Feature 0', 'Feature 1', 'Feature 2', 'Feature 3', 'Feature 4']);
+    expect(
+      tester.getRect(find.text('Thank you for contributing to your campus mobile app!')).top,
+      greaterThan(tester.getRect(find.text(entries.first.description)).bottom),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('feedback link opens the same support form as the Profile menu', (tester) async {
     final previousLauncher = UrlLauncherPlatform.instance;
     final launcher = _FeedbackLauncher();
@@ -194,8 +243,18 @@ void main() {
     try {
       await tester.pump();
       expect(
-        find.semantics.byLabel('Feedback & Support').evaluate().single,
-        isSemantics(label: 'Feedback & Support', isLink: true, hasTapAction: true),
+        find.semantics.byLabel(RegExp('Have an idea\\?')).evaluate().single,
+        isSemantics(
+          label:
+              'Have an idea? Submit a feedback ticket to Feedback & Support and you could be immortalized on this page!',
+          isLink: true,
+          hasTapAction: true,
+          isFocusable: true,
+        ),
+      );
+      expect(
+        find.semantics.byLabel('UCSD Campus Mobile App Contributions').evaluate().single,
+        isSemantics(label: 'UCSD Campus Mobile App Contributions', isHeader: true),
       );
     } finally {
       semantics.dispose();
@@ -212,11 +271,80 @@ void main() {
 
     expect(launcher.launchedUrl, 'https://eforms.ucsd.edu/view.php?id=857622');
     expect(launcher.options!.mode, PreferredLaunchMode.inAppBrowserView);
+    expect(launcher.launchCount, 1);
+
+    final tapArea = find.ancestor(of: find.textContaining('Have an idea?'), matching: find.byType(InkWell)).first;
+    final tapRect = tester.getRect(tapArea);
+    // The padded area remains tappable even outside the text's glyph bounds.
+    await tester.tapAt(Offset(tapRect.center.dx, tapRect.top + 2));
+    await tester.pumpAndSettle();
+    expect(launcher.launchCount, 2);
+
+    // Keyboard users can focus and activate the same link.
+    Focus.of(tester.element(find.textContaining('Have an idea?'))).requestFocus();
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(launcher.launchCount, 3);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('feedback invitation visibly highlights while pressed and clears on cancellation', (tester) async {
+    final previousLauncher = UrlLauncherPlatform.instance;
+    final launcher = _FeedbackLauncher();
+    UrlLauncherPlatform.instance = launcher;
+    addTearDown(() => UrlLauncherPlatform.instance = previousLauncher);
+
+    const boundaryKey = ValueKey('credits-paint');
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: RepaintBoundary(key: boundaryKey, child: TritonCredits()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final tapArea = find.ancestor(of: find.textContaining('Have an idea?'), matching: find.byType(InkWell)).first;
+    await tester.ensureVisible(tapArea);
+    await tester.pumpAndSettle();
+    final tapRect = tester.getRect(tapArea);
+    final point = Offset(tapRect.center.dx, tapRect.top + 4);
+    final boundary = tester.renderObject<RenderRepaintBoundary>(find.byKey(boundaryKey));
+    final before = await _readPixel(tester, boundary, point);
+
+    final gesture = await tester.startGesture(point);
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.pump(const Duration(milliseconds: 200));
+    final pressed = await _readPixel(tester, boundary, point);
+    // Check the painted feedback itself, including the padded touch area.
+    for (var channel = 0; channel < 3; channel++) {
+      expect(pressed[channel], greaterThan(before[channel]));
+    }
+    expect(launcher.launchCount, 0);
+
+    await gesture.cancel();
+    await tester.pumpAndSettle();
+    expect(await _readPixel(tester, boundary, point), before);
+    expect(launcher.launchCount, 0);
     expect(tester.takeException(), isNull);
   });
 }
 
+Future<List<int>> _readPixel(WidgetTester tester, RenderRepaintBoundary boundary, Offset globalPoint) async {
+  final pixel = await tester.runAsync(() async {
+    final image = await boundary.toImage();
+    try {
+      final bytes = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      final point = boundary.globalToLocal(globalPoint);
+      final offset = (point.dy.floor() * image.width + point.dx.floor()) * 4;
+      return bytes!.buffer.asUint8List(bytes.offsetInBytes + offset, 4).toList();
+    } finally {
+      image.dispose();
+    }
+  });
+  return pixel!;
+}
+
 class _FeedbackLauncher extends UrlLauncherPlatform {
+  int launchCount = 0;
   String? launchedUrl;
   LaunchOptions? options;
 
@@ -225,6 +353,7 @@ class _FeedbackLauncher extends UrlLauncherPlatform {
 
   @override
   Future<bool> launchUrl(String url, LaunchOptions options) async {
+    launchCount++;
     launchedUrl = url;
     this.options = options;
     return true;

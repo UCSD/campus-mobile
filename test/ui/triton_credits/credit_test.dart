@@ -7,12 +7,12 @@ void main() {
       feature: 'Triton Credits',
       ideaOwner: 'Kristhian Ortiz',
       devName: 'Prisha Jain',
-      date: DateTime(2026, 10, 26),
+      date: DateTime(2026, 10, 2),
     );
 
     expect(
       entry.description,
-      'Triton Credits was suggested by Kristhian Ortiz and implemented by Prisha Jain on October 26, 2026.',
+      'Triton Credits was suggested by Kristhian Ortiz and implemented by Prisha Jain on October 2, 2026.',
     );
   });
 
