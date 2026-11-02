@@ -9,18 +9,23 @@
 
     <include layout="@layout/widget_header" />
 
+    <include layout="@layout/widget_student" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="Classes Today"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/classes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="4"
         android:textColor="@android:color/white"
         android:textSize="13sp" />
 </LinearLayout>

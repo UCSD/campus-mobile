@@ -9,17 +9,25 @@ class HomeWidgetService {
   static const appGroupId = 'group.edu.ucsd.ucsandiego';
   static const _days = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
   static const barcodeSize = Size(300, 80);
+  static Future<void>? _lastOperation;
 
-  static Future<void> syncStudentId(String name, String barcode) async {
-    await HomeWidget.saveWidgetData<String>('student_name', name);
+  /// Widget writes and logout clears are async, so serialize them to keep a
+  /// stale refresh from overwriting cleared data.
+  static Future<void> _runExclusive(Future<void> Function() action) =>
+      _lastOperation = (_lastOperation ?? Future<void>.value()).then((_) => action()).catchError((_) {});
+
+  static Future<void> syncStudentId(String name, String major, String barcode) => _runExclusive(() async {
+    await HomeWidget.saveWidgetData<String>('student_name', name.isEmpty ? null : name);
+    await HomeWidget.saveWidgetData<String>('student_major', major.isEmpty ? null : major);
     if (barcode.isEmpty) {
       await HomeWidget.saveWidgetData<String>('student_barcode', null);
     } else {
-      // ponytail: neither iOS nor Android draws Codabar natively, so reuse barcode_widget as a PNG
+      // Neither iOS nor Android draws Codabar natively, so reuse barcode_widget as a PNG.
       await HomeWidget.renderFlutterWidget(barcodeImage(barcode), key: 'student_barcode', logicalSize: barcodeSize);
     }
     await HomeWidget.updateWidget(name: 'StudentIdWidget');
-  }
+    await HomeWidget.updateWidget(name: 'ClassesWidget'); // shows the name and major too
+  });
 
   /// Sized explicitly: renderFlutterWidget wraps this in a Column, where BarcodeWidget
   /// would default to width / 2 (150px) tall and overflow the 80px image.
@@ -33,27 +41,35 @@ class HomeWidgetService {
   );
 
   /// One list per weekday so the widget picks "today" itself after midnight.
-  static Future<void> syncClasses(Map<String, List<ScheduledClass>> classesByDay) async {
+  static Future<void> syncClasses(Map<String, List<ScheduledClass>> classesByDay) => _runExclusive(() async {
     for (final day in _days) {
       final lines = (classesByDay[day] ?? []).map((c) => classLine(c));
       await HomeWidget.saveWidgetData<String>('classes_$day', lines.join('\n'));
     }
     await HomeWidget.updateWidget(name: 'ClassesWidget');
-  }
+  });
 
   /// i.e. "CSE 141L  10:00  CENTR 115"
   static String classLine(ScheduledClass c) {
     final time = c.section.time?.trim() ?? '';
     final start = time.isEmpty ? 'TBA' : time.split('-').first;
-    return '${c.subjectCode} ${c.courseCode}  $start  ${c.section.building ?? ''} ${c.section.room ?? ''}'.trim();
+    final course = [
+      c.subjectCode,
+      c.courseCode,
+    ].whereType<String>().where((field) => field.trim().isNotEmpty).join(' ');
+    final location = [
+      c.section.building,
+      c.section.room,
+    ].whereType<String>().where((field) => field.trim().isNotEmpty).join(' ');
+    return [if (course.isNotEmpty) course, start, if (location.isNotEmpty) location].join('  ');
   }
 
   /// Logout: the widgets must never keep showing the previous user's ID.
-  static Future<void> clear() async {
-    for (final key in ['student_name', 'student_barcode', for (final day in _days) 'classes_$day']) {
+  static Future<void> clear() => _runExclusive(() async {
+    for (final key in ['student_name', 'student_major', 'student_barcode', for (final day in _days) 'classes_$day']) {
       await HomeWidget.saveWidgetData<String>(key, null);
     }
     await HomeWidget.updateWidget(name: 'StudentIdWidget');
     await HomeWidget.updateWidget(name: 'ClassesWidget');
-  }
+  });
 }

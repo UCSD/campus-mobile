@@ -33,7 +33,7 @@ struct StudentIdView: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 6) {
       BrandHeader()
-      Text(store?.string(forKey: "student_name") ?? signedOut).font(.headline).foregroundColor(.white)
+      Text(store?.string(forKey: "student_name") ?? signedOut).font(.headline).foregroundColor(.white).privacySensitive()
       if let path = store?.string(forKey: "student_barcode"), let barcode = UIImage(contentsOfFile: path) {
         Image(uiImage: barcode).resizable().interpolation(.none)
           .padding(.horizontal, 10).padding(.vertical, 4)  // white quiet zone so scanners can read it
@@ -55,7 +55,7 @@ struct ClassesView: View {
     VStack(alignment: .leading, spacing: 4) {
       BrandHeader()
       Text("Classes Today").font(.headline)
-      Text(classes.map { $0.isEmpty ? "No classes today" : $0 } ?? signedOut).font(.caption)
+      Text(classes.map { $0.isEmpty ? "No classes today" : $0 } ?? signedOut).font(.caption).privacySensitive()
     }
     .foregroundColor(.white)
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)

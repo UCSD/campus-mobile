@@ -9,13 +9,7 @@
 
     <include layout="@layout/widget_header" />
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+    <include layout="@layout/widget_student" />
 
     <!-- White padding is the barcode's quiet zone so scanners can read it -->
     <ImageView
@@ -24,8 +18,10 @@
         android:layout_height="0dp"
         android:layout_marginTop="6dp"
         android:layout_weight="1"
-        android:background="@android:color/white"
+        android:background="@drawable/widget_barcode_background"
+        android:clipToOutline="true"
+        android:outlineProvider="background"
         android:contentDescription="Student ID barcode"
         android:padding="8dp"
-        android:scaleType="fitXY" />
+        android:scaleType="fitCenter" />
 </LinearLayout>

@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ClassScheduleDataProvider extends ChangeNotifier {
+  ClassScheduleDataProvider({ClassScheduleService? service})
+    : _classScheduleService = service ?? ClassScheduleService();
+
   /// STATES
   bool _isLoading = false;
   DateTime _lastUpdated = DateTime.now();
@@ -44,13 +47,16 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   late UserDataProvider _userDataProvider;
 
   /// SERVICES
-  var _classScheduleService = ClassScheduleService();
+  final ClassScheduleService _classScheduleService;
 
   void fetchData() async {
     if (!_isLoading) {
       _isLoading = true;
       _error = null;
       notifyListeners();
+      final auth = _userDataProvider.authenticationModel;
+      final String? sessionPid = auth.pid;
+      final String? sessionToken = auth.accessToken;
       final bool termFetched = await _classScheduleService.fetchAcademicTerm();
       final bool isLoggedIn = _userDataProvider.isLoggedIn;
       if (termFetched && isLoggedIn) {
@@ -100,8 +106,11 @@ class ClassScheduleDataProvider extends ChangeNotifier {
         }
 
         _lastUpdated = DateTime.now();
-        // Skip if the user logged out mid-fetch so the widget never shows their classes again.
-        if (_userDataProvider.isLoggedIn) HomeWidgetService.syncClasses(_enrolledClasses);
+        // Skip logout and account switches mid-fetch; compare the exact session
+        // so account B cannot publish account A's delayed response.
+        if (_isSameSession(sessionPid, sessionToken)) {
+          HomeWidgetService.syncClasses(_enrolledClasses);
+        }
       } else {
         // TODO: determine what error to show to the user - December 2025
         _error = _classScheduleService.error;
@@ -168,6 +177,11 @@ class ClassScheduleDataProvider extends ChangeNotifier {
       listOfMidterms.sort((a, b) => _compare(a, b));
       listOfMidterms.sort((a, b) => _compareMidterms(a, b));
     }
+  }
+
+  bool _isSameSession(String? pid, String? token) {
+    final auth = _userDataProvider.authenticationModel;
+    return _userDataProvider.isLoggedIn && auth.pid == pid && auth.accessToken == token;
   }
 
   static int _compareMidterms(ScheduledClass a, ScheduledClass b) {

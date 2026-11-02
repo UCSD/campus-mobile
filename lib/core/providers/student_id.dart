@@ -158,8 +158,17 @@ class StudentIdDataProvider extends ChangeNotifier {
       if (_isCurrent(section, attempt, session)) {
         section.loading = false;
         _lastUpdated = DateTime.now();
+        // Name and profile start together; avoid publishing one half-finished result.
+        if ((section == _name || section == _profile) && !_name.loading && !_profile.loading && hasName && hasBarcode) {
+          unawaited(
+            HomeWidgetService.syncStudentId(
+              _studentIdNameModel.displayName,
+              _studentIdProfileModel.major,
+              _studentIdProfileModel.barcode,
+            ),
+          );
+        }
         notifyListeners();
-        unawaited(HomeWidgetService.syncStudentId(_studentIdNameModel.displayName, _studentIdProfileModel.barcode));
       }
     }
   }
