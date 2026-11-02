@@ -1,11 +1,5 @@
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 
-const int _nameWeight = 4;
-const int _paymentOptionsWeight = 3;
-const int _specialTitleWeight = 2;
-const int _locationWeight = 2;
-const int _descriptionWeight = 1;
-
 /// Searches [models] with the given [query] and returns the matching models in
 /// relevance order.
 ///
@@ -68,16 +62,16 @@ int? _scoreModel(DiningModel model, List<String> queryTokens) {
 }
 
 List<_SearchField> _buildSearchFields(DiningModel model) => [
-  _SearchField(_normalizeText(model.name), _nameWeight),
-  _SearchField(_normalizeText([...model.paymentOptions, model.paymentFilterTypes].join(' ')), _paymentOptionsWeight),
-  _SearchField(_normalizeText(model.specialHours?.specialHoursEvent), _specialTitleWeight),
-  _SearchField(_normalizeText(model.specials?.specialTitle), _specialTitleWeight),
-  _SearchField(_normalizeText(model.location), _locationWeight),
-  _SearchField(_normalizeText(model.address), _locationWeight),
-  _SearchField(_normalizeText(model.meals == null ? null : mealsValues.reverse[model.meals!]), _descriptionWeight),
-  _SearchField(_normalizeText(model.description), _descriptionWeight),
-  _SearchField(_normalizeText(model.specialHours?.specialHoursEventDetails), _descriptionWeight),
-  _SearchField(_normalizeText(model.specials?.specialDescription), _descriptionWeight),
+  _SearchField(_normalizeText(model.name), 4),
+  _SearchField(_normalizeText([...model.paymentOptions, model.paymentFilterTypes].join(' ')), 2),
+  _SearchField(_normalizeText(model.specialHours?.specialHoursEvent), 2),
+  _SearchField(_normalizeText(model.specials?.specialTitle), 2),
+  _SearchField(_normalizeText(model.location), 3),
+  _SearchField(_normalizeText(model.address), 3),
+  _SearchField(_normalizeText(model.meals == null ? null : mealsValues.reverse[model.meals!]), 3),
+  _SearchField(_normalizeText(model.description), 1),
+  _SearchField(_normalizeText(model.specialHours?.specialHoursEventDetails), 1),
+  _SearchField(_normalizeText(model.specials?.specialDescription), 1),
 ];
 
 bool _containsTokenPrefix(String fieldText, String queryToken) {
