@@ -129,7 +129,7 @@ class Router {
         return MaterialPageRoute(
           builder: (context) {
             Provider.of<CustomAppBar>(context).changeTitle(settings.name);
-            return DiningList();
+            return DiningList(showSearch: true);
           },
         );
       case RoutePaths.DINING_OPTION_DETAIL_VIEW:
