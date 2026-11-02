@@ -124,18 +124,35 @@ class _DiningListState extends State<DiningList> {
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         hintText: 'Search dining locations',
-        prefixIcon: const Icon(Icons.search),
+        prefixIcon: Icon(
+          Icons.search,
+          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
+        ),
         suffixIcon: _searchQuery.isEmpty
             ? null
             : IconButton(
-                icon: const Icon(Icons.clear),
+                icon: Icon(
+                  Icons.clear,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? listTileDividerColorDark
+                      : listTileDividerColorLight,
+                ),
                 tooltip: 'Clear search',
                 onPressed: () {
                   _searchController.clear();
                   _updateSearchQuery('');
                 },
               ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        border: WidgetStateInputBorder.resolveWith(
+          (states) => OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? listTileDividerColorDark
+                  : listTileDividerColorLight,
+            ),
+          ),
+        ),
       ),
       onChanged: _updateSearchQuery,
     ),
