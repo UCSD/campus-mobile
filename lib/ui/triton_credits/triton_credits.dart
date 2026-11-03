@@ -30,6 +30,91 @@ class TritonCredits extends StatelessWidget {
       devName: 'Gibson Connor',
       date: DateTime(2026, 10, 24), // First implementation: commit c243436b3.
     ),
+    credit(
+      feature: 'Fix Left Margin of the Error Messages',
+      ideaOwner: 'Alex Wu',
+      devName: 'Darvas Gao',
+      date: DateTime(2026, 10, 1), // TODO: replace with PR close date.
+    ),
+    credit(
+      feature: 'TritonGPT Feedback',
+      ideaOwner: 'Joshua Do',
+      devName: 'Prisha Jain',
+      date: DateTime(2026, 10, 9),
+    ),
+    credit(
+      feature: 'Home Screen Feedback',
+      ideaOwner: 'Kristhain Ortiz',
+      devName: 'Prisha Jain',
+      date: DateTime(2026, 10, 15),
+    ),
+    credit(
+      feature: 'Dining Card Feedback',
+      ideaOwner: 'Kristhain Ortiz',
+      devName: 'Joshua Do',
+      date: DateTime(2026, 11, 02),
+    ),
+    credit(
+      feature: 'Parking Card Feedback',
+      ideaOwner: 'Kristhain Ortiz',
+      devName: 'Minsung Kim',
+      date: DateTime(2026, 11, 02),
+    ),
+    credit(
+      feature: 'Show "Upcoming Schedule" When the Schedule Is Not for Today',
+      ideaOwner: 'TODO',
+      devName: 'TODO',
+      date: DateTime(2026, 11, 2), // TODO: replace with PR close date.
+    ),
+    credit(
+      feature: 'Remove Duplicate Shuttle Stops',
+      ideaOwner: 'Kristhian Ortiz',
+      devName: 'TODO',
+      date: DateTime(2026, 11, 2), // TODO: replace with PR close date.
+    ),
+    credit(
+      feature: 'Show "No Classes Found" Message When Not Enrolled',
+      ideaOwner: 'TODO',
+      devName: 'TODO',
+      date: DateTime(2026, 11, 2), // TODO: replace with PR close date.
+    ),
+    credit(
+      feature: 'Fix Extra Spaces at the Bottom of Web Cards',
+      ideaOwner: 'TODO',
+      devName: 'TODO',
+      date: DateTime(2026, 11, 2), // TODO: replace with PR close date.
+    ),
+    credit(
+      feature: 'Render Staff ID at the Top',
+      ideaOwner: 'Kristhian Ortiz',
+      devName: 'Darvas Gao',
+      date: DateTime(2026, 09, 30),
+    ),
+    credit(
+      feature: 'Adding All Cards Hidden Message',
+      ideaOwner: 'Kristhian Ortiz',
+      devName: 'Darvas Gao',
+      date: DateTime(2026, 10, 04),
+    ),
+    credit(
+      feature: 'Adding Calendar Classes View',
+      ideaOwner: 'Angela Wu',
+      devName: 'Minsung Kim',
+      date: DateTime(2026, 11, 02), // TODO: replace with PR close date.
+    ),
+    credit(
+      feature: 'Shuttle Card Modifications',
+      ideaOwner: 'Kristhian Ortiz',
+      devName: 'Albert Hoang',
+      date: DateTime(2026, 11, 02), // TODO: replace with PR close date.
+    ),
+    credit(
+      feature: 'Dining Card Search',
+      ideaOwner: 'Kristhian Ortiz',
+      devName: 'Darvas Gao',
+      date: DateTime(2026, 11, 02), // TODO: replace with PR close date.
+    ),
+
   ];
 
   List<Credit> get _sortedCredits {
