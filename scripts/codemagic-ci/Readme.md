@@ -4,7 +4,7 @@
 1. Select desired build triggers, i.e. include target experimental, trigger on push
 
 
-## ii. Environment variables (6)
+## ii. Environment variables
 1. **APP_VERSION**
     - Major, minor, and patch version number
     - Accepted: `7.3.0`, `8.1.15`, etc.
@@ -25,7 +25,16 @@
     - Value: Encrypted and secured `FIREBASE_ANDROID_QA.json` or `FIREBASE_ANDROID_PROD.json`
 7. **BUILD_PLATFORM**
     - Build platform
-    - Accepted: `IOS`, `ANDROID`
+    - Accepted: `IOS`, `ANDROID`, `BOTH`
+    - Use `BOTH` when the workflow builds both platforms.
+8. **GOOGLE_MAPS_ANDROID_API_KEY**
+    - Android Maps key for the workflow's environment
+    - Required when `BUILD_PLATFORM` is `ANDROID` or `BOTH`
+9. **GOOGLE_MAPS_IOS_API_KEY**
+    - iOS Maps key for the workflow's environment
+    - Required when `BUILD_PLATFORM` is `IOS` or `BOTH`
+
+Store Maps keys as secure Codemagic environment variables containing the raw key value, not a base64-encoded file. Use separate Android and iOS keys with the appropriate application and API restrictions, and select the correct keys for QA, PROD-TEST, and PROD workflows.
 
 
 **_Encrypting Environment Variables_**
@@ -37,6 +46,9 @@
 
 ## iii. Post-Clone Script
 1. Copy and paste the contents of `post-clone.sh` from `campus-mobile/scripts/codemagic-ci`
+2. Update the copied script in every applicable Codemagic workflow when the repository script changes.
+
+The script writes `GOOGLE_MAPS_API_KEY` into the ignored `android/secrets.properties` and/or `ios/Flutter/Secrets.xcconfig` files before the native builds. Maps keys do not belong in `APP_CONFIG` or `.env`. A missing key for the selected platform stops the build without printing the key value.
 
 
 ## iv. Build for Platforms

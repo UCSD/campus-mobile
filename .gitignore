@@ -67,6 +67,7 @@ node_modules/
 **/android/captures/
 **/android/gradlew.bat
 **/android/key.properties
+android/secrets.properties
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 **/android/**/build/
@@ -104,6 +105,7 @@ android/app/google-services.json
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Flutter.podspec
 **/ios/Flutter/Generated.xcconfig
+ios/Flutter/Secrets.xcconfig
 **/ios/Flutter/app.flx
 **/ios/Flutter/app.zip
 **/ios/Flutter/flutter_assets/
