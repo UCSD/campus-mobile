@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- updatePeriodMillis: re-pick today's classes within an hour of midnight -->
+<!-- The provider schedules class transitions; periodic updates also handle clock changes. -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/classes_widget"
-    android:minWidth="250dp"
-    android:minHeight="180dp"
+    android:minWidth="140dp"
+    android:minHeight="160dp"
+    android:minResizeWidth="110dp"
+    android:minResizeHeight="160dp"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen" />

@@ -18,6 +18,20 @@ struct Provider: TimelineProvider {
   }
 }
 
+struct ClassesProvider: TimelineProvider {
+  func placeholder(in context: Context) -> Entry { Entry(date: .now) }
+  func getSnapshot(in context: Context, completion: @escaping (Entry) -> Void) { completion(Entry(date: .now)) }
+  func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
+    let now = Date.now
+    let classes = upcomingClasses(in: classSchedule(from: store) ?? [:], at: now)
+    let starts = Set(classes.map { $0.start }).sorted()
+    let entries = [Entry(date: now)] + starts.map { Entry(date: $0) }
+    let calendar = campusCalendar()
+    let midnight = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now))!
+    completion(Timeline(entries: entries, policy: starts.isEmpty ? .after(midnight) : .atEnd))
+  }
+}
+
 /// UC San Diego wordmark top left, Triton trident top right.
 struct BrandHeader: View {
   var body: some View {
@@ -47,16 +61,51 @@ struct StudentIdView: View {
 }
 
 struct ClassesView: View {
+  @Environment(\.widgetFamily) private var family
   let date: Date
 
   var body: some View {
-    let day = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"][Calendar.current.component(.weekday, from: date) - 1]
-    let classes = store?.string(forKey: "classes_\(day)")
-    VStack(alignment: .leading, spacing: 4) {
+    let isSmall = family == .systemSmall
+    let schedule = classSchedule(from: store)
+    let classes = upcomingClasses(in: schedule ?? [:], at: date)
+    let secondary = Color(red: 0xB6 / 255, green: 0xC1 / 255, blue: 0xD2 / 255)
+    let hasIdentity = store?.string(forKey: "student_name") != nil || store?.string(forKey: "student_barcode") != nil
+    VStack(alignment: .leading, spacing: isSmall ? 4 : 6) {
       BrandHeader()
-      Text("Classes Today").font(.headline)
-      Text(classes.map { $0.isEmpty ? "No classes today" : $0 } ?? signedOut).font(.caption).privacySensitive()
+      if let next = classes.first {
+        VStack(alignment: .leading, spacing: 2) {
+          HStack(alignment: .firstTextBaseline) {
+            Text(next.title).font(.system(size: isSmall ? 16 : 20, weight: .bold))
+            if !isSmall {
+              Spacer()
+              Text("NEXT").font(.caption2).foregroundColor(secondary)
+            }
+          }
+          Text(isSmall ? (next.location.isEmpty ? "Location TBA" : next.location) : classDetails(next, at: date))
+            .font(isSmall ? .caption2 : .caption)
+          HStack(spacing: 4) {
+            Text("Starts in")
+            Text(next.start, style: .relative).monospacedDigit()
+          }.font((isSmall ? Font.caption2 : .caption).weight(.semibold))
+        }.privacySensitive()
+        if classes.count > 1 {
+          let following = classes[1]
+          VStack(alignment: .leading, spacing: 2) {
+            Text(following.title).font(.system(size: 13, weight: .semibold))
+            Text(classDetails(following, at: date)).font(.caption2).lineLimit(isSmall ? 2 : 1)
+          }
+          .foregroundColor(secondary)
+          .privacySensitive()
+        }
+      } else if let schedule {
+        let hasClasses = schedule.values.contains { !$0.isEmpty }
+        Text(hasClasses ? "Class times unavailable" : "No upcoming classes").font(.caption).lineLimit(2)
+      } else {
+        Text(hasIdentity ? "Open the app to load your classes" : signedOut).font(.caption).lineLimit(2)
+      }
     }
+    .lineLimit(1)
+    .minimumScaleFactor(isSmall ? 0.8 : 1)
     .foregroundColor(.white)
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     .widgetBackground()
@@ -84,9 +133,9 @@ struct StudentIdWidget: Widget {
 
 struct ClassesWidget: Widget {
   var body: some WidgetConfiguration {
-    StaticConfiguration(kind: "ClassesWidget", provider: Provider()) { ClassesView(date: $0.date) }
+    StaticConfiguration(kind: "ClassesWidget", provider: ClassesProvider()) { ClassesView(date: $0.date) }
       .configurationDisplayName("Classes")
-      .supportedFamilies([.systemMedium, .systemLarge])
+      .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
   }
 }
 

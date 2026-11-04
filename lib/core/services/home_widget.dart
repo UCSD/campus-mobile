@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:flutter/material.dart';
@@ -43,25 +45,31 @@ class HomeWidgetService {
   /// One list per weekday so the widget picks "today" itself after midnight.
   static Future<void> syncClasses(Map<String, List<ScheduledClass>> classesByDay) => _runExclusive(() async {
     for (final day in _days) {
-      final lines = (classesByDay[day] ?? []).map((c) => classLine(c));
-      await HomeWidget.saveWidgetData<String>('classes_$day', lines.join('\n'));
+      final classes = (classesByDay[day] ?? []).map(classData).toList();
+      await HomeWidget.saveWidgetData<String>('classes_$day', jsonEncode(classes));
     }
     await HomeWidget.updateWidget(name: 'ClassesWidget');
   });
 
-  /// i.e. "CSE 141L  10:00  CENTR 115"
-  static String classLine(ScheduledClass c) {
-    final time = c.section.time?.trim() ?? '';
-    final start = time.isEmpty ? 'TBA' : time.split('-').first;
+  /// Native widgets need the actual start time to select classes and count down.
+  static Map<String, Object?> classData(ScheduledClass c) {
+    final match = RegExp(r'^(\d{1,2}):(\d{2})$').firstMatch(c.section.time?.split('-').first.trim() ?? '');
+    final hour = match == null ? null : int.parse(match[1]!);
+    final minute = match == null ? null : int.parse(match[2]!);
     final course = [
       c.subjectCode,
       c.courseCode,
-    ].whereType<String>().where((field) => field.trim().isNotEmpty).join(' ');
-    final location = [
-      c.section.building,
-      c.section.room,
-    ].whereType<String>().where((field) => field.trim().isNotEmpty).join(' ');
-    return [if (course.isNotEmpty) course, start, if (location.isNotEmpty) location].join('  ');
+    ].whereType<String>().map((field) => field.trim()).where((field) => field.isNotEmpty).join(' ');
+    final building = c.section.building?.trim() ?? '';
+    final room = c.section.room?.trim() ?? '';
+    final location = room == building || room.startsWith('$building ')
+        ? room
+        : [building, room].where((field) => field.isNotEmpty).join(' ');
+    return {
+      'title': course.isEmpty ? 'Class' : course,
+      'location': location,
+      'startMinutes': hour != null && minute != null && hour < 24 && minute < 60 ? hour * 60 + minute : null,
+    };
   }
 
   /// Logout: the widgets must never keep showing the previous user's ID.

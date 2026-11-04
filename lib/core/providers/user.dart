@@ -48,6 +48,10 @@ class UserDataProvider extends ChangeNotifier {
   /// Update the [AuthenticationModel] stored in state
   /// overwrite the [AuthenticationModel] in persistent storage with the model passed in
   Future updateAuthenticationModel(AuthenticationModel model) async {
+    if (_authenticationModel.pid != model.pid) {
+      _authenticationModel = AuthenticationModel.fromJson({});
+      await HomeWidgetService.clear();
+    }
     _authenticationModel = model;
     var box = await Hive.openBox<AuthenticationModel?>('AuthenticationModel');
     var timeBox = await Hive.openBox<DateTime?>('AuthenticationModelLastUpdated');
@@ -266,7 +270,7 @@ class UserDataProvider extends ChangeNotifier {
     resetNotificationsScrollOffset();
     _pushNotificationDataProvider.unregisterDevice(_authenticationModel.accessToken);
     if (clearChatHistory) await _chatPersistenceService.clearUserChatData();
-    updateAuthenticationModel(AuthenticationModel.fromJson({}));
+    await updateAuthenticationModel(AuthenticationModel.fromJson({}));
     updateUserProfileModel(await _createNewUser(UserProfileModel.fromJson({})));
     _deletePasswordFromDevice();
     _deleteUsernameFromDevice();
