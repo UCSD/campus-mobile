@@ -25,13 +25,16 @@ class ScheduledClass {
   String get gradeOption {
     switch (course.gradeOption) {
       case 'L':
+      case 'Letter Grade':
         return 'Letter Grade';
       case 'P':
+      case 'Pass/No Pass':
         return 'Pass/No Pass';
       case 'S':
+      case 'Sat/Unsat':
         return 'Sat/Unsat';
       default:
-        return 'Other';
+        return course.gradeOption?.isNotEmpty == true ? course.gradeOption! : 'Other';
     }
   }
 }

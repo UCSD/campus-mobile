@@ -191,13 +191,16 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   static String buildGradeEvaluation(String gradeEvaluation) {
     switch (gradeEvaluation) {
       case 'L':
+      case 'Letter Grade':
         return 'Letter Grade';
       case 'P':
+      case 'Pass/No Pass':
         return 'Pass/No Pass';
       case 'S':
+      case 'Sat/Unsat':
         return 'Sat/Unsat';
       default:
-        return 'Other';
+        return gradeEvaluation.isNotEmpty ? gradeEvaluation : 'Other';
     }
   }
 
