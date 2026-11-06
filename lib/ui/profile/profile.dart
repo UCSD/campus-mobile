@@ -109,6 +109,14 @@ class Profile extends StatelessWidget {
                   ),
                   onTap: handlePrivacyTap,
                 ),
+                ListTile(
+                  leading: Icon(Icons.star, color: Theme.of(context).iconTheme.color, size: 30.0),
+                  title: Text(
+                    'Triton Credits',
+                    style: Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight,
+                  ),
+                  onTap: () => Navigator.pushNamed(context, RoutePaths.TRITON_CREDITS),
+                ),
                 if (isLoggedIn)
                   ListTile(
                     leading: Icon(Icons.warning_amber_rounded, color: Theme.of(context).iconTheme.color, size: 36.0),
@@ -132,8 +140,7 @@ class Profile extends StatelessWidget {
   // }
 
   Future<void> handleFeedbackTap() async {
-    const feedbackUrl = "https://eforms.ucsd.edu/view.php?id=857622";
-    openLink(feedbackUrl);
+    openLink(SupportConstants.FEEDBACK_URL);
   }
 
   Future<void> handlePrivacyTap() async {

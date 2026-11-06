@@ -58,7 +58,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
         children: <Widget>[
           Expanded(
             child: Container(
-              height: 40,
+              constraints: const BoxConstraints(minHeight: 40),
               child: AnimatedCrossFade(
                 duration: Duration(milliseconds: 300),
                 crossFadeState: isOverCount ? CrossFadeState.showFirst : CrossFadeState.showSecond,
@@ -84,7 +84,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
               ),
             ),
           ),
-          _checkBoxButton(),
+          Flexible(child: _checkBoxButton()),
         ],
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
       ),
@@ -94,7 +94,7 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
   Widget _checkBoxButton() {
     return Container(
       height: 23,
-      width: 100,
+      constraints: const BoxConstraints(maxWidth: 100),
       decoration: BoxDecoration(
         border: Border.all(width: 1.0, color: _borderColor),
         borderRadius: BorderRadius.all(Radius.circular(2.0)),
@@ -133,7 +133,14 @@ class _CheckBoxButtonState extends State<FreeFoodNotification> {
                           ),
                         ),
                       ),
-                      Text("I'm Going!", style: TextStyle(color: _textColor, fontSize: 12)),
+                      Flexible(
+                        child: Text(
+                          "I'm Going!",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: _textColor, fontSize: 12),
+                        ),
+                      ),
                     ],
                   ),
                 ),

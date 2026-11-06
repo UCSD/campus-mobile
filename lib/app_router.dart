@@ -33,6 +33,7 @@ import 'package:campus_mobile_experimental/ui/profile/cards.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/add_shuttle_stops_view.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/manage_shuttle_view.dart';
+import 'package:campus_mobile_experimental/ui/triton_credits/triton_credits.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -226,6 +227,8 @@ class Router {
             return NeighborhoodLotsView(data);
           },
         );
+      case RoutePaths.TRITON_CREDITS:
+        return MaterialPageRoute(builder: (_) => TritonCredits());
       default:
         return MaterialPageRoute(
           builder: (context) {
