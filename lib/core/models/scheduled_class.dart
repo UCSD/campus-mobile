@@ -25,20 +25,21 @@ class ScheduledClass {
   String? get gradeOption {
     final raw = course.gradeOption?.trim();
     if (raw == null || raw.isEmpty) return null;
-    switch (raw.toUpperCase()) {
-      case 'L':
-      case 'GR':
-      case 'GRD':
-      case 'LETTER':
+    switch (raw.toLowerCase()) {
+      case 'l':
+      case 'letter grade':
         return 'Letter Grade';
-      case 'P':
-      case 'PN':
-      case 'PNP':
-      case 'PASS':
+      case 'p':
+      case 'pn':
+      case 'pnp':
+      case 'pass/no pass':
+      case 'pass/not pass':
         return 'Pass/No Pass';
-      case 'S':
-      case 'SU':
-      case 'S/U':
+      case 's':
+      case 'su':
+      case 's/u':
+      case 'sat/unsat':
+      case 'satisfactory/unsatisfactory':
         return 'Sat/Unsat';
       default:
         // Surface the raw value instead of a misleading "Other" when the

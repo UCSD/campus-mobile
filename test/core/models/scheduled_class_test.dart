@@ -7,16 +7,23 @@ ScheduledClass scheduledFromJson(Map<String, dynamic> courseJson) =>
 
 void main() {
   group('ScheduledClass.gradeOption', () {
-    test('maps the classic single-letter codes', () {
+    test('maps the legacy single-letter codes', () {
       expect(scheduledFromJson({'grade_option': 'L'}).gradeOption, 'Letter Grade');
       expect(scheduledFromJson({'grade_option': 'P'}).gradeOption, 'Pass/No Pass');
       expect(scheduledFromJson({'grade_option': 'S'}).gradeOption, 'Sat/Unsat');
     });
 
-    test('maps known TSS vocabulary variants case-insensitively', () {
-      expect(scheduledFromJson({'grade_option': 'GRD'}).gradeOption, 'Letter Grade');
-      expect(scheduledFromJson({'grade_option': 'pnp'}).gradeOption, 'Pass/No Pass');
-      expect(scheduledFromJson({'grade_option': 'S/U'}).gradeOption, 'Sat/Unsat');
+    test('maps real MyAcademicHistory Title Case values', () {
+      expect(scheduledFromJson({'grade_option': 'Letter Grade'}).gradeOption, 'Letter Grade');
+      expect(scheduledFromJson({'grade_option': 'Pass/No Pass'}).gradeOption, 'Pass/No Pass');
+      expect(scheduledFromJson({'grade_option': 'Sat/Unsat'}).gradeOption, 'Sat/Unsat');
+      expect(scheduledFromJson({'grade_option': 'Satisfactory/Unsatisfactory'}).gradeOption, 'Sat/Unsat');
+    });
+
+    test('maps grade-option spellings case-insensitively', () {
+      expect(scheduledFromJson({'grade_option': 'letter grade'}).gradeOption, 'Letter Grade');
+      expect(scheduledFromJson({'grade_option': 'pass/not pass'}).gradeOption, 'Pass/No Pass');
+      expect(scheduledFromJson({'grade_option': 's/u'}).gradeOption, 'Sat/Unsat');
     });
 
     test('passes unrecognized non-empty values through verbatim', () {
@@ -33,11 +40,11 @@ void main() {
 
   group('ClassData.fromJson grade_option parsing', () {
     test('reads snake_case payloads', () {
-      expect(ClassData.fromJson({'grade_option': 'L'}).gradeOption, 'L');
+      expect(ClassData.fromJson({'grade_option': 'Letter Grade'}).gradeOption, 'Letter Grade');
     });
 
     test('falls back to camelCase payloads', () {
-      expect(ClassData.fromJson({'gradeOption': 'L'}).gradeOption, 'L');
+      expect(ClassData.fromJson({'gradeOption': 'Pass/No Pass'}).gradeOption, 'Pass/No Pass');
     });
   });
 }
