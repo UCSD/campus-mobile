@@ -122,12 +122,7 @@ class CardContainer extends StatelessWidget {
         child: child(),
       );
     } else if (titleText == "SHUTTLE") {
-      // web cards are still sized with static values
-      return Container(
-        width: double.infinity,
-        constraints: BoxConstraints(minHeight: cardMinHeight, maxHeight: 375),
-        child: child(),
-      );
+      return Container(width: double.infinity, child: child());
     } else if (titleText == "PARKING") {
       double _maxHeight = 320;
       if (MediaQuery.of(context).size.width > 600) _maxHeight = 800;
@@ -152,6 +147,16 @@ class CardContainer extends StatelessWidget {
   }
 
   Widget buildMenuOptions(Map<String, Function> menuOptions) {
+    if (titleText == 'SHUTTLE') {
+      return PopupMenuButton<String>(
+        tooltip: '$titleText Card Menu',
+        icon: Icon(Icons.more_vert, size: 36, color: dotsUnselectedColor),
+        onSelected: onMenuItemPressed,
+        itemBuilder: (_) =>
+            menuOptions.keys.map((option) => PopupMenuItem<String>(value: option, child: Text(option))).toList(),
+      );
+    }
+
     List<DropdownMenuItem<String>> menu = [];
 
     menuOptions.forEach((menuOption, func) {

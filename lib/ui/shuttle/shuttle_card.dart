@@ -122,21 +122,40 @@ class _ShuttleCardState extends State<ShuttleCard> {
           ShuttleDisplay(
             stop: _shuttleCardDataProvider.stopsToRender[i],
             arrivingShuttles: arrivalsToRender[_shuttleCardDataProvider.stopsToRender[i].id],
+            arrivalError: _shuttleCardDataProvider.arrivalErrors[_shuttleCardDataProvider.stopsToRender[i].id],
           ),
         );
       }
       return Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Flexible(
-            child: PageView(
-              controller: _controller,
-              children: renderList,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentPage = index;
-                });
-              },
-            ),
+          Stack(
+            children: [
+              // Size the swipe viewport to the selected stop's natural height.
+              ExcludeSemantics(
+                child: Opacity(opacity: 0, child: renderList[_currentPage.clamp(0, renderList.length - 1)]),
+              ),
+              Positioned.fill(
+                child: PageView(
+                  controller: _controller,
+                  children: renderList
+                      .map(
+                        (page) => OverflowBox(
+                          minHeight: 0,
+                          maxHeight: double.infinity,
+                          alignment: Alignment.topCenter,
+                          child: page,
+                        ),
+                      )
+                      .toList(),
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                ),
+              ),
+            ],
           ),
           if (renderList.length > 1)
             DotsIndicator(

@@ -131,6 +131,36 @@ void main() {
   });
 
   group('ShuttleService.getArrivingInformation', () {
+    test('an empty arrivals response with MTS references succeeds', () async {
+      final ShuttleService service = ShuttleService(
+        client: _FakeOneBusAwayClient(
+          arrivalsEnvelope: {
+            'code': 200,
+            'currentTime': 1793993241998,
+            'data': {
+              'entry': {
+                'arrivalsAndDepartures': [],
+                'nearbyStopIds': ['MTS_99385'],
+                'situationIds': [],
+                'stopId': 'UCSD_4006',
+              },
+              'references': {
+                'routes': [
+                  {'agencyId': 'MTS', 'id': 'MTS_43', 'longName': 'Balboa Av TC - Kearny Mesa', 'color': '000099'},
+                ],
+              },
+            },
+          },
+        ),
+      );
+
+      final arrivals = await service.getArrivingInformation(4006);
+
+      expect(arrivals, isEmpty);
+      expect(service.error, isNull);
+      expect(service.isLoading, isFalse);
+    });
+
     test('queries arrivals with the raw OneBusAway stop id', () async {
       final _FakeOneBusAwayClient client = _FakeOneBusAwayClient(
         stopsEnvelope: _stopsEnvelope(),

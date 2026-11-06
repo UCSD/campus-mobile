@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:campus_mobile_experimental/core/services/one_bus_away_client.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const String testEndpoint = 'https://onebusaway.example.test';
@@ -84,6 +85,42 @@ void main() {
   };
 
   group('OneBusAwayConfig', () {
+    late DotEnv originalDotEnv;
+
+    setUp(() {
+      originalDotEnv = dotenv;
+      dotenv = DotEnv();
+    });
+
+    tearDown(() {
+      dotenv = originalDotEnv;
+    });
+
+    test('reads settings from the app dotenv configuration', () {
+      dotenv.testLoad(fileInput: 'ONE_BUS_AWAY_API=$testEndpoint\nONE_BUS_AWAY_API_KEY=$testApiKey');
+
+      final OneBusAwayConfig config = OneBusAwayConfig();
+
+      expect(config.apiEndpoint, testEndpoint);
+      expect(config.apiKey, testApiKey);
+      expect(config.isConfigured, isTrue);
+    });
+
+    test('injected values override dotenv configuration, including empty values', () {
+      dotenv.testLoad(fileInput: 'ONE_BUS_AWAY_API=$testEndpoint\nONE_BUS_AWAY_API_KEY=$testApiKey');
+
+      final OneBusAwayConfig config = OneBusAwayConfig(apiEndpoint: '', apiKey: '');
+
+      expect(config.apiEndpoint, isEmpty);
+      expect(config.apiKey, isEmpty);
+      expect(config.isConfigured, isFalse);
+    });
+
+    test('can construct configuration before dotenv is initialized', () {
+      expect(dotenv.isInitialized, isFalse);
+      expect(() => OneBusAwayConfig(), returnsNormally);
+    });
+
     test('injected values take precedence over machine environment', () {
       final OneBusAwayConfig config = OneBusAwayConfig(apiEndpoint: testEndpoint, apiKey: testApiKey);
       expect(config.apiEndpoint, testEndpoint);
@@ -154,6 +191,55 @@ void main() {
   });
 
   group('OneBusAwayClient error handling', () {
+    test('waits for Retry-After before retrying a rate-limited request', () async {
+      final harness = _Harness();
+      var attempts = 0;
+      harness.adapter.handler = (_) async {
+        attempts++;
+        if (attempts == 1) {
+          return ResponseBody.fromString(
+            '{}',
+            429,
+            headers: {
+              Headers.contentTypeHeader: ['application/json'],
+              'retry-after': ['1'],
+            },
+          );
+        }
+        return _jsonResponse(stopsEnvelope);
+      };
+
+      final pending = harness.client.fetchStopsForAgency();
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      expect(attempts, 1);
+      final envelope = await pending;
+
+      expect(attempts, 2);
+      expect(envelope['code'], 200);
+    });
+
+    test('stops retrying after repeated rate limiting', () async {
+      final harness = _Harness();
+      var attempts = 0;
+      harness.adapter.handler = (_) async {
+        attempts++;
+        return ResponseBody.fromString(
+          '{}',
+          429,
+          headers: {
+            Headers.contentTypeHeader: ['application/json'],
+            'retry-after': ['0'],
+          },
+        );
+      };
+
+      await expectLater(
+        harness.client.fetchStopsForAgency(),
+        throwsA(isA<OneBusAwayException>().having((e) => e.message, 'message', contains('HTTP 429'))),
+      );
+      expect(attempts, 3);
+    });
+
     test('throws a sanitized error on HTTP failure', () async {
       final _Harness harness = _Harness()..respond({'error': 'boom'}, status: 500);
 
@@ -191,7 +277,40 @@ void main() {
           },
         );
 
-      await expectLater(harness.client.fetchStopsForAgency(), throwsA(isA<OneBusAwayException>()));
+      await expectLater(
+        harness.client.fetchStopsForAgency(),
+        throwsA(isA<OneBusAwayException>().having((e) => e.message, 'message', 'OneBusAway returned invalid JSON.')),
+      );
+    });
+
+    test('reports an unexpected JSON shape without echoing response contents', () async {
+      final _Harness harness = _Harness()..respond(['$testEndpoint?key=$testApiKey']);
+
+      await expectLater(
+        harness.client.fetchArrivalsAndDeparturesForStop('UCSD_4006'),
+        throwsA(
+          isA<OneBusAwayException>().having(
+            (e) => e.message,
+            'message',
+            'OneBusAway returned an unexpected JSON response shape.',
+          ),
+        ),
+      );
+    });
+
+    test('reports a malformed status code without echoing its value', () async {
+      final _Harness harness = _Harness()..respond({'code': '$testEndpoint?key=$testApiKey'});
+
+      await expectLater(
+        harness.client.fetchArrivalsAndDeparturesForStop('UCSD_4006'),
+        throwsA(
+          isA<OneBusAwayException>().having(
+            (e) => e.message,
+            'message',
+            'OneBusAway response is missing a numeric status code.',
+          ),
+        ),
+      );
     });
 
     test('throws when the OneBusAway envelope reports a non-200 code', () async {

@@ -213,7 +213,7 @@ List<SingleChildWidget> dependentServices = [
       print("UpdateProvider: shuttleDataProvider");
       shuttleDataProvider!.userCoords = coordinates;
       shuttleDataProvider.userDataProvider = userDataProvider;
-      shuttleDataProvider.fetchStops(true);
+      shuttleDataProvider.fetchStops(true, refreshCatalog: false);
       return shuttleDataProvider;
     },
   ),

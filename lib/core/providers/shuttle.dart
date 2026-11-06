@@ -1,17 +1,22 @@
+import 'dart:async';
 import 'dart:math' as Math;
 import 'package:campus_mobile_experimental/core/models/location.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {
+  ShuttleDataProvider({ShuttleService? shuttleService}) : _shuttleService = shuttleService ?? ShuttleService();
+
   /// STATES
   bool _isLoading = false;
   String? _error;
   double closestDistance = 10000000;
   Map<int, List<ArrivingShuttle>> arrivalsToRender = {};
+  final Map<int, String> arrivalErrors = {};
   Coordinates? _userCoords;
 
   /// MODELS
@@ -22,32 +27,65 @@ class ShuttleDataProvider extends ChangeNotifier {
   UserDataProvider? userDataProvider;
 
   /// SERVICES
-  var _shuttleService = ShuttleService();
+  final ShuttleService _shuttleService;
+  Completer<void>? _fetchStopsCompleter;
+  bool _refreshRequested = false;
+  bool _refreshCatalogRequested = false;
+  List<int?>? _lastSelectedStopIds;
+  double? _lastLatitude;
+  double? _lastLongitude;
 
-  void fetchStops(bool reloading) async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
-    /// create new map of shuttles/stops to display
-    Map<int, ShuttleStopModel> newMapOfStops = <int, ShuttleStopModel>{};
-    if (await _shuttleService.fetchData()) {
-      _shuttleService.data.sort((a, b) => (a.name).compareTo(b.name));
-
-      for (ShuttleStopModel model in _shuttleService.data) {
-        newMapOfStops[model.id] = model;
-      }
-      fetchedStops = newMapOfStops;
-
-      /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      if (userDataProvider != null && !reloading) reorderStops(userDataProvider!.userProfileModel.selectedStops);
-
-      // get closest stop to current user
-      await calculateClosestStop();
-      await getArrivalInformation();
+  Future<void> fetchStops(bool reloading, {bool refreshCatalog = true}) {
+    final selectedStopIds = userDataProvider?.userProfileModel.selectedStops ?? const <int?>[];
+    if (!refreshCatalog &&
+        fetchedStops != null &&
+        _error == null &&
+        listEquals(_lastSelectedStopIds, selectedStopIds) &&
+        _lastLatitude == _userCoords?.lat &&
+        _lastLongitude == _userCoords?.lon) {
+      return _fetchStopsCompleter?.future ?? Future<void>.value();
     }
-    _isLoading = false;
-    notifyListeners();
+    _refreshRequested = true;
+    _refreshCatalogRequested |= refreshCatalog;
+    if (_fetchStopsCompleter != null) return _fetchStopsCompleter!.future;
+
+    final completer = Completer<void>();
+    _fetchStopsCompleter = completer;
+    _runFetchStops(reloading).then(completer.complete, onError: completer.completeError);
+    return completer.future;
+  }
+
+  Future<void> _runFetchStops(bool reloading) async {
+    _isLoading = true;
+    try {
+      do {
+        _refreshRequested = false;
+        final shouldFetchCatalog = _refreshCatalogRequested || fetchedStops == null;
+        _refreshCatalogRequested = false;
+        _error = null;
+        arrivalErrors.clear();
+        _lastSelectedStopIds = List<int?>.of(userDataProvider?.userProfileModel.selectedStops ?? const <int?>[]);
+        _lastLatitude = _userCoords?.lat;
+        _lastLongitude = _userCoords?.lon;
+        notifyListeners();
+
+        if (!shouldFetchCatalog || await _shuttleService.fetchData()) {
+          final sortedStops = _shuttleService.data.toList()..sort((a, b) => a.name.compareTo(b.name));
+          fetchedStops = {for (final stop in sortedStops) stop.id: stop};
+
+          if (userDataProvider != null && !reloading) reorderStops(userDataProvider!.userProfileModel.selectedStops);
+
+          await calculateClosestStop();
+          await getArrivalInformation();
+        } else {
+          _error = _shuttleService.error;
+        }
+      } while (_refreshRequested);
+    } finally {
+      _fetchStopsCompleter = null;
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   // TODO: unused function. If needed, rewrite w/ proper nullability - December 2025
@@ -127,16 +165,21 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> getArrivalInformation() async {
-    if (_closestStop != null) arrivalsToRender[_closestStop!.id] = await fetchArrivalInformation(_closestStop!.id);
-
-    for (ShuttleStopModel stop in stopsToRender) {
-      arrivalsToRender[stop.id] = await fetchArrivalInformation(stop.id);
+    final Set<int> stopIds = {if (_closestStop != null) _closestStop!.id, ...stopsToRender.map((stop) => stop.id)};
+    for (final int stopId in stopIds) {
+      arrivalsToRender[stopId] = await fetchArrivalInformation(stopId);
     }
     notifyListeners();
   }
 
   Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async {
-    List<ArrivingShuttle> output = await _shuttleService.getArrivingInformation(stopID);
+    final List<ArrivingShuttle> output = (await _shuttleService.getArrivingInformation(stopID)).toList();
+    final String? arrivalError = _shuttleService.error;
+    if (arrivalError == null) {
+      arrivalErrors.remove(stopID);
+    } else {
+      arrivalErrors[stopID] = arrivalError;
+    }
     output.sort((a, b) => a.secondsToArrival.compareTo(b.secondsToArrival));
     return output;
   }

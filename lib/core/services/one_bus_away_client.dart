@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Names of the machine environment variables that hold the OneBusAway API
-/// base endpoint and API key (MA-685). The values are read from the machine
-/// environment at runtime and must never be hardcoded, committed, or logged.
+/// base endpoint and API key (MA-685). Values come from the machine environment,
+/// Dart defines, or the app's loaded .env and must never be hardcoded, committed, or logged.
 const String oneBusAwayApiEnvVar = 'ONE_BUS_AWAY_API';
 const String oneBusAwayApiKeyEnvVar = 'ONE_BUS_AWAY_API_KEY';
 
@@ -15,6 +16,13 @@ const String oneBusAwayApiKeyEnvVar = 'ONE_BUS_AWAY_API_KEY';
 /// Like the environment variables, these values are never stored in code.
 const String _oneBusAwayApiDartDefine = String.fromEnvironment(oneBusAwayApiEnvVar);
 const String _oneBusAwayApiKeyDartDefine = String.fromEnvironment(oneBusAwayApiKeyEnvVar);
+
+String _readOneBusAwaySetting(String name, String dartDefine) {
+  final String? environmentValue = Platform.environment[name];
+  if (environmentValue != null && environmentValue.trim().isNotEmpty) return environmentValue.trim();
+  if (dartDefine.trim().isNotEmpty) return dartDefine.trim();
+  return dotenv.isInitialized ? (dotenv.env[name] ?? '').trim() : '';
+}
 
 /// Sanitized error type for all OneBusAway failures. Messages never include
 /// request URLs, which embed the API key as a query parameter.
@@ -27,14 +35,14 @@ class OneBusAwayException implements Exception {
   String toString() => message;
 }
 
-/// Holds the OneBusAway API configuration read from the machine environment.
+/// Holds OneBusAway configuration from the environment, Dart defines, or .env.
 ///
 /// Explicit [apiEndpoint]/[apiKey] values (used by dependency injection and
 /// tests) always take precedence over the environment.
 class OneBusAwayConfig {
   OneBusAwayConfig({String? apiEndpoint, String? apiKey})
-    : apiEndpoint = (apiEndpoint ?? Platform.environment[oneBusAwayApiEnvVar] ?? _oneBusAwayApiDartDefine).trim(),
-      apiKey = (apiKey ?? Platform.environment[oneBusAwayApiKeyEnvVar] ?? _oneBusAwayApiKeyDartDefine).trim();
+    : apiEndpoint = (apiEndpoint ?? _readOneBusAwaySetting(oneBusAwayApiEnvVar, _oneBusAwayApiDartDefine)).trim(),
+      apiKey = (apiKey ?? _readOneBusAwaySetting(oneBusAwayApiKeyEnvVar, _oneBusAwayApiKeyDartDefine)).trim();
 
   final String apiEndpoint;
   final String apiKey;
@@ -93,11 +101,11 @@ class OneBusAwayClient {
     return Uri.parse('$base$path').replace(queryParameters: <String, String>{'key': _config.apiKey});
   }
 
-  Future<Map<String, dynamic>> _get(String path) async {
+  Future<Map<String, dynamic>> _get(String path, {int retryAttempt = 0}) async {
     if (!_config.isConfigured) {
       throw const OneBusAwayException(
         'The OneBusAway API is not configured. Set the ONE_BUS_AWAY_API and '
-        'ONE_BUS_AWAY_API_KEY environment variables.',
+        'ONE_BUS_AWAY_API_KEY in .env, environment variables, or --dart-define.',
       );
     }
     try {
@@ -105,18 +113,28 @@ class OneBusAwayClient {
       final dynamic body = response.data;
       final dynamic decoded = body is String ? jsonDecode(body) : body;
       if (decoded is! Map<String, dynamic>) {
-        throw const FormatException('Unexpected OneBusAway response shape.');
+        throw const OneBusAwayException('OneBusAway returned an unexpected JSON response shape.');
       }
-      final int? code = (decoded['code'] as num?)?.toInt();
+      final dynamic responseCode = decoded['code'];
+      if (responseCode is! num) {
+        throw const OneBusAwayException('OneBusAway response is missing a numeric status code.');
+      }
+      final int code = responseCode.toInt();
       if (code != 200) {
         throw OneBusAwayException('OneBusAway returned error code $code.');
       }
       return decoded;
     } on OneBusAwayException {
       rethrow;
+    } on FormatException {
+      throw const OneBusAwayException('OneBusAway returned invalid JSON.');
     } on DioException catch (e) {
       // Never surface the request URI: it contains the API key.
       final int? status = e.response?.statusCode;
+      if (status == 429 && retryAttempt < 2) {
+        await Future<void>.delayed(_rateLimitRetryDelay(e.response, retryAttempt));
+        return _get(path, retryAttempt: retryAttempt + 1);
+      }
       throw OneBusAwayException(
         status == null ? 'Failed to reach the OneBusAway API.' : 'Failed to reach the OneBusAway API (HTTP $status).',
       );
@@ -125,5 +143,20 @@ class OneBusAwayClient {
       // can embed the full request URL, which contains the API key.
       throw const OneBusAwayException('Failed to process OneBusAway data.');
     }
+  }
+
+  Duration _rateLimitRetryDelay(Response<dynamic>? response, int retryAttempt) {
+    final String? retryAfter = response?.headers.value(HttpHeaders.retryAfterHeader);
+    final int? seconds = int.tryParse(retryAfter ?? '');
+    if (seconds != null && seconds >= 0) return Duration(seconds: seconds);
+    if (retryAfter != null) {
+      try {
+        final delay = HttpDate.parse(retryAfter).difference(DateTime.now().toUtc());
+        return delay.isNegative ? Duration.zero : delay;
+      } on FormatException {
+        // Use a short backoff when the server's retry instruction is invalid.
+      }
+    }
+    return Duration(seconds: 2 * (retryAttempt + 1));
   }
 }

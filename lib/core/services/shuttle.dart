@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/services/one_bus_away_client.dart';
@@ -31,6 +33,7 @@ class ShuttleService {
     try {
       /// fetch data: all stops served by the campus shuttle agency
       final Map<String, dynamic> envelope = await _client.fetchStopsForAgency();
+      // print('\x1B[32mstops-for-agency response:\n${const JsonEncoder.withIndent('  ').convert(envelope)}\x1B[0m');
 
       /// parse data
       _data = shuttleStopsFromOneBusAwayEnvelope(envelope);
@@ -44,6 +47,7 @@ class ShuttleService {
       /// OneBusAway failures are wrapped in [OneBusAwayException] with
       /// sanitized messages, so this is safe to expose to the UI.
       _error = e.toString();
+      // print('\x1B[31mstops-for-agency failed: $_error\x1B[0m');
       return false;
     } finally {
       _isLoading = false;
@@ -53,10 +57,13 @@ class ShuttleService {
   Future<List<ArrivingShuttle>> getArrivingInformation(stopId) async {
     _error = null;
     _isLoading = true;
+    final String oneBusAwayStopId = _oneBusAwayStopIds[stopId] ?? stopId.toString();
     try {
       /// fetch data: arrivals for the raw OneBusAway stop id when known
-      final String oneBusAwayStopId = _oneBusAwayStopIds[stopId] ?? stopId.toString();
       final Map<String, dynamic> envelope = await _client.fetchArrivalsAndDeparturesForStop(oneBusAwayStopId);
+      print(
+        '\x1B[32marrivals-and-departures-for-stop ($oneBusAwayStopId) response:\n${const JsonEncoder.withIndent('  ').convert(envelope)}\x1B[0m',
+      );
 
       /// parse data: keep only the campus shuttle agency's routes, matching
       /// the scope of the previous shuttle feed
@@ -65,6 +72,7 @@ class ShuttleService {
       /// OneBusAway failures are wrapped in [OneBusAwayException] with
       /// sanitized messages, so this is safe to expose to the UI.
       _error = e.toString();
+      print('\x1B[31marrivals-and-departures-for-stop ($oneBusAwayStopId) failed: $_error\x1B[0m');
       return [];
     } finally {
       _isLoading = false;
