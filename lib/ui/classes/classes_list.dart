@@ -166,7 +166,7 @@ class ClassList extends StatelessWidget {
             // Classroom Location:
             _detailRow(Icons.location_on_outlined, 'Location: ${_formatLocation(scheduledClass)}', detailStyle),
             // Evaluation Option:
-            if (!isMidterm)
+            if (!isMidterm && scheduledClass.gradeOption != null)
               _detailRow(Icons.check_box_outlined, 'Evaluation: ${scheduledClass.gradeOption}', detailStyle),
           ],
         ),
