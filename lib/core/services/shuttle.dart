@@ -61,9 +61,7 @@ class ShuttleService {
     try {
       /// fetch data: arrivals for the raw OneBusAway stop id when known
       final Map<String, dynamic> envelope = await _client.fetchArrivalsAndDeparturesForStop(oneBusAwayStopId);
-      print(
-        '\x1B[32marrivals-and-departures-for-stop ($oneBusAwayStopId) response:\n${const JsonEncoder.withIndent('  ').convert(envelope)}\x1B[0m',
-      );
+      // print('\x1B[32marrivals-and-departures-for-stop ($oneBusAwayStopId) response:\n${const JsonEncoder.withIndent('  ').convert(envelope)}\x1B[0m',);
 
       /// parse data: keep only the campus shuttle agency's routes, matching
       /// the scope of the previous shuttle feed
@@ -72,7 +70,7 @@ class ShuttleService {
       /// OneBusAway failures are wrapped in [OneBusAwayException] with
       /// sanitized messages, so this is safe to expose to the UI.
       _error = e.toString();
-      print('\x1B[31marrivals-and-departures-for-stop ($oneBusAwayStopId) failed: $_error\x1B[0m');
+      // print('\x1B[31marrivals-and-departures-for-stop ($oneBusAwayStopId) failed: $_error\x1B[0m');
       return [];
     } finally {
       _isLoading = false;

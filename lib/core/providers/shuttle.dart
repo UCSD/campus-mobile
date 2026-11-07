@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 class ShuttleDataProvider extends ChangeNotifier {
   ShuttleDataProvider({ShuttleService? shuttleService}) : _shuttleService = shuttleService ?? ShuttleService();
 
+  static const int maxSelectedStops = 5;
+
   /// STATES
   bool _isLoading = false;
   String? _error;
@@ -31,12 +33,12 @@ class ShuttleDataProvider extends ChangeNotifier {
   Completer<void>? _fetchStopsCompleter;
   bool _refreshRequested = false;
   bool _refreshCatalogRequested = false;
-  List<int?>? _lastSelectedStopIds;
+  List<int>? _lastSelectedStopIds;
   double? _lastLatitude;
   double? _lastLongitude;
 
   Future<void> fetchStops(bool reloading, {bool refreshCatalog = true}) {
-    final selectedStopIds = userDataProvider?.userProfileModel.selectedStops ?? const <int?>[];
+    final selectedStopIds = _normalizedSelectedStopIds(requireKnownStop: fetchedStops != null);
     if (!refreshCatalog &&
         fetchedStops != null &&
         _error == null &&
@@ -64,7 +66,7 @@ class ShuttleDataProvider extends ChangeNotifier {
         _refreshCatalogRequested = false;
         _error = null;
         arrivalErrors.clear();
-        _lastSelectedStopIds = List<int?>.of(userDataProvider?.userProfileModel.selectedStops ?? const <int?>[]);
+        _lastSelectedStopIds = _normalizedSelectedStopIds(requireKnownStop: fetchedStops != null);
         _lastLatitude = _userCoords?.lat;
         _lastLongitude = _userCoords?.lon;
         notifyListeners();
@@ -72,6 +74,7 @@ class ShuttleDataProvider extends ChangeNotifier {
         if (!shouldFetchCatalog || await _shuttleService.fetchData()) {
           final sortedStops = _shuttleService.data.toList()..sort((a, b) => a.name.compareTo(b.name));
           fetchedStops = {for (final stop in sortedStops) stop.id: stop};
+          _lastSelectedStopIds = _normalizedSelectedStopIds(requireKnownStop: true);
 
           if (userDataProvider != null && !reloading) reorderStops(userDataProvider!.userProfileModel.selectedStops);
 
@@ -106,7 +109,10 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   void reorderStops(List<int?>? order) {
     /// update userProfileModel with selectedStops
-    userDataProvider!.userProfileModel.selectedStops = order;
+    userDataProvider!.userProfileModel.selectedStops = _normalizeStopIds(
+      order ?? const <int?>[],
+      requireKnownStop: fetchedStops != null,
+    );
     if (userDataProvider!.isLoggedIn) {
       /// post updated userProfileModel for logged-in users
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
@@ -115,18 +121,21 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> addStop(int stopID) async {
-    if (!userDataProvider!.userProfileModel.selectedStops!.contains(stopID)) {
-      userDataProvider!.userProfileModel.selectedStops!.add(stopID);
-      // update userprofilemodel locally and in database after a stop is added
-      userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
-      arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
-    }
+    final selectedStopIds = _normalizedSelectedStopIds(requireKnownStop: fetchedStops != null);
+    final isKnownStop = fetchedStops?.containsKey(stopID) ?? false;
+    if (!isKnownStop || selectedStopIds.contains(stopID) || selectedStopIds.length >= maxSelectedStops) return;
+
+    userDataProvider!.userProfileModel.selectedStops = [...selectedStopIds, stopID];
+    // update userprofilemodel locally and in database after a stop is added
+    userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
+    arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
     notifyListeners();
   }
 
   Future<void> removeStop(int? stopID) async {
-    if (userDataProvider!.userProfileModel.selectedStops!.contains(stopID)) {
-      userDataProvider!.userProfileModel.selectedStops!.remove(stopID);
+    final selectedStopIds = _normalizedSelectedStopIds(requireKnownStop: fetchedStops != null);
+    if (selectedStopIds.remove(stopID)) {
+      userDataProvider!.userProfileModel.selectedStops = selectedStopIds;
       // update userprofilemodel locally and in database after a stop is removed
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
     }
@@ -196,16 +205,10 @@ class ShuttleDataProvider extends ChangeNotifier {
   get error => _error;
   ShuttleStopModel? get closestStop => _closestStop;
   List<ShuttleStopModel> get stopsToRender {
-    var stopsToRenderList = <ShuttleStopModel>[];
-    final bool hasStops = fetchedStops != null;
-    final bool hasSelectedStops = userDataProvider?.userProfileModel.selectedStops != null;
-    if (hasStops && hasSelectedStops) {
-      for (var i = 0; i < userDataProvider!.userProfileModel.selectedStops!.length; i++) {
-        int stopID = userDataProvider!.userProfileModel.selectedStops![i]!;
-        if (fetchedStops![stopID] != null) stopsToRenderList.add(fetchedStops![stopID]!);
-      }
-    }
-    return stopsToRenderList;
+    if (fetchedStops == null) return <ShuttleStopModel>[];
+    return _normalizedSelectedStopIds(
+      requireKnownStop: true,
+    ).map((stopId) => fetchedStops![stopId]!).toList(growable: false);
   }
 
   Map<int, ShuttleStopModel> get stopsNotSelected {
@@ -215,5 +218,22 @@ class ShuttleDataProvider extends ChangeNotifier {
       output.remove(stop!.id);
     }
     return output;
+  }
+
+  List<int> _normalizedSelectedStopIds({required bool requireKnownStop}) {
+    final selectedStopIds = userDataProvider?.userProfileModel.selectedStops ?? const <int?>[];
+    return _normalizeStopIds(selectedStopIds, requireKnownStop: requireKnownStop);
+  }
+
+  List<int> _normalizeStopIds(Iterable<int?> selectedStopIds, {required bool requireKnownStop}) {
+    final normalized = <int>[];
+    final seen = <int>{};
+    for (final stopId in selectedStopIds) {
+      if (stopId == null || !seen.add(stopId)) continue;
+      if (requireKnownStop && !(fetchedStops?.containsKey(stopId) ?? false)) continue;
+      if (normalized.length == maxSelectedStops) break;
+      normalized.add(stopId);
+    }
+    return normalized;
   }
 }
