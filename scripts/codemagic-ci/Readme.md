@@ -36,7 +36,17 @@
 
 
 ## iii. Post-Clone Script
-1. Copy and paste the contents of `post-clone.sh` from `campus-mobile/scripts/codemagic-ci`
+1. In Codemagic's Workflow Editor, set the Post-clone script to invoke the
+   checked-in script directly:
+
+   ```sh
+   sh ./scripts/codemagic-ci/post-clone.sh
+   ```
+
+   Invoking the repository file ensures future script changes are used by
+   Codemagic without copying them into the Workflow Editor again.
+2. Save the workflow and confirm the next build log contains
+   `Start: post-clone.sh` before dependency resolution begins.
 
 
 ## iv. Build for Platforms

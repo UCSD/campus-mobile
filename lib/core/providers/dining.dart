@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart';
 import 'package:campus_mobile_experimental/core/models/location.dart';
