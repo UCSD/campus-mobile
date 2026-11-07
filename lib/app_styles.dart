@@ -304,7 +304,7 @@ const IconThemeData darkIconTheme = IconThemeData(color: darkPrimaryColor2);
 
 // Unselected / inactive colors
 const Color unselectedIconLightColor = Color(0xFF6A6B6D);
-const Color unselectedIconDarkColor = Color(0xFF6A6B6D);
+const Color unselectedIconDarkColor = Color(0xFF909193);
 const noArrivalsFoundColor = "#747678";
 
 // Colors for text on buttons using light theme
@@ -351,7 +351,7 @@ const Color c3 = Color.fromARGB(255, 0, 0, 255);
 
 // List Tile Theme Data
 const lightListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00629B));
-const darkListTileTheme = ListTileThemeData(selectedColor: const Color(0xFF00C6D7));
+const darkListTileTheme = ListTileThemeData(selectedColor: secondaryColorDark);
 
 // New Onboarding Screen Colors
 const lightOnboardingScreen = Color.fromARGB(255, 245, 240, 228);

@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
 
   Widget buildLoggedInWidget(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -79,14 +79,20 @@ class _LoginState extends State<Login> {
 
   Widget buildUserProfileTile(BuildContext context) {
     return ListTile(
+      contentPadding: EdgeInsets.zero,
+      minLeadingWidth: 24,
+      horizontalTitleGap: 8,
       leading: Icon(Icons.check_circle, color: Colors.green),
-      title: Transform.translate(
-        offset: Offset(-24, 0),
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
         child: Text(
           _userDataProvider.userProfileModel.username != null
               ? parseUsername(_userDataProvider.userProfileModel.username!)
               : "",
           style: bodyMediumLight,
+          maxLines: 1,
+          softWrap: false,
         ),
       ),
       trailing: TextButton(
