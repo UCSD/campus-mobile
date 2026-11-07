@@ -30,8 +30,8 @@ class EventsAll extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 1,
         mainAxisSpacing: 8,
+        mainAxisExtent: 300,
         children: eventTiles,
-        childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1.4),
       );
     } else {
       return ContainerView(child: Center(child: Text('No events found.')));
