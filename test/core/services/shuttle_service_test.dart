@@ -1,4 +1,3 @@
-import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/services/one_bus_away_client.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
@@ -30,6 +29,19 @@ class _FakeOneBusAwayClient extends OneBusAwayClient {
   Future<Map<String, dynamic>> fetchArrivalsAndDeparturesForStop(String stopId) async {
     if (error != null) throw error!;
     requestedStopIds.add(stopId);
+    return arrivalsEnvelope!;
+  }
+}
+
+class _PerStopOneBusAwayClient extends _FakeOneBusAwayClient {
+  _PerStopOneBusAwayClient({required super.arrivalsEnvelope});
+
+  @override
+  Future<Map<String, dynamic>> fetchArrivalsAndDeparturesForStop(String stopId) async {
+    requestedStopIds.add(stopId);
+    if (stopId == '5000') {
+      throw const OneBusAwayException('Failed to reach the OneBusAway API (HTTP 503).');
+    }
     return arrivalsEnvelope!;
   }
 }
@@ -154,9 +166,10 @@ void main() {
         ),
       );
 
-      final arrivals = await service.getArrivingInformation(4006);
+      final result = await service.getArrivingInformation(4006);
 
-      expect(arrivals, isEmpty);
+      expect(result.arrivals, isEmpty);
+      expect(result.error, isNull);
       expect(service.error, isNull);
       expect(service.isLoading, isFalse);
     });
@@ -169,14 +182,15 @@ void main() {
       final ShuttleService service = ShuttleService(client: client);
       await service.fetchData();
 
-      final List<ArrivingShuttle> arrivals = await service.getArrivingInformation(10772);
+      final ShuttleArrivalResult result = await service.getArrivingInformation(10772);
 
       // the integer id used by the UI is translated back to UCSD_10772
       expect(client.requestedStopIds, ['UCSD_10772']);
-      expect(arrivals, hasLength(1));
-      expect(arrivals.single.routeName, 'Inside Loop');
-      expect(arrivals.single.routeColor, '#ffcd00');
-      expect(arrivals.single.secondsToArrival, 60);
+      expect(result.error, isNull);
+      expect(result.arrivals, hasLength(1));
+      expect(result.arrivals.single.routeName, 'Inside Loop');
+      expect(result.arrivals.single.routeColor, '#ffcd00');
+      expect(result.arrivals.single.secondsToArrival, 60);
     });
 
     test('falls back to the stop id as-is when the stop was never fetched', () async {
@@ -188,15 +202,28 @@ void main() {
       expect(client.requestedStopIds, ['10772']);
     });
 
-    test('returns an empty list and a sanitized error when the client fails', () async {
+    test('returns an empty result with a stop-specific sanitized error when the client fails', () async {
       final ShuttleService service = ShuttleService(
         client: _FakeOneBusAwayClient(error: OneBusAwayException('Failed to reach the OneBusAway API (HTTP 404).')),
       );
 
-      final List<ArrivingShuttle> arrivals = await service.getArrivingInformation(10772);
+      final ShuttleArrivalResult result = await service.getArrivingInformation(10772);
 
-      expect(arrivals, isEmpty);
-      expect(service.error, contains('HTTP 404'));
+      expect(result.arrivals, isEmpty);
+      expect(result.error, contains('HTTP 404'));
+      expect(service.error, isNull);
+    });
+
+    test('concurrent stops keep success and failure results independent', () async {
+      final service = ShuttleService(client: _PerStopOneBusAwayClient(arrivalsEnvelope: _arrivalsEnvelope()));
+
+      final results = await Future.wait([service.getArrivingInformation(5000), service.getArrivingInformation(10772)]);
+
+      expect(results[0].arrivals, isEmpty);
+      expect(results[0].error, contains('HTTP 503'));
+      expect(results[1].arrivals, hasLength(1));
+      expect(results[1].error, isNull);
+      expect(service.error, isNull);
     });
 
     test('keeps isLoading accurate around requests', () async {

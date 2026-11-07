@@ -1,22 +1,28 @@
-import 'dart:convert';
-
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/services/one_bus_away_client.dart';
 
 /// Fetches campus transit data from the OneBusAway API (MA-685).
 ///
-/// The service keeps the same public contract as the previous
-/// shuttle-feed-backed implementation, so the provider and UI are unchanged:
+/// Catalog failures remain available through [error]. Arrival failures are
+/// returned with their stop's [ShuttleArrivalResult] instead of shared state:
 /// - [fetchData] populates [data] with the available shuttle stops.
-/// - [getArrivingInformation] returns upcoming arrivals for a stop id.
+/// - [getArrivingInformation] returns arrivals and any stop-specific error
+///   together.
+class ShuttleArrivalResult {
+  const ShuttleArrivalResult({required this.arrivals, this.error});
+
+  final List<ArrivingShuttle> arrivals;
+  final String? error;
+}
+
 class ShuttleService {
   ShuttleService({OneBusAwayClient? client}) : _client = client ?? OneBusAwayClient();
 
   /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
-  String? _error;
+  String? _catalogError;
 
   /// MODELS
   List<ShuttleStopModel> _data = [];
@@ -28,7 +34,7 @@ class ShuttleService {
   final OneBusAwayClient _client;
 
   Future<bool> fetchData() async {
-    _error = null;
+    _catalogError = null;
     _isLoading = true;
     try {
       /// fetch data: all stops served by the campus shuttle agency
@@ -46,16 +52,14 @@ class ShuttleService {
     } catch (e) {
       /// OneBusAway failures are wrapped in [OneBusAwayException] with
       /// sanitized messages, so this is safe to expose to the UI.
-      _error = e.toString();
-      // print('\x1B[31mstops-for-agency failed: $_error\x1B[0m');
+      _catalogError = e.toString();
       return false;
     } finally {
       _isLoading = false;
     }
   }
 
-  Future<List<ArrivingShuttle>> getArrivingInformation(stopId) async {
-    _error = null;
+  Future<ShuttleArrivalResult> getArrivingInformation(stopId) async {
     _isLoading = true;
     final String oneBusAwayStopId = _oneBusAwayStopIds[stopId] ?? stopId.toString();
     try {
@@ -65,13 +69,13 @@ class ShuttleService {
 
       /// parse data: keep only the campus shuttle agency's routes, matching
       /// the scope of the previous shuttle feed
-      return arrivingShuttlesFromOneBusAwayEnvelope(envelope, agencyId: OneBusAwayClient.defaultAgencyId);
+      return ShuttleArrivalResult(
+        arrivals: arrivingShuttlesFromOneBusAwayEnvelope(envelope, agencyId: OneBusAwayClient.defaultAgencyId),
+      );
     } catch (e) {
       /// OneBusAway failures are wrapped in [OneBusAwayException] with
       /// sanitized messages, so this is safe to expose to the UI.
-      _error = e.toString();
-      // print('\x1B[31marrivals-and-departures-for-stop ($oneBusAwayStopId) failed: $_error\x1B[0m');
-      return [];
+      return ShuttleArrivalResult(arrivals: const [], error: e.toString());
     } finally {
       _isLoading = false;
     }
@@ -79,7 +83,7 @@ class ShuttleService {
 
   /// SIMPLE GETTERS
   get isLoading => _isLoading;
-  get error => _error;
+  get error => _catalogError;
   get lastUpdated => _lastUpdated;
   List<ShuttleStopModel> get data => _data;
 }

@@ -31,24 +31,24 @@ class ShuttleDataProvider extends ChangeNotifier {
   /// SERVICES
   final ShuttleService _shuttleService;
   Completer<void>? _fetchStopsCompleter;
+  Future<bool>? _catalogRequest;
+  final Map<int, Future<ShuttleArrivalResult>> _arrivalRequests = {};
   bool _refreshRequested = false;
   bool _refreshCatalogRequested = false;
+  bool _refreshArrivalsRequested = false;
   List<int>? _lastSelectedStopIds;
-  double? _lastLatitude;
-  double? _lastLongitude;
 
   Future<void> fetchStops(bool reloading, {bool refreshCatalog = true}) {
     final selectedStopIds = _normalizedSelectedStopIds(requireKnownStop: fetchedStops != null);
     if (!refreshCatalog &&
         fetchedStops != null &&
         _error == null &&
-        listEquals(_lastSelectedStopIds, selectedStopIds) &&
-        _lastLatitude == _userCoords?.lat &&
-        _lastLongitude == _userCoords?.lon) {
+        listEquals(_lastSelectedStopIds, selectedStopIds)) {
       return _fetchStopsCompleter?.future ?? Future<void>.value();
     }
     _refreshRequested = true;
     _refreshCatalogRequested |= refreshCatalog;
+    _refreshArrivalsRequested |= refreshCatalog;
     if (_fetchStopsCompleter != null) return _fetchStopsCompleter!.future;
 
     final completer = Completer<void>();
@@ -62,33 +62,48 @@ class ShuttleDataProvider extends ChangeNotifier {
     try {
       do {
         _refreshRequested = false;
-        final shouldFetchCatalog = _refreshCatalogRequested || fetchedStops == null;
+        final refreshCatalog = _refreshCatalogRequested;
+        final refreshArrivals = _refreshArrivalsRequested;
         _refreshCatalogRequested = false;
+        _refreshArrivalsRequested = false;
         _error = null;
-        arrivalErrors.clear();
-        _lastSelectedStopIds = _normalizedSelectedStopIds(requireKnownStop: fetchedStops != null);
-        _lastLatitude = _userCoords?.lat;
-        _lastLongitude = _userCoords?.lon;
         notifyListeners();
 
-        if (!shouldFetchCatalog || await _shuttleService.fetchData()) {
-          final sortedStops = _shuttleService.data.toList()..sort((a, b) => a.name.compareTo(b.name));
-          fetchedStops = {for (final stop in sortedStops) stop.id: stop};
-          _lastSelectedStopIds = _normalizedSelectedStopIds(requireKnownStop: true);
+        if (!await _ensureCatalog(refresh: refreshCatalog)) continue;
 
-          if (userDataProvider != null && !reloading) reorderStops(userDataProvider!.userProfileModel.selectedStops);
-
-          await calculateClosestStop();
-          await getArrivalInformation();
-        } else {
-          _error = _shuttleService.error;
-        }
-      } while (_refreshRequested);
+        _lastSelectedStopIds = _normalizedSelectedStopIds(requireKnownStop: true);
+        await calculateClosestStop();
+        await _reconcileArrivalInformation(refresh: refreshArrivals);
+      } while (_refreshRequested || _refreshCatalogRequested || _refreshArrivalsRequested);
     } finally {
       _fetchStopsCompleter = null;
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<bool> _ensureCatalog({required bool refresh}) {
+    if (!refresh && fetchedStops != null) return Future<bool>.value(true);
+    final activeRequest = _catalogRequest;
+    if (activeRequest != null) return activeRequest;
+
+    late final Future<bool> request;
+    request = _fetchCatalog().whenComplete(() {
+      if (identical(_catalogRequest, request)) _catalogRequest = null;
+    });
+    _catalogRequest = request;
+    return request;
+  }
+
+  Future<bool> _fetchCatalog() async {
+    if (!await _shuttleService.fetchData()) {
+      _error = _shuttleService.error;
+      return false;
+    }
+
+    final sortedStops = _shuttleService.data.toList()..sort((a, b) => a.name.compareTo(b.name));
+    fetchedStops = {for (final stop in sortedStops) stop.id: stop};
+    return true;
   }
 
   // TODO: unused function. If needed, rewrite w/ proper nullability - December 2025
@@ -118,6 +133,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
     }
     notifyListeners();
+    fetchStops(true, refreshCatalog: false);
   }
 
   Future<void> addStop(int stopID) async {
@@ -128,8 +144,7 @@ class ShuttleDataProvider extends ChangeNotifier {
     userDataProvider!.userProfileModel.selectedStops = [...selectedStopIds, stopID];
     // update userprofilemodel locally and in database after a stop is added
     userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
-    arrivalsToRender[stopID] = await fetchArrivalInformation(stopID);
-    notifyListeners();
+    await fetchStops(true, refreshCatalog: false);
   }
 
   Future<void> removeStop(int? stopID) async {
@@ -140,6 +155,7 @@ class ShuttleDataProvider extends ChangeNotifier {
       userDataProvider!.postUserProfile(userDataProvider!.userProfileModel);
     }
     notifyListeners();
+    await fetchStops(true, refreshCatalog: false);
   }
 
   Future<void> calculateClosestStop() async {
@@ -174,23 +190,50 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> getArrivalInformation() async {
-    final Set<int> stopIds = {if (_closestStop != null) _closestStop!.id, ...stopsToRender.map((stop) => stop.id)};
-    for (final int stopId in stopIds) {
-      arrivalsToRender[stopId] = await fetchArrivalInformation(stopId);
+    await _reconcileArrivalInformation(refresh: true);
+  }
+
+  Future<void> _reconcileArrivalInformation({required bool refresh}) async {
+    final desiredStopIds = stopsToRender.map((stop) => stop.id).toSet();
+    arrivalsToRender.removeWhere((stopId, _) => !desiredStopIds.contains(stopId));
+    arrivalErrors.removeWhere((stopId, _) => !desiredStopIds.contains(stopId));
+
+    for (final stopId in desiredStopIds) {
+      if (!refresh && (arrivalsToRender.containsKey(stopId) || arrivalErrors.containsKey(stopId))) continue;
+      if (!stopsToRender.any((stop) => stop.id == stopId)) continue;
+
+      final result = await _sharedArrivalInformation(stopId);
+      if (stopsToRender.any((stop) => stop.id == stopId)) {
+        arrivalsToRender[stopId] = result.arrivals;
+        if (result.error == null) {
+          arrivalErrors.remove(stopId);
+        } else {
+          arrivalErrors[stopId] = result.error!;
+        }
+      } else {
+        arrivalErrors.remove(stopId);
+      }
     }
     notifyListeners();
   }
 
-  Future<List<ArrivingShuttle>> fetchArrivalInformation(int stopID) async {
-    final List<ArrivingShuttle> output = (await _shuttleService.getArrivingInformation(stopID)).toList();
-    final String? arrivalError = _shuttleService.error;
-    if (arrivalError == null) {
-      arrivalErrors.remove(stopID);
-    } else {
-      arrivalErrors[stopID] = arrivalError;
-    }
+  Future<ShuttleArrivalResult> _sharedArrivalInformation(int stopId) {
+    final activeRequest = _arrivalRequests[stopId];
+    if (activeRequest != null) return activeRequest;
+
+    late final Future<ShuttleArrivalResult> request;
+    request = fetchArrivalInformation(stopId).whenComplete(() {
+      if (identical(_arrivalRequests[stopId], request)) _arrivalRequests.remove(stopId);
+    });
+    _arrivalRequests[stopId] = request;
+    return request;
+  }
+
+  Future<ShuttleArrivalResult> fetchArrivalInformation(int stopID) async {
+    final result = await _shuttleService.getArrivingInformation(stopID);
+    final output = result.arrivals.toList();
     output.sort((a, b) => a.secondsToArrival.compareTo(b.secondsToArrival));
-    return output;
+    return ShuttleArrivalResult(arrivals: output, error: result.error);
   }
 
   /// SIMPLE SETTERS

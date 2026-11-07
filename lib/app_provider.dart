@@ -204,15 +204,14 @@ List<SingleChildWidget> dependentServices = [
       return availabilityDataProvider;
     },
   ),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, ShuttleDataProvider>(
+  ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
     create: (_) {
       var shuttleDataProvider = ShuttleDataProvider();
       return shuttleDataProvider;
     },
-    update: (_, coordinates, userDataProvider, shuttleDataProvider) {
+    update: (_, userDataProvider, shuttleDataProvider) {
       print("UpdateProvider: shuttleDataProvider");
-      shuttleDataProvider!.userCoords = coordinates;
-      shuttleDataProvider.userDataProvider = userDataProvider;
+      shuttleDataProvider!.userDataProvider = userDataProvider;
       shuttleDataProvider.fetchStops(true, refreshCatalog: false);
       return shuttleDataProvider;
     },
