@@ -29,14 +29,11 @@ class EventsDataProvider extends ChangeNotifier {
   }
 
   Future<void> loadFromCache() async {
-    print('======loadFromCache======');
     if (_modelInitialized) return;
 
     try {
       final box = await Hive.openBox('EventsModel');
       final cachedJson = box.get('EventsModel') as String?;
-
-      print("cachedJson: $cachedJson");
 
       if (cachedJson == null || cachedJson.isEmpty) return;
 
@@ -45,7 +42,6 @@ class EventsDataProvider extends ChangeNotifier {
       /// never let stale cache overwrite it.
       if (_modelInitialized) return;
 
-      print("====applying cache====");
       _applyModels(cachedModels);
       notifyListeners();
     } catch (e) {
@@ -104,7 +100,6 @@ class EventsDataProvider extends ChangeNotifier {
       try {
         final box = await Hive.openBox('EventsModel');
         await box.put('EventsModel', cacheJson);
-        print('========wrote to cache=========');
       } catch (_) {}
     }
   }
