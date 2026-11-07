@@ -146,47 +146,13 @@ class CardContainer extends StatelessWidget {
     );
   }
 
-  Widget buildMenuOptions(Map<String, Function> menuOptions) {
-    if (titleText == 'SHUTTLE') {
-      return PopupMenuButton<String>(
-        tooltip: '$titleText Card Menu',
-        icon: Icon(Icons.more_vert, size: 36, color: dotsUnselectedColor),
-        onSelected: onMenuItemPressed,
-        itemBuilder: (_) =>
-            menuOptions.keys.map((option) => PopupMenuItem<String>(value: option, child: Text(option))).toList(),
-      );
-    }
-
-    List<DropdownMenuItem<String>> menu = [];
-
-    menuOptions.forEach((menuOption, func) {
-      Widget item = DropdownMenuItem<String>(
-        value: menuOption,
-        child: Text(
-          menuOption,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: dotsUnselectedColor),
-        ),
-      );
-      menu.add(item as DropdownMenuItem<String>);
-    });
-
-    return Semantics(
-      label: '$titleText Card Menu',
-      button: true,
-      child: DropdownButton(
-        items: menu,
-        iconSize: 36,
-        iconEnabledColor: dotsUnselectedColor,
-        underline: Container(),
-        icon: Transform.translate(
-          offset: Offset(6, -3),
-          child: Icon(Icons.more_vert, color: dotsUnselectedColor, semanticLabel: '$titleText Card Menu'),
-        ),
-        onChanged: (String? selectedMenuItem) => onMenuItemPressed(selectedMenuItem),
-      ),
-    );
-  }
+  Widget buildMenuOptions(Map<String, Function> menuOptions) => PopupMenuButton<String>(
+    tooltip: '$titleText Card Menu',
+    icon: Icon(Icons.more_vert, size: 36, color: dotsUnselectedColor),
+    onSelected: onMenuItemPressed,
+    itemBuilder: (_) =>
+        menuOptions.keys.map((option) => PopupMenuItem<String>(value: option, child: Text(option))).toList(),
+  );
 
   void onMenuItemPressed(String? selectedMenuItem) {
     switch (selectedMenuItem) {
