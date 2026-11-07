@@ -1,8 +1,13 @@
+import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/ui/shuttle/shuttle_card.dart';
+import 'package:dots_indicator/dots_indicator.dart';
+import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +29,21 @@ class _LayoutShuttleProvider extends ShuttleDataProvider {
   ];
 }
 
+class _FakeFirebaseAnalyticsPlatform extends FirebaseAnalyticsPlatform {
+  _FakeFirebaseAnalyticsPlatform({super.appInstance});
+
+  @override
+  FirebaseAnalyticsPlatform delegateFor({required FirebaseApp app, Map<String, dynamic>? webOptions}) =>
+      _FakeFirebaseAnalyticsPlatform(appInstance: app);
+
+  @override
+  Future<void> logEvent({
+    required String name,
+    Map<String, Object?>? parameters,
+    AnalyticsCallOptions? callOptions,
+  }) async {}
+}
+
 Future<void> _pumpCard(WidgetTester tester, Size size, double textScale) async {
   await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -34,6 +54,9 @@ Future<void> _pumpCard(WidgetTester tester, Size size, double textScale) async {
         ChangeNotifierProvider<CardsDataProvider>(create: (_) => CardsDataProvider()),
       ],
       child: MaterialApp(
+        routes: {
+          RoutePaths.MANAGE_SHUTTLE_VIEW: (_) => const Scaffold(body: Text('Manage shuttle stops')),
+        },
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(textScale)),
           child: child!,
@@ -50,6 +73,14 @@ Future<void> _pumpCard(WidgetTester tester, Size size, double textScale) async {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setupFirebaseCoreMocks();
+
+  setUpAll(() async {
+    FirebaseAnalyticsPlatform.instance = _FakeFirebaseAnalyticsPlatform();
+    await Firebase.initializeApp();
+  });
+
   for (final size in [const Size(320, 568), const Size(412, 892), const Size(600, 960), const Size(1024, 768)]) {
     for (final scale in [1.0, 1.5, 2.0]) {
       testWidgets('shuttle card fits ${size.width.toInt()}px width at ${scale}x text scale', (tester) async {
@@ -83,5 +114,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     expect(tester.getSize(pager).height, closeTo(populatedHeight, 0.01));
+  });
+
+  testWidgets('returning from manage stops keeps the shuttle page and dots synchronized', (tester) async {
+    await _pumpCard(tester, const Size(412, 892), 1.0);
+    final pager = find.byType(PageView);
+    final controller = tester.widget<PageView>(pager).controller!;
+
+    controller.jumpToPage(1);
+    await tester.pumpAndSettle();
+    expect(controller.page, 1);
+    expect(tester.widget<DotsIndicator>(find.byType(DotsIndicator)).position, 1);
+
+    await tester.tap(find.text('MANAGE SHUTTLE STOPS'));
+    await tester.pumpAndSettle();
+    expect(find.text('Manage shuttle stops'), findsOneWidget);
+
+    Navigator.of(tester.element(find.text('Manage shuttle stops'))).pop();
+    await tester.pumpAndSettle();
+
+    expect(controller.page, 1);
+    expect(tester.widget<DotsIndicator>(find.byType(DotsIndicator)).position, 1);
   });
 }

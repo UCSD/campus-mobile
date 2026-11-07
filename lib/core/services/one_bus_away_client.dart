@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle_request_trace.dart';
 
 /// Names of the machine environment variables that hold the OneBusAway API
 /// base endpoint and API key (MA-685). Values come from the machine environment,
@@ -60,9 +61,14 @@ class OneBusAwayConfig {
 /// `{"code":200,"currentTime":...,"data":{...}}`. This client validates the
 /// envelope and returns the decoded map to the caller for model mapping.
 class OneBusAwayClient {
-  OneBusAwayClient({OneBusAwayConfig? config, Dio? dio, Duration? timeout})
-    : _config = config ?? OneBusAwayConfig(),
-      _timeout = timeout ?? const Duration(seconds: 15) {
+  OneBusAwayClient({
+    OneBusAwayConfig? config,
+    Dio? dio,
+    Duration? timeout,
+    ShuttleRequestTraceObserver? requestTraceObserver,
+  }) : _config = config ?? OneBusAwayConfig(),
+       _timeout = timeout ?? const Duration(seconds: 15),
+       _requestTraceObserver = requestTraceObserver {
     _dio = dio ?? Dio();
     _dio.options.connectTimeout = _timeout;
     _dio.options.receiveTimeout = _timeout;
@@ -78,19 +84,34 @@ class OneBusAwayClient {
   late final Dio _dio;
   final OneBusAwayConfig _config;
   final Duration _timeout;
+  final ShuttleRequestTraceObserver? _requestTraceObserver;
+  int _logicalRequestSequence = 0;
 
   /// Fetches all stops served by [agencyId] (the campus shuttle agency by
   /// default). OneBusAway replaces the legacy shuttle stops feed with
   /// `GET {base}/api/where/stops-for-agency/{agencyId}.json`.
-  Future<Map<String, dynamic>> fetchStopsForAgency({String agencyId = defaultAgencyId}) =>
-      _get('$_stopsForAgencyPathTemplate/$agencyId.json');
+  Future<Map<String, dynamic>> fetchStopsForAgency({
+    String agencyId = defaultAgencyId,
+    ShuttleRequestContext? requestContext,
+  }) => _get(
+    '$_stopsForAgencyPathTemplate/$agencyId.json',
+    endpoint: ShuttleRequestEndpoint.catalog,
+    requestContext: requestContext,
+  );
 
   /// Fetches upcoming arrivals and departures for [stopId] (the raw
   /// OneBusAway stop id, e.g. `UCSD_10772`). OneBusAway replaces the legacy
   /// arrivals feed with
   /// `GET {base}/api/where/arrivals-and-departures-for-stop/{stopId}.json`.
-  Future<Map<String, dynamic>> fetchArrivalsAndDeparturesForStop(String stopId) =>
-      _get('$_arrivalsForStopPathTemplate/${Uri.encodeComponent(stopId)}.json');
+  Future<Map<String, dynamic>> fetchArrivalsAndDeparturesForStop(
+    String stopId, {
+    ShuttleRequestContext? requestContext,
+  }) => _get(
+    '$_arrivalsForStopPathTemplate/' + Uri.encodeComponent(stopId) + '.json',
+    endpoint: ShuttleRequestEndpoint.arrivals,
+    stopId: stopId,
+    requestContext: requestContext,
+  );
 
   /// Builds the request [Uri] for [path], attaching the API key as the
   /// standard OneBusAway `key` query parameter.
@@ -101,15 +122,75 @@ class OneBusAwayClient {
     return Uri.parse('$base$path').replace(queryParameters: <String, String>{'key': _config.apiKey});
   }
 
-  Future<Map<String, dynamic>> _get(String path, {int retryAttempt = 0}) async {
+  Future<Map<String, dynamic>> _get(
+    String path, {
+    required ShuttleRequestEndpoint endpoint,
+    String? stopId,
+    ShuttleRequestContext? requestContext,
+  }) {
+    final context =
+        requestContext ?? const ShuttleRequestContext(operationId: 0, trigger: ShuttleRequestTrigger.unspecified);
+    final logicalRequestId = ++_logicalRequestSequence;
+    _emit(
+      ShuttleRequestTraceEvent(
+        kind: ShuttleRequestTraceKind.logicalRequestStarted,
+        context: context,
+        endpoint: endpoint,
+        stopId: stopId,
+        logicalRequestId: logicalRequestId,
+      ),
+    );
+    return _getAttempt(
+      path,
+      endpoint: endpoint,
+      stopId: stopId,
+      context: context,
+      logicalRequestId: logicalRequestId,
+      retryAttempt: 0,
+    );
+  }
+
+  Future<Map<String, dynamic>> _getAttempt(
+    String path, {
+    required ShuttleRequestEndpoint endpoint,
+    required ShuttleRequestContext context,
+    required int logicalRequestId,
+    required int retryAttempt,
+    String? stopId,
+  }) async {
     if (!_config.isConfigured) {
       throw const OneBusAwayException(
         'The OneBusAway API is not configured. Set the ONE_BUS_AWAY_API and '
         'ONE_BUS_AWAY_API_KEY in .env, environment variables, or --dart-define.',
       );
     }
+    final attempt = retryAttempt + 1;
+    final stopwatch = Stopwatch()..start();
+    _emit(
+      ShuttleRequestTraceEvent(
+        kind: ShuttleRequestTraceKind.httpAttemptStarted,
+        context: context,
+        endpoint: endpoint,
+        stopId: stopId,
+        logicalRequestId: logicalRequestId,
+        attempt: attempt,
+      ),
+    );
     try {
       final Response<dynamic> response = await _dio.getUri(_buildUri(path));
+      stopwatch.stop();
+      _emit(
+        ShuttleRequestTraceEvent(
+          kind: ShuttleRequestTraceKind.httpAttemptSucceeded,
+          context: context,
+          endpoint: endpoint,
+          stopId: stopId,
+          logicalRequestId: logicalRequestId,
+          attempt: attempt,
+          statusCode: response.statusCode,
+          elapsed: stopwatch.elapsed,
+        ),
+      );
       final dynamic body = response.data;
       final dynamic decoded = body is String ? jsonDecode(body) : body;
       if (decoded is! Map<String, dynamic>) {
@@ -131,9 +212,42 @@ class OneBusAwayClient {
     } on DioException catch (e) {
       // Never surface the request URI: it contains the API key.
       final int? status = e.response?.statusCode;
+      stopwatch.stop();
+      _emit(
+        ShuttleRequestTraceEvent(
+          kind: ShuttleRequestTraceKind.httpAttemptFailed,
+          context: context,
+          endpoint: endpoint,
+          stopId: stopId,
+          logicalRequestId: logicalRequestId,
+          attempt: attempt,
+          statusCode: status,
+          elapsed: stopwatch.elapsed,
+        ),
+      );
       if (status == 429 && retryAttempt < 2) {
-        await Future<void>.delayed(_rateLimitRetryDelay(e.response, retryAttempt));
-        return _get(path, retryAttempt: retryAttempt + 1);
+        final retryDelay = _rateLimitRetryDelay(e.response, retryAttempt);
+        _emit(
+          ShuttleRequestTraceEvent(
+            kind: ShuttleRequestTraceKind.retryScheduled,
+            context: context,
+            endpoint: endpoint,
+            stopId: stopId,
+            logicalRequestId: logicalRequestId,
+            attempt: attempt,
+            statusCode: status,
+            retryDelay: retryDelay,
+          ),
+        );
+        await Future<void>.delayed(retryDelay);
+        return _getAttempt(
+          path,
+          endpoint: endpoint,
+          stopId: stopId,
+          context: context,
+          logicalRequestId: logicalRequestId,
+          retryAttempt: retryAttempt + 1,
+        );
       }
       throw OneBusAwayException(
         status == null ? 'Failed to reach the OneBusAway API.' : 'Failed to reach the OneBusAway API (HTTP $status).',
@@ -144,6 +258,8 @@ class OneBusAwayClient {
       throw const OneBusAwayException('Failed to process OneBusAway data.');
     }
   }
+
+  void _emit(ShuttleRequestTraceEvent event) => _requestTraceObserver?.call(event);
 
   Duration _rateLimitRetryDelay(Response<dynamic>? response, int retryAttempt) {
     final String? retryAfter = response?.headers.value(HttpHeaders.retryAfterHeader);

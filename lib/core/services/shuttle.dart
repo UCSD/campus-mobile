@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/services/one_bus_away_client.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle_request_trace.dart';
 
 /// Fetches campus transit data from the OneBusAway API (MA-685).
 ///
@@ -17,7 +18,8 @@ class ShuttleArrivalResult {
 }
 
 class ShuttleService {
-  ShuttleService({OneBusAwayClient? client}) : _client = client ?? OneBusAwayClient();
+  ShuttleService({OneBusAwayClient? client, ShuttleRequestTraceObserver? requestTraceObserver})
+    : _client = client ?? OneBusAwayClient(requestTraceObserver: requestTraceObserver);
 
   /// STATES
   bool _isLoading = false;
@@ -33,12 +35,12 @@ class ShuttleService {
 
   final OneBusAwayClient _client;
 
-  Future<bool> fetchData() async {
+  Future<bool> fetchData({ShuttleRequestContext? requestContext}) async {
     _catalogError = null;
     _isLoading = true;
     try {
       /// fetch data: all stops served by the campus shuttle agency
-      final Map<String, dynamic> envelope = await _client.fetchStopsForAgency();
+      final Map<String, dynamic> envelope = await _client.fetchStopsForAgency(requestContext: requestContext);
       // print('\x1B[32mstops-for-agency response:\n${const JsonEncoder.withIndent('  ').convert(envelope)}\x1B[0m');
 
       /// parse data
@@ -59,12 +61,15 @@ class ShuttleService {
     }
   }
 
-  Future<ShuttleArrivalResult> getArrivingInformation(stopId) async {
+  Future<ShuttleArrivalResult> getArrivingInformation(stopId, {ShuttleRequestContext? requestContext}) async {
     _isLoading = true;
     final String oneBusAwayStopId = _oneBusAwayStopIds[stopId] ?? stopId.toString();
     try {
       /// fetch data: arrivals for the raw OneBusAway stop id when known
-      final Map<String, dynamic> envelope = await _client.fetchArrivalsAndDeparturesForStop(oneBusAwayStopId);
+      final Map<String, dynamic> envelope = await _client.fetchArrivalsAndDeparturesForStop(
+        oneBusAwayStopId,
+        requestContext: requestContext,
+      );
       // print('\x1B[32marrivals-and-departures-for-stop ($oneBusAwayStopId) response:\n${const JsonEncoder.withIndent('  ').convert(envelope)}\x1B[0m',);
 
       /// parse data: keep only the campus shuttle agency's routes, matching

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:campus_mobile_experimental/core/services/one_bus_away_client.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle_request_trace.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,12 +45,14 @@ class _Harness {
     client = OneBusAwayClient(
       config: OneBusAwayConfig(apiEndpoint: endpoint, apiKey: apiKey),
       dio: dio,
+      requestTraceObserver: events.add,
     );
   }
 
   final String endpoint;
   final String apiKey;
   final _RecordingAdapter adapter = _RecordingAdapter();
+  final List<ShuttleRequestTraceEvent> events = [];
   late final Dio dio;
   late final OneBusAwayClient client;
 
@@ -188,6 +191,31 @@ void main() {
       expect(uri.path, '/api/where/arrivals-and-departures-for-stop/UCSD_10772.json');
       expect(uri.queryParameters['key'], testApiKey);
     });
+
+    test('emits sanitized logical-request and HTTP-attempt events', () async {
+      final harness = _Harness()..respond(arrivalsEnvelope);
+      const context = ShuttleRequestContext(operationId: 42, trigger: ShuttleRequestTrigger.selectionChange);
+
+      await harness.client.fetchArrivalsAndDeparturesForStop('UCSD_10772', requestContext: context);
+
+      expect(harness.events.map((event) => event.kind), [
+        ShuttleRequestTraceKind.logicalRequestStarted,
+        ShuttleRequestTraceKind.httpAttemptStarted,
+        ShuttleRequestTraceKind.httpAttemptSucceeded,
+      ]);
+      final completed = harness.events.last;
+      expect(completed.context.operationId, 42);
+      expect(completed.endpoint, ShuttleRequestEndpoint.arrivals);
+      expect(completed.stopId, 'UCSD_10772');
+      expect(completed.logicalRequestId, 1);
+      expect(completed.attempt, 1);
+      expect(completed.statusCode, 200);
+      expect(completed.elapsed, isNotNull);
+      for (final event in harness.events) {
+        expect(event.toString(), isNot(contains(testEndpoint)));
+        expect(event.toString(), isNot(contains(testApiKey)));
+      }
+    });
   });
 
   group('OneBusAwayClient error handling', () {
@@ -216,6 +244,17 @@ void main() {
 
       expect(attempts, 2);
       expect(envelope['code'], 200);
+      expect(
+        harness.events.where((event) => event.kind == ShuttleRequestTraceKind.logicalRequestStarted),
+        hasLength(1),
+      );
+      expect(
+        harness.events
+            .where((event) => event.kind == ShuttleRequestTraceKind.httpAttemptStarted)
+            .map((event) => event.attempt),
+        [1, 2],
+      );
+      expect(harness.events.where((event) => event.kind == ShuttleRequestTraceKind.retryScheduled), hasLength(1));
     });
 
     test('stops retrying after repeated rate limiting', () async {

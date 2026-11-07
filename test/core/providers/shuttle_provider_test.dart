@@ -7,6 +7,7 @@ import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle_request_trace.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _ScriptedShuttleService extends ShuttleService {
@@ -30,14 +31,14 @@ class _ScriptedShuttleService extends ShuttleService {
   ]);
 
   @override
-  Future<bool> fetchData() async {
+  Future<bool> fetchData({ShuttleRequestContext? requestContext}) async {
     catalogRequestCount++;
     _scriptedError = catalogError;
     return catalogError == null;
   }
 
   @override
-  Future<ShuttleArrivalResult> getArrivingInformation(stopId) async {
+  Future<ShuttleArrivalResult> getArrivingInformation(stopId, {ShuttleRequestContext? requestContext}) async {
     requestedStopIds.add(stopId as int);
     final error = failures[stopId];
     if (error != null) return ShuttleArrivalResult(arrivals: const [], error: error);
@@ -54,7 +55,7 @@ class _ControlledShuttleService extends _ScriptedShuttleService {
   final List<Completer<bool>> catalogRequests = [];
 
   @override
-  Future<bool> fetchData() async {
+  Future<bool> fetchData({ShuttleRequestContext? requestContext}) async {
     final request = Completer<bool>();
     catalogRequests.add(request);
     final success = await request.future;
@@ -67,7 +68,7 @@ class _ControlledArrivalShuttleService extends _ScriptedShuttleService {
   final Map<int, Completer<ShuttleArrivalResult>> arrivalRequests = {};
 
   @override
-  Future<ShuttleArrivalResult> getArrivingInformation(stopId) {
+  Future<ShuttleArrivalResult> getArrivingInformation(stopId, {ShuttleRequestContext? requestContext}) {
     final id = stopId as int;
     requestedStopIds.add(id);
     _scriptedError = null;
@@ -90,16 +91,47 @@ class _TestUserDataProvider extends UserDataProvider {
   }
 }
 
-ShuttleDataProvider _provider(_ScriptedShuttleService service, List<int> selectedStops) {
+ShuttleDataProvider _provider(
+  _ScriptedShuttleService service,
+  List<int> selectedStops, {
+  ShuttleRequestTraceObserver? requestTraceObserver,
+}) {
   final user = _TestUserDataProvider();
   user.userProfileModel.selectedStops = selectedStops;
-  final provider = ShuttleDataProvider(shuttleService: service)..userDataProvider = user;
+  final provider = ShuttleDataProvider(shuttleService: service, requestTraceObserver: requestTraceObserver)
+    ..userDataProvider = user;
   addTearDown(provider.dispose);
   addTearDown(user.dispose);
   return provider;
 }
 
 void main() {
+  test('request trace records startup starts and identical-update skips', () async {
+    final events = <ShuttleRequestTraceEvent>[];
+    final service = _ScriptedShuttleService()..failures.clear();
+    final provider = _provider(service, [10772], requestTraceObserver: events.add);
+
+    await provider.fetchStops(true, refreshCatalog: false);
+
+    expect(
+      events.where((event) => event.kind == ShuttleRequestTraceKind.providerOperationStarted).single.context.trigger,
+      ShuttleRequestTrigger.startup,
+    );
+    expect(
+      events
+          .where((event) => event.kind == ShuttleRequestTraceKind.providerRequestStarted)
+          .map((event) => event.endpoint),
+      [ShuttleRequestEndpoint.catalog, ShuttleRequestEndpoint.arrivals],
+    );
+
+    events.clear();
+    await provider.fetchStops(true, refreshCatalog: false);
+
+    expect(events, hasLength(1));
+    expect(events.single.kind, ShuttleRequestTraceKind.providerRequestSkipped);
+    expect(events.single.context.trigger, ShuttleRequestTrigger.selectionChange);
+  });
+
   test('startup updates share one catalog request and use the latest selection', () async {
     final service = _ControlledShuttleService();
     final provider = _provider(service, []);
@@ -220,8 +252,9 @@ void main() {
   });
 
   test('overlapping notifications share one in-flight arrival request per stop', () async {
+    final events = <ShuttleRequestTraceEvent>[];
     final service = _ControlledArrivalShuttleService();
-    final provider = _provider(service, []);
+    final provider = _provider(service, [], requestTraceObserver: events.add);
     await provider.fetchStops(true, refreshCatalog: false);
     provider.userDataProvider!.userProfileModel.selectedStops = [10772];
 
@@ -230,6 +263,7 @@ void main() {
     final second = provider.fetchStops(true, refreshCatalog: false);
 
     expect(service.requestedStopIds, [10772]);
+    expect(events.where((event) => event.kind == ShuttleRequestTraceKind.providerRequestJoined), isNotEmpty);
     service.completeArrival(10772);
     await Future.wait([first, second]);
     expect(service.requestedStopIds, [10772]);
@@ -251,8 +285,9 @@ void main() {
   });
 
   test('an in-flight result cannot restore a stop removed during its request', () async {
+    final events = <ShuttleRequestTraceEvent>[];
     final service = _ControlledArrivalShuttleService();
-    final provider = _provider(service, []);
+    final provider = _provider(service, [], requestTraceObserver: events.add);
     await provider.fetchStops(true, refreshCatalog: false);
     provider.userDataProvider!.userProfileModel.selectedStops = [10772];
 
@@ -268,6 +303,55 @@ void main() {
     expect(provider.stopsToRender, isEmpty);
     expect(provider.arrivalsToRender.containsKey(10772), isFalse);
     expect(service.requestedStopIds, [10772]);
+    expect(
+      events
+          .where((event) => event.kind == ShuttleRequestTraceKind.providerResultDiscarded)
+          .map((event) => event.stopId),
+      ['10772'],
+    );
+  });
+
+  test('request budgets match startup and selection lifecycle events', () async {
+    final events = <ShuttleRequestTraceEvent>[];
+    final service = _ScriptedShuttleService()..failures.clear();
+    final provider = _provider(service, [10772, 4006], requestTraceObserver: events.add)
+      ..userCoords = Coordinates(lat: 32.0, lon: -117.0);
+
+    await provider.fetchStops(true, refreshCatalog: false);
+    expect(service.catalogRequestCount, 1);
+    expect(service.requestedStopIds, [10772, 4006]);
+
+    await provider.fetchStops(true, refreshCatalog: false);
+    expect(service.catalogRequestCount, 1);
+    expect(service.requestedStopIds, [10772, 4006]);
+
+    provider.reorderStops([4006, 10772]);
+    await provider.fetchStops(true, refreshCatalog: false);
+    expect(service.catalogRequestCount, 1);
+    expect(service.requestedStopIds, [10772, 4006]);
+
+    provider.userCoords = Coordinates(lat: 33.0, lon: -118.0);
+    await provider.fetchStops(true, refreshCatalog: false);
+    expect(service.catalogRequestCount, 1);
+    expect(service.requestedStopIds, [10772, 4006]);
+
+    await provider.addStop(6000);
+    expect(service.catalogRequestCount, 1);
+    expect(service.requestedStopIds, [10772, 4006, 6000]);
+
+    await provider.removeStop(4006);
+    expect(service.catalogRequestCount, 1);
+    expect(service.requestedStopIds, [10772, 4006, 6000]);
+
+    await provider.fetchStops(true);
+    expect(service.catalogRequestCount, 2);
+    expect(service.requestedStopIds, [10772, 4006, 6000, 10772, 6000]);
+    expect(
+      events
+          .where((event) => event.kind == ShuttleRequestTraceKind.providerOperationStarted)
+          .map((event) => event.context.trigger),
+      contains(ShuttleRequestTrigger.manualReload),
+    );
   });
 
   test('selection changes during arrivals request only newly needed stops', () async {

@@ -1,6 +1,7 @@
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/services/one_bus_away_client.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle_request_trace.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Fake OneBusAway client: stands in for the HTTP layer so the service is
@@ -20,13 +21,19 @@ class _FakeOneBusAwayClient extends OneBusAwayClient {
   final List<String> requestedStopIds = [];
 
   @override
-  Future<Map<String, dynamic>> fetchStopsForAgency({String agencyId = OneBusAwayClient.defaultAgencyId}) async {
+  Future<Map<String, dynamic>> fetchStopsForAgency({
+    String agencyId = OneBusAwayClient.defaultAgencyId,
+    ShuttleRequestContext? requestContext,
+  }) async {
     if (error != null) throw error!;
     return stopsEnvelope!;
   }
 
   @override
-  Future<Map<String, dynamic>> fetchArrivalsAndDeparturesForStop(String stopId) async {
+  Future<Map<String, dynamic>> fetchArrivalsAndDeparturesForStop(
+    String stopId, {
+    ShuttleRequestContext? requestContext,
+  }) async {
     if (error != null) throw error!;
     requestedStopIds.add(stopId);
     return arrivalsEnvelope!;
@@ -37,7 +44,10 @@ class _PerStopOneBusAwayClient extends _FakeOneBusAwayClient {
   _PerStopOneBusAwayClient({required super.arrivalsEnvelope});
 
   @override
-  Future<Map<String, dynamic>> fetchArrivalsAndDeparturesForStop(String stopId) async {
+  Future<Map<String, dynamic>> fetchArrivalsAndDeparturesForStop(
+    String stopId, {
+    ShuttleRequestContext? requestContext,
+  }) async {
     requestedStopIds.add(stopId);
     if (stopId == '5000') {
       throw const OneBusAwayException('Failed to reach the OneBusAway API (HTTP 503).');

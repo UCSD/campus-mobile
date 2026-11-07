@@ -63,9 +63,6 @@ class _ShuttleCardState extends State<ShuttleCard> {
         buttonText: 'MANAGE SHUTTLE STOPS',
         onPressed: () {
           analytics.logEvent(name: '${cardId}_card_action', parameters: {'action': 'manage_stops'});
-          setState(() {
-            _currentPage = 0;
-          });
           Navigator.pushNamed(context, RoutePaths.MANAGE_SHUTTLE_VIEW);
         },
       ),

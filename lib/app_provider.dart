@@ -19,6 +19,7 @@ import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle_request_trace.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
@@ -206,7 +207,7 @@ List<SingleChildWidget> dependentServices = [
   ),
   ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
     create: (_) {
-      var shuttleDataProvider = ShuttleDataProvider();
+      var shuttleDataProvider = ShuttleDataProvider(requestTraceObserver: debugLogShuttleRequestTrace);
       return shuttleDataProvider;
     },
     update: (_, userDataProvider, shuttleDataProvider) {

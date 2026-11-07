@@ -5,11 +5,14 @@ import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
 import 'package:campus_mobile_experimental/core/services/shuttle.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle_request_trace.dart';
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 
 class ShuttleDataProvider extends ChangeNotifier {
-  ShuttleDataProvider({ShuttleService? shuttleService}) : _shuttleService = shuttleService ?? ShuttleService();
+  ShuttleDataProvider({ShuttleService? shuttleService, ShuttleRequestTraceObserver? requestTraceObserver})
+    : _requestTraceObserver = requestTraceObserver,
+      _shuttleService = shuttleService ?? ShuttleService(requestTraceObserver: requestTraceObserver);
 
   static const int maxSelectedStops = 5;
 
@@ -30,6 +33,7 @@ class ShuttleDataProvider extends ChangeNotifier {
 
   /// SERVICES
   final ShuttleService _shuttleService;
+  final ShuttleRequestTraceObserver? _requestTraceObserver;
   Completer<void>? _fetchStopsCompleter;
   Future<bool>? _catalogRequest;
   final Map<int, Future<ShuttleArrivalResult>> _arrivalRequests = {};
@@ -37,6 +41,8 @@ class ShuttleDataProvider extends ChangeNotifier {
   bool _refreshCatalogRequested = false;
   bool _refreshArrivalsRequested = false;
   List<int>? _lastSelectedStopIds;
+  int _operationSequence = 0;
+  ShuttleRequestContext? _activeRequestContext;
 
   Future<void> fetchStops(bool reloading, {bool refreshCatalog = true}) {
     final selectedStopIds = _normalizedSelectedStopIds(requireKnownStop: fetchedStops != null);
@@ -44,12 +50,29 @@ class ShuttleDataProvider extends ChangeNotifier {
         fetchedStops != null &&
         _error == null &&
         listEquals(_lastSelectedStopIds, selectedStopIds)) {
+      final activeContext = _activeRequestContext;
+      _emit(
+        ShuttleRequestTraceEvent(
+          kind: activeContext == null
+              ? ShuttleRequestTraceKind.providerRequestSkipped
+              : ShuttleRequestTraceKind.providerRequestJoined,
+          context: activeContext ?? _newRequestContext(refreshCatalog: false),
+        ),
+      );
       return _fetchStopsCompleter?.future ?? Future<void>.value();
     }
     _refreshRequested = true;
     _refreshCatalogRequested |= refreshCatalog;
     _refreshArrivalsRequested |= refreshCatalog;
-    if (_fetchStopsCompleter != null) return _fetchStopsCompleter!.future;
+    if (_fetchStopsCompleter != null) {
+      _emit(
+        ShuttleRequestTraceEvent(
+          kind: ShuttleRequestTraceKind.providerRequestJoined,
+          context: _activeRequestContext ?? _newRequestContext(refreshCatalog: refreshCatalog),
+        ),
+      );
+      return _fetchStopsCompleter!.future;
+    }
 
     final completer = Completer<void>();
     _fetchStopsCompleter = completer;
@@ -67,36 +90,67 @@ class ShuttleDataProvider extends ChangeNotifier {
         _refreshCatalogRequested = false;
         _refreshArrivalsRequested = false;
         _error = null;
+        final requestContext = _newRequestContext(refreshCatalog: refreshCatalog);
+        _activeRequestContext = requestContext;
+        _emit(
+          ShuttleRequestTraceEvent(kind: ShuttleRequestTraceKind.providerOperationStarted, context: requestContext),
+        );
         notifyListeners();
 
-        if (!await _ensureCatalog(refresh: refreshCatalog)) continue;
+        if (!await _ensureCatalog(refresh: refreshCatalog, requestContext: requestContext)) continue;
 
         _lastSelectedStopIds = _normalizedSelectedStopIds(requireKnownStop: true);
         await calculateClosestStop();
-        await _reconcileArrivalInformation(refresh: refreshArrivals);
+        await _reconcileArrivalInformation(refresh: refreshArrivals, requestContext: requestContext);
       } while (_refreshRequested || _refreshCatalogRequested || _refreshArrivalsRequested);
     } finally {
       _fetchStopsCompleter = null;
+      _activeRequestContext = null;
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<bool> _ensureCatalog({required bool refresh}) {
-    if (!refresh && fetchedStops != null) return Future<bool>.value(true);
+  Future<bool> _ensureCatalog({required bool refresh, required ShuttleRequestContext requestContext}) {
+    if (!refresh && fetchedStops != null) {
+      _emit(
+        ShuttleRequestTraceEvent(
+          kind: ShuttleRequestTraceKind.providerRequestSkipped,
+          context: requestContext,
+          endpoint: ShuttleRequestEndpoint.catalog,
+        ),
+      );
+      return Future<bool>.value(true);
+    }
     final activeRequest = _catalogRequest;
-    if (activeRequest != null) return activeRequest;
+    if (activeRequest != null) {
+      _emit(
+        ShuttleRequestTraceEvent(
+          kind: ShuttleRequestTraceKind.providerRequestJoined,
+          context: requestContext,
+          endpoint: ShuttleRequestEndpoint.catalog,
+        ),
+      );
+      return activeRequest;
+    }
 
     late final Future<bool> request;
-    request = _fetchCatalog().whenComplete(() {
+    _emit(
+      ShuttleRequestTraceEvent(
+        kind: ShuttleRequestTraceKind.providerRequestStarted,
+        context: requestContext,
+        endpoint: ShuttleRequestEndpoint.catalog,
+      ),
+    );
+    request = _fetchCatalog(requestContext).whenComplete(() {
       if (identical(_catalogRequest, request)) _catalogRequest = null;
     });
     _catalogRequest = request;
     return request;
   }
 
-  Future<bool> _fetchCatalog() async {
-    if (!await _shuttleService.fetchData()) {
+  Future<bool> _fetchCatalog(ShuttleRequestContext requestContext) async {
+    if (!await _shuttleService.fetchData(requestContext: requestContext)) {
       _error = _shuttleService.error;
       return false;
     }
@@ -190,19 +244,44 @@ class ShuttleDataProvider extends ChangeNotifier {
   }
 
   Future<void> getArrivalInformation() async {
-    await _reconcileArrivalInformation(refresh: true);
+    final requestContext = _newRequestContext(refreshCatalog: false);
+    _emit(ShuttleRequestTraceEvent(kind: ShuttleRequestTraceKind.providerOperationStarted, context: requestContext));
+    await _reconcileArrivalInformation(refresh: true, requestContext: requestContext);
   }
 
-  Future<void> _reconcileArrivalInformation({required bool refresh}) async {
+  Future<void> _reconcileArrivalInformation({
+    required bool refresh,
+    required ShuttleRequestContext requestContext,
+  }) async {
     final desiredStopIds = stopsToRender.map((stop) => stop.id).toSet();
     arrivalsToRender.removeWhere((stopId, _) => !desiredStopIds.contains(stopId));
     arrivalErrors.removeWhere((stopId, _) => !desiredStopIds.contains(stopId));
 
     for (final stopId in desiredStopIds) {
-      if (!refresh && (arrivalsToRender.containsKey(stopId) || arrivalErrors.containsKey(stopId))) continue;
-      if (!stopsToRender.any((stop) => stop.id == stopId)) continue;
+      if (!refresh && (arrivalsToRender.containsKey(stopId) || arrivalErrors.containsKey(stopId))) {
+        _emit(
+          ShuttleRequestTraceEvent(
+            kind: ShuttleRequestTraceKind.providerRequestSkipped,
+            context: requestContext,
+            endpoint: ShuttleRequestEndpoint.arrivals,
+            stopId: stopId.toString(),
+          ),
+        );
+        continue;
+      }
+      if (!stopsToRender.any((stop) => stop.id == stopId)) {
+        _emit(
+          ShuttleRequestTraceEvent(
+            kind: ShuttleRequestTraceKind.providerRequestSkipped,
+            context: requestContext,
+            endpoint: ShuttleRequestEndpoint.arrivals,
+            stopId: stopId.toString(),
+          ),
+        );
+        continue;
+      }
 
-      final result = await _sharedArrivalInformation(stopId);
+      final result = await _sharedArrivalInformation(stopId, requestContext);
       if (stopsToRender.any((stop) => stop.id == stopId)) {
         arrivalsToRender[stopId] = result.arrivals;
         if (result.error == null) {
@@ -212,29 +291,66 @@ class ShuttleDataProvider extends ChangeNotifier {
         }
       } else {
         arrivalErrors.remove(stopId);
+        _emit(
+          ShuttleRequestTraceEvent(
+            kind: ShuttleRequestTraceKind.providerResultDiscarded,
+            context: requestContext,
+            endpoint: ShuttleRequestEndpoint.arrivals,
+            stopId: stopId.toString(),
+          ),
+        );
       }
     }
     notifyListeners();
   }
 
-  Future<ShuttleArrivalResult> _sharedArrivalInformation(int stopId) {
+  Future<ShuttleArrivalResult> _sharedArrivalInformation(int stopId, ShuttleRequestContext requestContext) {
     final activeRequest = _arrivalRequests[stopId];
-    if (activeRequest != null) return activeRequest;
+    if (activeRequest != null) {
+      _emit(
+        ShuttleRequestTraceEvent(
+          kind: ShuttleRequestTraceKind.providerRequestJoined,
+          context: requestContext,
+          endpoint: ShuttleRequestEndpoint.arrivals,
+          stopId: stopId.toString(),
+        ),
+      );
+      return activeRequest;
+    }
 
     late final Future<ShuttleArrivalResult> request;
-    request = fetchArrivalInformation(stopId).whenComplete(() {
+    _emit(
+      ShuttleRequestTraceEvent(
+        kind: ShuttleRequestTraceKind.providerRequestStarted,
+        context: requestContext,
+        endpoint: ShuttleRequestEndpoint.arrivals,
+        stopId: stopId.toString(),
+      ),
+    );
+    request = fetchArrivalInformation(stopId, requestContext: requestContext).whenComplete(() {
       if (identical(_arrivalRequests[stopId], request)) _arrivalRequests.remove(stopId);
     });
     _arrivalRequests[stopId] = request;
     return request;
   }
 
-  Future<ShuttleArrivalResult> fetchArrivalInformation(int stopID) async {
-    final result = await _shuttleService.getArrivingInformation(stopID);
+  Future<ShuttleArrivalResult> fetchArrivalInformation(int stopID, {ShuttleRequestContext? requestContext}) async {
+    final result = await _shuttleService.getArrivingInformation(stopID, requestContext: requestContext);
     final output = result.arrivals.toList();
     output.sort((a, b) => a.secondsToArrival.compareTo(b.secondsToArrival));
     return ShuttleArrivalResult(arrivals: output, error: result.error);
   }
+
+  ShuttleRequestContext _newRequestContext({required bool refreshCatalog}) => ShuttleRequestContext(
+    operationId: ++_operationSequence,
+    trigger: refreshCatalog
+        ? ShuttleRequestTrigger.manualReload
+        : fetchedStops == null
+        ? ShuttleRequestTrigger.startup
+        : ShuttleRequestTrigger.selectionChange,
+  );
+
+  void _emit(ShuttleRequestTraceEvent event) => _requestTraceObserver?.call(event);
 
   /// SIMPLE SETTERS
   set userCoords(Coordinates value) {
