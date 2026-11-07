@@ -5,16 +5,29 @@ import 'package:flutter/material.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 
 class ShuttleDisplay extends StatelessWidget {
-  ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles}) : super(key: key);
+  ShuttleDisplay({Key? key, required this.stop, required this.arrivingShuttles, this.arrivalError}) : super(key: key);
 
   /// STATES
   final List<ArrivingShuttle>? arrivingShuttles;
+  final String? arrivalError;
 
   /// MODELS
   final ShuttleStopModel stop;
 
   @override
   Widget build(BuildContext context) {
+    if (arrivalError != null) {
+      return Column(
+        children: [
+          buildCircleStopRow(context),
+          const SizedBox(height: 16),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Text('Arrival information is temporarily unavailable. Please try again.'),
+          ),
+        ],
+      );
+    }
     if (arrivingShuttles == null) {
       return Container(
         width: double.infinity,
@@ -43,6 +56,7 @@ class ShuttleDisplay extends StatelessWidget {
   }
 
   Row buildCircleStopRow(BuildContext context) {
+    final bool hasArrivals = arrivingShuttles?.isNotEmpty ?? false;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -61,20 +75,16 @@ class ShuttleDisplay extends StatelessWidget {
           ),
           child: CircleAvatar(
             minRadius: 40,
-            backgroundColor: HexColor(
-              arrivingShuttles!.isEmpty ? noArrivalsFoundColor : arrivingShuttles![0].routeColor,
-            ),
+            backgroundColor: HexColor(hasArrivals ? arrivingShuttles![0].routeColor : noArrivalsFoundColor),
             foregroundColor: Colors.black,
             child: Builder(
               builder: (context) {
-                Color circleColor = HexColor(
-                  arrivingShuttles!.isEmpty ? noArrivalsFoundColor : arrivingShuttles![0].routeColor,
-                );
+                Color circleColor = HexColor(hasArrivals ? arrivingShuttles![0].routeColor : noArrivalsFoundColor);
                 // Calculate luminance to determine the color of "?"
                 final double luminance = circleColor.computeLuminance();
                 final Color textColor = luminance > 0.5 ? Colors.black : Colors.white;
                 return Text(
-                  arrivingShuttles!.isEmpty ? "?" : arrivingShuttles![0].routeName[0],
+                  hasArrivals ? arrivingShuttles![0].routeName[0] : "?",
                   style: TextStyle(fontSize: 50, color: textColor),
                 );
               },
@@ -104,14 +114,16 @@ class ShuttleDisplay extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(width: 16),
-          Text(
-            "No arrivals found.",
-            style: TextStyle(
-              fontSize: 23.0,
-              fontWeight: FontWeight.w700,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? descriptiveTextColorLight
-                  : descriptiveTextColorDark,
+          Flexible(
+            child: Text(
+              "No arrivals found.",
+              style: TextStyle(
+                fontSize: 23.0,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? descriptiveTextColorLight
+                    : descriptiveTextColorDark,
+              ),
             ),
           ),
         ],
@@ -140,22 +152,25 @@ class ShuttleDisplay extends StatelessWidget {
             ],
           ),
           SizedBox(width: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(width: 16),
-              Text(
-                "Arriving in: ",
-                style: TextStyle(
-                  fontSize: 23.0,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? descriptiveTextColorLight
-                      : descriptiveTextColorDark,
-                ),
-              ),
-              buildTimeToArrivalText(context),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                if (arrivingShuttles![0].secondsToArrival >= 60)
+                  Text(
+                    "Arriving in: ",
+                    style: TextStyle(
+                      fontSize: 23.0,
+                      fontWeight: FontWeight.w400,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? descriptiveTextColorLight
+                          : descriptiveTextColorDark,
+                    ),
+                  ),
+                buildTimeToArrivalText(context),
+              ],
+            ),
           ),
         ],
       );
@@ -165,7 +180,7 @@ class ShuttleDisplay extends StatelessWidget {
   Widget buildTimeToArrivalText(BuildContext context) {
     var minutesToArrival = arrivingShuttles![0].secondsToArrival ~/ 60;
     return Text(
-      "$minutesToArrival minutes",
+      minutesToArrival <= 0 ? 'Arriving Now' : "$minutesToArrival minutes",
       style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
     );
   }
@@ -176,12 +191,14 @@ class ShuttleDisplay extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Text(
-            "Next Arrivals",
-            textAlign: TextAlign.left,
-            style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Text(
+              "Next Arrivals",
+              textAlign: TextAlign.left,
+              style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
+            ),
           ),
         ),
       ],
@@ -220,12 +237,15 @@ class ShuttleDisplay extends StatelessWidget {
           flex: 3,
           child: Text(shuttle.routeName, style: TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis, maxLines: 1),
         ),
-        Expanded(flex: 1, child: Container()),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "$minutesToArrival min",
-            style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
+        Expanded(
+          flex: 5,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "$minutesToArrival min",
+              textAlign: TextAlign.end,
+              style: Theme.of(context).brightness == Brightness.light ? titleMediumLight : titleMediumDark,
+            ),
           ),
         ),
       ],

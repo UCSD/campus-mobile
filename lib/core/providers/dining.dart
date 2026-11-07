@@ -104,23 +104,23 @@ class DiningDataProvider extends ChangeNotifier {
   }
 
   void populateDistances() {
-    final bool hasCoordinates = _coordinates != null;
-    final bool hasLatitude = _coordinates?.lat != null;
-    final bool hasLongitude = _coordinates?.lon != null;
-    if (hasCoordinates && hasLatitude && hasLongitude) {
-      for (DiningModel model in _diningModels.values.toList()) {
-        if (model.coordinates != null) {
-          var distance = calculateDistance(
-            _coordinates!.lat!,
-            _coordinates!.lon!,
-            model.coordinates!.lat!,
-            model.coordinates!.lon!,
-          );
-          model.distance = distance.toDouble();
-        } else {
-          model.distance = null;
-        }
+    final userLat = _coordinates?.lat;
+    final userLon = _coordinates?.lon;
+    for (final model in _diningModels.values) {
+      final lat = model.coordinates?.lat;
+      final lon = model.coordinates?.lon;
+      if (lat == null || lon == null) {
+        // Uncomment this print to see which dining locations have null coordinates.
+        // print(
+        //   'DiningDataProvider: Missing coordinates for "${model.name}" '
+        //   '(id: ${model.id}, lat: $lat, lon: $lon).',
+        // );
+        model.distance = null;
+        continue;
       }
+      model.distance = userLat != null && userLon != null
+          ? calculateDistance(userLat, userLon, lat, lon).toDouble()
+          : null;
     }
   }
 

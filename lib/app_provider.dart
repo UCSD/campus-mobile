@@ -19,6 +19,7 @@ import 'package:campus_mobile_experimental/core/providers/shuttle.dart';
 import 'package:campus_mobile_experimental/core/providers/speed_test.dart';
 import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/providers/user.dart';
+import 'package:campus_mobile_experimental/core/services/shuttle_request_trace.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
@@ -161,11 +162,10 @@ List<SingleChildWidget> dependentServices = [
       var classDataProvider = ClassScheduleDataProvider();
       return classDataProvider;
     },
+    lazy: false,
     update: (_, userDataProvider, classScheduleDataProvider) {
       classScheduleDataProvider!.userDataProvider = userDataProvider;
-      final bool isLoggedIn = userDataProvider.isLoggedIn;
-      final bool isNotLoading = !classScheduleDataProvider.isLoading;
-      if (isLoggedIn && isNotLoading) classScheduleDataProvider.fetchData();
+      classScheduleDataProvider.handleLoginStateChange();
       return classScheduleDataProvider;
     },
   ),
@@ -176,6 +176,7 @@ List<SingleChildWidget> dependentServices = [
     },
     update: (_, userDataProvider, studentIdDataProvider) {
       studentIdDataProvider!.userDataProvider = userDataProvider;
+      userDataProvider.studentIdDataProvider = studentIdDataProvider;
       return studentIdDataProvider;
     },
   ),
@@ -204,16 +205,15 @@ List<SingleChildWidget> dependentServices = [
       return availabilityDataProvider;
     },
   ),
-  ChangeNotifierProxyProvider2<Coordinates, UserDataProvider, ShuttleDataProvider>(
+  ChangeNotifierProxyProvider<UserDataProvider, ShuttleDataProvider>(
     create: (_) {
-      var shuttleDataProvider = ShuttleDataProvider();
+      var shuttleDataProvider = ShuttleDataProvider(requestTraceObserver: debugLogShuttleRequestTrace);
       return shuttleDataProvider;
     },
-    update: (_, coordinates, userDataProvider, shuttleDataProvider) {
+    update: (_, userDataProvider, shuttleDataProvider) {
       print("UpdateProvider: shuttleDataProvider");
-      shuttleDataProvider!.userCoords = coordinates;
-      shuttleDataProvider.userDataProvider = userDataProvider;
-      shuttleDataProvider.fetchStops(true);
+      shuttleDataProvider!.userDataProvider = userDataProvider;
+      shuttleDataProvider.fetchStops(true, refreshCatalog: false);
       return shuttleDataProvider;
     },
   ),
