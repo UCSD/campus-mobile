@@ -4,10 +4,6 @@ import 'package:campus_mobile_experimental/core/models/events.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EventsService {
-  EventsService() {
-    fetchData();
-  }
-
   /// STATES
   bool _isLoading = false;
   DateTime? _lastUpdated;
