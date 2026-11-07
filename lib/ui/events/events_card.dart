@@ -12,15 +12,31 @@ import 'package:provider/provider.dart';
 const cardId = 'events';
 
 // edit these files
-class EventsCard extends StatelessWidget {
+class EventsCard extends StatefulWidget {
+  @override
+  State<EventsCard> createState() => _EventsCardState();
+}
+
+class _EventsCardState extends State<EventsCard> {
+  @override
+  void initState() {
+    super.initState();
+
+    /// Render path: hydrate from the local cache immediately.
+    /// The silent refresh is owned by the provider's create-time fetch.
+    context.read<EventsDataProvider>().loadFromCache();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CardContainer(
       cardId: cardId,
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
-      reload: () => Provider.of<EventsDataProvider>(context, listen: false).fetchEvents(),
-      isLoading: Provider.of<EventsDataProvider>(context).isLoading,
+      reload: () => Provider.of<EventsDataProvider>(context, listen: false).reload(cardId),
+      isLoading: Provider.of<EventsDataProvider>(context).isRefreshing(cardId) ||
+          (Provider.of<EventsDataProvider>(context).isLoading &&
+              !Provider.of<EventsDataProvider>(context).hasData),
       titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<EventsDataProvider>(context).error,
       child: () => buildEventsCardList(Provider.of<EventsDataProvider>(context).eventsModels),
