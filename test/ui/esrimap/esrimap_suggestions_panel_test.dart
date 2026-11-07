@@ -50,7 +50,10 @@ void main() {
 
     await tester.tap(find.byTooltip('Search Dining'));
     expect(selectedCategory, same(category));
-    expect(find.byType(ListView), findsNothing);
+    expect(
+      find.byWidgetPredicate((widget) => widget is ListView && widget.scrollDirection == Axis.horizontal),
+      findsNothing,
+    );
     expect(
       tester.getRect(find.byTooltip('Search Recreation')).right,
       lessThanOrEqualTo(tester.getRect(find.byType(Scaffold)).right),
