@@ -36,7 +36,7 @@ class NoticesCard extends StatelessWidget {
         onTap: () {
           openLink(notice.link);
         },
-        child: ImageLoader(url: notice.imageUrl, fullSize: true),
+        child: ImageLoader(url: notice.imageUrl, fullSize: true, fit: BoxFit.fitWidth),
       ),
     );
   }
