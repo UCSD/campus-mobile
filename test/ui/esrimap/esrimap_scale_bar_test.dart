@@ -8,15 +8,7 @@ void main() {
   group('EsriMapScaleBar Widget Tests', () {
     testWidgets('renders imperial and metric units when autoFade is false', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: EsriMapScaleBar(
-              scale: 24000.0,
-              isDark: false,
-              autoFade: false,
-            ),
-          ),
-        ),
+        const MaterialApp(home: Scaffold(body: EsriMapScaleBar(scale: 24000.0, isDark: false, autoFade: false))),
       );
 
       expect(find.byType(EsriMapScaleBar), findsOneWidget);
@@ -25,15 +17,7 @@ void main() {
 
     testWidgets('renders close-up zoom scale (e.g. 500)', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: EsriMapScaleBar(
-              scale: 500.0,
-              isDark: false,
-              autoFade: false,
-            ),
-          ),
-        ),
+        const MaterialApp(home: Scaffold(body: EsriMapScaleBar(scale: 500.0, isDark: false, autoFade: false))),
       );
 
       expect(find.byType(EsriMapScaleBar), findsOneWidget);
@@ -50,15 +34,8 @@ void main() {
             home: Scaffold(
               body: Column(
                 children: [
-                  EsriMapScaleBar(
-                    scale: currentScale,
-                    autoFade: true,
-                    fadeDelay: const Duration(milliseconds: 500),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => setState(() => currentScale = 12000.0),
-                    child: const Text('Zoom'),
-                  ),
+                  EsriMapScaleBar(scale: currentScale, autoFade: true, fadeDelay: const Duration(milliseconds: 500)),
+                  ElevatedButton(onPressed: () => setState(() => currentScale = 12000.0), child: const Text('Zoom')),
                 ],
               ),
             ),
@@ -92,15 +69,7 @@ void main() {
 
     testWidgets('returns SizedBox.shrink when scale is 0 or negative', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: EsriMapScaleBar(
-              scale: 0.0,
-              isDark: false,
-              autoFade: false,
-            ),
-          ),
-        ),
+        const MaterialApp(home: Scaffold(body: EsriMapScaleBar(scale: 0.0, isDark: false, autoFade: false))),
       );
 
       expect(find.text('ft'), findsNothing);
