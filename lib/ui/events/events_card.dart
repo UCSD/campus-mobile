@@ -34,9 +34,9 @@ class _EventsCardState extends State<EventsCard> {
       active: context.select((CardsDataProvider p) => p.cardStates[cardId] ?? false),
       hide: () => Provider.of<CardsDataProvider>(context, listen: false).toggleCard(cardId),
       reload: () => Provider.of<EventsDataProvider>(context, listen: false).reload(cardId),
-      isLoading: Provider.of<EventsDataProvider>(context).isRefreshing(cardId) ||
-          (Provider.of<EventsDataProvider>(context).isLoading &&
-              !Provider.of<EventsDataProvider>(context).hasData),
+      isLoading:
+          Provider.of<EventsDataProvider>(context).isRefreshing(cardId) ||
+          (Provider.of<EventsDataProvider>(context).isLoading && !Provider.of<EventsDataProvider>(context).hasData),
       titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<EventsDataProvider>(context).error,
       child: () => buildEventsCardList(Provider.of<EventsDataProvider>(context).eventsModels),

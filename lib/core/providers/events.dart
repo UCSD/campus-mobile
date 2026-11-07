@@ -38,6 +38,7 @@ class EventsDataProvider extends ChangeNotifier {
       if (cachedJson == null || cachedJson.isEmpty) return;
 
       final cachedModels = eventModelFromJson(cachedJson);
+
       /// A fetch may have applied newer data while the box was opening;
       /// never let stale cache overwrite it.
       if (_modelInitialized) return;
