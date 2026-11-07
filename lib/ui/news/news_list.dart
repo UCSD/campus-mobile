@@ -16,8 +16,9 @@ class NewsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<NewsDataProvider>(context).isLoading)
+    if (Provider.of<NewsDataProvider>(context).isLoading) {
       return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary));
+    }
     return buildNewsList(context, Provider.of<NewsDataProvider>(context).newsModels);
   }
 
@@ -106,8 +107,11 @@ class NewsList extends StatelessWidget {
                             ),
                             TextSpan(
                               text: ' - ',
-                              style: Theme.of(context).textTheme.headlineMedium!
-                                  .copyWith(height: 1.42, fontSize: 16.0, decoration: TextDecoration.none),
+                              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                height: 1.42,
+                                fontSize: 16.0,
+                                decoration: TextDecoration.none,
+                              ),
                             ),
                             TextSpan(
                               text: newsItem.title,

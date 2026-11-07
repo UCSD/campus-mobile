@@ -122,6 +122,9 @@ class CardsDataProvider extends ChangeNotifier {
             // keep all new cards activated by default
             _cardStates.putIfAbsent(card, () => true);
           });
+
+          // staff only: move employee_id to the top, like student_id for students
+          if (isStaff && _cardOrder.remove('employee_id')) _cardOrder.insert(0, 'employee_id');
         } else {
           // User has custom order - just add any new web cards and ensure they're in available cards
           // print("DEBUG: User has custom order, preserving: $_cardOrder");

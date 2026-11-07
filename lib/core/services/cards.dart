@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/cards.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -26,10 +25,8 @@ class CardsService {
       _cardsModel = cardsModelFromJson(_response);
       return true;
     } catch (e) {
-      if (e.toString().contains("401")) {
-        var isNewTokenObtained = await NetworkHelper.getNewToken(headers);
-        if (isNewTokenObtained) return await fetchCards(ucsdAffiliation);
-      }
+      if (e.toString().contains("401"))
+        if (await NetworkHelper.getNewToken(headers)) return await fetchCards(ucsdAffiliation);
       _error = e.toString();
       return false;
     } finally {

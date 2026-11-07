@@ -54,16 +54,18 @@ class ClassData {
     termCode: json["term_code"] == null ? null : json["term_code"],
     subjectCode: json["subject_code"] == null ? null : json["subject_code"],
     courseCode: json["course_code"] == null ? null : json["course_code"],
-    units: json["units"] == null ? null : json["units"],
+    units: (json["units"] as num?)?.toDouble(),
     courseLevel: json["course_level"] == null ? null : json["course_level"],
     gradeOption: json["grade_option"] == null ? null : json["grade_option"],
     grade: json["grade"] == null ? null : json["grade"],
     courseTitle: json["course_title"] == null ? null : json["course_title"],
     enrollmentStatus: json["enrollment_status"] == null ? null : json["enrollment_status"],
     repeatCode: json["repeat_code"] == null ? null : json["repeat_code"],
-    sectionData: json["section_data"] == null
+    sectionData: json["sectionData"] == null
         ? null
-        : List<SectionData>.from(json["section_data"].map((x) => SectionData.fromJson(x))),
+        : (json["sectionData"] as List<dynamic>)
+              .map((item) => SectionData.fromJson(item as Map<String, dynamic>))
+              .toList(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -77,32 +79,30 @@ class ClassData {
     "course_title": courseTitle == null ? null : courseTitle,
     "enrollment_status": enrollmentStatus == null ? null : enrollmentStatus,
     "repeat_code": repeatCode == null ? null : repeatCode,
-    "section_data": sectionData == null ? null : List<dynamic>.from(sectionData!.map((x) => x.toJson())),
+    "sectionData": sectionData?.map((item) => item.toJson()).toList(),
   };
 }
 
 class SectionData {
   String? section;
+  String? sectionCode;
   String? meetingType;
+  String? date;
   String? time;
   String? days;
-  String? date;
   String? building;
   String? room;
   String? instructorName;
   String? specialMtgCode;
-  String? subjectCode;
-  String? courseCode;
-  String? courseTitle;
-  late String gradeOption;
   String? enrollStatus;
 
   SectionData({
     this.section,
+    this.sectionCode,
     this.meetingType,
+    this.date,
     this.time,
     this.days,
-    this.date,
     this.building,
     this.room,
     this.instructorName,
@@ -112,10 +112,11 @@ class SectionData {
 
   factory SectionData.fromJson(Map<String, dynamic> json) => SectionData(
     section: json["section"],
+    sectionCode: json["section_code"],
     meetingType: json["meeting_type"],
+    date: json["date"],
     time: json["time"],
     days: json["days"],
-    date: json["date"],
     building: json["building"],
     room: json["room"],
     instructorName: json["instructor_name"],
@@ -125,10 +126,11 @@ class SectionData {
 
   Map<String, dynamic> toJson() => {
     "section": section,
+    "section_code": sectionCode,
     "meeting_type": meetingType,
+    "date": date,
     "time": time,
     "days": days,
-    "date": date,
     "building": building,
     "room": room,
     "instructor_name": instructorName,

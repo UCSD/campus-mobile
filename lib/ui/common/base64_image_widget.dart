@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 
 class Base64ImageWidget extends StatelessWidget {
@@ -53,5 +52,7 @@ class Base64ImageWidget extends StatelessWidget {
     }
   }
 
-  Widget _buildPlaceholder() => Image.asset(placeholderAssetPath, fit: fit, width: width, height: height);
+  Widget _buildPlaceholder() {
+    return Image.asset(placeholderAssetPath, fit: fit, width: width, height: height);
+  }
 }

@@ -217,12 +217,12 @@ class CircularParkingIndicators extends StatelessWidget {
   }
 
   Widget buildSpotsAvailableText(BuildContext context) {
-    final openSpots = Provider.of<ParkingDataProvider>(context)
-        .getApproxNumOfOpenSpots(model.locationName)["Open"]
-        .toString();
-    final totalSpots = Provider.of<ParkingDataProvider>(context)
-        .getApproxNumOfOpenSpots(model.locationName)["Total"]
-        .toString();
+    final openSpots = Provider.of<ParkingDataProvider>(
+      context,
+    ).getApproxNumOfOpenSpots(model.locationName)["Open"].toString();
+    final totalSpots = Provider.of<ParkingDataProvider>(
+      context,
+    ).getApproxNumOfOpenSpots(model.locationName)["Total"].toString();
     final visualText = "~$openSpots of $totalSpots Spots Available";
     final semanticText = "Approximately $openSpots of $totalSpots Spots Available";
 

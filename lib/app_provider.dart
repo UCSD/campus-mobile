@@ -176,10 +176,6 @@ List<SingleChildWidget> dependentServices = [
     },
     update: (_, userDataProvider, studentIdDataProvider) {
       studentIdDataProvider!.userDataProvider = userDataProvider;
-      // Verify that the user is logged in
-      final bool isLoggedIn = userDataProvider.isLoggedIn;
-      final bool isNotLoading = !studentIdDataProvider.isLoading;
-      if (isLoggedIn && isNotLoading) studentIdDataProvider.fetchData();
       return studentIdDataProvider;
     },
   ),

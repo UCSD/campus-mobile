@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_arrival.dart';
 import 'package:campus_mobile_experimental/core/models/shuttle_stop.dart';
@@ -67,10 +66,8 @@ class ShuttleService {
     } catch (e) {
       /// if the authorized fetch failed we know we have to refresh the
       /// token for this service
-      if (e.toString().contains("401")) {
-        var isNewTokenObtained = await NetworkHelper.getNewToken(headers);
-        if (isNewTokenObtained) return await getArrivingInformation(stopId);
-      }
+      if (e.toString().contains("401"))
+        if (await NetworkHelper.getNewToken(headers)) return await getArrivingInformation(stopId);
       _error = e.toString();
       return [];
     } finally {

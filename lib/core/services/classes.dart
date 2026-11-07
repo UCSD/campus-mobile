@@ -17,6 +17,7 @@ class ClassScheduleService {
   AcademicTermModel? _academicTermModel;
 
   Future<bool> fetchUNCourses(Map<String, String> headers, String term) async {
+    // print('\x1B[31m================ Fetch UN Courses ================\x1B[0m');
     _error = null;
     _isLoading = true;
     try {
@@ -28,6 +29,7 @@ class ClassScheduleService {
 
       /// parse data
       _unData = classScheduleModelFromJson(_response);
+      // print('\x1B[31m$_response\x1B[0m');
       return true;
     } catch (e) {
       _error = e.toString();
@@ -38,6 +40,7 @@ class ClassScheduleService {
   }
 
   Future<bool> fetchGRCourses(Map<String, String> headers, String term) async {
+    // print('\x1B[32m================ Fetch GR Courses ================\x1B[0m');
     _error = null;
     _isLoading = true;
     try {
@@ -49,6 +52,7 @@ class ClassScheduleService {
 
       /// parse data
       _grData = classScheduleModelFromJson(_response);
+      // print('\x1B[32m$_response\x1B[0m');
       return true;
     } catch (e) {
       _error = e.toString();
@@ -59,14 +63,17 @@ class ClassScheduleService {
   }
 
   Future<bool> fetchAcademicTerm() async {
+    // print('\x1B[32m================ Fetch Academic Term ================\x1B[0m');
     _error = null;
     _isLoading = true;
     try {
       String _response = await NetworkHelper.fetchData(dotenv.get('ACADEMIC_TERM_API_ENDPOINT'));
       _academicTermModel = academicTermModelFromJson(_response);
+      // print('\x1B[32m$_response\x1B[0m');
       return true;
     } catch (e) {
       _error = e.toString();
+      // print('\x1B[32m$_error\x1B[0m');
       return false;
     } finally {
       _isLoading = false;

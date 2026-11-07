@@ -14,7 +14,7 @@ class TimeRangeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      getStartTime(context) + ' - ' + getStopTime(context),
+      '${getStartTime(context)} \u2013 ${getStopTime(context)}',
       style: Theme.of(context).brightness == Brightness.dark ? descriptiveTextSmallDark : descriptiveTextSmallLight,
     );
   }
