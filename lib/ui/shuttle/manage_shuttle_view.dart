@@ -47,18 +47,11 @@ class _ManageShuttleViewState extends State<ManageShuttleView> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    List<ShuttleStopModel?> newOrder = _shuttleDataProvider.stopsToRender;
-    List<ShuttleStopModel> toRemove = [];
-
-    newOrder.removeWhere((element) => toRemove.contains(element));
-    ShuttleStopModel? item = newOrder.removeAt(oldIndex);
+    final newOrder = _shuttleDataProvider.stopsToRender.toList();
+    final item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
 
-    List<int?> orderedStopNames = [];
-    for (ShuttleStopModel? item in newOrder) {
-      orderedStopNames.add(item!.id);
-    }
-    _shuttleDataProvider.reorderStops(orderedStopNames);
+    _shuttleDataProvider.reorderStops(newOrder.map((stop) => stop.id).toList());
   }
 
   List<Widget> createList(BuildContext context) {

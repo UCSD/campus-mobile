@@ -116,15 +116,24 @@ void main() {
     expect(tester.getSize(pager).height, closeTo(populatedHeight, 0.01));
   });
 
-  testWidgets('returning from manage stops keeps the shuttle page and dots synchronized', (tester) async {
+  testWidgets('returning from manage stops keeps the page, dots, and arrivals synchronized', (tester) async {
     await _pumpCard(tester, const Size(412, 892), 1.0);
     final pager = find.byType(PageView);
     final controller = tester.widget<PageView>(pager).controller!;
+    final provider = Provider.of<ShuttleDataProvider>(tester.element(pager), listen: false);
+    final populatedArrivals = provider.arrivalsToRender[1]!;
+    provider.arrivalsToRender[1] = [];
+    provider.arrivalsToRender[2] = populatedArrivals;
+    provider.notifyListeners();
+    await tester.pumpAndSettle();
 
     controller.jumpToPage(1);
     await tester.pumpAndSettle();
     expect(controller.page, 1);
     expect(tester.widget<DotsIndicator>(find.byType(DotsIndicator)).position, 1);
+    final nextArrivals = find.descendant(of: pager, matching: find.text('Next Arrivals'));
+    expect(nextArrivals, findsOneWidget);
+    expect(tester.getRect(nextArrivals).bottom, lessThanOrEqualTo(tester.getRect(pager).bottom));
 
     await tester.tap(find.text('MANAGE SHUTTLE STOPS'));
     await tester.pumpAndSettle();
@@ -135,5 +144,7 @@ void main() {
 
     expect(controller.page, 1);
     expect(tester.widget<DotsIndicator>(find.byType(DotsIndicator)).position, 1);
+    expect(nextArrivals, findsOneWidget);
+    expect(tester.getRect(nextArrivals).bottom, lessThanOrEqualTo(tester.getRect(pager).bottom));
   });
 }
