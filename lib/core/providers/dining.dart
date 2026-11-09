@@ -109,7 +109,9 @@ class DiningDataProvider extends ChangeNotifier {
     final bool hasLongitude = _coordinates?.lon != null;
     if (hasCoordinates && hasLatitude && hasLongitude) {
       for (DiningModel model in _diningModels.values.toList()) {
-        if (model.coordinates != null) {
+        // Some locations from the API have no lat/lon; skip them instead of crashing.
+        final bool modelHasLocation = model.coordinates?.lat != null && model.coordinates?.lon != null;
+        if (modelHasLocation) {
           var distance = calculateDistance(
             _coordinates!.lat!,
             _coordinates!.lon!,
