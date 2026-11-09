@@ -206,32 +206,6 @@ class ParkingDataProvider extends ChangeNotifier {
     return totalAndOpenSpots;
   }
 
-  Map<String, List<String>> getParkingMap() {
-    Map<String, List<String>> parkingMap = {};
-    List<String> neighborhoodsToSort = [];
-    for (ParkingModel model in _parkingService.data!) {
-      neighborhoodsToSort.add(model.neighborhood);
-    }
-    neighborhoodsToSort.sort();
-    for (String neighborhood in neighborhoodsToSort) {
-      List<String> val = [];
-      parkingMap[neighborhood] = val;
-    }
-
-    for (ParkingModel model in _parkingService.data!) {
-      parkingMap[model.neighborhood]!.add(model.locationName);
-    }
-    return parkingMap;
-  }
-
-  List<String> getStructures() {
-    List<String> structureMap = [];
-    for (ParkingModel model in _parkingService.data!) {
-      if (model.isStructure) structureMap.add(model.locationName);
-    }
-    return structureMap;
-  }
-
   List<String> getLots() {
     List<String> lotMap = [];
     for (ParkingModel model in _parkingService.data!) {

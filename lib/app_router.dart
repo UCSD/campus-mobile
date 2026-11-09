@@ -25,9 +25,6 @@ import 'package:campus_mobile_experimental/ui/notifications/notifications_filter
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_slides.dart';
 import 'package:campus_mobile_experimental/ui/onboarding/onboarding_login.dart';
 import 'package:campus_mobile_experimental/ui/parking/manage_parking_view.dart';
-import 'package:campus_mobile_experimental/ui/parking/neighborhood_lot_view.dart';
-import 'package:campus_mobile_experimental/ui/parking/neighborhoods_view.dart';
-import 'package:campus_mobile_experimental/ui/parking/parking_structure_view.dart';
 import 'package:campus_mobile_experimental/ui/parking/spot_types_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/cards.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
@@ -202,28 +199,6 @@ class Router {
           builder: (context) {
             Provider.of<CustomAppBar>(context).changeTitle(settings.name);
             return ClassList();
-          },
-        );
-      case RoutePaths.PARKING_STRUCTURE_VIEW:
-        return MaterialPageRoute(
-          builder: (context) {
-            Provider.of<CustomAppBar>(context).changeTitle(settings.name, done: true);
-            return ParkingStructureView();
-          },
-        );
-      case RoutePaths.NEIGHBORHOODS_VIEW:
-        return MaterialPageRoute(
-          builder: (context) {
-            Provider.of<CustomAppBar>(context).changeTitle(settings.name, done: true);
-            return NeighborhoodsView();
-          },
-        );
-      case RoutePaths.NEIGHBORHOODS_LOTS_VIEW:
-        List<String> data = settings.arguments as List<String>;
-        return MaterialPageRoute(
-          builder: (context) {
-            Provider.of<CustomAppBar>(context).changeTitle(settings.name, done: true);
-            return NeighborhoodLotsView(data);
           },
         );
       default:

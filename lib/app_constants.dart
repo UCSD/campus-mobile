@@ -29,10 +29,7 @@ class RoutePaths {
   // static const String DINING_NUTRITION_VIEW = 'dining/dining_nutrition_view';
   static const String PARKING = "parking/parking_view";
   static const String SPOT_TYPES_VIEW = "parking/spot_types_view";
-  static const String PARKING_STRUCTURE_VIEW = "parking/parking_structure_view";
   static const String PARKING_LOTS_VIEW = "parking/parking_lots_view";
-  static const String NEIGHBORHOODS_VIEW = "parking/neighborhoods_view";
-  static const String NEIGHBORHOODS_LOTS_VIEW = "parking/neighborhoods_lot_view";
   static const String AVAILABILITY_DETAILED_VIEW = "availability/detailed_view";
   static const String TGPT_CITATION_WEB = 'ai_assistant/citation_web';
 }
@@ -57,10 +54,7 @@ class RouteTitles {
     'shuttle/manage_shuttle_view': 'MANAGE SHUTTLE STOPS',
     'shuttle/add_shuttle_stops_view': 'ADD SHUTTLE STOPS',
     'parking/manage_parking_view': 'MANAGE LOTS',
-    'parking/neighborhoods_lot_view': 'MANAGE LOTS',
-    'parking/neighborhoods_view': 'MANAGE LOTS',
     'parking/parking_lots_view': 'MANAGE LOTS',
-    'parking/parking_structure_view': 'MANAGE LOTS',
     'parking/spot_types_view': 'MANAGE SPOTS',
     'dining/view_all_dining_options': 'DINING',
     'dining/option_detail_view': 'DINING',
