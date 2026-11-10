@@ -89,7 +89,7 @@ class _EsriAiSearchSheetState extends State<EsriAiSearchSheet> {
     final s = subtitle.toLowerCase();
     final isDining = s.contains('dining') || s.contains('food') || s.contains('coffee') || s.contains('cafe');
     if (isDining) return Icons.restaurant;
-    final isLibrary = s.contains('library') || s.contains('academic');
+    final isLibrary = s.contains('library') || s.contains('academic') || s.contains('study');
     if (isLibrary) return Icons.menu_book;
     final isParking = s.contains('parking');
     if (isParking) return Icons.local_parking;
