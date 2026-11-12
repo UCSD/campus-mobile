@@ -127,7 +127,6 @@ class EsriMapSearchService {
   /// library buildings are already scoped to study locations. The [exceptions]
   /// list is appended as-is and bypasses the subtitle filters by design.
   static List<MapSearchResult> mergeStudyResults({
-    required List<MapSearchResult> libraryPois,
     required List<MapSearchResult> libraryBuildings,
     required List<MapSearchResult> studentServices,
     required List<MapSearchResult> computerLabs,
@@ -138,7 +137,6 @@ class EsriMapSearchService {
 
     final uniqueNames = <String>{};
     return [
-      ...libraryPois,
       ...libraryBuildings,
       ...lounges,
       ...labs,

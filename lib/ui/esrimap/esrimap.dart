@@ -1017,7 +1017,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
       if (isStudy) {
         final legs = await Future.wait([
-          _studyLeg(EsriMapSearchService.queryPOIsByClass('Library')),
           _studyLeg(EsriMapSearchService.queryBuildings('library')),
           _studyLeg(EsriMapSearchService.queryPOIsByClass('Student Services')),
           // Load-bearing keyword: it matches the "Computer Labs" subcategory
@@ -1027,11 +1026,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
           _studyLeg(EsriMapSearchService.fetchStudyExceptions()),
         ]);
         allResults = EsriMapSearchService.mergeStudyResults(
-          libraryPois: legs[0],
-          libraryBuildings: legs[1],
-          studentServices: legs[2],
-          computerLabs: legs[3],
-          exceptions: legs[4],
+          libraryBuildings: legs[0],
+          studentServices: legs[1],
+          computerLabs: legs[2],
+          exceptions: legs[3],
         );
       } else if (isRec) {
         final baseSearch = EsriMapSearchService.queryPOIsByClass(category.poiClassValue);
