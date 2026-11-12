@@ -136,12 +136,7 @@ class EsriMapSearchService {
     final labs = computerLabs.where((r) => r.subtitle.toLowerCase().contains('computer labs'));
 
     final uniqueNames = <String>{};
-    return [
-      ...libraryBuildings,
-      ...lounges,
-      ...labs,
-      ...exceptions,
-    ].where((r) => uniqueNames.add(r.name)).toList();
+    return [...libraryBuildings, ...lounges, ...labs, ...exceptions].where((r) => uniqueNames.add(r.name)).toList();
   }
 
   /// Fetches the hand-audited Study exception entries in parallel, keeping
