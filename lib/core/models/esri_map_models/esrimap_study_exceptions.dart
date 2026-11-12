@@ -6,9 +6,9 @@
 /// ============================================================================
 ///
 /// Provenance: hand-compiled from a live API audit on 2026-11-08; every
-/// matchName was verified against a live response on the same date. Backend
-/// data enrichment is the proper long-term fix. This table should shrink
-/// over time, not grow.
+/// matchName was verified against a live response, with corrections
+/// re-verified on 2026-11-12. Backend data enrichment is the proper
+/// long-term fix. This table should shrink over time, not grow.
 
 /// Which endpoint an exception entry queries.
 enum StudyExceptionSource {
@@ -89,16 +89,16 @@ class StudyExceptions {
       note: 'proxy for Tioga residence halls',
     ),
     StudyException(
-      queryTerm: 'Tuolumne Apartments',
-      source: StudyExceptionSource.poi,
-      matchNames: ['Tuolumne Apartments'],
-      note: 'proxy for Tenaya residence halls; POI is filed under Classrooms',
+      queryTerm: 'Tenaya Hall',
+      source: StudyExceptionSource.buildings,
+      matchNames: ['Tenaya Hall'],
+      note: 'proxy for Tenaya residence hall lounges',
     ),
     StudyException(
       queryTerm: 'Tamarack Apartments',
-      source: StudyExceptionSource.poi,
-      matchNames: ['Tamarack Apartments'],
-      note: 'a "Hydration Location - Tamarack Apartments" namesake is excluded by the exact match',
+      source: StudyExceptionSource.buildings,
+      matchNames: ['Tamarack Apartments East', 'Tamarack Apartments West'],
+      note: 'East and West buildings proxy for the complex lounges',
     ),
     StudyException(
       queryTerm: 'Pines Restaurant',
@@ -165,13 +165,6 @@ class StudyExceptions {
       source: StudyExceptionSource.poi,
       matchNames: ['Canyon Vista Marketplace'],
       note: 'Dining-class study spot',
-    ),
-    // Sixth College
-    StudyException(
-      queryTerm: 'Commuter Center',
-      source: StudyExceptionSource.poi,
-      matchNames: ['Commuter Center'],
-      note: 'misfiled under Department Offices',
     ),
     // Seventh College
     StudyException(
