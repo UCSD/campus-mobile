@@ -51,8 +51,8 @@ class EventModel {
   Map<String, dynamic> toJson() => {
     "title": title,
     "description": description,
-    "startDate": startDate,
-    "endDate": endDate,
+    "startDate": startDate.toIso8601String(),
+    "endDate": endDate.toIso8601String(),
     "imageHQ": imageHQ,
     "imageThumb": imageThumb,
     "link": link,
