@@ -14,7 +14,18 @@ import 'package:campus_mobile_experimental/ui/common/action_button.dart';
 
 const cardId = 'schedule';
 
-class ClassScheduleCard extends StatelessWidget {
+class ClassScheduleCard extends StatefulWidget {
+  @override
+  State<ClassScheduleCard> createState() => _ClassScheduleCardState();
+}
+
+class _ClassScheduleCardState extends State<ClassScheduleCard> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ClassScheduleDataProvider>().loadFromCache();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CardContainer(
@@ -26,9 +37,12 @@ class ClassScheduleCard extends StatelessWidget {
         if (isLoading)
           return null;
         else
-          Provider.of<ClassScheduleDataProvider>(context, listen: false).fetchData();
+          Provider.of<ClassScheduleDataProvider>(context, listen: false).reload(cardId);
       },
-      isLoading: Provider.of<ClassScheduleDataProvider>(context).isLoading,
+      isLoading:
+          Provider.of<ClassScheduleDataProvider>(context).isRefreshing(cardId) ||
+          (Provider.of<ClassScheduleDataProvider>(context).isLoading &&
+              !Provider.of<ClassScheduleDataProvider>(context).hasData),
       titleText: CardTitleConstants.TITLE_MAP[cardId]!,
       errorText: Provider.of<ClassScheduleDataProvider>(context).error,
       child: () => buildClassScheduleCard(
@@ -87,7 +101,7 @@ class ClassScheduleCard extends StatelessWidget {
             buildLocationRow(context, section.room?.trim().isNotEmpty == true ? section.room!.trim() : 'TBD'),
             SizedBox(height: 8),
             // Evaluation Option:
-            buildGradeEvaluationRow(context, scheduledClass.gradeOption),
+            if (scheduledClass.gradeOption != null) buildGradeEvaluationRow(context, scheduledClass.gradeOption!),
             // "Last updated: A few seconds ago
             Padding(
               padding: const EdgeInsets.only(left: 4.0, top: 24.0),

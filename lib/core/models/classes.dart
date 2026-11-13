@@ -56,7 +56,7 @@ class ClassData {
     courseCode: json["course_code"] == null ? null : json["course_code"],
     units: (json["units"] as num?)?.toDouble(),
     courseLevel: json["course_level"] == null ? null : json["course_level"],
-    gradeOption: json["grade_option"] == null ? null : json["grade_option"],
+    gradeOption: json["grade_option"] ?? json["gradeOption"],
     grade: json["grade"] == null ? null : json["grade"],
     courseTitle: json["course_title"] == null ? null : json["course_title"],
     enrollmentStatus: json["enrollment_status"] == null ? null : json["enrollment_status"],
