@@ -407,4 +407,7 @@ class ClassScheduleDataProvider extends ChangeNotifier {
   Map<String, List<ScheduledClass>> get midterms => _midterms;
   Map<String, List<ScheduledClass>> get enrolledClasses => _enrolledClasses;
   ClassScheduleModel get classScheduleModel => _classScheduleModel;
+
+  /// Calendar-safe model access; never exposes the model before initialization.
+  ClassScheduleModel? get calendarSchedule => _modelInitialized ? _classScheduleModel : null;
 }

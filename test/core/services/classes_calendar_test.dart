@@ -54,12 +54,10 @@ void main() {
   List<DateTime> _dates(ClassCalendarData calendar) =>
       calendar.occurrences.map((occurrence) => occurrence.date).toList();
 
-  String _unfolded(String ics) {
-    return ics.split('\r\n').fold('', (content, line) {
-      if (line.startsWith(' ')) return content + line.substring(1);
-      return content.isEmpty ? line : '$content\r\n$line';
-    });
-  }
+  String _unfolded(String ics) => ics.split('\r\n').fold('', (content, line) {
+    if (line.startsWith(' ')) return content + line.substring(1);
+    return content.isEmpty ? line : '$content\r\n$line';
+  });
 
   test('empty, unsupported, and mixed terms are safely unavailable', () {
     final empty = buildClassCalendar(ClassScheduleModel());
@@ -484,5 +482,175 @@ void main() {
 
     final empty = buildClassCalendar(ClassScheduleModel());
     expect(createClassesCalendarIcs(empty, generatedAt: generatedAt), isNull);
+  });
+
+  test('all seven weekdays recur on their eligible teaching dates', () {
+    final calendar = buildClassCalendar(
+      _schedule([
+        _course(
+          sections: [
+            _section(sectionCode: '10001', time: '10:00 - 10:50', days: 'MO'),
+            _section(sectionCode: '10002', time: '10:00 - 10:50', days: 'TU'),
+            _section(sectionCode: '10003', time: '10:00 - 10:50', days: 'WE'),
+            _section(sectionCode: '10004', time: '10:00 - 10:50', days: 'TH'),
+            _section(sectionCode: '10005', time: '10:00 - 10:50', days: 'FR'),
+            _section(sectionCode: '10006', time: '10:00 - 10:50', days: 'SA'),
+            _section(sectionCode: '10007', time: '10:00 - 10:50', days: 'SU'),
+          ],
+        ),
+      ]),
+    );
+
+    // FA26 teaching dates: MO 10, TU 10, WE 9 (Nov 11 holiday), TH 10
+    // (Nov 26 holiday), FR 10 (Nov 27 holiday), SA 10, SU 10.
+    expect(calendar.occurrences, hasLength(69));
+    expect(calendar.omissions, isEmpty);
+    expect(calendar.undated, isEmpty);
+  });
+
+  test('same-day meetings sort all-day first with distinct section identities', () {
+    final calendar = buildClassCalendar(
+      _schedule([
+        _course(
+          sections: [
+            _section(sectionCode: '10001', date: '2026-10-7', time: '09:00 - 09:50', days: 'WE'),
+            _section(sectionCode: '10002', date: '2026-10-7', time: 'TBA', days: 'WE'),
+            _section(sectionCode: '10003', date: '2026-10-7', time: '11:00 - 11:50', days: 'WE'),
+          ],
+        ),
+      ]),
+    );
+    final meetings = calendar.meetingsOn(DateTime.utc(2026, 10, 7));
+
+    expect(meetings, hasLength(3));
+    expect(meetings.first.isAllDay, isTrue);
+    expect(meetings.skip(1).map((occurrence) => occurrence.isAllDay), everyElement(isFalse));
+    expect(meetings[1].start, DateTime.utc(2026, 10, 7, 16));
+    expect(meetings[2].start, DateTime.utc(2026, 10, 7, 18));
+    expect(meetings.map((occurrence) => occurrence.uid).toSet(), hasLength(3));
+  });
+
+  test('out-of-bounds or equal time endpoints become all-day meetings', () {
+    final calendar = buildClassCalendar(
+      _schedule([
+        _course(
+          sections: [
+            _section(sectionCode: '10001', date: '2026-10-7', time: '24:00 - 25:00', days: 'WE'),
+            _section(sectionCode: '10002', date: '2026-10-7', time: '10:60 - 11:00', days: 'WE'),
+            _section(sectionCode: '10003', date: '2026-10-7', time: '10:00:59 - 10:00:59', days: 'WE'),
+          ],
+        ),
+      ]),
+    );
+
+    expect(calendar.occurrences, hasLength(3));
+    expect(calendar.occurrences.map((occurrence) => occurrence.isAllDay), everyElement(isTrue));
+    expect(calendar.undated, isEmpty);
+    expect(classMeetingTimeRange('9:30 - 10:20'), (startSeconds: 34200, endSeconds: 37200));
+    expect(classMeetingTimeRange('10:00-10:50'), (startSeconds: 36000, endSeconds: 39000));
+    expect(classMeetingTimeRange('2:30:15 - 3:45:30'), (startSeconds: 9015, endSeconds: 13530));
+    expect(classMeetingTimeRange('25:00 - 26:00'), isNull);
+    expect(classMeetingTimeRange('10:00 - 10:00'), isNull);
+    expect(classMeetingTimeRange('garbage'), isNull);
+    expect(classMeetingTimeRange(null), isNull);
+  });
+
+  test('Spring 2027 timed meetings keep campus time across the March DST change', () {
+    final calendar = buildClassCalendar(
+      _schedule([
+        _course(
+          termCode: 'SP27',
+          sections: [_section(date: '2027-3-29', time: '10:00 - 10:50', days: 'MO')],
+        ),
+      ]),
+    );
+
+    expect(calendar.occurrences.single.start, DateTime.utc(2027, 3, 29, 17));
+    expect(calendar.occurrences.single.end, DateTime.utc(2027, 3, 29, 17, 50));
+  });
+
+  test('dated records outside the quarter or impossible are omissions without occurrences', () {
+    final calendar = buildClassCalendar(
+      _schedule([
+        _course(
+          sections: [
+            _section(sectionCode: '10001', date: '2026-12-20', time: '10:00 - 10:50', days: 'SU'),
+            _section(sectionCode: '10002', date: '2026-2-30', time: '10:00 - 10:50', days: 'MO'),
+            _section(sectionCode: '10003', date: '2026-09-25', time: '10:00 - 10:50', days: 'FR'),
+          ],
+        ),
+      ]),
+    );
+
+    expect(calendar.quarter?.termCode, 'FA26');
+    expect(calendar.occurrences, hasLength(1));
+    expect(calendar.occurrences.single.date, DateTime.utc(2026, 9, 25));
+    expect(calendar.undated, isEmpty);
+    expect(calendar.omissions, hasLength(2));
+    expect(calendar.omissions, everyElement(isNotEmpty));
+  });
+
+  test('malformed weekday strings never invent occurrences', () {
+    final calendar = buildClassCalendar(
+      _schedule([
+        _course(
+          sections: [
+            _section(sectionCode: '10001', time: '10:00 - 10:50', days: 'SUPER'),
+            _section(sectionCode: '10002', time: '10:00 - 10:50', days: 'MONTHLY'),
+            _section(sectionCode: '10003', time: '10:00 - 10:50', days: 'MO X'),
+          ],
+        ),
+      ]),
+    );
+
+    expect(calendar.occurrences, isEmpty);
+    expect(calendar.undated, hasLength(3));
+    expect(calendar.omissions, isEmpty);
+  });
+
+  test('concatenated weekday tokens are recognized', () {
+    final calendar = buildClassCalendar(
+      _schedule([
+        _course(
+          sections: [_section(time: '10:00 - 10:50', days: 'MOTU')],
+        ),
+      ]),
+    );
+
+    // MO 10 eligible Mondays + TU 10 eligible Tuesdays in FA26.
+    expect(calendar.occurrences, hasLength(20));
+  });
+
+  test('explicitly dated meetings on published holidays are excluded like exams', () {
+    final calendar = buildClassCalendar(
+      _schedule([
+        _course(
+          sections: [
+            _section(sectionCode: '10001', date: '2026-11-26', time: '10:00 - 10:50', days: 'TH'),
+            _section(sectionCode: '10002', date: '2026-11-27', time: '10:00 - 10:50', days: 'FR'),
+          ],
+        ),
+      ]),
+    );
+
+    expect(calendar.occurrences, isEmpty);
+    expect(calendar.undated, isEmpty);
+    expect(calendar.omissions, isEmpty);
+  });
+
+  test('duplicate scheduling records differing only in display metadata deduplicate', () {
+    final calendar = buildClassCalendar(
+      _schedule([
+        _course(
+          sections: [_section(time: '10:00 - 10:50', days: 'MO', building: 'Hall A', instructorName: 'Dr. One')],
+        ),
+        _course(
+          sections: [_section(time: '10:00 - 10:50', days: 'MO', building: 'Hall B', instructorName: 'Dr. Two')],
+        ),
+      ]),
+    );
+
+    expect(calendar.occurrences, hasLength(10));
+    expect(calendar.occurrences.map((occurrence) => occurrence.uid).toSet(), hasLength(10));
   });
 }

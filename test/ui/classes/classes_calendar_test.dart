@@ -1,6 +1,9 @@
 import 'package:campus_mobile_experimental/core/models/classes.dart';
+import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/services/classes_calendar.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_calendar.dart';
+import 'package:campus_mobile_experimental/ui/classes/class_schedule_card.dart';
+import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,6 +27,9 @@ void main() {
   setUpAll(() async {
     // Use the app's actual fonts so narrow-screen and large-text checks are
     // realistic.
+    // Keep semantics enabled for the whole suite so bySemanticsLabel finders
+    // work without leaking per-test handles.
+    TestWidgetsFlutterBinding.instance.ensureSemantics();
     final bodyFonts = FontLoader('Brix Sans')
       ..addFont(rootBundle.load('assets/fonts/HVD Fonts - BrixSansMedium.otf'))
       ..addFont(rootBundle.load('assets/fonts/HVD Fonts - BrixSansBold.otf'))
@@ -128,7 +134,9 @@ void main() {
       findsWidgets,
     );
     expect(
-      find.bySemanticsLabel(RegExp('no meetings.*november 14, 2026|november 14, 2026.*no meetings', caseSensitive: false)),
+      find.bySemanticsLabel(
+        RegExp('no meetings.*november 14, 2026|november 14, 2026.*no meetings', caseSensitive: false),
+      ),
       findsWidgets,
     );
     expect(find.textContaining(RegExp('no meetings', caseSensitive: false)), findsWidgets);
@@ -138,12 +146,12 @@ void main() {
   });
 
   testWidgets('initially selects the first eligible meeting when today is outside the quarter', (tester) async {
-    final calendar = await _pumpCalendar(tester, model: _baseSchedule(), now: DateTime(2026, 12, 20));
+    final calendar = await _pumpCalendar(tester, model: _baseSchedule(), now: DateTime.utc(2026, 12, 20, 20));
     final first = calendar.occurrences.first;
 
-    expect(_isSameDay(first.date, 2026, 9, 28), isTrue);
+    expect(_isSameDay(first.date, 2026, 9, 25), isTrue);
     expect(find.text(_fullDate.format(first.date)), findsOneWidget);
-    expect(find.bySemanticsLabel(RegExp('September 28, 2026')), findsWidgets);
+    expect(find.bySemanticsLabel(RegExp('September 25, 2026')), findsWidgets);
     expect(find.bySemanticsLabel(RegExp('October 25, 2026')), findsNothing);
     expect(find.text(_fullDate.format(DateTime(2026, 12, 20))), findsNothing);
     expect(tester.takeException(), isNull);
@@ -197,6 +205,30 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('clamps the selected day when navigating to a shorter month', (tester) async {
+    await _pumpCalendar(tester, model: _baseSchedule());
+
+    await tester.tap(_control('Previous month').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel(RegExp('Saturday, October 31, 2026')));
+    await tester.pumpAndSettle();
+    expect(find.text('Saturday, October 31, 2026'), findsOneWidget);
+
+    await tester.tap(_control('Next month').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Monday, November 30, 2026'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('clamps the selection to the quarter end when navigating forward', (tester) async {
+    await _pumpCalendar(tester, model: _baseSchedule());
+
+    await tester.tap(_control('Next month').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Saturday, December 12, 2026'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('announces neighboring-month dates but does not allow selecting them', (tester) async {
     await _pumpCalendar(tester, model: _baseSchedule());
 
@@ -244,6 +276,42 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('keeps each course marker color stable across days with different subsets', (tester) async {
+    await _pumpCalendar(tester, model: _colorStabilitySchedule());
+
+    final monday = find.bySemanticsLabel(RegExp('Monday, November 2, 2026'));
+    final tuesday = find.bySemanticsLabel(RegExp('Tuesday, November 3, 2026'));
+    // Courses sort globally (ANTH < BIOL < CHEM), so each course keeps its
+    // palette index no matter which subset of courses meets on a given day.
+    expect(_dotsIn(monday, _courseColors[0]), findsWidgets);
+    expect(_dotsIn(monday, _courseColors[1]), findsNothing);
+    expect(_dotsIn(tuesday, _courseColors[0]), findsNothing);
+    expect(_dotsIn(tuesday, _courseColors[1]), findsWidgets);
+    expect(_dotsIn(tuesday, _courseColors[2]), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('exposes selected, button, and enabled flags on date cells', (tester) async {
+    await _pumpCalendar(tester, model: _baseSchedule());
+
+    final selectedCell = _cellSemantics(tester, 'Saturday, November 14, 2026, Selected').properties;
+    expect(selectedCell.selected, isTrue);
+    expect(selectedCell.enabled, isTrue);
+
+    final selectableCell = _cellSemantics(tester, 'Friday, November 13, 2026').properties;
+    expect(selectableCell.button, isTrue);
+    expect(selectableCell.enabled, isTrue);
+    expect(find.bySemanticsLabel(RegExp('Friday, November 13, 2026')), findsOneWidget);
+    await tester.tap(find.bySemanticsLabel(RegExp('Friday, November 13, 2026')));
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel(RegExp('Friday, November 13, 2026, Selected')), findsOneWidget);
+
+    final neighborCell = _cellSemantics(tester, 'Tuesday, December 8, 2026').properties;
+    expect(neighborCell.selected, isFalse);
+    expect(neighborCell.enabled, isFalse);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('renders full informational agenda cards without tap actions', (tester) async {
     await _pumpCalendar(tester, model: _baseSchedule());
 
@@ -272,11 +340,52 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Thursday, November 5, 2026'), findsOneWidget);
     expect(find.text('PHIL 10'), findsWidgets);
+    expect(find.text('All-day / TBA'), findsOneWidget);
     expect(find.textContaining(RegExp('all day|TBA', caseSensitive: false)), findsWidgets);
 
     expect(find.text('CHEM 6'), findsOneWidget);
     expect(find.textContaining(RegExp('undated|no date', caseSensitive: false)), findsWidgets);
     expect(find.bySemanticsLabel(RegExp('1 meeting')), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders invalid time ranges as TBA', (tester) async {
+    final invalidNumbers = ScheduledClass(
+      course: _course(subject: 'CSE', code: '100', title: 'Advanced Data Structures', sections: []),
+      section: _section(
+        section: 'A00',
+        sectionCode: '93001',
+        time: '99:99-99:99',
+        building: 'CENTER',
+        room: '101',
+        instructor: 'Jones',
+      ),
+    );
+    final reversedRange = ScheduledClass(
+      course: _course(subject: 'MATH', code: '20A', title: 'Calculus I', sections: []),
+      section: _section(
+        section: 'B00',
+        sectionCode: '93002',
+        time: '14:00-10:00',
+        building: 'AP&M',
+        room: '2401',
+        instructor: 'Lee',
+      ),
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: [
+              ClassSectionCard(scheduledClass: invalidNumbers),
+              ClassSectionCard(scheduledClass: reversedRange),
+            ],
+          ),
+        ),
+      ),
+    );
+    expect(find.text('TBA'), findsNWidgets(2));
+    expect(find.byType(TimeRangeWidget), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -297,9 +406,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('selects today and shows the empty state for a quarter with no eligible meetings', (
-    tester,
-  ) async {
+  testWidgets('selects today and shows the empty state for a quarter with no eligible meetings', (tester) async {
     await _pumpCalendar(tester, model: _emptyQuarterSchedule());
 
     expect(find.text('Saturday, November 14, 2026'), findsOneWidget);
@@ -345,7 +452,6 @@ Future<ClassCalendarData> _pumpCalendar(
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
-  addTearDown(tester.ensureSemantics().dispose);
 
   await tester.pumpWidget(
     MaterialApp(
@@ -356,7 +462,11 @@ Future<ClassCalendarData> _pumpCalendar(
       ),
       home: Scaffold(
         body: SingleChildScrollView(
-          child: ClassesCalendar(calendar: calendar, courseColors: _courseColors, now: now ?? DateTime(2026, 11, 14)),
+          child: ClassesCalendar(
+            calendar: calendar,
+            courseColors: _courseColors,
+            now: now ?? DateTime.utc(2026, 11, 14, 20),
+          ),
         ),
       ),
     ),
@@ -383,6 +493,14 @@ bool _hasColor(Widget widget, Color color) {
 
 bool _isSameDay(DateTime actual, int year, int month, int day) =>
     actual.year == year && actual.month == month && actual.day == day;
+
+Finder _dotsIn(Finder cell, Color color) =>
+    find.descendant(of: cell, matching: find.byWidgetPredicate((widget) => _hasColor(widget, color)));
+
+Semantics _cellSemantics(WidgetTester tester, String labelPart) => tester
+    .widgetList<Semantics>(find.byType(Semantics))
+    .where((semantics) => (semantics.properties.label ?? '').contains(labelPart))
+    .single;
 
 ClassScheduleModel _baseSchedule({String termCode = 'FA26'}) => ClassScheduleModel(
   data: [
@@ -455,9 +573,7 @@ ClassScheduleModel _baseSchedule({String termCode = 'FA26'}) => ClassScheduleMod
       code: '6',
       title: 'General Chemistry Lab',
       gradeOption: 'P',
-      sections: [
-        _section(section: 'D00', sectionCode: '90005', meetingType: 'Lab', instructor: 'Park'),
-      ],
+      sections: [_section(section: 'D00', sectionCode: '90005', meetingType: 'Lab', instructor: 'Park')],
     ),
   ],
 );
@@ -486,6 +602,59 @@ ClassScheduleModel _busySchedule() => ClassScheduleModel(
           ),
         ],
       ),
+  ],
+);
+
+ClassScheduleModel _colorStabilitySchedule() => ClassScheduleModel(
+  data: [
+    _course(
+      subject: 'ANTH',
+      code: '1',
+      title: 'Introduction to Anthropology',
+      sections: [
+        _section(
+          section: 'E00',
+          sectionCode: '92001',
+          days: 'MO',
+          time: '09:00-09:50',
+          building: 'SSB',
+          room: '101',
+          instructor: 'Adams',
+        ),
+      ],
+    ),
+    _course(
+      subject: 'BIOL',
+      code: '2',
+      title: 'Introductory Biology',
+      sections: [
+        _section(
+          section: 'F00',
+          sectionCode: '92002',
+          days: 'TU',
+          time: '10:00-10:50',
+          building: 'York',
+          room: '201',
+          instructor: 'Baker',
+        ),
+      ],
+    ),
+    _course(
+      subject: 'CHEM',
+      code: '3',
+      title: 'General Chemistry',
+      sections: [
+        _section(
+          section: 'G00',
+          sectionCode: '92003',
+          days: 'TU',
+          time: '14:00-14:50',
+          building: 'York',
+          room: '301',
+          instructor: 'Clark',
+        ),
+      ],
+    ),
   ],
 );
 

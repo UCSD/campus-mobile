@@ -8,6 +8,7 @@ environment:
 dependencies:
   barcode_widget: 2.0.4
   connectivity_plus: 7.0.0
+  crypto: 3.0.6
   dio: ^5.9.0
   encrypt: ^5.0.3
   dots_indicator: 4.0.1
@@ -21,6 +22,7 @@ dependencies:
     git:
       url: https://github.com/UCSD/flutter_dotenv.git
       ref: master
+  flutter_file_dialog: 3.3.6
   flutter_linkify: 6.0.0
   flutter_local_notifications: ^19.5.0
   flutter_secure_storage: ^10.3.1
@@ -40,6 +42,7 @@ dependencies:
   percent_indicator: ^4.2.5
   pointycastle: ^3.9.0
   provider: ^6.1.5+1
+  share_plus: 11.1.0
   shared_preferences: ^2.5.3
   app_links: ^3.0.0
   url_launcher: ^6.3.1
@@ -49,6 +52,7 @@ dependencies:
     git:
       url: https://github.com/UCSD/wifi_connection.git
       ref: e0fb416f81daedeabb1eedef22041e67f30f792b
+  timezone: 0.10.1
   device_info_plus: ^11.5.0
 dependency_overrides:
   value_layout_builder: ^0.5.0 # Fix Flutter 3.32.0 compatibility

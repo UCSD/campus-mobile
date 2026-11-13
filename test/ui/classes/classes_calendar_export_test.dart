@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Directory;
 
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/services/classes_calendar.dart';
 import 'package:campus_mobile_experimental/ui/classes/classes_calendar_export.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,6 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 // - share_plus 11.1.0 share: {paths, mimeTypes} -> non-empty result string
 const MethodChannel _saveChannel = MethodChannel('flutter_file_dialog');
 const MethodChannel _shareChannel = MethodChannel('dev.fluttercommunity.plus/share');
+const MethodChannel _pathProviderChannel = MethodChannel('plugins.flutter.io/path_provider');
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -22,12 +23,8 @@ void main() {
   final saveCalls = <MethodCall>[];
   final shareCalls = <MethodCall>[];
 
-  void stubChannel(MethodChannel channel, Future<Object?>? Function(MethodCall call)? handler) {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-      channel,
-      handler,
-    );
-  }
+  void stubChannel(MethodChannel channel, Future<Object?>? Function(MethodCall call)? handler) =>
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, handler);
 
   setUp(() {
     saveCalls.clear();
@@ -57,9 +54,7 @@ void main() {
     );
   }
 
-  testWidgets('blocks export and never opens a channel when there are no eligible meetings', (
-    tester,
-  ) async {
+  testWidgets('blocks export and never opens a channel when there are no eligible meetings', (tester) async {
     final calendar = buildClassCalendar(null);
     expect(calendar.occurrences, isEmpty);
 
@@ -91,10 +86,12 @@ void main() {
     final contents = utf8.decode(args['data']! as Uint8List);
     expect(contents, startsWith('BEGIN:VCALENDAR'));
     expect(contents, contains('BEGIN:VEVENT'));
-    expect(contents, contains('CSE 100'));
+    expect(contents, contains('CSE-100-A00'));
     expect(contents, contains('END:VCALENDAR'));
 
-    expect(find.textContaining('classes.ics'), findsWidgets);
+    expect(args['fileName'], 'classes-fall-2026.ics');
+    expect(find.textContaining('Saved classes-fall-2026.ics'), findsOneWidget);
+    expect(find.textContaining('classes-fall-2026.ics'), findsOneWidget);
     expect(find.textContaining('Unable to save'), findsNothing);
   });
 
@@ -109,7 +106,7 @@ void main() {
     await tester.pump();
 
     expect(saveCalls, hasLength(1));
-    expect(find.textContaining('classes.ics'), findsNothing);
+    expect(find.textContaining('Saved '), findsNothing);
     expect(find.textContaining('Unable to save'), findsNothing);
   });
 
@@ -124,15 +121,34 @@ void main() {
     await tester.pump();
 
     expect(find.textContaining('Unable to save'), findsOneWidget);
-    expect(find.textContaining('classes.ics'), findsNothing);
+    expect(find.textContaining('Saved '), findsNothing);
   });
 
-  testWidgets('share hands the .ics file to the OS and a success result never claims an import', (
-    tester,
-  ) async {
+  testWidgets('share hands the .ics file to the OS, anchors the sheet, and never claims an import', (tester) async {
+    Directory? shareTempDir;
+    stubChannel(_pathProviderChannel, (call) async {
+      if (call.method == 'getTemporaryDirectory') return shareTempDir!.path;
+      return null;
+    });
+    await tester.runAsync(() async {
+      shareTempDir = await Directory.systemTemp.createTemp('classes_ics_share');
+    });
+    addTearDown(
+      () => tester.runAsync(() async {
+        if (shareTempDir != null && await shareTempDir!.exists()) {
+          await shareTempDir!.delete(recursive: true);
+        }
+      }),
+    );
     await pumpActions(tester, _populatedCalendar());
 
-    await tester.tap(find.text('Share .ics'));
+    await tester.runAsync(() async {
+      await tester.tap(find.text('Share .ics'));
+      final deadline = DateTime.now().add(const Duration(seconds: 5));
+      while (shareCalls.isEmpty && DateTime.now().isBefore(deadline)) {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
+    });
     await tester.pump();
 
     expect(shareCalls, hasLength(1));
@@ -140,6 +156,10 @@ void main() {
     final args = shareCalls.single.arguments! as Map<Object?, Object?>;
     expect((args['paths']! as List).first, endsWith('.ics'));
     expect((args['mimeTypes']! as List).first, 'text/calendar');
+    expect(args['originWidth'], isA<num>());
+    expect((args['originWidth']! as num) > 0, isTrue);
+    expect(args['originHeight'], isA<num>());
+    expect((args['originHeight']! as num) > 0, isTrue);
 
     expect(find.textContaining('Imported'), findsNothing);
     expect(find.textContaining('imported'), findsNothing);
@@ -162,22 +182,26 @@ void main() {
 
     pending.complete('/storage/emulated/0/Download/classes.ics');
     await tester.pump();
-    expect(find.textContaining('classes.ics'), findsWidgets);
+    expect(find.textContaining('Saved classes-fall-2026.ics'), findsOneWidget);
   });
 
   testWidgets('warns about partially omitted meetings and names them', (tester) async {
-    await pumpActions(
-      tester,
-      _populatedCalendar(omissions: ['CSE 100 lecture (no reliable date)']),
-    );
+    await pumpActions(tester, _populatedCalendar(omissions: ['CSE 100 lecture (no reliable date)']));
 
     expect(find.textContaining('could not be exported'), findsOneWidget);
     expect(find.textContaining('CSE 100 lecture'), findsOneWidget);
   });
 
-  testWidgets('import instructions cover Google web, Apple Mac, Outlook web, and the snapshot warning', (
-    tester,
-  ) async {
+  testWidgets('lists undated meetings in the warning while dated meetings stay exportable', (tester) async {
+    await pumpActions(tester, _populatedCalendar(undated: [_undatedMeeting()]));
+
+    expect(find.textContaining('could not be exported'), findsOneWidget);
+    expect(find.textContaining('CSE 100 LE'), findsOneWidget);
+    expect(find.text('Save .ics'), findsOneWidget);
+    expect(tester.widget<OutlinedButton>(find.widgetWithText(OutlinedButton, 'Save .ics')).onPressed, isNotNull);
+  });
+
+  testWidgets('import instructions cover Google web, Apple Mac, Outlook web, and the snapshot warning', (tester) async {
     await pumpActions(tester, _populatedCalendar());
 
     await tester.tap(find.text('Import instructions'));
@@ -194,7 +218,7 @@ void main() {
   });
 }
 
-ClassCalendarData _populatedCalendar({List<String> omissions = const []}) {
+ClassCalendarData _populatedCalendar({List<String> omissions = const [], List<ScheduledClass> undated = const []}) {
   final course = ClassData(
     termCode: 'FA26',
     subjectCode: 'CSE',
@@ -230,7 +254,12 @@ ClassCalendarData _populatedCalendar({List<String> omissions = const []}) {
         uid: 'CSE-100-A00-2026-09-29@campus-mobile',
       ),
     ],
-    undated: const [],
+    undated: undated,
     omissions: omissions,
   );
 }
+
+ScheduledClass _undatedMeeting() => ScheduledClass(
+  course: ClassData(termCode: 'FA26', subjectCode: 'CSE', courseCode: '100', courseTitle: 'Advanced Data Structures'),
+  section: SectionData(section: 'B00', sectionCode: '90001', meetingType: 'LE', days: 'TH'),
+);
