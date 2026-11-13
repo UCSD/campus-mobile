@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:arcgis_maps/arcgis_maps.dart';
+import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_study_exceptions.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +38,7 @@ class EsriMapSearchService {
   /// Performs an HTTP GET request to the specified [path] with optional query [params].
   static Future<Map<String, dynamic>> apiGet(String path, [Map<String, String>? params]) async {
     final uri = Uri.parse('$BASE_URL/$path').replace(queryParameters: params);
-    final response = await http.get(uri);
+    final response = await http.get(uri).timeout(const Duration(seconds: 10));
     final isResNotOk = response.statusCode != 200;
     if (isResNotOk) throw Exception('API error ${response.statusCode}: ${response.body}');
     return jsonDecode(response.body) as Map<String, dynamic>;
@@ -88,15 +89,16 @@ class EsriMapSearchService {
     }
   }
 
-  /// Queries POIs matching the search string [query].
-  static Future<List<MapSearchResult>> queryPOIs(String query) async {
-    final data = await apiGet('poi', {'q': query});
+  /// Queries POIs matching the search string [query], up to [limit] results.
+  static Future<List<MapSearchResult>> queryPOIs(String query, {int limit = 500}) async {
+    final data = await apiGet('poi', {'q': query, 'limit': '$limit'});
     return parsePOIResults(data);
   }
 
-  /// Queries POIs belonging to a specific [classValue] (e.g. "Dining", "Parking").
-  static Future<List<MapSearchResult>> queryPOIsByClass(String classValue) async {
-    final data = await apiGet('poi', {'class': classValue, 'limit': '100'});
+  /// Queries POIs belonging to a specific [classValue] (e.g. "Dining", "Parking"),
+  /// up to [limit] results.
+  static Future<List<MapSearchResult>> queryPOIsByClass(String classValue, {int limit = 500}) async {
+    final data = await apiGet('poi', {'class': classValue, 'limit': '$limit'});
     return parsePOIResults(data);
   }
 
@@ -116,6 +118,45 @@ class EsriMapSearchService {
         })
         .where((r) => r.latitude != 0.0 && r.longitude != 0.0)
         .toList();
+  }
+
+  /// Merges the Study aggregation legs into a single deduplicated result list.
+  ///
+  /// The Student Services and Computer Lab legs fetch broader datasets, so only
+  /// results filed under the study subcategories are kept; library POIs and
+  /// library buildings are already scoped to study locations. The [exceptions]
+  /// list is appended as-is and bypasses the subtitle filters by design.
+  static List<MapSearchResult> mergeStudyResults({
+    required List<MapSearchResult> libraryBuildings,
+    required List<MapSearchResult> studentServices,
+    required List<MapSearchResult> computerLabs,
+    List<MapSearchResult> exceptions = const [],
+  }) {
+    final lounges = studentServices.where((r) => r.subtitle.toLowerCase().contains('lounges'));
+    final labs = computerLabs.where((r) => r.subtitle.toLowerCase().contains('computer labs'));
+
+    final uniqueNames = <String>{};
+    return [...libraryBuildings, ...lounges, ...labs, ...exceptions].where((r) => uniqueNames.add(r.name)).toList();
+  }
+
+  /// Fetches the hand-audited Study exception entries in parallel, keeping
+  /// only results whose names match an entry exactly. Each entry is guarded
+  /// so one failed request does not drop the others.
+  static Future<List<MapSearchResult>> fetchStudyExceptions() async {
+    final lists = await Future.wait(
+      StudyExceptions.entries.map((entry) async {
+        try {
+          final results = entry.source == StudyExceptionSource.poi
+              ? await queryPOIs(entry.queryTerm)
+              : await queryBuildings(entry.queryTerm);
+          return results.where((r) => entry.matches(r.name)).toList();
+        } catch (e) {
+          debugPrint('Study exception query failed (${entry.queryTerm}): $e');
+          return const <MapSearchResult>[];
+        }
+      }),
+    );
+    return lists.expand((results) => results).toList();
   }
 
   /// Loads cached building footprints from SharedPreferences.

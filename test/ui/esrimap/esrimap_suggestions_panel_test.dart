@@ -14,7 +14,7 @@ void main() {
     const category = EsriSearchCategory(label: 'Dining', icon: Icons.restaurant, poiClassValue: 'Dining and Beverage');
     const categories = [
       category,
-      EsriSearchCategory(label: 'Library', icon: Icons.menu_book, poiClassValue: 'Library'),
+      EsriSearchCategory(label: 'Study', icon: Icons.menu_book, poiClassValue: 'Library'),
       EsriSearchCategory(label: 'Parking', icon: Icons.local_parking, poiClassValue: 'Parking'),
       EsriSearchCategory(label: 'Recreation', icon: Icons.fitness_center, poiClassValue: 'Recreation Facilities'),
     ];
