@@ -144,10 +144,13 @@ class DiningDataProvider extends ChangeNotifier {
 
   /// RETURNS A List<diningModels> filtered by the selected filter types
   List<DiningModel> get filteredDiningModels {
-    // If all or no filters are selected, then return diningModels (the source of truth)
+    // If all or no filters are selected, show no restaurnats
     final bool noFiltersSelected = !_diningFilterTypeStates.values.contains(true);
+    if (noFiltersSelected) return [];
+
+    //If all filters are selected, show every restaurants (the source of truth)
     final bool allFiltersSelected = _diningFilterTypeStates.values.every((f) => f);
-    if (noFiltersSelected || allFiltersSelected) return diningModels;
+    if (allFiltersSelected) return diningModels;
     // Else, return the updated filtered list
     return _filteredDiningModels.values.toList();
   }
