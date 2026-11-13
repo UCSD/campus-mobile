@@ -1,9 +1,9 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_name.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_photo.dart';
 import 'package:campus_mobile_experimental/core/models/student_id_profile.dart';
+import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -17,10 +17,17 @@ class StudentIdService {
     await NetworkHelper.authorizedFetch('${dotenv.get('MY_STUDENT_CONTACT_API_ENDPOINT')}/photo', headers),
   );
 
-  Future<StudentIdProfileModel> fetchStudentIdProfile(Map<String, String> headers) async =>
-      studentIdProfileModelFromJson(
-        await NetworkHelper.authorizedFetch('${dotenv.get('MY_STUDENT_PROFILE_API_ENDPOINT')}/profile', headers),
-      );
+  // TODO(prisha): temporary debug logging to inspect raw profile JSON; remove before committing.
+  Future<StudentIdProfileModel> fetchStudentIdProfile(Map<String, String> headers) async {
+    final rawResponse = await NetworkHelper.authorizedFetch(
+      '${dotenv.get('MY_STUDENT_PROFILE_API_ENDPOINT')}/profile',
+      headers,
+    );
+    if (kDebugMode) {
+      debugPrint('STUDENT PROFILE RAW: $rawResponse');
+    }
+    return studentIdProfileModelFromJson(rawResponse);
+  }
 
   /// Load even while CardContainer hides its body. Fresh GETs bypass image caches
   /// so retrying an unchanged URL starts a new download and decoding attempt.

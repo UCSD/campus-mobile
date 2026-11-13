@@ -45,6 +45,7 @@ dependencies:
   url_launcher: ^6.3.1
   visibility_detector: ^0.4.0+2
   webview_flutter: ^4.4.2
+  flip_card: ^0.6.0
   wifi_connection:
     git:
       url: https://github.com/UCSD/wifi_connection.git

@@ -9,14 +9,21 @@ import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flip_card/flip_card.dart';
 
 class StudentIdCard extends StatefulWidget {
   @override
   _StudentIdCardState createState() => _StudentIdCardState();
 }
+class _ImportantNumbers {
+  final String agencyName;
+  final String number;
+  const _ImportantNumbers(this.agencyName, this.number);
+}
 
 class _StudentIdCardState extends State<StudentIdCard> {
   static const CARD_ID = "student_id";
+bool showBack = false;
 
   /// Pop up barcode
   createAlertDialog(BuildContext context) {
@@ -184,7 +191,40 @@ class _StudentIdCardState extends State<StudentIdCard> {
       );
     }
   }
+  Widget _buildBackContent(BuildContext context){
+     const importantNums = [_ImportantNumbers('Emergency', '911'),
+     _ImportantNumbers('UC San Diego Police', '858-534-4357'),
+      _ImportantNumbers('Campus Emergency Status', '888-308-8273'),
+      _ImportantNumbers('Community Svc. Off. Escort', '858-534-9255'),
+      _ImportantNumbers('Counseling and Psychological Svcs', '858-249-0030'),
+      _ImportantNumbers('Sexual Assault Resource Center', '858-534-5793'),
+      _ImportantNumbers('Trevor Project LGBTQ+ Crisis Lifeline', 'Call: 1-866-488-7386, Text: START to 678-678')
+    ];
+    return Column(
+      children:[
+        for (final entry in importantNums)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text.rich(
+              TextSpan(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.3),
+                children: [
+                  TextSpan(
+                    text: entry.agencyName,
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  const TextSpan(text: '\n'),
+                  TextSpan(text: entry.number),
+                ],
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+      ]
 
+    );
+  }
   Widget _sectionLoading(String label) => Semantics(
     label: label,
     child: Align(
