@@ -1,3 +1,5 @@
+import 'dart:ui' show Tristate;
+
 import 'package:campus_mobile_experimental/core/models/classes.dart';
 import 'package:campus_mobile_experimental/core/models/scheduled_class.dart';
 import 'package:campus_mobile_experimental/core/services/classes_calendar.dart';
@@ -126,8 +128,11 @@ void main() {
     expect(find.text('Saturday, November 14, 2026'), findsOneWidget);
     expect(find.bySemanticsLabel(RegExp('Saturday, November 14, 2026')), findsWidgets);
     expect(
-      find.bySemanticsLabel(RegExp('selected.*november 14, 2026|november 14, 2026.*selected', caseSensitive: false)),
-      findsWidgets,
+      tester
+          .getSemantics(find.byWidget(_cellSemantics(tester, 'Saturday, November 14, 2026')))
+          .flagsCollection
+          .isSelected,
+      Tristate.isTrue,
     );
     expect(
       find.bySemanticsLabel(RegExp('today.*november 14, 2026|november 14, 2026.*today', caseSensitive: false)),
@@ -294,8 +299,14 @@ void main() {
   testWidgets('exposes selected, button, and enabled flags on date cells', (tester) async {
     await _pumpCalendar(tester, model: _baseSchedule());
 
-    final selectedCell = _cellSemantics(tester, 'Saturday, November 14, 2026, Selected').properties;
-    expect(selectedCell.selected, isTrue);
+    final selectedCell = _cellSemantics(tester, 'Saturday, November 14, 2026').properties;
+    expect(
+      tester
+          .getSemantics(find.byWidget(_cellSemantics(tester, 'Saturday, November 14, 2026')))
+          .flagsCollection
+          .isSelected,
+      Tristate.isTrue,
+    );
     expect(selectedCell.enabled, isTrue);
 
     final selectableCell = _cellSemantics(tester, 'Friday, November 13, 2026').properties;
@@ -304,7 +315,8 @@ void main() {
     expect(find.bySemanticsLabel(RegExp('Friday, November 13, 2026')), findsOneWidget);
     await tester.tap(find.bySemanticsLabel(RegExp('Friday, November 13, 2026')));
     await tester.pumpAndSettle();
-    expect(find.bySemanticsLabel(RegExp('Friday, November 13, 2026, Selected')), findsOneWidget);
+    final activatedCell = tester.getSemantics(find.byWidget(_cellSemantics(tester, 'Friday, November 13, 2026')));
+    expect(activatedCell.flagsCollection.isSelected, Tristate.isTrue);
 
     final neighborCell = _cellSemantics(tester, 'Tuesday, December 8, 2026').properties;
     expect(neighborCell.selected, isFalse);

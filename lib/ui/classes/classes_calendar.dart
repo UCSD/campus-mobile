@@ -239,12 +239,7 @@ class _ClassesCalendarState extends State<ClassesCalendar> {
     final countLabel = meetings.isEmpty
         ? 'no meetings'
         : '${meetings.length} meeting${meetings.length == 1 ? '' : 's'}';
-    final labelParts = <String>[
-      _fullDateFormat.format(date),
-      if (isSelected) 'Selected',
-      if (isToday) 'Today',
-      countLabel,
-    ];
+    final labelParts = <String>[_fullDateFormat.format(date), if (isToday) 'Today', countLabel];
     final theme = Theme.of(context);
 
     return Semantics(
