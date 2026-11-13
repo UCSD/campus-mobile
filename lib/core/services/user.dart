@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:campus_mobile_experimental/app_networking.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserProfileService {
@@ -18,11 +19,19 @@ class UserProfileService {
     _error = null;
     _isLoading = true;
     try {
+      // TODO(prisha): temporary debug logging to inspect raw user profile JSON; remove before committing.
+      final rawResponse = await NetworkHelper.authorizedFetch(_endpoint + '/profile', headers);
+      if (kDebugMode) {
+        debugPrint('USER PROFILE RAW: $rawResponse');
+      }
       _userProfileModel = userProfileModelFromJson(
-        await NetworkHelper.authorizedFetch(_endpoint + '/profile', headers),
+        rawResponse,
       );
       return true;
     } catch (e) {
+      if (kDebugMode) {
+        debugPrint('USER PROFILE FETCH FAILED: $e');
+      }
       _error = e.toString();
       return false;
     } finally {
