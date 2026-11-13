@@ -1,4 +1,6 @@
 #!/bin/sh
+# Keep secret values out of shell trace output.
+set +x
 set -e
 echo "Start: post-clone.sh"
 
@@ -58,6 +60,37 @@ else
     echo "Error: BUILD_PLATFORM not found, exiting."
     exit 1
 fi
+
+write_maps_config() {
+    if [ -z "$2" ]; then
+        echo "Error: $1 not found for BUILD_PLATFORM=$BUILD_PLATFORM, exiting."
+        exit 1
+    fi
+
+    echo "Writing Maps configuration to $3 ..."
+    (
+        umask 077
+        printf 'GOOGLE_MAPS_API_KEY=%s\n' "$2" > "$3"
+    )
+}
+
+# Native Maps configuration is separate from the Flutter .env asset.
+case "$BUILD_PLATFORM" in
+    ANDROID)
+        write_maps_config GOOGLE_MAPS_ANDROID_API_KEY "$GOOGLE_MAPS_ANDROID_API_KEY" ./android/secrets.properties
+        ;;
+    IOS)
+        write_maps_config GOOGLE_MAPS_IOS_API_KEY "$GOOGLE_MAPS_IOS_API_KEY" ./ios/Flutter/Secrets.xcconfig
+        ;;
+    BOTH)
+        write_maps_config GOOGLE_MAPS_ANDROID_API_KEY "$GOOGLE_MAPS_ANDROID_API_KEY" ./android/secrets.properties
+        write_maps_config GOOGLE_MAPS_IOS_API_KEY "$GOOGLE_MAPS_IOS_API_KEY" ./ios/Flutter/Secrets.xcconfig
+        ;;
+    *)
+        echo "Error: BUILD_PLATFORM must be ANDROID, IOS, or BOTH, exiting."
+        exit 1
+        ;;
+esac
 
 echo "Installing Node.js ..."
 curl "https://nodejs.org/dist/v18.16.0/node-v18.16.0.pkg" > "$HOME/Downloads/node-stable.pkg" && sudo installer -store -pkg "$HOME/Downloads/node-stable.pkg" -target "/"
