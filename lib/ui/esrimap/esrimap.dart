@@ -1567,8 +1567,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   void _closePoiSheet() {
     _dismissCallout();
-    final canReopenSearchList =
-        _allCategoryResults.isNotEmpty && !_showRouteFields && !_hasRoute && !_routeFailed;
+    final canReopenSearchList = _allCategoryResults.isNotEmpty && !_showRouteFields && !_hasRoute && !_routeFailed;
     setState(() {
       _showPoiSheet = false;
       _showCategoryList = canReopenSearchList;
@@ -2266,11 +2265,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     for (int i = 0; i < results.length; i++) {
       final result = results[i];
-      var mapPoint = ArcGISPoint(
-        x: result.longitude,
-        y: result.latitude,
-        spatialReference: SpatialReference.wgs84,
-      );
+      var mapPoint = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
       final hasValidSpatialReference = mapSr != null && mapPoint.spatialReference != null;
       if (hasValidSpatialReference) {
         try {
@@ -2837,10 +2832,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                     controller: _poiSheetController,
                     activeCategory: _pointsOfInterestCategory,
                     allCategoryResults: _poiResults,
-                    viewportResults: EsriMapSearchService.filterToViewport(
-                      _poiResults,
-                      _getViewportEnvelopeWGS84(),
-                    ),
+                    viewportResults: EsriMapSearchService.filterToViewport(_poiResults, _getViewportEnvelopeWGS84()),
                     userLocation: _getUserLatLng(),
                     onClearSearch: _closePoiSheet,
                     onSeeAllResults: () => _zoomToResults(_poiResults),
