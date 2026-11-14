@@ -83,6 +83,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   // Search State
   static const _MINIMUM_SEARCH_LOADING_DURATION = Duration(milliseconds: 400);
+  static const String _pointsOfInterestLayerKey = 'pointsOfInterest';
+  static const EsriSearchCategory _pointsOfInterestCategory = EsriSearchCategory(
+    label: 'Points of Interest',
+    icon: Icons.place,
+    poiClassValue: 'pointsOfInterest',
+  );
   List<MapSearchResult> _searchResults = [];
   List<String> _allPoiClasses = [];
   List<String> _matchingPoiClasses = [];
@@ -509,6 +515,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isEntryNull = entry == null;
     if (isEntryNull) return;
 
+    final isPointsOfInterest = entry.source == 'poiList';
+    if (isPointsOfInterest) {
+      await _togglePointsOfInterest(key);
+      return;
+    }
+
     final isAlreadyVisible = _layerVisible[key] == true;
     if (isAlreadyVisible) {
       _layerTimers[key]?.cancel();
@@ -557,6 +569,37 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _layerVisible[key] = true;
       _layerLoading[key] = false;
     });
+  }
+
+  Future<void> _togglePointsOfInterest(String key) async {
+    if (_layerLoading[key] == true) return;
+    if (_layerVisible[key] == true) {
+      _clearSearch();
+      return;
+    }
+
+    if (_allCategoryResults.isNotEmpty || _selectedResult != null) _clearSearch();
+    setState(() => _layerLoading[key] = true);
+
+    try {
+      final results = await EsriMapSearchService.loadPointsOfInterest();
+      if (!mounted) return;
+
+      _plotResultsOnMap(results);
+      _zoomToResults(results);
+      setState(() {
+        _allCategoryResults = results;
+        _showCategoryList = results.isNotEmpty;
+        _activeCategory = results.isEmpty ? null : _pointsOfInterestCategory;
+        _selectedResult = null;
+        _layerVisible[key] = results.isNotEmpty;
+        _layerLoading[key] = false;
+      });
+    } catch (e) {
+      debugPrint('Failed to load points of interest: $e');
+      if (!mounted) return;
+      setState(() => _layerLoading[key] = false);
+    }
   }
 
   void _toggleTransitRoute(String routeName, bool isVisible) {
@@ -1167,6 +1210,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
 
   void _plotResultsOnMap(List<MapSearchResult> results) {
+    _layerVisible[_pointsOfInterestLayerKey] = false;
+    _layerLoading[_pointsOfInterestLayerKey] = false;
     _dismissCallout();
     _graphicsOverlay.graphics.clear();
     _mappedResults = results;
@@ -1695,6 +1740,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _activeRouteField = null;
       _fromLatLng = null;
       _routeDestination = null;
+      _layerVisible[_pointsOfInterestLayerKey] = false;
+      _layerLoading[_pointsOfInterestLayerKey] = false;
     });
   }
 

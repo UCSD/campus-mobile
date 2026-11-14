@@ -56,6 +56,7 @@ class FeatureFlags {
   static const bool TRANSIT_OPERATIONAL_LAYER_ENABLED = true;
   static const bool DISTRICTS_OPERATIONAL_LAYER_ENABLED = true;
   static const bool CONSTRUCTION_OPERATIONAL_LAYER_ENABLED = true;
+  static const bool POINTS_OF_INTEREST_OPERATIONAL_LAYER_ENABLED = true;
 
   // ---------------------------------------------------------------------------
   // SCENES Feature (inside the Map Display)

@@ -10,6 +10,7 @@ import 'dart:math' as math;
 import 'package:arcgis_maps/arcgis_maps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/map_search_result.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,8 +25,12 @@ class EsriMapSearchService {
   /// SharedPreferences key used to persist cached building footprints.
   static const String _CACHED_BUILDINGS_KEY = 'esrimap_cached_buildings';
 
+  /// Asset path for the app-managed Points of Interest layer.
+  static const String POINTS_OF_INTEREST_ASSET_PATH = 'assets/esri_map_assets/pointsOfInterest.json';
+
   static List<MapSearchResult> _searches = [];
   static List<MapSearchResult> _cachedBuildings = [];
+  static List<MapSearchResult>? _pointsOfInterestCache;
 
   /// Maximum number of recent searches retained.
   static const int MAX_RECENT_SEARCHES = 5;
@@ -75,6 +80,32 @@ class EsriMapSearchService {
         })
         .where((r) => r.latitude != 0.0 && r.longitude != 0.0)
         .toList();
+  }
+
+  /// Loads and caches the app-managed Points of Interest locations.
+  static Future<List<MapSearchResult>> loadPointsOfInterest() async {
+    final cached = _pointsOfInterestCache;
+    if (cached != null) return cached;
+
+    final raw = await rootBundle.loadString(POINTS_OF_INTEREST_ASSET_PATH);
+    final data = jsonDecode(raw) as Map<String, dynamic>;
+    final results = (data['results'] as List<dynamic>? ?? [])
+        .map<MapSearchResult>((entry) {
+          final json = entry as Map<String, dynamic>;
+          return MapSearchResult(
+            name: json['name'] as String? ?? '',
+            subtitle: json['subtitle'] as String? ?? '',
+            address: json['address'] as String? ?? '',
+            latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
+            longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
+            source: json['source'] == 'poi' ? MapSearchSource.poi : MapSearchSource.building,
+          );
+        })
+        .where((result) => result.latitude != 0.0 && result.longitude != 0.0)
+        .toList(growable: false);
+
+    _pointsOfInterestCache = results;
+    return results;
   }
 
   /// Fetches all available POI class strings from the backend.

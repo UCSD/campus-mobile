@@ -42,6 +42,9 @@ class EsriMapLayersPanel extends StatelessWidget {
   /// Whether to hide the 3D scene switcher section.
   final bool hideSceneSwitcher;
 
+  /// Whether the Points of Interest tile is enabled for this panel instance.
+  final bool pointsOfInterestEnabled;
+
   /// Constructs an [EsriMapLayersPanel] instance.
   const EsriMapLayersPanel({
     Key? key,
@@ -55,6 +58,7 @@ class EsriMapLayersPanel extends StatelessWidget {
     required this.onToggleLayer,
     required this.onClose,
     this.hideSceneSwitcher = false,
+    this.pointsOfInterestEnabled = FeatureFlags.POINTS_OF_INTEREST_OPERATIONAL_LAYER_ENABLED,
   }) : super(key: key);
 
   @override
@@ -280,6 +284,8 @@ class EsriMapLayersPanel extends StatelessWidget {
                                     if (isDist) return FeatureFlags.DISTRICTS_OPERATIONAL_LAYER_ENABLED;
                                     var isConst = key == 'construction';
                                     if (isConst) return FeatureFlags.CONSTRUCTION_OPERATIONAL_LAYER_ENABLED;
+                                    var isPointsOfInterest = key == 'pointsOfInterest';
+                                    if (isPointsOfInterest) return pointsOfInterestEnabled;
                                     return true;
                                   })) ...[
                                     imageTile(

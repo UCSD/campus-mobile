@@ -114,6 +114,13 @@
       ],
       "refreshInterval": 0,
       "popup":           false
+    },
+    "pointsOfInterest": {
+      "label":           "Points of Interest",
+      "thumbnailAsset":  "https://dvsbke0idzv4u.cloudfront.net/thumbnails/default-thumbnail.png",
+      "source":          "poiList",
+      "refreshInterval": 0,
+      "popup":           false
     }
   },
 
