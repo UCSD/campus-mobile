@@ -63,6 +63,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   late final ArcGISMap _map;
   final _graphicsOverlay = GraphicsOverlay();
   final _routeGraphicsOverlay = GraphicsOverlay();
+  final _poiGraphicsOverlay = GraphicsOverlay();
 
   final _searchController = TextEditingController();
   final _fromController = TextEditingController();
@@ -73,6 +74,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   final _toFocusNode = FocusNode();
 
   final _categorySheetController = DraggableScrollableController();
+  // A sheet swap mounts the new sheet before the old one is disposed.
+  final _poiSheetController = DraggableScrollableController();
   final _detailSheetMinimized = ValueNotifier<bool>(false);
 
   // ---------------------------------------------------------------------------
@@ -83,7 +86,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   // Search State
   static const _MINIMUM_SEARCH_LOADING_DURATION = Duration(milliseconds: 400);
-  static const String _pointsOfInterestLayerKey = 'pointsOfInterest';
   static const EsriSearchCategory _pointsOfInterestCategory = EsriSearchCategory(
     label: 'Points of Interest',
     icon: Icons.place,
@@ -112,6 +114,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   List<MapSearchResult> _allCategoryResults = [];
   bool _showCategoryList = false;
   EsriSearchCategory? _activeCategory;
+
+  // Points of Interest layer state
+  List<MapSearchResult> _poiResults = [];
+  bool _showPoiSheet = false;
 
   // FAB & Viewpoint State
   // FAB & Viewpoint State
@@ -251,6 +257,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (isGraphicsOverlayMissing) _mapViewController.graphicsOverlays.add(_graphicsOverlay);
     final isRouteOverlayMissing = !_mapViewController.graphicsOverlays.contains(_routeGraphicsOverlay);
     if (isRouteOverlayMissing) _mapViewController.graphicsOverlays.add(_routeGraphicsOverlay);
+    final isPoiOverlayMissing = !_mapViewController.graphicsOverlays.contains(_poiGraphicsOverlay);
+    if (isPoiOverlayMissing) _mapViewController.graphicsOverlays.add(_poiGraphicsOverlay);
 
     // Configure location display settings
     _mapViewController.locationDisplay.dataSource = _locationDataSource;
@@ -332,6 +340,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void dispose() {
     _searchDebounce?.cancel();
     _categorySheetController.dispose();
+    _poiSheetController.dispose();
     _detailSheetMinimized.dispose();
     _searchController.dispose();
     _fromController.dispose();
@@ -574,32 +583,44 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   Future<void> _togglePointsOfInterest(String key) async {
     if (_layerLoading[key] == true) return;
     if (_layerVisible[key] == true) {
-      _clearSearch();
+      _turnOffPointsOfInterest(key);
       return;
     }
 
-    if (_allCategoryResults.isNotEmpty || _selectedResult != null) _clearSearch();
     setState(() => _layerLoading[key] = true);
 
     try {
       final results = await EsriMapSearchService.loadPointsOfInterest();
       if (!mounted) return;
 
-      _plotResultsOnMap(results);
-      _zoomToResults(results);
       setState(() {
-        _allCategoryResults = results;
-        _showCategoryList = results.isNotEmpty;
-        _activeCategory = results.isEmpty ? null : _pointsOfInterestCategory;
-        _selectedResult = null;
+        _poiResults = results;
+        _showPoiSheet = false;
         _layerVisible[key] = results.isNotEmpty;
         _layerLoading[key] = false;
       });
+      _plotPoiResultsOnMap();
+      _zoomToResults(results);
     } catch (e) {
       debugPrint('Failed to load points of interest: $e');
       if (!mounted) return;
-      setState(() => _layerLoading[key] = false);
+      setState(() {
+        _layerVisible[key] = false;
+        _layerLoading[key] = false;
+      });
     }
+  }
+
+  void _turnOffPointsOfInterest(String key) {
+    _closePoiSheet();
+    final detailShowsPoi = _poiResults.contains(_selectedResult);
+    _poiGraphicsOverlay.graphics.clear();
+    setState(() {
+      _poiResults = [];
+      _layerVisible[key] = false;
+      _layerLoading[key] = false;
+      if (detailShowsPoi) _selectedResult = null;
+    });
   }
 
   void _toggleTransitRoute(String routeName, bool isVisible) {
@@ -970,6 +991,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _showResults = _showRouteFields;
       _showSuggestions = false;
       _selectedResult = null;
+      _showPoiSheet = false;
       _matchingPoiClasses = matched;
     });
 
@@ -1033,6 +1055,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _matchingPoiClasses = [];
       _selectedResult = null;
       _showCategoryList = false;
+      _showPoiSheet = false;
       _activeCategory = category;
       _searchController.text = category.label;
     });
@@ -1210,8 +1233,6 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   // ---------------------------------------------------------------------------
 
   void _plotResultsOnMap(List<MapSearchResult> results) {
-    _layerVisible[_pointsOfInterestLayerKey] = false;
-    _layerLoading[_pointsOfInterestLayerKey] = false;
     _dismissCallout();
     _graphicsOverlay.graphics.clear();
     _mappedResults = results;
@@ -1243,6 +1264,20 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       );
       graphic.attributes['resultIndex'] = i;
       _graphicsOverlay.graphics.add(graphic);
+    }
+  }
+
+  void _plotPoiResultsOnMap() {
+    _poiGraphicsOverlay.graphics.clear();
+    for (int i = 0; i < _poiResults.length; i++) {
+      final result = _poiResults[i];
+      final point = ArcGISPoint(x: result.longitude, y: result.latitude, spatialReference: SpatialReference.wgs84);
+      final graphic = Graphic(
+        geometry: point,
+        symbol: SimpleMarkerSymbol(style: SimpleMarkerSymbolStyle.circle, color: Colors.purple, size: 14),
+      );
+      graphic.attributes['resultIndex'] = i;
+      _poiGraphicsOverlay.graphics.add(graphic);
     }
   }
 
@@ -1281,6 +1316,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _dismissCallout() {
     _mapViewController.callout.dismiss();
     _graphicsOverlay.clearSelection();
+    _poiGraphicsOverlay.clearSelection();
   }
 
   void _seeAllCategoryResults() {
@@ -1408,6 +1444,30 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       debugPrint('Identify error: $e');
     }
 
+    try {
+      final poiIdentifyResult = await _mapViewController.identifyGraphicsOverlay(
+        _poiGraphicsOverlay,
+        screenPoint: screenPoint,
+        tolerance: 12.0,
+        maximumResults: 1,
+      );
+
+      if (poiIdentifyResult.graphics.isNotEmpty) {
+        isRequestFinished = true;
+        if (mounted)
+          setState(() {
+            _loadingLocation = null;
+          });
+        final tappedGraphic = poiIdentifyResult.graphics.first;
+        final index = tappedGraphic.attributes['resultIndex'] as int?;
+        final isValidResultIndex = index != null && index >= 0 && index < _poiResults.length;
+        if (isValidResultIndex) _handlePoiPinTap(_poiResults[index], tappedGraphic);
+        return;
+      }
+    } catch (e) {
+      debugPrint('POI identify error: $e');
+    }
+
     if (mapPoint != null) {
       final wgs84Point =
           GeometryEngine.project(mapPoint, outputSpatialReference: SpatialReference.wgs84) as ArcGISPoint?;
@@ -1453,6 +1513,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final availabilityProvider = Provider.of<AvailabilityDataProvider>(context, listen: false);
 
     _graphicsOverlay.clearSelection();
+    _poiGraphicsOverlay.clearSelection();
     graphic.isSelected = true;
     _mapViewController.callout.showCalloutForGeoElement(
       graphic,
@@ -1488,6 +1549,40 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     _showCalloutForGraphic(result, graphic);
 
     _selectResultFromPin(result, updateSearchText: false);
+  }
+
+  void _handlePoiPinTap(MapSearchResult result, Graphic graphic) {
+    if (_showRouteFields) {
+      _handlePinTap(result, graphic);
+      return;
+    }
+
+    _showCalloutForGraphic(result, graphic);
+    setState(() {
+      _selectedResult = null;
+      _showCategoryList = false;
+      _showPoiSheet = true;
+    });
+  }
+
+  void _closePoiSheet() {
+    _dismissCallout();
+    final canReopenSearchList =
+        _allCategoryResults.isNotEmpty && !_showRouteFields && !_hasRoute && !_routeFailed;
+    setState(() {
+      _showPoiSheet = false;
+      _showCategoryList = canReopenSearchList;
+    });
+  }
+
+  void _selectResultFromPoiList(MapSearchResult result) {
+    final index = _poiResults.indexOf(result);
+    final isOutOfBounds = index < 0 || index >= _poiGraphicsOverlay.graphics.length;
+    if (isOutOfBounds) {
+      _selectResultFromPin(result);
+      return;
+    }
+    _handlePinTap(result, _poiGraphicsOverlay.graphics[index]);
   }
 
   void _selectResultFromList(MapSearchResult result) {
@@ -1549,6 +1644,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _showResults = false;
       _showSuggestions = false;
       _showCategoryList = false;
+      _showPoiSheet = false;
     });
     _focusNode.unfocus();
     _addToRecentSearches(result);
@@ -1556,8 +1652,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
   void _closeDetail() {
     _dismissCallout();
-    final canShowCategoryResults = _allCategoryResults.isNotEmpty && !_showRouteFields && !_hasRoute && !_routeFailed;
-    if (canShowCategoryResults) {
+    final canReopenList = !_showRouteFields && !_hasRoute && !_routeFailed;
+    if (canReopenList && _poiResults.contains(_selectedResult)) {
+      setState(() {
+        _selectedResult = null;
+        _showPoiSheet = true;
+      });
+    } else if (canReopenList && _allCategoryResults.isNotEmpty) {
       setState(() {
         _selectedResult = null;
         _showCategoryList = true;
@@ -1734,14 +1835,13 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _isSearching = false;
       _showSuggestions = false;
       _showCategoryList = false;
+      _showPoiSheet = false;
       _activeCategory = null;
       _selectedResult = null;
       _lastSelectedResult = null;
       _activeRouteField = null;
       _fromLatLng = null;
       _routeDestination = null;
-      _layerVisible[_pointsOfInterestLayerKey] = false;
-      _layerLoading[_pointsOfInterestLayerKey] = false;
     });
   }
 
@@ -1798,6 +1898,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _isRouting = true;
       _routeFailed = false;
       _travelMode = mode;
+      _showPoiSheet = false;
     });
 
     var userLatLng = originLatLng;
@@ -2141,14 +2242,70 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       setState(() => _showLayersPanel = false);
       return;
     }
-    final isCategoryListOpen = _showCategoryList && _selectedResult == null;
-    if (isCategoryListOpen) {
-      final isAttached = _categorySheetController.isAttached;
+    final isSheetOpen = (_showCategoryList || _showPoiSheet) && _selectedResult == null;
+    if (isSheetOpen) {
+      final sheetController = _showPoiSheet ? _poiSheetController : _categorySheetController;
+      final isAttached = sheetController.isAttached;
       if (isAttached)
-        _categorySheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+        sheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
     }
     final isSelectedResultOpen = _selectedResult != null;
     if (isSelectedResultOpen) _detailSheetMinimized.value = true;
+  }
+
+  /// Builds invisible accessibility targets for the given plotted pins.
+  List<Widget> _buildPinSemanticsNodes(
+    List<MapSearchResult> results,
+    GraphicsOverlay overlay,
+    void Function(MapSearchResult result, Graphic graphic) onTap,
+    BoxConstraints constraints,
+  ) {
+    final semanticsNodes = <Widget>[];
+    final vp = _mapViewController.getCurrentViewpoint(ViewpointType.boundingGeometry);
+    final mapSr = vp?.targetGeometry.spatialReference;
+
+    for (int i = 0; i < results.length; i++) {
+      final result = results[i];
+      var mapPoint = ArcGISPoint(
+        x: result.longitude,
+        y: result.latitude,
+        spatialReference: SpatialReference.wgs84,
+      );
+      final hasValidSpatialReference = mapSr != null && mapPoint.spatialReference != null;
+      if (hasValidSpatialReference) {
+        try {
+          final proj = GeometryEngine.project(mapPoint, outputSpatialReference: mapSr);
+          mapPoint = proj as ArcGISPoint;
+        } catch (_) {}
+      }
+
+      final screenPt = _mapViewController.locationToScreen(mapPoint: mapPoint);
+      // Keep within visible bounds roughly
+      final isWithinHorizontalBounds = screenPt.dx >= -50 && screenPt.dx <= constraints.maxWidth + 50;
+      final isWithinVerticalBounds = screenPt.dy >= -50 && screenPt.dy <= constraints.maxHeight + 50;
+      if (isWithinHorizontalBounds && isWithinVerticalBounds) {
+        semanticsNodes.add(
+          Positioned(
+            left: screenPt.dx - 24,
+            top: screenPt.dy - 48,
+            child: Semantics(
+              label: 'Map pin: ${result.name}',
+              hint: 'Double tap to view details.',
+              button: true,
+              onTap: () {
+                if (i < overlay.graphics.length) {
+                  onTap(result, overlay.graphics[i]);
+                } else {
+                  _selectResultFromPin(result);
+                }
+              },
+              child: const SizedBox(width: 48, height: 48),
+            ),
+          ),
+        );
+      }
+    }
+    return semanticsNodes;
   }
 
   // ---------------------------------------------------------------------------
@@ -2250,6 +2407,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final shouldShowCatListPanel = _showCategoryList && _allCategoryResults.isNotEmpty;
+    final shouldShowPoiListPanel =
+        _showPoiSheet &&
+        _poiResults.isNotEmpty &&
+        _selectedResult == null &&
+        !shouldShowCatListPanel &&
+        !_showRouteFields;
 
     final isDefaultScene = _sceneMode == 'default';
     final isBuilding3dScene = _sceneMode == 'building3d';
@@ -2268,7 +2431,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         !_showResults;
     final isLayersPanelVisible = _showLayersPanel && _config != null;
     final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene && !_hasNetworkError;
-    final hasValidResults = _mappedResults.isNotEmpty && !_hasNetworkError;
+    final hasMappableResults = (_mappedResults.isNotEmpty || _poiResults.isNotEmpty) && !_hasNetworkError;
 
     return Scaffold(
       body: LayoutBuilder(
@@ -2327,59 +2490,17 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               ),
 
               // Hidden Semantics nodes for Map Pins / Graphics
-              if (hasValidResults && isDefaultScene)
+              if (hasMappableResults && isDefaultScene)
                 Builder(
-                  builder: (context) {
-                    final List<Widget> semanticsNodes = [];
-                    final vp = _mapViewController.getCurrentViewpoint(ViewpointType.boundingGeometry);
-                    final mapSr = vp?.targetGeometry.spatialReference;
-
-                    for (int i = 0; i < _mappedResults.length; i++) {
-                      final result = _mappedResults[i];
-                      var mapPoint = ArcGISPoint(
-                        x: result.longitude,
-                        y: result.latitude,
-                        spatialReference: SpatialReference.wgs84,
-                      );
-                      final hasValidSpatialReference = mapSr != null && mapPoint.spatialReference != null;
-                      if (hasValidSpatialReference) {
-                        try {
-                          final proj = GeometryEngine.project(mapPoint, outputSpatialReference: mapSr);
-                          mapPoint = proj as ArcGISPoint;
-                        } catch (_) {}
-                      }
-
-                      final screenPt = _mapViewController.locationToScreen(mapPoint: mapPoint);
-                      // Keep within visible bounds roughly
-                      final isWithinHorizontalBounds = screenPt.dx >= -50 && screenPt.dx <= constraints.maxWidth + 50;
-                      final isWithinVerticalBounds = screenPt.dy >= -50 && screenPt.dy <= constraints.maxHeight + 50;
-                      if (isWithinHorizontalBounds && isWithinVerticalBounds) {
-                        semanticsNodes.add(
-                          Positioned(
-                            left: screenPt.dx - 24,
-                            top: screenPt.dy - 48,
-                            child: Semantics(
-                              label: 'Map pin: ${result.name}',
-                              hint: 'Double tap to view details.',
-                              button: true,
-                              onTap: () {
-                                if (i < _graphicsOverlay.graphics.length) {
-                                  _handlePinTap(result, _graphicsOverlay.graphics[i]);
-                                } else {
-                                  _selectResultFromPin(result);
-                                }
-                              },
-                              child: const SizedBox(width: 48, height: 48),
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                    return Semantics(
-                      sortKey: const OrdinalSortKey(4.0),
-                      child: Stack(children: semanticsNodes),
-                    );
-                  },
+                  builder: (context) => Semantics(
+                    sortKey: const OrdinalSortKey(4.0),
+                    child: Stack(
+                      children: [
+                        ..._buildPinSemanticsNodes(_mappedResults, _graphicsOverlay, _handlePinTap, constraints),
+                        ..._buildPinSemanticsNodes(_poiResults, _poiGraphicsOverlay, _handlePoiPinTap, constraints),
+                      ],
+                    ),
+                  ),
                 ),
 
               // Map controls stay behind search and slide-over panels.
@@ -2707,6 +2828,27 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   ),
                 ),
 
+              // Points of Interest list panel
+              if (shouldShowPoiListPanel)
+                Semantics(
+                  sortKey: const OrdinalSortKey(1.5),
+                  child: EsriMapCategoryListPanel(
+                    key: const Key('poi_list_panel'),
+                    controller: _poiSheetController,
+                    activeCategory: _pointsOfInterestCategory,
+                    allCategoryResults: _poiResults,
+                    viewportResults: EsriMapSearchService.filterToViewport(
+                      _poiResults,
+                      _getViewportEnvelopeWGS84(),
+                    ),
+                    userLocation: _getUserLatLng(),
+                    onClearSearch: _closePoiSheet,
+                    onSeeAllResults: () => _zoomToResults(_poiResults),
+                    onSelectResult: _selectResultFromPoiList,
+                    iconForResult: _iconForResult,
+                  ),
+                ),
+
               // Dynamic Google Maps-style Scale Bar Indicator
               if (shouldShowScaleBar)
                 Positioned(
@@ -2804,7 +2946,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   currentSceneKey: _sceneMode,
                   layerVisible: _layerVisible,
                   layerLoading: _layerLoading,
-                  hideSceneSwitcher: _selectedResult != null || _showCategoryList,
+                  hideSceneSwitcher: _selectedResult != null || _showCategoryList || _showPoiSheet,
                   onSwitchBasemap: _switchBasemap,
                   onSetSceneMode: _setSceneMode,
                   onToggleLayer: _toggleLayer,
