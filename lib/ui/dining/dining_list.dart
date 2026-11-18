@@ -38,37 +38,37 @@ class _DiningListState extends State<DiningList> {
     List<dining_model.DiningModel> data = Provider.of<DiningDataProvider>(context).filteredDiningModels;
     List<dining_model.DiningModel> searchedData = searchDiningModels(data, _searchQuery);
 
-    if (data.isEmpty) {
-      return ContainerView(
-        child: ListView(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 32),
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            Text(
-              'No dining locations match your filters.',
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
-    }
-
-    return buildDiningList(searchedData, context);
+    return buildDiningList(searchedData, context, noFilterMatches: data.isEmpty);
   }
 
-  Widget buildDiningList(List<dining_model.DiningModel> listOfDiners, BuildContext context) {
+  Widget buildDiningList(
+    List<dining_model.DiningModel> listOfDiners,
+    BuildContext context, {
+    bool noFilterMatches = false,
+  }) {
     final List<Widget> diningTiles = [];
 
-    /// check to see if we want to display only a limited number of elements
-    /// if no constraint is given on the size of the list then all elements
-    /// are rendered
-    var size = widget.listSize ?? listOfDiners.length;
+    // Message to show when the list is empty
+    final String emptyMessage = noFilterMatches
+        ? 'No dining locations match your filters.'
+        : 'No dining locations match your search.';
+
+    // Show at most listSize items, but never more than we actually have
+    int size = listOfDiners.length;
+    if (widget.listSize != null && widget.listSize < size) size = widget.listSize;
+
     for (var i = 0; i < size; i++) {
       final dining_model.DiningModel item = listOfDiners[i];
       final tile = buildDiningTile(item, context);
       diningTiles.add(tile);
+    }
+
+    // Home card: show a small message instead of an empty list
+    if (widget.listSize != null && listOfDiners.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(emptyMessage, style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
+      );
     }
 
     return widget.listSize != null
@@ -95,7 +95,7 @@ class _DiningListState extends State<DiningList> {
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: Text(
-                          'No dining locations match your search.',
+                          emptyMessage,
                           style: Theme.of(context).textTheme.bodyLarge,
                           textAlign: TextAlign.center,
                         ),
