@@ -9,7 +9,6 @@ import 'package:campus_mobile_experimental/ui/common/card_container.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flip_card/flip_card.dart';
 
 class StudentIdCard extends StatefulWidget {
   @override
@@ -127,8 +126,16 @@ bool showBack = false;
       final hasCollege = profileModel.collegeCurrent.isNotEmpty;
       return Padding(
         padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-        child: LayoutBuilder(
-          builder: (context, constraints) => Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (studentId.hasUsableContent) _buildToggle(context),
+            const SizedBox(height: 4),
+            if (showBack)
+              _buildBackContent(context, profileModel)
+            else
+              LayoutBuilder(
+                builder: (context, constraints) => Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildPhoto(studentId, constraints.maxWidth),
@@ -167,6 +174,8 @@ bool showBack = false;
               ),
             ],
           ),
+              ),
+          ],
         ),
       );
     } catch (e) {
@@ -191,7 +200,20 @@ bool showBack = false;
       );
     }
   }
-  Widget _buildBackContent(BuildContext context){
+  Widget _buildToggle(BuildContext context) => TextButton(
+    style: TextButton.styleFrom(padding: EdgeInsets.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+    onPressed: () => setState(() => showBack = !showBack),
+    child: Text(
+      showBack ? 'tap here to see the front' : 'tap here to see the back',
+      textAlign: TextAlign.center,
+      style: (Theme.of(context).brightness == Brightness.dark ? linkTextDark : linkTextLight).copyWith(
+        fontSize: 14,
+        height: 1.3,
+      ),
+    ),
+  );
+
+  Widget _buildBackContent(BuildContext context, StudentIdProfileModel profileModel){
      const importantNums = [_ImportantNumbers('Emergency', '911'),
      _ImportantNumbers('UC San Diego Police', '858-534-4357'),
       _ImportantNumbers('Campus Emergency Status', '888-308-8273'),
@@ -202,6 +224,19 @@ bool showBack = false;
     ];
     return Column(
       children:[
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text.rich(
+            TextSpan(
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.3),
+              children: [
+                TextSpan(text: 'TSN', style: const TextStyle(fontWeight: FontWeight.w700)),
+                const TextSpan(text: '\n'),
+                TextSpan(text: profileModel.tsn.isNotEmpty ? profileModel.tsn : 'unavailable'),
+              ],
+            ),
+          ),
+        ),
         for (final entry in importantNums)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),

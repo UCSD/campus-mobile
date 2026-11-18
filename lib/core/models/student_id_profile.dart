@@ -19,6 +19,7 @@ class StudentIdProfileModel {
   String graduatePrimaryMajorCurrent;
   int athleteCurrentCount;
   String cardNumber;
+  String tsn;
   String barcode;
   String classificationType;
   int issueNumber;
@@ -32,6 +33,7 @@ class StudentIdProfileModel {
     this.graduatePrimaryMajorCurrent = '',
     this.athleteCurrentCount = 0,
     this.cardNumber = '',
+    this.tsn = '',
     this.barcode = '',
     this.classificationType = '',
     this.issueNumber = 0,
@@ -46,6 +48,7 @@ class StudentIdProfileModel {
     graduatePrimaryMajorCurrent: studentIdText(json["Graduate_Primary_Major_Current"]),
     athleteCurrentCount: json["Athlete_Current_Count"] is int ? json["Athlete_Current_Count"] : 0,
     cardNumber: studentIdText(json["Card_Number"]),
+    tsn: studentIdText(json["TSN"]),
     barcode: _validatedBarcode(json["Barcode"]),
     classificationType: studentIdText(json["Classification_Type"]),
     issueNumber: json["Issue_Number"] is int ? json["Issue_Number"] : 0,
@@ -65,6 +68,7 @@ class StudentIdProfileModel {
       graduatePrimaryMajorCurrent,
     ),
     barcode: retainStudentIdText(replacement.barcode, barcode),
+    tsn: retainStudentIdText(replacement.tsn, tsn),
   );
 
   Map<String, dynamic> toJson() => {
@@ -76,6 +80,7 @@ class StudentIdProfileModel {
     "Graduate_Primary_Major_Current": graduatePrimaryMajorCurrent,
     "Athlete_Current_Count": athleteCurrentCount,
     "Card_Number": cardNumber,
+    "TSN": tsn,
     "Barcode": barcode,
     "Classification_Type": classificationType,
     "Issue_Number": issueNumber,
