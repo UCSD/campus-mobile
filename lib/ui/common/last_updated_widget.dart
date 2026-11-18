@@ -11,12 +11,12 @@ class LastUpdatedWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        'Last updated: ' + determineText(time),
+        'Last Updated: ' + determineText(time),
         style: TextStyle(
           fontSize: 16.0,
           fontStyle: FontStyle.italic,
           fontWeight: FontWeight.w400,
-          color: descriptiveTextColorLight,
+          color: Theme.of(context).brightness == Brightness.dark ? descriptiveTextColorDark : descriptiveTextColorLight,
         ),
       ),
     );

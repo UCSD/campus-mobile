@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 class AvailabilityDataProvider extends ChangeNotifier {
   /// STATES
   bool _isLoading = false;
+  bool _isFetching = false;
+  bool _refreshFailed = false;
   DateTime? _lastUpdated;
   String? _error;
   Map<String?, bool> _locationViewState = {};
@@ -19,51 +21,62 @@ class AvailabilityDataProvider extends ChangeNotifier {
   /// SERVICES
   var _availabilityService = AvailabilityService();
 
-  void fetchAvailability() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
-    /// creating  new map ensures we remove all unsupported lots
-    Map<String, AvailabilityModel> newMapOfLots = {};
-
-    if (await _availabilityService.fetchData()) {
-      Map<String?, bool> newLocationViewState = {};
-
-      /// setting the LocationViewState based on user data
-      for (AvailabilityModel model in _availabilityService.data) {
-        String curName = model.name;
-        RegExpMatch? match = RegExp(r' \(\d+/\d+\)$').firstMatch(curName);
-        if (match != null) curName = curName.replaceRange(match.start, match.end, '');
-        newMapOfLots[model.name] = model;
-
-        /// if the user is logged out and has not put any preferences,
-        /// show all locations by default
-        final selectedLocations = userDataProvider.userProfileModel.selectedOccuspaceLocations ?? [];
-        final bool hasNoSelectedLocations = selectedLocations.isEmpty;
-
-        if (hasNoSelectedLocations)
-          newLocationViewState[curName] = _locationViewState[curName] ?? true;
-        /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
-        else {
-          newLocationViewState[curName] = _locationViewState[curName] ?? selectedLocations.contains(curName);
-        }
+  Future<void> fetchAvailability({bool silent = false}) async {
+    if (_isFetching) return;
+    _isFetching = true;
+    try {
+      if (!silent) {
+        _isLoading = true;
+        _error = null;
+        notifyListeners();
       }
 
-      // After the loop, assign it:
-      _locationViewState = newLocationViewState;
+      /// creating  new map ensures we remove all unsupported lots
+      Map<String, AvailabilityModel> newMapOfLots = {};
 
-      /// replace old list of lots with new one
-      _availabilityModels = newMapOfLots;
+      if (await _availabilityService.fetchData()) {
+        _refreshFailed = false;
+        _error = null;
+        Map<String?, bool> newLocationViewState = {};
 
-      /// if the user is logged in we want to sync the order of parking lots amongst all devices
-      reorderLocations(userDataProvider.userProfileModel.selectedOccuspaceLocations);
-      _lastUpdated = DateTime.now();
-    } else {
-      _error = _availabilityService.error;
+        /// setting the LocationViewState based on user data
+        for (AvailabilityModel model in _availabilityService.data) {
+          String curName = model.name;
+          RegExpMatch? match = RegExp(r' \(\d+/\d+\)$').firstMatch(curName);
+          if (match != null) curName = curName.replaceRange(match.start, match.end, '');
+          newMapOfLots[model.name] = model;
+
+          /// if the user is logged out and has not put any preferences,
+          /// show all locations by default
+          final selectedLocations = userDataProvider.userProfileModel.selectedOccuspaceLocations ?? [];
+          final bool hasNoSelectedLocations = selectedLocations.isEmpty;
+
+          if (hasNoSelectedLocations)
+            newLocationViewState[curName] = _locationViewState[curName] ?? true;
+          /// otherwise, LocationViewState should be true for all selectedOccuspaceLocations
+          else {
+            newLocationViewState[curName] = _locationViewState[curName] ?? selectedLocations.contains(curName);
+          }
+        }
+
+        // After the loop, assign it:
+        _locationViewState = newLocationViewState;
+
+        /// replace old list of lots with new one
+        _availabilityModels = newMapOfLots;
+
+        /// if the user is logged in we want to sync the order of parking lots amongst all devices
+        reorderLocations(userDataProvider.userProfileModel.selectedOccuspaceLocations);
+        _lastUpdated = DateTime.now();
+      } else {
+        _refreshFailed = true;
+        if (!silent) _error = _availabilityService.error;
+      }
+    } finally {
+      _isFetching = false;
+      _isLoading = false;
+      notifyListeners();
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
   List<AvailabilityModel?> makeOrderedList(List<String?>? order) {
@@ -113,6 +126,7 @@ class AvailabilityDataProvider extends ChangeNotifier {
   /// SIMPLE GETTERS
   bool get isLoading => _isLoading;
   String? get error => _error;
+  bool get refreshFailed => _refreshFailed;
   DateTime? get lastUpdated => _lastUpdated;
   Map<String?, bool> get locationViewState => _locationViewState;
   List<AvailabilityModel?> get availabilityModels =>

@@ -22,16 +22,29 @@ class ScheduledClass {
     return dayCodes.isEmpty ? days : dayCodes.join(', ');
   }
 
-  String get gradeOption {
-    switch (course.gradeOption) {
-      case 'L':
+  String? get gradeOption {
+    final raw = course.gradeOption?.trim();
+    if (raw == null || raw.isEmpty) return null;
+    switch (raw.toLowerCase()) {
+      case 'l':
+      case 'letter grade':
         return 'Letter Grade';
-      case 'P':
+      case 'p':
+      case 'pn':
+      case 'pnp':
+      case 'pass/no pass':
+      case 'pass/not pass':
         return 'Pass/No Pass';
-      case 'S':
+      case 's':
+      case 'su':
+      case 's/u':
+      case 'sat/unsat':
+      case 'satisfactory/unsatisfactory':
         return 'Sat/Unsat';
       default:
-        return 'Other';
+        // Surface the raw value instead of a misleading "Other" when the
+        // TSS API adds new grade-option codes.
+        return raw;
     }
   }
 }
