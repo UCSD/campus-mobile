@@ -1559,7 +1559,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     _showCalloutForGraphic(result, graphic);
     setState(() {
-      _selectedResult = null;
+      _selectedResult = result;
       _showCategoryList = false;
       _showPoiSheet = true;
     });
@@ -1572,6 +1572,12 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
       _showPoiSheet = false;
       _showCategoryList = canReopenSearchList;
     });
+    if (!canReopenSearchList) _collapsePoiSheet();
+  }
+
+  void _collapsePoiSheet() {
+    if (!_poiSheetController.isAttached) return;
+    _poiSheetController.animateTo(0.15, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
   }
 
   void _selectResultFromPoiList(MapSearchResult result) {
@@ -2403,7 +2409,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final shouldShowCatListPanel = _showCategoryList && _allCategoryResults.isNotEmpty;
     final shouldShowPoiListPanel =
-        _showPoiSheet &&
+        (_showPoiSheet || (!_isSearching && !_showSuggestions && _sceneMode == 'default')) &&
         _poiResults.isNotEmpty &&
         _selectedResult == null &&
         !shouldShowCatListPanel &&
@@ -2415,7 +2421,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
     final indexedStackIndex = isBuilding3dScene ? 1 : (isDroneViewScene ? 2 : 0);
 
-    final shouldShowScaleBar = _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel;
+    final shouldShowScaleBar =
+        _sceneMode == 'default' && _selectedResult == null && !shouldShowCatListPanel && !shouldShowPoiListPanel;
     final isFabVisible =
         !_hasNetworkError &&
         !keyboardVisible &&
@@ -2424,6 +2431,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         !shouldShowCatListPanel &&
         !_showSuggestions &&
         !_showResults;
+    final isBottomChromeVisible = isFabVisible && !shouldShowPoiListPanel;
     final isLayersPanelVisible = _showLayersPanel && _config != null;
     final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene && !_hasNetworkError;
     final hasMappableResults = (_mappedResults.isNotEmpty || _poiResults.isNotEmpty) && !_hasNetworkError;
@@ -2522,7 +2530,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 ),
 
               // Bottom-right center-on-me button
-              if (isFabVisible && _sceneMode == 'default')
+              if (isBottomChromeVisible && _sceneMode == 'default')
                 Builder(
                   builder: (context) {
                     double? screenAngle;
@@ -2805,6 +2813,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Category results list panel
               if (shouldShowCatListPanel)
                 Semantics(
+                  key: const Key('category_list_panel_wrapper'),
                   sortKey: const OrdinalSortKey(1.5),
                   child: EsriMapCategoryListPanel(
                     key: const Key('category_list_panel'),
@@ -2826,6 +2835,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Points of Interest list panel
               if (shouldShowPoiListPanel)
                 Semantics(
+                  key: const Key('poi_list_panel_wrapper'),
                   sortKey: const OrdinalSortKey(1.5),
                   child: EsriMapCategoryListPanel(
                     key: const Key('poi_list_panel'),
@@ -2853,7 +2863,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                 ),
 
               // Transit Legend
-              if (_layerVisible['tritonTransit'] == true && isFabVisible)
+              if (_layerVisible['tritonTransit'] == true && isBottomChromeVisible)
                 Positioned(
                   bottom: 16,
                   left: 8,

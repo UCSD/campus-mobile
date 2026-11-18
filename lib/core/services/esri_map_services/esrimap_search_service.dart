@@ -99,6 +99,8 @@ class EsriMapSearchService {
             latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
             longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
             source: json['source'] == 'poi' ? MapSearchSource.poi : MapSearchSource.building,
+            description: json['description'] as String? ?? '',
+            websiteUrl: json['websiteUrl'] as String?,
           );
         })
         .where((result) => result.latitude != 0.0 && result.longitude != 0.0)
