@@ -1,0 +1,391 @@
+{
+  "results": [
+    {
+      "name": "Geisel Library",
+      "subtitle": "Geisel Library | Library - Geisel",
+      "address": "9701 Hopkins Drive, La Jolla, 92093",
+      "latitude": 32.88117324,
+      "longitude": -117.23758039,
+      "source": "building"
+    },
+    {
+      "name": "Triton Alumni and Welcome Center",
+      "subtitle": "Triton Alumni and Welcome Center",
+      "address": "9540 Gilman Drive, La Jolla, 92093",
+      "latitude": 32.87815092,
+      "longitude": -117.23613606,
+      "source": "building"
+    },
+    {
+      "name": "Price Center West",
+      "subtitle": "Price Center West | Price West | University Center - Price Center West",
+      "address": "3135 Matthews Lane, La Jolla, 92093",
+      "latitude": 32.87941051,
+      "longitude": -117.23683532,
+      "source": "building"
+    },
+    {
+      "name": "Price Center East Expansion",
+      "subtitle": "Price Center East Expansion | Price East | East Expansion, Price Center | University Center Expansion and Renovation - Price Center East",
+      "address": "3151 Matthews Lane, La Jolla, 92093",
+      "latitude": 32.87978182,
+      "longitude": -117.23596562,
+      "source": "building"
+    },
+    {
+      "name": "Snake Path, 1992",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Alexis Smith's Snake Path uses pointed allusions to the biblical conflict between innocence and knowledge, and marks an apt symbolic path to the university's main repository of books. Ends at the terrace of Geisel Library URL: http://stuartcollection.ucsd.edu/StuartCollection/AlexisSmith.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/smith-a.html",
+      "latitude": 32.881046,
+      "longitude": -117.236992,
+      "source": "poi"
+    },
+    {
+      "name": "Two Running Violet V Forms, 1983",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Robert Irwin's piece comprises \"fences\" of blue-violet fencing contrasting with the ordered eucalyptus grove surrounding the piece. Eucalyptus groves east of the Mandeville Center and adjacent to the Faculty Club URL: http://stuartcollection.ucsd.edu/StuartCollection/Irwin.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/irwin.html",
+      "latitude": 32.878471,
+      "longitude": -117.238937,
+      "source": "poi"
+    },
+    {
+      "name": "La Jolla Vista View, 1988",
+      "subtitle": "Art - Stuart Collection",
+      "description": "La Jolla Vista View, William Wegman's only major outdoor permanent sculpture, includes a long bronze map, telescope, drinking fountain and picnic table, creating an overlook near UCSD's theatre district. Near the theater complex URL: http://stuartcollection.ucsd.edu/StuartCollection/Wegman.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/wegman.html",
+      "latitude": 32.871426,
+      "longitude": -117.240089,
+      "source": "poi"
+    },
+    {
+      "name": "Standing, 1998",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Set in the School of Medicine, Kiki Smith's Standing illustrates her vision of the human body as a fluid vehicle for intimating life and death. The Madonna-like figure perched atop a tree trunk calls forth thoughts of human strength and frailty.   Between the Basic Science and Medical Teaching buildings URL: http://stuartcollection.ucsd.edu/StuartCollection/KikiSmith.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/smith-k.html",
+      "latitude": 32.875435,
+      "longitude": -117.235733,
+      "source": "poi"
+    },
+    {
+      "name": "Green Table, 1992",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Jenny Holzer's Green Table serves as an informal gathering place for students and faculty to eat, study or play. Engraved with her humorous and sometimes politically charged writings, it creates a site for questioning and debate. Muir College Quad URL: http://stuartcollection.ucsd.edu/StuartCollection/Holzer.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/holzer.html",
+      "latitude": 32.878651,
+      "longitude": -117.241974,
+      "source": "poi"
+    },
+    {
+      "name": "Trees, 1986",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Artist Terry Allen created this piece in which three trees, salvaged from a eucalyptus grove cleared for construction, were encased in lead. \"Trees\" symbolizes the displacement and loss of the natural environment of UCSD. Eucalyptus grove between Geisel Library and the Faculty Club URL: http://stuartcollection.ucsd.edu/StuartCollection/Allen.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/allen.html",
+      "latitude": 32.87994,
+      "longitude": -117.238174,
+      "source": "poi"
+    },
+    {
+      "name": "Trees, 1986",
+      "subtitle": "Art - Stuart Collection",
+      "description": "",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/allen.html",
+      "latitude": 32.879884,
+      "longitude": -117.23804,
+      "source": "poi"
+    },
+    {
+      "name": "Untitled, 1991",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Juxtaposed with a large American flag and WWII commemorative plaque and set in front of UCSD's main administrative complex, Michael Asher's granite drinking fountain Untitled suggests the continuity between the institutions of defense and learning. Myers Drive, across from the Chancellors Complex URL: http://stuartcollection.ucsd.edu/StuartCollection/Asher.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/asher.html",
+      "latitude": 32.878963,
+      "longitude": -117.236237,
+      "source": "poi"
+    },
+    {
+      "name": "Trees, 1986",
+      "subtitle": "Art - Stuart Collection",
+      "description": "",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/allen.html",
+      "latitude": 32.880395,
+      "longitude": -117.237573,
+      "source": "poi"
+    },
+    {
+      "name": "READ/WRITE/THINK/DREAM, 2001",
+      "subtitle": "Art - Stuart Collection",
+      "description": "This piece by John Baldessari at the entrance to the Geisel Library comprises a wall of 8 10-foot-high glass panels flanking two pairs of automatic sliding doors, replaced with glass in primary colors. Geisel Library main entrance URL: http://stuartcollection.ucsd.edu/StuartCollection/Baldessari.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/baldessari.html",
+      "latitude": 32.88084,
+      "longitude": -117.237572,
+      "source": "poi"
+    },
+    {
+      "name": "Bear, 2005",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Bear, artist Tim Hawkinson's 2005 contribution to the Stuart Collection, stands over 23 feet high and is made of uncut granite boulders. This enormous stone teddy bear is surrounded by the high-tech buildings of the Engineering School. Academic courtyard, Jacobs School of Engineering URL: http://stuartcollection.ucsd.edu/StuartCollection/Hawkinson.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/hawkinson.html",
+      "latitude": 32.881962,
+      "longitude": -117.2341,
+      "source": "poi"
+    },
+    {
+      "name": "Terrace, 1991",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Jackie Ferrara has designed and built courtyards, terraces, and architectural structures since the early 1970s. Cellular and Molecular Medicine Facility URL: http://stuartcollection.ucsd.edu/StuartCollection/Ferrara.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/ferrara.html",
+      "latitude": 32.876766,
+      "longitude": -117.238007,
+      "source": "poi"
+    },
+    {
+      "name": "Vices and Virtues, 1988",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Bruce Nauman's Vices and Virtues consists of 7 pairs of words superimposed in blinking colored neon, running around the top of the Powell Structure Systems Laboratory. Warren College URL: http://stuartcollection.ucsd.edu/StuartCollection/Nauman.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/nauman.html",
+      "latitude": 32.880672,
+      "longitude": -117.234917,
+      "source": "poi"
+    },
+    {
+      "name": "Another, 2008",
+      "subtitle": "Art - Stuart Collection",
+      "description": "The mural on the large interior wall of the main space depicts a double image of clocks, news ticker, and is punctuated by phrases indicating \"another\" aspect of life. The piece suggests how our lives are culturally inflected, constructed and contained. Price Center East, west interior wall URL: http://stuartcollection.ucsd.edu/StuartCollection/Kruger.htm",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/kruger.html",
+      "latitude": 32.879726,
+      "longitude": -117.236038,
+      "source": "poi"
+    },
+    {
+      "name": "UNDA, 1987",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Ian Hamilton Finlay created a one-word poem using the four letters UNDA (Latin for \"wave\") and the editor's wave-shaped mark used to transpose these letters. The five limestone blocks, previously installed at one edge of the north playing field in Marshall College, are now located at the south field by Rady School of Management.  Learn more: http://stuartcollection.ucsd.edu/StuartCollection/Finlay.htm",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/finlay.html",
+      "latitude": 32.886353,
+      "longitude": -117.241348,
+      "source": "poi"
+    },
+    {
+      "name": "What Hath God Wrought, 2018",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Artist: Mark BradfordLocation: Revelle PlazaThe 199-foot tall metal flag-pole-like sculpture&mdash;now considered the tallest structure on the University&rsquo;s campus&mdash;is mounted with a flashing light which playfully spells out &ldquo;What Hath God Wrought&rdquo; in Morse Code. The titular phrase is notably the first message Samuel Morse tested and transmitted across 41-miles, over the communication system he&rsquo;d newly designed with partner Alfred Vail, from Baltimore to Washington in 1844.Learn more: https://stuartcollection.ucsd.edu/artist/bradford.html ",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/bradford.html",
+      "latitude": 32.874863,
+      "longitude": -117.241158,
+      "source": "poi"
+    },
+    {
+      "name": "The Wind Garden, 2017",
+      "subtitle": "Art - Stuart Collection",
+      "description": "The Wind Garden (2017) is a sound work by the composer John Luther Adams located in the historic Eucalyptus grove immediately west of the theaters. A continually changing series of harmonic tones are generated by the movement of trees in the wind, influenced by daily and annual positions of the sun.",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/adams.html",
+      "latitude": 32.87104,
+      "longitude": -117.241768,
+      "source": "poi"
+    },
+    {
+      "name": "La Jolla Project, 1984",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Richard Fleischner's La Jolla Project comprises 71 blocks of pink and gray granite arranged in configurations that refer to architectural vocabulary, transforming an ordinary lawn into a space reminiscent of an ancient ruin or construction site. Revelle College lawn, south of Galbraith Hall URL: http://stuartcollection.ucsd.edu/StuartCollection/Fleischner.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/fleischner.html",
+      "latitude": 32.872761,
+      "longitude": -117.240234,
+      "source": "poi"
+    },
+    {
+      "name": "Something Pacific, 1986",
+      "subtitle": "Art - Stuart Collection",
+      "description": "In Nam June Paik's Something Pacific, old and disintegrating televisions and Buddhas are embedded in the landscape outside of a lobby displaying a lively interactive bank of TV monitors. Lobby of the Media Center URL: http://stuartcollection.ucsd.edu/StuartCollection/Paik.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/paik.html",
+      "latitude": 32.881371,
+      "longitude": -117.240303,
+      "source": "poi"
+    },
+    {
+      "name": "Fallen Star, 2011",
+      "subtitle": "Art - Stuart Collection",
+      "description": "The little blue house and rooftop garden of Do Ho Suh's Fallen Star sit atop Jacobs Hall overlooking Warren Mall in the Jacobs School of Engineering. 7th floor roof of Jacobs Hall overlooking Warren Mall, JSOE, between the Bioengineering Building and head of the Snake Path. 9500 Gilman Drive, MC 0403 URL: http://stuartcollection.ucsd.edu/artists/suh.shtml",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/suh.html",
+      "latitude": 32.881626,
+      "longitude": -117.235252,
+      "source": "poi"
+    },
+    {
+      "name": "Red Shoe, 1996",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Elizabeth Murray's giant Red Shoe lopes its way through one of UCSD's many eucalyptus groves, evoking thoughts of childhood play, nursery rhymes and fairytales. Eucalyptus trees near the theater complex URL: http://stuartcollection.ucsd.edu/StuartCollection/Murray.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/murray.html",
+      "latitude": 32.871078,
+      "longitude": -117.242912,
+      "source": "poi"
+    },
+    {
+      "name": "Sun God, 1983",
+      "subtitle": "Art - Stuart Collection",
+      "description": "Niki De Saint Phalle's Sun God was the first work commissioned by the Stuart Collection. The exuberantly colored, fourteen-foot bird is sited on a grassy area between the Faculty Club and Mandeville Auditorium. Sun God has become a landmark on campus.   On a grassy area between the Faculty Club and Mandeville Auditorium URL: http://stuartcollection.ucsd.edu/StuartCollection/Phalle.htm (858) 534-2117",
+      "websiteUrl": "https://stuartcollection.ucsd.edu/artist/de-saint-phalle.html",
+      "latitude": 32.878597,
+      "longitude": -117.240105,
+      "source": "poi"
+    },
+    {
+      "name": "Birch Aquarium at Scripps",
+      "subtitle": "Birch Aquarium at Scripps | Birch | Aquarium - Birch",
+      "address": "2300 Expedition Way, La Jolla, 92093",
+      "latitude": 32.86584392,
+      "longitude": -117.25066806,
+      "source": "building"
+    },
+    {
+      "name": "RIMAC",
+      "subtitle": "RIMAC | Recreational and Intramural Athletic Complex | LionTree Arena",
+      "address": "9860 Hopkins Drive, La Jolla, 92093",
+      "latitude": 32.88525013,
+      "longitude": -117.23947914,
+      "source": "building"
+    },
+    {
+      "name": "Canyonview Aquatic and Climbing Wall Facility",
+      "subtitle": "Canyonview Aquatic and Climbing Wall Facility | Canyonview | Climbing Wall and Pool | Pool and Climbing Wall",
+      "address": "3302 Voigt Drive, La Jolla, 92093",
+      "latitude": 32.88060064,
+      "longitude": -117.23184153,
+      "source": "building"
+    },
+    {
+      "name": "Main Gymnasium",
+      "subtitle": "Main Gymnasium | Gymnasium, Main",
+      "address": "2995 Scholars Lane, La Jolla, 92093",
+      "latitude": 32.87715307,
+      "longitude": -117.24123997,
+      "source": "building"
+    },
+    {
+      "name": "Eucalyptus Trail Trailhead",
+      "subtitle": "Recreation Facilities - Recreation Facilities",
+      "description": "This sign marks the beginning of a walking path \"Eucalyptus Trail\" for the fitness-conscious walker on campus. End of loop above Geisel Library, Shuttle Stop URL: http://walk.ucsd.edu",
+      "websiteUrl": "https://blink.ucsd.edu/HR/services/support/health/walk/index.html",
+      "latitude": 32.8815,
+      "longitude": -117.238464,
+      "source": "poi"
+    },
+    {
+      "name": "Sun God Stroll Trailhead",
+      "subtitle": "Recreation Facilities - Recreation Facilities",
+      "description": "This sign marks the beginning of the walking path \"Sun God Stroll\" for the fitness-conscious walker on campus. End of Muir Lane, at the loop near Peterson Hall",
+      "websiteUrl": "https://blink.ucsd.edu/HR/services/support/health/walk/index.html",
+      "latitude": 32.879791,
+      "longitude": -117.2397,
+      "source": "poi"
+    },
+    {
+      "name": "RIMAC Field",
+      "subtitle": "Sustainability - Sustainability",
+      "description": "RIMAC field sits below the recreation facility and is used for competition and training fields. The entire plot is irrigated with recycled water, which is a part of the campus water conservation efforts.. With each new construction project, UCSD installs landscape recycled water piping. Approximately 30% of campus irrigation uses recycled water.",
+      "websiteUrl": null,
+      "latitude": 32.887203,
+      "longitude": -117.239655,
+      "source": "poi"
+    },
+    {
+      "name": "Joan and Irwin Jacobs Center for La Jolla Playhouse",
+      "subtitle": "Joan and Irwin Jacobs Center for La Jolla Playhouse | Jacobs Center | Black Box Theater | Jacobs Center for La Jolla Playhouse | La Jolla Playhouse, Joan and Irwin Jacobs Center for | Potiker Theatre | Sheila and Hughes Potiker Theatre | Theatre, Potiker",
+      "address": "2965 Theatre District Drive, La Jolla, 92093",
+      "latitude": 32.87135954,
+      "longitude": -117.24080217,
+      "source": "building"
+    },
+    {
+      "name": "Mandell Weiss Forum",
+      "subtitle": "Mandell Weiss Forum | Forum Theater | Weiss Forum Theater, Mandell",
+      "address": "2975 Theatre District Drive, La Jolla, 92093",
+      "latitude": 32.87214549,
+      "longitude": -117.24102549,
+      "source": "building"
+    },
+    {
+      "name": "Mandell Weiss Theatre",
+      "subtitle": "Mandell Weiss Theatre | Weiss Theatre, Mandell",
+      "address": "2955 Theatre District Drive, La Jolla, 92093",
+      "latitude": 32.8710228,
+      "longitude": -117.24128419,
+      "source": "building"
+    },
+    {
+      "name": "Conrad Prebys Music Center",
+      "subtitle": "Conrad Prebys Music Center | Prebys Music Center | CPMC | Music Center, Conrad Prebys",
+      "address": "9410 Russell Lane, La Jolla, 92093",
+      "latitude": 32.87803262,
+      "longitude": -117.23465882,
+      "source": "building"
+    },
+    {
+      "name": "Epstein Family Amphitheater",
+      "subtitle": "Epstein Family Amphitheater | Epstein Amphitheater  | Epstein Amphitheater",
+      "address": "9480 Innovation Lane, La Jolla, 92093",
+      "latitude": 32.87893396,
+      "longitude": -117.2332623,
+      "source": "building"
+    },
+    {
+      "name": "Atkinson Hall",
+      "subtitle": "Atkinson Hall | California Institute for Telecommunications and Technology | Calit2",
+      "address": "3195 Voigt Drive, La Jolla, 92093",
+      "latitude": 32.88250202,
+      "longitude": -117.23473323,
+      "source": "building"
+    },
+    {
+      "name": "Mandeville Center",
+      "subtitle": "Mandeville Center | MANDE | University Art Gallery",
+      "address": "9390 Mandeville Lane, La Jolla, 92093",
+      "latitude": 32.87778757,
+      "longitude": -117.23996688,
+      "source": "building"
+    },
+    {
+      "name": "Molli and Arthur Wagner Dance Building",
+      "subtitle": "Molli and Arthur Wagner Dance Building | Wagner Dance Building | DANCE | Dance Studio Facility | Wagner Dance Building, Molli and Arthur",
+      "address": "9155 Mandell Weiss Lane, La Jolla, 92093",
+      "latitude": 32.87180577,
+      "longitude": -117.24005072,
+      "source": "building"
+    },
+    {
+      "name": "Galbraith Hall",
+      "subtitle": "Galbraith Hall | GH | Library - Galbraith | Arthur Wagner Theatre",
+      "address": "2980 Theatre District Drive, La Jolla, 92093",
+      "latitude": 32.87382905,
+      "longitude": -117.24092246,
+      "source": "building"
+    },
+    {
+      "name": "Theodore and Adele Shank Theatre",
+      "subtitle": "Theodore and Adele Shank Theatre | Shank Theater | Shank Theatre, Theodore and Adele",
+      "address": "2975 Theatre District Drive, La Jolla, 92093",
+      "latitude": 32.87236767,
+      "longitude": -117.24096767,
+      "source": "building"
+    },
+    {
+      "name": "Triton Esports Center",
+      "subtitle": "Recreation Facilities - Recreation Facilities",
+      "description": "The Triton Esports Center, or TEC for short, is a community space on campus designed to be the home of UCSD Esports and the gaming community of UC San Diego.",
+      "websiteUrl": "https://recreation.ucsd.edu/tec/",
+      "latitude": 32.8861079,
+      "longitude": -117.2405856,
+      "source": "poi"
+    },
+    {
+      "name": "TEC 2",
+      "subtitle": "Recreation Facilities - Recreation Facilities",
+      "description": "TEC2 is the new community space on campus designed to be the home of UCSD Esports and the gaming community of UC San Diego.",
+      "websiteUrl": "https://recreation.ucsd.edu/tec/",
+      "latitude": 32.882157,
+      "longitude": -117.239794,
+      "source": "poi"
+    }
+  ]
+}

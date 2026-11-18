@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
 import 'package:campus_mobile_experimental/core/providers/cards.dart';
 import 'package:campus_mobile_experimental/core/providers/notifications.dart';
+import 'package:campus_mobile_experimental/core/providers/student_id.dart';
 import 'package:campus_mobile_experimental/core/services/authentication.dart';
 import 'package:campus_mobile_experimental/core/services/tgpt_services/chat_persistence.dart';
 import 'package:campus_mobile_experimental/core/services/user.dart';
@@ -34,6 +36,7 @@ class UserDataProvider extends ChangeNotifier {
   /// PROVIDERS
   late PushNotificationDataProvider _pushNotificationDataProvider;
   late CardsDataProvider cardsDataProvider;
+  StudentIdDataProvider? studentIdDataProvider;
 
   /// SERVICES
   var _authenticationService = AuthenticationService();

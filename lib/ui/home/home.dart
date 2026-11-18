@@ -16,6 +16,7 @@ import 'package:campus_mobile_experimental/ui/dining/dining_card.dart';
 import 'package:campus_mobile_experimental/ui/employee_id/employee_id_card.dart';
 import 'package:campus_mobile_experimental/ui/events/events_card.dart';
 import 'package:campus_mobile_experimental/ui/finals/finals_card.dart';
+import 'package:campus_mobile_experimental/ui/home/home_background.dart';
 import 'package:campus_mobile_experimental/ui/my_student_chart/my_student_chart_card.dart';
 import 'package:campus_mobile_experimental/ui/my_ucsd_chart/my_ucsd_chart_card.dart';
 import 'package:campus_mobile_experimental/ui/navigator/bottom.dart';
@@ -139,13 +140,17 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // Provider.of<CustomAppBar>(context).changeTitle(null); // reset title to logo (for dining)
     _connectivityProvider = Provider.of<InternetConnectivityProvider>(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: cardMargin, vertical: 0.0),
-      child: ListView(
-        controller: _controller,
-        padding: const EdgeInsets.only(top: 0.0, right: 0.0, bottom: cardMargin + 2.0, left: 0.0),
-        children: createList(),
-      ),
+    return CustomScrollView(
+      controller: _controller,
+      slivers: [
+        DecoratedSliver(
+          decoration: const HomeBackgroundDecoration(),
+          sliver: SliverPadding(
+            padding: const EdgeInsets.only(left: cardMargin, right: cardMargin, bottom: cardMargin + 2.0),
+            sliver: SliverList(delegate: SliverChildListDelegate(createList())),
+          ),
+        ),
+      ],
     );
   }
 
