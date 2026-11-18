@@ -101,7 +101,7 @@ class _ClassScheduleCardState extends State<ClassScheduleCard> {
             buildLocationRow(context, section.room?.trim().isNotEmpty == true ? section.room!.trim() : 'TBD'),
             SizedBox(height: 8),
             // Evaluation Option:
-            buildGradeEvaluationRow(context, scheduledClass.gradeOption),
+            if (scheduledClass.gradeOption != null) buildGradeEvaluationRow(context, scheduledClass.gradeOption!),
             // "Last updated: A few seconds ago
             Padding(
               padding: const EdgeInsets.only(left: 4.0, top: 24.0),
