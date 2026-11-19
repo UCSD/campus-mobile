@@ -76,17 +76,22 @@ class _ParkingCardState extends State<ParkingCard> {
       }
 
       if (selectedLotsViews.isEmpty) {
-        return (Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("No Lots to Display", style: TextStyle(fontSize: 24)),
-            Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: Text("Add a Lot via 'Manage Lots'", style: TextStyle(fontSize: 14)),
-            ),
-          ],
-        ));
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final scale = CircularParkingIndicators.computeEmptyStateScale(constraints);
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("No Lots to Display", style: TextStyle(fontSize: 24 * scale)),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text("Add a Lot via 'Manage Lots'", style: TextStyle(fontSize: 14 * scale)),
+                ),
+              ],
+            );
+          },
+        );
       }
 
       return Column(
