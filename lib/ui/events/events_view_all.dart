@@ -10,12 +10,10 @@ class EventsAll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<EventsDataProvider>(context).isLoading
+    final provider = Provider.of<EventsDataProvider>(context);
+    return provider.isLoading && !provider.hasData
         ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary))
-        : Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: buildEventsList(Provider.of<EventsDataProvider>(context).eventsModels, context),
-          );
+        : Padding(padding: const EdgeInsets.only(top: 16.0), child: buildEventsList(provider.eventsModels, context));
   }
 
   Widget buildEventsList(List<EventModel> listOfEvents, BuildContext context) {
@@ -32,8 +30,8 @@ class EventsAll extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 1,
         mainAxisSpacing: 8,
+        mainAxisExtent: 300,
         children: eventTiles,
-        childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1.4),
       );
     } else {
       return ContainerView(child: Center(child: Text('No events found.')));
