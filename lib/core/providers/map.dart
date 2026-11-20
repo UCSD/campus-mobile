@@ -6,6 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapsDataProvider extends ChangeNotifier {
+  /// Keyword searches the backend food index responds to; a single "Food"
+  /// query only matches one POI, so the quick search fans out over all of
+  /// them and merges the results.
+  static const List<String> _foodSearchKeywords = [
+    'Food',
+    'Cafe',
+    'Coffee',
+    'Market',
+    'Vending',
+    'Restaurant',
+    'Bistro',
+    'Pizza',
+  ];
+
   MapsDataProvider() {
     ///DEFAULT STATES
     _isLoading = false;
@@ -93,14 +107,7 @@ class MapsDataProvider extends ChangeNotifier {
       populateDistances();
       reorderLocations();
       addMarker(0);
-      if (!_searchHistory.contains(query)) {
-        // Check to see if this search is already in history...
-        _searchHistory.add(query); // ...If it is not, add it...
-      } else {
-        // ...otherwise...
-        _searchHistory.remove(query); // ...reorder search history to put it back on top
-        _searchHistory.add(query);
-      }
+      _recordSearchHistory(query);
       _lastUpdated = DateTime.now();
     } else {
       // TODO: determine what error to show to the user - December 2025
@@ -109,6 +116,37 @@ class MapsDataProvider extends ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
+  }
+
+  void fetchFoodLocations() async {
+    markers.clear();
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    if (await _mapSearchService.fetchLocationsByKeywords(_foodSearchKeywords)) {
+      _mapSearchModels = _mapSearchService.results;
+      _noResults = false;
+      populateDistances();
+      reorderLocations();
+      addMarker(0);
+      _recordSearchHistory('Food');
+      _lastUpdated = DateTime.now();
+    } else {
+      _error = _mapSearchService.error;
+      _noResults = true;
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void _recordSearchHistory(String query) {
+    if (!_searchHistory.contains(query)) {
+      _searchHistory.add(query);
+    } else {
+      // ...otherwise...reorder search history to put it back on top
+      _searchHistory.remove(query);
+      _searchHistory.add(query);
+    }
   }
 
   void populateDistances() {

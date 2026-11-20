@@ -16,6 +16,15 @@ class QuickSearchIcons extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             LabeledIconButton(
+              icon: Icons.restaurant,
+              text: 'Food',
+              onPressed: () {
+                Provider.of<MapsDataProvider>(context, listen: false).searchBarController.text = 'Food';
+                Provider.of<MapsDataProvider>(context, listen: false).fetchFoodLocations();
+                Navigator.pop(context);
+              },
+            ),
+            LabeledIconButton(
               icon: Icons.local_parking,
               text: 'Parking',
               onPressed: () {
