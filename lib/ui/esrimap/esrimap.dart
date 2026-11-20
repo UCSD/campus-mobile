@@ -36,6 +36,7 @@ import 'package:provider/provider.dart';
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
 import 'package:campus_mobile_experimental/core/providers/parking.dart';
 import 'package:campus_mobile_experimental/core/providers/availability.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -2200,7 +2201,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // The dark basemap carries its own contrast: overlay chrome switches to
+    // the app's dark theme even when the rest of the app is light (MA-728).
+    final isDarkBasemap = _currentBasemapType == BasemapType.dark;
+    final isDark = isDarkBasemap || Theme.of(context).brightness == Brightness.dark;
     final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final shouldShowCatListPanel = _showCategoryList && _allCategoryResults.isNotEmpty;
 
@@ -2223,7 +2227,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene && !_hasNetworkError;
     final hasValidResults = _mappedResults.isNotEmpty && !_hasNetworkError;
 
-    return Scaffold(
+    final mapScaffold = Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(
@@ -2769,5 +2773,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         },
       ),
     );
+    // Re-theme the whole map surface so every overlay widget reading
+    // Theme.of(context) (search bar, panels, slide-over, legend) follows the
+    // dark basemap without restyling each component.
+    return Theme(data: isDarkBasemap ? campusMobileDarkTheme : Theme.of(context), child: mapScaffold);
   }
 }

@@ -4,7 +4,6 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_provider.dart';
 import 'package:campus_mobile_experimental/app_router.dart' as campusMobileRouter;
 import 'package:campus_mobile_experimental/app_styles.dart';
-import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:campus_mobile_experimental/core/models/authentication.dart';
 import 'package:campus_mobile_experimental/core/models/tgpt_models/chat_message_persistent.dart';
 import 'package:campus_mobile_experimental/core/models/user_profile.dart';
@@ -100,70 +99,13 @@ Future<void> clearHiveStorage() async {
 class CampusMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final lightTheme = ThemeData(
-      useMaterial3: false,
-      snackBarTheme: AppSnackBar.theme,
-      primaryColor: lightPrimaryColor,
-      textTheme: lightThemeText.copyWith(
-        titleLarge: cardTitleStyleLight,
-        titleMedium: titleMediumLight,
-        titleSmall: titleSmallLight,
-        bodyLarge: heading2StyleLight,
-        bodyMedium: bodyMediumLight,
-        bodySmall: descriptiveTextSmallLight,
-        labelLarge: labelLargeStyleLight,
-        labelMedium: labelMediumStyleLight,
-        headlineMedium: headlineMediumLight,
-      ),
-      iconTheme: lightIconTheme,
-      appBarTheme: lightAppBarTheme,
-      listTileTheme: lightListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: ColorPrimary,
-      ).copyWith(surface: lightButtonColor, brightness: Brightness.light),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        unselectedItemColor: unselectedIconLightColor,
-        selectedItemColor: Colors.white,
-        backgroundColor: bottomTabBarColorLight,
-      ),
-    );
-
-    final darkTheme = ThemeData(
-      useMaterial3: false,
-      snackBarTheme: AppSnackBar.theme,
-      primaryColor: darkPrimaryColor,
-      textTheme: darkThemeText.copyWith(
-        titleLarge: cardTitleStyleDark,
-        titleMedium: titleMediumDark,
-        titleSmall: titleSmallDark,
-        bodyLarge: heading2StyleDark,
-        bodyMedium: bodyMediumDark,
-        bodySmall: descriptiveTextSmallDark,
-        labelLarge: labelLargeStyleDark,
-        labelMedium: labelMediumStyleDark,
-        headlineMedium: headlineMediumDark,
-      ),
-      iconTheme: darkIconTheme,
-      appBarTheme: darkAppBarTheme,
-      unselectedWidgetColor: darkAccentColor,
-      listTileTheme: darkListTileTheme,
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: ColorPrimary,
-      ).copyWith(surface: darkButtonColor, brightness: Brightness.dark),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        unselectedItemColor: unselectedIconDarkColor,
-        selectedItemColor: Colors.white,
-        backgroundColor: bottomTabBarColorDark,
-      ),
-    );
-
     return MultiProvider(
       providers: providers,
       child: GetMaterialApp(
         debugShowCheckedModeBanner: true,
         title: 'UC San Diego',
-        theme: lightTheme.copyWith(colorScheme: lightTheme.colorScheme.copyWith(secondary: darkAccentColor)),
-        darkTheme: darkTheme.copyWith(colorScheme: darkTheme.colorScheme.copyWith(secondary: lightAccentColor)),
+        theme: campusMobileLightTheme,
+        darkTheme: campusMobileDarkTheme,
         themeMode: ThemeMode.system,
         initialRoute: showOnboardingScreen ? RoutePaths.ONBOARDING_LOGIN : RoutePaths.BOTTOM_NAVIGATION_BAR,
         onGenerateRoute: campusMobileRouter.Router.generateRoute,
