@@ -1,3 +1,4 @@
+import 'package:campus_mobile_experimental/ui/common/app_snack_bar.dart';
 import 'package:flutter/material.dart';
 
 /* Campus Mobile Style Guide (WIP)
@@ -367,3 +368,71 @@ const List<double> grayscaleInvertMatrix = [
 // Dining logo border and shadow colors for dark mode
 const Color darkLogoBorderColor = Color(0xFF444444); // subtle dark border
 const Color darkLogoShadowColor = Colors.white; // use white for shadow in dark mode
+
+/// Shared app themes. Defined here (rather than in main.dart) so feature
+/// surfaces like the ESRI map can re-theme their subtree locally, e.g. when
+/// the dark basemap is active (MA-728).
+final ThemeData campusMobileLightTheme = _baseLightTheme.copyWith(
+  colorScheme: _baseLightTheme.colorScheme.copyWith(secondary: darkAccentColor),
+);
+
+final ThemeData campusMobileDarkTheme = _baseDarkTheme.copyWith(
+  colorScheme: _baseDarkTheme.colorScheme.copyWith(secondary: lightAccentColor),
+);
+
+final ThemeData _baseLightTheme = ThemeData(
+  useMaterial3: false,
+  snackBarTheme: AppSnackBar.theme,
+  primaryColor: lightPrimaryColor,
+  textTheme: lightThemeText.copyWith(
+    titleLarge: cardTitleStyleLight,
+    titleMedium: titleMediumLight,
+    titleSmall: titleSmallLight,
+    bodyLarge: heading2StyleLight,
+    bodyMedium: bodyMediumLight,
+    bodySmall: descriptiveTextSmallLight,
+    labelLarge: labelLargeStyleLight,
+    labelMedium: labelMediumStyleLight,
+    headlineMedium: headlineMediumLight,
+  ),
+  iconTheme: lightIconTheme,
+  appBarTheme: lightAppBarTheme,
+  listTileTheme: lightListTileTheme,
+  colorScheme: ColorScheme.fromSwatch(
+    primarySwatch: ColorPrimary,
+  ).copyWith(surface: lightButtonColor, brightness: Brightness.light),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    unselectedItemColor: unselectedIconLightColor,
+    selectedItemColor: Colors.white,
+    backgroundColor: bottomTabBarColorLight,
+  ),
+);
+
+final ThemeData _baseDarkTheme = ThemeData(
+  useMaterial3: false,
+  snackBarTheme: AppSnackBar.theme,
+  primaryColor: darkPrimaryColor,
+  textTheme: darkThemeText.copyWith(
+    titleLarge: cardTitleStyleDark,
+    titleMedium: titleMediumDark,
+    titleSmall: titleSmallDark,
+    bodyLarge: heading2StyleDark,
+    bodyMedium: bodyMediumDark,
+    bodySmall: descriptiveTextSmallDark,
+    labelLarge: labelLargeStyleDark,
+    labelMedium: labelMediumStyleDark,
+    headlineMedium: headlineMediumDark,
+  ),
+  iconTheme: darkIconTheme,
+  appBarTheme: darkAppBarTheme,
+  unselectedWidgetColor: darkAccentColor,
+  listTileTheme: darkListTileTheme,
+  colorScheme: ColorScheme.fromSwatch(
+    primarySwatch: ColorPrimary,
+  ).copyWith(surface: darkButtonColor, brightness: Brightness.dark),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    unselectedItemColor: unselectedIconDarkColor,
+    selectedItemColor: Colors.white,
+    backgroundColor: bottomTabBarColorDark,
+  ),
+);
