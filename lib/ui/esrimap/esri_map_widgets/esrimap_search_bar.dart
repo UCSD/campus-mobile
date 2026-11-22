@@ -51,8 +51,11 @@ class EsriMapSearchBar extends StatelessWidget {
   /// Live matching POI class values.
   final List<String> matchingPoiClasses;
 
-  /// Callback when main search text is submitted or changed.
+  /// Callback when main search text is submitted (Enter or search action).
   final void Function(String query) onPerformSearch;
+
+  /// Callback when main search text changes while the user types.
+  final void Function(String text) onChangeSearchText;
 
   /// Callback when a matching class category item is selected.
   final void Function(String classValue) onPerformClassSearch;
@@ -119,6 +122,7 @@ class EsriMapSearchBar extends StatelessWidget {
     required this.searchResults,
     required this.matchingPoiClasses,
     required this.onPerformSearch,
+    required this.onChangeSearchText,
     required this.onPerformClassSearch,
     required this.onSelectResult,
     required this.onClearSearch,
@@ -335,14 +339,7 @@ class EsriMapSearchBar extends StatelessWidget {
                     focusNode: focusNode,
                     textInputAction: TextInputAction.search,
                     onSubmitted: onPerformSearch,
-                    onChanged: (text) {
-                      final isTextEmpty = text.isEmpty;
-                      if (isTextEmpty) {
-                        onClearSearch();
-                      } else {
-                        onPerformSearch(text);
-                      }
-                    },
+                    onChanged: (text) => text.isEmpty ? onClearSearch() : onChangeSearchText(text),
                     onTap: onTapSearchField,
                     style: TextStyle(fontSize: searchFontSize, color: searchTextColor),
                     decoration: InputDecoration(

@@ -30,6 +30,7 @@ import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_s
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_search_bar.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_suggestions_panel.dart';
 import 'package:campus_mobile_experimental/ui/esrimap/esri_map_widgets/esrimap_callout_content.dart';
+import 'package:campus_mobile_experimental/ui/esrimap/search_prefetch_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
@@ -100,6 +101,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   List<MapSearchResult> _recentSearches = [];
   Timer? _searchDebounce;
   int _searchRequestId = 0;
+  final SearchPrefetchCache _prefetch = SearchPrefetchCache();
 
   // Active Category & Pin Plotting State
   MapSearchResult? _selectedResultValue;
@@ -964,10 +966,55 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  void _cancelPendingSearch() {
+  void _cancelSearchDebounce() {
     _searchDebounce?.cancel();
     _searchDebounce = null;
+  }
+
+  void _cancelPendingSearch() {
+    _cancelSearchDebounce();
+    _prefetch.clear();
     _searchRequestId++;
+  }
+
+  /// Local, synchronous category matches for the current query.
+  List<String> _localCategoryMatches(String query) {
+    final q = query.trim().toLowerCase();
+    if (q.isEmpty) return const [];
+    final matched = _allPoiClasses.where((c) => c.toLowerCase().contains(q)).toList();
+    for (final cat in _categories) {
+      final value = cat.poiClassValue;
+      if (value.toLowerCase().contains(q) && !matched.contains(value)) {
+        matched.insert(0, value);
+      }
+    }
+    return matched;
+  }
+
+  /// Refreshes suggestions while typing; the map commit waits for submit.
+  void _onMainQueryChanged(String text) {
+    _cancelPendingSearch();
+    final q = text.trim();
+    if (q.isNotEmpty) {
+      _searchDebounce = Timer(const Duration(milliseconds: 250), () {
+        _searchDebounce = null;
+        if (mounted && _focusNode.hasFocus) _prefetch.start(q, _fetchSearchResults(q));
+      });
+    }
+    setState(() {
+      _isSearching = false;
+      _showSuggestions = false;
+      _matchingPoiClasses = _localCategoryMatches(text);
+    });
+  }
+
+  /// Commits the typed query: plots results and closes the keyboard.
+  void _submitSearch(String text) {
+    final q = text.trim();
+    if (q.isEmpty) return;
+    _cancelSearchDebounce();
+    _focusNode.unfocus();
+    _performSearch(q, ++_searchRequestId);
   }
 
   Future<void> _waitForMinimumSearchLoadingTime(Stopwatch stopwatch) async {
@@ -975,37 +1022,45 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     if (remaining > Duration.zero) await Future.delayed(remaining);
   }
 
+  /// Fetches buildings and POIs concurrently, unsorted.
+  Future<List<MapSearchResult>> _fetchSearchResults(String query) async {
+    final results = await Future.wait([
+      EsriMapSearchService.queryBuildings(query),
+      EsriMapSearchService.queryPOIs(query),
+    ]);
+    return [...results[0], ...results[1]];
+  }
+
   /// Text search: queries buildings and POIs concurrently.
   Future<void> _performSearch(String query, int requestId) async {
     final loadingStopwatch = Stopwatch()..start();
-    final q = query.toLowerCase();
-    final matched = _allPoiClasses.where((c) => c.toLowerCase().contains(q)).toList();
+    final matched = _localCategoryMatches(query);
 
-    for (final cat in _categories) {
-      final matchesCat = cat.poiClassValue.toLowerCase().contains(q) && !matched.contains(cat.poiClassValue);
-      if (matchesCat) matched.insert(0, cat.poiClassValue);
-    }
+    final prefetch = _showRouteFields ? null : _prefetch.lookup(query);
+    final readyResults = prefetch?.result;
+    _prefetch.clear();
 
     setState(() {
-      _isSearching = true;
+      _isSearching = readyResults == null;
       _showResults = _showRouteFields;
       _showSuggestions = false;
       _selectedResult = null;
       _showPoiSheet = false;
-      _matchingPoiClasses = matched;
+      if (_showRouteFields) _matchingPoiClasses = matched;
     });
 
     var merged = <MapSearchResult>[];
-    try {
-      final results = await Future.wait([
-        EsriMapSearchService.queryBuildings(query),
-        EsriMapSearchService.queryPOIs(query),
-      ]);
-      merged = [...results[0], ...results[1]];
-    } catch (e) {
-      debugPrint('Search error: $e');
+    if (readyResults != null) {
+      merged = readyResults;
+    } else {
+      final pending = (prefetch != null && !prefetch.failed) ? prefetch.pending : _fetchSearchResults(query);
+      try {
+        merged = await pending;
+      } catch (e) {
+        debugPrint('Search error: $e');
+      }
+      await _waitForMinimumSearchLoadingTime(loadingStopwatch);
     }
-    await _waitForMinimumSearchLoadingTime(loadingStopwatch);
     final isStale = !mounted || requestId != _searchRequestId;
     if (isStale) return;
 
@@ -2495,6 +2550,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Hidden Semantics nodes for Map Pins / Graphics
               if (hasMappableResults && isDefaultScene)
                 Builder(
+                  key: const Key('esri_pin_semantics'),
                   builder: (context) => Semantics(
                     sortKey: const OrdinalSortKey(4.0),
                     child: Stack(
@@ -2509,6 +2565,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Map controls stay behind search and slide-over panels.
               if (isFabVisible)
                 Positioned(
+                  key: const Key('esri_fab_cluster'),
                   top: MediaQuery.of(context).padding.top + 68,
                   right: 16,
                   child: Semantics(
@@ -2532,6 +2589,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Bottom-right center-on-me button
               if (isBottomChromeVisible && _sceneMode == 'default')
                 Builder(
+                  key: const Key('esri_location_fab'),
                   builder: (context) {
                     double? screenAngle;
                     bool isUserVisible = false;
@@ -2586,6 +2644,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
               if (_loadingLocation != null)
                 Builder(
+                  key: const Key('esri_loading_location'),
                   builder: (context) {
                     final screenPt = _mapViewController.locationToScreen(mapPoint: _loadingLocation!);
                     return Positioned(
@@ -2615,6 +2674,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Floating top search bar & suggestion panel
               if (isSearchEnabledAndDefault)
                 Positioned(
+                  key: const Key('esri_search_bar'),
                   top: 8,
                   left: 12,
                   right: 12,
@@ -2636,7 +2696,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                           isSearching: _isSearching,
                           searchResults: _searchResults,
                           matchingPoiClasses: _matchingPoiClasses,
-                          onPerformSearch: _queueSearch,
+                          onPerformSearch: _submitSearch,
+                          onChangeSearchText: _onMainQueryChanged,
                           onPerformClassSearch: _performClassSearch,
                           onSelectResult: _selectResult,
                           onClearSearch: _clearSearch,
@@ -2854,6 +2915,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Dynamic Google Maps-style Scale Bar Indicator
               if (shouldShowScaleBar)
                 Positioned(
+                  key: const Key('esri_scale_bar'),
                   bottom: 24,
                   right: 16,
                   child: Semantics(
@@ -2865,6 +2927,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Transit Legend
               if (_layerVisible['tritonTransit'] == true && isBottomChromeVisible)
                 Positioned(
+                  key: const Key('esri_transit_legend'),
                   bottom: 16,
                   left: 8,
                   child: Semantics(sortKey: const OrdinalSortKey(9.0), child: _buildTransitLegend()),
@@ -2872,6 +2935,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
 
               // Selected Result Detail Slide-over
               AnimatedSwitcher(
+                key: const Key('esri_detail_switcher'),
                 duration: const Duration(milliseconds: 300),
                 switchInCurve: Curves.easeOutQuart,
                 switchOutCurve: Curves.easeInQuart,
@@ -2932,6 +2996,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
               // Basemap & Operational Layer Selector Panel
               if (isLayersPanelVisible) ...[
                 Positioned.fill(
+                  key: const Key('esri_layers_scrim'),
                   child: Semantics(
                     sortKey: const OrdinalSortKey(1.7),
                     button: true,
@@ -2943,6 +3008,7 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
                   ),
                 ),
                 EsriMapLayersPanel(
+                  key: const Key('esri_layers_panel'),
                   config: _config!,
                   currentBasemapType: _currentBasemapType,
                   currentSceneKey: _sceneMode,
