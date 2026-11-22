@@ -13,8 +13,14 @@ env:
 
 jobs:
   precommit:
-    runs-on: ubuntu-latest
+    # ArcGIS Maps' native build hook rejects Linux before Flutter tests start.
+    # Its test-host hook supports Windows, while production builds remain
+    # limited to the Android and iOS targets declared by the package.
+    runs-on: windows-latest
     timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Check out code
         uses: actions/checkout@v4

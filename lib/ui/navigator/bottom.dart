@@ -4,7 +4,8 @@ import 'package:campus_mobile_experimental/core/providers/bottom_nav.dart';
 import 'package:campus_mobile_experimental/core/wrappers/push_notifications.dart';
 import 'package:campus_mobile_experimental/ui/ai_assistant/ai_assistant.dart';
 import 'package:campus_mobile_experimental/ui/home/home.dart';
-import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
+// import 'package:campus_mobile_experimental/ui/map/map.dart' as prefix0;
+import 'package:campus_mobile_experimental/ui/esrimap/esrimap.dart';
 import 'package:campus_mobile_experimental/ui/navigator/top.dart';
 import 'package:campus_mobile_experimental/ui/notifications/notifications_list_view.dart';
 import 'package:campus_mobile_experimental/ui/profile/profile.dart';
@@ -29,7 +30,7 @@ class BottomTabBar extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar> {
-  var currentTab = [Home(), prefix0.Maps(), AIAssistantTab(), NotificationsListView(), Profile()];
+  var currentTab = [Home(), EsriMap(), AIAssistantTab(), NotificationsListView(), Profile()];
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +43,11 @@ class _BottomTabBarState extends State<BottomTabBar> {
       backgroundColor: provider.currentIndex == 0 ? lightPrimaryColor : theme.scaffoldBackgroundColor,
       appBar: isAssistantTab
           ? null
-          : PreferredSize(preferredSize: Size.fromHeight(57), child: Provider.of<CustomAppBar>(context).appBar),
+          : PreferredSize(preferredSize: Size.fromHeight(50), child: Provider.of<CustomAppBar>(context).appBar),
       body: PushNotificationWrapper(
         child: IndexedStack(index: provider.currentIndex, children: currentTab),
       ),
+
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: theme.bottomNavigationBarTheme.backgroundColor,
@@ -135,7 +137,15 @@ class _BottomTabBarState extends State<BottomTabBar> {
         color: isSelected ? theme.listTileTheme.selectedColor : Colors.transparent,
         borderRadius: BorderRadius.circular(34),
       ),
-      child: Image.asset(iconAsset, width: 34, height: 34, filterQuality: FilterQuality.high),
+      child: Image.asset(
+        iconAsset,
+        width: 34,
+        height: 34,
+        filterQuality: FilterQuality.high,
+        color: isSelected
+            ? theme.bottomNavigationBarTheme.selectedItemColor
+            : theme.bottomNavigationBarTheme.unselectedItemColor,
+      ),
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:campus_mobile_experimental/app_constants.dart';
 import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/dining.dart' as dining_model;
 import 'package:campus_mobile_experimental/core/providers/dining.dart';
+import 'package:campus_mobile_experimental/core/utils/dining_search.dart';
 import 'package:campus_mobile_experimental/ui/common/container_view.dart';
 import 'package:campus_mobile_experimental/ui/common/directions_helper.dart';
 import 'package:campus_mobile_experimental/ui/common/time_range_widget.dart';
@@ -9,15 +10,34 @@ import 'package:campus_mobile_experimental/ui/dining/payment_filter_button.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DiningList extends StatelessWidget {
-  const DiningList({Key? key, this.listSize}) : super(key: key);
+class DiningList extends StatefulWidget {
+  const DiningList({Key? key, this.listSize, this.showSearch = false}) : super(key: key);
 
   final listSize;
+  final bool showSearch;
+
+  @override
+  State<DiningList> createState() => _DiningListState();
+}
+
+class _DiningListState extends State<DiningList> {
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocus = FocusNode();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocus.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     // Using Provider's filteredDiningModels so that the list respects the filters
     List<dining_model.DiningModel> data = Provider.of<DiningDataProvider>(context).filteredDiningModels;
+    List<dining_model.DiningModel> searchedData = searchDiningModels(data, _searchQuery);
+
     if (data.isEmpty) {
       return ContainerView(
         child: ListView(
@@ -34,7 +54,8 @@ class DiningList extends StatelessWidget {
         ),
       );
     }
-    return buildDiningList(data, context);
+
+    return buildDiningList(searchedData, context);
   }
 
   Widget buildDiningList(List<dining_model.DiningModel> listOfDiners, BuildContext context) {
@@ -43,14 +64,14 @@ class DiningList extends StatelessWidget {
     /// check to see if we want to display only a limited number of elements
     /// if no constraint is given on the size of the list then all elements
     /// are rendered
-    var size = listSize ?? listOfDiners.length;
+    var size = widget.listSize ?? listOfDiners.length;
     for (var i = 0; i < size; i++) {
       final dining_model.DiningModel item = listOfDiners[i];
       final tile = buildDiningTile(item, context);
       diningTiles.add(tile);
     }
 
-    return listSize != null
+    return widget.listSize != null
         ? ListView(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -68,18 +89,80 @@ class DiningList extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.only(left: 16, right: 16),
                   shrinkWrap: true,
-                  children: ListTile.divideTiles(
-                    tiles: diningTiles,
-                    context: context,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? listTileDividerColorDark
-                        : listTileDividerColorLight,
-                  ).toList(),
+                  children: [
+                    if (widget.showSearch) buildSearchField(context),
+                    if (listOfDiners.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text(
+                          'No dining locations match your search.',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    else
+                      ...ListTile.divideTiles(
+                        tiles: diningTiles,
+                        context: context,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? listTileDividerColorDark
+                            : listTileDividerColorLight,
+                      ),
+                  ],
                 ),
               ),
               Positioned(bottom: 24, right: 24, child: PaymentFilterButton()),
             ],
           );
+  }
+
+  Widget buildSearchField(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 16, top: 16),
+    child: TextField(
+      controller: _searchController,
+      focusNode: _searchFocus,
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+        hintText: 'Search dining locations',
+        prefixIcon: Icon(
+          Icons.search,
+          color: Theme.of(context).brightness == Brightness.dark ? listTileDividerColorDark : listTileDividerColorLight,
+        ),
+        suffixIcon: _searchQuery.isEmpty
+            ? null
+            : IconButton(
+                icon: Icon(
+                  Icons.clear,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? listTileDividerColorDark
+                      : listTileDividerColorLight,
+                ),
+                tooltip: 'Clear search',
+                onPressed: () {
+                  _searchController.clear();
+                  _updateSearchQuery('');
+                },
+              ),
+        border: WidgetStateInputBorder.resolveWith(
+          (states) => OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? listTileDividerColorDark
+                  : listTileDividerColorLight,
+            ),
+          ),
+        ),
+      ),
+      onChanged: _updateSearchQuery,
+    ),
+  );
+
+  void _updateSearchQuery(String query) {
+    if (query == _searchQuery) return;
+    setState(() {
+      _searchQuery = query;
+    });
   }
 
   Widget textClosed(BuildContext context, {String? nextOpenDay, String? nextOpenTime}) {
