@@ -27,9 +27,16 @@ void _setupPersistentRetry(Layer layer) {
 ///    Vector tiles scale seamlessly to building/room level (Level 22+) without tile cutoff watermarks.
 /// 2. Custom UC San Diego campus vector tile layers are layered directly on top to display campus-specific facilities.
 Basemap buildBasemap(BasemapType type, EsriMapConfig config) {
-  // 1. Satellite Basemap: Use modern BasemapStyle for optimized CDN routing and faster raster loading.
-  var isSatellite = type == BasemapType.satellite;
-  if (isSatellite) return Basemap.withStyle(BasemapStyle.arcGISImagery);
+  // 1. Satellite & Blueprint Basemaps: Use modern BasemapStyle for optimized CDN
+  // routing and faster raster loading.
+  switch (type) {
+    case BasemapType.satellite:
+      return Basemap.withStyle(BasemapStyle.arcGISImagery);
+    case BasemapType.blueprint:
+      return Basemap.withStyle(BasemapStyle.openBlueprint);
+    default:
+      break;
+  }
 
   final basemap = Basemap();
 

@@ -130,11 +130,20 @@ class EsriMapLayersPanel extends StatelessWidget {
       );
     }
 
-    Widget networkImage(String url) => Image.network(
-      url,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.grey[700] : Colors.grey[300]),
-    );
+    Widget networkImage(String url) {
+      final isAsset = url.startsWith('assets/');
+      return isAsset
+          ? Image.asset(
+              url,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.grey[700] : Colors.grey[300]),
+            )
+          : Image.network(
+              url,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.grey[700] : Colors.grey[300]),
+            );
+    }
 
     Widget sceneChip(String key, String label, bool selected) => Semantics(
       button: true,
@@ -243,7 +252,8 @@ class EsriMapLayersPanel extends StatelessWidget {
                                   if (isAlt) return true;
                                   var notLight = t != BasemapType.light;
                                   var notDark = t != BasemapType.dark;
-                                  return notLight && notDark;
+                                  var notBlueprint = t != BasemapType.blueprint;
+                                  return notLight && notDark && notBlueprint;
                                 })) ...[
                                   imageTile(
                                     label: entry.value.label,

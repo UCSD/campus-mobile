@@ -367,3 +367,18 @@ const List<double> grayscaleInvertMatrix = [
 // Dining logo border and shadow colors for dark mode
 const Color darkLogoBorderColor = Color(0xFF444444); // subtle dark border
 const Color darkLogoShadowColor = Colors.white; // use white for shadow in dark mode
+
+// Blueprint basemap overlay UI colors (Map Type: Blueprint).
+const Color blueprintAccentColor = Color(0xFF1E5AA8);
+const Color blueprintSurfaceColor = Color(0xFFE8F0FB);
+
+/// Light blueprint-tinted copy of [base] used by map overlay widgets while the
+/// Blueprint basemap is active.
+ThemeData blueprintMapOverlayTheme(ThemeData base) => base.copyWith(
+  scaffoldBackgroundColor: blueprintSurfaceColor,
+  colorScheme: base.colorScheme.copyWith(
+    primary: blueprintAccentColor,
+    secondary: blueprintAccentColor,
+    brightness: Brightness.light,
+  ),
+);

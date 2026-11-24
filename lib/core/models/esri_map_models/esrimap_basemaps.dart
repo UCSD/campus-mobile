@@ -1,7 +1,7 @@
 /// ============================================================================
 /// File: esrimap_basemaps.dart
 /// Description: Enum models and conversion utilities for basemap types
-///              (Default, Light, Dark, Satellite).
+///              (Default, Light, Dark, Blueprint, Satellite).
 /// ============================================================================
 
 /// Enumeration representing available basemap styles on the map view.
@@ -14,6 +14,9 @@ enum BasemapType {
 
   /// Dark slate mode basemap.
   dark,
+
+  /// Blueprint-styled vector basemap.
+  blueprint,
 
   /// Satellite imagery basemap.
   satellite,
@@ -28,6 +31,8 @@ String basemapKey(BasemapType type) {
       return 'light';
     case BasemapType.dark:
       return 'dark';
+    case BasemapType.blueprint:
+      return 'blueprint';
     case BasemapType.satellite:
       return 'satellite';
   }
@@ -42,6 +47,8 @@ BasemapType? basemapTypeFromKey(String key) {
       return BasemapType.light;
     case 'dark':
       return BasemapType.dark;
+    case 'blueprint':
+      return BasemapType.blueprint;
     case 'satellite':
       return BasemapType.satellite;
     default:

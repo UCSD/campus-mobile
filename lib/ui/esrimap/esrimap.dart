@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:arcgis_maps/arcgis_maps.dart';
+import 'package:campus_mobile_experimental/app_styles.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_ai_search_model.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_basemaps.dart';
 import 'package:campus_mobile_experimental/core/models/esri_map_models/esrimap_config.dart';
@@ -211,7 +212,8 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
   void _initMap(EsriMapConfig config) {
     for (final type in BasemapType.values) {
       var shouldSkipBasemap =
-          !FeatureFlags.MAP_ALTERNATE_BASEMAPS_ENABLED && (type == BasemapType.light || type == BasemapType.dark);
+          !FeatureFlags.MAP_ALTERNATE_BASEMAPS_ENABLED &&
+          (type == BasemapType.light || type == BasemapType.dark || type == BasemapType.blueprint);
       if (shouldSkipBasemap) continue;
       _basemaps[type] = buildBasemap(type, config);
     }
@@ -2223,7 +2225,9 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
     final isSearchEnabledAndDefault = FeatureFlags.MAP_SEARCH_ENABLED && isDefaultScene && !_hasNetworkError;
     final hasValidResults = _mappedResults.isNotEmpty && !_hasNetworkError;
 
-    return Scaffold(
+    final isBlueprintBasemap = _currentBasemapType == BasemapType.blueprint;
+
+    final mapScaffold = Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(
@@ -2769,5 +2773,10 @@ class _EsriMapState extends State<EsriMap> with AutomaticKeepAliveClientMixin {
         },
       ),
     );
+
+    if (isBlueprintBasemap) {
+      return Theme(data: blueprintMapOverlayTheme(Theme.of(context)), child: mapScaffold);
+    }
+    return mapScaffold;
   }
 }

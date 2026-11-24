@@ -45,7 +45,7 @@ class FeatureFlags {
   ///           will instantiate and pre-load them into memory.
   /// - `false`: The UI buttons will be hidden, and the map controller will skip
   ///            creating these objects, saving significant memory.
-  static const bool MAP_ALTERNATE_BASEMAPS_ENABLED = false; // No Light and Dark basemaps for now.
+  static const bool MAP_ALTERNATE_BASEMAPS_ENABLED = true;
 
   /// Master switch for all Operational Layers (Transit, Districts, Construction).
   /// - `true`: Renders the "LAYERS" section in the map settings panel.
