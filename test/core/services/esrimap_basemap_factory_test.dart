@@ -38,17 +38,27 @@ void main() {
       final satelliteBasemap = config.basemaps['satellite'];
       expect(satelliteBasemap, isNotNull);
       expect(satelliteBasemap!.baseLayers.any((l) => l.serviceKey == 'worldImagery'), isTrue);
+
+      // Verify Blueprint basemap is registered with no config base layers
+      // (its tiles come from the ArcGIS BasemapStyle service instead).
+      final blueprintBasemap = config.basemaps['blueprint'];
+      expect(blueprintBasemap, isNotNull);
+      expect(blueprintBasemap!.label, 'Blueprint');
+      expect(blueprintBasemap.baseLayers, isEmpty);
+      expect(blueprintBasemap.thumbnailAsset, 'assets/esri_map_assets/blueprint_thumbnail.png');
     });
 
     test('basemapKey and basemapTypeFromKey mapping', () {
       expect(basemapKey(BasemapType.defaultMap), 'defaultMap');
       expect(basemapKey(BasemapType.light), 'light');
       expect(basemapKey(BasemapType.dark), 'dark');
+      expect(basemapKey(BasemapType.blueprint), 'blueprint');
       expect(basemapKey(BasemapType.satellite), 'satellite');
 
       expect(basemapTypeFromKey('defaultMap'), BasemapType.defaultMap);
       expect(basemapTypeFromKey('light'), BasemapType.light);
       expect(basemapTypeFromKey('dark'), BasemapType.dark);
+      expect(basemapTypeFromKey('blueprint'), BasemapType.blueprint);
       expect(basemapTypeFromKey('satellite'), BasemapType.satellite);
     });
   });
